@@ -20,8 +20,6 @@ public class AtomImplementation extends InputStream implements Atom {
     public AtomImplementation(Location location) {
     }
 
-
-    @Override
     public byte[] getBytes() {
         return new byte[0];
     }
