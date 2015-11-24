@@ -2,16 +2,16 @@ package model.interfaces;
 
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
+import model.implementations.components.identity.Session;
+import model.implementations.components.manifests.AssetManifest;
+import model.implementations.components.manifests.AtomManifest;
+import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.utils.GUID;
 import model.interfaces.components.entities.Atom;
 import model.interfaces.components.entities.Compound;
+import model.interfaces.components.entities.Manifest;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
-import model.interfaces.components.identity.Session;
-import model.interfaces.components.manifests.AssetManifest;
-import model.interfaces.components.manifests.AtomManifest;
-import model.interfaces.components.manifests.CompoundManifest;
-import model.interfaces.components.manifests.Manifest;
 
 /**
  * This interface describes the set of allowed operations in the Sea of Stuff.
@@ -152,6 +152,7 @@ public interface SeaOfStuff {
      */
     boolean verifyManifest(Manifest manifest);
 
+    // TODO - how to add data to an existing asset?
 }
 
 // TODO - additional calls into the sea of stuff for searching and setting up policies

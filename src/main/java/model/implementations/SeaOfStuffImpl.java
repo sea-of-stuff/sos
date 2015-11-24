@@ -2,18 +2,17 @@ package model.implementations;
 
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
-import model.implementations.components.identity.SessionImpl;
+import model.implementations.components.identity.Session;
+import model.implementations.components.manifests.AssetManifest;
+import model.implementations.components.manifests.AtomManifest;
+import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.entities.Atom;
 import model.interfaces.components.entities.Compound;
+import model.interfaces.components.entities.Manifest;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
-import model.interfaces.components.identity.Session;
-import model.interfaces.components.manifests.AssetManifest;
-import model.interfaces.components.manifests.AtomManifest;
-import model.interfaces.components.manifests.CompoundManifest;
-import model.interfaces.components.manifests.Manifest;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -28,7 +27,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private Session session;
 
     public SeaOfStuffImpl() {
-        session = new SessionImpl();
+        session = new Session();
     }
 
     @Override

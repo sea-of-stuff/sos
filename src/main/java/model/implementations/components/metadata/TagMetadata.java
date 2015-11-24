@@ -1,4 +1,4 @@
-package model.interfaces.components.metadata;
+package model.implementations.components.metadata;
 
 /**
  * is/has relationship

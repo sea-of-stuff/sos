@@ -1,6 +1,7 @@
 package model.interfaces.components.identity;
 
-import model.interfaces.components.manifests.Manifest;
+
+import model.interfaces.components.entities.Manifest;
 
 import java.security.SignatureException;
 

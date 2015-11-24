@@ -2,10 +2,10 @@ package model.implementations;
 
 import IO.sources.DataSource;
 import model.factories.AtomFactory;
-import model.implementations.components.manifests.ManifestTypes;
+import model.implementations.components.manifests.AtomManifest;
+import model.implementations.components.manifests.ManifestConstants;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.entities.Atom;
-import model.interfaces.components.manifests.AtomManifest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -34,9 +34,10 @@ public class SeaOfStuffAddAtomTests {
     public void testAddAtom() throws Exception {
         DataSource source = mock(DataSource.class);
         Atom atom = AtomFactory.makeAtom(source);
+
         AtomManifest atomManifest = model.addAtom(atom);
 
         // TODO - test atom manifest
-        assertEquals(atomManifest.getManifestType(), ManifestTypes.ATOM);
+        assertEquals(atomManifest.getManifestType(), ManifestConstants.ATOM);
     }
 }

@@ -15,7 +15,7 @@ import model.implementations.utils.GUID;
  */
 public interface Asset {
 
-    // TODO - refactor and avoid using Union
+    // TODO
 
     // getContent(); // return content of the asset
 

@@ -2,7 +2,6 @@ package model.implementations.components.identity;
 
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
-import model.interfaces.components.identity.Session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,12 +11,12 @@ import java.util.Map;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SessionImpl implements Session {
+public class Session {
 
     protected static IdentityToken nextToken;
     private Map<IdentityToken, Identity> tokeys;
 
-    public SessionImpl() {
+    public Session() {
         tokeys = new HashMap<IdentityToken, Identity>();
         nextToken = new IdentityTokenImpl(1);
     }
@@ -35,7 +34,6 @@ public class SessionImpl implements Session {
         tokeys.remove(tokey);
     }
 
-    @Override
     public Map<IdentityToken, Identity> getAllRegisteredIdentities() {
         return tokeys;
     }

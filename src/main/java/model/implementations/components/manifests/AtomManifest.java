@@ -4,19 +4,33 @@ import model.implementations.utils.GUID;
 import model.implementations.utils.GUIDsha1;
 import model.implementations.utils.Location;
 import model.interfaces.components.entities.Atom;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 
 /**
- * Atom Manifest implementation
+ * Manifest describing an Atom.
+ *
+ * <p>
+ * Manifest - GUID <br>
+ * ManifestType - ATOM <br>
+ * Timestamp - ? <br>
+ * Signature - signature of the manifest <br>
+ * Locations - list of locations <br>
+ * Content - GUID Content
+ * </p>
+ *
+ * @see Atom
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifest extends Manifest implements model.interfaces.components.manifests.AtomManifest  {
+public class AtomManifest extends UnionManifest {
 
     private GUID contentGUID;
+    private Collection<Location> locations;
 
     public AtomManifest(Atom atom) {
+        super(ManifestConstants.ATOM);
         contentGUID = new GUIDsha1(atom.getSource());
 
         // TODO - how about locations?
@@ -27,10 +41,15 @@ public class AtomManifest extends Manifest implements model.interfaces.component
     }
 
     public Collection<Location> getLocations() {
-        return null;
+        return locations;
     }
 
     public boolean verify() {
-        return false;
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String toString() {
+        throw new NotImplementedException();
     }
 }
