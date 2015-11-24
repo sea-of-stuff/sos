@@ -1,11 +1,11 @@
 package model.interfaces.components.manifests;
 
-import model.interfaces.components.utils.GUID;
-import model.interfaces.entities.Asset;
-import model.interfaces.metadata.Metadata;
+import model.implementations.utils.GUID;
+import model.interfaces.components.entities.Asset;
+import model.interfaces.components.metadata.Metadata;
 
 /**
- *
+ * Manifest describing an Asset.
  *
  * Manifest of the form:
  * <p>

@@ -2,19 +2,20 @@ package model.interfaces;
 
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
+import model.implementations.utils.GUID;
+import model.interfaces.components.entities.Atom;
+import model.interfaces.components.entities.Compound;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.components.identity.Session;
 import model.interfaces.components.manifests.AssetManifest;
 import model.interfaces.components.manifests.AtomManifest;
 import model.interfaces.components.manifests.CompoundManifest;
 import model.interfaces.components.manifests.Manifest;
-import model.interfaces.components.utils.GUID;
-import model.interfaces.entities.Atom;
-import model.interfaces.entities.Compound;
 
 /**
  * This interface describes the set of allowed operations in the Sea of Stuff.
- *
+ * <br>
  * The sea of stuff is a large collection of assets, compounds and atoms stored
  * across a collection of storage repositories.
  * The sea of stuff supports locatable persistent data via asset, compound and
@@ -24,10 +25,14 @@ import model.interfaces.entities.Compound;
  * All manifests reside in the manifest space, while all other data is stored in the data space.
  * In reality, however, all data is stored in the data space.
  *
+ * TODO - more on the operations and how these are used?
  * <p>
- * Notes:
- * - I am not sure if timestamp is absolutely necessary in the manifest.
+ * Session
  * </p>
+ *
+ * TODO - model
+ * TODO - metadata
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface SeaOfStuff {
@@ -43,6 +48,7 @@ public interface SeaOfStuff {
      * @return
      *
      * @see #unregister(IdentityToken)
+     * @see Session
      * Notes: change method name to subscribe?
      */
     IdentityToken register(Identity identity);
@@ -59,45 +65,36 @@ public interface SeaOfStuff {
     void unregister(IdentityToken identityToken) throws UnknownIdentityException;
 
     /**
+     * TODO
+     * @return
+     */
+    Session getSession();
+
+    /**
      * Adds an atom to the Sea of Stuff. The content of the atom and it
      * location are used to generate a manifest.
      *
      * If an identity is registered, then the manifest will be signed.
      * @param atom to be added to the Sea of Stuff
-     * @return Manifest of the form:
-     * <p>
-     * Manifest - GUID <br>
-     * ManifestType - ATOM <br>
-     * Timestamp - ? <br>
-     * Signature - signature of the manifest <br>
-     * Locations - list of locations <br>
-     * Content - GUID Content
-     * </p>
+     * @return AtomManifest for the added atom
      *
      * @see Atom
      * @see Manifest
      */
-    Manifest addAtom(Atom atom);
+    AtomManifest addAtom(Atom atom);
 
     /**
      * Adds a Compound to the Sea of Stuff. The content of the compound
      * and its location are used to generate a Manifest
      *
      * @param compound to be added to the Sea of Stuff
-     * @return Manifest of the form:
-     * <p>
-     * Manifest - GUID <br>
-     * ManifestType - COMPOUND <br>
-     * Timestamp - ? <br>
-     * Signature - signature of the manifest <br>
-     * Locations - list of GUIDs/locations <br>
-     * Content - GUID Content
-     * </p>
+     * @return CompoundManifest for the added compound
+
      *
      * @see Compound
      * @see Manifest
      */
-    Manifest addCompound(Compound compound);
+    CompoundManifest addCompound(Compound compound);
 
     /**
      * Adds an asset to the Sea of Stuff
@@ -144,6 +141,7 @@ public interface SeaOfStuff {
      * <p>
      * verifyManifest checks the integrity of the manifest's GUID against the
      * content of the manifest.
+     * </p>
      *
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches

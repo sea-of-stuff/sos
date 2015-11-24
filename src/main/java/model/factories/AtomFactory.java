@@ -1,9 +1,9 @@
 package model.factories;
 
 import IO.sources.DataSource;
-import model.implementations.components.AtomImplementation;
-import model.interfaces.components.utils.Location;
-import model.interfaces.entities.Atom;
+import model.implementations.components.entities.AtomImpl;
+import model.implementations.utils.Location;
+import model.interfaces.components.entities.Atom;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -19,7 +19,7 @@ public class AtomFactory {
      *
      * @see Location
      */
-    public Atom makeAtom(DataSource source) {
-        return new AtomImplementation(source);
+    public static Atom makeAtom(DataSource source) {
+        return new AtomImpl(source);
     }
 }

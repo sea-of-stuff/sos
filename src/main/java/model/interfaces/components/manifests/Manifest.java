@@ -1,7 +1,8 @@
 package model.interfaces.components.manifests;
 
+import model.implementations.utils.GUID;
+import model.interfaces.SeaOfStuff;
 import model.interfaces.components.identity.Signature;
-import model.interfaces.components.utils.GUID;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -34,4 +35,23 @@ public interface Manifest {
      * @return a string representing the type of this manifest.
      */
     String getManifestType();
+
+    /**
+     * Verify this manifest's GUID against its content.
+     *
+     * {@link SeaOfStuff#verifyManifest(Manifest)}
+     *
+     * @return
+     */
+    boolean verify();
+
+    /**
+     *
+     * Note that any java object inherits from Object and thus implements
+     * the method {@link Object#toString()}. However, it is good design that
+     * classes implementing Manifest DO implement this method.
+     *
+     * @return string representation of this manifest.
+     */
+    String toString();
 }

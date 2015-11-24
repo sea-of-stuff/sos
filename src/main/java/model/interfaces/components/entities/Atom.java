@@ -1,7 +1,7 @@
-package model.interfaces.entities;
+package model.interfaces.components.entities;
 
 import IO.sources.DataSource;
-import model.interfaces.components.utils.GUID;
+import model.implementations.utils.GUID;
 
 /**
  * An atom is an immutable sequence of bytes uniquely identified by a
@@ -13,6 +13,7 @@ import model.interfaces.components.utils.GUID;
  * A GUID is a shorthand for a sequence of bytes. GUIDs and the sequences of
  * bytes that they represent are in 1:1 correspondence and once created are good
  * for all time.
+ * </p>
  *
  * @see GUID
  *
@@ -20,5 +21,9 @@ import model.interfaces.components.utils.GUID;
  */
 public interface Atom extends Union {
 
+    /**
+     *
+     * @return the data of this atom
+     */
     DataSource getSource();
 }

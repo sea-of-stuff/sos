@@ -1,4 +1,4 @@
-package model.interfaces.metadata;
+package model.interfaces.components.metadata;
 
 /**
  * Type III metadata

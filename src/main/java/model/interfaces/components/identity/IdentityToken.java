@@ -8,4 +8,6 @@ package model.interfaces.components.identity;
 public interface IdentityToken {
 
     long getTokey();
+
+    IdentityToken next();
 }

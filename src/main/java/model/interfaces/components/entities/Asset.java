@@ -1,6 +1,6 @@
-package model.interfaces.entities;
+package model.interfaces.components.entities;
 
-import model.interfaces.components.utils.GUID;
+import model.implementations.utils.GUID;
 
 /**
  * An Asset is identified by an asset GUID. Unlike other GUIDs they are not
@@ -10,7 +10,6 @@ import model.interfaces.components.utils.GUID;
  * assert commonality over a history of changes of unions.
  *
  * @see GUID
- * @see ?? - content TODO
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

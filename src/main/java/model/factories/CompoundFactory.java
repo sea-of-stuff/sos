@@ -1,7 +1,7 @@
 package model.factories;
 
-import model.interfaces.entities.Compound;
-import model.interfaces.entities.Union;
+import model.interfaces.components.entities.Compound;
+import model.interfaces.components.entities.Union;
 
 import java.util.List;
 

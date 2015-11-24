@@ -1,4 +1,4 @@
-package model.interfaces.components.utils;
+package model.implementations.utils;
 
 import java.nio.file.Path;
 
@@ -8,11 +8,11 @@ import java.nio.file.Path;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Location {
+public abstract class Location {
 
     /**
      * @return the location of the data
      */
-    Path getLocationPath();
+    public abstract Path getLocationPath();
 
 }

@@ -1,19 +1,21 @@
-package model.implementations.identity;
+package model.implementations.components.identity;
 
 import configurations.identity.IdentityConfiguration;
 import model.interfaces.components.identity.Identity;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.crypto.Cipher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.nio.file.Path;
 import java.security.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class IdentityImplementation implements Identity {
+public class IdentityImpl implements Identity {
 
     private PublicKey publicKey;
     private PrivateKey privateKey;
@@ -21,17 +23,16 @@ public class IdentityImplementation implements Identity {
     /**
      * Generate key which contains a pair of private and public key.
      * Store the set of keys in appropriate files.
-     *
      */
     public void generateKeys() {
-            final KeyPair key = generateKeyPair();
+        final KeyPair key = generateKeyPair();
 
-            File privateKeyFile = createKeyFile(IdentityConfiguration.PRIVATE_KEY_FILE);
-            File publicKeyFile = createKeyFile(IdentityConfiguration.PUBLIC_KEY_FILE);
+        File privateKeyFile = createKeyFile(IdentityConfiguration.PRIVATE_KEY_FILE);
+        File publicKeyFile = createKeyFile(IdentityConfiguration.PUBLIC_KEY_FILE);
 
-            // Saving the keys
-            saveKeyToFile(publicKeyFile, key.getPublic());
-            saveKeyToFile(privateKeyFile, key.getPrivate());
+        // Saving the keys
+        saveKeyToFile(publicKeyFile, key.getPublic());
+        saveKeyToFile(privateKeyFile, key.getPrivate());
     }
 
     public byte[] encrypt(String text) {
@@ -61,6 +62,9 @@ public class IdentityImplementation implements Identity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        if (dectyptedText == null)
+            return null;
 
         return new String(dectyptedText);
     }
@@ -104,8 +108,13 @@ public class IdentityImplementation implements Identity {
             publicKeyOS.writeObject(key);
             publicKeyOS.close();
         } catch (IOException e) {
-
+            System.err.print(e.getMessage());
         }
+    }
+
+    @Override
+    public void loadIdentity(Path path) {
+        throw new NotImplementedException();
     }
 
     @Override

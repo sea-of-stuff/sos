@@ -1,7 +1,7 @@
 package model.interfaces.components.manifests;
 
-import model.interfaces.components.utils.GUID;
-import model.interfaces.components.utils.Location;
+import model.implementations.utils.GUID;
+import model.implementations.utils.Location;
 
 import java.util.Collection;
 
