@@ -7,19 +7,9 @@ import java.io.InputStream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class MemorySource implements DataSource {
-
-    public MemorySource() {
-        // TODO - persist data to a given location
-    }
-
+public class PathSource implements DataSource {
     @Override
     public InputStream getInputStream() {
         return null;
-    }
-
-    // Persist source into local storage
-    private void persiste() {
-
     }
 }

@@ -24,14 +24,14 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifest extends UnionManifest {
+public class AtomManifest extends BasicManifest {
 
     private GUID contentGUID;
     private Collection<Location> locations;
 
     public AtomManifest(Atom atom) {
         super(ManifestConstants.ATOM);
-        contentGUID = new GUIDsha1(atom.getSource());
+        contentGUID = new GUIDsha1(atom.getSource().getInputStream());
 
         // TODO - how about locations?
     }

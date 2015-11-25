@@ -14,14 +14,14 @@ import model.interfaces.components.identity.Signature;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class ManifestImpl implements Manifest {
+public abstract class BasicManifest implements Manifest {
 
     private GUID guid;
     private Signature signature;
     private long timestamp;
     private final String manifestType;
 
-    protected ManifestImpl(String manifestType) {
+    protected BasicManifest(String manifestType) {
         this.manifestType = manifestType;
     }
 

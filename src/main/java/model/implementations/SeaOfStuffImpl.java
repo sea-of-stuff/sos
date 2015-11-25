@@ -9,10 +9,10 @@ import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.entities.Atom;
-import model.interfaces.components.entities.Compound;
 import model.interfaces.components.entities.Manifest;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
+import model.services.ServiceManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -25,6 +25,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class SeaOfStuffImpl implements SeaOfStuff {
 
     private Session session;
+    private ServiceManager serviceManager;
 
     public SeaOfStuffImpl() {
         session = new Session();
@@ -40,7 +41,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         session.removeIdentity(identityToken);
     }
 
-    @Override
     public Session getSession() {
         return session;
     }
@@ -51,7 +51,12 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public CompoundManifest addCompound(Compound compound) {
+    public Atom getAtomContent(AtomManifest atomManifest) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void addCompound(CompoundManifest compoundManifest) {
         throw new NotImplementedException();
     }
 
@@ -62,16 +67,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public Manifest getManifest(GUID guid) throws UnknownGUIDException {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Atom getAtomContent(AtomManifest atomManifest) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Compound getCompoundContent(CompoundManifest compoundManifest) {
         throw new NotImplementedException();
     }
 

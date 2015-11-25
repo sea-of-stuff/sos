@@ -19,7 +19,7 @@ import model.implementations.utils.GUID;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Atom extends Union {
+public interface Atom {
 
     /**
      *

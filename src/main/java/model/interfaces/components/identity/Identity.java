@@ -12,6 +12,9 @@ import java.security.Key;
  */
 public interface Identity {
 
+    byte[] encrypt(String text);
+    String decrypt(byte[] text);
+
     /**
      * Load identity - TODO - path to keys?
      * @param path

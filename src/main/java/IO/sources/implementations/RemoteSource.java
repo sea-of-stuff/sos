@@ -7,8 +7,9 @@ import java.io.InputStream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalStorageSource implements DataSource {
-    public InputStream getStream() {
+public class RemoteSource implements DataSource {
+    @Override
+    public InputStream getInputStream() {
         return null;
     }
 }

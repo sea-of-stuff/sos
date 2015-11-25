@@ -8,13 +8,17 @@ import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.utils.GUID;
 import model.interfaces.components.entities.Atom;
-import model.interfaces.components.entities.Compound;
 import model.interfaces.components.entities.Manifest;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
 
 /**
  * This interface describes the set of allowed operations in the Sea of Stuff.
+ * <br>
+ * Client applications interact with the Sea of Stuff through this interface.
+ * This interface abstracts the complexity of the data management in the Sea of Stuff,
+ * such as data synching, data retrieval from remote, de-duplication or data
+ * redundancy.
  * <br>
  * The sea of stuff is a large collection of assets, compounds and atoms stored
  * across a collection of storage repositories.
@@ -25,9 +29,14 @@ import model.interfaces.components.identity.IdentityToken;
  * All manifests reside in the manifest space, while all other data is stored in the data space.
  * In reality, however, all data is stored in the data space.
  *
- * TODO - more on the operations and how these are used?
  * <p>
- * Session
+ * Entities:
+ * </p>
+ * <p>
+ * Operations:
+ * </p>
+ * <p>
+ * Session:
  * </p>
  *
  * TODO - model
@@ -65,12 +74,6 @@ public interface SeaOfStuff {
     void unregister(IdentityToken identityToken) throws UnknownIdentityException;
 
     /**
-     * TODO
-     * @return
-     */
-    Session getSession();
-
-    /**
      * Adds an atom to the Sea of Stuff. The content of the atom and it
      * location are used to generate a manifest.
      *
@@ -84,6 +87,13 @@ public interface SeaOfStuff {
     AtomManifest addAtom(Atom atom);
 
     /**
+     *
+     * @param atomManifest
+     * @return
+     */
+    Atom getAtomContent(AtomManifest atomManifest);
+
+    /**
      * Adds a Compound to the Sea of Stuff. The content of the compound
      * and its location are used to generate a Manifest
      *
@@ -94,10 +104,11 @@ public interface SeaOfStuff {
      * @see Compound
      * @see Manifest
      */
-    CompoundManifest addCompound(Compound compound);
+    void addCompound(CompoundManifest compoundManifest);
 
     /**
-     * Adds an asset to the Sea of Stuff
+     * Adds an asset to the Sea of Stuff.
+     * Note that an asset exists only in the manifest space.
      *
      * @param assetManifest
      */
@@ -115,20 +126,6 @@ public interface SeaOfStuff {
      * @see GUID
      */
     Manifest getManifest(GUID guid) throws UnknownGUIDException;
-
-    /**
-     *
-     * @param atomManifest
-     * @return
-     */
-    Atom getAtomContent(AtomManifest atomManifest);
-
-    /**
-     *
-     * @param compoundManifest
-     * @return
-     */
-    Compound getCompoundContent(CompoundManifest compoundManifest);
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by
@@ -158,6 +155,12 @@ public interface SeaOfStuff {
 // TODO - additional calls into the sea of stuff for searching and setting up policies
 
 // TODO - search methods
+
+// TODO - describe this workflow
+// 1- get manifest from sea of stuff
+// 2 - copy data
+// 3 - create new manifest, which has similarities with other manifest.
+
 /*
 
 public ManifestStream findManifests(Metadata metadata);

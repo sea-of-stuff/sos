@@ -9,7 +9,9 @@ import java.io.InputStream;
  */
 public class AWSSource implements DataSource {
 
-    public InputStream getStream() {
+
+    @Override
+    public InputStream getInputStream() {
         return null;
     }
 }

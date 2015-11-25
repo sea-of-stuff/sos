@@ -1,13 +1,18 @@
 package model.implementations.components.manifests;
 
 import model.implementations.utils.GUID;
-import model.interfaces.components.entities.Asset;
 import model.interfaces.components.metadata.Metadata;
 
 /**
- * Manifest describing an Asset.
- *
- * Manifest of the form:
+ * An Asset is identified by an asset GUID. Unlike other GUIDs they are not
+ * derived from contents. Instead an asset GUID is good for all time
+ * irrespective of the asset's contents.
+ * Assets do not contain data, thus they exist only in the manifest space.
+ * Assets refer to unions - and they are used to assert commonality over a
+ * history of changes of unions.
+ * <br>
+ * This class defines the manifest describing an Asset, which takes the
+ * following form:
  * <p>
  * Manifest - GUID <br>
  * Asset - GUID <br>
@@ -17,10 +22,13 @@ import model.interfaces.components.metadata.Metadata;
  * Previous Asset - GUID <br>
  * Union - GUID <br>
  * Metadata - GUID
+ * </p>
+ *
+ * @see GUID
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifest extends ManifestImpl {
+public class AssetManifest extends BasicManifest {
 
     public AssetManifest() {
         super(ManifestConstants.ASSET);
@@ -43,7 +51,6 @@ public class AssetManifest extends ManifestImpl {
      * @return the previous asset.
      *         Null if the asset does not have a previous one.
      *
-     * @see Asset
      */
     public AssetManifest getPreviousManifest() {
         return null;
@@ -64,7 +71,6 @@ public class AssetManifest extends ManifestImpl {
      * @return Metadata associated with the asset.
      *         Null if there is not metadata associated with the asset.
      *
-     * @see Asset
      * @see Metadata
      */
     public AssetManifest getMetadata() {

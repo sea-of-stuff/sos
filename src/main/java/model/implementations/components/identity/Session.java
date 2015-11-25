@@ -1,5 +1,6 @@
 package model.implementations.components.identity;
 
+import model.exceptions.UnknownIdentityException;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
 
@@ -30,11 +31,18 @@ public class Session {
         return ret;
     }
 
-    public void removeIdentity(IdentityToken tokey) {
+    public void removeIdentity(IdentityToken tokey) throws UnknownIdentityException {
+        if (!containtIdentity(tokey))
+            throw new UnknownIdentityException();
+
         tokeys.remove(tokey);
     }
 
     public Map<IdentityToken, Identity> getAllRegisteredIdentities() {
         return tokeys;
+    }
+
+    private boolean containtIdentity(IdentityToken tokey) {
+        return tokeys.containsKey(tokey);
     }
 }

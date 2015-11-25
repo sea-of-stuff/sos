@@ -20,6 +20,10 @@ public class IdentityImpl implements Identity {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
+    public IdentityImpl() {
+        generateKeys();
+    }
+
     /**
      * Generate key which contains a pair of private and public key.
      * Store the set of keys in appropriate files.
@@ -35,6 +39,12 @@ public class IdentityImpl implements Identity {
         saveKeyToFile(privateKeyFile, key.getPrivate());
     }
 
+    /**
+     * Encrypt a given text using the keys for this identity
+     *
+     * @param text in plain to be encrypted.
+     * @return the encrypted text.
+     */
     public byte[] encrypt(String text) {
         byte[] cipherText = null;
         try {
@@ -49,6 +59,11 @@ public class IdentityImpl implements Identity {
         return cipherText;
     }
 
+    /**
+     * Decrypt the given encrypted text using the private key of this identity.
+     * @param text to decrypt.
+     * @return the plain text. Null if the input could not be decrypted.
+     */
     public String decrypt(byte[] text) {
         byte[] dectyptedText = null;
         try {
@@ -58,7 +73,6 @@ public class IdentityImpl implements Identity {
             // decrypt the text using the private key
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             dectyptedText = cipher.doFinal(text);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -7,7 +7,7 @@ import model.interfaces.components.entities.Atom;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomImpl implements Atom {
+public class BasicAtom implements Atom {
 
     private DataSource source;
 
@@ -16,7 +16,7 @@ public class AtomImpl implements Atom {
      *
      * @param source
      */
-    public AtomImpl(DataSource source) {
+    public BasicAtom(DataSource source) {
         this.source = source;
     }
 

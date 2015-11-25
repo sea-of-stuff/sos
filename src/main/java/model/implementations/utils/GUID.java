@@ -1,6 +1,6 @@
 package model.implementations.utils;
 
-import IO.sources.DataSource;
+import java.io.InputStream;
 
 /**
  *
@@ -12,11 +12,11 @@ public abstract class GUID {
 
     protected byte[] hash;
 
-    public GUID(DataSource source) {
+    public GUID(InputStream source) {
         hash(source);
     }
 
-    protected abstract void hash(DataSource source);
+    protected abstract void hash(InputStream source);
 
     public abstract String getAlgorithm();
 

@@ -9,6 +9,6 @@ public class IdentityConfiguration {
     public static final int KEY_SIZE = 1024; // in bytes
 
     // TODO - os dependent
-    public static final String PRIVATE_KEY_FILE = "C:/keys/private.key";
-    public static final String PUBLIC_KEY_FILE = "C:/keys/public.key";
+    public static final String PRIVATE_KEY_FILE = "keys/private.key";
+    public static final String PUBLIC_KEY_FILE = "keys/public.key";
 }

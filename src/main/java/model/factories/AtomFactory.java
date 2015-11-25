@@ -1,7 +1,7 @@
 package model.factories;
 
 import IO.sources.DataSource;
-import model.implementations.components.entities.AtomImpl;
+import model.implementations.components.entities.BasicAtom;
 import model.implementations.utils.Location;
 import model.interfaces.components.entities.Atom;
 
@@ -20,6 +20,6 @@ public class AtomFactory {
      * @see Location
      */
     public static Atom makeAtom(DataSource source) {
-        return new AtomImpl(source);
+        return new BasicAtom(source);
     }
 }
