@@ -6,6 +6,7 @@ import model.implementations.components.identity.Session;
 import model.implementations.components.manifests.AssetManifest;
 import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
+import model.implementations.components.manifests.ManifestFactory;
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.entities.Atom;
@@ -47,11 +48,19 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(Atom atom) {
-        throw new NotImplementedException();
+        Identity identity = session.getRegisteredIdentity();
+        AtomManifest manifest = ManifestFactory.createAtomManifest(atom, identity);
+
+        // TODO - add atom and manifest to Sea of Stuff
+
+        return manifest;
     }
 
     @Override
     public Atom getAtomContent(AtomManifest atomManifest) {
+
+        // TODO - get locations from atomManifest and retrieve atom.
+
         throw new NotImplementedException();
     }
 
@@ -67,11 +76,17 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public Manifest getManifest(GUID guid) throws UnknownGUIDException {
+
+        // TODO - lookup localdb or webservice for GUID
+
         throw new NotImplementedException();
     }
 
     @Override
     public boolean verifyManifest(Manifest manifest) {
+
+        // TODO - verify manifest through GUIDs and hashing
+
         throw new NotImplementedException();
     }
 }

@@ -49,9 +49,7 @@ public interface SeaOfStuff {
     /**
      * Register this identity for the current session.
      * Any operations following the register operation will be under the
-     * registered identity
-     *
-     * TODO - define session
+     * registered identity.
      *
      * @param identity
      * @return
@@ -87,21 +85,21 @@ public interface SeaOfStuff {
     AtomManifest addAtom(Atom atom);
 
     /**
-     *
+     * Get an atom given an AtomManifest.
      * @param atomManifest
      * @return
+     *
+     * @see // TODO - policy
      */
     Atom getAtomContent(AtomManifest atomManifest);
 
     /**
-     * Adds a Compound to the Sea of Stuff. The content of the compound
+     * Adds a CompoundManifest to the Sea of Stuff.
+     * FIXME - The content of the compound
      * and its location are used to generate a Manifest
      *
-     * @param compound to be added to the Sea of Stuff
-     * @return CompoundManifest for the added compound
-
+     * @param compoundManifest to be added to the Sea of Stuff
      *
-     * @see Compound
      * @see Manifest
      */
     void addCompound(CompoundManifest compoundManifest);
@@ -149,6 +147,9 @@ public interface SeaOfStuff {
      */
     boolean verifyManifest(Manifest manifest);
 
+    // decide on how data is replicated, etc.
+    void setPolicy(/* TODO - policy */);
+
     // TODO - how to add data to an existing asset?
 }
 
@@ -157,9 +158,9 @@ public interface SeaOfStuff {
 // TODO - search methods
 
 // TODO - describe this workflow
-// 1- get manifest from sea of stuff
-// 2 - copy data
-// 3 - create new manifest, which has similarities with other manifest.
+// XXX 1- get manifest from sea of stuff
+// XXX 2 - copy data
+// XXX 3 - create new manifest, which has similarities with other manifest.
 
 /*
 

@@ -22,6 +22,7 @@ import model.implementations.utils.GUID;
 public interface Atom {
 
     /**
+     * Get the data of this atom.
      *
      * @return the data of this atom
      */

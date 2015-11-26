@@ -1,6 +1,8 @@
 package model.implementations.components.manifests;
 
 import model.implementations.utils.GUID;
+import model.interfaces.components.identity.Identity;
+import model.interfaces.components.identity.Signature;
 import model.interfaces.components.metadata.Metadata;
 
 /**
@@ -30,7 +32,7 @@ import model.interfaces.components.metadata.Metadata;
  */
 public class AssetManifest extends BasicManifest {
 
-    public AssetManifest() {
+    protected AssetManifest() {
         super(ManifestConstants.ASSET);
     }
 
@@ -82,7 +84,23 @@ public class AssetManifest extends BasicManifest {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return null;
     }
+
+    @Override
+    protected GUID generateGUID() {
+        return null;
+    }
+
+    @Override
+    protected Signature generateSignature(Identity identity) {
+        return null;
+    }
+
 }

@@ -3,14 +3,13 @@ package model.implementations.components.manifests;
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.entities.Manifest;
+import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.Signature;
 
+import java.time.Clock;
+
 /**
- * A manifest is an entity that describes assets, compounds and atoms by
- * recording metadata about them. A manifest is not updatable.
- * Manifests are publishable within the sea of stuff and allow discoverability
- * of assets, compounds and atoms. Manifests are represented as a
- * set of labels and values.
+ * TODO - docs about BasicManifest
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -21,37 +20,30 @@ public abstract class BasicManifest implements Manifest {
     private long timestamp;
     private final String manifestType;
 
+    /**
+     * Constructor for a BasicManifest. Initialise the type of manifest and the timestamp
+     * for this manifest.
+     *
+     * @param manifestType
+     */
     protected BasicManifest(String manifestType) {
         this.manifestType = manifestType;
+        this.timestamp = generateTimestamp();
     }
 
-    public void setGuid(GUID guid) {
-        this.guid = guid;
-    }
+    /**
+     * Generate the GUID of this manifest.
+     *
+     * @return the GUID of this manifest.
+     */
+    protected abstract GUID generateGUID();
 
-    public void setSignature(Signature signature) {
-        this.signature = signature;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public GUID getGUID() {
-        return this.guid;
-    }
-
-    public Signature getSignature() {
-        return this.signature;
-    }
-
-    public long getTimestamp() {
-        return this.timestamp;
-    }
-
-    public String getManifestType() {
-        return this.manifestType;
-    }
+    /**
+     * Generate the signature for this manifest.
+     *
+     * @return
+     */
+    protected abstract Signature generateSignature(Identity identity);
 
     /**
      * Verify this manifest's GUID against its content.
@@ -60,15 +52,47 @@ public abstract class BasicManifest implements Manifest {
      *
      * @return
      */
+    @Override
     public abstract boolean verify();
 
     /**
+     * Checks whether this manifest contains valid key-value entries.
      *
-     * Note that any java object inherits from Object and thus implements
-     * the method {@link Object#toString()}. However, it is good design that
-     * classes implementing Manifest DO implement this method.
+     * @return
+     */
+    @Override
+    public abstract boolean isValid();
+
+    /**
      *
      * @return string representation of this manifest.
      */
+    @Override
     public abstract String toString();
+
+    @Override
+    public GUID getGUID() {
+        return this.guid;
+    }
+
+    @Override
+    public Signature getSignature() {
+        return this.signature;
+    }
+
+    private long generateTimestamp() {
+        Clock clock = Clock.systemDefaultZone();
+        return clock.millis();
+    }
+
+    @Override
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    @Override
+    public String getManifestType() {
+        return this.manifestType;
+    }
+
 }

@@ -19,7 +19,7 @@ public class MemorySource implements DataSource {
     }
 
     // Persist source into local storage
-    private void persiste() {
+    private void persist() {
 
     }
 }

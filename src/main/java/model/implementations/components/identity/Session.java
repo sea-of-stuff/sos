@@ -4,9 +4,6 @@ import model.exceptions.UnknownIdentityException;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Represents the current session of this view of the Sea of Stuff
  *
@@ -15,34 +12,30 @@ import java.util.Map;
 public class Session {
 
     protected static IdentityToken nextToken;
-    private Map<IdentityToken, Identity> tokeys;
+
+    private IdentityToken tokey;
+    private Identity identity;
 
     public Session() {
-        tokeys = new HashMap<IdentityToken, Identity>();
         nextToken = new IdentityTokenImpl(1);
     }
 
     public IdentityToken addIdentity(Identity identity) {
-        tokeys.put(nextToken, identity);
-        IdentityToken ret = nextToken;
+        tokey = nextToken;
+        this.identity = identity;
 
         nextToken = nextToken.next();
 
-        return ret;
+        return tokey;
     }
 
     public void removeIdentity(IdentityToken tokey) throws UnknownIdentityException {
-        if (!containtIdentity(tokey))
-            throw new UnknownIdentityException();
-
-        tokeys.remove(tokey);
+        this.tokey = null;
+        this.identity = null;
     }
 
-    public Map<IdentityToken, Identity> getAllRegisteredIdentities() {
-        return tokeys;
+    public Identity getRegisteredIdentity() {
+        return identity;
     }
 
-    private boolean containtIdentity(IdentityToken tokey) {
-        return tokeys.containsKey(tokey);
-    }
 }

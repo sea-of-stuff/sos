@@ -1,26 +1,11 @@
 package model.implementations.components.manifests;
 
 import model.implementations.utils.GUID;
+import model.interfaces.components.identity.Identity;
+import model.interfaces.components.identity.Signature;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
-
-/**
- * Manifest describing a Compound.
- *
- * <p>
- * Manifest - GUID <br>
- * ManifestType - COMPOUND <br>
- * Timestamp - ? <br>
- * Signature - signature of the manifest <br>
- * Locations - list of GUIDs/locations <br>
- * Content - GUID Content
- * </p>
- *
- * @author Simone I. Conte "sic2@st-andrews.ac.uk"
- */
-
-
 
 /**
  * A compound is an immutable collection of (references to)
@@ -38,12 +23,24 @@ import java.util.Collection;
  * to be duplicated for each compound, since we can uniquely refer to the data
  * from the compound itself.
  *
+ *
+ * Manifest describing a Compound.
+ *
+ * <p>
+ * Manifest - GUID <br>
+ * ManifestType - COMPOUND <br>
+ * Timestamp - ? <br>
+ * Signature - signature of the manifest <br>
+ * Locations - list of GUIDs/locations <br>
+ * Content - GUID Content
+ * </p>
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 
 public class CompoundManifest extends BasicManifest {
 
-    public CompoundManifest() {
+    protected CompoundManifest() {
         super(ManifestConstants.COMPOUND);
     }
 
@@ -57,7 +54,23 @@ public class CompoundManifest extends BasicManifest {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return null;
     }
+
+    @Override
+    protected GUID generateGUID() {
+        return null;
+    }
+
+    @Override
+    protected Signature generateSignature(Identity identity) {
+        return null;
+    }
+
 }

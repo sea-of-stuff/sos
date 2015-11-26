@@ -4,6 +4,7 @@ import IO.sources.DataSource;
 import model.interfaces.components.entities.Atom;
 
 /**
+ * Basic implementation of the Atom entity.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -12,9 +13,9 @@ public class BasicAtom implements Atom {
     private DataSource source;
 
     /**
-     * Created an atom given an input source.
+     * Creates an atom given an input source.
      *
-     * @param source
+     * @param source used for this atom.
      */
     public BasicAtom(DataSource source) {
         this.source = source;

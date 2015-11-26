@@ -4,6 +4,8 @@ import model.implementations.utils.GUID;
 import model.implementations.utils.GUIDsha1;
 import model.implementations.utils.Location;
 import model.interfaces.components.entities.Atom;
+import model.interfaces.components.identity.Identity;
+import model.interfaces.components.identity.Signature;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
@@ -29,7 +31,12 @@ public class AtomManifest extends BasicManifest {
     private GUID contentGUID;
     private Collection<Location> locations;
 
-    public AtomManifest(Atom atom) {
+    /**
+     * Creates a partially valid atom manifest given an atom.
+     *
+     * @param atom
+     */
+    protected AtomManifest(Atom atom) {
         super(ManifestConstants.ATOM);
         contentGUID = new GUIDsha1(atom.getSource().getInputStream());
 
@@ -49,7 +56,23 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
+    public boolean isValid() {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public String toString() {
         throw new NotImplementedException();
     }
+
+    @Override
+    protected GUID generateGUID() {
+        return null;
+    }
+
+    @Override
+    protected Signature generateSignature(Identity identity) {
+        throw new NotImplementedException();
+    }
+
 }
