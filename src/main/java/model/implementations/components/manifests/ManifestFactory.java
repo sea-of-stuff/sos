@@ -21,12 +21,12 @@ public class ManifestFactory {
      */
     public static AtomManifest createAtomManifest(Atom atom, Identity identity) {
         AtomManifest manifest = new AtomManifest(atom);
-        finaliseManifest(manifest, identity);
+        //finaliseManifest(manifest, identity);
         return manifest;
     }
 
     /**
-     *
+     * TODO
      * @param identity
      * @return
      */
@@ -35,7 +35,7 @@ public class ManifestFactory {
     }
 
     /**
-     *
+     * TODO
      * @param identity
      * @return
      */
@@ -47,7 +47,7 @@ public class ManifestFactory {
      * Generates the key-value pairs of the manifests that have not been passed
      * by the user.
      *
-     * These are:
+     * The generated key-value pairs are:
      * - GUID
      * - Signature
      *

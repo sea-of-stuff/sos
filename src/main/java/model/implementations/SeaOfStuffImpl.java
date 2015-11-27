@@ -89,4 +89,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
         throw new NotImplementedException();
     }
+
+    @Override
+    public void setPolicy() {
+
+    }
 }

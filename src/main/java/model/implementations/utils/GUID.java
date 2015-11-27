@@ -11,6 +11,7 @@ import java.io.InputStream;
 public abstract class GUID {
 
     protected byte[] hash;
+    protected String hashHex;
 
     public GUID(InputStream source) {
         hash(source);
@@ -26,5 +27,9 @@ public abstract class GUID {
 
     public byte[] getHash() {
         return hash;
+    }
+
+    public String getHashHex() {
+        return hashHex;
     }
 }

@@ -1,5 +1,6 @@
 package model.interfaces;
 
+import IO.sources.ManifestStream;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
 import model.implementations.components.identity.Session;
@@ -11,6 +12,8 @@ import model.interfaces.components.entities.Atom;
 import model.interfaces.components.entities.Manifest;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.components.metadata.Metadata;
+import model.interfaces.policies.Policy;
 
 /**
  * This interface describes the set of allowed operations in the Sea of Stuff.
@@ -48,7 +51,7 @@ public interface SeaOfStuff {
 
     /**
      * Register this identity for the current session.
-     * Any operations following the register operation will be under the
+     * Any operations following the register operation will be associated with the
      * registered identity.
      *
      * @param identity
@@ -56,13 +59,11 @@ public interface SeaOfStuff {
      *
      * @see #unregister(IdentityToken)
      * @see Session
-     * Notes: change method name to subscribe?
      */
     IdentityToken register(Identity identity);
 
     /**
      * Unregister this identity from the current session.
-     * TODO
      *
      * @param identityToken
      * @throws UnknownIdentityException if the identityToken is unknown
@@ -86,17 +87,14 @@ public interface SeaOfStuff {
 
     /**
      * Get an atom given an AtomManifest.
-     * @param atomManifest
-     * @return
      *
-     * @see // TODO - policy
+     * @param atomManifest describing the atom to retrieve
+     * @return atom to retrieve
      */
     Atom getAtomContent(AtomManifest atomManifest);
 
     /**
      * Adds a CompoundManifest to the Sea of Stuff.
-     * FIXME - The content of the compound
-     * and its location are used to generate a Manifest
      *
      * @param compoundManifest to be added to the Sea of Stuff
      *
@@ -115,10 +113,10 @@ public interface SeaOfStuff {
     /**
      * Get the manifest that matches a given GUID.
      *
-     * @param guid                  of the manifest
+     * @param guid                  of the manifest.
      * @return Manifest             the manifest associated with the GUID.
      * @throws UnknownGUIDException if the GUID is not known within the currently
-     *                              explorable Sea of Stuff
+     *                              explorable Sea of Stuff.
      *
      * @see Manifest
      * @see GUID
@@ -147,24 +145,34 @@ public interface SeaOfStuff {
      */
     boolean verifyManifest(Manifest manifest);
 
-    // decide on how data is replicated, etc.
-    void setPolicy(/* TODO - policy */);
+    /**
+     * Set a policy for this current session. All operations in the sea of stuff
+     * will obey this policy.
+     *
+     * To remove a policy from the current session, call {@link #unsetPolicy(Policy)}
+     *
+     * @param policy to be set.
+     */
+    void setPolicy(Policy policy);
 
-    // TODO - how to add data to an existing asset?
+    /**
+     * Remove the specified policy from the current session.
+     *
+     * @param policy
+     */
+    void unsetPolicy(Policy policy);
+
+    /**
+     * Search the sea of stuff for manifests that match the specified metadata.
+     *
+     * @param metadata used for querying the sea of stuff.
+     * @return a stream of manifests that match the query.
+     */
+    ManifestStream findManifests(Metadata metadata);
 }
-
-// TODO - additional calls into the sea of stuff for searching and setting up policies
-
-// TODO - search methods
 
 // TODO - describe this workflow
 // XXX 1- get manifest from sea of stuff
 // XXX 2 - copy data
 // XXX 3 - create new manifest, which has similarities with other manifest.
 
-/*
-
-public ManifestStream findManifests(Metadata metadata);
-
-public ManifestStream getCompoundEntities(Manifest manifest);
-*/

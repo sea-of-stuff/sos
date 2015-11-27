@@ -1,6 +1,10 @@
 package IO.sources;
 
+import model.implementations.utils.Location;
+
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * The DataSource interface represents a service agnostic source for data.
@@ -16,5 +20,12 @@ public interface DataSource {
      *
      * @return the input stream of the data source.
      */
-    InputStream getInputStream();
+    InputStream getInputStream() throws IOException;
+
+    /**
+     * Get a collection of locations for this data source.
+     *
+     * @return collection of locations
+     */
+    Collection<Location> getLocations();
 }

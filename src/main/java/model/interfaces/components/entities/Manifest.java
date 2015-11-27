@@ -65,14 +65,15 @@ public interface Manifest {
     boolean isValid();
 
     /**
-    *
-    * Note that any java object inherits from Object and thus implements
-    * the method {@link Object#toString()}. However, it is good design that
-    * classes implementing Manifest DO implement this method.
-    *
-    * @return string representation of this manifest.
-    */
-    String toString();
+     * FIXME
+     *
+     * Note that any java object inherits from Object and thus implements
+     * the method {@link Object#toString()}. However, it is good design that
+     * classes implementing Manifest DO implement this method.
+     *
+     * @return string representation of this manifest.
+     */
+    String toJSON();
 
     /**
      * Get a string representation for the type of manifest.

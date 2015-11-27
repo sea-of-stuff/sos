@@ -68,7 +68,7 @@ public abstract class BasicManifest implements Manifest {
      * @return string representation of this manifest.
      */
     @Override
-    public abstract String toString();
+    public abstract String toJSON();
 
     @Override
     public GUID getGUID() {

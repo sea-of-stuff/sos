@@ -89,7 +89,7 @@ public class AssetManifest extends BasicManifest {
     }
 
     @Override
-    public String toString() {
+    public String toJSON() {
         return null;
     }
 

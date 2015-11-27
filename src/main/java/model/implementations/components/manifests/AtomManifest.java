@@ -6,8 +6,14 @@ import model.implementations.utils.Location;
 import model.interfaces.components.entities.Atom;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.Signature;
+import org.apache.xmlbeans.impl.common.ReaderInputStream;
+import org.json.JSONObject;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
 /**
@@ -38,9 +44,12 @@ public class AtomManifest extends BasicManifest {
      */
     protected AtomManifest(Atom atom) {
         super(ManifestConstants.ATOM);
-        contentGUID = new GUIDsha1(atom.getSource().getInputStream());
-
-        // TODO - how about locations?
+        try {
+            contentGUID = new GUIDsha1(atom.getSource().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        locations = atom.getSource().getLocations();
     }
 
     public GUID getGUIDContent() {
@@ -51,6 +60,7 @@ public class AtomManifest extends BasicManifest {
         return locations;
     }
 
+    @Override
     public boolean verify() {
         throw new NotImplementedException();
     }
@@ -61,18 +71,53 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    public String toString() {
-        throw new NotImplementedException();
+    public String toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put(ManifestConstants.KEY_TYPE, getManifestType());
+        obj.put(ManifestConstants.KEY_LOCATIONS, getLocations());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent());
+
+        return obj.toString();
     }
 
     @Override
     protected GUID generateGUID() {
-        return null;
+
+        GUID guid = null;
+        try {
+            String manifestStringRepresentation = generateManifestToHash();
+            StringReader reader = new StringReader(manifestStringRepresentation);
+            InputStream inputStream = new ReaderInputStream(reader, "UTF-8");
+            guid = new GUIDsha1(inputStream);
+
+            inputStream.close();
+            reader.close();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return guid;
     }
 
     @Override
     protected Signature generateSignature(Identity identity) {
-        throw new NotImplementedException();
+        return null;
+    }
+
+    /**
+     * Generates a JSON representation of the part of the manifest that are used
+     * to generate the GUID of this manifest.
+     *
+     * @return
+     */
+    private String generateManifestToHash() {
+        JSONObject obj = new JSONObject();
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_LOCATIONS, locations);
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+
+        return obj.toString();
     }
 
 }

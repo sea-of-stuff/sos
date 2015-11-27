@@ -30,6 +30,9 @@ public class Session {
     }
 
     public void removeIdentity(IdentityToken tokey) throws UnknownIdentityException {
+        if (tokey == null || identity == null)
+            throw new UnknownIdentityException();
+
         this.tokey = null;
         this.identity = null;
     }

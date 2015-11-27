@@ -1,5 +1,6 @@
 package model.implementations.utils;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class GUIDsha1 extends GUID {
     protected void hash(InputStream source) {
         try {
             hash = DigestUtils.sha1(source);
+            hashHex = Hex.encodeHexString(hash);
         } catch (IOException e) {
             e.printStackTrace();
         }
