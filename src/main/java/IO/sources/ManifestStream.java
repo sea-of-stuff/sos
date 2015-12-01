@@ -3,31 +3,38 @@ package IO.sources;
 import model.interfaces.components.entities.Manifest;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.stream.Stream;
 
 /**
  * Returns a stream of manifests from the Sea of Stuff.
  *
+ * We use Java 8 streams because they allow infinite data to be streamed and
+ * let us focus more on data manipulation, rather than data storage.
+ *
+ * Also considered using InputStreams, but they are too low-level and not the
+ * granularity we are looking for.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestStream extends InputStream {
+public class ManifestStream {
 
-    @Override
-    public int read() throws IOException {
-        return 0;
-    }
+    // TODO - not sure if JAVA8 Streams are a good choice. Need to explore more.
+    private Stream<Manifest> manifestStream;
 
     /**
-     * Get a manifest from the ManifestStream. The manifest is returned from
-     * the current and available view of the sea of stuff.
+     * Get a stream of manifests from the ManifestStream.
+     * The stream is returned from the current and available view of the sea of stuff.
      *
-     * If no manifest is available, then a null value is returned.
      *
-     * @return the next manifest in the stream.
+     * @return the stream of manifests.
      * @throws IOException if the input stream has been closed, or
      * if some other I/O error occurs.
      */
-    public Manifest readManifest() throws IOException {
-        return null;
+    public Stream<Manifest> getManifestStream() throws IOException {
+        return manifestStream;
+    }
+
+    private void addToStream(Manifest manifest) {
+        manifestStream = Stream.concat(manifestStream, Stream.of(manifest));
     }
 }

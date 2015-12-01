@@ -5,5 +5,8 @@ package configurations.IO;
  */
 public class SourceConfiguration {
 
+    // Suppresses default constructor, ensuring non-instantiability.
+    private SourceConfiguration() {}
+
     public static int INPUT_BUFFER_SIZE = 2048;
 }

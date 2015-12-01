@@ -84,14 +84,11 @@ public class AtomManifest extends BasicManifest {
     protected GUID generateGUID() {
 
         GUID guid = null;
-        try {
-            String manifestStringRepresentation = generateManifestToHash();
-            StringReader reader = new StringReader(manifestStringRepresentation);
-            InputStream inputStream = new ReaderInputStream(reader, "UTF-8");
-            guid = new GUIDsha1(inputStream);
+        String manifestStringRepresentation = generateManifestToHash();
+        try (StringReader reader = new StringReader(manifestStringRepresentation);
+             InputStream inputStream = new ReaderInputStream(reader, "UTF-8");) {
 
-            inputStream.close();
-            reader.close();
+            guid = new GUIDsha1(inputStream);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {

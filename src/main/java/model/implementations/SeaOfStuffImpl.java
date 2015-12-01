@@ -1,5 +1,6 @@
 package model.implementations;
 
+import IO.sources.ManifestStream;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
 import model.implementations.components.identity.Session;
@@ -13,6 +14,8 @@ import model.interfaces.components.entities.Atom;
 import model.interfaces.components.entities.Manifest;
 import model.interfaces.components.identity.Identity;
 import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.components.metadata.Metadata;
+import model.interfaces.policies.Policy;
 import model.services.ServiceManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -91,7 +94,17 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public void setPolicy() {
+    public void setPolicy(Policy policy) {
 
+    }
+
+    @Override
+    public void unsetPolicy(Policy policy) {
+
+    }
+
+    @Override
+    public ManifestStream findManifests(Metadata metadata) {
+        return null;
     }
 }

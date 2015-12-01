@@ -5,11 +5,14 @@ import model.interfaces.components.identity.Identity;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * The manifest factory is used to create manifests for atoms, compounds and assets.
+ * This factory is used to create manifests for atoms, compounds and assets.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ManifestFactory {
+
+    // Suppresses default constructor, ensuring non-instantiability.
+    private ManifestFactory() {}
 
     /**
      * Creates an AtomManifest given an atom. The manifest is signed using
@@ -21,23 +24,25 @@ public class ManifestFactory {
      */
     public static AtomManifest createAtomManifest(Atom atom, Identity identity) {
         AtomManifest manifest = new AtomManifest(atom);
-        //finaliseManifest(manifest, identity);
+        finaliseManifest(manifest, identity);
         return manifest;
     }
 
     /**
-     * TODO
+     * Creates a CompoundManifest.
+     *
      * @param identity
-     * @return
+     * @return a compound manifest
      */
     public static CompoundManifest createCompoundManifest(/* TODO */ Identity identity) {
         throw new NotImplementedException();
     }
 
     /**
-     * TODO
+     * Creates an AssetManifest.
+     *
      * @param identity
-     * @return
+     * @return an asset manifest
      */
     public static AssetManifest createAssetManifest(/* TODO */ Identity identity) {
         throw new NotImplementedException();

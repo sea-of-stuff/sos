@@ -50,7 +50,7 @@ public interface Manifest {
     *
     * {@link SeaOfStuff#verifyManifest(Manifest)}
     *
-    * @return
+    * @return true if the GUID of the manifest matches the content.
     */
     boolean verify();
 
@@ -65,19 +65,16 @@ public interface Manifest {
     boolean isValid();
 
     /**
-     * FIXME
+     * Get a JSON representation of this manifest.
      *
-     * Note that any java object inherits from Object and thus implements
-     * the method {@link Object#toString()}. However, it is good design that
-     * classes implementing Manifest DO implement this method.
-     *
-     * @return string representation of this manifest.
+     * @return JSON representation of this manifest.
      */
     String toJSON();
 
     /**
-     * Get a string representation for the type of manifest.
-     * @return
+     * Get the type of manifest as a string.
+     *
+     * @return type of manifest as a string.
      */
     String getManifestType();
 }

@@ -27,15 +27,14 @@ public class URLSource implements DataSource {
     @Override
     public InputStream getInputStream() throws IOException {
 
-        URLConnection urlConnection = null;
-        InputStream ret = null;
+        URLConnection urlConnection;
+        InputStream ret;
         try {
             urlConnection = new URL(url).openConnection();
             ret = urlConnection.getInputStream();
         } catch (IOException e) {
             throw new IOException();
         }
-
 
         return ret;
     }

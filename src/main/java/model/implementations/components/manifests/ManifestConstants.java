@@ -1,9 +1,14 @@
 package model.implementations.components.manifests;
 
 /**
+ * This class contains some useful constants for constructing manifests.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ManifestConstants {
+
+    // Suppresses default constructor, ensuring non-instantiability.
+    private ManifestConstants() {}
 
     public static final String ATOM = "Atom";
     public static final String COMPOUND = "Compound";

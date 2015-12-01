@@ -6,13 +6,18 @@ import model.implementations.utils.Location;
 import model.interfaces.components.entities.Atom;
 
 /**
+ * The AtomFactory abstracts the complexity in building an Atom given a DataSource.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AtomFactory {
 
+    // Suppresses default constructor, ensuring non-instantiability.
+    private AtomFactory() {}
+
     /**
-     * Makes an atom given a source - either memory or an arbitrary location.
-     * The atom is persisted in the Sea of Stuff at a given location TODO - not in all cases
+     * Makes an atom given a data source.
+     * We assume that the returned atom is persisted in the Sea of Stuff at a given location.
      *
      * @param source source of bytes used to create an Atom
      * @return Atom

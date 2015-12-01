@@ -1,5 +1,7 @@
 package model.interfaces.components.metadata;
 
+import model.interfaces.components.entities.Atom;
+
 /**
  * Metadata is data about assets, compounds or atoms that can be used to
  * facilitate data retrieval, usage, and management.
@@ -18,4 +20,10 @@ public interface Metadata {
      * @return
      */
     String getType();
+
+    /**
+     *
+     * @return
+     */
+    Atom toAtom();
 }

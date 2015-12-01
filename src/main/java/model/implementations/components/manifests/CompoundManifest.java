@@ -10,8 +10,8 @@ import java.util.Collection;
 /**
  * A compound is an immutable collection of (references to)
  * atoms or other compounds (contents).
- * FIXME - Compounds do not contain data
- * - they refer to data - and are identified by GUID (derived from their contents).
+ * Compounds do not contain data - they refer to data - and are identified by
+ * GUID (derived from their contents).
  *
  * <p>
  * Intuition: <br>
@@ -23,21 +23,19 @@ import java.util.Collection;
  * to be duplicated for each compound, since we can uniquely refer to the data
  * from the compound itself.
  *
- *
+ * <br>
  * Manifest describing a Compound.
- *
  * <p>
  * Manifest - GUID <br>
  * ManifestType - COMPOUND <br>
  * Timestamp - ? <br>
  * Signature - signature of the manifest <br>
- * Locations - list of GUIDs/locations <br>
- * Content - GUID Content
+ * Contents - list of labels x GUIDs
+ * TODO - optionally labelled!!!!
  * </p>
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-
 public class CompoundManifest extends BasicManifest {
 
     protected CompoundManifest() {

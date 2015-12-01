@@ -20,30 +20,51 @@ import model.interfaces.policies.Policy;
  * <br>
  * Client applications interact with the Sea of Stuff through this interface.
  * This interface abstracts the complexity of the data management in the Sea of Stuff,
- * such as data synching, data retrieval from remote, de-duplication or data
+ * such as data syncing, data retrieval from remote, de-duplication or data
  * redundancy.
  * <br>
  * The sea of stuff is a large collection of assets, compounds and atoms stored
  * across a collection of storage repositories.
  * The sea of stuff supports locatable persistent data via asset, compound and
  * atom GUIDs.
- * <br>
+ *
+ * <p>
  * The Sea of Stuff is divided into two logical sub-spaces: data and manifest space.
  * All manifests reside in the manifest space, while all other data is stored in the data space.
  * In reality, however, all data is stored in the data space.
- *
- * <p>
- * Entities:
- * </p>
- * <p>
- * Operations:
- * </p>
- * <p>
- * Session:
  * </p>
  *
- * TODO - model
- * TODO - metadata
+ * <p>
+ * The sea of stuff is made of few entities that represent data (atoms), aggregations
+ * of data (compounds), and allows these to be versioned and linked to other
+ * entities - possibly metadata (assets). Atoms do exist in the sea of stuff
+ * as sequence of bytes and are represented by an AtomManifest. Compounds and
+ * assets, instead, are metadata information about aggregations, versions and
+ * links. Therefore, compounds and assets exist only in the form of manifests -
+ * CompoundManifest and AssetManifest.
+ * </p>
+ *
+ * <p>
+ * The operations defines in this interface are of 3 categories: <br>
+ * 1. Manipulation of the sea of stuff - the operations change the state of the sea of stuff <br>
+ * 2. Behaviour - describe how the operations in (1) behave
+ * 3. XXX Local behaviours? session???
+ * </p>
+ *
+ * <p>
+ * Session and Policies:
+ * </p>
+ *
+ * <p>
+ * Metadata:
+ * </p>
+ *
+ * <p>
+ *     Assumptions:
+ *     - manifests can be inspected easily and quickly
+ *     - manifests can be stored efficiently
+ *
+ * </p>
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

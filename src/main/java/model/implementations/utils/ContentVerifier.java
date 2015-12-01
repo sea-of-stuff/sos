@@ -7,6 +7,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class ContentVerifier {
 
+    // Suppresses default constructor, ensuring non-instantiability.
+    private ContentVerifier() {}
+
     /**
      * Verify that the data at a given location and the given GUID match.
      *
