@@ -1,6 +1,6 @@
 package model.implementations;
 
-import IO.sources.ManifestStream;
+import IO.ManifestStream;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
 import model.implementations.components.identity.Session;
@@ -9,15 +9,17 @@ import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.components.manifests.ManifestFactory;
 import model.implementations.utils.GUID;
+import model.implementations.utils.Location;
 import model.interfaces.SeaOfStuff;
-import model.interfaces.components.entities.Atom;
 import model.interfaces.components.entities.Manifest;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.IdentityToken;
 import model.interfaces.components.metadata.Metadata;
+import model.interfaces.identity.Identity;
+import model.interfaces.identity.IdentityToken;
 import model.interfaces.policies.Policy;
 import model.services.ServiceManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.Collection;
 
 /**
  * Implementation class for the SeaOfStuff interface.
@@ -36,12 +38,12 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public IdentityToken register(Identity identity) {
+    public IdentityToken registerIdentity(Identity identity) {
         return session.addIdentity(identity);
     }
 
     @Override
-    public void unregister(IdentityToken identityToken) throws UnknownIdentityException {
+    public void unregisterIdentity(IdentityToken identityToken) throws UnknownIdentityException {
         session.removeIdentity(identityToken);
     }
 
@@ -50,9 +52,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(Atom atom) {
+    public AtomManifest addAtom(Collection<Location> locations) {
         Identity identity = session.getRegisteredIdentity();
-        AtomManifest manifest = ManifestFactory.createAtomManifest(atom, identity);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(locations, identity);
 
         // TODO - add atom and manifest to Sea of Stuff
 
@@ -60,7 +62,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Atom getAtomContent(AtomManifest atomManifest) {
+    public byte[] getAtomContent(AtomManifest atomManifest) {
 
         // TODO - get locations from atomManifest and retrieve atom.
 

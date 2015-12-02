@@ -1,6 +1,6 @@
 package model.implementations.components.identity;
 
-import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.identity.IdentityToken;
 
 import java.util.Objects;
 

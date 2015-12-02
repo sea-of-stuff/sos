@@ -1,7 +1,7 @@
 package model.implementations.utils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Objects;
 
 /**
@@ -9,15 +9,15 @@ import java.util.Objects;
  */
 public class StringLocation extends Location {
 
-    private Path path;
+    private URL url;
 
-    public StringLocation(String location) {
-        path = Paths.get(location);
+    public StringLocation(String location) throws MalformedURLException {
+        url = new URL(location);
     }
 
     @Override
-    public Path getLocationPath() {
-        return path;
+    public URL getLocationPath() {
+        return url;
     }
 
     @Override
@@ -25,11 +25,11 @@ public class StringLocation extends Location {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StringLocation that = (StringLocation) o;
-        return Objects.equals(path, that.path);
+        return Objects.equals(url, that.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path);
+        return Objects.hash(url);
     }
 }

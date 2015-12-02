@@ -1,4 +1,4 @@
-package IO.sources;
+package IO;
 
 import model.interfaces.components.entities.Manifest;
 

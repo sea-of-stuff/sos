@@ -1,8 +1,8 @@
 package model.implementations.components.identity;
 
 import model.exceptions.UnknownIdentityException;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.identity.Identity;
+import model.interfaces.identity.IdentityToken;
 
 /**
  * Represents the current session of this view of the Sea of Stuff
@@ -25,7 +25,6 @@ public class Session {
         this.identity = identity;
 
         nextToken = nextToken.next();
-
         return tokey;
     }
 

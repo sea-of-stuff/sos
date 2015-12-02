@@ -1,6 +1,6 @@
 package model.interfaces;
 
-import IO.sources.ManifestStream;
+import IO.ManifestStream;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
 import model.implementations.components.identity.Session;
@@ -8,12 +8,14 @@ import model.implementations.components.manifests.AssetManifest;
 import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.utils.GUID;
-import model.interfaces.components.entities.Atom;
+import model.implementations.utils.Location;
 import model.interfaces.components.entities.Manifest;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.IdentityToken;
 import model.interfaces.components.metadata.Metadata;
+import model.interfaces.identity.Identity;
+import model.interfaces.identity.IdentityToken;
 import model.interfaces.policies.Policy;
+
+import java.util.Collection;
 
 /**
  * This interface describes the set of allowed operations in the Sea of Stuff.
@@ -72,16 +74,16 @@ public interface SeaOfStuff {
 
     /**
      * Register this identity for the current session.
-     * Any operations following the register operation will be associated with the
+     * Any operations following the registerIdentity operation will be associated with the
      * registered identity.
      *
      * @param identity
      * @return
      *
-     * @see #unregister(IdentityToken)
+     * @see #unregisterIdentity(IdentityToken)
      * @see Session
      */
-    IdentityToken register(Identity identity);
+    IdentityToken registerIdentity(Identity identity);
 
     /**
      * Unregister this identity from the current session.
@@ -89,9 +91,9 @@ public interface SeaOfStuff {
      * @param identityToken
      * @throws UnknownIdentityException if the identityToken is unknown
      *
-     * @see #register(Identity)
+     * @see #registerIdentity(Identity)
      */
-    void unregister(IdentityToken identityToken) throws UnknownIdentityException;
+    void unregisterIdentity(IdentityToken identityToken) throws UnknownIdentityException;
 
     /**
      * Adds an atom to the Sea of Stuff. The content of the atom and it
@@ -104,7 +106,7 @@ public interface SeaOfStuff {
      * @see Atom
      * @see Manifest
      */
-    AtomManifest addAtom(Atom atom);
+    AtomManifest addAtom(Collection<Location> locations);
 
     /**
      * Get an atom given an AtomManifest.
@@ -112,7 +114,7 @@ public interface SeaOfStuff {
      * @param atomManifest describing the atom to retrieve
      * @return atom to retrieve
      */
-    Atom getAtomContent(AtomManifest atomManifest);
+    byte[] getAtomContent(AtomManifest atomManifest);
 
     /**
      * Adds a CompoundManifest to the Sea of Stuff.
@@ -191,9 +193,3 @@ public interface SeaOfStuff {
      */
     ManifestStream findManifests(Metadata metadata);
 }
-
-// TODO - describe this workflow
-// XXX 1- get manifest from sea of stuff
-// XXX 2 - copy data
-// XXX 3 - create new manifest, which has similarities with other manifest.
-

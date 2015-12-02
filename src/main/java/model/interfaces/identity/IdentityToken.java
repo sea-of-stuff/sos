@@ -1,4 +1,4 @@
-package model.interfaces.components.identity;
+package model.interfaces.identity;
 
 /**
  * TODO

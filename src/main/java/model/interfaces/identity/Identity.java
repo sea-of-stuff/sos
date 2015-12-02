@@ -1,4 +1,7 @@
-package model.interfaces.components.identity;
+package model.interfaces.identity;
+
+import model.exceptions.DecryptionException;
+import model.exceptions.EncryptionException;
 
 import java.nio.file.Path;
 import java.security.Key;
@@ -12,8 +15,8 @@ import java.security.Key;
  */
 public interface Identity {
 
-    byte[] encrypt(String text);
-    String decrypt(byte[] text);
+    byte[] encrypt(String text) throws EncryptionException;
+    String decrypt(byte[] text) throws DecryptionException;
 
     /**
      * Load identity - TODO - path to keys?

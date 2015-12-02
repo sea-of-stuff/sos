@@ -2,7 +2,6 @@ package model.interfaces.components.entities;
 
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
-import model.interfaces.components.identity.Signature;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -29,21 +28,6 @@ public interface Manifest {
      * @return the GUID of this manifest.
      */
     GUID getGUID();
-
-    /**
-     * Get the signature used for this manifest.
-     *
-     * @return  the signature used for this manifest.
-     *          Null if the manifest is not signed.
-     */
-    Signature getSignature();
-
-    /**
-     * Get the timestamp of this manifest.
-     *
-     * @return the timestamp of this manifest.s
-     */
-    long getTimestamp();
 
     /**
     * Verify this manifest's GUID against its content.

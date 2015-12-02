@@ -1,8 +1,10 @@
 package model.implementations.components.manifests;
 
-import model.interfaces.components.entities.Atom;
-import model.interfaces.components.identity.Identity;
+import model.implementations.utils.Location;
+import model.interfaces.identity.Identity;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.Collection;
 
 /**
  * This factory is used to create manifests for atoms, compounds and assets.
@@ -22,9 +24,10 @@ public class ManifestFactory {
      * @param identity used to sign the manifest
      * @return the manifest for the atom
      */
-    public static AtomManifest createAtomManifest(Atom atom, Identity identity) {
-        AtomManifest manifest = new AtomManifest(atom);
-        finaliseManifest(manifest, identity);
+    public static AtomManifest createAtomManifest(Collection<Location> locations, Identity identity) {
+        AtomManifest manifest = new AtomManifest(locations);
+        // XXX - move to internal constructor
+        // manifest.generateGUID();
         return manifest;
     }
 
@@ -48,19 +51,4 @@ public class ManifestFactory {
         throw new NotImplementedException();
     }
 
-    /**
-     * Generates the key-value pairs of the manifests that have not been passed
-     * by the user.
-     *
-     * The generated key-value pairs are:
-     * - GUID
-     * - Signature
-     *
-     * @param manifest
-     * @param identity
-     */
-    private static void finaliseManifest(BasicManifest manifest, Identity identity) {
-        manifest.generateGUID();
-        manifest.generateSignature(identity);
-    }
 }

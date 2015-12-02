@@ -1,8 +1,8 @@
 package model.implementations.components.identity;
 
 import model.exceptions.UnknownIdentityException;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.identity.Identity;
+import model.interfaces.identity.IdentityToken;
 
 import java.util.HashMap;
 import java.util.Map;

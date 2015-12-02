@@ -1,8 +1,8 @@
 package model.implementations.components.manifests;
 
 import model.implementations.utils.GUID;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.Signature;
+import model.interfaces.identity.Identity;
+import model.interfaces.identity.Signature;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
@@ -40,6 +40,8 @@ public class CompoundManifest extends BasicManifest {
 
     protected CompoundManifest() {
         super(ManifestConstants.COMPOUND);
+
+        // todo - generate guid
     }
 
     public Collection<GUID> getContents() {
@@ -66,7 +68,6 @@ public class CompoundManifest extends BasicManifest {
         return null;
     }
 
-    @Override
     protected Signature generateSignature(Identity identity) {
         return null;
     }

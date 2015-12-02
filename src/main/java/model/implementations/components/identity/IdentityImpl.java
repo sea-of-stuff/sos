@@ -1,7 +1,10 @@
 package model.implementations.components.identity;
 
 import configurations.identity.IdentityConfiguration;
-import model.interfaces.components.identity.Identity;
+import model.exceptions.DecryptionException;
+import model.exceptions.EncryptionException;
+import model.exceptions.KeyGenerationException;
+import model.interfaces.identity.Identity;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.crypto.Cipher;
@@ -17,10 +20,14 @@ import java.security.*;
  */
 public class IdentityImpl implements Identity {
 
+    private String name;
+    private String description;
+
+    // keys of this identity
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    public IdentityImpl() {
+    public IdentityImpl() throws KeyGenerationException {
         generateKeys();
     }
 
@@ -28,7 +35,7 @@ public class IdentityImpl implements Identity {
      * Generate key which contains a pair of private and public key.
      * Store the set of keys in appropriate files.
      */
-    public void generateKeys() {
+    public void generateKeys() throws KeyGenerationException {
         final KeyPair key = generateKeyPair();
 
         File privateKeyFile = createKeyFile(IdentityConfiguration.PRIVATE_KEY_FILE);
@@ -45,16 +52,14 @@ public class IdentityImpl implements Identity {
      * @param text in plain to be encrypted.
      * @return the encrypted text.
      */
-    public byte[] encrypt(String text) {
+    public byte[] encrypt(String text) throws EncryptionException {
         byte[] cipherText = null;
         try {
-            // get an RSA cipher object and print the provider
             final Cipher cipher = Cipher.getInstance(IdentityConfiguration.ALGORITHM);
-            // encrypt the plain text using the public key
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             cipherText = cipher.doFinal(text.getBytes());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new EncryptionException();
         }
         return cipherText;
     }
@@ -64,17 +69,14 @@ public class IdentityImpl implements Identity {
      * @param text to decrypt.
      * @return the plain text. Null if the input could not be decrypted.
      */
-    public String decrypt(byte[] text) {
+    public String decrypt(byte[] text) throws DecryptionException {
         byte[] dectyptedText = null;
         try {
-            // get an RSA cipher object and print the provider
             final Cipher cipher = Cipher.getInstance(IdentityConfiguration.ALGORITHM);
-
-            // decrypt the text using the private key
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             dectyptedText = cipher.doFinal(text);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new DecryptionException();
         }
 
         if (dectyptedText == null)
@@ -83,7 +85,7 @@ public class IdentityImpl implements Identity {
         return new String(dectyptedText);
     }
 
-    private KeyPair generateKeyPair() {
+    private KeyPair generateKeyPair() throws KeyGenerationException {
         KeyPair key = null;
         try {
             final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(IdentityConfiguration.ALGORITHM);
@@ -93,24 +95,24 @@ public class IdentityImpl implements Identity {
             publicKey = key.getPublic();
             privateKey = key.getPrivate();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new KeyGenerationException("Could not generate key pair");
         }
 
         return key;
 
     }
 
-    private File createKeyFile(String path) {
+    // Create files to store public and private key
+    private File createKeyFile(String path) throws KeyGenerationException {
         File file = new File(path);
 
-        // Create files to store public and private key
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
         }
         try {
             file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new KeyGenerationException("Could not save key to file");
         }
 
         return file;

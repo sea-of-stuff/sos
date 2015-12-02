@@ -1,9 +1,9 @@
 package model.implementations.components.manifests;
 
 import model.implementations.utils.GUID;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.Signature;
 import model.interfaces.components.metadata.Metadata;
+import model.interfaces.identity.Identity;
+import model.interfaces.identity.Signature;
 
 /**
  * An Asset is identified by an asset GUID. Unlike other GUIDs they are not

@@ -1,6 +1,6 @@
 package model.implementations.utils;
 
-import java.nio.file.Path;
+import java.net.URL;
 
 /**
  * Represents a location in the data-space within the Sea of Stuff.
@@ -13,6 +13,6 @@ public abstract class Location {
     /**
      * @return the location of the data
      */
-    public abstract Path getLocationPath();
+    public abstract URL getLocationPath();
 
 }

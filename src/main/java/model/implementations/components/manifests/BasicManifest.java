@@ -1,12 +1,9 @@
 package model.implementations.components.manifests;
 
+import model.exceptions.GuidGenerationException;
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.entities.Manifest;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.Signature;
-
-import java.time.Clock;
 
 /**
  * The BasicManifest defines the base implementation for all other manifests.
@@ -19,8 +16,6 @@ import java.time.Clock;
 public abstract class BasicManifest implements Manifest {
 
     private GUID guid;
-    private Signature signature;
-    private long timestamp;
     private final String manifestType;
 
     /**
@@ -31,7 +26,6 @@ public abstract class BasicManifest implements Manifest {
      */
     protected BasicManifest(String manifestType) {
         this.manifestType = manifestType;
-        this.timestamp = generateTimestamp();
     }
 
     /**
@@ -39,14 +33,7 @@ public abstract class BasicManifest implements Manifest {
      *
      * @return the GUID of this manifest.
      */
-    protected abstract GUID generateGUID();
-
-    /**
-     * Generate the signature for this manifest.
-     *
-     * @return the signature for this manifest.
-     */
-    protected abstract Signature generateSignature(Identity identity);
+    protected abstract GUID generateGUID() throws GuidGenerationException;
 
     /**
      * Verify this manifest's GUID against its content.
@@ -79,25 +66,6 @@ public abstract class BasicManifest implements Manifest {
         return this.guid;
     }
 
-    /**
-     * Get the signature for this manifest.
-     *
-     * @return the signature of this manifest.
-     */
-    @Override
-    public Signature getSignature() {
-        return this.signature;
-    }
-
-    private long generateTimestamp() {
-        Clock clock = Clock.systemDefaultZone();
-        return clock.millis();
-    }
-
-    @Override
-    public long getTimestamp() {
-        return this.timestamp;
-    }
 
     @Override
     public String getManifestType() {

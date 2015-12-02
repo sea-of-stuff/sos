@@ -1,11 +1,9 @@
 package model.implementations.components.manifests;
 
+import model.exceptions.GuidGenerationException;
 import model.implementations.utils.GUID;
 import model.implementations.utils.GUIDsha1;
 import model.implementations.utils.Location;
-import model.interfaces.components.entities.Atom;
-import model.interfaces.components.identity.Identity;
-import model.interfaces.components.identity.Signature;
 import org.apache.xmlbeans.impl.common.ReaderInputStream;
 import org.json.JSONObject;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -28,8 +26,6 @@ import java.util.Collection;
  * Content - GUID Content
  * </p>
  *
- * @see Atom
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AtomManifest extends BasicManifest {
@@ -40,16 +36,14 @@ public class AtomManifest extends BasicManifest {
     /**
      * Creates a partially valid atom manifest given an atom.
      *
-     * @param atom
+     * @param locations
      */
-    protected AtomManifest(Atom atom) {
+    protected AtomManifest(Collection<Location> locations) {
         super(ManifestConstants.ATOM);
-        try {
-            contentGUID = new GUIDsha1(atom.getSource().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        locations = atom.getSource().getLocations();
+
+        this.locations = locations;
+
+        // TODO - generate guid
     }
 
     public GUID getGUIDContent() {
@@ -81,7 +75,7 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    protected GUID generateGUID() {
+    protected GUID generateGUID() throws GuidGenerationException {
 
         GUID guid = null;
         String manifestStringRepresentation = generateManifestToHash();
@@ -90,16 +84,11 @@ public class AtomManifest extends BasicManifest {
 
             guid = new GUIDsha1(inputStream);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new GuidGenerationException("UnsupportedEncoding");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new GuidGenerationException("IO exception");
         }
         return guid;
-    }
-
-    @Override
-    protected Signature generateSignature(Identity identity) {
-        return null;
     }
 
     /**
@@ -111,7 +100,6 @@ public class AtomManifest extends BasicManifest {
     private String generateManifestToHash() {
         JSONObject obj = new JSONObject();
         obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_LOCATIONS, locations);
         obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
 
         return obj.toString();

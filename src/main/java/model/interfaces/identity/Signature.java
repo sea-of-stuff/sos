@@ -1,4 +1,4 @@
-package model.interfaces.components.identity;
+package model.interfaces.identity;
 
 
 import model.interfaces.components.entities.Manifest;
