@@ -1,16 +1,14 @@
 package model.implementations.components.manifests;
 
-import IO.sources.DataSource;
-import IO.utils.StreamsUtils;
-import model.interfaces.components.entities.Atom;
-import model.interfaces.components.identity.Identity;
-import org.powermock.core.classloader.annotations.PrepareForTest;
+
+import model.implementations.utils.Location;
+import model.interfaces.identity.Identity;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -18,18 +16,12 @@ import static org.testng.Assert.assertEquals;
  */
 public class AtomManifestTest {
 
-    @PrepareForTest(ManifestFactory.class)
     @Test
     public void testManifestType() throws IOException {
-        DataSource dataSourceMocked = mock(DataSource.class);
-
-        Atom atomMocked = mock(Atom.class);
-        when(atomMocked.getSource()).thenReturn(dataSourceMocked);
-        when(dataSourceMocked.getInputStream()).thenReturn(StreamsUtils.StringToInputStream("TEST"));
-
+        Collection<Location> mySet = (Collection<Location>) mock(Collection.class);
         Identity identityMocked = mock(Identity.class);
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(atomMocked, identityMocked);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(mySet, identityMocked);
 
         assertEquals(atomManifest.getManifestType(), "Atom");
     }

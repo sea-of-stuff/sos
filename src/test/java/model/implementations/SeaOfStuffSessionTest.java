@@ -2,7 +2,7 @@ package model.implementations;
 
 import model.exceptions.UnknownIdentityException;
 import model.interfaces.SeaOfStuff;
-import model.interfaces.components.identity.IdentityToken;
+import model.interfaces.identity.IdentityToken;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ public class SeaOfStuffSessionTest {
     public void testRegister() throws Exception {
 //        Identity mockedIdentity = mock(Identity.class);
 //
-//        IdentityToken tokey = model.register((mockedIdentity));
+//        IdentityToken tokey = model.registerIdentity((mockedIdentity));
 //        Session session = model.getSession();
 //        Map<IdentityToken, Identity> tokeys = session.getAllRegisteredIdentities();
 //
@@ -43,8 +43,8 @@ public class SeaOfStuffSessionTest {
     public void testUnregister() throws Exception, UnknownIdentityException {
 //        Identity mockedIdentity = mock(Identity.class);
 //
-//        IdentityToken tokey = model.register((mockedIdentity));
-//        model.unregister(tokey);
+//        IdentityToken tokey = model.registerIdentity((mockedIdentity));
+//        model.unregisterIdentity(tokey);
 //        Session session = model.getSession();
 //        Map<IdentityToken, Identity> tokeys = session.getAllRegisteredIdentities();
 //
@@ -54,7 +54,7 @@ public class SeaOfStuffSessionTest {
     @Test (expectedExceptions = UnknownIdentityException.class)
     public void testUnregisterWithException() throws Exception, UnknownIdentityException {
         IdentityToken mockedTokey = mock(IdentityToken.class);
-        model.unregister(mockedTokey);
+        model.unregisterIdentity(mockedTokey);
     }
 
 }

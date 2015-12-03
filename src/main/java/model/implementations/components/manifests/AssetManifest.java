@@ -98,7 +98,6 @@ public class AssetManifest extends BasicManifest {
         return null;
     }
 
-    @Override
     protected Signature generateSignature(Identity identity) {
         return null;
     }
