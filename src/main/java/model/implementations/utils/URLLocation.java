@@ -7,11 +7,11 @@ import java.util.Objects;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StringLocation extends Location {
+public class URLLocation extends Location {
 
     private URL url;
 
-    public StringLocation(String location) throws MalformedURLException {
+    public URLLocation(String location) throws MalformedURLException {
         url = new URL(location);
     }
 
@@ -24,7 +24,7 @@ public class StringLocation extends Location {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StringLocation that = (StringLocation) o;
+        URLLocation that = (URLLocation) o;
         return Objects.equals(url, that.url);
     }
 

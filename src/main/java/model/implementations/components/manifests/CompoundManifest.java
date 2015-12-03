@@ -1,9 +1,9 @@
 package model.implementations.components.manifests;
 
+import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
-import model.interfaces.identity.Identity;
-import model.interfaces.identity.Signature;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Collection;
 
@@ -28,24 +28,30 @@ import java.util.Collection;
  * <p>
  * Manifest - GUID <br>
  * ManifestType - COMPOUND <br>
- * Timestamp - ? <br>
  * Signature - signature of the manifest <br>
- * Contents - list of labels x GUIDs
- * TODO - optionally labelled!!!!
+ * Contents - contents of this compound
  * </p>
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CompoundManifest extends BasicManifest {
+public class CompoundManifest extends SignedManifest {
 
-    protected CompoundManifest() {
+    private Collection<Content> contents;
+
+    protected CompoundManifest(Collection<Content> contents) {
         super(ManifestConstants.COMPOUND);
 
-        // todo - generate guid
+        this.contents = contents;
+
+        make();
     }
 
-    public Collection<GUID> getContents() {
-        throw new NotImplementedException();
+    private void make() {
+        // TODO
+    }
+
+    public Collection<Content> getContents() {
+        return contents;
     }
 
     @Override
@@ -55,12 +61,32 @@ public class CompoundManifest extends BasicManifest {
 
     @Override
     public boolean isValid() {
-        return false;
+        // TODO - test for signature?
+        return super.isValid() && !contents.isEmpty();
     }
 
     @Override
-    public String toJSON() {
-        return null;
+    public JSONObject toJSON() {
+        JSONObject obj = super.toJSON();
+
+        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.put(ManifestConstants.KEY_CONTENTS, getContentsInJSON());
+
+        return obj;
+    }
+
+    @Override
+    public String toString() {
+        return toJSON().toString();
+    }
+
+    private JSONArray getContentsInJSON() {
+        JSONArray arr = new JSONArray();
+        for (Content content : contents) {
+            arr.put(content.toJSON());
+        }
+
+        return arr;
     }
 
     @Override
@@ -68,8 +94,5 @@ public class CompoundManifest extends BasicManifest {
         return null;
     }
 
-    protected Signature generateSignature(Identity identity) {
-        return null;
-    }
 
 }

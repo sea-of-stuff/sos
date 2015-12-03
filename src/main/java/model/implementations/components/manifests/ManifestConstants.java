@@ -15,7 +15,13 @@ public class ManifestConstants {
     public static final String ASSET = "Asset";
 
     public static final String KEY_TYPE = "Type";
+    public static final String KEY_MANIFEST_GUID = "ManifestGUID";
+    public static final String KEY_SIGNATURE ="Signature";
     public static final String KEY_LOCATIONS = "Locations";
     public static final String KEY_CONTENT_GUID = "ContentGUID";
+    public static final String KEY_CONTENTS = "Contents";
+
+    public static final String KEY_GUID = "GUID";
+    public static final String KEY_VALUE = "Value";
 
 }

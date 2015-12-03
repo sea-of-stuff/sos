@@ -1,5 +1,7 @@
 package model.implementations.utils;
 
+import model.exceptions.GuidGenerationException;
+
 import java.io.InputStream;
 
 /**
@@ -13,11 +15,11 @@ public abstract class GUID {
     protected byte[] hash;
     protected String hashHex;
 
-    public GUID(InputStream source) {
+    public GUID(InputStream source) throws GuidGenerationException {
         hash(source);
     }
 
-    protected abstract void hash(InputStream source);
+    protected abstract void hash(InputStream source) throws GuidGenerationException;
 
     public abstract String getAlgorithm();
 

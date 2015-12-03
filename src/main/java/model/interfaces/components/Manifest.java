@@ -1,7 +1,8 @@
-package model.interfaces.components.entities;
+package model.interfaces.components;
 
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
+import org.json.JSONObject;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -49,16 +50,16 @@ public interface Manifest {
     boolean isValid();
 
     /**
-     * Get a JSON representation of this manifest.
-     *
-     * @return JSON representation of this manifest.
-     */
-    String toJSON();
-
-    /**
      * Get the type of manifest as a string.
      *
      * @return type of manifest as a string.
      */
     String getManifestType();
+
+    /**
+     * Get a JSON representation of this manifest.
+     *
+     * @return JSON representation of this manifest.
+     */
+    JSONObject toJSON();
 }

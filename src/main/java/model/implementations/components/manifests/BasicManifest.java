@@ -3,7 +3,8 @@ package model.implementations.components.manifests;
 import model.exceptions.GuidGenerationException;
 import model.implementations.utils.GUID;
 import model.interfaces.SeaOfStuff;
-import model.interfaces.components.entities.Manifest;
+import model.interfaces.components.Manifest;
+import org.json.JSONObject;
 
 /**
  * The BasicManifest defines the base implementation for all other manifests.
@@ -51,7 +52,10 @@ public abstract class BasicManifest implements Manifest {
      * @return true if the manifest is valid.
      */
     @Override
-    public abstract boolean isValid();
+    public boolean isValid() {
+        // TODO - test for guid and manifest type
+        return false;
+    }
 
     /**
      * Transform the content of this manifest to a JSON representation.
@@ -59,13 +63,19 @@ public abstract class BasicManifest implements Manifest {
      * @return JSON representation of this manifest.
      */
     @Override
-    public abstract String toJSON();
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_MANIFEST_GUID, guid);
+        obj.put(ManifestConstants.KEY_TYPE, manifestType);
+
+        return obj;
+    }
 
     @Override
     public GUID getGUID() {
         return this.guid;
     }
-
 
     @Override
     public String getManifestType() {

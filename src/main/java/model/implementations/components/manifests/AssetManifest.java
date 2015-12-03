@@ -1,9 +1,9 @@
 package model.implementations.components.manifests;
 
+import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
-import model.interfaces.components.metadata.Metadata;
-import model.interfaces.identity.Identity;
-import model.interfaces.identity.Signature;
+import model.interfaces.components.Metadata;
+import org.json.JSONObject;
 
 /**
  * An Asset is identified by an asset GUID. Unlike other GUIDs they are not
@@ -22,7 +22,7 @@ import model.interfaces.identity.Signature;
  * Timestamp - ? <br>
  * Signature - ? <br>
  * Previous Asset - GUID <br>
- * Union - GUID <br>
+ * Content - GUID <br>
  * Metadata - GUID
  * </p>
  *
@@ -30,10 +30,42 @@ import model.interfaces.identity.Signature;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifest extends BasicManifest {
+public class AssetManifest extends SignedManifest {
 
-    protected AssetManifest() {
+    private Content content;
+    private GUID previous;
+    private GUID metadata;
+
+    protected AssetManifest(Content content) {
         super(ManifestConstants.ASSET);
+        this.content = content;
+
+        make();
+    }
+
+    protected AssetManifest(GUID previous, Content content) {
+        this(content);
+        this.previous = previous;
+
+        make();
+    }
+
+    protected AssetManifest(GUID previous, Content content, GUID metadata) {
+        this(previous, content);
+        this.metadata = metadata;
+
+        make();
+    }
+
+    protected AssetManifest(Content content, GUID metadata) {
+        this(content);
+        this.metadata = metadata;
+
+        make();
+    }
+
+    private void make() {
+        // TODO
     }
 
     /**
@@ -89,16 +121,12 @@ public class AssetManifest extends BasicManifest {
     }
 
     @Override
-    public String toJSON() {
+    public JSONObject toJSON() {
         return null;
     }
 
     @Override
     protected GUID generateGUID() {
-        return null;
-    }
-
-    protected Signature generateSignature(Identity identity) {
         return null;
     }
 

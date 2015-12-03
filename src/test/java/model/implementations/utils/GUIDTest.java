@@ -1,6 +1,7 @@
 package model.implementations.utils;
 
 import IO.utils.StreamsUtils;
+import model.exceptions.GuidGenerationException;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
@@ -29,6 +30,15 @@ public class GUIDTest {
     public void testGetHashHexAndSize() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(TEST_STRING);
         GUID guid = new GUIDsha1(inputStreamFake);
+
+        assertEquals(SHA_1_SIZE_IN_BYTES, guid.getHashSize());
+        assertEquals(TEST_STRING_HASHED, guid.getHashHex());
+        assertEquals(TEST_STRING_HASHED, guid.toString());
+    }
+
+    @Test (expectedExceptions = GuidGenerationException.class)
+    public void testNoInputStream() throws Exception {
+        GUID guid = new GUIDsha1(null);
 
         assertEquals(SHA_1_SIZE_IN_BYTES, guid.getHashSize());
         assertEquals(TEST_STRING_HASHED, guid.getHashHex());

@@ -1,4 +1,4 @@
-package model.interfaces.components.metadata;
+package model.interfaces.components;
 
 /**
  * Metadata is data about assets, compounds or atoms that can be used to

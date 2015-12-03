@@ -9,8 +9,8 @@ import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.utils.GUID;
 import model.implementations.utils.Location;
-import model.interfaces.components.entities.Manifest;
-import model.interfaces.components.metadata.Metadata;
+import model.interfaces.components.Manifest;
+import model.interfaces.components.Metadata;
 import model.interfaces.identity.Identity;
 import model.interfaces.identity.IdentityToken;
 import model.interfaces.policies.Policy;
@@ -65,6 +65,8 @@ import java.util.Collection;
  *     Assumptions:
  *     - manifests can be inspected easily and quickly
  *     - manifests can be stored efficiently
+ *     - manifests can be represented in JSON.
+ *     We use JSON for simplicity, but it could be any other format in theory.
  *
  * </p>
  *

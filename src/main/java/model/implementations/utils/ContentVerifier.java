@@ -3,6 +3,8 @@ package model.implementations.utils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
+ * FIXME - rename. It seems like this contentverifier is strictly linked to #Content class
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContentVerifier {

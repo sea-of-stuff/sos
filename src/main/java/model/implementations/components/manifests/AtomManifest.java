@@ -43,7 +43,11 @@ public class AtomManifest extends BasicManifest {
 
         this.locations = locations;
 
-        // TODO - generate guid
+        make();
+    }
+
+    private void make() {
+        // TODO
     }
 
     public GUID getGUIDContent() {
@@ -65,13 +69,13 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    public String toJSON() {
-        JSONObject obj = new JSONObject();
-        obj.put(ManifestConstants.KEY_TYPE, getManifestType());
+    public JSONObject toJSON() {
+        JSONObject obj = super.toJSON();
+
         obj.put(ManifestConstants.KEY_LOCATIONS, getLocations());
         obj.put(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent());
 
-        return obj.toString();
+        return obj;
     }
 
     @Override
