@@ -1,7 +1,7 @@
 package model.interfaces.components;
 
+import model.exceptions.GuidGenerationException;
 import model.implementations.utils.GUID;
-import model.interfaces.SeaOfStuff;
 import org.json.JSONObject;
 
 /**
@@ -31,13 +31,13 @@ public interface Manifest {
     GUID getManifestGUID();
 
     /**
-    * Verify this manifest's GUID against its content.
-    *
-    * {@link SeaOfStuff#verifyManifest(Manifest)}
-    *
-    * @return true if the GUID of the manifest matches the content.
-    */
-    boolean verify();
+     * Verify this manifest's GUID against its content.
+     *
+     * @return true if the GUID of the manifest matches the content.
+     * @throws GuidGenerationException if the GUIDs of the manifests could not be generated
+     *                                  due to IO, network or other issues.
+     */
+    boolean verify() throws GuidGenerationException;
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

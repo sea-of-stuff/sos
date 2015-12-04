@@ -6,7 +6,6 @@ import constants.Hashes;
 import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Location;
 import model.implementations.utils.URLLocation;
-import model.interfaces.identity.Identity;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 
@@ -38,9 +37,7 @@ public class AtomManifestTest {
         when(locations.iterator())
                 .thenReturn(Collections.emptyIterator());
 
-        Identity identityMocked = mock(Identity.class);
-
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations, identityMocked);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
     }
 
     @Test
@@ -58,9 +55,7 @@ public class AtomManifestTest {
 
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(locationMocked);
-
-        Identity identityMocked = mock(Identity.class);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations, identityMocked);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
 
         assertEquals(atomManifest.getLocations(), locations);
     }
@@ -71,9 +66,7 @@ public class AtomManifestTest {
 
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);
-
-        Identity identityMocked = mock(Identity.class);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations, identityMocked);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
 
         JSONAssert.assertEquals(EXPECT_JSON_MANIFEST, atomManifest.toJSON().toString(), true);
     }

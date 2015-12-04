@@ -20,6 +20,8 @@ public class ManifestConstants {
     public static final String KEY_LOCATIONS = "Locations";
     public static final String KEY_CONTENT_GUID = "ContentGUID";
     public static final String KEY_CONTENTS = "Contents";
+    public static final String KEY_PREVIOUS_GUID = "PreviousGUID";
+    public static final String KEY_METADATA_GUID = "MetadataGUID";
 
     public static final String KEY_GUID = "GUID";
     public static final String KEY_VALUE = "Value";

@@ -1,8 +1,11 @@
 package model.implementations.components.manifests;
 
+import model.exceptions.GuidGenerationException;
+import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
 import model.interfaces.components.Metadata;
+import model.interfaces.identity.Identity;
 import org.json.JSONObject;
 
 /**
@@ -19,7 +22,6 @@ import org.json.JSONObject;
  * Manifest - GUID <br>
  * Asset - GUID <br>
  * ManifestType - ASSET <br>
- * Timestamp - ? <br>
  * Signature - ? <br>
  * Previous Asset - GUID <br>
  * Content - GUID <br>
@@ -32,40 +34,56 @@ import org.json.JSONObject;
  */
 public class AssetManifest extends SignedManifest {
 
+    private GUID incarnation;
     private Content content;
     private GUID previous;
     private GUID metadata;
 
-    protected AssetManifest(Content content) {
-        super(ManifestConstants.ASSET);
+    protected AssetManifest(Content content, Identity identity)
+            throws ManifestNotMadeException {
+        super(identity, ManifestConstants.ASSET);
         this.content = content;
 
         make();
     }
 
-    protected AssetManifest(GUID previous, Content content) {
-        this(content);
+    protected AssetManifest(GUID previous, Content content, Identity identity)
+            throws ManifestNotMadeException {
+        this(content, identity);
         this.previous = previous;
 
         make();
     }
 
-    protected AssetManifest(GUID previous, Content content, GUID metadata) {
-        this(previous, content);
+    protected AssetManifest(GUID previous, Content content, GUID metadata, Identity identity)
+            throws ManifestNotMadeException {
+        this(previous, content, identity);
         this.metadata = metadata;
 
         make();
     }
 
-    protected AssetManifest(Content content, GUID metadata) {
-        this(content);
+    protected AssetManifest(Content content, GUID metadata, Identity identity)
+            throws ManifestNotMadeException {
+        this(content, identity);
         this.metadata = metadata;
 
         make();
     }
 
-    private void make() {
-        // TODO
+    private void make() throws ManifestNotMadeException {
+
+        try {
+            generateSignature(null);
+        } catch (Exception e) {
+            // TODO throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateManifestGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
     }
 
     /**
@@ -76,27 +94,27 @@ public class AssetManifest extends SignedManifest {
      * @see GUID
      */
     public GUID getAssetGUID() {
-        return null;
+        return incarnation;
     }
 
     /**
-     * Get the previous asset's manifest of a given asset.
+     * Get the previous asset's GUID of a given asset.
      *
-     * @return the previous asset.
+     * @return the previous asset's GUID
      *         Null if the asset does not have a previous one.
      *
      */
-    public AssetManifest getPreviousManifest() {
-        return null;
+    public GUID getPreviousManifest() {
+        return previous;
     }
 
     /**
-     * Get the union of this asset via a GUID reference within the Sea of Stuff.
+     * Get the content's GUID of this asset.
      *
-     * @return GUID of the union of this asset.
+     * @return GUID of the content of this asset.
      */
-    public GUID getGUIDUnion() {
-        return null;
+    public GUID getContentGUID() {
+        return content.getGUID();
     }
 
     /**
@@ -107,8 +125,8 @@ public class AssetManifest extends SignedManifest {
      *
      * @see Metadata
      */
-    public AssetManifest getMetadata() {
-        return null;
+    public GUID getMetadataGUID() {
+        return metadata;
     }
 
     public boolean verify() {
@@ -122,10 +140,27 @@ public class AssetManifest extends SignedManifest {
 
     @Override
     public JSONObject toJSON() {
-        return null;
+        JSONObject obj = super.toJSON();
+
+        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
+        obj.put(ManifestConstants.KEY_PREVIOUS_GUID, previous);
+        obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
+
+        return obj;
     }
 
     @Override
-    protected String generateManifestToHash() { return null; }
+    protected String generateManifestToHash() {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
+        obj.put(ManifestConstants.KEY_PREVIOUS_GUID, previous);
+        obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
+
+        return obj.toString();
+    }
 
 }

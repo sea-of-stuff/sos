@@ -55,7 +55,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException {
         Identity identity = session.getRegisteredIdentity();
-        AtomManifest manifest = ManifestFactory.createAtomManifest(locations, identity);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(locations);
 
         // TODO - add atom and manifest to Sea of Stuff
 

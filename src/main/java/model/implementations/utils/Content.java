@@ -24,6 +24,10 @@ public class Content {
         this.value = value;
     }
 
+    public GUID getGUID() {
+        return guid;
+    }
+
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
 

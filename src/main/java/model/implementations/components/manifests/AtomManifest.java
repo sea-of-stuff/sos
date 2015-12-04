@@ -6,7 +6,6 @@ import model.exceptions.SourceLocationException;
 import model.implementations.utils.GUID;
 import model.implementations.utils.Location;
 import org.json.JSONObject;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +17,6 @@ import java.util.Collection;
  * <p>
  * Manifest - GUID <br>
  * ManifestType - ATOM <br>
- * Timestamp - ? <br>
- * Signature - signature of the manifest <br>
  * Locations - list of locations <br>
  * Content - GUID Content
  * </p>
@@ -38,14 +35,12 @@ public class AtomManifest extends BasicManifest {
      */
     protected AtomManifest(Collection<Location> locations) throws ManifestNotMadeException {
         super(ManifestConstants.ATOM);
-
         this.locations = locations;
 
         make();
     }
 
     private void make() throws ManifestNotMadeException {
-
         try {
             contentGUID = generateContentGUID();
         } catch (GuidGenerationException e) {
@@ -106,14 +101,43 @@ public class AtomManifest extends BasicManifest {
         return locations;
     }
 
+    /**
+     * Verify that the sources at all locations match the content GUID.
+     *
+     * @return
+     */
     @Override
-    public boolean verify() {
-        throw new NotImplementedException();
+    public boolean verify() throws GuidGenerationException {
+        if (contentGUID == null)
+            return false;
+
+        for(Location location:locations) {
+
+            InputStream dataStream = null;
+            try {
+                dataStream = tryLocation(location);
+            } catch (SourceLocationException e) {
+                continue;
+            }
+
+            if (!verifyStream(dataStream)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {
+        return inputStream != null &&
+                contentGUID == generateGUID(inputStream);
     }
 
     @Override
     public boolean isValid() {
-        throw new NotImplementedException();
+        return super.isValid() &&
+                !locations.isEmpty() &&
+                isGUIDValid(contentGUID);
     }
 
     @Override

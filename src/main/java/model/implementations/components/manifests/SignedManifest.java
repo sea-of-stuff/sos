@@ -8,10 +8,12 @@ import model.interfaces.identity.Signature;
  */
 public abstract class SignedManifest extends BasicManifest {
 
+    private Identity identity;
     private Signature signature;
 
-    protected SignedManifest(String type) {
-        super(type);
+    protected SignedManifest(Identity identity, String manifestType) {
+        super(manifestType);
+        this.identity = identity;
     }
 
     public Signature getSignature() {

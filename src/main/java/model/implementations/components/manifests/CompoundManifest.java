@@ -4,8 +4,10 @@ import model.exceptions.GuidGenerationException;
 import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
+import model.interfaces.identity.Identity;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 
@@ -41,18 +43,15 @@ public class CompoundManifest extends SignedManifest {
     private GUID contentGUID;
     private Collection<Content> contents;
 
-    protected CompoundManifest(Collection<Content> contents) throws ManifestNotMadeException {
-        super(ManifestConstants.COMPOUND);
+    protected CompoundManifest(Collection<Content> contents, Identity identity)
+            throws ManifestNotMadeException {
+        super(identity, ManifestConstants.COMPOUND);
         this.contents = contents;
 
         make();
     }
 
     private void make() throws ManifestNotMadeException {
-
-        // TODO - generate signature
-        // generate content gui
-        // generate manifest guid
 
         try {
             contentGUID = generateContentGUID();
@@ -83,13 +82,16 @@ public class CompoundManifest extends SignedManifest {
 
     @Override
     public boolean verify() {
-        return false;
+        // TODO - verify the GUID of the content against the actual content.
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean isValid() {
         // TODO - test for signature?
-        return super.isValid() && !contents.isEmpty();
+        return super.isValid() &&
+                !contents.isEmpty() &&
+                isGUIDValid(contentGUID);
     }
 
     @Override

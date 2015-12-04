@@ -48,7 +48,7 @@ public abstract class BasicManifest implements Manifest {
      * @return true if the GUID of the manifest matches the content.
      */
     @Override
-    public abstract boolean verify();
+    public abstract boolean verify() throws GuidGenerationException;
 
     /**
      * Checks whether this manifest contains valid key-value entries.

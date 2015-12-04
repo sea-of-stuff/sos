@@ -4,6 +4,7 @@ import IO.utils.StreamsUtils;
 import constants.Hashes;
 import model.implementations.utils.Content;
 import model.implementations.utils.GUIDsha1;
+import model.interfaces.identity.Identity;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static org.mockito.Mockito.mock;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -19,6 +22,7 @@ public class CompoundManifestTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
+                    "\"ManifestGUID\":\"f2026bc53f4cc9790d89bba1e35265eede5668a9\"," +
                     "\"Contents\":" +
                     "[{" +
                     "\"Type\":\"label\"," +
@@ -28,6 +32,7 @@ public class CompoundManifestTest {
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
+                    "\"ManifestGUID\":\"b554d48a4df7df1de0a5242950e9d5d1673f05f2\"," +
                     "\"Contents\":" +
                     "[]}";
 
@@ -40,7 +45,8 @@ public class CompoundManifestTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compoundManifest = new CompoundManifest(contents);
+        Identity identityMocked = mock(Identity.class);
+        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
     }
@@ -50,7 +56,8 @@ public class CompoundManifestTest {
 
         Collection<Content> contents = Collections.EMPTY_LIST;
 
-        CompoundManifest compoundManifest = new CompoundManifest(contents);
+        Identity identityMocked = mock(Identity.class);
+        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
     }
