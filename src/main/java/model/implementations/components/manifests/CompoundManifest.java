@@ -1,5 +1,7 @@
 package model.implementations.components.manifests;
 
+import model.exceptions.GuidGenerationException;
+import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
 import org.json.JSONArray;
@@ -36,18 +38,43 @@ import java.util.Collection;
  */
 public class CompoundManifest extends SignedManifest {
 
+    private GUID contentGUID;
     private Collection<Content> contents;
 
-    protected CompoundManifest(Collection<Content> contents) {
+    protected CompoundManifest(Collection<Content> contents) throws ManifestNotMadeException {
         super(ManifestConstants.COMPOUND);
-
         this.contents = contents;
 
         make();
     }
 
-    private void make() {
-        // TODO
+    private void make() throws ManifestNotMadeException {
+
+        // TODO - generate signature
+        // generate content gui
+        // generate manifest guid
+
+        try {
+            contentGUID = generateContentGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateSignature(null);
+        } catch (Exception e) {
+            // TODO throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateManifestGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
+    }
+
+    private GUID generateContentGUID() throws GuidGenerationException {
+        return generateGUID(getContentsInJSON().toString());
     }
 
     public Collection<Content> getContents() {
@@ -90,8 +117,14 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    protected GUID generateGUID() {
-        return null;
+    protected String generateManifestToHash() {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+
+        return obj.toString();
     }
 
 

@@ -2,9 +2,18 @@ package model.implementations.components.manifests;
 
 import model.exceptions.GuidGenerationException;
 import model.implementations.utils.GUID;
+import model.implementations.utils.GUIDsha1;
 import model.interfaces.SeaOfStuff;
 import model.interfaces.components.Manifest;
+import org.apache.xmlbeans.impl.common.ReaderInputStream;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The BasicManifest defines the base implementation for all other manifests.
@@ -16,7 +25,9 @@ import org.json.JSONObject;
  */
 public abstract class BasicManifest implements Manifest {
 
-    private GUID guid;
+    Pattern hexPattern = Pattern.compile("^[0-9a-fA-F]+$");
+
+    private GUID manifestGuid;
     private final String manifestType;
 
     /**
@@ -28,13 +39,6 @@ public abstract class BasicManifest implements Manifest {
     protected BasicManifest(String manifestType) {
         this.manifestType = manifestType;
     }
-
-    /**
-     * Generate the GUID of this manifest.
-     *
-     * @return the GUID of this manifest.
-     */
-    protected abstract GUID generateGUID() throws GuidGenerationException;
 
     /**
      * Verify this manifest's GUID against its content.
@@ -53,8 +57,7 @@ public abstract class BasicManifest implements Manifest {
      */
     @Override
     public boolean isValid() {
-        // TODO - test for guid and manifest type
-        return false;
+        return isGUIDValid(manifestGuid) && isManifestTypeValid();
     }
 
     /**
@@ -66,20 +69,86 @@ public abstract class BasicManifest implements Manifest {
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
 
-        obj.put(ManifestConstants.KEY_MANIFEST_GUID, guid);
+        obj.put(ManifestConstants.KEY_MANIFEST_GUID, manifestGuid);
         obj.put(ManifestConstants.KEY_TYPE, manifestType);
 
         return obj;
     }
 
     @Override
-    public GUID getGUID() {
-        return this.guid;
+    public GUID getManifestGUID() {
+        return this.manifestGuid;
     }
 
     @Override
     public String getManifestType() {
         return this.manifestType;
     }
+
+    /**
+     *
+     * @param guid
+     * @return
+     */
+    protected boolean isGUIDValid(GUID guid) {
+        Matcher matcher = hexPattern.matcher(guid.toString());
+        return matcher.matches();
+    }
+
+    private boolean isManifestTypeValid() {
+        return manifestType != null && !manifestType.isEmpty();
+    }
+
+    /**
+     * Generates and set the manifest guid.
+     * Assuming that the function generateManifestToHash has been implemented.
+     *
+     * @throws GuidGenerationException
+     */
+    protected void generateManifestGUID() throws GuidGenerationException {
+        String manifest = generateManifestToHash();
+        manifestGuid = generateGUID(manifest);
+    }
+
+    /**
+     *
+     * @param string
+     * @return
+     * @throws GuidGenerationException
+     */
+    protected GUID generateGUID(String string) throws GuidGenerationException {
+        GUID guid = null;
+
+        try (StringReader reader = new StringReader(string);
+             InputStream inputStream = new ReaderInputStream(reader, "UTF-8");) {
+
+            guid = generateGUID(inputStream);
+        } catch (UnsupportedEncodingException e) {
+            throw new GuidGenerationException("Unsupported Encoding");
+        } catch (IOException e) {
+            throw new GuidGenerationException("IO Exception");
+        } catch (Exception e) {
+            throw new GuidGenerationException("General Exception");
+        }
+        return guid;
+    }
+
+    /**
+     *
+     * @param inputStream
+     * @return
+     * @throws GuidGenerationException
+     */
+    protected GUID generateGUID(InputStream inputStream) throws GuidGenerationException {
+        return new GUIDsha1(inputStream);
+    }
+
+    /**
+     * Generates a JSON representation of the part of the manifest that are used
+     * to generate the GUID of this manifest.
+     *
+     * @return
+     */
+    protected abstract String generateManifestToHash();
 
 }

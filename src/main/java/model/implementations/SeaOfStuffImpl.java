@@ -1,6 +1,7 @@
 package model.implementations;
 
 import IO.ManifestStream;
+import model.exceptions.ManifestNotMadeException;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
 import model.implementations.components.identity.Session;
@@ -52,7 +53,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(Collection<Location> locations) {
+    public AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException {
         Identity identity = session.getRegisteredIdentity();
         AtomManifest manifest = ManifestFactory.createAtomManifest(locations, identity);
 

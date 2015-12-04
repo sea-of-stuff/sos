@@ -28,7 +28,7 @@ public interface Manifest {
      *
      * @return the GUID of this manifest.
      */
-    GUID getGUID();
+    GUID getManifestGUID();
 
     /**
     * Verify this manifest's GUID against its content.

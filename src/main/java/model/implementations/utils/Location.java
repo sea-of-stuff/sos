@@ -1,5 +1,7 @@
 package model.implementations.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -14,5 +16,13 @@ public abstract class Location {
      * @return the location of the data
      */
     public abstract URL getLocationPath();
+
+    /**
+     * Gets an input stream for the source located at the given location.
+     * Stream must be closed after usage.
+     *
+     * @return
+     */
+    public abstract InputStream getSource() throws IOException;
 
 }

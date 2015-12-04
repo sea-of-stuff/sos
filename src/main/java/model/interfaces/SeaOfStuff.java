@@ -1,6 +1,7 @@
 package model.interfaces;
 
 import IO.ManifestStream;
+import model.exceptions.ManifestNotMadeException;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
 import model.implementations.components.identity.Session;
@@ -108,7 +109,7 @@ public interface SeaOfStuff {
      * @see Atom
      * @see Manifest
      */
-    AtomManifest addAtom(Collection<Location> locations);
+    AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException;
 
     /**
      * Get an atom given an AtomManifest.

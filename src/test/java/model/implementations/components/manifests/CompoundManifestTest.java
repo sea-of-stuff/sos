@@ -1,8 +1,10 @@
 package model.implementations.components.manifests;
 
 import IO.utils.StreamsUtils;
+import constants.Hashes;
 import model.implementations.utils.Content;
 import model.implementations.utils.GUIDsha1;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
@@ -10,15 +12,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.testng.Assert.assertEquals;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class CompoundManifestTest {
-
-    private static final String TEST_STRING = "TEST";
-    private static final String TEST_STRING_HASHED = "984816fd329622876e14907634264e6f332e9fb3";
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
@@ -26,7 +23,7 @@ public class CompoundManifestTest {
                     "[{" +
                     "\"Type\":\"label\"," +
                     "\"Value\":\"cat\"," +
-                    "\"GUID\":\""+TEST_STRING_HASHED+"\"" +
+                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
                             "}]}";
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
@@ -36,7 +33,7 @@ public class CompoundManifestTest {
 
     @Test
     public void testToStringContents() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(TEST_STRING);
+        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
 
         Content cat = new Content("label", "cat", guid);
@@ -45,7 +42,7 @@ public class CompoundManifestTest {
 
         CompoundManifest compoundManifest = new CompoundManifest(contents);
 
-        assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString());
+        JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
     }
 
     @Test
@@ -55,6 +52,6 @@ public class CompoundManifestTest {
 
         CompoundManifest compoundManifest = new CompoundManifest(contents);
 
-        assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString());
+        JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
     }
 }

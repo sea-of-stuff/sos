@@ -126,8 +126,6 @@ public class AssetManifest extends SignedManifest {
     }
 
     @Override
-    protected GUID generateGUID() {
-        return null;
-    }
+    protected String generateManifestToHash() { return null; }
 
 }

@@ -1,17 +1,15 @@
 package model.implementations.components.manifests;
 
 import model.exceptions.GuidGenerationException;
+import model.exceptions.ManifestNotMadeException;
+import model.exceptions.SourceLocationException;
 import model.implementations.utils.GUID;
-import model.implementations.utils.GUIDsha1;
 import model.implementations.utils.Location;
-import org.apache.xmlbeans.impl.common.ReaderInputStream;
 import org.json.JSONObject;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
 /**
@@ -38,7 +36,7 @@ public class AtomManifest extends BasicManifest {
      *
      * @param locations
      */
-    protected AtomManifest(Collection<Location> locations) {
+    protected AtomManifest(Collection<Location> locations) throws ManifestNotMadeException {
         super(ManifestConstants.ATOM);
 
         this.locations = locations;
@@ -46,8 +44,58 @@ public class AtomManifest extends BasicManifest {
         make();
     }
 
-    private void make() {
-        // TODO
+    private void make() throws ManifestNotMadeException {
+
+        try {
+            contentGUID = generateContentGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateManifestGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
+    }
+
+    private GUID generateContentGUID() throws GuidGenerationException {
+        for(Location location:locations) {
+
+            InputStream dataStream = null;
+            try {
+                dataStream = tryLocation(location);
+            } catch (SourceLocationException e) {
+                continue;
+            }
+
+            if (dataStream != null) {
+                contentGUID = generateGUID(dataStream);
+                break; // Assume that all other locations point to the same source.
+            }
+
+        }
+
+        if (contentGUID == null)
+            throw new GuidGenerationException("All locations failed to return data");
+
+        return contentGUID;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private InputStream tryLocation(Location location) throws SourceLocationException {
+
+        InputStream stream = null;
+        try {
+            stream = location.getSource();
+        } catch (IOException e) {
+            throw new SourceLocationException(location.getLocationPath().toString());
+        }
+
+        return stream;
     }
 
     public GUID getGUIDContent() {
@@ -79,30 +127,9 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    protected GUID generateGUID() throws GuidGenerationException {
-
-        GUID guid = null;
-        String manifestStringRepresentation = generateManifestToHash();
-        try (StringReader reader = new StringReader(manifestStringRepresentation);
-             InputStream inputStream = new ReaderInputStream(reader, "UTF-8");) {
-
-            guid = new GUIDsha1(inputStream);
-        } catch (UnsupportedEncodingException e) {
-            throw new GuidGenerationException("UnsupportedEncoding");
-        } catch (IOException e) {
-            throw new GuidGenerationException("IO exception");
-        }
-        return guid;
-    }
-
-    /**
-     * Generates a JSON representation of the part of the manifest that are used
-     * to generate the GUID of this manifest.
-     *
-     * @return
-     */
-    private String generateManifestToHash() {
+    protected String generateManifestToHash() {
         JSONObject obj = new JSONObject();
+
         obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
         obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
 

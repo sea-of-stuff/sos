@@ -1,5 +1,6 @@
 package model.implementations.components.manifests;
 
+import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
 import model.implementations.utils.Location;
@@ -28,7 +29,9 @@ public class ManifestFactory {
      * @param identity used to sign the manifest
      * @return the manifest for the atom
      */
-    public static AtomManifest createAtomManifest(Collection<Location> locations, Identity identity) {
+    public static AtomManifest createAtomManifest(Collection<Location> locations,
+                                                  Identity identity)
+            throws ManifestNotMadeException {
         AtomManifest manifest = new AtomManifest(locations);
 
         return manifest;

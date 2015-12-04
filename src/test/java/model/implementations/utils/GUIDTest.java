@@ -1,6 +1,7 @@
 package model.implementations.utils;
 
 import IO.utils.StreamsUtils;
+import constants.Hashes;
 import model.exceptions.GuidGenerationException;
 import org.testng.annotations.Test;
 
@@ -13,14 +14,9 @@ import static org.testng.AssertJUnit.assertEquals;
  */
 public class GUIDTest {
 
-    private static final int SHA_1_SIZE_IN_BYTES = 20;
-    private static final String TEST_STRING = "TEST";
-    // Hash generated using http://www.sha1-online.com/
-    private static final String TEST_STRING_HASHED = "984816fd329622876e14907634264e6f332e9fb3";
-
     @Test
     public void testGetAlgorithm() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(TEST_STRING);
+        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
 
         assertEquals("sha-1", guid.getAlgorithm());
@@ -28,19 +24,19 @@ public class GUIDTest {
 
     @Test
     public void testGetHashHexAndSize() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(TEST_STRING);
+        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUID guid = new GUIDsha1(inputStreamFake);
 
-        assertEquals(SHA_1_SIZE_IN_BYTES, guid.getHashSize());
-        assertEquals(TEST_STRING_HASHED, guid.getHashHex());
-        assertEquals(TEST_STRING_HASHED, guid.toString());
+        assertEquals(Hashes.SHA_1_SIZE_IN_BYTES, guid.getHashSize());
+        assertEquals(Hashes.TEST_STRING_HASHED, guid.getHashHex());
+        assertEquals(Hashes.TEST_STRING_HASHED, guid.toString());
     }
 
     @Test (expectedExceptions = GuidGenerationException.class)
     public void testNoInputStream() throws Exception {
         GUID guid = new GUIDsha1(null);
 
-        assertEquals(SHA_1_SIZE_IN_BYTES, guid.getHashSize());
-        assertEquals(TEST_STRING_HASHED, guid.getHashHex());
+        assertEquals(Hashes.SHA_1_SIZE_IN_BYTES, guid.getHashSize());
+        assertEquals(Hashes.TEST_STRING_HASHED, guid.getHashHex());
     }
 }
