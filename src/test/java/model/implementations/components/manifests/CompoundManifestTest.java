@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -22,7 +24,8 @@ public class CompoundManifestTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ManifestGUID\":\"f2026bc53f4cc9790d89bba1e35265eede5668a9\"," +
+                    "\"ManifestGUID\":\"2ffdfe2d899c4db7cde6d76cc2ade7ff49d5e0b9\"," +
+                    "\"ContentGUID\":\"a412b829e2e1f4e982f4f75b99e4bbaebb73e411\"," +
                     "\"Contents\":" +
                     "[{" +
                     "\"Type\":\"label\"," +
@@ -32,7 +35,8 @@ public class CompoundManifestTest {
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ManifestGUID\":\"b554d48a4df7df1de0a5242950e9d5d1673f05f2\"," +
+                    "\"ManifestGUID\":\"77c475aa512d4b515254457a8cc5b63fb352a68b\"," +
+                    "\"ContentGUID\":\"97d170e1550eee4afc0af065b78cda302a97674c\"," +
                     "\"Contents\":" +
                     "[]}";
 
@@ -46,6 +50,8 @@ public class CompoundManifestTest {
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
+        byte[] fakedSignature = new byte[]{0, 0, 1};
+        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
@@ -57,6 +63,8 @@ public class CompoundManifestTest {
         Collection<Content> contents = Collections.EMPTY_LIST;
 
         Identity identityMocked = mock(Identity.class);
+        byte[] fakedSignature = new byte[]{0, 0, 1};
+        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);

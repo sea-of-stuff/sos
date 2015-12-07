@@ -1,5 +1,7 @@
 package model.implementations.components.manifests;
 
+import configurations.identity.IdentityConfiguration;
+import model.exceptions.EncryptionException;
 import model.exceptions.GuidGenerationException;
 import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Content;
@@ -38,7 +40,7 @@ import org.json.JSONObject;
  */
 public class AssetManifest extends SignedManifest {
 
-    private GUID incarnation;
+    private GUID incarnation; // XXX - generate only the first time, then pass it in the constructor.
     private Content content;
     private GUID previous; // XXX - consider having multiple of them.
     private GUID metadata;
@@ -186,12 +188,12 @@ public class AssetManifest extends SignedManifest {
 
     private void make() throws ManifestNotMadeException {
 
-        incarnation = null; // TODO - generate incarnation GUID
+        incarnation = null; // FIXME - generate incarnation GUID
 
         try {
-            generateSignature(null);
+            generateSignature();
         } catch (Exception e) {
-            // TODO throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException();
         }
 
         try {
@@ -201,4 +203,16 @@ public class AssetManifest extends SignedManifest {
         }
     }
 
+    @Override
+    protected void generateSignature() throws EncryptionException {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
+        obj.put(ManifestConstants.KEY_PREVIOUS_GUID, previous);
+        obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
+
+        byte[] signatureBytes = this.identity.encrypt(obj.toString());
+        signature = IdentityConfiguration.bytesToHex(signatureBytes);
+    }
 }

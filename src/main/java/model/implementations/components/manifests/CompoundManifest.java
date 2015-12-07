@@ -1,5 +1,7 @@
 package model.implementations.components.manifests;
 
+import configurations.identity.IdentityConfiguration;
+import model.exceptions.EncryptionException;
 import model.exceptions.GuidGenerationException;
 import model.exceptions.ManifestNotMadeException;
 import model.implementations.utils.Content;
@@ -87,6 +89,7 @@ public class CompoundManifest extends SignedManifest {
         JSONObject obj = super.toJSON();
 
         obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
         obj.put(ManifestConstants.KEY_CONTENTS, getContentsInJSON());
 
         return obj;
@@ -102,24 +105,35 @@ public class CompoundManifest extends SignedManifest {
         JSONObject obj = new JSONObject();
 
         obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
         obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
 
         return obj;
+    }
+
+    @Override
+    protected void generateSignature() throws EncryptionException {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+
+        byte[] signatureBytes = this.identity.encrypt(obj.toString());
+        signature = IdentityConfiguration.bytesToHex(signatureBytes);
     }
 
     private void make() throws ManifestNotMadeException {
 
         try {
-            contentGUID = generateContentGUID();
+            generateContentGUID();
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
 
         try {
-            generateSignature(null);
+            generateSignature();
         } catch (Exception e) {
-            // TODO throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException();
         }
 
         try {
@@ -129,8 +143,8 @@ public class CompoundManifest extends SignedManifest {
         }
     }
 
-    private GUID generateContentGUID() throws GuidGenerationException {
-        return generateGUID(getContentsInJSON().toString());
+    private void generateContentGUID() throws GuidGenerationException {
+        contentGUID = generateGUID(getContentsInJSON().toString());
     }
 
     private JSONArray getContentsInJSON() {
