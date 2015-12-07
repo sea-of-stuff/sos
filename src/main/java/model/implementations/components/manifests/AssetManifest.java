@@ -9,22 +9,26 @@ import model.interfaces.identity.Identity;
 import org.json.JSONObject;
 
 /**
- * An Asset is identified by an asset GUID. Unlike other GUIDs they are not
- * derived from contents. Instead an asset GUID is good for all time
- * irrespective of the asset's contents.
+ * An Asset is identified by an asset GUID (incarnation).
+ * Unlike other GUIDs, the asset's GUID is not derived from contents.
+ * Instead an asset GUID is good for all time irrespective of the asset's contents.
+ *
  * Assets do not contain data, thus they exist only in the manifest space.
- * Assets refer to unions - and they are used to assert commonality over a
- * history of changes of unions.
- * <br>
+ *
+ * Assets refer to unions (atoms or compounds) - and they are used to assert commonality over a
+ * history of changes of unions. <br>
+ *
+ * TODO - an asset also refers to metadata
+ *
  * This class defines the manifest describing an Asset, which takes the
  * following form:
  * <p>
- * Manifest - GUID <br>
- * Asset - GUID <br>
+ * Manifest's GUID - GUID <br>
+ * Asset's GUID (incarnation) - GUID <br>
  * ManifestType - ASSET <br>
  * Signature - ? <br>
  * Previous Asset - GUID <br>
- * Content - GUID <br>
+ * Content (union) - GUID <br>
  * Metadata - GUID
  * </p>
  *
@@ -36,9 +40,16 @@ public class AssetManifest extends SignedManifest {
 
     private GUID incarnation;
     private Content content;
-    private GUID previous;
+    private GUID previous; // XXX - consider having multiple of them.
     private GUID metadata;
 
+    /**
+     * Creates an AssetManifest given a content and an identity.
+     *
+     * @param content
+     * @param identity
+     * @throws ManifestNotMadeException
+     */
     protected AssetManifest(Content content, Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.ASSET);
@@ -47,6 +58,15 @@ public class AssetManifest extends SignedManifest {
         make();
     }
 
+    /**
+     * Creates an AssetManifest given a content, an identity and the GUID of a previous
+     * asset's manifest.
+     *
+     * @param previous
+     * @param content
+     * @param identity
+     * @throws ManifestNotMadeException
+     */
     protected AssetManifest(GUID previous, Content content, Identity identity)
             throws ManifestNotMadeException {
         this(content, identity);
@@ -55,6 +75,16 @@ public class AssetManifest extends SignedManifest {
         make();
     }
 
+    /**
+     * Creates an AssetManifest given a content, an identity, the GUID of a previous
+     * asset's manifest, and the GUID of metadata associated to the asset.
+     *
+     * @param previous
+     * @param content
+     * @param metadata
+     * @param identity
+     * @throws ManifestNotMadeException
+     */
     protected AssetManifest(GUID previous, Content content, GUID metadata, Identity identity)
             throws ManifestNotMadeException {
         this(previous, content, identity);
@@ -63,6 +93,14 @@ public class AssetManifest extends SignedManifest {
         make();
     }
 
+    /**
+     * Creates an AssetManifest given a content, an identity, and the GUID of metadata associated to the asset.
+     *
+     * @param content
+     * @param metadata
+     * @param identity
+     * @throws ManifestNotMadeException
+     */
     protected AssetManifest(Content content, GUID metadata, Identity identity)
             throws ManifestNotMadeException {
         this(content, identity);
@@ -71,27 +109,10 @@ public class AssetManifest extends SignedManifest {
         make();
     }
 
-    private void make() throws ManifestNotMadeException {
-
-        try {
-            generateSignature(null);
-        } catch (Exception e) {
-            // TODO throw new ManifestNotMadeException();
-        }
-
-        try {
-            generateManifestGUID();
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-    }
-
     /**
-     * TODO - Incarnation
+     * Gets the GUID of this asset (incarnation).
      *
      * @return the GUID of this asset
-     *
-     * @see GUID
      */
     public GUID getAssetGUID() {
         return incarnation;
@@ -102,7 +123,6 @@ public class AssetManifest extends SignedManifest {
      *
      * @return the previous asset's GUID
      *         Null if the asset does not have a previous one.
-     *
      */
     public GUID getPreviousManifest() {
         return previous;
@@ -118,10 +138,10 @@ public class AssetManifest extends SignedManifest {
     }
 
     /**
-     * Get the metadata associated with an asset's manifest
+     * Get the metadata's GUID associated with an asset's manifest
      *
-     * @return Metadata associated with the asset.
-     *         Null if there is not metadata associated with the asset.
+     * @return Metadata's GUID associated with the asset.
+     *         Null if there is no metadata associated with the asset.
      *
      * @see Metadata
      */
@@ -129,6 +149,7 @@ public class AssetManifest extends SignedManifest {
         return metadata;
     }
 
+    @Override
     public boolean verify() {
         return false;
     }
@@ -151,7 +172,7 @@ public class AssetManifest extends SignedManifest {
     }
 
     @Override
-    protected String generateManifestToHash() {
+    protected JSONObject generateManifestToHash() {
         JSONObject obj = new JSONObject();
 
         obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
@@ -160,7 +181,24 @@ public class AssetManifest extends SignedManifest {
         obj.put(ManifestConstants.KEY_PREVIOUS_GUID, previous);
         obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
 
-        return obj.toString();
+        return obj;
+    }
+
+    private void make() throws ManifestNotMadeException {
+
+        incarnation = null; // TODO - generate incarnation GUID
+
+        try {
+            generateSignature(null);
+        } catch (Exception e) {
+            // TODO throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateManifestGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
     }
 
 }

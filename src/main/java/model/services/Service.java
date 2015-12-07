@@ -1,9 +1,8 @@
 package model.services;
 
 /**
- *
- *
- * TODO - this can be either the local machine, local network, close peers, known public service (e.g. google, aws), or other
+ * Interface descriptor for a storage service. This can be either a local storage service,
+ * or within the local network, a known public service (e.g. google, aws), etc.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

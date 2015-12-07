@@ -99,23 +99,21 @@ public interface SeaOfStuff {
     void unregisterIdentity(IdentityToken identityToken) throws UnknownIdentityException;
 
     /**
-     * Adds an atom to the Sea of Stuff. The content of the atom and it
-     * location are used to generate a manifest.
+     * Adds an atom to the Sea of Stuff.
+     * The locations of the atom are used to generate a manifest.
      *
-     * If an identity is registered, then the manifest will be signed.
-     * @param atom to be added to the Sea of Stuff
-     * @return AtomManifest for the added atom
+     * @param locations of the atom.
+     * @return AtomManifest for the added atom.
      *
-     * @see Atom
      * @see Manifest
      */
     AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException;
 
     /**
-     * Get an atom given an AtomManifest.
+     * Get an atom's data given an AtomManifest.
      *
      * @param atomManifest describing the atom to retrieve
-     * @return atom to retrieve
+     * @return atom to retrieve in bytes.
      */
     byte[] getAtomContent(AtomManifest atomManifest);
 

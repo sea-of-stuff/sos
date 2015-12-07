@@ -10,10 +10,12 @@ public class ManifestConstants {
     // Suppresses default constructor, ensuring non-instantiability.
     private ManifestConstants() {}
 
+    // Manifest types
     public static final String ATOM = "Atom";
     public static final String COMPOUND = "Compound";
     public static final String ASSET = "Asset";
 
+    // Manifest keys
     public static final String KEY_TYPE = "Type";
     public static final String KEY_MANIFEST_GUID = "ManifestGUID";
     public static final String KEY_SIGNATURE ="Signature";
@@ -23,7 +25,9 @@ public class ManifestConstants {
     public static final String KEY_PREVIOUS_GUID = "PreviousGUID";
     public static final String KEY_METADATA_GUID = "MetadataGUID";
 
-    public static final String KEY_GUID = "GUID";
-    public static final String KEY_VALUE = "Value";
+    // Content keys
+    public static final String CONTENT_KEY_GUID = "GUID";
+    public static final String CONTENT_KEY_TYPE = "Type";
+    public static final String CONTENT_KEY_VALUE = "Value";
 
 }

@@ -4,7 +4,7 @@ import model.implementations.components.manifests.ManifestConstants;
 import org.json.JSONObject;
 
 /**
- * Sub-unit used to represent some content with metadata associated with it.
+ * Envelope class used to represent some content with metadata associated with it.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -14,20 +14,44 @@ public class Content {
     private String value;
     private String type;
 
+    /**
+     * Constructs a content envelope using a GUID.
+     *
+     * @param guid
+     */
     public Content(GUID guid) {
         this.guid = guid;
     }
 
+    /**
+     * Constructs a content envelope using a GUID and some metadata information
+     * regarding the content: type and value
+     * (e.g. type - "label", value - "holidays").
+     *
+     * @param type
+     * @param value
+     * @param guid
+     */
     public Content(String type, String value, GUID guid) {
         this(guid);
         this.type = type;
         this.value = value;
     }
 
+    /**
+     * Gets the GUID of the content.
+     *
+     * @return GUID of the content.
+     */
     public GUID getGUID() {
         return guid;
     }
 
+    /**
+     * Gets a JSON representation of the content.
+     *
+     * @return JSON object representing this content.
+     */
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
 
@@ -37,10 +61,15 @@ public class Content {
         return obj;
     }
 
+    @Override
+    public String toString() {
+        return toJSON().toString();
+    }
+
     private void addTypeAndValue(JSONObject obj) {
         if (typeAndValueExist()) {
-            obj.put(ManifestConstants.KEY_TYPE, this.type);
-            obj.put(ManifestConstants.KEY_VALUE, this.value);
+            obj.put(ManifestConstants.CONTENT_KEY_TYPE, this.type);
+            obj.put(ManifestConstants.CONTENT_KEY_VALUE, this.value);
         }
     }
 
@@ -51,10 +80,6 @@ public class Content {
     }
 
     private void addGUID(JSONObject obj) {
-        obj.put(ManifestConstants.KEY_GUID, this.guid);
-    }
-
-    public String toString() {
-        return toJSON().toString();
+        obj.put(ManifestConstants.CONTENT_KEY_GUID, this.guid);
     }
 }

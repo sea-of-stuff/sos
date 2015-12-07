@@ -15,9 +15,9 @@ import java.util.Collection;
  * Manifest describing an Atom.
  *
  * <p>
- * Manifest - GUID <br>
+ * Manifest's GUID - GUID <br>
  * ManifestType - ATOM <br>
- * Locations - list of locations <br>
+ * Locations - collection of locations <br>
  * Content - GUID Content
  * </p>
  *
@@ -29,7 +29,7 @@ public class AtomManifest extends BasicManifest {
     private Collection<Location> locations;
 
     /**
-     * Creates a partially valid atom manifest given an atom.
+     * Creates a valid atom manifest given an atom.
      *
      * @param locations
      */
@@ -38,6 +38,72 @@ public class AtomManifest extends BasicManifest {
         this.locations = locations;
 
         make();
+    }
+
+    /**
+     * Get the GUID of the content.
+     *
+     * @return GUID of the content.
+     */
+    public GUID getGUIDContent() {
+        return contentGUID;
+    }
+
+    /**
+     * Gets a collection of locations for this atom.
+     *
+     * @return locations of this atom.
+     */
+    public Collection<Location> getLocations() {
+        return locations;
+    }
+
+    @Override
+    public boolean verify() throws GuidGenerationException {
+        if (contentGUID == null)
+            return false;
+
+        for(Location location:locations) {
+            InputStream dataStream = null;
+            try {
+                dataStream = tryLocation(location);
+            } catch (SourceLocationException e) {
+                continue;
+            }
+
+            if (!verifyStream(dataStream)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                !locations.isEmpty() &&
+                isGUIDValid(contentGUID);
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = super.toJSON();
+
+        obj.put(ManifestConstants.KEY_LOCATIONS, getLocations());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent());
+
+        return obj;
+    }
+
+    @Override
+    protected JSONObject generateManifestToHash() {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+
+        return obj;
     }
 
     private void make() throws ManifestNotMadeException {
@@ -56,7 +122,6 @@ public class AtomManifest extends BasicManifest {
 
     private GUID generateContentGUID() throws GuidGenerationException {
         for(Location location:locations) {
-
             InputStream dataStream = null;
             try {
                 dataStream = tryLocation(location);
@@ -68,7 +133,6 @@ public class AtomManifest extends BasicManifest {
                 contentGUID = generateGUID(dataStream);
                 break; // Assume that all other locations point to the same source.
             }
-
         }
 
         if (contentGUID == null)
@@ -93,71 +157,9 @@ public class AtomManifest extends BasicManifest {
         return stream;
     }
 
-    public GUID getGUIDContent() {
-        return contentGUID;
-    }
-
-    public Collection<Location> getLocations() {
-        return locations;
-    }
-
-    /**
-     * Verify that the sources at all locations match the content GUID.
-     *
-     * @return
-     */
-    @Override
-    public boolean verify() throws GuidGenerationException {
-        if (contentGUID == null)
-            return false;
-
-        for(Location location:locations) {
-
-            InputStream dataStream = null;
-            try {
-                dataStream = tryLocation(location);
-            } catch (SourceLocationException e) {
-                continue;
-            }
-
-            if (!verifyStream(dataStream)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {
         return inputStream != null &&
                 contentGUID == generateGUID(inputStream);
-    }
-
-    @Override
-    public boolean isValid() {
-        return super.isValid() &&
-                !locations.isEmpty() &&
-                isGUIDValid(contentGUID);
-    }
-
-    @Override
-    public JSONObject toJSON() {
-        JSONObject obj = super.toJSON();
-
-        obj.put(ManifestConstants.KEY_LOCATIONS, getLocations());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent());
-
-        return obj;
-    }
-
-    @Override
-    protected String generateManifestToHash() {
-        JSONObject obj = new JSONObject();
-
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
-
-        return obj.toString();
     }
 
 }

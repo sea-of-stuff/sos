@@ -43,6 +43,14 @@ public class CompoundManifest extends SignedManifest {
     private GUID contentGUID;
     private Collection<Content> contents;
 
+    /**
+     * Creates a valid compound manifest given a collection of contents and an
+     * identity to sign the manifest.
+     *
+     * @param contents
+     * @param identity
+     * @throws ManifestNotMadeException
+     */
     protected CompoundManifest(Collection<Content> contents, Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.COMPOUND);
@@ -51,31 +59,11 @@ public class CompoundManifest extends SignedManifest {
         make();
     }
 
-    private void make() throws ManifestNotMadeException {
-
-        try {
-            contentGUID = generateContentGUID();
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-
-        try {
-            generateSignature(null);
-        } catch (Exception e) {
-            // TODO throw new ManifestNotMadeException();
-        }
-
-        try {
-            generateManifestGUID();
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-    }
-
-    private GUID generateContentGUID() throws GuidGenerationException {
-        return generateGUID(getContentsInJSON().toString());
-    }
-
+    /**
+     * Gets all the contents of this compound.
+     *
+     * @return the contents of this compound.
+     */
     public Collection<Content> getContents() {
         return contents;
     }
@@ -109,6 +97,42 @@ public class CompoundManifest extends SignedManifest {
         return toJSON().toString();
     }
 
+    @Override
+    protected JSONObject generateManifestToHash() {
+        JSONObject obj = new JSONObject();
+
+        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
+
+        return obj;
+    }
+
+    private void make() throws ManifestNotMadeException {
+
+        try {
+            contentGUID = generateContentGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateSignature(null);
+        } catch (Exception e) {
+            // TODO throw new ManifestNotMadeException();
+        }
+
+        try {
+            generateManifestGUID();
+        } catch (GuidGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
+    }
+
+    private GUID generateContentGUID() throws GuidGenerationException {
+        return generateGUID(getContentsInJSON().toString());
+    }
+
     private JSONArray getContentsInJSON() {
         JSONArray arr = new JSONArray();
         for (Content content : contents) {
@@ -117,17 +141,5 @@ public class CompoundManifest extends SignedManifest {
 
         return arr;
     }
-
-    @Override
-    protected String generateManifestToHash() {
-        JSONObject obj = new JSONObject();
-
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
-        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
-
-        return obj.toString();
-    }
-
 
 }
