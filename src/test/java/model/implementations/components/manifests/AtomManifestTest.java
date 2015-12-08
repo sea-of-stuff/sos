@@ -60,7 +60,7 @@ public class AtomManifestTest {
         assertEquals(atomManifest.getLocations(), locations);
     }
 
-    @Test
+    @Test (timeOut = 2000)
     public void testToJSON() throws Exception {
         Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
 

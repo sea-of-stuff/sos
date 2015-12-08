@@ -58,13 +58,13 @@
             <version>2.6.0</version>
         </dependency>
         <dependency>
-            <groupId>org.codeartisans</groupId>
-            <artifactId>org.json</artifactId>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
             <version>20150729</version>
         </dependency>
         <dependency>
-            <groupId>org.codeartisan</groupId>
-            <artifactId>org.json</artifactId>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
             <version>20150729</version>
             <scope>test</scope>
         </dependency>
@@ -74,6 +74,12 @@
             <version>1.2.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20150729</version>
+        </dependency>
+
     </dependencies>
 
 </project>

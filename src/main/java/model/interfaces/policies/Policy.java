@@ -46,4 +46,6 @@ public interface Policy {
      * @return new policy.
      */
     Policy add(Policy policy);
+
+    Policy removePolicy(Policy policy);
 }

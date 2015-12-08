@@ -1,14 +1,16 @@
 package model.implementations;
 
 import IO.ManifestStream;
-import model.exceptions.ManifestNotMadeException;
-import model.exceptions.UnknownGUIDException;
-import model.exceptions.UnknownIdentityException;
-import model.implementations.components.identity.Session;
+import configurations.DefaultConfiguration;
+import configurations.SeaConfiguration;
+import model.exceptions.*;
 import model.implementations.components.manifests.AssetManifest;
 import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
 import model.implementations.components.manifests.ManifestFactory;
+import model.implementations.identity.Session;
+import model.implementations.policies.DefaultPolicy;
+import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
 import model.implementations.utils.Location;
 import model.interfaces.SeaOfStuff;
@@ -17,7 +19,7 @@ import model.interfaces.components.Metadata;
 import model.interfaces.identity.Identity;
 import model.interfaces.identity.IdentityToken;
 import model.interfaces.policies.Policy;
-import model.services.ServiceManager;
+import model.managers.ManifestsManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
@@ -32,10 +34,24 @@ import java.util.Collection;
 public class SeaOfStuffImpl implements SeaOfStuff {
 
     private Session session;
-    private ServiceManager serviceManager;
+    private Policy policy;
+    private ManifestsManager manifestsManager;
+    private SeaConfiguration configuration;
 
     public SeaOfStuffImpl() {
+        configuration = new DefaultConfiguration(); // TODO - load configuration from file.
+
         session = new Session();
+        policy = new DefaultPolicy();
+        manifestsManager = new ManifestsManager(configuration, policy);
+
+        // TODO - start background processes
+        // listen to incoming requests from other nodes / crawlers?
+        // make this node available to the rest of the sea of stuff
+    }
+
+    public Session getSession() {
+        return session;
     }
 
     @Override
@@ -44,20 +60,42 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public void unregisterIdentity(IdentityToken identityToken) throws UnknownIdentityException {
+    public void unregisterIdentity(IdentityToken identityToken)
+            throws UnknownIdentityException {
+
         session.removeIdentity(identityToken);
     }
 
-    public Session getSession() {
-        return session;
+    @Override
+    public AtomManifest addAtom(Collection<Location> locations)
+            throws ManifestNotMadeException {
+
+        AtomManifest manifest = ManifestFactory.createAtomManifest(locations);
+        manifestsManager.addManifest(manifest);
+
+        return manifest;
     }
 
     @Override
-    public AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException {
-        Identity identity = session.getRegisteredIdentity();
-        AtomManifest manifest = ManifestFactory.createAtomManifest(locations);
+    public CompoundManifest addCompound(Collection<Content> contents)
+            throws ManifestNotMadeException {
 
-        // TODO - add atom and manifest to Sea of Stuff
+        Identity identity = session.getRegisteredIdentity();
+        CompoundManifest manifest = ManifestFactory.createCompoundManifest(contents, identity);
+        manifestsManager.addManifest(manifest);
+
+        return manifest;
+    }
+
+    @Override
+    public AssetManifest addAsset(Content content,
+                                  GUID previous,
+                                  GUID metadata)
+            throws ManifestNotMadeException {
+
+        Identity identity = session.getRegisteredIdentity();
+        AssetManifest manifest = ManifestFactory.createAssetManifest(content, previous, metadata, identity);
+        manifestsManager.addManifest(manifest);
 
         return manifest;
     }
@@ -66,17 +104,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public byte[] getAtomContent(AtomManifest atomManifest) {
 
         // TODO - get locations from atomManifest and retrieve atom.
+        // TODO - query the manifests manager
+        // abstract implementation from this class
 
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void addCompound(CompoundManifest compoundManifest) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void addAsset(AssetManifest assetManifest) {
         throw new NotImplementedException();
     }
 
@@ -84,30 +114,38 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public Manifest getManifest(GUID guid) throws UnknownGUIDException {
 
         // TODO - lookup localdb or webservice for GUID
+        // manifests manager.
+        // abstract implementation
 
         throw new NotImplementedException();
     }
 
     @Override
-    public boolean verifyManifest(Manifest manifest) {
+    public boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException {
 
-        // TODO - verify manifest through GUIDs and hashing
+        boolean ret;
+        try {
+            ret = manifest.verify();
+        } catch (GuidGenerationException e) {
+            throw new ManifestVerificationFailedException();
+        }
 
-        throw new NotImplementedException();
+        return ret;
     }
 
     @Override
     public void setPolicy(Policy policy) {
-
+        this.policy = policy;
     }
 
     @Override
     public void unsetPolicy(Policy policy) {
-
+        this.policy = new DefaultPolicy();
     }
 
     @Override
     public ManifestStream findManifests(Metadata metadata) {
-        return null;
+        // TODO - look at manifests manager
+        throw new NotImplementedException();
     }
 }

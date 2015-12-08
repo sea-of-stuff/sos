@@ -1,4 +1,4 @@
-package model.implementations.components.identity;
+package model.implementations.identity;
 
 import model.exceptions.DecryptionException;
 import model.exceptions.EncryptionException;

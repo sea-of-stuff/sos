@@ -2,12 +2,14 @@ package model.interfaces;
 
 import IO.ManifestStream;
 import model.exceptions.ManifestNotMadeException;
+import model.exceptions.ManifestVerificationFailedException;
 import model.exceptions.UnknownGUIDException;
 import model.exceptions.UnknownIdentityException;
-import model.implementations.components.identity.Session;
 import model.implementations.components.manifests.AssetManifest;
 import model.implementations.components.manifests.AtomManifest;
 import model.implementations.components.manifests.CompoundManifest;
+import model.implementations.identity.Session;
+import model.implementations.utils.Content;
 import model.implementations.utils.GUID;
 import model.implementations.utils.Location;
 import model.interfaces.components.Manifest;
@@ -104,6 +106,7 @@ public interface SeaOfStuff {
      *
      * @param locations of the atom.
      * @return AtomManifest for the added atom.
+     * @throws ManifestNotMadeException
      *
      * @see Manifest
      */
@@ -112,7 +115,7 @@ public interface SeaOfStuff {
     /**
      * Get an atom's data given an AtomManifest.
      *
-     * @param atomManifest describing the atom to retrieve
+     * @param atomManifest describing the atom to retrieve.
      * @return atom to retrieve in bytes.
      */
     byte[] getAtomContent(AtomManifest atomManifest);
@@ -120,19 +123,26 @@ public interface SeaOfStuff {
     /**
      * Adds a CompoundManifest to the Sea of Stuff.
      *
-     * @param compoundManifest to be added to the Sea of Stuff
+     * @param contents of this compound.
+     * @return CompoundManifest for the added compound.
+     * @throws ManifestNotMadeException
      *
      * @see Manifest
      */
-    void addCompound(CompoundManifest compoundManifest);
+    CompoundManifest addCompound(Collection<Content> contents) throws ManifestNotMadeException;
 
     /**
      * Adds an asset to the Sea of Stuff.
      * Note that an asset exists only in the manifest space.
      *
-     * @param assetManifest
+     * @param content of this asset.
+     * @param previous version of this asset.
+     * @param metadata of this asset.
+     * @return AssetManifest for the added asset.
+     * @throws ManifestNotMadeException
+     *
      */
-    void addAsset(AssetManifest assetManifest);
+    AssetManifest addAsset(Content content, GUID previous, GUID metadata) throws ManifestNotMadeException;
 
     /**
      * Get the manifest that matches a given GUID.
@@ -163,11 +173,12 @@ public interface SeaOfStuff {
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
+     * @throws ManifestVerificationFailedException
      *
      * @see Manifest
      * @see GUID
      */
-    boolean verifyManifest(Manifest manifest);
+    boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException;
 
     /**
      * Set a policy for this current session. All operations in the sea of stuff
