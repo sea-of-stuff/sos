@@ -20,6 +20,16 @@ public class URLLocation extends Location implements JSONString {
     }
 
     @Override
+    public String getProtocol() {
+        return null;
+    }
+
+    @Override
+    public String getPort() {
+        return null;
+    }
+
+    @Override
     public URL getLocationPath() {
         return url;
     }

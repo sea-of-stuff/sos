@@ -12,6 +12,10 @@ import java.net.URL;
  */
 public abstract class Location {
 
+    public abstract String getProtocol();
+
+    public abstract String getPort();
+
     /**
      * @return the location of the data
      */

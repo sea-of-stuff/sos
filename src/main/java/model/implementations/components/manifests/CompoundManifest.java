@@ -35,6 +35,7 @@ import java.util.Collection;
  * Manifest - GUID <br>
  * ManifestType - COMPOUND <br>
  * Signature - signature of the manifest <br>
+ * ContentGUID - guid of the compound content <br>
  * Contents - contents of this compound
  * </p>
  *
