@@ -1,0 +1,43 @@
+package sos.model.implementations.identity;
+
+import sos.exceptions.UnknownIdentityException;
+import sos.model.interfaces.identity.Identity;
+import sos.model.interfaces.identity.IdentityToken;
+
+/**
+ * Represents the current session of this view of the Sea of Stuff
+ *
+ * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ */
+public class Session {
+
+    protected static IdentityToken nextToken;
+
+    private IdentityToken tokey;
+    private Identity identity;
+
+    public Session() {
+        nextToken = new IdentityTokenImpl(1);
+    }
+
+    public IdentityToken addIdentity(Identity identity) {
+        tokey = nextToken;
+        this.identity = identity;
+
+        nextToken = nextToken.next();
+        return tokey;
+    }
+
+    public void removeIdentity(IdentityToken tokey) throws UnknownIdentityException {
+        if (tokey == null || identity == null)
+            throw new UnknownIdentityException();
+
+        this.tokey = null;
+        this.identity = null;
+    }
+
+    public Identity getRegisteredIdentity() {
+        return identity;
+    }
+
+}

@@ -1,6 +1,6 @@
 package IO;
 
-import model.interfaces.components.Manifest;
+import sos.model.interfaces.components.Manifest;
 
 import java.io.IOException;
 import java.util.stream.Stream;
