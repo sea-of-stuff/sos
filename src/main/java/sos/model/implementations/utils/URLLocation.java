@@ -1,7 +1,5 @@
 package sos.model.implementations.utils;
 
-import org.json.JSONString;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -11,7 +9,7 @@ import java.util.Objects;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class URLLocation extends Location implements JSONString {
+public class URLLocation extends Location {
 
     private String protocol;
     private URL url;
@@ -54,13 +52,8 @@ public class URLLocation extends Location implements JSONString {
         return Objects.hash(url);
     }
 
-    // TODO - include port, protocol, etc
-    @Override
-    public String toJSONString() {
-        return "\""+ url.toString() + "\"";
-    }
-
     public String toString() {
-        return protocol + ":" + url.toString() + ":" + port;
+        return url.toString();
+        // return protocol + ":" + url.toString() + ":" + port;
     }
 }

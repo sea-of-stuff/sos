@@ -1,7 +1,8 @@
 package sos.managers;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import constants.Hashes;
-import org.json.JSONObject;
 import org.testng.annotations.Test;
 import sos.configurations.DefaultConfiguration;
 import sos.model.implementations.components.manifests.CompoundManifest;
@@ -27,12 +28,12 @@ public class ManifestsManagerTest {
                     "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}]}";
 
-    private JSONObject jsonObj = new JSONObject(EXPECTED_JSON_CONTENTS);
+    JsonParser parser = new JsonParser();
+    JsonObject jsonObj = parser.parse(EXPECTED_JSON_CONTENTS).getAsJsonObject();
 
     @Test
     public void testAddManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(new DefaultConfiguration(), null);
-
+        ManifestsManager manifestsManager = new ManifestsManager(new DefaultConfiguration(), null, null);
 
         Manifest mockedManifest = mock(CompoundManifest.class);
         when(mockedManifest.isValid()).thenReturn(true);
@@ -40,6 +41,6 @@ public class ManifestsManagerTest {
         manifestsManager.addManifest(mockedManifest);
 
         // TODO - query sea of stuff
-        assertTrue(true);
+        assertTrue(false);
     }
 }

@@ -1,6 +1,6 @@
 package sos.model.interfaces.components;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 import sos.exceptions.GuidGenerationException;
 import sos.model.implementations.utils.GUID;
 
@@ -68,5 +68,5 @@ public interface Manifest {
      *
      * @return JSON representation of this manifest.
      */
-    JSONObject toJSON();
+    JsonObject toJSON();
 }

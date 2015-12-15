@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -44,7 +45,12 @@ public class SQLiteCache extends MemCache {
     }
 
     @Override
-    public GUID getGUIDReference(String match) {
+    public Set<String> getMetaValueMatches(String value) {
+        return null;
+    }
+
+    @Override
+    public Set<String> getMetaTypeMatches(String type) {
         return null;
     }
 

@@ -1,16 +1,17 @@
 package sos.managers;
 
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import sos.configurations.SeaConfiguration;
-import sos.exceptions.ManifestCacheException;
-import sos.exceptions.ManifestPersistException;
-import sos.exceptions.ManifestSaveException;
-import sos.exceptions.UnknownManifestTypeException;
+import sos.exceptions.*;
+import sos.model.implementations.components.manifests.AssetManifest;
+import sos.model.implementations.components.manifests.AtomManifest;
+import sos.model.implementations.components.manifests.CompoundManifest;
 import sos.model.implementations.components.manifests.ManifestConstants;
 import sos.model.implementations.utils.GUID;
 import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.policies.Policy;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -65,33 +66,115 @@ public class ManifestsManager {
         throw new ManifestSaveException("Manifest not valid");
     }
 
+
+    // need to provide a general abstraction to what the redis cache (for example) does.
+    // look at the sea of stuff interface to understand what we need.
+    // Get manifest from file
+    // https://github.com/google/gson/blob/master/UserGuide.md#object-examples
     /**
      * Find a manifest in the sea of stuff given a GUID.
      *
      * @param guid
      * @return
+     * @throws ManifestException
      */
-    public Manifest findManifest(GUID guid) {
+    public Manifest findManifest(GUID guid) throws ManifestException {
+        // Look at REDIS, then return
+        // if fails, then Look at Files then return
+        // if fails, return null
 
-        // need to provide a general abstraction to what the redis cache (for example) does.
-        // look at the sea of stuff interface to understand what we need.
+        Manifest manifest;
+        try {
+             manifest = constructManifestFromCache(guid);
+        } catch (UnknownManifestTypeException e) {
+            try {
+                manifest = getManifestFromFile(guid);
+            } catch (SourceLocationException ex) {
+                throw new ManifestException();
+            }
+        }
 
-        // Get manifest from file
-
-        throw new NotImplementedException();
+        return manifest;
     }
 
+    private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException {
+        // Retrieve all useful information from redis/cache and build a manifest
+
+        String type = cache.getManifestType(guid);
+        JsonObject obj = constructJsonObjectFromCache(guid, type);
+
+        return constructManifestFromJson(type, obj);
+    }
+
+    private JsonObject constructJsonObjectFromCache(GUID guid, String type) throws UnknownManifestTypeException {
+        JsonObject obj = null;
+
+        switch (type) {
+            case ManifestConstants.ATOM:
+                obj = constructAtomJsonObjectFromCache(guid, type);
+                break;
+            case ManifestConstants.COMPOUND:
+
+                break;
+            case ManifestConstants.ASSET:
+
+                break;
+            default:
+                throw new UnknownManifestTypeException();
+        }
+
+        return obj;
+    }
+
+    private JsonObject constructAtomJsonObjectFromCache(GUID guid, String type) {
+        JsonObject obj = new JsonObject();
+
+
+
+
+        return obj;
+    }
+
+    private Manifest constructManifestFromJson(String type, JsonObject obj) throws UnknownManifestTypeException {
+        Manifest manifest = null;
+        Gson gson = new Gson();
+        try {
+            switch (type) {
+                case ManifestConstants.ATOM:
+                    manifest = gson.fromJson(obj, AtomManifest.class);
+                    break;
+                case ManifestConstants.COMPOUND:
+                    manifest = gson.fromJson(obj, CompoundManifest.class);
+                    break;
+                case ManifestConstants.ASSET:
+                    manifest = gson.fromJson(obj, AssetManifest.class);
+                    break;
+                default:
+                    throw new UnknownManifestTypeException();
+            }
+        } catch (JsonSyntaxException e) {
+            // TODO - throw exception
+        }
+        return manifest;
+
+    }
+
+    private Manifest getManifestFromFile(GUID guid) throws SourceLocationException {
+        return null;
+    }
+
+    // NOTE - local or remote based on policy
     private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {
-        JSONObject manifestJSON = manifest.toJSON();
+        JsonObject manifestJSON = manifest.toJSON();
 
         // remove manifest guid and use that for the manifest file name
         String manifestGUID = manifestJSON.remove(ManifestConstants.KEY_MANIFEST_GUID).toString();
-        saveToFileLocal(manifestGUID, manifestJSON); // TODO - local or remote based on policy
+        saveToFileLocal(manifestGUID, manifestJSON);
 
         cacheManifest(manifest);
     }
 
-    private void saveToFileLocal(String filename, JSONObject object) throws ManifestPersistException {
+    private void saveToFileLocal(String filename, JsonObject object) throws ManifestPersistException {
         final String path = configuration.getLocalManifestsLocation() + filename;
         File file = new File(path);
 
@@ -104,7 +187,8 @@ public class ManifestsManager {
 
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
-            bufferedWriter.write(object.toString());
+            Gson gson = new Gson();
+            bufferedWriter.write(gson.toJson(object));
         } catch (IOException ioe) {
             throw new ManifestPersistException();
         } catch (Exception e) {

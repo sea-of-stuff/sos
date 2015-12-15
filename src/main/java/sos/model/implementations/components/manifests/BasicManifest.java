@@ -1,7 +1,7 @@
 package sos.model.implementations.components.manifests;
 
+import com.google.gson.JsonObject;
 import org.apache.xmlbeans.impl.common.ReaderInputStream;
-import org.json.JSONObject;
 import sos.exceptions.GuidGenerationException;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.GUIDsha1;
@@ -64,11 +64,11 @@ public abstract class BasicManifest implements Manifest {
      * @return JSON representation of this manifest.
      */
     @Override
-    public JSONObject toJSON() {
-        JSONObject obj = new JSONObject();
+    public JsonObject toJSON() {
+        JsonObject obj = new JsonObject();
 
-        obj.put(ManifestConstants.KEY_MANIFEST_GUID, manifestGuid);
-        obj.put(ManifestConstants.KEY_TYPE, manifestType);
+        obj.addProperty(ManifestConstants.KEY_MANIFEST_GUID, manifestGuid.toString());
+        obj.addProperty(ManifestConstants.KEY_TYPE, manifestType);
 
         return obj;
     }
@@ -168,6 +168,6 @@ public abstract class BasicManifest implements Manifest {
      *
      * @return JSONObject representation of this manifest.
      */
-    protected abstract JSONObject generateManifestToHash();
+    protected abstract JsonObject generateManifestToHash();
 
 }

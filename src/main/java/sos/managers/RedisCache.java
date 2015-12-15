@@ -108,6 +108,7 @@ public class RedisCache extends MemCache {
         throw new NotImplementedException();
     }
 
+    @Override
     public String getManifestType(GUID manifestGUID) {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE));
     }

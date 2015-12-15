@@ -1,8 +1,9 @@
 package sos.model.implementations.components.manifests;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import configurations.identity.IdentityConfiguration;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import sos.exceptions.EncryptionException;
 import sos.exceptions.GuidGenerationException;
 import sos.exceptions.ManifestNotMadeException;
@@ -86,12 +87,12 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    public JSONObject toJSON() {
-        JSONObject obj = super.toJSON();
+    public JsonObject toJSON() {
+        JsonObject obj = super.toJSON();
 
-        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
-        obj.put(ManifestConstants.KEY_CONTENTS, getContentsInJSON());
+        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
+        obj.add(ManifestConstants.KEY_CONTENTS, getContentsInJSON());
 
         return obj;
     }
@@ -107,24 +108,25 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    protected JSONObject generateManifestToHash() {
-        JSONObject obj = new JSONObject();
+    protected JsonObject generateManifestToHash() {
+        JsonObject obj = new JsonObject();
 
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
 
         return obj;
     }
 
     @Override
     protected void generateSignature() throws EncryptionException {
-        JSONObject obj = new JSONObject();
+        JsonObject obj = new JsonObject();
 
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
 
-        byte[] signatureBytes = this.identity.encrypt(obj.toString());
+        Gson gson = new Gson();
+        byte[] signatureBytes = this.identity.encrypt(gson.toJson(obj));
         signature = IdentityConfiguration.bytesToHex(signatureBytes);
     }
 
@@ -153,10 +155,10 @@ public class CompoundManifest extends SignedManifest {
         contentGUID = generateGUID(getContentsInJSON().toString());
     }
 
-    private JSONArray getContentsInJSON() {
-        JSONArray arr = new JSONArray();
+    private JsonArray getContentsInJSON() {
+        JsonArray arr = new JsonArray();
         for (Content content : contents) {
-            arr.put(content.toJSON());
+            arr.add(content.toJSON());
         }
 
         return arr;

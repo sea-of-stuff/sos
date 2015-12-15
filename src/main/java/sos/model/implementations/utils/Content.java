@@ -1,6 +1,6 @@
 package sos.model.implementations.utils;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 import sos.model.implementations.components.manifests.ManifestConstants;
 
 /**
@@ -70,8 +70,8 @@ public class Content {
      *
      * @return JSON object representing this content.
      */
-    public JSONObject toJSON() {
-        JSONObject obj = new JSONObject();
+    public JsonObject toJSON() {
+        JsonObject obj = new JsonObject();
 
         addTypeAndValue(obj);
         addGUID(obj);
@@ -84,10 +84,10 @@ public class Content {
         return toJSON().toString();
     }
 
-    private void addTypeAndValue(JSONObject obj) {
+    private void addTypeAndValue(JsonObject obj) {
         if (typeAndValueExist()) {
-            obj.put(ManifestConstants.CONTENT_KEY_TYPE, this.type);
-            obj.put(ManifestConstants.CONTENT_KEY_VALUE, this.value);
+            obj.addProperty(ManifestConstants.CONTENT_KEY_TYPE, this.type);
+            obj.addProperty(ManifestConstants.CONTENT_KEY_VALUE, this.value);
         }
     }
 
@@ -97,7 +97,7 @@ public class Content {
 
     }
 
-    private void addGUID(JSONObject obj) {
-        obj.put(ManifestConstants.CONTENT_KEY_GUID, this.guid);
+    private void addGUID(JsonObject obj) {
+        obj.addProperty(ManifestConstants.CONTENT_KEY_GUID, this.guid.toString());
     }
 }

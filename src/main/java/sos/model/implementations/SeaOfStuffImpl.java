@@ -121,7 +121,13 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public Manifest getManifest(GUID guid) throws UnknownGUIDException {
-        return manifestsManager.findManifest(guid);
+        Manifest manifest = null;
+        try {
+            manifest = manifestsManager.findManifest(guid);
+        } catch (UnknownManifestTypeException e) {
+            throw new UnknownGUIDException();
+        }
+        return manifest;
     }
 
     @Override
@@ -150,6 +156,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public ManifestStream findManifests(Metadata metadata) {
         // TODO - look at manifests manager
+        // having a look at the redis cache would be very helpful!
         throw new NotImplementedException();
     }
 }

@@ -1,8 +1,9 @@
 package sos.model.implementations.components.manifests;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import configurations.identity.IdentityConfiguration;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import sos.exceptions.EncryptionException;
 import sos.exceptions.GuidGenerationException;
 import sos.exceptions.ManifestNotMadeException;
@@ -176,26 +177,26 @@ public class AssetManifest extends SignedManifest {
     }
 
     @Override
-    public JSONObject toJSON() {
-        JSONObject obj = super.toJSON();
+    public JsonObject toJSON() {
+        JsonObject obj = super.toJSON();
 
-        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
-        obj.put(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
-        obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
+        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.add(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
+        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
+        obj.addProperty(ManifestConstants.KEY_METADATA_GUID, metadata.toString());
 
         return obj;
     }
 
     @Override
-    protected JSONObject generateManifestToHash() {
-        JSONObject obj = new JSONObject();
+    protected JsonObject generateManifestToHash() {
+        JsonObject obj = new JsonObject();
 
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_SIGNATURE, getSignature());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
-        obj.put(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
-        obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
+        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
+        obj.add(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
+        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
+        obj.addProperty(ManifestConstants.KEY_METADATA_GUID, metadata.toString());
 
         return obj;
     }
@@ -219,21 +220,22 @@ public class AssetManifest extends SignedManifest {
 
     @Override
     protected void generateSignature() throws EncryptionException {
-        JSONObject obj = new JSONObject();
+        JsonObject obj = new JsonObject();
 
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
-        obj.put(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
-        obj.put(ManifestConstants.KEY_METADATA_GUID, metadata);
+        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.add(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
+        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
+        obj.addProperty(ManifestConstants.KEY_METADATA_GUID, metadata.toString());
 
-        byte[] signatureBytes = this.identity.encrypt(obj.toString());
+        Gson gson = new Gson();
+        byte[] signatureBytes = this.identity.encrypt(gson.toJson(obj));
         signature = IdentityConfiguration.bytesToHex(signatureBytes);
     }
 
-    private JSONArray getPrevsInJSON() {
-        JSONArray arr = new JSONArray();
+    private JsonArray getPrevsInJSON() {
+        JsonArray arr = new JsonArray();
         for (GUID prev : prevs) {
-            arr.put(prev.toString());
+            arr.add(prev.toString());
         }
 
         return arr;

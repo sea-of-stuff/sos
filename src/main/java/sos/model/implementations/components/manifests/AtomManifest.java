@@ -1,6 +1,7 @@
 package sos.model.implementations.components.manifests;
 
-import org.json.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import sos.exceptions.GuidGenerationException;
 import sos.exceptions.ManifestNotMadeException;
 import sos.exceptions.SourceLocationException;
@@ -88,11 +89,16 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    public JSONObject toJSON() {
-        JSONObject obj = super.toJSON();
+    public JsonObject toJSON() {
+        JsonObject obj = super.toJSON();
 
-        obj.put(ManifestConstants.KEY_LOCATIONS, getLocations());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent());
+        JsonArray array = new JsonArray();
+        Collection<Location> locations = getLocations();
+        for(Location location:locations)
+            array.add(location.toString());
+
+        obj.add(ManifestConstants.KEY_LOCATIONS, array);
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent().toString());
 
         return obj;
     }
@@ -103,11 +109,11 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    protected JSONObject generateManifestToHash() {
-        JSONObject obj = new JSONObject();
+    protected JsonObject generateManifestToHash() {
+        JsonObject obj = new JsonObject();
 
-        obj.put(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.put(ManifestConstants.KEY_CONTENT_GUID, contentGUID);
+        obj.addProperty(ManifestConstants.KEY_TYPE, getManifestType());
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
 
         return obj;
     }
