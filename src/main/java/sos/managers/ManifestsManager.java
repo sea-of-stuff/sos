@@ -2,6 +2,10 @@ package sos.managers;
 
 import org.json.JSONObject;
 import sos.configurations.SeaConfiguration;
+import sos.exceptions.ManifestCacheException;
+import sos.exceptions.ManifestPersistException;
+import sos.exceptions.ManifestSaveException;
+import sos.exceptions.UnknownManifestTypeException;
 import sos.model.implementations.components.manifests.ManifestConstants;
 import sos.model.implementations.utils.GUID;
 import sos.model.interfaces.components.Manifest;
@@ -22,9 +26,7 @@ public class ManifestsManager {
 
     private SeaConfiguration configuration;
     private Policy policy;
-
-    // TODO - pass cache around, do not instantiate it here.
-    // this way we can control what cache to use
+    private MemCache cache;
 
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
@@ -34,10 +36,12 @@ public class ManifestsManager {
      *
      * @param configuration
      * @param policy
+     * @param cache
      */
-    public ManifestsManager(SeaConfiguration configuration, Policy policy) {
+    public ManifestsManager(SeaConfiguration configuration, Policy policy, MemCache cache) {
         this.configuration = configuration;
         this.policy = policy;
+        this.cache = cache;
     }
 
     /**
@@ -47,11 +51,18 @@ public class ManifestsManager {
      *
      * @param manifest
      */
-    // TODO - throw exception if manifest could not be added.
-    public void addManifest(Manifest manifest) {
+    public void addManifest(Manifest manifest) throws ManifestSaveException {
         if (manifest.isValid()) {
-            saveManifest(manifest);
+            try {
+                saveManifest(manifest);
+            } catch (ManifestCacheException e) {
+                throw new ManifestSaveException();
+            } catch (ManifestPersistException e) {
+                throw new ManifestSaveException();
+            }
         }
+
+        throw new ManifestSaveException("Manifest not valid");
     }
 
     /**
@@ -61,27 +72,26 @@ public class ManifestsManager {
      * @return
      */
     public Manifest findManifest(GUID guid) {
-        // TODO - maybe provide other similar methods.
+
+        // need to provide a general abstraction to what the redis cache (for example) does.
+        // look at the sea of stuff interface to understand what we need.
+
+        // Get manifest from file
+
         throw new NotImplementedException();
     }
 
-    private void cacheManifest(Manifest manifest) {
-        // TODO - cache for fast retrieval, redis (not really for local use, but might be useful if this node has to server incoming requests)
-        // sqlite - easy to use, reasonably fast
-    }
-
-    private void saveManifest(Manifest manifest) {
+    private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {
         JSONObject manifestJSON = manifest.toJSON();
-        // TODO - remove manifest guid and use that for the manifest file name
 
+        // remove manifest guid and use that for the manifest file name
         String manifestGUID = manifestJSON.remove(ManifestConstants.KEY_MANIFEST_GUID).toString();
+        saveToFileLocal(manifestGUID, manifestJSON); // TODO - local or remote based on policy
 
-        // TODO - local or remote based on policy
-        // save to file
-        saveToFileLocal(manifestGUID, manifestJSON);
+        cacheManifest(manifest);
     }
 
-    private void saveToFileLocal(String filename, JSONObject object) {
+    private void saveToFileLocal(String filename, JSONObject object) throws ManifestPersistException {
         final String path = configuration.getLocalManifestsLocation() + filename;
         File file = new File(path);
 
@@ -96,13 +106,21 @@ public class ManifestsManager {
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
             bufferedWriter.write(object.toString());
         } catch (IOException ioe) {
-            // TODO - throw new exception
+            throw new ManifestPersistException();
         } catch (Exception e) {
-
+            throw new ManifestPersistException();
         } finally {
             file.setReadOnly();
         }
 
         // file already exists, thus there is no need to create another one.
+    }
+
+    private void cacheManifest(Manifest manifest) throws ManifestCacheException {
+        try {
+            cache.addManifest(manifest);
+        } catch (UnknownManifestTypeException e) {
+            throw new ManifestCacheException("Manifest could not be cached");
+        }
     }
 }

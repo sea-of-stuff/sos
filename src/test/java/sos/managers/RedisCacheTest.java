@@ -31,11 +31,10 @@ public class RedisCacheTest {
 
     private RedisCache cache;
     private RedisServer server;
-    private static final int REDIS_PORT = 6380; // 6379 is the default one - do not use it
 
     @BeforeTest
     public void setUp() throws IOException {
-        server = new RedisServer(REDIS_PORT);
+        server = new RedisServer(RedisCache.REDIS_PORT);
         server.start();
 
         cache = RedisCache.getInstance();
@@ -63,7 +62,7 @@ public class RedisCacheTest {
 
         cache.addManifest(simpleManifestMocked);
         assertEquals(cache.getManifestType(manifestGUID), "Atom");
-        assertEquals(cache.getContentGUID(manifestGUID), Hashes.TEST_STRING_HASHED);
+        assertEquals(cache.getContent(manifestGUID), Hashes.TEST_STRING_HASHED);
 
         Collection<String> manifests = cache.getManifests(contentGUID);
         Iterator<String> it = manifests.iterator();
@@ -168,6 +167,10 @@ public class RedisCacheTest {
         when(previousOne.toString()).thenReturn("PREV_1");
         when(previousTwo.toString()).thenReturn("PREV_2");
 
+        Content contentMocked = mock(Content.class);
+        when(assetManifestMocked.getContent()).thenReturn(contentMocked);
+        when(contentMocked.toString()).thenReturn("Content_1");
+
         GUID manifestGUID = assetManifestMocked.getManifestGUID();
 
         cache.addManifest(assetManifestMocked);
@@ -180,6 +183,7 @@ public class RedisCacheTest {
 
         assertEquals(cache.getMetadata(manifestGUID), Hashes.TEST_STRING_HASHED);
         assertEquals(cache.getIncarnation(manifestGUID), Hashes.TEST_STRING_HASHED);
+        assertEquals(cache.getContent(manifestGUID), Hashes.TEST_STRING_HASHED);
     }
 
     // This must be used, because Redis sets do not preserve ordering

@@ -94,9 +94,9 @@ public abstract class BasicManifest implements Manifest {
     }
 
     /**
-     * TODO -
+     * Gets the GUID of the content referenced by this manifest.
      *
-     * @return
+     * @return guid of the content.
      */
     public abstract GUID getContentGUID();
 

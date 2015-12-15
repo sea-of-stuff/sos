@@ -5,6 +5,8 @@ import sos.configurations.DefaultConfiguration;
 import sos.configurations.SeaConfiguration;
 import sos.exceptions.*;
 import sos.managers.ManifestsManager;
+import sos.managers.MemCache;
+import sos.managers.RedisCache;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.CompoundManifest;
@@ -37,17 +39,24 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private Policy policy;
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
+    private MemCache cache;
 
     public SeaOfStuffImpl() {
         configuration = new DefaultConfiguration(); // TODO - load configuration from file.
 
         session = new Session();
         policy = new DefaultPolicy();
-        manifestsManager = new ManifestsManager(configuration, policy);
+        cache = RedisCache.getInstance();
+        manifestsManager = new ManifestsManager(configuration, policy, cache);
 
         // TODO - start background processes
         // listen to incoming requests from other nodes / crawlers?
         // make this node available to the rest of the sea of stuff
+    }
+
+    public void cleanup() {
+        // XXX - temporary solution. This should be done form the cache object.
+        RedisCache.getInstance().killInstance();
     }
 
     public Session getSession() {
@@ -68,7 +77,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(Collection<Location> locations)
-            throws ManifestNotMadeException {
+            throws ManifestNotMadeException, ManifestSaveException {
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(locations);
         manifestsManager.addManifest(manifest);
@@ -78,7 +87,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public CompoundManifest addCompound(Collection<Content> contents)
-            throws ManifestNotMadeException {
+            throws ManifestNotMadeException, ManifestSaveException {
 
         Identity identity = session.getRegisteredIdentity();
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(contents, identity);
@@ -91,7 +100,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public AssetManifest addAsset(Content content,
                                   Collection<GUID> prevs,
                                   GUID metadata)
-            throws ManifestNotMadeException {
+            throws ManifestNotMadeException, ManifestSaveException {
 
         Identity identity = session.getRegisteredIdentity();
         AssetManifest manifest = ManifestFactory.createAssetManifest(content, prevs, metadata, identity);
@@ -112,12 +121,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public Manifest getManifest(GUID guid) throws UnknownGUIDException {
-
-        // TODO - lookup localdb or webservice for GUID
-        // manifests manager.
-        // abstract implementation
-
-        throw new NotImplementedException();
+        return manifestsManager.findManifest(guid);
     }
 
     @Override

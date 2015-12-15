@@ -1,10 +1,7 @@
 package sos.model.interfaces;
 
 import IO.ManifestStream;
-import sos.exceptions.ManifestNotMadeException;
-import sos.exceptions.ManifestVerificationFailedException;
-import sos.exceptions.UnknownGUIDException;
-import sos.exceptions.UnknownIdentityException;
+import sos.exceptions.*;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.CompoundManifest;
@@ -110,7 +107,7 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException;
+    AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Get an atom's data given an AtomManifest.
@@ -129,7 +126,7 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    CompoundManifest addCompound(Collection<Content> contents) throws ManifestNotMadeException;
+    CompoundManifest addCompound(Collection<Content> contents) throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Adds an asset to the Sea of Stuff.
@@ -142,7 +139,7 @@ public interface SeaOfStuff {
      * @throws ManifestNotMadeException
      *
      */
-    AssetManifest addAsset(Content content, Collection<GUID> prev, GUID metadata) throws ManifestNotMadeException;
+    AssetManifest addAsset(Content content, Collection<GUID> prevs, GUID metadata) throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Get the manifest that matches a given GUID.

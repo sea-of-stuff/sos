@@ -136,6 +136,15 @@ public class AssetManifest extends SignedManifest {
     }
 
     /**
+     * Get the content of this asset.
+     *
+     * @return the content of this asset.
+     */
+    public Content getContent() {
+        return content;
+    }
+
+    /**
      * Get the content's GUID of this asset.
      *
      * @return GUID of the content of this asset.

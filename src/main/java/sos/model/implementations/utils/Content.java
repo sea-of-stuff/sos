@@ -48,6 +48,24 @@ public class Content {
     }
 
     /**
+     * Gets the type of this content.
+     *
+     * @return type of the content.
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Gets the metadata value of this content.
+     *
+     * @return metadata value of the content.
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
      * Gets a JSON representation of the content.
      *
      * @return JSON object representing this content.
@@ -73,7 +91,7 @@ public class Content {
         }
     }
 
-    private boolean typeAndValueExist() {
+    public boolean typeAndValueExist() {
         return type != null && value != null &&
                 !type.isEmpty() && !value.isEmpty();
 

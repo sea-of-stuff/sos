@@ -31,9 +31,9 @@ public interface Manifest {
     GUID getManifestGUID();
 
     /**
-     * TODO
+     * Gets the GUID of the content referenced by this manifest.
      *
-     * @return
+     * @return guid of the content.
      */
     GUID getContentGUID();
 

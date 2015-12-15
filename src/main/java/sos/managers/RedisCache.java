@@ -10,18 +10,45 @@ import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
 import java.util.Set;
 
 /**
+ * Basic implementation of in-memory cache using Redis.
+ * Redis, mainly, stores data as strings (in C strings are sequences of bytes).
+ * Thus when storing manifests in Redis, we convert information to Java strings.
+ * When querying Redis, we get the information back in strings and not in objects.
+ * In this implementation, the information is not parsed back to objects (naive).
+ *
+ * Dev Notes
+ * convert redis stored data from strings to proper objects.
+ * Consider storing data as JSON and then use a deserialiser for the object.
+ * Consider using hashes to store structured data
+ * Consider marshalling the java objects
+ * @see: http://stackoverflow.com/questions/28935229/best-way-to-store-a-list-of-java-objects-in-redis
+ * @see: http://stackoverflow.com/questions/3736058/java-object-to-byte-and-byte-to-object-converter-for-tokyo-cabinet
+ *
+ * look also at serialise/deserialise methods - http://commons.apache.org/proper/commons-lang/javadocs/api-release/index.html
+ *
+ * Reasons for not using hashes:
+ * -> cannot store sets inside hashes
+ * -> lose flexibility over storing individual keys on their own
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class RedisCache extends MemCache {
 
+    public static final int REDIS_PORT = 6380;
     private static RedisCache instance = null;
     private Jedis redis;
 
+    /**
+     * Singleton pattern.
+     *
+     * @return
+     */
     public static RedisCache getInstance() {
         if(instance == null) {
             instance = new RedisCache();
@@ -29,13 +56,17 @@ public class RedisCache extends MemCache {
         return instance;
     }
 
+    /**
+     * The Cache must be killed to avoid memory leaks.
+     */
     public void killInstance() {
-        redis.quit(); // TODO - maybe use close, or both
+        redis.quit();
         instance = null;
     }
 
     private RedisCache() {
-        redis = new Jedis("localhost", 6380); // TODO - have a pool if we want to have multiple instances access this.
+        // XXX - maybe have a pool if we want to have multiple instances access this.
+        redis = new Jedis("localhost", REDIS_PORT);
     }
 
     @Override
@@ -59,54 +90,66 @@ public class RedisCache extends MemCache {
         }
     }
 
-    @Override
-    public GUID getGUIDReference(String match) {
-        return null;
+    public Set<String> getMetaValueMatches(String value) {
+        return redis.smembers(getMetaRedisKey(value, RedisKeys.HANDLE_META_VAL));
+    }
+
+    public Set<String> getMetaTypeMatches(String type) {
+        return redis.smembers(getMetaRedisKey(type, RedisKeys.HANDLE_META_TYPE));
+    }
+
+    public void conjunction(String... keys) {
+        redis.sinter(keys);
+        throw new NotImplementedException();
+    }
+
+    public void disjunction(String... keys) {
+        redis.sunion(keys);
+        throw new NotImplementedException();
     }
 
     public String getManifestType(GUID manifestGUID) {
-        return redis.get(getRedisKey(manifestGUID, "type"));
+        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE));
     }
 
-    // TODO - convert string-locations to string objects?
-    public Set<String> getLocations(GUID manifestGUID) {
-        return redis.smembers(getRedisKey(manifestGUID, "location"));
+    public Collection<String> getLocations(GUID manifestGUID) {
+        return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION));
     }
 
     // can be used for incarnation guid, or for content guid
     public Set<String> getManifests(GUID guid) {
-        return redis.smembers(getRedisKey(guid, "manifest"));
+        return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_MANIFEST));
     }
 
     public String getSignature(GUID manifestGUID) {
-        return redis.get(getRedisKey(manifestGUID, "signature"));
+        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE));
     }
 
-    public String getContentGUID(GUID manifestGUID) {
-        return redis.get(getRedisKey(manifestGUID, "content"));
+    public String getContent(GUID manifestGUID) {
+        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_CONTENT));
     }
 
     public Set<String> getContents(GUID contentGUID) {
-        return redis.smembers(getRedisKey(contentGUID, "contents"));
+        return redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS));
     }
 
     public String getIncarnation(GUID manifestGUID) {
-        return redis.get(getRedisKey(manifestGUID, "incarnation"));
+        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INCARNATION));
     }
 
     public Set<String> getPrevs(GUID manifestGUID) {
-        return redis.smembers(getRedisKey(manifestGUID, "prevs"));
+        return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_PREVS));
     }
 
     public String getMetadata(GUID manifestGUID) {
-        return redis.get(getRedisKey(manifestGUID, "metadata"));
+        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA));
     }
 
     // manifestGUID --> manifestType
     private void addType(Manifest manifest) {
         GUID manifestGUID = manifest.getManifestGUID();
         String type = manifest.getManifestType();
-        redis.set(getRedisKey(manifestGUID, "type"), type);
+        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE), type);
     }
 
     // bi-directional mapping
@@ -115,8 +158,8 @@ public class RedisCache extends MemCache {
     private void addContentGUID(Manifest manifest) {
         GUID manifestGUID = manifest.getManifestGUID();
         GUID contentGUID = manifest.getContentGUID();
-        redis.sadd(getRedisKey(contentGUID, "manifest"), manifestGUID.toString());
-        redis.set(getRedisKey(manifestGUID, "content"), contentGUID.toString());
+        redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_MANIFEST), manifestGUID.toString());
+        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_CONTENT), contentGUID.toString());
     }
 
     // manifestGUID --> [locations]
@@ -125,7 +168,7 @@ public class RedisCache extends MemCache {
         Collection<Location> locations = manifest.getLocations();
 
         for(Location location:locations) {
-            redis.sadd(getRedisKey(manifestGUID, "location"), location.toString());
+            redis.sadd(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION), location.toString());
         }
     }
 
@@ -137,9 +180,10 @@ public class RedisCache extends MemCache {
         String signature = manifest.getSignature();
         Collection<Content> contents = manifest.getContents();
 
-        redis.set(getRedisKey(manifestGUID, "signature"), signature);
+        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE), signature);
         for(Content content:contents) {
-            redis.sadd(getRedisKey(contentGUID, "contents"), content.toString());
+            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS), content.toString());
+            addMetaContent(content);
         }
     }
 
@@ -156,17 +200,30 @@ public class RedisCache extends MemCache {
         GUID metadata = manifest.getMetadataGUID();
         String signature = manifest.getSignature();
 
-        redis.sadd(getRedisKey(incarnation, "manifest"), manifestGUID.toString());
-        redis.set(getRedisKey(manifestGUID, "incarnation"), incarnation.toString());
+        redis.sadd(getGUIDRedisKey(incarnation, RedisKeys.HANDLE_MANIFEST), manifestGUID.toString());
+        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INCARNATION), incarnation.toString());
 
-        redis.set(getRedisKey(manifestGUID, "signature"), signature);
-        redis.set(getRedisKey(manifestGUID, "metadata"), metadata.toString());
+        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE), signature);
+        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA), metadata.toString());
         for(GUID prev:prevs) {
-            redis.sadd(getRedisKey(manifestGUID, "prevs"), prev.toString());
+            redis.sadd(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_PREVS), prev.toString());
+        }
+
+        addMetaContent(manifest.getContent());
+    }
+
+    private void addMetaContent(Content content) {
+        if (content.typeAndValueExist()) {
+            redis.sadd(getMetaRedisKey(content.getType(), RedisKeys.HANDLE_META_TYPE), content.getGUID().toString());
+            redis.sadd(getMetaRedisKey(content.getValue(), RedisKeys.HANDLE_META_VAL), content.getGUID().toString());
         }
     }
 
-    private String getRedisKey(GUID guid, String key) {
-        return "guid:"+guid.toString()+":"+key;
+    private String getGUIDRedisKey(GUID guid, String key) {
+        return RedisKeys.MAIN_HANDLE_GUID+":"+guid.toString()+":"+key;
+    }
+
+    private String getMetaRedisKey(String value, String key) {
+        return RedisKeys.MAIN_HANDLE_META+":"+value+":"+key;
     }
 }
