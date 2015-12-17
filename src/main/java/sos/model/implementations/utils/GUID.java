@@ -1,9 +1,5 @@
 package sos.model.implementations.utils;
 
-import sos.exceptions.GuidGenerationException;
-
-import java.io.InputStream;
-
 /**
  * Globally Unique Identifier - GUID.
  *
@@ -14,26 +10,9 @@ import java.io.InputStream;
  */
 public abstract class GUID {
 
-    protected byte[] hash;
     protected String hashHex;
 
-    public GUID(InputStream source) throws GuidGenerationException {
-        hash(source);
-    }
-
-    protected abstract void hash(InputStream source) throws GuidGenerationException;
-
-    public abstract String getAlgorithm();
-
-    public int getHashSize() {
-        return hash.length;
-    }
-
-    public byte[] getHash() {
-        return hash;
-    }
-
-    public String getHashHex() {
+    public String toString() {
         return hashHex;
     }
 

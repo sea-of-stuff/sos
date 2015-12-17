@@ -26,8 +26,8 @@ public abstract class BasicManifest implements Manifest {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
-    private GUID manifestGuid;
-    private final String manifestType;
+    protected GUID manifestGuid;
+    protected final String manifestType;
 
     /**
      * Constructor for a BasicManifest.

@@ -5,11 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import sos.configurations.SeaConfiguration;
 import sos.exceptions.*;
-import sos.model.implementations.components.manifests.AssetManifest;
-import sos.model.implementations.components.manifests.AtomManifest;
-import sos.model.implementations.components.manifests.CompoundManifest;
-import sos.model.implementations.components.manifests.ManifestConstants;
+import sos.model.implementations.components.manifests.*;
 import sos.model.implementations.utils.GUID;
+import sos.model.implementations.utils.GUIDsha1;
+import sos.model.implementations.utils.Location;
+import sos.model.implementations.utils.URLLocation;
 import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.policies.Policy;
 
@@ -17,6 +17,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Manage the manifests of the sea of stuff.
@@ -61,9 +64,9 @@ public class ManifestsManager {
             } catch (ManifestPersistException e) {
                 throw new ManifestSaveException();
             }
+        } else {
+            throw new ManifestSaveException("Manifest not valid");
         }
-
-        throw new ManifestSaveException("Manifest not valid");
     }
 
 
@@ -92,26 +95,29 @@ public class ManifestsManager {
             } catch (SourceLocationException ex) {
                 throw new ManifestException();
             }
+        } catch (MalformedURLException e) {
+            throw new ManifestException();
+        } catch (ManifestNotMadeException e) {
+            throw new ManifestException();
         }
 
         return manifest;
     }
 
-    private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException {
+    private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
         // Retrieve all useful information from redis/cache and build a manifest
 
         String type = cache.getManifestType(guid);
-        JsonObject obj = constructJsonObjectFromCache(guid, type);
 
-        return constructManifestFromJson(type, obj);
+        return constructJsonObjectFromCache(guid, type);
     }
 
-    private JsonObject constructJsonObjectFromCache(GUID guid, String type) throws UnknownManifestTypeException {
-        JsonObject obj = null;
+    private Manifest constructJsonObjectFromCache(GUID guid, String type) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
+        Manifest manifest = null;
 
         switch (type) {
             case ManifestConstants.ATOM:
-                obj = constructAtomJsonObjectFromCache(guid, type);
+                manifest = constructAtomManifestFromCache(guid, type);
                 break;
             case ManifestConstants.COMPOUND:
 
@@ -123,16 +129,51 @@ public class ManifestsManager {
                 throw new UnknownManifestTypeException();
         }
 
-        return obj;
+        return manifest;
     }
 
-    private JsonObject constructAtomJsonObjectFromCache(GUID guid, String type) {
-        JsonObject obj = new JsonObject();
+    private AtomManifest constructAtomManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
 
+        GUID contentGUID = new GUIDsha1(cache.getContent(guid));
+        Collection<String> cachedLocations = cache.getLocations(guid);
+        Collection<Location> locations = new ArrayList<Location>();
+        for(String cachedLocation:cachedLocations) {
+            locations.add(new URLLocation(cachedLocation));
+        }
 
+        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, contentGUID, locations);
 
+        return manifest;
+    }
 
-        return obj;
+    private CompoundManifest constructCompoundManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
+
+        /*GUID contentGUID = new GUID(cache.getContent(guid));
+        Collection<String> cachedLocations = cache.getLocations(guid);
+        Collection<Location> locations = new ArrayList<Location>();
+        for(String cachedLocation:cachedLocations) {
+            locations.add(new URLLocation(cachedLocation));
+        }
+
+        CompoundManifest manifest = ManifestFactory.createAtomManifest(guid, contentGUID, locations);
+
+        return manifest;*/
+        return null;
+    }
+
+    private AssetManifest constructAssetManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
+
+        /*GUID contentGUID = new GUID(cache.getContent(guid));
+        Collection<String> cachedLocations = cache.getLocations(guid);
+        Collection<Location> locations = new ArrayList<Location>();
+        for(String cachedLocation:cachedLocations) {
+            locations.add(new URLLocation(cachedLocation));
+        }
+
+        AssetManifest manifest = ManifestFactory.createAtomManifest(guid, contentGUID, locations);
+
+        return manifest;*/
+        return null;
     }
 
     private Manifest constructManifestFromJson(String type, JsonObject obj) throws UnknownManifestTypeException {
@@ -168,7 +209,7 @@ public class ManifestsManager {
         JsonObject manifestJSON = manifest.toJSON();
 
         // remove manifest guid and use that for the manifest file name
-        String manifestGUID = manifestJSON.remove(ManifestConstants.KEY_MANIFEST_GUID).toString();
+        String manifestGUID = manifestJSON.remove(ManifestConstants.KEY_MANIFEST_GUID).getAsString();
         saveToFileLocal(manifestGUID, manifestJSON);
 
         cacheManifest(manifest);
@@ -188,7 +229,8 @@ public class ManifestsManager {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
             Gson gson = new Gson();
-            bufferedWriter.write(gson.toJson(object));
+            String json = gson.toJson(object);
+            bufferedWriter.write(json);
         } catch (IOException ioe) {
             throw new ManifestPersistException();
         } catch (Exception e) {

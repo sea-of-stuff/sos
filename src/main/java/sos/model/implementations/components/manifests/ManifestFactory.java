@@ -32,6 +32,13 @@ public class ManifestFactory {
         return manifest;
     }
 
+    public static AtomManifest createAtomManifest(GUID manifestGUID, GUID contentGUID, Collection<Location> locations)
+            throws ManifestNotMadeException {
+
+        AtomManifest manifest = new AtomManifest(manifestGUID, contentGUID, locations);
+        return manifest;
+    }
+
     /**
      * Creates a CompoundManifest given a collection of contents and an identity
      * which will be used to sign the manifest.

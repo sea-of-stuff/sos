@@ -42,6 +42,15 @@ public class AtomManifest extends BasicManifest {
         make();
     }
 
+    // FIXME - REMOVEME - maybe not needed - see gson serialization
+    protected AtomManifest(GUID manifestGUID, GUID contentGUID, Collection<Location> locations) {
+        super(ManifestConstants.ATOM);
+        this.manifestGuid = manifestGUID;
+        this.contentGUID = contentGUID;
+        this.locations = locations;
+        this.contentSize = 0; // TODO - initialise contentSize properly if possible
+    }
+
     /**
      * Get the GUID of the content.
      *

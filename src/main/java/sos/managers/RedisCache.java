@@ -49,7 +49,7 @@ public class RedisCache extends MemCache {
      *
      * @return
      */
-    public static RedisCache getInstance() {
+    public static MemCache getInstance() {
         if(instance == null) {
             instance = new RedisCache();
         }
@@ -59,9 +59,15 @@ public class RedisCache extends MemCache {
     /**
      * The Cache must be killed to avoid memory leaks.
      */
+    @Override
     public void killInstance() {
         redis.quit();
         instance = null;
+    }
+
+    @Override
+    public void flushDB() {
+        redis.flushDB();
     }
 
     private RedisCache() {
@@ -90,14 +96,6 @@ public class RedisCache extends MemCache {
         }
     }
 
-    public Set<String> getMetaValueMatches(String value) {
-        return redis.smembers(getMetaRedisKey(value, RedisKeys.HANDLE_META_VAL));
-    }
-
-    public Set<String> getMetaTypeMatches(String type) {
-        return redis.smembers(getMetaRedisKey(type, RedisKeys.HANDLE_META_TYPE));
-    }
-
     public void conjunction(String... keys) {
         redis.sinter(keys);
         throw new NotImplementedException();
@@ -113,15 +111,18 @@ public class RedisCache extends MemCache {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE));
     }
 
+    @Override
     public Collection<String> getLocations(GUID manifestGUID) {
         return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION));
     }
 
     // can be used for incarnation guid, or for content guid
+    @Override
     public Set<String> getManifests(GUID guid) {
         return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_MANIFEST));
     }
 
+    @Override
     public String getSignature(GUID manifestGUID) {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE));
     }
@@ -130,20 +131,34 @@ public class RedisCache extends MemCache {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_CONTENT));
     }
 
+    @Override
     public Set<String> getContents(GUID contentGUID) {
         return redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS));
     }
 
+    @Override
     public String getIncarnation(GUID manifestGUID) {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INCARNATION));
     }
 
+    @Override
     public Set<String> getPrevs(GUID manifestGUID) {
         return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_PREVS));
     }
 
+    @Override
     public String getMetadata(GUID manifestGUID) {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA));
+    }
+
+    @Override
+    public Set<String> getMetaValueMatches(String value) {
+        return redis.smembers(getMetaRedisKey(value, RedisKeys.HANDLE_META_VAL));
+    }
+
+    @Override
+    public Set<String> getMetaTypeMatches(String type) {
+        return redis.smembers(getMetaRedisKey(type, RedisKeys.HANDLE_META_TYPE));
     }
 
     // manifestGUID --> manifestType

@@ -41,11 +41,6 @@ public class AtomManifestTest {
     }
 
     @Test
-    public void testGetGUIDContent() throws Exception {
-
-    }
-
-    @Test
     public void testGetLocations() throws Exception {
         Location locationMocked = mock(Location.class);
 
@@ -60,7 +55,7 @@ public class AtomManifestTest {
         assertEquals(atomManifest.getLocations(), locations);
     }
 
-    @Test (timeOut = 2000)
+    @Test (timeOut = 10000)
     public void testToJSON() throws Exception {
         Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
 
@@ -69,5 +64,27 @@ public class AtomManifestTest {
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
 
         JSONAssert.assertEquals(EXPECT_JSON_MANIFEST, atomManifest.toJSON().toString(), true);
+    }
+
+    @Test (timeOut = 10000)
+    public void testIsValid() throws Exception {
+        Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
+
+        Collection<Location> locations = new ArrayList<Location>();
+        locations.add(location);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+
+        assertEquals(atomManifest.isValid(), true);
+    }
+
+    @Test (timeOut = 10000)
+    public void testIsVerified() throws Exception {
+        Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
+
+        Collection<Location> locations = new ArrayList<Location>();
+        locations.add(location);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+
+        assertEquals(atomManifest.verify(), true);
     }
 }

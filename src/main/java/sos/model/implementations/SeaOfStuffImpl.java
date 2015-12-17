@@ -124,7 +124,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         Manifest manifest = null;
         try {
             manifest = manifestsManager.findManifest(guid);
-        } catch (UnknownManifestTypeException e) {
+        } catch (ManifestException e) {
             throw new UnknownGUIDException();
         }
         return manifest;

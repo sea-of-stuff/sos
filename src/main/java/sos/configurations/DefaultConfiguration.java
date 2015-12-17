@@ -5,7 +5,7 @@ package sos.configurations;
  */
 public class DefaultConfiguration implements SeaConfiguration {
 
-    private static final String MANIFESTS_LOCATION = "/tmp/sos/manifests/";
+    private static final String MANIFESTS_LOCATION = System.getProperty("user.home") + "/sos/manifests/";
 
     // Suppresses default constructor, ensuring non-instantiability.
     public DefaultConfiguration() {}

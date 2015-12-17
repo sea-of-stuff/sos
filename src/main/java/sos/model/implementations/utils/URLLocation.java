@@ -11,9 +11,9 @@ import java.util.Objects;
  */
 public class URLLocation extends Location {
 
-    private String protocol;
+    private transient String protocol;
     private URL url;
-    private int port;
+    private transient int port;
 
     public URLLocation(String location) throws MalformedURLException {
         url = new URL(location);

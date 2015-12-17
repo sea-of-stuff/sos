@@ -14,21 +14,12 @@ import static org.testng.AssertJUnit.assertEquals;
  */
 public class GUIDTest {
 
-    @Test
-    public void testGetAlgorithm() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-
-        assertEquals("sha-1", guid.getAlgorithm());
-    }
 
     @Test
     public void testGetHashHexAndSize() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUID guid = new GUIDsha1(inputStreamFake);
 
-        assertEquals(Hashes.SHA_1_SIZE_IN_BYTES, guid.getHashSize());
-        assertEquals(Hashes.TEST_STRING_HASHED, guid.getHashHex());
         assertEquals(Hashes.TEST_STRING_HASHED, guid.toString());
     }
 
@@ -36,7 +27,6 @@ public class GUIDTest {
     public void testNoInputStream() throws Exception {
         GUID guid = new GUIDsha1(null);
 
-        assertEquals(Hashes.SHA_1_SIZE_IN_BYTES, guid.getHashSize());
-        assertEquals(Hashes.TEST_STRING_HASHED, guid.getHashHex());
+        assertEquals(Hashes.TEST_STRING_HASHED, guid.toString());
     }
 }

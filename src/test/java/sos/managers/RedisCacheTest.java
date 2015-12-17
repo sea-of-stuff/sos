@@ -29,7 +29,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class RedisCacheTest {
 
-    private RedisCache cache;
+    private MemCache cache;
     private RedisServer server;
 
     @BeforeTest

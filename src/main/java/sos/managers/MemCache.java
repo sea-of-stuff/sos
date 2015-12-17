@@ -12,11 +12,29 @@ import java.util.Set;
  */
 public abstract class MemCache {
 
+    public abstract void killInstance();
+
+    public abstract void flushDB();
+
     public abstract void addManifest(Manifest manifest) throws UnknownManifestTypeException;
 
     public abstract String getManifestType(GUID manifestGUID);
 
     public abstract Collection<String> getLocations(GUID manifestGUID);
+
+    public abstract String getContent(GUID manifestGUID);
+
+    public abstract String getSignature(GUID manifestGUID);
+
+    public abstract Set<String> getManifests(GUID guid);
+
+    public abstract Set<String> getContents(GUID contentGUID);
+
+    public abstract String getIncarnation(GUID manifestGUID);
+
+    public abstract Set<String> getPrevs(GUID manifestGUID);
+
+    public abstract String getMetadata(GUID manifestGUID);
 
     // FIXME - set of GUIDs!!!
     public abstract Set<String> getMetaValueMatches(String value);
