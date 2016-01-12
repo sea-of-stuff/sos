@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.Objects;
 
 /**
+ * 
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class URLLocation extends Location {

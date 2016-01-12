@@ -26,7 +26,6 @@ public abstract class BasicManifest implements Manifest {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
-    protected GUID manifestGuid;
     protected final String manifestType;
 
     /**
@@ -55,7 +54,7 @@ public abstract class BasicManifest implements Manifest {
      */
     @Override
     public boolean isValid() {
-        return isGUIDValid(manifestGuid) && isManifestTypeValid();
+        return isManifestTypeValid();
     }
 
     /**
@@ -66,21 +65,9 @@ public abstract class BasicManifest implements Manifest {
     @Override
     public JsonObject toJSON() {
         JsonObject obj = new JsonObject();
-
-        obj.addProperty(ManifestConstants.KEY_MANIFEST_GUID, manifestGuid.toString());
         obj.addProperty(ManifestConstants.KEY_TYPE, manifestType);
 
         return obj;
-    }
-
-    /**
-     * Gets the GUID of this manifest.
-     *
-     * @return GUID of this manifest.
-     */
-    @Override
-    public GUID getManifestGUID() {
-        return this.manifestGuid;
     }
 
     /**
@@ -113,18 +100,6 @@ public abstract class BasicManifest implements Manifest {
 
     private boolean isManifestTypeValid() {
         return manifestType != null && !manifestType.isEmpty();
-    }
-
-    /**
-     * Generates and set the manifest's guid.
-     * Assumption:
-     * the function generateManifestToHash MUST be implemented.
-     *
-     * @throws GuidGenerationException
-     */
-    protected void generateManifestGUID() throws GuidGenerationException {
-        String manifest = generateManifestToHash().toString();
-        manifestGuid = generateGUID(manifest);
     }
 
     /**
@@ -161,13 +136,5 @@ public abstract class BasicManifest implements Manifest {
     protected GUID generateGUID(InputStream inputStream) throws GuidGenerationException {
         return new GUIDsha1(inputStream);
     }
-
-    /**
-     * Generates a JSON representation of the part of the manifest that are used
-     * to generate the GUID of this manifest.
-     *
-     * @return JSONObject representation of this manifest.
-     */
-    protected abstract JsonObject generateManifestToHash();
 
 }

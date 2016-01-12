@@ -26,7 +26,6 @@ public class AtomManifestTest {
 
     private static final String EXPECT_JSON_MANIFEST =
             "{\"Type\":\"Atom\"," +
-                    "\"ManifestGUID\":\"b57ac21f9edc88e961ed8c60700e1b5f9d202aa1\"," +
                     "\"ContentGUID\":" + Hashes.TEST_HTTP_BIN_STRING_HASHES + "," +
                     "\"Locations\":[\"" + Hashes.TEST_HTTP_BIN_URL + "\"]" +
                     "}";

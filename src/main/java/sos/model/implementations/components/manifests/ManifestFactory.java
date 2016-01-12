@@ -32,10 +32,10 @@ public class ManifestFactory {
         return manifest;
     }
 
-    public static AtomManifest createAtomManifest(GUID manifestGUID, GUID contentGUID, Collection<Location> locations)
+    public static AtomManifest createAtomManifest(GUID contentGUID, Collection<Location> locations)
             throws ManifestNotMadeException {
 
-        AtomManifest manifest = new AtomManifest(manifestGUID, contentGUID, locations);
+        AtomManifest manifest = new AtomManifest(contentGUID, locations);
         return manifest;
     }
 
@@ -70,7 +70,7 @@ public class ManifestFactory {
      */
     public static AssetManifest createAssetManifest(Content content,
                                                     Collection<GUID> prevs,
-                                                    GUID metadata,
+                                                    Collection<GUID> metadata,
                                                     Identity identity)
             throws ManifestNotMadeException {
 

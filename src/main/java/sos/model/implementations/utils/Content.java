@@ -11,8 +11,7 @@ import sos.model.implementations.components.manifests.ManifestConstants;
 public class Content {
 
     private GUID guid;
-    private String value;
-    private String type;
+    private String label;
 
     /**
      * Constructs a content envelope using a GUID.
@@ -24,18 +23,15 @@ public class Content {
     }
 
     /**
-     * Constructs a content envelope using a GUID and some metadata information
-     * regarding the content: type and value
-     * (e.g. type - "label", value - "holidays").
+     * Constructs a content envelope using a GUID and a label.
+     * (e.g. label - "holidays").
      *
-     * @param type
-     * @param value
+     * @param label
      * @param guid
      */
-    public Content(String type, String value, GUID guid) {
+    public Content(String label, GUID guid) {
         this(guid);
-        this.type = type;
-        this.value = value;
+        this.label = label;
     }
 
     /**
@@ -48,21 +44,12 @@ public class Content {
     }
 
     /**
-     * Gets the type of this content.
+     * Gets the label of this content.
      *
-     * @return type of the content.
+     * @return label of the content.
      */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Gets the metadata value of this content.
-     *
-     * @return metadata value of the content.
-     */
-    public String getValue() {
-        return value;
+    public String getLabel() {
+        return label;
     }
 
     /**
@@ -73,8 +60,9 @@ public class Content {
     public JsonObject toJSON() {
         JsonObject obj = new JsonObject();
 
-        addTypeAndValue(obj);
-        addGUID(obj);
+        if (label != null && !label.isEmpty() )
+        obj.addProperty(ManifestConstants.CONTENT_KEY_LABEL, this.label);
+        obj.addProperty(ManifestConstants.CONTENT_KEY_GUID, this.guid.toString());
 
         return obj;
     }
@@ -84,20 +72,4 @@ public class Content {
         return toJSON().toString();
     }
 
-    private void addTypeAndValue(JsonObject obj) {
-        if (typeAndValueExist()) {
-            obj.addProperty(ManifestConstants.CONTENT_KEY_TYPE, this.type);
-            obj.addProperty(ManifestConstants.CONTENT_KEY_VALUE, this.value);
-        }
-    }
-
-    public boolean typeAndValueExist() {
-        return type != null && value != null &&
-                !type.isEmpty() && !value.isEmpty();
-
-    }
-
-    private void addGUID(JsonObject obj) {
-        obj.addProperty(ManifestConstants.CONTENT_KEY_GUID, this.guid.toString());
-    }
 }

@@ -12,12 +12,10 @@ public class RedisKeys {
     public static final String HANDLE_LOCATION = "location";
     public static final String HANDLE_SIGNATURE = "signature";
     public static final String HANDLE_MANIFEST = "manifest";
-    public static final String HANDLE_CONTENT = "content";
     public static final String HANDLE_CONTENTS = "contents";
-    public static final String HANDLE_INCARNATION = "incarnation";
+    public static final String HANDLE_INVARIANT = "incarnation";
     public static final String HANDLE_PREVS = "prevs";
     public static final String HANDLE_METADATA = "metadata";
 
-    public static final String HANDLE_META_TYPE = "type";
-    public static final String HANDLE_META_VAL = "value";
+    public static final String HANDLE_META_LABEL = "label";
 }

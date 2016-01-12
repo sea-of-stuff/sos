@@ -7,11 +7,9 @@ import sos.configurations.SeaConfiguration;
 import sos.exceptions.*;
 import sos.model.implementations.components.manifests.*;
 import sos.model.implementations.utils.GUID;
-import sos.model.implementations.utils.GUIDsha1;
 import sos.model.implementations.utils.Location;
 import sos.model.implementations.utils.URLLocation;
 import sos.model.interfaces.components.Manifest;
-import sos.model.interfaces.policies.Policy;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,29 +27,23 @@ import java.util.Collection;
 public class ManifestsManager {
 
     private SeaConfiguration configuration;
-    private Policy policy;
     private MemCache cache;
 
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
      * a policy for the sea of stuff. The configuration object is need to know the
-     * locations for the manifests. The policy is required to know how and where
-     * to store/retrieve the manifests.
+     * locations for the manifests.
      *
      * @param configuration
-     * @param policy
      * @param cache
      */
-    public ManifestsManager(SeaConfiguration configuration, Policy policy, MemCache cache) {
+    public ManifestsManager(SeaConfiguration configuration, MemCache cache) {
         this.configuration = configuration;
-        this.policy = policy;
         this.cache = cache;
     }
 
     /**
      * Adds a manifest to the sea of stuff.
-     * The current policy of the sea of stuff is used to determine where the manifest
-     * is physically stored and how many copies are stored (replication).
      *
      * @param manifest
      */
@@ -132,16 +124,16 @@ public class ManifestsManager {
         return manifest;
     }
 
+    // TODO - REMOVEME - use of manifest guid is wrong!
     private AtomManifest constructAtomManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
 
-        GUID contentGUID = new GUIDsha1(cache.getContent(guid));
         Collection<String> cachedLocations = cache.getLocations(guid);
         Collection<Location> locations = new ArrayList<Location>();
         for(String cachedLocation:cachedLocations) {
             locations.add(new URLLocation(cachedLocation));
         }
 
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, contentGUID, locations);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
 
         return manifest;
     }
@@ -204,13 +196,12 @@ public class ManifestsManager {
         return null;
     }
 
-    // NOTE - local or remote based on policy
     private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {
         JsonObject manifestJSON = manifest.toJSON();
 
         // remove manifest guid and use that for the manifest file name
-        String manifestGUID = manifestJSON.remove(ManifestConstants.KEY_MANIFEST_GUID).getAsString();
-        saveToFileLocal(manifestGUID, manifestJSON);
+        String guid = manifestJSON.remove(ManifestConstants.KEY_CONTENT_GUID).getAsString();
+        saveToFileLocal(guid, manifestJSON);
 
         cacheManifest(manifest);
     }

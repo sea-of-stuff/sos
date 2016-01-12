@@ -57,7 +57,7 @@ public class RedisCache extends MemCache {
     }
 
     /**
-     * The Cache must be killed to avoid memory leaks.
+     * The Cache must be killed manually to avoid memory leaks.
      */
     @Override
     public void killInstance() {
@@ -78,7 +78,6 @@ public class RedisCache extends MemCache {
     @Override
     public void addManifest(Manifest manifest) throws UnknownManifestTypeException {
         addType(manifest);
-        addContentGUID(manifest);
 
         String type = manifest.getManifestType();
         switch(type) {
@@ -116,7 +115,7 @@ public class RedisCache extends MemCache {
         return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION));
     }
 
-    // can be used for incarnation guid, or for content guid
+    // can be used for invariant guid, or for content guid
     @Override
     public Set<String> getManifests(GUID guid) {
         return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_MANIFEST));
@@ -127,10 +126,6 @@ public class RedisCache extends MemCache {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE));
     }
 
-    public String getContent(GUID manifestGUID) {
-        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_CONTENT));
-    }
-
     @Override
     public Set<String> getContents(GUID contentGUID) {
         return redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS));
@@ -138,7 +133,7 @@ public class RedisCache extends MemCache {
 
     @Override
     public String getIncarnation(GUID manifestGUID) {
-        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INCARNATION));
+        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INVARIANT));
     }
 
     @Override
@@ -147,91 +142,78 @@ public class RedisCache extends MemCache {
     }
 
     @Override
-    public String getMetadata(GUID manifestGUID) {
-        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA));
+    public Set<String> getMetadata(GUID manifestGUID) {
+        return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA));
     }
 
     @Override
-    public Set<String> getMetaValueMatches(String value) {
-        return redis.smembers(getMetaRedisKey(value, RedisKeys.HANDLE_META_VAL));
+    public Set<String> getMetaLabelMatches(String value) {
+        return redis.smembers(getMetaRedisKey(value, RedisKeys.HANDLE_META_LABEL));
     }
 
-    @Override
-    public Set<String> getMetaTypeMatches(String type) {
-        return redis.smembers(getMetaRedisKey(type, RedisKeys.HANDLE_META_TYPE));
-    }
-
-    // manifestGUID --> manifestType
+    // contentGUID --> manifestType
     private void addType(Manifest manifest) {
-        GUID manifestGUID = manifest.getManifestGUID();
-        String type = manifest.getManifestType();
-        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE), type);
-    }
-
-    // bi-directional mapping
-    // contentGUID --> [manifestGUID] - there can be multiple manifests for same content
-    // manifestGUID --> contentGUID
-    private void addContentGUID(Manifest manifest) {
-        GUID manifestGUID = manifest.getManifestGUID();
         GUID contentGUID = manifest.getContentGUID();
-        redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_MANIFEST), manifestGUID.toString());
-        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_CONTENT), contentGUID.toString());
+        String type = manifest.getManifestType();
+        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_TYPE), type);
     }
 
-    // manifestGUID --> [locations]
+    // contentGUID --> [locations]
     private void addAtomManifest(AtomManifest manifest) {
-        GUID manifestGUID = manifest.getManifestGUID();
+        GUID contentGUID = manifest.getContentGUID();
         Collection<Location> locations = manifest.getLocations();
 
         for(Location location:locations) {
-            redis.sadd(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION), location.toString());
+            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_LOCATION), location.toString());
         }
     }
 
-    // manifestGUID --> signature
-    // manifestGUID --> [contentGUIDs]
+    // contentGUID --> signature
+    // contentGUID --> [contentGUIDs]
     private void addCompoundManifest(CompoundManifest manifest) {
-        GUID manifestGUID = manifest.getManifestGUID();
         GUID contentGUID = manifest.getContentGUID();
         String signature = manifest.getSignature();
         Collection<Content> contents = manifest.getContents();
 
-        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE), signature);
+        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_SIGNATURE), signature);
         for(Content content:contents) {
             redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS), content.toString());
             addMetaContent(content);
         }
     }
 
+    // XXX - what about the version GUID?
     // bi-directional mapping for incarnation
-    // manifestGUID -->incarnation
-    // incarnation --> [manifestGUID] - there can be multiple manifests for this incarnation
-    // manifestGUID --> signature
-    // manifestGUID --> [prevs]
-    // manifestGUID --> metadata
+    // contentGUID -->invariant
+    // invariant --> [manifestGUID] - there can be multiple manifests for this incarnation
+    // contentGUID --> signature
+    // contentGUID --> [prevs]
+    // contentGUID --> metadata
     private void addAssetManifest(AssetManifest manifest) {
-        GUID manifestGUID = manifest.getManifestGUID();
-        GUID incarnation = manifest.getAssetGUID();
+        GUID contentGUID = manifest.getContentGUID();
+        GUID invariant = manifest.getAssetGUID();
         Collection<GUID> prevs = manifest.getPreviousManifests();
-        GUID metadata = manifest.getMetadataGUID();
+        Collection<GUID> metadata = manifest.getMetadataGUID();
         String signature = manifest.getSignature();
 
-        redis.sadd(getGUIDRedisKey(incarnation, RedisKeys.HANDLE_MANIFEST), manifestGUID.toString());
-        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INCARNATION), incarnation.toString());
+        redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_MANIFEST), contentGUID.toString());
+        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_INVARIANT), invariant.toString());
+        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_SIGNATURE), signature);
 
-        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_SIGNATURE), signature);
-        redis.set(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA), metadata.toString());
         for(GUID prev:prevs) {
-            redis.sadd(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_PREVS), prev.toString());
+            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_PREVS), prev.toString());
+        }
+        for(GUID meta:metadata) {
+            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_METADATA), meta.toString());
         }
 
         addMetaContent(manifest.getContent());
     }
 
     private void addMetaContent(Content content) {
-        if (content.typeAndValueExist()) {
-            redis.sadd(getMetaRedisKey(content.getType(), RedisKeys.HANDLE_META_TYPE), content.getGUID().toString());
-            redis.sadd(getMetaRedisKey(content.getValue(), RedisKeys.HANDLE_META_VAL), content.getGUID().toString());
+        String label = content.getLabel();
+        if (label != null && !label.isEmpty()) {
+            redis.sadd(getMetaRedisKey(content.getLabel(), RedisKeys.HANDLE_META_LABEL), content.getGUID().toString());
         }
     }
 

@@ -13,7 +13,6 @@ import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.components.Metadata;
 import sos.model.interfaces.identity.Identity;
 import sos.model.interfaces.identity.IdentityToken;
-import sos.model.interfaces.policies.Policy;
 
 import java.util.Collection;
 
@@ -73,6 +72,10 @@ import java.util.Collection;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface SeaOfStuff {
+
+    // NOTE on identities and implicit contexts
+    // identity such as simone's work, simone's home, etc
+    // should be able to set multiple identities active (say I am at home and working)
 
     /**
      * Register this identity for the current session.
@@ -139,7 +142,7 @@ public interface SeaOfStuff {
      * @throws ManifestNotMadeException
      *
      */
-    AssetManifest addAsset(Content content, Collection<GUID> prevs, GUID metadata) throws ManifestNotMadeException, ManifestSaveException;
+    AssetManifest addAsset(Content content, Collection<GUID> prevs, Collection<GUID> metadata) throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Get the manifest that matches a given GUID.
@@ -178,27 +181,11 @@ public interface SeaOfStuff {
     boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException;
 
     /**
-     * Set a policy for this current session. All operations in the sea of stuff
-     * will obey this policy.
-     *
-     * To remove a policy from the current session, call {@link #unsetPolicy(Policy)}
-     *
-     * @param policy to be set.
-     */
-    void setPolicy(Policy policy);
-
-    /**
-     * Remove the specified policy from the current session.
-     *
-     * @param policy
-     */
-    void unsetPolicy(Policy policy);
-
-    /**
      * Search the sea of stuff for manifests that match the specified metadata.
      *
      * @param metadata used for querying the sea of stuff.
      * @return a stream of manifests that match the query.
      */
     ManifestStream findManifests(Metadata metadata);
+
 }

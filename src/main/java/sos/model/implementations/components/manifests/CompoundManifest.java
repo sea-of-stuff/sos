@@ -74,13 +74,11 @@ public class CompoundManifest extends SignedManifest {
 
     @Override
     public boolean verify() {
-        // TODO - verify the GUID of the content against the actual content.
         throw new NotImplementedException();
     }
 
     @Override
     public boolean isValid() {
-        // TODO - test for signature?
         return super.isValid() &&
                 !contents.isEmpty() &&
                 isGUIDValid(contentGUID);
@@ -108,17 +106,6 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    protected JsonObject generateManifestToHash() {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
-        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
-
-        return obj;
-    }
-
-    @Override
     protected void generateSignature() throws EncryptionException {
         JsonObject obj = new JsonObject();
 
@@ -141,12 +128,6 @@ public class CompoundManifest extends SignedManifest {
         try {
             generateSignature();
         } catch (Exception e) {
-            throw new ManifestNotMadeException();
-        }
-
-        try {
-            generateManifestGUID();
-        } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
     }

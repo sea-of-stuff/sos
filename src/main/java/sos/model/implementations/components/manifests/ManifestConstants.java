@@ -17,7 +17,6 @@ public class ManifestConstants {
 
     // Manifest keys
     public static final String KEY_TYPE = "Type";
-    public static final String KEY_MANIFEST_GUID = "ManifestGUID";
     public static final String KEY_SIGNATURE ="Signature";
     public static final String KEY_LOCATIONS = "Locations";
     public static final String KEY_CONTENT_GUID = "ContentGUID";
@@ -27,7 +26,6 @@ public class ManifestConstants {
 
     // Content keys
     public static final String CONTENT_KEY_GUID = "GUID";
-    public static final String CONTENT_KEY_TYPE = "Type";
-    public static final String CONTENT_KEY_VALUE = "Value";
+    public static final String CONTENT_KEY_LABEL = "Label";
 
 }

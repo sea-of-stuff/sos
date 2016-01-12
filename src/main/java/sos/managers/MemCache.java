@@ -22,8 +22,6 @@ public abstract class MemCache {
 
     public abstract Collection<String> getLocations(GUID manifestGUID);
 
-    public abstract String getContent(GUID manifestGUID);
-
     public abstract String getSignature(GUID manifestGUID);
 
     public abstract Set<String> getManifests(GUID guid);
@@ -34,11 +32,9 @@ public abstract class MemCache {
 
     public abstract Set<String> getPrevs(GUID manifestGUID);
 
-    public abstract String getMetadata(GUID manifestGUID);
+    public abstract Set<String> getMetadata(GUID manifestGUID);
 
     // FIXME - set of GUIDs!!!
-    public abstract Set<String> getMetaValueMatches(String value);
-
-    public abstract Set<String> getMetaTypeMatches(String type);
+    public abstract Set<String> getMetaLabelMatches(String value);
 
 }

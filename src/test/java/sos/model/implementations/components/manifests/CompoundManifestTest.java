@@ -24,19 +24,16 @@ public class CompoundManifestTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ManifestGUID\":\"edb0af008d53ae792799c60584ac1ee64bf2910f\"," +
-                    "\"ContentGUID\":\"a412b829e2e1f4e982f4f75b99e4bbaebb73e411\"," +
+                    "\"ContentGUID\":\"5ddcc2228d3d80966b29f709774c2d5ee15a99a0\"," +
                     "\"Signature\":\"000001\"," +
                     "\"Contents\":" +
                     "[{" +
-                    "\"Type\":\"label\"," +
-                    "\"Value\":\"cat\"," +
+                    "\"Label\":\"cat\"," +
                     "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
                             "}]}";
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ManifestGUID\":\"5111a4a4962fdfca3f07d62cc93c667f352329f6\"," +
                     "\"ContentGUID\":\"97d170e1550eee4afc0af065b78cda302a97674c\"," +
                     "\"Signature\":\"000001\"," +
                     "\"Contents\":" +
@@ -47,7 +44,7 @@ public class CompoundManifestTest {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
 
-        Content cat = new Content("label", "cat", guid);
+        Content cat = new Content("cat", guid);
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 

@@ -12,7 +12,6 @@ import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.CompoundManifest;
 import sos.model.implementations.components.manifests.ManifestFactory;
 import sos.model.implementations.identity.Session;
-import sos.model.implementations.policies.DefaultPolicy;
 import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
@@ -21,7 +20,6 @@ import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.components.Metadata;
 import sos.model.interfaces.identity.Identity;
 import sos.model.interfaces.identity.IdentityToken;
-import sos.model.interfaces.policies.Policy;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collection;
@@ -36,7 +34,6 @@ import java.util.Collection;
 public class SeaOfStuffImpl implements SeaOfStuff {
 
     private Session session;
-    private Policy policy;
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
     private MemCache cache;
@@ -45,9 +42,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         configuration = new DefaultConfiguration(); // TODO - load configuration from file.
 
         session = new Session();
-        policy = new DefaultPolicy();
         cache = RedisCache.getInstance();
-        manifestsManager = new ManifestsManager(configuration, policy, cache);
+        manifestsManager = new ManifestsManager(configuration, cache);
 
         // TODO - start background processes
         // listen to incoming requests from other nodes / crawlers?
@@ -55,12 +51,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     public void cleanup() {
-        // XXX - temporary solution. This should be done form the cache object.
-        RedisCache.getInstance().killInstance();
-    }
-
-    public Session getSession() {
-        return session;
+        cache.killInstance();
     }
 
     @Override
@@ -99,7 +90,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public AssetManifest addAsset(Content content,
                                   Collection<GUID> prevs,
-                                  GUID metadata)
+                                  Collection<GUID> metadata)
             throws ManifestNotMadeException, ManifestSaveException {
 
         Identity identity = session.getRegisteredIdentity();
@@ -141,16 +132,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         }
 
         return ret;
-    }
-
-    @Override
-    public void setPolicy(Policy policy) {
-        this.policy = policy;
-    }
-
-    @Override
-    public void unsetPolicy(Policy policy) {
-        this.policy = new DefaultPolicy();
     }
 
     @Override

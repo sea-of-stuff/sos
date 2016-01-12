@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import configurations.identity.IdentityConfiguration;
 import sos.exceptions.EncryptionException;
-import sos.exceptions.GuidGenerationException;
 import sos.exceptions.ManifestNotMadeException;
 import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
@@ -29,11 +28,11 @@ import java.util.Collection;
  * This class defines the manifest describing an Asset, which takes the
  * following form:
  * <p>
- * Manifest - GUID <br>
- * Incarnation - GUID <br>
+ * Version - GUID <br>
+ * Invariant - GUID <br>
  * ManifestType - ASSET <br>
  * Signature - ? <br>
- * Previous Asset - GUID <br>
+ * Previous Assets - GUID <br>
  * Content - GUID <br>
  * Metadata - GUID
  * </p>
@@ -42,13 +41,13 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-// XXX - write unit tests
 public class AssetManifest extends SignedManifest {
 
-    private GUID incarnation; // XXX - generate only the first time, then pass it in the constructor.
+    private GUID version; // TODO - manifest GUID
+    private GUID invariant; // XXX - generate only the first time, then pass it in the constructor.
     private Content content;
     private Collection<GUID> prevs;
-    private GUID metadata; // XXX - consider having multiple of them.
+    private Collection<GUID> metadata;
 
     /**
      * Creates an AssetManifest given a content and an identity.
@@ -92,7 +91,7 @@ public class AssetManifest extends SignedManifest {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    protected AssetManifest(Collection<GUID> prevs, Content content, GUID metadata, Identity identity)
+    protected AssetManifest(Collection<GUID> prevs, Content content, Collection<GUID> metadata, Identity identity)
             throws ManifestNotMadeException {
         this(prevs, content, identity);
         this.metadata = metadata;
@@ -108,7 +107,7 @@ public class AssetManifest extends SignedManifest {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    protected AssetManifest(Content content, GUID metadata, Identity identity)
+    protected AssetManifest(Content content, Collection<GUID> metadata, Identity identity)
             throws ManifestNotMadeException {
         this(content, identity);
         this.metadata = metadata;
@@ -122,15 +121,15 @@ public class AssetManifest extends SignedManifest {
      * @return the GUID of this asset
      */
     public GUID getAssetGUID() {
-        return incarnation;
+        return invariant;
     }
 
     /**
      * XXX - check plural
-     * Get the previous asset's GUID of a given asset.
+     * Get the GUIDs of the versions from which this version is derived
      *
-     * @return the previous asset's GUID
-     *         Null if the asset does not have a previous one.
+     * @return the previous versions
+     *         Null if the asset does not have a previous version.
      */
     public Collection<GUID> getPreviousManifests() {
         return prevs;
@@ -162,7 +161,7 @@ public class AssetManifest extends SignedManifest {
      *
      * @see Metadata
      */
-    public GUID getMetadataGUID() {
+    public Collection<GUID> getMetadataGUID() {
         return metadata;
     }
 
@@ -182,38 +181,19 @@ public class AssetManifest extends SignedManifest {
 
         obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
         obj.add(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
-        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
-        obj.addProperty(ManifestConstants.KEY_METADATA_GUID, metadata.toString());
-
-        return obj;
-    }
-
-    @Override
-    protected JsonObject generateManifestToHash() {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
-        obj.add(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
-        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
-        obj.addProperty(ManifestConstants.KEY_METADATA_GUID, metadata.toString());
+        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
+        obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
 
         return obj;
     }
 
     private void make() throws ManifestNotMadeException {
 
-        incarnation = null; // FIXME - generate incarnation GUID
+        invariant = null; // FIXME - generate invariant GUID
 
         try {
             generateSignature();
         } catch (Exception e) {
-            throw new ManifestNotMadeException();
-        }
-
-        try {
-            generateManifestGUID();
-        } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
     }
@@ -224,20 +204,21 @@ public class AssetManifest extends SignedManifest {
 
         obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
         obj.add(ManifestConstants.KEY_CONTENT_GUID, content.toJSON());
-        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getPrevsInJSON());
-        obj.addProperty(ManifestConstants.KEY_METADATA_GUID, metadata.toString());
+        obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
+        obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
 
         Gson gson = new Gson();
         byte[] signatureBytes = this.identity.encrypt(gson.toJson(obj));
         signature = IdentityConfiguration.bytesToHex(signatureBytes);
     }
 
-    private JsonArray getPrevsInJSON() {
+    private JsonArray getCollectionInJSON(Collection<?> collection) {
         JsonArray arr = new JsonArray();
-        for (GUID prev : prevs) {
-            arr.add(prev.toString());
+        for (Object obj : collection) {
+            arr.add(obj.toString());
         }
 
         return arr;
     }
+
 }

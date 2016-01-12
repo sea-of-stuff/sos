@@ -43,9 +43,8 @@ public class AtomManifest extends BasicManifest {
     }
 
     // FIXME - REMOVEME - maybe not needed - see gson serialization
-    protected AtomManifest(GUID manifestGUID, GUID contentGUID, Collection<Location> locations) {
+    protected AtomManifest(GUID contentGUID, Collection<Location> locations) {
         super(ManifestConstants.ATOM);
-        this.manifestGuid = manifestGUID;
         this.contentGUID = contentGUID;
         this.locations = locations;
         this.contentSize = 0; // TODO - initialise contentSize properly if possible
@@ -117,25 +116,9 @@ public class AtomManifest extends BasicManifest {
         return this.contentGUID;
     }
 
-    @Override
-    protected JsonObject generateManifestToHash() {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty(ManifestConstants.KEY_TYPE, getManifestType());
-        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
-
-        return obj;
-    }
-
     private void make() throws ManifestNotMadeException {
         try {
             contentGUID = generateContentGUID();
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-
-        try {
-            generateManifestGUID();
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
@@ -180,7 +163,7 @@ public class AtomManifest extends BasicManifest {
 
     private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {
         return inputStream != null &&
-                contentGUID == generateGUID(inputStream);
+                contentGUID.equals(generateGUID(inputStream));
     }
 
 }
