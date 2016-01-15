@@ -1,9 +1,12 @@
 package sos.managers;
 
 import sos.exceptions.UnknownManifestTypeException;
+import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
+import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
 
+import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -21,19 +24,19 @@ public abstract class MemCache {
 
     public abstract String getManifestType(GUID manifestGUID);
 
-    public abstract Collection<String> getLocations(GUID manifestGUID);
+    public abstract Collection<Location> getLocations(GUID manifestGUID) throws MalformedURLException;
 
     public abstract String getSignature(GUID manifestGUID);
 
     public abstract Set<String> getManifests(GUID guid);
 
-    public abstract Set<String> getContents(GUID contentGUID);
+    public abstract Collection<Content> getContents(GUID contentGUID);
 
-    public abstract String getInvariant(GUID manifestGUID);
+    public abstract GUID getInvariant(GUID manifestGUID);
 
-    public abstract Set<String> getPrevs(GUID manifestGUID);
+    public abstract Collection<GUID> getPrevs(GUID manifestGUID);
 
-    public abstract Set<String> getMetadata(GUID manifestGUID);
+    public abstract Collection<GUID> getMetadata(GUID manifestGUID);
 
     public abstract Set<String> getMetaLabelMatches(String value);
 

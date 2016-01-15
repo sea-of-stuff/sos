@@ -1,7 +1,11 @@
 package sos.managers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import redis.clients.jedis.Jedis;
 import redis.embedded.RedisServer;
+import sos.deserializers.AtomManifestDeserializer;
+import sos.deserializers.ContentDeserializer;
 import sos.exceptions.UnknownManifestTypeException;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
@@ -9,11 +13,14 @@ import sos.model.implementations.components.manifests.CompoundManifest;
 import sos.model.implementations.components.manifests.ManifestConstants;
 import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
+import sos.model.implementations.utils.GUIDsha1;
 import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -46,6 +53,7 @@ public class RedisCache extends MemCache {
     private static RedisCache instance = null;
     private Jedis redis;
     private static RedisServer server;
+    private static Gson gson;
 
     /**
      * Singleton pattern.
@@ -59,6 +67,8 @@ public class RedisCache extends MemCache {
             server = new RedisServer(REDIS_PORT);
             server.start();
             instance = new RedisCache();
+
+            configureGson();
         }
         return instance;
     }
@@ -83,6 +93,17 @@ public class RedisCache extends MemCache {
     private RedisCache() {
         // XXX - maybe have a pool if we want to have multiple instances access this.
         redis = new Jedis("localhost", REDIS_PORT);
+    }
+
+    private static void configureGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        registerGSonTypeAdapters(gsonBuilder);
+        gson = gsonBuilder.create();
+    }
+
+    private static void registerGSonTypeAdapters(GsonBuilder builder) {
+        builder.registerTypeAdapter(Content.class, new ContentDeserializer());
+        builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
     }
 
     @Override
@@ -121,14 +142,21 @@ public class RedisCache extends MemCache {
     }
 
     @Override
-    public Collection<String> getLocations(GUID manifestGUID) {
-        return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION));
+    public Collection<Location> getLocations(GUID manifestGUID) throws MalformedURLException {
+        Collection<String> cachedLocations =  redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_LOCATION));
+
+        Collection<Location> locations = new ArrayList<Location>();
+        for(String cachedLocation:cachedLocations) {
+            locations.add(new Location(cachedLocation));
+        }
+
+        return locations;
     }
 
     // can be used for invariant guid, or for content guid
     @Override
     public Set<String> getManifests(GUID guid) {
-        return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_MANIFEST));
+        return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_VERSION));
     }
 
     @Override
@@ -137,23 +165,48 @@ public class RedisCache extends MemCache {
     }
 
     @Override
-    public Set<String> getContents(GUID contentGUID) {
-        return redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENT));
+    public Collection<Content> getContents(GUID contentGUID) {
+        Collection<String> cachedContents = redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENT));
+
+        Collection<Content> contents = new ArrayList<Content>();
+        for(String cachedContent:cachedContents) {
+            Content content = gson.fromJson(cachedContent, Content.class);
+            contents.add(content);
+        }
+
+        return contents;
     }
 
     @Override
-    public String getInvariant(GUID manifestGUID) {
-        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INVARIANT));
+    public GUID getInvariant(GUID manifestGUID) {
+        String sGUID = redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INVARIANT));
+        return new GUIDsha1(sGUID);
     }
 
     @Override
-    public Set<String> getPrevs(GUID manifestGUID) {
-        return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_PREVS));
+    public Collection<GUID> getPrevs(GUID manifestGUID) {
+        Collection<String> cachedPrevious = redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_PREVS));
+
+        Collection<GUID> previous = new ArrayList<GUID>();
+        for(String cachedPrev:cachedPrevious) {
+            GUID guid = new GUIDsha1(cachedPrev);
+            previous.add(guid);
+        }
+
+        return previous;
     }
 
     @Override
-    public Set<String> getMetadata(GUID manifestGUID) {
-        return redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA));
+    public Collection<GUID> getMetadata(GUID manifestGUID) {
+        Collection<String> cachedMetadata = redis.smembers(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_METADATA));
+
+        Collection<GUID> metadata = new ArrayList<GUID>();
+        for(String meta:cachedMetadata) {
+            GUID guid = new GUIDsha1(meta);
+            metadata.add(guid);
+        }
+
+        return metadata;
     }
 
     @Override
@@ -207,10 +260,10 @@ public class RedisCache extends MemCache {
         Collection<GUID> metadata = manifest.getMetadata();
         String signature = manifest.getSignature();
 
-        redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_MANIFEST), version.toString());
+        redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_VERSION), version.toString());
         redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_INVARIANT), invariant.toString());
 
-        redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_CONTENT), contentGUID.toString());
+        redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_CONTENT), contentGUID.toString());
         redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_SIGNATURE), signature);
 
         for(GUID prev:prevs) {

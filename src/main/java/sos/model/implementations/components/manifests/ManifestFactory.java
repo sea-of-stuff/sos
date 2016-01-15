@@ -34,23 +34,38 @@ public class ManifestFactory {
     public static AtomManifest createAtomManifest(GUID contentGUID, Collection<Location> locations)
             throws ManifestNotMadeException {
 
-        return new AtomManifest(contentGUID, locations);
+        AtomManifest manifest = new AtomManifest();
+        manifest.setContentGUID(contentGUID);
+        manifest.setLocations(locations);
+
+        return manifest;
     }
 
-    /**
-     * Creates a CompoundManifest given a collection of contents and an identity
-     * which will be used to sign the manifest.
-     *
-     * @param contents
-     * @param identity
-     * @return a compound manifest
-     * @throws ManifestNotMadeException
-     */
     public static CompoundManifest createCompoundManifest(Collection<Content> contents,
                                                           Identity identity)
             throws ManifestNotMadeException {
 
         return new CompoundManifest(contents, identity);
+    }
+
+    /**
+     * Creates a CompoundManifest given a collection of contents and a signature.
+     *
+     * @param contents
+     * @param signature
+     * @return a compound manifest
+     * @throws ManifestNotMadeException
+     */
+    public static CompoundManifest createCompoundManifest(Collection<Content> contents,
+                                                          String signature)
+            throws ManifestNotMadeException {
+
+        CompoundManifest manifest = new CompoundManifest();
+        manifest.setSignature(signature);
+        manifest.setContents(contents);
+        manifest.makeContentGUID();
+
+        return manifest;
     }
 
     /**

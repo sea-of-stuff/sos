@@ -62,10 +62,10 @@ public class SeaOfStuffAddAtomTests {
         Location location = createDummyDataFile();
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
-
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals("Atom", retrievedManifest.getManifestType());
 
         Collection<Location> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         Iterator<Location> iterator = retrievedLocations.iterator();
@@ -74,6 +74,11 @@ public class SeaOfStuffAddAtomTests {
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
 
         deleteStoredFiles(manifest, location);
+    }
+
+    @Test
+    public void testRetrieveAtomFromFile() {
+        // TODO - test AtomManifestDeserialiser
     }
 
     private void deleteStoredFiles(Manifest manifest, Location location) throws URISyntaxException {

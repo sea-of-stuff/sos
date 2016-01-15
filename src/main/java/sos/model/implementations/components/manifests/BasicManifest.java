@@ -26,6 +26,7 @@ public abstract class BasicManifest implements Manifest {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
+    protected GUID contentGUID;
     protected final String manifestType;
 
     /**
@@ -85,7 +86,15 @@ public abstract class BasicManifest implements Manifest {
      *
      * @return guid of the content.
      */
-    public abstract GUID getContentGUID();
+    @Override
+    public GUID getContentGUID() {
+        return this.contentGUID;
+    }
+
+    public void setContentGUID(GUID guid) {
+        if (this.contentGUID == null)
+            this.contentGUID = guid;
+    }
 
     /**
      * Checks if the given GUID contains valid hex characters.

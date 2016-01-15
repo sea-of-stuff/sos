@@ -33,6 +33,11 @@ public abstract class SignedManifest extends BasicManifest {
         return this.signature;
     }
 
+    public void setSignature(String signature) {
+        if (this.signature == null)
+            this.signature = signature;
+    }
+
     /**
      * Generates the signature for this manifest.
      *

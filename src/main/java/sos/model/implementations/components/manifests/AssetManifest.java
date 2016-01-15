@@ -185,6 +185,10 @@ public class AssetManifest extends SignedManifest {
         return content.getGUID();
     }
 
+    public void setContentGUID() {
+        throw new NotImplementedException();
+    }
+
     /**
      * Get the metadata's GUID associated with an asset's manifest
      *

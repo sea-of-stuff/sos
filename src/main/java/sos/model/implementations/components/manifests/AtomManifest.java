@@ -26,9 +26,11 @@ import java.util.Collection;
  */
 public class AtomManifest extends BasicManifest {
 
-    private GUID contentGUID;
     private Collection<Location> locations;
-    private int contentSize;
+
+    public AtomManifest() {
+        super(ManifestConstants.ATOM);
+    }
 
     /**
      * Creates a valid atom manifest given an atom.
@@ -38,16 +40,8 @@ public class AtomManifest extends BasicManifest {
     protected AtomManifest(Collection<Location> locations) throws ManifestNotMadeException {
         super(ManifestConstants.ATOM);
         this.locations = locations;
-        this.contentSize = 0; // TODO - initialise contentSize properly if possible
-        make();
-    }
 
-    // FIXME - REMOVEME - maybe not needed - see gson serialization
-    protected AtomManifest(GUID contentGUID, Collection<Location> locations) {
-        super(ManifestConstants.ATOM);
-        this.contentGUID = contentGUID;
-        this.locations = locations;
-        this.contentSize = 0; // TODO - initialise contentSize properly if possible
+        make();
     }
 
     /**
@@ -57,6 +51,11 @@ public class AtomManifest extends BasicManifest {
      */
     public Collection<Location> getLocations() {
         return locations;
+    }
+
+    public void setLocations(Collection<Location> locations) {
+        if (this.locations == null)
+            this.locations = locations;
     }
 
     @Override
@@ -100,11 +99,6 @@ public class AtomManifest extends BasicManifest {
         obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getContentGUID().toString());
 
         return obj;
-    }
-
-    @Override
-    public GUID getContentGUID() {
-        return this.contentGUID;
     }
 
     private void make() throws ManifestNotMadeException {

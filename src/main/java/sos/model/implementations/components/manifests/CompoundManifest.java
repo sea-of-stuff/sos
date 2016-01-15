@@ -44,7 +44,6 @@ import java.util.Collection;
  */
 public class CompoundManifest extends SignedManifest {
 
-    private GUID contentGUID;
     private Collection<Content> contents;
 
     /**
@@ -60,7 +59,12 @@ public class CompoundManifest extends SignedManifest {
         super(identity, ManifestConstants.COMPOUND);
         this.contents = contents;
 
-        make();
+        makeContentGUID();
+        makeSignature();
+    }
+
+    protected CompoundManifest() {
+        super(null, ManifestConstants.COMPOUND);
     }
 
     /**
@@ -70,6 +74,12 @@ public class CompoundManifest extends SignedManifest {
      */
     public Collection<Content> getContents() {
         return contents;
+    }
+
+    public void setContents(Collection<Content> contents) {
+        if (this.contents == null) {
+            this.contents = contents;
+        }
     }
 
     @Override
@@ -97,11 +107,6 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    public GUID getContentGUID() {
-        return this.contentGUID;
-    }
-
-    @Override
     public String toString() {
         return toJSON().toString();
     }
@@ -118,14 +123,15 @@ public class CompoundManifest extends SignedManifest {
         return IdentityConfiguration.bytesToHex(signatureBytes);
     }
 
-    private void make() throws ManifestNotMadeException {
-
+    public void makeContentGUID() throws ManifestNotMadeException {
         try {
             contentGUID = generateContentGUID();
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
+    }
 
+    private void makeSignature() throws ManifestNotMadeException  {
         try {
             signature = generateSignature();
         } catch (Exception e) {

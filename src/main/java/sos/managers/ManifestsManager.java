@@ -1,11 +1,14 @@
 package sos.managers;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import sos.configurations.SeaConfiguration;
+import sos.deserializers.AtomManifestDeserializer;
 import sos.exceptions.*;
 import sos.model.implementations.components.manifests.*;
+import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
@@ -16,7 +19,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -28,6 +30,7 @@ public class ManifestsManager {
 
     private SeaConfiguration configuration;
     private MemCache cache;
+    private Gson gson;
 
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
@@ -40,6 +43,18 @@ public class ManifestsManager {
     public ManifestsManager(SeaConfiguration configuration, MemCache cache) {
         this.configuration = configuration;
         this.cache = cache;
+
+        configureGson();
+    }
+
+    private void configureGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        registerGSonTypeAdapters(gsonBuilder);
+        gson = gsonBuilder.create();
+    }
+
+    private void registerGSonTypeAdapters(GsonBuilder builder) {
+        builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
     }
 
     /**
@@ -94,10 +109,7 @@ public class ManifestsManager {
     }
 
     private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
-        // Retrieve all useful information from redis/cache and build a manifest
-
         String type = cache.getManifestType(guid);
-
         return constructJsonObjectFromCache(guid, type);
     }
 
@@ -106,13 +118,13 @@ public class ManifestsManager {
 
         switch (type) {
             case ManifestConstants.ATOM:
-                manifest = constructAtomManifestFromCache(guid, type);
+                manifest = constructAtomManifestFromCache(guid);
                 break;
             case ManifestConstants.COMPOUND:
-
+                manifest = constructCompoundManifestFromCache(guid);
                 break;
             case ManifestConstants.ASSET:
-
+                manifest = constructAssetManifestFromCache(guid);
                 break;
             default:
                 throw new UnknownManifestTypeException();
@@ -121,44 +133,23 @@ public class ManifestsManager {
         return manifest;
     }
 
-    private AtomManifest constructAtomManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
-
-        Collection<String> cachedLocations = cache.getLocations(guid);
-        Collection<Location> locations = new ArrayList<Location>();
-        for(String cachedLocation:cachedLocations) {
-            locations.add(new Location(cachedLocation));
-        }
-
-        return ManifestFactory.createAtomManifest(guid, locations);
+    private AtomManifest constructAtomManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
+        Collection<Location> cachedLocations = cache.getLocations(guid);
+        return ManifestFactory.createAtomManifest(guid, cachedLocations);
     }
 
-    private CompoundManifest constructCompoundManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
-
-        /*GUID contentGUID = new GUID(cache.getContent(guid));
-        Collection<String> cachedLocations = cache.getLocations(guid);
-        Collection<Location> locations = new ArrayList<Location>();
-        for(String cachedLocation:cachedLocations) {
-            locations.add(new URLLocation(cachedLocation));
-        }
-
-        CompoundManifest manifest = ManifestFactory.createAtomManifest(guid, contentGUID, locations);
-
-        return manifest;*/
-        return null;
+    private CompoundManifest constructCompoundManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
+        String cachedSignature = cache.getSignature(guid);
+        Collection<Content> cachedContents = cache.getContents(guid);
+        return ManifestFactory.createCompoundManifest(cachedContents, cachedSignature);
     }
 
-    private AssetManifest constructAssetManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
+    private AssetManifest constructAssetManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
 
-        /*GUID contentGUID = new GUID(cache.getContent(guid));
-        Collection<String> cachedLocations = cache.getLocations(guid);
-        Collection<Location> locations = new ArrayList<Location>();
-        for(String cachedLocation:cachedLocations) {
-            locations.add(new URLLocation(cachedLocation));
-        }
+        String signature = cache.getSignature(guid);
+        // TODO
 
-        AssetManifest manifest = ManifestFactory.createAtomManifest(guid, contentGUID, locations);
-
-        return manifest;*/
+        //return ManifestFactory.createAssetManifest();
         return null;
     }
 

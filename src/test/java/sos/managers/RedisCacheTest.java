@@ -1,7 +1,5 @@
 package sos.managers;
 
-import IO.utils.StreamsUtils;
-import constants.Hashes;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,7 +13,6 @@ import sos.model.implementations.utils.GUIDsha1;
 import sos.model.implementations.utils.Location;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,9 +43,8 @@ public class RedisCacheTest {
     @Test
     public void testAddSimpleManifest() throws Exception {
         AtomManifest simpleManifestMocked = mock(AtomManifest.class);
-        InputStream otherInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
 
-        when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1((otherInputStreamFake)));
+        when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(simpleManifestMocked.getManifestType()).thenReturn("Atom");
 
         GUID contentGUID = simpleManifestMocked.getContentGUID();
@@ -60,9 +56,8 @@ public class RedisCacheTest {
     @Test (expectedExceptions = UnknownManifestTypeException.class)
     public void testAddManifestWithWrongType() throws Exception {
         AtomManifest simpleManifestMocked = mock(AtomManifest.class);
-        InputStream otherInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
 
-        when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1((otherInputStreamFake)));
+        when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(simpleManifestMocked.getManifestType()).thenReturn("WrongType");
 
         cache.addManifest(simpleManifestMocked);
@@ -71,55 +66,49 @@ public class RedisCacheTest {
     @Test
     public void testAddAtomManifest() throws Exception {
         AtomManifest atomManifestMocked = mock(AtomManifest.class);
-        InputStream otherInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
 
-        when(atomManifestMocked.getContentGUID()).thenReturn(new GUIDsha1((otherInputStreamFake)));
+        when(atomManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(atomManifestMocked.getManifestType()).thenReturn("Atom");
 
-        Location locationMocked = mock(Location.class);
-        Location otherLocationMocked = mock(Location.class);
+        Location locationMocked = new Location("file:///Location_1");
+        Location otherLocationMocked = new Location("file:///Location_2");
         Collection<Location> locations = new ArrayList<Location>(
                 Arrays.asList(locationMocked, otherLocationMocked)
         );
         when(atomManifestMocked.getLocations()).thenReturn(locations);
-        when(locationMocked.toString()).thenReturn("Location_1");
-        when(otherLocationMocked.toString()).thenReturn("Location_2");
 
         GUID contentGUID = atomManifestMocked.getContentGUID();
         cache.addManifest(atomManifestMocked);
 
-        Collection<String> cachedLocations = cache.getLocations(contentGUID);
-        for(String location:cachedLocations) {
-            assertContains(location, "Location_1", "Location_2");
+        Collection<Location> cachedLocations = cache.getLocations(contentGUID);
+        for(Location location:cachedLocations) {
+            assertContains(location, locationMocked, otherLocationMocked);
         }
     }
 
     @Test
     public void testAddCompoundManifest() throws Exception {
         CompoundManifest compoundManifestMocked = mock(CompoundManifest.class);
-        InputStream otherInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
 
-        when(compoundManifestMocked.getContentGUID()).thenReturn(new GUIDsha1((otherInputStreamFake)));
+        when(compoundManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(compoundManifestMocked.getManifestType()).thenReturn("Compound");
         when(compoundManifestMocked.getSignature()).thenReturn("Test_Signature");
 
-        Content contentMocked = mock(Content.class);
-        Content otherContentMocked = mock(Content.class);
+        GUID anyGUID = new GUIDsha1("abc");
+        Content contentMocked = new Content("Content_1", anyGUID);
+        Content otherContentMocked = new Content("Content_2", anyGUID);
         Collection<Content> contents = new ArrayList<Content>(
                 Arrays.asList(contentMocked, otherContentMocked)
         );
         when(compoundManifestMocked.getContents()).thenReturn(contents);
-        when(contentMocked.toString()).thenReturn("Content_1");
-        when(otherContentMocked.toString()).thenReturn("Content_2");
-
 
         GUID contentGUID = compoundManifestMocked.getContentGUID();
         cache.addManifest(compoundManifestMocked);
         assertEquals(cache.getSignature(contentGUID), "Test_Signature");
 
-        Collection<String> cachedContents = cache.getContents(contentGUID);
-        for(String content:cachedContents) {
-            assertContains(content, "Content_1", "Content_2");
+        Collection<Content> cachedContents = cache.getContents(contentGUID);
+        for(Content content:cachedContents) {
+            assertContains(content, contentMocked, otherContentMocked);
         }
     }
 
@@ -127,51 +116,47 @@ public class RedisCacheTest {
     public void testAddAssetManifest() throws Exception {
         AssetManifest assetManifestMocked = mock(AssetManifest.class);
 
-        InputStream versionInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        InputStream contentInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        InputStream metaInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        InputStream invariantInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-
-        when(assetManifestMocked.getVersionGUID()).thenReturn(new GUIDsha1(versionInputStreamFake));
-        when(assetManifestMocked.getContentGUID()).thenReturn(new GUIDsha1(contentInputStreamFake));
-        when(assetManifestMocked.getInvariantGUID()).thenReturn(new GUIDsha1(invariantInputStreamFake));
+        GUID version = new GUIDsha1("123");
+        GUID content = new GUIDsha1("321");
+        GUID invariant = new GUIDsha1("123");
+        when(assetManifestMocked.getVersionGUID()).thenReturn(version);
+        when(assetManifestMocked.getContentGUID()).thenReturn(content);
+        when(assetManifestMocked.getInvariantGUID()).thenReturn(invariant);
         when(assetManifestMocked.getManifestType()).thenReturn("Asset");
         when(assetManifestMocked.getSignature()).thenReturn("Test_Signature");
 
-        GUID metadataFake = new GUIDsha1(metaInputStreamFake);
+        GUID metadataFake = new GUIDsha1("abcdef");
         Collection<GUID> metadata = new ArrayList<GUID>(
                 Arrays.asList(metadataFake)
         );
         when(assetManifestMocked.getMetadata()).thenReturn(metadata);
 
-        GUID previousOne = mock(GUID.class);
-        GUID previousTwo = mock(GUID.class);
+        GUID previousOne = new GUIDsha1("prev1");
+        GUID previousTwo = new GUIDsha1("prev1");
         Collection<GUID> prevs = new ArrayList<GUID>(
                 Arrays.asList(previousOne, previousTwo)
         );
         when(assetManifestMocked.getPreviousManifests()).thenReturn(prevs);
-        when(previousOne.toString()).thenReturn("PREV_1");
-        when(previousTwo.toString()).thenReturn("PREV_2");
 
         Content contentMocked = mock(Content.class);
         when(assetManifestMocked.getContent()).thenReturn(contentMocked);
         when(contentMocked.toString()).thenReturn("Content_1");
 
-        GUID contentGUID = assetManifestMocked.getContentGUID();
         cache.addManifest(assetManifestMocked);
-        assertEquals(cache.getSignature(contentGUID), "Test_Signature");
+        assertEquals(cache.getSignature(version), "Test_Signature");
 
-        Collection<String> cachedPrevs = cache.getPrevs(contentGUID);
-        for(String prev:cachedPrevs) {
-            assertContains(prev, "PREV_1", "PREV_2");
+        Collection<GUID> cachedPrevs = cache.getPrevs(version);
+        for(GUID prev:cachedPrevs) {
+            assertContains(prev, previousOne, previousTwo);
         }
 
-        Collection<String> cachedMetadata = cache.getMetadata(contentGUID);
-        for(String meta:cachedMetadata) {
-            assertContains(meta, Hashes.TEST_STRING_HASHED);
+        Collection<GUID> cachedMetadata = cache.getMetadata(version);
+        for(GUID meta:cachedMetadata) {
+            assertContains(meta, metadataFake);
         }
 
-        assertEquals(cache.getInvariant(contentGUID), Hashes.TEST_STRING_HASHED);
+        assertEquals(cache.getInvariant(version), invariant);
+        assertContains(cache.getContents(version), content);
     }
 
     // This must be used, because Redis sets do not preserve ordering
