@@ -95,7 +95,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public Manifest getManifest(GUID guid) throws UnknownGUIDException {
-        Manifest manifest = null;
+        Manifest manifest;
         try {
             manifest = manifestsManager.findManifest(guid);
         } catch (ManifestException e) {

@@ -28,15 +28,13 @@ public class ManifestFactory {
     public static AtomManifest createAtomManifest(Collection<Location> locations)
             throws ManifestNotMadeException {
 
-        AtomManifest manifest = new AtomManifest(locations);
-        return manifest;
+        return new AtomManifest(locations);
     }
 
     public static AtomManifest createAtomManifest(GUID contentGUID, Collection<Location> locations)
             throws ManifestNotMadeException {
 
-        AtomManifest manifest = new AtomManifest(contentGUID, locations);
-        return manifest;
+        return new AtomManifest(contentGUID, locations);
     }
 
     /**
@@ -52,8 +50,7 @@ public class ManifestFactory {
                                                           Identity identity)
             throws ManifestNotMadeException {
 
-        CompoundManifest manifest = new CompoundManifest(contents, identity);
-        return manifest;
+        return new CompoundManifest(contents, identity);
     }
 
     /**

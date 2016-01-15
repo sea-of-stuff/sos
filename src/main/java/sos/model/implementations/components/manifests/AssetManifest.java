@@ -193,7 +193,7 @@ public class AssetManifest extends SignedManifest {
      *
      * @see Metadata
      */
-    public Collection<GUID> getMetadataGUID() {
+    public Collection<GUID> getMetadata() {
         return metadata;
     }
 

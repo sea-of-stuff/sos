@@ -23,8 +23,8 @@ public class ManifestConstants {
     public static final String KEY_CONTENTS = "Content";
     public static final String KEY_INVARIANT = "Invariant";
     public static final String KEY_VERSION = "Version";
-    public static final String KEY_PREVIOUS_GUID = "PreviousGUID";
-    public static final String KEY_METADATA_GUID = "MetadataGUID";
+    public static final String KEY_PREVIOUS_GUID = "Previous";
+    public static final String KEY_METADATA_GUID = "Metadata";
 
     // Content keys
     public static final String CONTENT_KEY_GUID = "GUID";

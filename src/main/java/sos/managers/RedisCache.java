@@ -204,7 +204,7 @@ public class RedisCache extends MemCache {
         GUID invariant = manifest.getInvariantGUID();
         GUID version = manifest.getVersionGUID();
         Collection<GUID> prevs = manifest.getPreviousManifests();
-        Collection<GUID> metadata = manifest.getMetadataGUID();
+        Collection<GUID> metadata = manifest.getMetadata();
         String signature = manifest.getSignature();
 
         redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_MANIFEST), version.toString());

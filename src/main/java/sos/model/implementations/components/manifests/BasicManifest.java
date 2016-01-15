@@ -110,10 +110,10 @@ public abstract class BasicManifest implements Manifest {
      * @throws GuidGenerationException if the GUID could not be generated.
      */
     protected GUID generateGUID(String string) throws GuidGenerationException {
-        GUID guid = null;
+        GUID guid;
 
         try (StringReader reader = new StringReader(string);
-             InputStream inputStream = new ReaderInputStream(reader, "UTF-8");) {
+             InputStream inputStream = new ReaderInputStream(reader, "UTF-8")) {
 
             guid = generateGUID(inputStream);
         } catch (UnsupportedEncodingException e) {

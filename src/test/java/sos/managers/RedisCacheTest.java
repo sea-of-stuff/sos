@@ -142,7 +142,7 @@ public class RedisCacheTest {
         Collection<GUID> metadata = new ArrayList<GUID>(
                 Arrays.asList(metadataFake)
         );
-        when(assetManifestMocked.getMetadataGUID()).thenReturn(metadata);
+        when(assetManifestMocked.getMetadata()).thenReturn(metadata);
 
         GUID previousOne = mock(GUID.class);
         GUID previousTwo = mock(GUID.class);

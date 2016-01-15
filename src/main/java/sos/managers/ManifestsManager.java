@@ -129,9 +129,7 @@ public class ManifestsManager {
             locations.add(new Location(cachedLocation));
         }
 
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
-
-        return manifest;
+        return ManifestFactory.createAtomManifest(guid, locations);
     }
 
     private CompoundManifest constructCompoundManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
@@ -217,7 +215,7 @@ public class ManifestsManager {
             return;
 
         try (FileWriter fileWriter = new FileWriter(file);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             Gson gson = new Gson();
             String json = gson.toJson(object);
             bufferedWriter.write(json);
