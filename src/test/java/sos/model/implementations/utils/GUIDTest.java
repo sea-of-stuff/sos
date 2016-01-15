@@ -3,7 +3,6 @@ package sos.model.implementations.utils;
 import IO.utils.StreamsUtils;
 import constants.Hashes;
 import org.testng.annotations.Test;
-import sos.exceptions.GuidGenerationException;
 
 import java.io.InputStream;
 
@@ -23,10 +22,4 @@ public class GUIDTest {
         assertEquals(Hashes.TEST_STRING_HASHED, guid.toString());
     }
 
-    @Test (expectedExceptions = GuidGenerationException.class)
-    public void testNoInputStream() throws Exception {
-        GUID guid = new GUIDsha1(null);
-
-        assertEquals(Hashes.TEST_STRING_HASHED, guid.toString());
-    }
 }

@@ -5,6 +5,10 @@ package sos.configurations;
  */
 public interface SeaConfiguration {
 
+    // TODO - javadocs
+
+    String getDataPath();
+
     String getLocalManifestsLocation();
 
     String[] getIdentityPaths();

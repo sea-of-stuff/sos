@@ -17,13 +17,12 @@ import sos.model.interfaces.SeaOfStuff;
 import sos.model.interfaces.components.Manifest;
 import utils.Helper;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import static org.testng.Assert.assertEquals;
 
@@ -60,22 +59,38 @@ public class SeaOfStuffAddAtomTests {
     @Test
     public void testAddAtom() throws Exception {
         Collection<Location> locations = new ArrayList<Location>();
-        Location loc = createDummyDataFile();
-        locations.add(loc);
+        Location location = createDummyDataFile();
+        locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
 
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+
+        Collection<Location> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
+        Iterator<Location> iterator = retrievedLocations.iterator();
+        assertEquals(location, iterator.next());
+
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
 
+        deleteStoredFiles(manifest, location);
+    }
+
+    private void deleteStoredFiles(Manifest manifest, Location location) throws URISyntaxException {
         Helper.deleteFile(configuration.getLocalManifestsLocation() + manifest.getContentGUID().toString());
+        Helper.deleteFile(Helper.localURItoPath(location));
     }
 
     private Location createDummyDataFile() throws FileNotFoundException, UnsupportedEncodingException, MalformedURLException {
-        // FIXME - do not use this path!
-        String location = "/Users/sic2/test/data/alec/A-20120905-163643/tl/nmr/09142012-1-tl-tl12-A/10/audita.txt";
-        PrintWriter writer = new PrintWriter(location, "UTF-8");
+        String location = configuration.getDataPath() + "testData.txt";
+
+        File file = new File(location);
+        File parent = file.getParentFile();
+        if(!parent.exists() && !parent.mkdirs()){
+            throw new IllegalStateException("Couldn't create dir: " + parent);
+        }
+
+        PrintWriter writer = new PrintWriter(file);
         writer.println("The first line");
         writer.println("The second line");
         writer.close();

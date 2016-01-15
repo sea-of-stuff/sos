@@ -1,6 +1,9 @@
 package utils;
 
+import sos.model.implementations.utils.Location;
+
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.*;
 
 /**
@@ -8,8 +11,16 @@ import java.nio.file.*;
  */
 public class Helper {
 
+    public static String localURItoPath(Location location) throws URISyntaxException {
+        return location.getLocationPath().toURI().getPath();
+    }
+
     public static void deleteFile(String file) {
         Path path = Paths.get(file);
+        deleteFile(path);
+    }
+
+    private static void deleteFile(Path path) {
         try {
             Files.delete(path);
         } catch (NoSuchFileException x) {
