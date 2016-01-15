@@ -51,15 +51,6 @@ public class AtomManifest extends BasicManifest {
     }
 
     /**
-     * Get the GUID of the content.
-     *
-     * @return GUID of the content.
-     */
-    public GUID getGUIDContent() {
-        return contentGUID;
-    }
-
-    /**
      * Gets a collection of locations for this atom.
      *
      * @return locations of this atom.
@@ -106,7 +97,7 @@ public class AtomManifest extends BasicManifest {
             array.add(location.toString());
 
         obj.add(ManifestConstants.KEY_LOCATIONS, array);
-        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getGUIDContent().toString());
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getContentGUID().toString());
 
         return obj;
     }

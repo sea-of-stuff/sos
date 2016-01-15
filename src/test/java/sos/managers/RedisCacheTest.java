@@ -5,12 +5,14 @@ import constants.Hashes;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import redis.embedded.RedisServer;
 import sos.exceptions.UnknownManifestTypeException;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.CompoundManifest;
-import sos.model.implementations.utils.*;
+import sos.model.implementations.utils.Content;
+import sos.model.implementations.utils.GUID;
+import sos.model.implementations.utils.GUIDsha1;
+import sos.model.implementations.utils.Location;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,20 +31,16 @@ import static org.testng.Assert.assertTrue;
 public class RedisCacheTest {
 
     private MemCache cache;
-    private RedisServer server;
 
     @BeforeMethod
     public void setUp() throws IOException {
-        server = new RedisServer(RedisCache.REDIS_PORT);
-        server.start();
-
         cache = RedisCache.getInstance();
     }
 
     @AfterMethod
     public void tearDown() {
+        cache.flushDB();
         cache.killInstance();
-        server.stop();
     }
 
     @Test
@@ -78,8 +76,8 @@ public class RedisCacheTest {
         when(atomManifestMocked.getContentGUID()).thenReturn(new GUIDsha1((otherInputStreamFake)));
         when(atomManifestMocked.getManifestType()).thenReturn("Atom");
 
-        Location locationMocked = mock(URLLocation.class);
-        Location otherLocationMocked = mock(URLLocation.class);
+        Location locationMocked = mock(Location.class);
+        Location otherLocationMocked = mock(Location.class);
         Collection<Location> locations = new ArrayList<Location>(
                 Arrays.asList(locationMocked, otherLocationMocked)
         );
@@ -129,12 +127,14 @@ public class RedisCacheTest {
     public void testAddAssetManifest() throws Exception {
         AssetManifest assetManifestMocked = mock(AssetManifest.class);
 
-        InputStream otherInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream versionInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream contentInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         InputStream metaInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        InputStream incarnationInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream invariantInputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
 
-        when(assetManifestMocked.getContentGUID()).thenReturn(new GUIDsha1(otherInputStreamFake));
-        when(assetManifestMocked.getAssetGUID()).thenReturn(new GUIDsha1(incarnationInputStreamFake));
+        when(assetManifestMocked.getVersionGUID()).thenReturn(new GUIDsha1(versionInputStreamFake));
+        when(assetManifestMocked.getContentGUID()).thenReturn(new GUIDsha1(contentInputStreamFake));
+        when(assetManifestMocked.getInvariantGUID()).thenReturn(new GUIDsha1(invariantInputStreamFake));
         when(assetManifestMocked.getManifestType()).thenReturn("Asset");
         when(assetManifestMocked.getSignature()).thenReturn("Test_Signature");
 
@@ -171,7 +171,7 @@ public class RedisCacheTest {
             assertContains(meta, Hashes.TEST_STRING_HASHED);
         }
 
-        assertEquals(cache.getIncarnation(contentGUID), Hashes.TEST_STRING_HASHED);
+        assertEquals(cache.getInvariant(contentGUID), Hashes.TEST_STRING_HASHED);
     }
 
     // This must be used, because Redis sets do not preserve ordering

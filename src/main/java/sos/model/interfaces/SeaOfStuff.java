@@ -1,18 +1,18 @@
 package sos.model.interfaces;
 
 import IO.ManifestStream;
-import sos.exceptions.*;
+import sos.exceptions.ManifestNotMadeException;
+import sos.exceptions.ManifestSaveException;
+import sos.exceptions.ManifestVerificationFailedException;
+import sos.exceptions.UnknownGUIDException;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.CompoundManifest;
-import sos.model.implementations.identity.Session;
 import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.components.Metadata;
-import sos.model.interfaces.identity.Identity;
-import sos.model.interfaces.identity.IdentityToken;
 
 import java.util.Collection;
 
@@ -53,7 +53,7 @@ import java.util.Collection;
  * </p>
  *
  * <p>
- * Session and Policies:
+ * Policies:
  * </p>
  *
  * <p>
@@ -78,29 +78,6 @@ public interface SeaOfStuff {
     // should be able to set multiple identities active (say I am at home and working)
 
     /**
-     * Register this identity for the current session.
-     * Any operations following the registerIdentity operation will be associated with the
-     * registered identity.
-     *
-     * @param identity
-     * @return
-     *
-     * @see #unregisterIdentity(IdentityToken)
-     * @see Session
-     */
-    IdentityToken registerIdentity(Identity identity);
-
-    /**
-     * Unregister this identity from the current session.
-     *
-     * @param identityToken
-     * @throws UnknownIdentityException if the identityToken is unknown
-     *
-     * @see #registerIdentity(Identity)
-     */
-    void unregisterIdentity(IdentityToken identityToken) throws UnknownIdentityException;
-
-    /**
      * Adds an atom to the Sea of Stuff.
      * The locations of the atom are used to generate a manifest.
      *
@@ -110,7 +87,8 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    AtomManifest addAtom(Collection<Location> locations) throws ManifestNotMadeException, ManifestSaveException;
+    AtomManifest addAtom(Collection<Location> locations)
+            throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Get an atom's data given an AtomManifest.
@@ -129,20 +107,23 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    CompoundManifest addCompound(Collection<Content> contents) throws ManifestNotMadeException, ManifestSaveException;
+    CompoundManifest addCompound(Collection<Content> contents)
+            throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Adds an asset to the Sea of Stuff.
-     * Note that an asset exists only in the manifest space.
      *
      * @param content of this asset.
+     * @param invariant guid of this asset
      * @param prevs version of this asset.
      * @param metadata of this asset.
      * @return AssetManifest for the added asset.
      * @throws ManifestNotMadeException
      *
      */
-    AssetManifest addAsset(Content content, Collection<GUID> prevs, Collection<GUID> metadata) throws ManifestNotMadeException, ManifestSaveException;
+    AssetManifest addAsset(Content content, GUID invariant,
+                           Collection<GUID> prevs, Collection<GUID> metadata)
+            throws ManifestNotMadeException, ManifestSaveException;
 
     /**
      * Get the manifest that matches a given GUID.

@@ -80,6 +80,7 @@ public class CompoundManifest extends SignedManifest {
     @Override
     public boolean isValid() {
         return super.isValid() &&
+                contents != null &&
                 !contents.isEmpty() &&
                 isGUIDValid(contentGUID);
     }
@@ -106,7 +107,7 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    protected void generateSignature() throws EncryptionException {
+    protected String generateSignature() throws EncryptionException {
         JsonObject obj = new JsonObject();
 
         obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
@@ -114,26 +115,26 @@ public class CompoundManifest extends SignedManifest {
 
         Gson gson = new Gson();
         byte[] signatureBytes = this.identity.encrypt(gson.toJson(obj));
-        signature = IdentityConfiguration.bytesToHex(signatureBytes);
+        return IdentityConfiguration.bytesToHex(signatureBytes);
     }
 
     private void make() throws ManifestNotMadeException {
 
         try {
-            generateContentGUID();
+            contentGUID = generateContentGUID();
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
 
         try {
-            generateSignature();
+            signature = generateSignature();
         } catch (Exception e) {
             throw new ManifestNotMadeException();
         }
     }
 
-    private void generateContentGUID() throws GuidGenerationException {
-        contentGUID = generateGUID(getContentsInJSON().toString());
+    private GUID generateContentGUID() throws GuidGenerationException {
+         return generateGUID(getContentsInJSON().toString());
     }
 
     private JsonArray getContentsInJSON() {

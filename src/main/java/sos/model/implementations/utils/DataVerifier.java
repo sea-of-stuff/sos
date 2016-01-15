@@ -3,14 +3,14 @@ package sos.model.implementations.utils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * FIXME - rename. It seems like this contentverifier is strictly linked to #Content class
+ *
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContentVerifier {
+public class DataVerifier {
 
     // Suppresses default constructor, ensuring non-instantiability.
-    private ContentVerifier() {}
+    private DataVerifier() {}
 
     /**
      * Verify that the data at a given location and the given GUID match.

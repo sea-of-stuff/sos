@@ -3,10 +3,7 @@ package sos.managers;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import constants.Hashes;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import redis.embedded.RedisServer;
 import sos.configurations.DefaultConfiguration;
 import sos.configurations.SeaConfiguration;
 import sos.exceptions.ManifestSaveException;
@@ -15,11 +12,9 @@ import sos.model.implementations.components.manifests.ManifestConstants;
 import sos.model.implementations.components.manifests.ManifestFactory;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
-import sos.model.implementations.utils.URLLocation;
 import sos.model.interfaces.components.Manifest;
+import utils.Helper;
 
-import java.io.IOException;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -51,26 +46,13 @@ public class ManifestsManagerTest {
     private JsonObject jsonObj = parser.parse(EXPECTED_JSON_CONTENTS).getAsJsonObject();
     private JsonObject jsonAtomObj = parser.parse(EXPECTED_JSON_ATOM_MANIFEST).getAsJsonObject();
 
-    private RedisServer server;
-
-    @BeforeMethod
-    public void setUp() throws IOException {
-        server = new RedisServer(RedisCache.REDIS_PORT);
-        server.start();
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        server.stop();
-    }
-
     @Test
     public void testAddAtomManifest() throws Exception {
         MemCache cache = RedisCache.getInstance();
         SeaConfiguration configuration = new DefaultConfiguration();
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new ArrayList<Location>(Arrays.asList(new URLLocation(Hashes.TEST_HTTP_BIN_URL))));
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new ArrayList<Location>(Arrays.asList(new Location(Hashes.TEST_HTTP_BIN_URL))));
         GUID guid = atomManifest.getContentGUID();
         try {
             manifestsManager.addManifest(atomManifest);
@@ -86,7 +68,7 @@ public class ManifestsManagerTest {
         } catch (ManifestSaveException e) {
             throw new Exception();
         } finally {
-            deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
+            Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
         }
     }
 
@@ -95,18 +77,5 @@ public class ManifestsManagerTest {
         assertTrue(false);
     }
 
-    public void deleteFile(String file) {
-        Path path = Paths.get(file);
-        try {
-            Files.delete(path);
-        } catch (NoSuchFileException x) {
-            System.err.format("%s: no such" + " file or directory", path);
-        } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s: not empty", path);
-        } catch (IOException x) {
-            // File permission problems are caught here.
-            System.err.println(x);
-        }
 
-    }
 }

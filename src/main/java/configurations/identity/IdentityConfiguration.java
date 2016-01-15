@@ -9,11 +9,7 @@ public class IdentityConfiguration {
     private IdentityConfiguration() {}
 
     public static final String ALGORITHM = "RSA";
-    public static final int KEY_SIZE = 1024; // in bytes
-
-    // XXX This is OS dependent
-    public static final String PRIVATE_KEY_FILE = "keys/private.key";
-    public static final String PUBLIC_KEY_FILE = "keys/public.key";
+    public static final int KEY_SIZE = 2048; // in bytes - size cannot exceed 2048 according to SUN specs
 
     // @see http://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java
     final private static char[] hexArray = "0123456789ABCDEF".toCharArray();

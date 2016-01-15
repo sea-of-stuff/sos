@@ -10,6 +10,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+// FIXME - set of GUIDs!!!
 public abstract class MemCache {
 
     public abstract void killInstance();
@@ -28,13 +29,12 @@ public abstract class MemCache {
 
     public abstract Set<String> getContents(GUID contentGUID);
 
-    public abstract String getIncarnation(GUID manifestGUID);
+    public abstract String getInvariant(GUID manifestGUID);
 
     public abstract Set<String> getPrevs(GUID manifestGUID);
 
     public abstract Set<String> getMetadata(GUID manifestGUID);
 
-    // FIXME - set of GUIDs!!!
     public abstract Set<String> getMetaLabelMatches(String value);
 
 }

@@ -3,6 +3,8 @@ package sos.model.implementations.utils;
 import com.google.gson.JsonObject;
 import sos.model.implementations.components.manifests.ManifestConstants;
 
+import java.util.Objects;
+
 /**
  * Envelope class used to represent some content with metadata associated with it.
  *
@@ -60,8 +62,9 @@ public class Content {
     public JsonObject toJSON() {
         JsonObject obj = new JsonObject();
 
-        if (label != null && !label.isEmpty() )
+        if (label != null && !label.isEmpty())
         obj.addProperty(ManifestConstants.CONTENT_KEY_LABEL, this.label);
+
         obj.addProperty(ManifestConstants.CONTENT_KEY_GUID, this.guid.toString());
 
         return obj;
@@ -72,4 +75,17 @@ public class Content {
         return toJSON().toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Content content = (Content) o;
+        return Objects.equals(guid, content.guid) &&
+                Objects.equals(label, content.label);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(guid, label);
+    }
 }

@@ -7,5 +7,7 @@ public interface SeaConfiguration {
 
     String getLocalManifestsLocation();
 
-    // TODO - other configs, such as #threads running, etc, could be useful
+    String[] getIdentityPaths();
+
+    // XXX - other configs, such as #threads running, etc, could be useful
 }

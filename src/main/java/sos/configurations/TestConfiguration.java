@@ -3,15 +3,15 @@ package sos.configurations;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DefaultConfiguration implements SeaConfiguration {
+public class TestConfiguration implements SeaConfiguration {
 
     private static final String HOME = System.getProperty("user.home");
-    private static final String MANIFESTS_LOCATION = HOME + "/sos/manifests/";
-    private static final String PRIVATE_KEY_FILE = HOME + "/sos/keys/private.der";
-    private static final String PUBLIC_KEY_FILE = HOME + "/sos/keys/public.der";
+    private static final String MANIFESTS_LOCATION = HOME + "/sos/test/manifests/";
+    private static final String PRIVATE_KEY_FILE = HOME + "/sos//test/keys/private.der";
+    private static final String PUBLIC_KEY_FILE = HOME + "/sos/test/keys/public.der";
 
     // Suppresses default constructor, ensuring non-instantiability.
-    public DefaultConfiguration() {}
+    public TestConfiguration() {}
 
     @Override
     public String getLocalManifestsLocation() {

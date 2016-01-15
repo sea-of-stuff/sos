@@ -7,7 +7,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import sos.exceptions.ManifestNotMadeException;
 import sos.model.implementations.utils.Location;
-import sos.model.implementations.utils.URLLocation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +55,7 @@ public class AtomManifestTest {
 
     @Test (timeOut = 10000)
     public void testToJSON() throws Exception {
-        Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
+        Location location = new Location(Hashes.TEST_HTTP_BIN_URL);
 
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);
@@ -67,7 +66,7 @@ public class AtomManifestTest {
 
     @Test (timeOut = 10000)
     public void testIsValid() throws Exception {
-        Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
+        Location location = new Location(Hashes.TEST_HTTP_BIN_URL);
 
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);
@@ -78,7 +77,7 @@ public class AtomManifestTest {
 
     @Test (timeOut = 10000)
     public void testIsVerified() throws Exception {
-        Location location = new URLLocation(Hashes.TEST_HTTP_BIN_URL);
+        Location location = new Location(Hashes.TEST_HTTP_BIN_URL);
 
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);

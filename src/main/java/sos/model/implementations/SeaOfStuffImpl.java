@@ -1,17 +1,15 @@
 package sos.model.implementations;
 
 import IO.ManifestStream;
-import sos.configurations.DefaultConfiguration;
 import sos.configurations.SeaConfiguration;
 import sos.exceptions.*;
 import sos.managers.ManifestsManager;
 import sos.managers.MemCache;
-import sos.managers.RedisCache;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.CompoundManifest;
 import sos.model.implementations.components.manifests.ManifestFactory;
-import sos.model.implementations.identity.Session;
+import sos.model.implementations.identity.IdentityImpl;
 import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
@@ -19,9 +17,9 @@ import sos.model.interfaces.SeaOfStuff;
 import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.components.Metadata;
 import sos.model.interfaces.identity.Identity;
-import sos.model.interfaces.identity.IdentityToken;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -33,37 +31,25 @@ import java.util.Collection;
  */
 public class SeaOfStuffImpl implements SeaOfStuff {
 
-    private Session session;
+    private Identity identity;
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
     private MemCache cache;
 
-    public SeaOfStuffImpl() {
-        configuration = new DefaultConfiguration(); // TODO - load configuration from file.
+    public SeaOfStuffImpl(SeaConfiguration configuration, MemCache cache) throws KeyGenerationException, KeyLoadedException, IOException {
+        this.configuration = configuration;
 
-        session = new Session();
-        cache = RedisCache.getInstance();
+        identity = new IdentityImpl(configuration);
         manifestsManager = new ManifestsManager(configuration, cache);
 
-        // TODO - start background processes
-        // listen to incoming requests from other nodes / crawlers?
-        // make this node available to the rest of the sea of stuff
+        backgroundProcesses();
     }
 
-    public void cleanup() {
-        cache.killInstance();
-    }
-
-    @Override
-    public IdentityToken registerIdentity(Identity identity) {
-        return session.addIdentity(identity);
-    }
-
-    @Override
-    public void unregisterIdentity(IdentityToken identityToken)
-            throws UnknownIdentityException {
-
-        session.removeIdentity(identityToken);
+    private void backgroundProcesses() {
+        // TODO
+        // - start background processes
+        // - listen to incoming requests from other nodes / crawlers?
+        // - make this node available to the rest of the sea of stuff
     }
 
     @Override
@@ -80,7 +66,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public CompoundManifest addCompound(Collection<Content> contents)
             throws ManifestNotMadeException, ManifestSaveException {
 
-        Identity identity = session.getRegisteredIdentity();
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(contents, identity);
         manifestsManager.addManifest(manifest);
 
@@ -89,12 +74,12 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AssetManifest addAsset(Content content,
+                                  GUID invariant,
                                   Collection<GUID> prevs,
                                   Collection<GUID> metadata)
             throws ManifestNotMadeException, ManifestSaveException {
 
-        Identity identity = session.getRegisteredIdentity();
-        AssetManifest manifest = ManifestFactory.createAssetManifest(content, prevs, metadata, identity);
+        AssetManifest manifest = ManifestFactory.createAssetManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
 
         return manifest;
@@ -102,11 +87,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public byte[] getAtomContent(AtomManifest atomManifest) {
-
-        // TODO - get locations from atomManifest and retrieve atom.
-        // TODO - query the manifests manager
-        // abstract implementation from this class
-
+        // - get locations from atomManifest and retrieve atom.
+        // - query the manifests manager
+        // - abstract implementation from this class
         throw new NotImplementedException();
     }
 
@@ -123,7 +106,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException {
-
         boolean ret;
         try {
             ret = manifest.verify();
@@ -136,8 +118,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public ManifestStream findManifests(Metadata metadata) {
-        // TODO - look at manifests manager
-        // having a look at the redis cache would be very helpful!
+        // - look at manifests manager
+        // - having a look at the redis cache would be very helpful!
         throw new NotImplementedException();
     }
 }

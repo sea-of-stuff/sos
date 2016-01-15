@@ -69,6 +69,7 @@ public class ManifestFactory {
      * @throws ManifestNotMadeException
      */
     public static AssetManifest createAssetManifest(Content content,
+                                                    GUID invariant,
                                                     Collection<GUID> prevs,
                                                     Collection<GUID> metadata,
                                                     Identity identity)
@@ -80,10 +81,12 @@ public class ManifestFactory {
             manifest = new AssetManifest(content, identity);
         else if (prevs == null && metadata != null)
             manifest = new AssetManifest(content, metadata, identity);
-        else if (prevs != null && metadata == null)
-            manifest = new AssetManifest(prevs, content, identity);
+        else if (invariant != null && prevs != null && metadata == null)
+            manifest = new AssetManifest(invariant, content, prevs, identity);
+        else if (invariant != null && prevs != null && metadata != null)
+            manifest = new AssetManifest(invariant, content, prevs, metadata, identity);
         else
-            manifest = new AssetManifest(prevs, content, metadata, identity);
+            throw new ManifestNotMadeException("Parameters missing or null");
 
         return manifest;
     }

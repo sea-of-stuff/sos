@@ -8,8 +8,8 @@ import sos.exceptions.*;
 import sos.model.implementations.components.manifests.*;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
-import sos.model.implementations.utils.URLLocation;
 import sos.model.interfaces.components.Manifest;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -61,9 +61,6 @@ public class ManifestsManager {
         }
     }
 
-
-    // need to provide a general abstraction to what the redis cache (for example) does.
-    // look at the sea of stuff interface to understand what we need.
     // Get manifest from file
     // https://github.com/google/gson/blob/master/UserGuide.md#object-examples
     /**
@@ -75,8 +72,8 @@ public class ManifestsManager {
      */
     public Manifest findManifest(GUID guid) throws ManifestException {
         // Look at REDIS, then return
-        // if fails, then Look at Files then return
-        // if fails, return null
+        // if query fails, then Look at Files then return
+        // if this also fails, return null
 
         Manifest manifest;
         try {
@@ -124,13 +121,12 @@ public class ManifestsManager {
         return manifest;
     }
 
-    // TODO - REMOVEME - use of manifest guid is wrong!
     private AtomManifest constructAtomManifestFromCache(GUID guid, String type) throws ManifestNotMadeException, MalformedURLException {
 
         Collection<String> cachedLocations = cache.getLocations(guid);
         Collection<Location> locations = new ArrayList<Location>();
         for(String cachedLocation:cachedLocations) {
-            locations.add(new URLLocation(cachedLocation));
+            locations.add(new Location(cachedLocation));
         }
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
@@ -193,20 +189,20 @@ public class ManifestsManager {
     }
 
     private Manifest getManifestFromFile(GUID guid) throws SourceLocationException {
-        return null;
+        throw new NotImplementedException();
     }
 
     private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {
         JsonObject manifestJSON = manifest.toJSON();
 
-        // remove manifest guid and use that for the manifest file name
+        // Remove content guid and use that for the manifest file name
         String guid = manifestJSON.remove(ManifestConstants.KEY_CONTENT_GUID).getAsString();
-        saveToFileLocal(guid, manifestJSON);
+        saveToFile(guid, manifestJSON);
 
         cacheManifest(manifest);
     }
 
-    private void saveToFileLocal(String filename, JsonObject object) throws ManifestPersistException {
+    private void saveToFile(String filename, JsonObject object) throws ManifestPersistException {
         final String path = configuration.getLocalManifestsLocation() + filename;
         File file = new File(path);
 
@@ -216,6 +212,9 @@ public class ManifestsManager {
             // TODO - custom exception
             throw new IllegalStateException("Couldn't create dir: " + parent);
         }
+
+        if (file.exists())
+            return;
 
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
@@ -229,8 +228,6 @@ public class ManifestsManager {
         } finally {
             file.setReadOnly();
         }
-
-        // file already exists, thus there is no need to create another one.
     }
 
     private void cacheManifest(Manifest manifest) throws ManifestCacheException {

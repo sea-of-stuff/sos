@@ -1,6 +1,7 @@
 package sos.managers;
 
 import redis.clients.jedis.Jedis;
+import redis.embedded.RedisServer;
 import sos.exceptions.UnknownManifestTypeException;
 import sos.model.implementations.components.manifests.AssetManifest;
 import sos.model.implementations.components.manifests.AtomManifest;
@@ -12,6 +13,7 @@ import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -43,14 +45,19 @@ public class RedisCache extends MemCache {
     public static final int REDIS_PORT = 6380;
     private static RedisCache instance = null;
     private Jedis redis;
+    private static RedisServer server;
 
     /**
      * Singleton pattern.
      *
+     * Start a Redis server and return a client instance back.
+     *
      * @return
      */
-    public static MemCache getInstance() {
+    public static MemCache getInstance() throws IOException {
         if(instance == null) {
+            server = new RedisServer(REDIS_PORT);
+            server.start();
             instance = new RedisCache();
         }
         return instance;
@@ -58,11 +65,14 @@ public class RedisCache extends MemCache {
 
     /**
      * The Cache must be killed manually to avoid memory leaks.
+     *
+     * The server instance is also shutdown.
      */
     @Override
     public void killInstance() {
         redis.quit();
         instance = null;
+        server.stop();
     }
 
     @Override
@@ -106,7 +116,7 @@ public class RedisCache extends MemCache {
     }
 
     @Override
-    public String getManifestType(GUID manifestGUID) {
+    public String getManifestType(GUID manifestGUID) { // TODO - rename manifestGUID to guid and do so for all other methods
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE));
     }
 
@@ -128,11 +138,11 @@ public class RedisCache extends MemCache {
 
     @Override
     public Set<String> getContents(GUID contentGUID) {
-        return redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS));
+        return redis.smembers(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENT));
     }
 
     @Override
-    public String getIncarnation(GUID manifestGUID) {
+    public String getInvariant(GUID manifestGUID) {
         return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_INVARIANT));
     }
 
@@ -177,34 +187,37 @@ public class RedisCache extends MemCache {
 
         redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_SIGNATURE), signature);
         for(Content content:contents) {
-            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENTS), content.toString());
+            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENT), content.toString());
             addMetaContent(content);
         }
     }
 
-    // XXX - what about the version GUID?
-    // bi-directional mapping for incarnation
-    // contentGUID -->invariant
-    // invariant --> [manifestGUID] - there can be multiple manifests for this incarnation
-    // contentGUID --> signature
-    // contentGUID --> [prevs]
-    // contentGUID --> metadata
+    // bi-directional mapping for invariant
+    //  versionGUID -->invariant
+    //  invariant --> [manifestGUID] - there can be multiple manifests for this invariant
+    // versionGUID --> contentGUID
+    // versionGUID --> signature
+    // versionGUID --> [prevs]
+    // versionGUID --> metadata
     private void addAssetManifest(AssetManifest manifest) {
         GUID contentGUID = manifest.getContentGUID();
-        GUID invariant = manifest.getAssetGUID();
+        GUID invariant = manifest.getInvariantGUID();
+        GUID version = manifest.getVersionGUID();
         Collection<GUID> prevs = manifest.getPreviousManifests();
         Collection<GUID> metadata = manifest.getMetadataGUID();
         String signature = manifest.getSignature();
 
-        redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_MANIFEST), contentGUID.toString());
-        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_INVARIANT), invariant.toString());
-        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_SIGNATURE), signature);
+        redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_MANIFEST), version.toString());
+        redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_INVARIANT), invariant.toString());
+
+        redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_CONTENT), contentGUID.toString());
+        redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_SIGNATURE), signature);
 
         for(GUID prev:prevs) {
-            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_PREVS), prev.toString());
+            redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_PREVS), prev.toString());
         }
         for(GUID meta:metadata) {
-            redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_METADATA), meta.toString());
+            redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_METADATA), meta.toString());
         }
 
         addMetaContent(manifest.getContent());
