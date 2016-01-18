@@ -60,10 +60,8 @@ public class ManifestFactory {
                                                           String signature)
             throws ManifestNotMadeException {
 
-        CompoundManifest manifest = new CompoundManifest();
+        CompoundManifest manifest = new CompoundManifest(contents, null);
         manifest.setSignature(signature);
-        manifest.setContents(contents);
-        manifest.makeContentGUID();
 
         return manifest;
     }
@@ -87,18 +85,22 @@ public class ManifestFactory {
                                                     Identity identity)
             throws ManifestNotMadeException {
 
-        AssetManifest manifest;
+        if (content == null || identity == null) {
+            throw new ManifestNotMadeException("Parameters missing or null : content or identity");
+        }
 
-        if (prevs == null && metadata == null)
-            manifest = new AssetManifest(content, identity);
-        else if (prevs == null && metadata != null)
-            manifest = new AssetManifest(content, metadata, identity);
-        else if (invariant != null && prevs != null && metadata == null)
-            manifest = new AssetManifest(invariant, content, prevs, identity);
-        else if (invariant != null && prevs != null && metadata != null)
-            manifest = new AssetManifest(invariant, content, prevs, metadata, identity);
-        else
-            throw new ManifestNotMadeException("Parameters missing or null");
+        return new AssetManifest(invariant, content, prevs, metadata, identity);
+    }
+
+    public static AssetManifest createAssetManifest(Content content,
+                                                    GUID invariant,
+                                                    Collection<GUID> prevs,
+                                                    Collection<GUID> metadata,
+                                                    String signature)
+            throws ManifestNotMadeException {
+
+        AssetManifest manifest = new AssetManifest(invariant, content, prevs, metadata, null);
+        manifest.setSignature(signature);
 
         return manifest;
     }

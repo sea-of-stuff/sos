@@ -60,11 +60,9 @@ public class CompoundManifest extends SignedManifest {
         this.contents = contents;
 
         makeContentGUID();
-        makeSignature();
-    }
 
-    protected CompoundManifest() {
-        super(null, ManifestConstants.COMPOUND);
+        if (identity != null)
+            makeSignature();
     }
 
     /**
@@ -74,12 +72,6 @@ public class CompoundManifest extends SignedManifest {
      */
     public Collection<Content> getContents() {
         return contents;
-    }
-
-    public void setContents(Collection<Content> contents) {
-        if (this.contents == null) {
-            this.contents = contents;
-        }
     }
 
     @Override

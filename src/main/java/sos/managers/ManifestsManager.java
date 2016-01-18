@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Manage the manifests of the sea of stuff.
@@ -146,11 +147,17 @@ public class ManifestsManager {
 
     private AssetManifest constructAssetManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
 
-        String signature = cache.getSignature(guid);
-        // TODO
+        String cachedSignature = cache.getSignature(guid);
 
-        //return ManifestFactory.createAssetManifest();
-        return null;
+        Collection<Content> cachedContents = cache.getContents(guid);
+        Iterator<Content> contentIterator = cachedContents.iterator();
+        Content cachedContent = contentIterator.next();
+
+        GUID cachedInvariant = cache.getInvariant(guid);
+        Collection<GUID> cachedPrevs = cache.getPrevs(guid);
+        Collection<GUID> cachedMetadata = cache.getMetadata(guid);
+
+        return ManifestFactory.createAssetManifest(cachedContent, cachedInvariant, cachedPrevs, cachedMetadata, cachedSignature);
     }
 
     private Manifest constructManifestFromJson(String type, JsonObject obj) throws UnknownManifestTypeException {
@@ -185,7 +192,13 @@ public class ManifestsManager {
         JsonObject manifestJSON = manifest.toJSON();
 
         // Remove content guid and use that for the manifest file name
-        String guid = manifestJSON.remove(ManifestConstants.KEY_CONTENT_GUID).getAsString();
+        String guid = "";
+        String type = manifest.getManifestType();
+        if (type.equals(ManifestConstants.ASSET)) {
+            guid = manifestJSON.remove(ManifestConstants.KEY_VERSION).getAsString();
+        } else {
+            guid = manifestJSON.remove(ManifestConstants.KEY_CONTENT_GUID).getAsString();
+        }
         saveToFile(guid, manifestJSON);
 
         cacheManifest(manifest);

@@ -108,8 +108,6 @@ public class RedisCache extends MemCache {
 
     @Override
     public void addManifest(Manifest manifest) throws UnknownManifestTypeException {
-        addType(manifest);
-
         String type = manifest.getManifestType();
         switch(type) {
             case ManifestConstants.ATOM:
@@ -214,18 +212,13 @@ public class RedisCache extends MemCache {
         return redis.smembers(getMetaRedisKey(value, RedisKeys.HANDLE_META_LABEL));
     }
 
-    // contentGUID --> manifestType
-    private void addType(Manifest manifest) {
-        GUID contentGUID = manifest.getContentGUID();
-        String type = manifest.getManifestType();
-        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_TYPE), type);
-    }
-
     // contentGUID --> [locations]
     private void addAtomManifest(AtomManifest manifest) {
         GUID contentGUID = manifest.getContentGUID();
-        Collection<Location> locations = manifest.getLocations();
+        String type = manifest.getManifestType();
+        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_TYPE), type);
 
+        Collection<Location> locations = manifest.getLocations();
         for(Location location:locations) {
             redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_LOCATION), location.toString());
         }
@@ -235,10 +228,13 @@ public class RedisCache extends MemCache {
     // contentGUID --> [contentGUIDs]
     private void addCompoundManifest(CompoundManifest manifest) {
         GUID contentGUID = manifest.getContentGUID();
-        String signature = manifest.getSignature();
-        Collection<Content> contents = manifest.getContents();
+        String type = manifest.getManifestType();
+        redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_TYPE), type);
 
+        String signature = manifest.getSignature();
         redis.set(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_SIGNATURE), signature);
+
+        Collection<Content> contents = manifest.getContents();
         for(Content content:contents) {
             redis.sadd(getGUIDRedisKey(contentGUID, RedisKeys.HANDLE_CONTENT), content.toString());
             addMetaContent(content);
@@ -253,27 +249,36 @@ public class RedisCache extends MemCache {
     // versionGUID --> [prevs]
     // versionGUID --> metadata
     private void addAssetManifest(AssetManifest manifest) {
-        GUID contentGUID = manifest.getContentGUID();
         GUID invariant = manifest.getInvariantGUID();
         GUID version = manifest.getVersionGUID();
         Collection<GUID> prevs = manifest.getPreviousManifests();
         Collection<GUID> metadata = manifest.getMetadata();
         String signature = manifest.getSignature();
+        Content content = manifest.getContent();
+
+        String type = manifest.getManifestType();
+        redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_TYPE), type);
 
         redis.sadd(getGUIDRedisKey(invariant, RedisKeys.HANDLE_VERSION), version.toString());
         redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_INVARIANT), invariant.toString());
 
-        redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_CONTENT), contentGUID.toString());
+        redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_CONTENT), content.toString());
+        addMetaContent(content);
+
+
         redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_SIGNATURE), signature);
 
-        for(GUID prev:prevs) {
-            redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_PREVS), prev.toString());
-        }
-        for(GUID meta:metadata) {
-            redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_METADATA), meta.toString());
+        if (prevs != null) {
+            for (GUID prev : prevs) {
+                redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_PREVS), prev.toString());
+            }
         }
 
-        addMetaContent(manifest.getContent());
+        if (metadata != null) {
+            for (GUID meta : metadata) {
+                redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_METADATA), meta.toString());
+            }
+        }
     }
 
     private void addMetaContent(Content content) {

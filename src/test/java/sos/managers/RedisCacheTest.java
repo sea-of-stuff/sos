@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -117,10 +118,11 @@ public class RedisCacheTest {
         AssetManifest assetManifestMocked = mock(AssetManifest.class);
 
         GUID version = new GUIDsha1("123");
-        GUID content = new GUIDsha1("321");
-        GUID invariant = new GUIDsha1("123");
+        Content content = new Content(new GUIDsha1("321"));
+        GUID invariant = new GUIDsha1("abc123");
         when(assetManifestMocked.getVersionGUID()).thenReturn(version);
-        when(assetManifestMocked.getContentGUID()).thenReturn(content);
+        when(assetManifestMocked.getContent()).thenReturn(content);
+        when(assetManifestMocked.getContentGUID()).thenReturn(content.getGUID());
         when(assetManifestMocked.getInvariantGUID()).thenReturn(invariant);
         when(assetManifestMocked.getManifestType()).thenReturn("Asset");
         when(assetManifestMocked.getSignature()).thenReturn("Test_Signature");
@@ -138,10 +140,6 @@ public class RedisCacheTest {
         );
         when(assetManifestMocked.getPreviousManifests()).thenReturn(prevs);
 
-        Content contentMocked = mock(Content.class);
-        when(assetManifestMocked.getContent()).thenReturn(contentMocked);
-        when(contentMocked.toString()).thenReturn("Content_1");
-
         cache.addManifest(assetManifestMocked);
         assertEquals(cache.getSignature(version), "Test_Signature");
 
@@ -156,7 +154,10 @@ public class RedisCacheTest {
         }
 
         assertEquals(cache.getInvariant(version), invariant);
-        assertContains(cache.getContents(version), content);
+
+        Collection<Content> contents = cache.getContents(version);
+        Iterator<Content> contentIterator = contents.iterator();
+        assertEquals(content, contentIterator.next());
     }
 
     // This must be used, because Redis sets do not preserve ordering

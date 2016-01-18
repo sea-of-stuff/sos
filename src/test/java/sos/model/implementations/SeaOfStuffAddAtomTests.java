@@ -73,7 +73,8 @@ public class SeaOfStuffAddAtomTests {
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
 
-        deleteStoredFiles(manifest, location);
+        deleteStoredFiles(manifest);
+        deleteStoredDataFile(location);
     }
 
     @Test
@@ -81,8 +82,11 @@ public class SeaOfStuffAddAtomTests {
         // TODO - test AtomManifestDeserialiser
     }
 
-    private void deleteStoredFiles(Manifest manifest, Location location) throws URISyntaxException {
+    private void deleteStoredFiles(Manifest manifest) {
         Helper.deleteFile(configuration.getLocalManifestsLocation() + manifest.getContentGUID().toString());
+    }
+
+    private void deleteStoredDataFile(Location location) throws URISyntaxException {
         Helper.deleteFile(Helper.localURItoPath(location));
     }
 

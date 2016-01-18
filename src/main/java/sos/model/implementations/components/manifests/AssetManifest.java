@@ -53,51 +53,10 @@ public class AssetManifest extends SignedManifest {
     private Collection<GUID> metadata;
 
     /**
-     * Creates an AssetManifest given a content and an identity.
-     *
-     * @param content
-     * @param identity
-     * @throws ManifestNotMadeException
-     */
-    protected AssetManifest(Content content, Identity identity)
-            throws ManifestNotMadeException {
-        super(identity, ManifestConstants.ASSET);
-        this.content = content;
-
-        try {
-            generateInvariant();
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-        make();
-    }
-
-    /**
-     * Creates an AssetManifest given a content, an identity and the GUIDs of the previous
-     * asset's manifest.
-     *
-     * @param invariant
-     * @param content
-     * @param prevs
-     * @param identity
-     * @throws ManifestNotMadeException
-     */
-    protected AssetManifest(GUID invariant, Content content,
-                            Collection<GUID> prevs, Identity identity)
-            throws ManifestNotMadeException {
-        super(identity, ManifestConstants.ASSET);
-        this.content = content;
-        this.invariant = invariant;
-        this.prevs = prevs;
-
-        make();
-    }
-
-    /**
      * Creates an AssetManifest given a content, an identity, the GUIDs of the previous
      * asset's manifest, and the GUID of metadata associated to the asset.
      *
-     * @param invariant
+     * @param invariant - if null it will be generated
      * @param content
      * @param prevs
      * @param metadata
@@ -110,33 +69,24 @@ public class AssetManifest extends SignedManifest {
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.ASSET);
         this.content = content;
-        this.invariant = invariant;
+
+        if (invariant != null) {
+            this.invariant = invariant;
+        } else {
+            try {
+                generateInvariant();
+            } catch (GuidGenerationException e) {
+                throw new ManifestNotMadeException();
+            }
+        }
+
         this.prevs = prevs;
         this.metadata = metadata;
 
-        make();
-    }
+        makeVersionGUID();
 
-    /**
-     * Creates an AssetManifest given a content, an identity, and the GUID of metadata associated to the asset.
-     *
-     * @param content
-     * @param metadata
-     * @param identity
-     * @throws ManifestNotMadeException
-     */
-    protected AssetManifest(Content content, Collection<GUID> metadata, Identity identity)
-            throws ManifestNotMadeException {
-        super(identity, ManifestConstants.ASSET);
-        this.content = content;
-        this.metadata = metadata;
-
-        try {
-            generateInvariant();
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-        make();
+        if (identity != null)
+            makeSignature();
     }
 
     /**
@@ -176,17 +126,15 @@ public class AssetManifest extends SignedManifest {
         return content;
     }
 
-    /**
-     * Get the content's GUID of this asset.
-     *
-     * @return GUID of the content of this asset.
-     */
+    @Override
     public GUID getContentGUID() {
         return content.getGUID();
     }
 
-    public void setContentGUID() {
-        throw new NotImplementedException();
+    @Override
+    public void setContentGUID(GUID guid) {
+        if (content == null || content.getGUID() == null)
+            content = new Content(guid);
     }
 
     /**
@@ -208,7 +156,9 @@ public class AssetManifest extends SignedManifest {
 
     @Override
     public boolean isValid() {
-        throw new NotImplementedException();
+        return super.isValid() &&
+                content != null &&
+                isGUIDValid(content.getGUID());
     }
 
     @Override
@@ -263,14 +213,15 @@ public class AssetManifest extends SignedManifest {
         invariant = generateGUID(Double.toString(Math.random()));
     }
 
-    private void make() throws ManifestNotMadeException {
-
+    private void makeVersionGUID() throws ManifestNotMadeException {
         try {
             version = generateGUID(manifestToHashInJSON().toString());
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
+    }
 
+    private void makeSignature() throws ManifestNotMadeException {
         try {
             signature = generateSignature();
         } catch (Exception e) {

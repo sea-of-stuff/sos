@@ -77,7 +77,7 @@ public class AssetManifestTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(cat, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, cat, null, null, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -100,7 +100,7 @@ public class AssetManifestTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(cat, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, cat, null, metadata, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -126,7 +126,7 @@ public class AssetManifestTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, null, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));

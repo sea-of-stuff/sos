@@ -3,8 +3,8 @@ package sos.model.implementations.identity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import sos.configurations.DefaultConfiguration;
 import sos.configurations.SeaConfiguration;
+import sos.configurations.TestConfiguration;
 import sos.exceptions.DecryptionException;
 import sos.exceptions.EncryptionException;
 import sos.exceptions.KeyGenerationException;
@@ -25,7 +25,7 @@ public class IdentityImplKeysTest {
 
     @BeforeMethod
     public void setup() {
-        configuration = new DefaultConfiguration();
+        configuration = new TestConfiguration();
     }
 
     @AfterMethod
