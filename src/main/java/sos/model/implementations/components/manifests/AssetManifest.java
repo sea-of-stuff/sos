@@ -182,10 +182,10 @@ public class AssetManifest extends SignedManifest {
         obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
         obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
 
-        if (prevs != null)
+        if (prevs != null && !prevs.isEmpty())
             obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
 
-        if (metadata != null)
+        if (metadata != null && !metadata.isEmpty())
             obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
 
         Gson gson = new Gson();
@@ -199,10 +199,10 @@ public class AssetManifest extends SignedManifest {
         obj.addProperty(ManifestConstants.KEY_INVARIANT, invariant.toString());
         obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
 
-        if (prevs != null)
+        if (prevs != null && !prevs.isEmpty())
             obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
 
-        if (metadata != null)
+        if (metadata != null && !metadata.isEmpty())
             obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
 
         return obj;

@@ -15,6 +15,7 @@ import sos.managers.RedisCache;
 import sos.model.implementations.components.manifests.CompoundManifest;
 import sos.model.implementations.components.manifests.ManifestConstants;
 import sos.model.implementations.utils.Content;
+import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.GUIDsha1;
 import sos.model.interfaces.SeaOfStuff;
 import sos.model.interfaces.components.Manifest;
@@ -79,11 +80,11 @@ public class SeaOfStuffAddCompoundTests {
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
 
-        deleteStoredFiles(retrievedManifest);
+        deleteStoredFiles(retrievedManifest.getContentGUID());
     }
 
-    private void deleteStoredFiles(Manifest manifest) {
-        Helper.deleteFile(configuration.getLocalManifestsLocation() + manifest.getContentGUID().toString());
+    private void deleteStoredFiles(GUID guid) {
+        Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
     }
 
 }

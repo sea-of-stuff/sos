@@ -12,6 +12,7 @@ import sos.managers.MemCache;
 import sos.managers.RedisCache;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.ManifestConstants;
+import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
 import sos.model.interfaces.SeaOfStuff;
 import sos.model.interfaces.components.Manifest;
@@ -73,7 +74,7 @@ public class SeaOfStuffAddAtomTests {
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
 
-        deleteStoredFiles(manifest);
+        deleteStoredFiles(manifest.getContentGUID());
         deleteStoredDataFile(location);
     }
 
@@ -82,8 +83,8 @@ public class SeaOfStuffAddAtomTests {
         // TODO - test AtomManifestDeserialiser
     }
 
-    private void deleteStoredFiles(Manifest manifest) {
-        Helper.deleteFile(configuration.getLocalManifestsLocation() + manifest.getContentGUID().toString());
+    private void deleteStoredFiles(GUID guid) {
+        Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
     }
 
     private void deleteStoredDataFile(Location location) throws URISyntaxException {

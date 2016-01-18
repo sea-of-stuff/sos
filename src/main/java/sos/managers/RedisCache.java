@@ -268,13 +268,13 @@ public class RedisCache extends MemCache {
 
         redis.set(getGUIDRedisKey(version, RedisKeys.HANDLE_SIGNATURE), signature);
 
-        if (prevs != null) {
+        if (prevs != null && !prevs.isEmpty()) {
             for (GUID prev : prevs) {
                 redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_PREVS), prev.toString());
             }
         }
 
-        if (metadata != null) {
+        if (metadata != null && !metadata.isEmpty()) {
             for (GUID meta : metadata) {
                 redis.sadd(getGUIDRedisKey(version, RedisKeys.HANDLE_METADATA), meta.toString());
             }
