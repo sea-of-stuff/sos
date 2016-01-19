@@ -3,8 +3,6 @@ package sos.deserializers;
 import com.google.gson.*;
 import sos.model.implementations.components.manifests.AtomManifest;
 import sos.model.implementations.components.manifests.ManifestConstants;
-import sos.model.implementations.utils.GUID;
-import sos.model.implementations.utils.GUIDsha1;
 import sos.model.implementations.utils.Location;
 
 import java.lang.reflect.Type;
@@ -22,12 +20,7 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
 
         JsonObject obj = json.getAsJsonObject();
 
-        JsonElement jGUID = obj.get(ManifestConstants.KEY_CONTENT_GUID);
-        String sGUID = jGUID.getAsString();
-        GUID guid = new GUIDsha1(sGUID);
-
         JsonArray jLocations = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
-
         Collection<Location> locations = new ArrayList<Location>();
         for (int i = 0; i < jLocations.size(); i++) {
             JsonElement jLocation = jLocations.get(i);
@@ -40,7 +33,6 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
         }
 
         AtomManifest manifest = new AtomManifest();
-        manifest.setContentGUID(guid);
         manifest.setLocations(locations);
 
         return manifest;

@@ -66,7 +66,7 @@ public class SeaOfStuffAddAtomTests {
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
-        assertEquals("Atom", retrievedManifest.getManifestType());
+        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
         Collection<Location> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         Iterator<Location> iterator = retrievedLocations.iterator();
@@ -79,8 +79,27 @@ public class SeaOfStuffAddAtomTests {
     }
 
     @Test
-    public void testRetrieveAtomFromFile() {
-        // TODO - test AtomManifestDeserialiser
+    public void testRetrieveAtomFromFile() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = createDummyDataFile();
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        // Flush the cache, so to force the manifest to be retrieved from file.
+        cache.flushDB();
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
+
+        Collection<Location> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
+        Iterator<Location> iterator = retrievedLocations.iterator();
+        assertEquals(location, iterator.next());
+
+        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
+
+        deleteStoredFiles(manifest.getContentGUID());
+        deleteStoredDataFile(location);
     }
 
     private void deleteStoredFiles(GUID guid) {

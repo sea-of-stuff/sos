@@ -72,7 +72,7 @@ public class SeaOfStuffAddCompoundTests {
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
-        assertEquals("Compound", retrievedManifest.getManifestType());
+        assertEquals(ManifestConstants.COMPOUND, retrievedManifest.getManifestType());
 
         Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
         Iterator<Content> iterator = retrievedContents.iterator();

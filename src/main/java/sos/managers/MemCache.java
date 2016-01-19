@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-// FIXME - set of GUIDs!!!
 public abstract class MemCache {
 
     public abstract void killInstance();
@@ -28,7 +27,7 @@ public abstract class MemCache {
 
     public abstract String getSignature(GUID manifestGUID);
 
-    public abstract Set<String> getManifests(GUID guid);
+    public abstract Collection<Manifest> getManifests(GUID guid);
 
     public abstract Collection<Content> getContents(GUID contentGUID);
 
@@ -38,6 +37,7 @@ public abstract class MemCache {
 
     public abstract Collection<GUID> getMetadata(GUID manifestGUID);
 
+    // TODO - write description
     public abstract Set<String> getMetaLabelMatches(String value);
 
 }

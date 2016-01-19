@@ -75,7 +75,7 @@ public class SeaOfStuffAddAssetTests {
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
-        assertEquals("Asset", retrievedManifest.getManifestType());
+        assertEquals(ManifestConstants.ASSET, retrievedManifest.getManifestType());
 
         Content retrievedContent = ((AssetManifest) retrievedManifest).getContent();
         assertEquals(assetContent, retrievedContent);

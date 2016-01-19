@@ -135,8 +135,8 @@ public class RedisCache extends MemCache {
     }
 
     @Override
-    public String getManifestType(GUID manifestGUID) { // TODO - rename manifestGUID to guid and do so for all other methods
-        return redis.get(getGUIDRedisKey(manifestGUID, RedisKeys.HANDLE_TYPE));
+    public String getManifestType(GUID guid) {
+        return redis.get(getGUIDRedisKey(guid, RedisKeys.HANDLE_TYPE));
     }
 
     @Override
@@ -153,8 +153,9 @@ public class RedisCache extends MemCache {
 
     // can be used for invariant guid, or for content guid
     @Override
-    public Set<String> getManifests(GUID guid) {
-        return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_VERSION));
+    public Collection<Manifest> getManifests(GUID guid) {
+        //return redis.smembers(getGUIDRedisKey(guid, RedisKeys.HANDLE_VERSION)); -- TODO - this should be renamed to get versions
+        return null;
     }
 
     @Override
@@ -241,6 +242,7 @@ public class RedisCache extends MemCache {
         }
     }
 
+    // TODO - refactor
     // bi-directional mapping for invariant
     //  versionGUID -->invariant
     //  invariant --> [manifestGUID] - there can be multiple manifests for this invariant

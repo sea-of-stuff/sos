@@ -12,15 +12,12 @@ import sos.model.implementations.utils.Content;
 import sos.model.implementations.utils.GUID;
 import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * Manage the manifests of the sea of stuff.
@@ -91,13 +88,16 @@ public class ManifestsManager {
         // if query fails, then Look at Files then return
         // if this also fails, return null
 
+        if (guid == null)
+            throw new ManifestException();
+
         Manifest manifest;
         try {
              manifest = constructManifestFromCache(guid);
         } catch (UnknownManifestTypeException e) {
             try {
                 manifest = getManifestFromFile(guid);
-            } catch (SourceLocationException ex) {
+            } catch (UnknownGUIDException ex) {
                 throw new ManifestException();
             }
         } catch (MalformedURLException e) {
@@ -110,11 +110,18 @@ public class ManifestsManager {
     }
 
     private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
+        if (guid == null)
+            throw new UnknownManifestTypeException();
+
         String type = cache.getManifestType(guid);
-        return constructJsonObjectFromCache(guid, type);
+
+        if (type == null || type.isEmpty())
+            throw new UnknownManifestTypeException();
+
+        return constructManifestFromCache(guid, type);
     }
 
-    private Manifest constructJsonObjectFromCache(GUID guid, String type) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
+    private Manifest constructManifestFromCache(GUID guid, String type) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
         Manifest manifest = null;
 
         switch (type) {
@@ -146,7 +153,6 @@ public class ManifestsManager {
     }
 
     private AssetManifest constructAssetManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
-
         String cachedSignature = cache.getSignature(guid);
 
         Collection<Content> cachedContents = cache.getContents(guid);
@@ -160,19 +166,39 @@ public class ManifestsManager {
         return ManifestFactory.createAssetManifest(cachedContent, cachedInvariant, cachedPrevs, cachedMetadata, cachedSignature);
     }
 
-    private Manifest constructManifestFromJson(String type, JsonObject obj) throws UnknownManifestTypeException {
+    private Manifest getManifestFromFile(GUID guid) throws UnknownGUIDException {
+        Manifest manifest;
+        final String path = getManifestPath(guid);
+        try {
+            String manifestData = readManifestFromFile(path);
+
+            JsonObject obj = gson.fromJson(manifestData, JsonObject.class);
+            String type = obj.get(ManifestConstants.KEY_TYPE).getAsString();
+
+            manifest = constructManifestFromJson(guid, type, manifestData);
+
+        } catch (FileNotFoundException e) {
+            throw new UnknownGUIDException();
+        } catch (UnknownManifestTypeException e) {
+            throw new UnknownGUIDException();
+        }
+
+        return manifest;
+    }
+
+    private Manifest constructManifestFromJson(GUID guid, String type, String manifestData) throws UnknownManifestTypeException {
         Manifest manifest = null;
-        Gson gson = new Gson();
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
-                    manifest = gson.fromJson(obj, AtomManifest.class);
+                    manifest = gson.fromJson(manifestData, AtomManifest.class);
+                    ((AtomManifest) manifest).setContentGUID(guid);
                     break;
                 case ManifestConstants.COMPOUND:
-                    manifest = gson.fromJson(obj, CompoundManifest.class);
+                    manifest = gson.fromJson(manifestData, CompoundManifest.class);
                     break;
                 case ManifestConstants.ASSET:
-                    manifest = gson.fromJson(obj, AssetManifest.class);
+                    manifest = gson.fromJson(manifestData, AssetManifest.class);
                     break;
                 default:
                     throw new UnknownManifestTypeException();
@@ -184,11 +210,20 @@ public class ManifestsManager {
 
     }
 
-    private Manifest getManifestFromFile(GUID guid) throws SourceLocationException {
-        throw new NotImplementedException();
+    private String readManifestFromFile(String path) throws FileNotFoundException {
+        // http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
+        Scanner scanner = new Scanner(new File(path));
+        String text = scanner.useDelimiter("\\A").next();
+        scanner.close();
+        return text;
     }
 
     private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {
+        saveToFile(manifest);
+        cacheManifest(manifest);
+    }
+
+    private void saveToFile(Manifest manifest) throws ManifestPersistException {
         JsonObject manifestJSON = manifest.toJSON();
 
         // Remove content guid and use that for the manifest file name
@@ -199,13 +234,8 @@ public class ManifestsManager {
         } else {
             guid = manifestJSON.remove(ManifestConstants.KEY_CONTENT_GUID).getAsString();
         }
-        saveToFile(guid, manifestJSON);
 
-        cacheManifest(manifest);
-    }
-
-    private void saveToFile(String filename, JsonObject object) throws ManifestPersistException {
-        final String path = configuration.getLocalManifestsLocation() + filename;
+        final String path = getManifestPath(guid);
         File file = new File(path);
 
         // if filepath doesn't exists, then create it
@@ -221,7 +251,7 @@ public class ManifestsManager {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             Gson gson = new Gson();
-            String json = gson.toJson(object);
+            String json = gson.toJson(manifestJSON);
             bufferedWriter.write(json);
         } catch (IOException ioe) {
             throw new ManifestPersistException();
@@ -238,5 +268,13 @@ public class ManifestsManager {
         } catch (UnknownManifestTypeException e) {
             throw new ManifestCacheException("Manifest could not be cached");
         }
+    }
+
+    private String getManifestPath(GUID guid) {
+        return configuration.getLocalManifestsLocation() + guid.toString();
+    }
+
+    private String getManifestPath(String guid) {
+        return configuration.getLocalManifestsLocation() + guid;
     }
 }
