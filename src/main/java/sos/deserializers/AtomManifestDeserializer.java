@@ -17,7 +17,6 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
 
     @Override
     public AtomManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
         JsonObject obj = json.getAsJsonObject();
 
         JsonArray jLocations = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);

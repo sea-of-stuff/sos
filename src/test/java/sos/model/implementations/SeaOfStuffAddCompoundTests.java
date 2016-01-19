@@ -1,7 +1,5 @@
 package sos.model.implementations;
 
-import IO.utils.StreamsUtils;
-import constants.Hashes;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -22,7 +20,6 @@ import sos.model.interfaces.components.Manifest;
 import utils.Helper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -61,15 +58,36 @@ public class SeaOfStuffAddCompoundTests {
 
     @Test
     public void testAddCompound() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-
-        Content cat = new Content("cat", guid);
+        Content cat = new Content("cat", new GUIDsha1("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
         CompoundManifest manifest = model.addCompound(contents);
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals(ManifestConstants.COMPOUND, retrievedManifest.getManifestType());
+
+        Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
+        Iterator<Content> iterator = retrievedContents.iterator();
+        assertEquals(cat, iterator.next());
+
+        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
+
+        deleteStoredFiles(retrievedManifest.getContentGUID());
+    }
+
+    @Test
+    public void testRetrieveCompoundFromFile() throws Exception {
+        Content cat = new Content("cat", new GUIDsha1("123"));
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(cat);
+
+        CompoundManifest manifest = model.addCompound(contents);
+        assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
+
+        // Flush the cache, so to force the manifest to be retrieved from file.
+        cache.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.COMPOUND, retrievedManifest.getManifestType());

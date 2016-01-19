@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import sos.configurations.SeaConfiguration;
+import sos.deserializers.AssetManifestDeserializer;
 import sos.deserializers.AtomManifestDeserializer;
+import sos.deserializers.CompoundManifestDeserializer;
 import sos.exceptions.*;
 import sos.model.implementations.components.manifests.*;
 import sos.model.implementations.utils.Content;
@@ -53,6 +55,8 @@ public class ManifestsManager {
 
     private void registerGSonTypeAdapters(GsonBuilder builder) {
         builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
+        builder.registerTypeAdapter(CompoundManifest.class, new CompoundManifestDeserializer());
+        builder.registerTypeAdapter(AssetManifest.class, new AssetManifestDeserializer());
     }
 
     /**

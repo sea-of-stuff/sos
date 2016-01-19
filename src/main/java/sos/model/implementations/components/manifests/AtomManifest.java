@@ -111,7 +111,7 @@ public class AtomManifest extends BasicManifest {
 
     private GUID generateContentGUID() throws GuidGenerationException {
         for(Location location:locations) {
-            InputStream dataStream = null;
+            InputStream dataStream;
             try {
                 dataStream = tryLocation(location);
             } catch (SourceLocationException e) {
@@ -136,7 +136,7 @@ public class AtomManifest extends BasicManifest {
      */
     private InputStream tryLocation(Location location) throws SourceLocationException {
 
-        InputStream stream = null;
+        InputStream stream;
         try {
             stream = location.getSource();
         } catch (IOException e) {

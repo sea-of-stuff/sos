@@ -54,7 +54,7 @@ public class CompoundManifest extends SignedManifest {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    protected CompoundManifest(Collection<Content> contents, Identity identity)
+    public CompoundManifest(Collection<Content> contents, Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.COMPOUND);
         this.contents = contents;
