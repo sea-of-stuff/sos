@@ -1,6 +1,6 @@
 package utils;
 
-import sos.model.implementations.utils.Location;
+import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
