@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
-import utils.Helper;
+import uk.ac.standrews.cs.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

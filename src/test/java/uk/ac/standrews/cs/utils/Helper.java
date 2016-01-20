@@ -1,4 +1,4 @@
-package utils;
+package uk.ac.standrews.cs.utils;
 
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 

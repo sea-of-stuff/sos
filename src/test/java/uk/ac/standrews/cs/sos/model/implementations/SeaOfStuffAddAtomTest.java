@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
-import utils.Helper;
+import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.*;
 import java.net.MalformedURLException;
