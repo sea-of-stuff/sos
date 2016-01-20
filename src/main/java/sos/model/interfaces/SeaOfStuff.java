@@ -1,6 +1,5 @@
 package sos.model.interfaces;
 
-import IO.ManifestStream;
 import sos.exceptions.ManifestNotMadeException;
 import sos.exceptions.ManifestSaveException;
 import sos.exceptions.ManifestVerificationFailedException;
@@ -168,6 +167,6 @@ public interface SeaOfStuff {
      * @param metadata used for querying the sea of stuff.
      * @return a stream of manifests that match the query.
      */
-    ManifestStream findManifests(Metadata metadata);
+    void findManifests(Metadata metadata);
 
 }

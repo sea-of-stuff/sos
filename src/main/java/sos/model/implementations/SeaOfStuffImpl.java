@@ -1,6 +1,5 @@
 package sos.model.implementations;
 
-import IO.ManifestStream;
 import sos.configurations.SeaConfiguration;
 import sos.exceptions.*;
 import sos.managers.ManifestsManager;
@@ -130,7 +129,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public ManifestStream findManifests(Metadata metadata) {
+    public void findManifests(Metadata metadata) {
         // - look at manifests manager
         // - having a look at the redis cache would be very helpful!
         // - need to define what metadata is
