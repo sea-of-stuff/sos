@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/src/test/java/SoS_cli.iml" filepath="$PROJECT_DIR$/src/test/java/SoS_cli.iml" />
       <module fileurl="file://$PROJECT_DIR$/sea_of_stuff.iml" filepath="$PROJECT_DIR$/sea_of_stuff.iml" />
     </modules>
   </component>

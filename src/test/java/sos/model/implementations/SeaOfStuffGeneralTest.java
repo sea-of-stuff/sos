@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffGeneralTests {
+public class SeaOfStuffGeneralTest {
 
     private SeaOfStuff model;
     private MemCache cache;

@@ -26,15 +26,14 @@ public class IdentityImplKeysTest {
     @BeforeMethod
     public void setup() {
         configuration = new TestConfiguration();
+
+        // Delete any left over keys from past
+        deleteKeys(configuration);
     }
 
     @AfterMethod
     public void tearDown() {
-        File privKey = new File(configuration.getIdentityPaths()[0]);
-        File pubkey = new File(configuration.getIdentityPaths()[1]);
-
-        privKey.delete();
-        pubkey.delete();
+        deleteKeys(configuration);
     }
 
     @Test
@@ -69,6 +68,14 @@ public class IdentityImplKeysTest {
         byte[] encrypted = identity.encrypt("hello");
         String result = identityLoaded.decrypt(encrypted);
         assertEquals(result, "hello");
+    }
+
+    private void deleteKeys(SeaConfiguration configuration) {
+        File privKey = new File(configuration.getIdentityPaths()[0]);
+        File pubkey = new File(configuration.getIdentityPaths()[1]);
+
+        privKey.delete();
+        pubkey.delete();
     }
 
 }

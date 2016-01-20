@@ -14,6 +14,7 @@ import sos.model.implementations.utils.Location;
 import sos.model.interfaces.components.Manifest;
 import sos.model.interfaces.components.Metadata;
 
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -96,7 +97,7 @@ public interface SeaOfStuff {
      * @param atomManifest describing the atom to retrieve.
      * @return atom to retrieve in bytes.
      */
-    byte[] getAtomContent(AtomManifest atomManifest);
+    InputStream getAtomContent(AtomManifest atomManifest);
 
     /**
      * Adds a CompoundManifest to the Sea of Stuff.

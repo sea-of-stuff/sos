@@ -11,9 +11,6 @@ public class TestConfiguration implements SeaConfiguration {
     private static final String PRIVATE_KEY_FILE = HOME + "keys/private.der";
     private static final String PUBLIC_KEY_FILE = HOME + "keys/public.der";
 
-    // Suppresses default constructor, ensuring non-instantiability.
-    public TestConfiguration() {}
-
     @Override
     public String getDataPath() {
         return DATA_LOCATION;

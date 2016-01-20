@@ -1,5 +1,6 @@
 package sos.model.implementations;
 
+import org.apache.commons.io.IOUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -25,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffAddAtomTests {
+public class SeaOfStuffAddAtomTest {
 
     private SeaOfStuff model;
     private MemCache cache;
@@ -102,6 +103,55 @@ public class SeaOfStuffAddAtomTests {
         deleteStoredDataFile(location);
     }
 
+    @Test
+    public void testRetrieveAtomData() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = createDummyDataFile();
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        InputStream inputStream = model.getAtomContent((AtomManifest) retrievedManifest);
+
+        assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
+
+        deleteStoredFiles(manifest.getContentGUID());
+        deleteStoredDataFile(location);
+    }
+
+    @Test
+    public void testAtomDataVerify() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = createDummyDataFile();
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertTrue(retrievedManifest.verify());
+
+        deleteStoredFiles(manifest.getContentGUID());
+        deleteStoredDataFile(location);
+    }
+
+    @Test
+    public void testAtomDataVerifyFails() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = createDummyDataFile();
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+
+        appendToFile(location, "Data has changed");
+        assertFalse(retrievedManifest.verify());
+
+        deleteStoredFiles(manifest.getContentGUID());
+        deleteStoredDataFile(location);
+    }
+
     private void deleteStoredFiles(GUID guid) {
         Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
     }
@@ -125,6 +175,15 @@ public class SeaOfStuffAddAtomTests {
         writer.close();
 
         return new Location("file://"+location);
+    }
+
+    private void appendToFile(Location location, String text) throws URISyntaxException, FileNotFoundException {
+        PrintWriter writer = new PrintWriter(new FileOutputStream(
+                new File(Helper.localURItoPath(location)),
+                true));
+
+        writer.append(text);
+        writer.close();
     }
 
 }

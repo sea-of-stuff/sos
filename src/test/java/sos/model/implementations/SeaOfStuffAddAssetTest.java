@@ -30,7 +30,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffAddAssetTests {
+public class SeaOfStuffAddAssetTest {
 
     private SeaOfStuff model;
     private MemCache cache;

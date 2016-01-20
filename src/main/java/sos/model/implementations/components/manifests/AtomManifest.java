@@ -66,7 +66,7 @@ public class AtomManifest extends BasicManifest {
         for(Location location:locations) {
             InputStream dataStream = null;
             try {
-                dataStream = tryLocation(location);
+                dataStream = getInputStreamFromLocation(location);
             } catch (SourceLocationException e) {
                 continue;
             }
@@ -113,7 +113,7 @@ public class AtomManifest extends BasicManifest {
         for(Location location:locations) {
             InputStream dataStream;
             try {
-                dataStream = tryLocation(location);
+                dataStream = getInputStreamFromLocation(location);
             } catch (SourceLocationException e) {
                 continue;
             }
@@ -134,7 +134,7 @@ public class AtomManifest extends BasicManifest {
      *
      * @return
      */
-    private InputStream tryLocation(Location location) throws SourceLocationException {
+    public InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
 
         InputStream stream;
         try {

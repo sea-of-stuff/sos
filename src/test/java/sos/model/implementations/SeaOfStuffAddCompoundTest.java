@@ -29,7 +29,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffAddCompoundTests {
+public class SeaOfStuffAddCompoundTest {
 
     private SeaOfStuff model;
     private MemCache cache;

@@ -20,6 +20,7 @@ import sos.model.interfaces.identity.Identity;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -86,11 +87,23 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public byte[] getAtomContent(AtomManifest atomManifest) {
-        // - get locations from atomManifest and retrieve atom.
-        // - query the manifests manager
-        // - abstract implementation from this class
-        throw new NotImplementedException();
+    public InputStream getAtomContent(AtomManifest atomManifest) {
+        InputStream dataStream = null;
+        Collection<Location> locations = atomManifest.getLocations();
+        for(Location location:locations) {
+
+            try {
+                dataStream = atomManifest.getInputStreamFromLocation(location);
+            } catch (SourceLocationException e) {
+                continue;
+            }
+
+            if (dataStream != null) {
+                break;
+            }
+        }
+
+        return dataStream;
     }
 
     @Override
@@ -120,6 +133,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public ManifestStream findManifests(Metadata metadata) {
         // - look at manifests manager
         // - having a look at the redis cache would be very helpful!
+        // - need to define what metadata is
         throw new NotImplementedException();
     }
 }
