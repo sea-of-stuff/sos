@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.interfaces.identity;
 
-import uk.ac.standrews.cs.sos.exceptions.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 
 import java.security.Key;
 

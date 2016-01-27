@@ -5,7 +5,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IO.utils.StreamsUtils;
 import uk.ac.standrews.cs.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 
 import java.io.IOException;

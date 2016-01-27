@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.model.interfaces;
 
-import uk.ac.standrews.cs.sos.exceptions.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.ManifestSaveException;
-import uk.ac.standrews.cs.sos.exceptions.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;

@@ -5,9 +5,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.managers.MemCache;
 import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -28,7 +28,7 @@ public class SeaOfStuffGeneralTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance();
+            cache = RedisCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class SeaOfStuffGeneralTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
     }

@@ -8,7 +8,13 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
-import uk.ac.standrews.cs.sos.exceptions.*;
+import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -16,7 +22,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.io.*;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -104,7 +110,7 @@ public class ManifestsManager {
             } catch (UnknownGUIDException ex) {
                 throw new ManifestException();
             }
-        } catch (MalformedURLException e) {
+        } catch (URISyntaxException e) {
             throw new ManifestException();
         } catch (ManifestNotMadeException e) {
             throw new ManifestException();
@@ -113,11 +119,11 @@ public class ManifestsManager {
         return manifest;
     }
 
-    private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
+    private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException, URISyntaxException, ManifestNotMadeException {
         if (guid == null)
             throw new UnknownManifestTypeException();
 
-        String type = cache.getManifestType(guid);
+        String type = ""; //cache.getManifestType(guid);
 
         if (type == null || type.isEmpty())
             throw new UnknownManifestTypeException();
@@ -125,7 +131,7 @@ public class ManifestsManager {
         return constructManifestFromCache(guid, type);
     }
 
-    private Manifest constructManifestFromCache(GUID guid, String type) throws UnknownManifestTypeException, MalformedURLException, ManifestNotMadeException {
+    private Manifest constructManifestFromCache(GUID guid, String type) throws UnknownManifestTypeException, URISyntaxException, ManifestNotMadeException {
         Manifest manifest = null;
 
         switch (type) {
@@ -145,26 +151,26 @@ public class ManifestsManager {
         return manifest;
     }
 
-    private AtomManifest constructAtomManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
-        Collection<Location> cachedLocations = cache.getLocations(guid);
+    private AtomManifest constructAtomManifestFromCache(GUID guid) throws ManifestNotMadeException, URISyntaxException {
+        Collection<Location> cachedLocations = null; // cache.getLocations(guid);
         return ManifestFactory.createAtomManifest(guid, cachedLocations);
     }
 
-    private CompoundManifest constructCompoundManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
-        String cachedSignature = cache.getSignature(guid);
+    private CompoundManifest constructCompoundManifestFromCache(GUID guid) throws ManifestNotMadeException, URISyntaxException {
+        String cachedSignature = ""; // cache.getSignature(guid);
         Collection<Content> cachedContents = cache.getContents(guid);
         return ManifestFactory.createCompoundManifest(cachedContents, cachedSignature);
     }
 
-    private AssetManifest constructAssetManifestFromCache(GUID guid) throws ManifestNotMadeException, MalformedURLException {
-        String cachedSignature = cache.getSignature(guid);
+    private AssetManifest constructAssetManifestFromCache(GUID guid) throws ManifestNotMadeException, URISyntaxException {
+        String cachedSignature = ""; // cache.getSignature(guid);
 
         Collection<Content> cachedContents = cache.getContents(guid);
         Iterator<Content> contentIterator = cachedContents.iterator();
         Content cachedContent = contentIterator.next();
 
-        GUID cachedInvariant = cache.getInvariant(guid);
-        Collection<GUID> cachedPrevs = cache.getPrevs(guid);
+        GUID cachedInvariant = null; // cache.getInvariant(guid);
+        Collection<GUID> cachedPrevs = null; // cache.getPrevs(guid);
         Collection<GUID> cachedMetadata = cache.getMetadata(guid);
 
         return ManifestFactory.createAssetManifest(cachedContent, cachedInvariant, cachedPrevs, cachedMetadata, cachedSignature);

@@ -2,7 +2,15 @@ package uk.ac.standrews.cs.sos.model.implementations;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.*;
+import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.managers.MemCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
@@ -131,7 +139,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public void findManifests(Metadata metadata) {
         // - look at manifests manager
-        // - having a look at the redis cache would be very helpful!
+        // - having a look at the redis storage would be very helpful!
         // - need to define what metadata is
         throw new NotImplementedException();
     }

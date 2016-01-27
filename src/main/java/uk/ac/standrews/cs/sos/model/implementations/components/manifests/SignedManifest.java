@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 
-import uk.ac.standrews.cs.sos.exceptions.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 /**

@@ -6,8 +6,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.managers.MemCache;
 import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
@@ -39,7 +39,7 @@ public class SeaOfStuffAddCompoundTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance();
+            cache = RedisCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -51,7 +51,7 @@ public class SeaOfStuffAddCompoundTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
     }
@@ -86,7 +86,7 @@ public class SeaOfStuffAddCompoundTest {
         CompoundManifest manifest = model.addCompound(contents);
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
-        // Flush the cache, so to force the manifest to be retrieved from file.
+        // Flush the storage, so to force the manifest to be retrieved from file.
         cache.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());

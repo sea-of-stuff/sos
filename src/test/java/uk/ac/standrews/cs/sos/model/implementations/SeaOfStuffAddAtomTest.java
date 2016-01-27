@@ -7,8 +7,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.managers.MemCache;
 import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +40,7 @@ public class SeaOfStuffAddAtomTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance();
+            cache = RedisCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -53,7 +52,7 @@ public class SeaOfStuffAddAtomTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
     }
@@ -87,7 +86,7 @@ public class SeaOfStuffAddAtomTest {
         AtomManifest manifest = model.addAtom(locations);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        // Flush the cache, so to force the manifest to be retrieved from file.
+        // Flush the storage, so to force the manifest to be retrieved from file.
         cache.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -160,7 +159,7 @@ public class SeaOfStuffAddAtomTest {
         Helper.deleteFile(Helper.localURItoPath(location));
     }
 
-    private Location createDummyDataFile() throws FileNotFoundException, UnsupportedEncodingException, MalformedURLException {
+    private Location createDummyDataFile() throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
         String location = configuration.getDataPath() + "testData.txt";
 
         File file = new File(location);
@@ -184,6 +183,71 @@ public class SeaOfStuffAddAtomTest {
 
         writer.append(text);
         writer.close();
+    }
+
+    @Test
+    public void testAddAtomFromURL() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = new Location("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
+
+        System.out.println(manifest.getContentGUID());
+
+        // TODO - remove copied data
+    }
+
+    @Test
+    public void testAddAtomFromURLHttps() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = new Location("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
+
+        System.out.println(manifest.getContentGUID());
+
+        // TODO - remove copied data
+    }
+
+    @Test
+    public void testAddAtomFromURLHttpsPdf() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = new Location("https://studres.cs.st-andrews.ac.uk/CS1002/Lectures/W01/W01-Lecture.pdf");
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
+
+        System.out.println(manifest.getContentGUID());
+
+        // TODO - remove copied data
+    }
+
+    @Test
+    public void testAddAtomFromURLHttpsTextFile() throws Exception {
+        Collection<Location> locations = new ArrayList<Location>();
+        Location location = new Location("https://studres.cs.st-andrews.ac.uk/CS1002/Examples/W01/Example1/W01Example1.java");
+        locations.add(location);
+        AtomManifest manifest = model.addAtom(locations);
+        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
+
+        System.out.println(manifest.getContentGUID());
+
+        // TODO - remove copied data
     }
 
 }

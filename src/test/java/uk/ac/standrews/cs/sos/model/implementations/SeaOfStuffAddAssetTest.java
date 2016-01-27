@@ -6,8 +6,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.managers.MemCache;
 import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
@@ -40,7 +40,7 @@ public class SeaOfStuffAddAssetTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance();
+            cache = RedisCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -52,7 +52,7 @@ public class SeaOfStuffAddAssetTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
     }
@@ -70,7 +70,7 @@ public class SeaOfStuffAddAssetTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
-        assertEquals(ManifestConstants.ASSET, retrievedManifest.getManifestType());
+        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);
 
         Content retrievedContent = ((AssetManifest) retrievedManifest).getContent();
         assertEquals(assetContent, retrievedContent);
@@ -93,11 +93,11 @@ public class SeaOfStuffAddAssetTest {
         AssetManifest manifest = model.addAsset(assetContent, null, null, null);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
-        // Flush the cache, so to force the manifest to be retrieved from file.
+        // Flush the storage, so to force the manifest to be retrieved from file.
         cache.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
-        assertEquals(ManifestConstants.ASSET, retrievedManifest.getManifestType());
+        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);
 
         Content retrievedContent = ((AssetManifest) retrievedManifest).getContent();
         assertEquals(assetContent, retrievedContent);
@@ -130,11 +130,11 @@ public class SeaOfStuffAddAssetTest {
         AssetManifest manifest = model.addAsset(assetContent, invariant, prevs, metadata);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
-        // Flush the cache, so to force the manifest to be retrieved from file.
+        // Flush the storage, so to force the manifest to be retrieved from file.
         cache.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
-        assertEquals(ManifestConstants.ASSET, retrievedManifest.getManifestType());
+        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);
 
         GUID retrievedInvariant = ((AssetManifest) retrievedManifest).getInvariantGUID();
         assertEquals(invariant, retrievedInvariant);

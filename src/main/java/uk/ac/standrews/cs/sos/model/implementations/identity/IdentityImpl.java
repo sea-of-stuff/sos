@@ -2,10 +2,10 @@ package uk.ac.standrews.cs.sos.model.implementations.identity;
 
 import uk.ac.standrews.cs.configurations.identity.IdentityConfiguration;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import javax.crypto.Cipher;

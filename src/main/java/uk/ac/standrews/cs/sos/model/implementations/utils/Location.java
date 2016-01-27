@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.model.implementations.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 /**
@@ -15,11 +15,11 @@ import java.util.Objects;
 public class Location {
 
     private transient String protocol;
-    private URL url;
+    private URI uri;
     private transient int port;
 
-    public Location(String location) throws MalformedURLException {
-        url = new URL(location);
+    public Location(String location) throws URISyntaxException {
+        uri = new URI(location); // TODO - store uri FIXME
     }
 
     public String getProtocol() {
@@ -30,8 +30,8 @@ public class Location {
         return -1;
     }
 
-    public URL getLocationPath() {
-        return url;
+    public URI getLocationPath() {
+        return uri;
     }
 
     /**
@@ -41,7 +41,8 @@ public class Location {
      * @return
      */
     public InputStream getSource() throws IOException {
-        return url.openStream();
+        // TODO - check if this can work for both local and remote paths!
+        return uri.toURL().openStream();
     }
 
     @Override
@@ -49,16 +50,16 @@ public class Location {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location that = (Location) o;
-        return Objects.equals(url, that.url);
+        return Objects.equals(uri, that.uri);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url);
+        return Objects.hash(uri);
     }
 
     public String toString() {
-        return url.toString();
+        return uri.toString();
         // return protocol + ":" + url.toString() + ":" + port;
     }
 }

@@ -13,5 +13,7 @@ public interface SeaConfiguration {
 
     String[] getIdentityPaths();
 
+    String getIndexPath();
+
     // XXX - other configs, such as #threads running, etc, could be useful
 }

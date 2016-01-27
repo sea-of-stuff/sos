@@ -12,7 +12,7 @@ import java.nio.file.*;
 public class Helper {
 
     public static String localURItoPath(Location location) throws URISyntaxException {
-        return location.getLocationPath().toURI().getPath();
+        return location.getLocationPath().getPath();
     }
 
     public static void deleteFile(String file) {

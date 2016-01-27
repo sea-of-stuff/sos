@@ -123,8 +123,6 @@ public class CompoundManifestTest {
 
     @Test
     public void testIsNotValidManifest() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
         Collection<Content> contents = new ArrayList<>();
 
         Identity identityMocked = mock(Identity.class);

@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.ManifestSaveException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -50,8 +50,8 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAtomManifest() throws Exception {
-        MemCache cache = RedisCache.getInstance();
         SeaConfiguration configuration = new TestConfiguration();
+        MemCache cache = RedisCache.getInstance(configuration);
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(new ArrayList<Location>(Arrays.asList(new Location(Hashes.TEST_HTTP_BIN_URL))));
@@ -76,8 +76,8 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddCompoundManifest() throws Exception {
-        MemCache cache = RedisCache.getInstance();
         SeaConfiguration configuration = new TestConfiguration();
+        MemCache cache = RedisCache.getInstance(configuration);
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
         Identity identity = new IdentityImpl(configuration);
@@ -108,8 +108,8 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAssetManifest() throws Exception {
-        MemCache cache = RedisCache.getInstance();
         SeaConfiguration configuration = new TestConfiguration();
+        MemCache cache = RedisCache.getInstance(configuration);
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
         Identity identity = new IdentityImpl(configuration);

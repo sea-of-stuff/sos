@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.model.implementations.components.manifests.Manifes
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
             String sLocation = jLocation.getAsString();
             try {
                 locations.add(new Location(sLocation));
-            } catch (MalformedURLException e) {
+            } catch (URISyntaxException e) {
                 throw new JsonParseException("Unable to create location : " + sLocation);
             }
         }
