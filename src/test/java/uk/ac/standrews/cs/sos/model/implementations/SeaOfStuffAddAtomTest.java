@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterMethod;
@@ -9,8 +10,8 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.managers.LuceneCache;
 import uk.ac.standrews.cs.sos.managers.MemCache;
-import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -40,7 +41,7 @@ public class SeaOfStuffAddAtomTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance(configuration);
+            cache = LuceneCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -55,6 +56,8 @@ public class SeaOfStuffAddAtomTest {
     public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
+
+        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
     }
 
     @Test
@@ -197,8 +200,8 @@ public class SeaOfStuffAddAtomTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println(manifest.getContentGUID());
-
+        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        deleteStoredFiles(manifest.getContentGUID());
         // TODO - remove copied data
     }
 
@@ -213,8 +216,8 @@ public class SeaOfStuffAddAtomTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println(manifest.getContentGUID());
-
+        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        deleteStoredFiles(manifest.getContentGUID());
         // TODO - remove copied data
     }
 
@@ -229,8 +232,8 @@ public class SeaOfStuffAddAtomTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println(manifest.getContentGUID());
-
+        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        deleteStoredFiles(manifest.getContentGUID());
         // TODO - remove copied data
     }
 
@@ -245,8 +248,8 @@ public class SeaOfStuffAddAtomTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println(manifest.getContentGUID());
-
+        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        deleteStoredFiles(manifest.getContentGUID());
         // TODO - remove copied data
     }
 

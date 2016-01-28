@@ -14,8 +14,8 @@ import java.security.Key;
  */
 public interface Identity {
 
-    byte[] encrypt(String text) throws EncryptionException;
-    String decrypt(byte[] text) throws DecryptionException;
+    byte[] sign(String text) throws EncryptionException ;
+    boolean verify(String text, byte[] signature) throws DecryptionException ;
 
     Key getPublicKey();
 

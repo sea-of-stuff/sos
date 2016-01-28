@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
-import javax.crypto.Cipher;
 import java.io.*;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -16,6 +15,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
+ * https://docs.oracle.com/javase/tutorial/security/apisign/
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class IdentityImpl implements Identity {
@@ -24,6 +25,8 @@ public class IdentityImpl implements Identity {
     private PrivateKey privateKey;
 
     public IdentityImpl(SeaConfiguration configuration) throws KeyGenerationException, KeyLoadedException {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
         String[] pathsToKeys = configuration.getIdentityPaths();
 
         File privateKeyFile = new File(pathsToKeys[0]);
@@ -47,37 +50,48 @@ public class IdentityImpl implements Identity {
      * @param text in plain to be encrypted.
      * @return the encrypted text.
      */
-    public byte[] encrypt(String text) throws EncryptionException {
-        byte[] cipherText = null;
+    public byte[] sign(String text) throws EncryptionException {
+        byte[] retval;
         try {
-            final Cipher cipher = Cipher.getInstance(IdentityConfiguration.ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-            cipherText = cipher.doFinal(text.getBytes());
-        } catch (Exception e) {
+            Signature signature = Signature.getInstance(IdentityConfiguration.SIGNATURE_ALGORITHM, IdentityConfiguration.PROVIDER);
+            signature.initSign(privateKey, new SecureRandom());
+            signature.update(text.getBytes());
+            retval = signature.sign();
+        } catch (NoSuchAlgorithmException e) {
+            throw new EncryptionException();
+        } catch (NoSuchProviderException e) {
+            throw new EncryptionException();
+        } catch (SignatureException e) {
+            throw new EncryptionException();
+        } catch (InvalidKeyException e) {
             throw new EncryptionException();
         }
-        return cipherText;
+
+        return retval;
     }
 
     /**
      * Decrypt the given encrypted text using the private key of this identity.
-     * @param text to decrypt.
+     * @param text to verify.
      * @return the plain text. Null if the input could not be decrypted.
      */
-    public String decrypt(byte[] text) throws DecryptionException {
-        byte[] dectyptedText = null;
+    public boolean verify(String text, byte[] signatue) throws DecryptionException {
+        boolean isValid = false;
         try {
-            final Cipher cipher = Cipher.getInstance(IdentityConfiguration.ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            dectyptedText = cipher.doFinal(text);
-        } catch (Exception ex) {
+            Signature signature = Signature.getInstance(IdentityConfiguration.SIGNATURE_ALGORITHM, IdentityConfiguration.PROVIDER);
+            signature.initVerify(publicKey);
+            signature.update(text.getBytes());
+            isValid = signature.verify(signatue);
+        } catch (NoSuchAlgorithmException e) {
+            throw new DecryptionException();
+        } catch (NoSuchProviderException e) {
+            throw new DecryptionException();
+        } catch (SignatureException e) {
+            throw new DecryptionException();
+        } catch (InvalidKeyException e) {
             throw new DecryptionException();
         }
-
-        if (dectyptedText == null)
-            return null;
-
-        return new String(dectyptedText);
+        return isValid;
     }
 
     private void loadKeys(String[] pathsToKeys) throws KeyLoadedException {
@@ -92,10 +106,10 @@ public class IdentityImpl implements Identity {
             in.readFully(data);
 
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.ALGORITHM);
+            KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.KEYS_ALGORITHM);
             privateKey = kf.generatePrivate(keySpec);
         } catch (IOException e) {
-            throw new KeyLoadedException("Private Key - uk.ac.standrews.cs.IO Exception");
+            throw new KeyLoadedException("Private Key - IO Exception");
         } catch (NoSuchAlgorithmException e) {
             throw new KeyLoadedException("Private Key - Algorithm Exception");
         } catch (InvalidKeySpecException e) {
@@ -111,10 +125,10 @@ public class IdentityImpl implements Identity {
 
             // http://stackoverflow.com/questions/19640735/load-public-key-data-from-file
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.ALGORITHM);
+            KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.KEYS_ALGORITHM);
             publicKey = kf.generatePublic(keySpec);
         } catch (IOException e) {
-            throw new KeyLoadedException("Private Key - uk.ac.standrews.cs.IO Exception");
+            throw new KeyLoadedException("Private Key - IO Exception");
         } catch (NoSuchAlgorithmException e) {
             throw new KeyLoadedException("Private Key - Algorithm Exception");
         } catch (InvalidKeySpecException e) {
@@ -138,20 +152,21 @@ public class IdentityImpl implements Identity {
     }
 
     private KeyPair generateKeyPair() throws KeyGenerationException {
-        KeyPair pair = null;
+        KeyPair pair;
         try {
-            final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(IdentityConfiguration.ALGORITHM);
-            keyGen.initialize(IdentityConfiguration.KEY_SIZE);
+            final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(IdentityConfiguration.KEYS_ALGORITHM, IdentityConfiguration.PROVIDER);
+            keyGen.initialize(IdentityConfiguration.KEY_SIZE, new SecureRandom());
             pair = keyGen.generateKeyPair();
 
             publicKey = pair.getPublic();
             privateKey = pair.getPrivate();
         } catch (NoSuchAlgorithmException e) {
-            throw new KeyGenerationException("Could not generate key pair");
+            throw new KeyGenerationException("Could not generate key pair - algorithm exception");
+        } catch (NoSuchProviderException e) {
+            throw new KeyGenerationException("Could not generate key pair - provided exception");
         }
 
         return pair;
-
     }
 
     // Create files to store public and private key

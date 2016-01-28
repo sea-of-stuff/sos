@@ -13,8 +13,8 @@ import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.File;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -52,22 +52,20 @@ public class IdentityImplKeysTest {
     }
 
     @Test
-    public void testEncryptDecrypt() throws Exception, EncryptionException, DecryptionException {
+    public void testEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
         Identity identity = new IdentityImpl(configuration);
 
-        byte[] encrypted = identity.encrypt("hello");
-        String result = identity.decrypt(encrypted);
-        assertEquals(result, "hello");
+        byte[] signature = identity.sign("hello");
+        assertTrue(identity.verify("hello", signature));
     }
 
     @Test
-    public void testLoadedKeyEncryptDecrypt() throws Exception, EncryptionException, DecryptionException {
+    public void testLoadedKeyEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
         Identity identity = new IdentityImpl(configuration);
         Identity identityLoaded = new IdentityImpl(configuration);
 
-        byte[] encrypted = identity.encrypt("hello");
-        String result = identityLoaded.decrypt(encrypted);
-        assertEquals(result, "hello");
+        byte[] signature = identity.sign("hello");
+        assertTrue(identityLoaded.verify("hello", signature));
     }
 
     private void deleteKeys(SeaConfiguration configuration) {

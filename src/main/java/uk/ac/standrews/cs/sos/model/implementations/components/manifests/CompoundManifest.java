@@ -111,7 +111,7 @@ public class CompoundManifest extends SignedManifest {
         obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
 
         Gson gson = new Gson();
-        byte[] signatureBytes = this.identity.encrypt(gson.toJson(obj));
+        byte[] signatureBytes = this.identity.sign(gson.toJson(obj));
         return IdentityConfiguration.bytesToHex(signatureBytes);
     }
 

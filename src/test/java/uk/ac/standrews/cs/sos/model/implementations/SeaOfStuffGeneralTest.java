@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -8,11 +9,12 @@ import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.managers.LuceneCache;
 import uk.ac.standrews.cs.sos.managers.MemCache;
-import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -28,7 +30,7 @@ public class SeaOfStuffGeneralTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance(configuration);
+            cache = LuceneCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -43,6 +45,8 @@ public class SeaOfStuffGeneralTest {
     public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
+
+        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
     }
 
     @Test(expectedExceptions = UnknownGUIDException.class)

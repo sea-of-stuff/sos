@@ -8,8 +8,10 @@ public class IdentityConfiguration {
     // Suppresses default constructor, ensuring non-instantiability.
     private IdentityConfiguration() {}
 
-    public static final String ALGORITHM = "RSA";
-    public static final int KEY_SIZE = 2048; // in bytes - size cannot exceed 2048 according to SUN specs
+    public static final String KEYS_ALGORITHM = "RSA";
+    public static final int KEY_SIZE = 512; // in bits - size cannot exceed 2048 according to SUN specs
+    public static final String PROVIDER = "BC";
+    public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
 
     // @see http://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java
     final private static char[] hexArray = "0123456789ABCDEF".toCharArray();

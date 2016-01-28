@@ -10,21 +10,18 @@ import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -94,86 +91,19 @@ public class ManifestsManager {
      * @throws ManifestException
      */
     public Manifest findManifest(GUID guid) throws ManifestException {
-        // Look at REDIS, then return
-        // if query fails, then Look at Files then return
-        // if this also fails, return null
 
         if (guid == null)
             throw new ManifestException();
 
         Manifest manifest;
         try {
-             manifest = constructManifestFromCache(guid);
-        } catch (UnknownManifestTypeException e) {
-            try {
-                manifest = getManifestFromFile(guid);
-            } catch (UnknownGUIDException ex) {
-                throw new ManifestException();
-            }
-        } catch (URISyntaxException e) {
-            throw new ManifestException();
-        } catch (ManifestNotMadeException e) {
+            manifest = getManifestFromFile(guid);
+            // TODO - if manifest is not found, then get it from one of the registered services.
+        } catch (UnknownGUIDException ex) {
             throw new ManifestException();
         }
 
         return manifest;
-    }
-
-    private Manifest constructManifestFromCache(GUID guid) throws UnknownManifestTypeException, URISyntaxException, ManifestNotMadeException {
-        if (guid == null)
-            throw new UnknownManifestTypeException();
-
-        String type = ""; //cache.getManifestType(guid);
-
-        if (type == null || type.isEmpty())
-            throw new UnknownManifestTypeException();
-
-        return constructManifestFromCache(guid, type);
-    }
-
-    private Manifest constructManifestFromCache(GUID guid, String type) throws UnknownManifestTypeException, URISyntaxException, ManifestNotMadeException {
-        Manifest manifest = null;
-
-        switch (type) {
-            case ManifestConstants.ATOM:
-                manifest = constructAtomManifestFromCache(guid);
-                break;
-            case ManifestConstants.COMPOUND:
-                manifest = constructCompoundManifestFromCache(guid);
-                break;
-            case ManifestConstants.ASSET:
-                manifest = constructAssetManifestFromCache(guid);
-                break;
-            default:
-                throw new UnknownManifestTypeException();
-        }
-
-        return manifest;
-    }
-
-    private AtomManifest constructAtomManifestFromCache(GUID guid) throws ManifestNotMadeException, URISyntaxException {
-        Collection<Location> cachedLocations = null; // cache.getLocations(guid);
-        return ManifestFactory.createAtomManifest(guid, cachedLocations);
-    }
-
-    private CompoundManifest constructCompoundManifestFromCache(GUID guid) throws ManifestNotMadeException, URISyntaxException {
-        String cachedSignature = ""; // cache.getSignature(guid);
-        Collection<Content> cachedContents = cache.getContents(guid);
-        return ManifestFactory.createCompoundManifest(cachedContents, cachedSignature);
-    }
-
-    private AssetManifest constructAssetManifestFromCache(GUID guid) throws ManifestNotMadeException, URISyntaxException {
-        String cachedSignature = ""; // cache.getSignature(guid);
-
-        Collection<Content> cachedContents = cache.getContents(guid);
-        Iterator<Content> contentIterator = cachedContents.iterator();
-        Content cachedContent = contentIterator.next();
-
-        GUID cachedInvariant = null; // cache.getInvariant(guid);
-        Collection<GUID> cachedPrevs = null; // cache.getPrevs(guid);
-        Collection<GUID> cachedMetadata = cache.getMetadata(guid);
-
-        return ManifestFactory.createAssetManifest(cachedContent, cachedInvariant, cachedPrevs, cachedMetadata, cachedSignature);
     }
 
     private Manifest getManifestFromFile(GUID guid) throws UnknownGUIDException {
@@ -194,6 +124,14 @@ public class ManifestsManager {
         }
 
         return manifest;
+    }
+
+    private String readManifestFromFile(String path) throws FileNotFoundException {
+        // http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
+        Scanner scanner = new Scanner(new File(path));
+        String text = scanner.useDelimiter("\\A").next();
+        scanner.close();
+        return text;
     }
 
     private Manifest constructManifestFromJson(GUID guid, String type, String manifestData) throws UnknownManifestTypeException {
@@ -218,14 +156,6 @@ public class ManifestsManager {
         }
         return manifest;
 
-    }
-
-    private String readManifestFromFile(String path) throws FileNotFoundException {
-        // http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
-        Scanner scanner = new Scanner(new File(path));
-        String text = scanner.useDelimiter("\\A").next();
-        scanner.close();
-        return text;
     }
 
     private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {

@@ -189,7 +189,7 @@ public class AssetManifest extends SignedManifest {
             obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
 
         Gson gson = new Gson();
-        byte[] signatureBytes = this.identity.encrypt(gson.toJson(obj));
+        byte[] signatureBytes = this.identity.sign(gson.toJson(obj));
         return IdentityConfiguration.bytesToHex(signatureBytes);
     }
 

@@ -52,7 +52,7 @@ public class CompoundManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
@@ -69,7 +69,7 @@ public class CompoundManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         assertNotNull(compoundManifest.getContents());
@@ -85,7 +85,7 @@ public class CompoundManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         assertNotNull(compoundManifest.getContents());
@@ -98,7 +98,7 @@ public class CompoundManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
@@ -115,7 +115,7 @@ public class CompoundManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         assertTrue(compoundManifest.isValid());
@@ -127,7 +127,7 @@ public class CompoundManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
         assertFalse(compoundManifest.isValid());

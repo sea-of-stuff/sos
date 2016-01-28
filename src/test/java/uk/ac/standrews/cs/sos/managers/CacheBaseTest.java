@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import static uk.ac.standrews.cs.sos.managers.CacheBaseTest.CACHE_TYPE.LUCENE;
 import static uk.ac.standrews.cs.sos.managers.CacheBaseTest.CACHE_TYPE.REDIS;
@@ -22,9 +23,9 @@ public abstract class CacheBaseTest {
     protected MemCache cache;
 
     @BeforeMethod
-    public void setUp() throws IOException {
+    public void setUp(Method method) throws IOException {
         CACHE_TYPE type = getCacheType();
-        System.out.println("Running test for cache " + type.toString());
+        System.out.println(type.toString() + " :: " + method.getName());
         cache = new CacheFactory().getCache(type);
     }
 
@@ -33,7 +34,6 @@ public abstract class CacheBaseTest {
         cache.flushDB();
         cache.killInstance();
 
-        // FIXME - directory is never deleted!
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
     }
 

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
+import org.apache.commons.io.FileUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -8,8 +9,8 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.managers.LuceneCache;
 import uk.ac.standrews.cs.sos.managers.MemCache;
-import uk.ac.standrews.cs.sos.managers.RedisCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -19,6 +20,7 @@ import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.utils.Helper;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +41,7 @@ public class SeaOfStuffAddCompoundTest {
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = RedisCache.getInstance(configuration);
+            cache = LuceneCache.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, cache);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -54,6 +56,8 @@ public class SeaOfStuffAddCompoundTest {
     public void tearDown() throws IOException {
         cache.flushDB();
         cache.killInstance();
+
+        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
     }
 
     @Test

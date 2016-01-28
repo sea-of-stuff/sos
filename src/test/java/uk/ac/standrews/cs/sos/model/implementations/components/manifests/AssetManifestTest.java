@@ -75,7 +75,7 @@ public class AssetManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
         AssetManifest assetManifest = new AssetManifest(null, cat, null, null, identityMocked);
 
@@ -98,7 +98,7 @@ public class AssetManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
         AssetManifest assetManifest = new AssetManifest(null, cat, null, metadata, identityMocked);
 
@@ -124,7 +124,7 @@ public class AssetManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
         AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, null, identityMocked);
 
@@ -154,7 +154,7 @@ public class AssetManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
         AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, metadata, identityMocked);
 
@@ -184,7 +184,7 @@ public class AssetManifestTest {
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.encrypt(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
         AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, metadata, identityMocked);
 

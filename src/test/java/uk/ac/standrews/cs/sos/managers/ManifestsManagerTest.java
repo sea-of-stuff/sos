@@ -2,6 +2,9 @@ package uk.ac.standrews.cs.sos.managers;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.io.FileUtils;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
@@ -17,6 +20,8 @@ import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.Helper;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,10 +53,27 @@ public class ManifestsManagerTest {
     private JsonObject jsonObj = parser.parse(EXPECTED_JSON_CONTENTS).getAsJsonObject();
     private JsonObject jsonAtomObj = parser.parse(EXPECTED_JSON_ATOM_MANIFEST).getAsJsonObject();
 
+    private SeaConfiguration configuration;
+    private MemCache cache;
+
+    @BeforeMethod
+    public void setUp() throws IOException {
+        configuration = new TestConfiguration();
+        cache = LuceneCache.getInstance(configuration);
+    }
+
+    @AfterMethod
+    public void tearDown() throws IOException {
+        cache.flushDB();
+        cache.killInstance();
+
+        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        configuration = null;
+        cache = null;
+    }
+
     @Test
     public void testAddAtomManifest() throws Exception {
-        SeaConfiguration configuration = new TestConfiguration();
-        MemCache cache = RedisCache.getInstance(configuration);
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(new ArrayList<Location>(Arrays.asList(new Location(Hashes.TEST_HTTP_BIN_URL))));
@@ -67,17 +89,12 @@ public class ManifestsManagerTest {
         } catch (ManifestSaveException e) {
             throw new Exception();
         } finally {
-            cache.flushDB();
-            cache.killInstance();
-
-            Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
+            Helper.deleteFile(cache.getConfiguration().getLocalManifestsLocation() + guid.toString());
         }
     }
 
     @Test
     public void testAddCompoundManifest() throws Exception {
-        SeaConfiguration configuration = new TestConfiguration();
-        MemCache cache = RedisCache.getInstance(configuration);
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
         Identity identity = new IdentityImpl(configuration);
@@ -98,18 +115,12 @@ public class ManifestsManagerTest {
         } catch (ManifestSaveException e) {
             throw new Exception();
         } finally {
-            cache.flushDB();
-            cache.killInstance();
-
             Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
         }
     }
 
-
     @Test
     public void testAddAssetManifest() throws Exception {
-        SeaConfiguration configuration = new TestConfiguration();
-        MemCache cache = RedisCache.getInstance(configuration);
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
         Identity identity = new IdentityImpl(configuration);
@@ -128,9 +139,6 @@ public class ManifestsManagerTest {
         } catch (ManifestSaveException e) {
             throw new Exception();
         } finally {
-            cache.flushDB();
-            cache.killInstance();
-
             Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
         }
     }
