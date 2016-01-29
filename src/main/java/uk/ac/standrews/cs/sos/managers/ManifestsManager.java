@@ -10,18 +10,23 @@ import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestMergeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
+import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Scanner;
 
 /**
@@ -35,6 +40,7 @@ public class ManifestsManager {
     private MemCache cache;
     private Gson gson;
 
+    private final static String BACKUP_EXTENSION = ".bak";
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
      * a policy for the sea of stuff. The configuration object is need to know the
@@ -72,9 +78,11 @@ public class ManifestsManager {
             try {
                 saveManifest(manifest);
             } catch (ManifestCacheException e) {
-                throw new ManifestSaveException();
+                throw new ManifestSaveException("Manifest could not be cached");
             } catch (ManifestPersistException e) {
-                throw new ManifestSaveException();
+                throw new ManifestSaveException("Manifest could not be persisted");
+            } catch (UnknownGUIDException | ManifestMergeException e) {
+                throw new ManifestSaveException("An equivalent manifest exists, but could not be fetched or merged");
             }
         } else {
             throw new ManifestSaveException("Manifest not valid");
@@ -91,9 +99,9 @@ public class ManifestsManager {
      * @throws ManifestException
      */
     public Manifest findManifest(GUID guid) throws ManifestException {
-
-        if (guid == null)
+        if (guid == null) {
             throw new ManifestException();
+        }
 
         Manifest manifest;
         try {
@@ -116,10 +124,7 @@ public class ManifestsManager {
             String type = obj.get(ManifestConstants.KEY_TYPE).getAsString();
 
             manifest = constructManifestFromJson(guid, type, manifestData);
-
-        } catch (FileNotFoundException e) {
-            throw new UnknownGUIDException();
-        } catch (UnknownManifestTypeException e) {
+        } catch (FileNotFoundException | UnknownManifestTypeException | ManifestNotMadeException e) {
             throw new UnknownGUIDException();
         }
 
@@ -134,8 +139,8 @@ public class ManifestsManager {
         return text;
     }
 
-    private Manifest constructManifestFromJson(GUID guid, String type, String manifestData) throws UnknownManifestTypeException {
-        Manifest manifest = null;
+    private Manifest constructManifestFromJson(GUID guid, String type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+        Manifest manifest;
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
@@ -152,15 +157,54 @@ public class ManifestsManager {
                     throw new UnknownManifestTypeException();
             }
         } catch (JsonSyntaxException e) {
-            // TODO - throw exception
+            throw new ManifestNotMadeException();
         }
         return manifest;
-
     }
 
-    private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException {
-        saveToFile(manifest);
+    // if atom-manifest, check if it exists already
+    // then merge and save
+    // otherwise just save
+    private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException, UnknownGUIDException, ManifestMergeException {
+        GUID guid = manifest.getContentGUID();
+
+        if (manifest.getManifestType().equals(ManifestConstants.ATOM) &&
+                manifestExistsInLocalStorage(manifest.getContentGUID())) {
+
+            String backupPath = backupManifest(manifest);
+
+            Manifest existingManifest = getManifestFromFile(guid);
+            manifest = mergeManifests((AtomManifest) existingManifest, (AtomManifest) manifest);
+
+            FileHelper.deleteFile(backupPath);
+            saveToFile(manifest);
+            FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
+        } else {
+            saveToFile(manifest);
+        }
         cacheManifest(manifest);
+    }
+
+    private String backupManifest(Manifest manifest) throws ManifestMergeException {
+        GUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
+        String originalPath = getManifestPath(guidUsedToStoreManifest);
+        try {
+            FileHelper.copyToFile(new Location(originalPath).getSource(),
+                    new Location(originalPath + BACKUP_EXTENSION));
+        } catch (IOException | URISyntaxException e) {
+            throw new ManifestMergeException();
+        }
+        return originalPath;
+    }
+
+    private GUID getGUIDUsedToStoreManifest(Manifest manifest) {
+        GUID guid;
+        if (manifest.getManifestType().equals(ManifestConstants.ASSET)) {
+            guid = ((AssetManifest) manifest).getVersionGUID();
+        } else {
+            guid = manifest.getContentGUID();
+        }
+        return guid;
     }
 
     private void saveToFile(Manifest manifest) throws ManifestPersistException {
@@ -181,8 +225,7 @@ public class ManifestsManager {
         // if filepath doesn't exists, then create it
         File parent = file.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
-            // TODO - custom exception
-            throw new IllegalStateException("Couldn't create dir: " + parent);
+            throw new IllegalStateException("Couldn't create dir: " + parent); // TODO - custom exception
         }
 
         if (file.exists())
@@ -211,14 +254,33 @@ public class ManifestsManager {
     }
 
     private String getManifestPath(GUID guid) {
-        return configuration.getLocalManifestsLocation() + normaliseGUID(guid.toString());
+        return getManifestPath(guid.toString());
     }
 
     private String getManifestPath(String guid) {
         return configuration.getLocalManifestsLocation() + normaliseGUID(guid);
     }
 
-    public static String normaliseGUID(String guid) {
+    private String normaliseGUID(String guid) {
         return guid.substring(0, 2) + "/" + guid.substring(2) + ".json";
+    }
+
+    private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
+        Collection<Location> locations = new HashSet<>();
+        locations.addAll(first.getLocations());
+        locations.addAll(second.getLocations());
+
+        Manifest manifest;
+        try {
+            manifest = ManifestFactory.createAtomManifest(configuration, locations);
+        } catch (ManifestNotMadeException | DataStorageException e) {
+            throw new ManifestMergeException();
+        }
+        return manifest;
+    }
+
+    private boolean manifestExistsInLocalStorage(GUID guid) {
+        String path = getManifestPath(guid);
+        return new File(path).exists();
     }
 }

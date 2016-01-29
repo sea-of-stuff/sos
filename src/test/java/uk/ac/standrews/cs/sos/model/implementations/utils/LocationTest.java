@@ -14,13 +14,12 @@ public class LocationTest {
     @Test
     public void testConstructorLocalURL() throws URISyntaxException {
         Location location = new Location("/sos/data/test.txt");
-        assertEquals(location.getLocationPath().toString(), "/sos/data/test.txt");
+        assertEquals(location.getLocationPath().toString(), "file:///sos/data/test.txt");
     }
 
     @Test
     public void testConstructorLocalFileURL() throws URISyntaxException {
         Location location = new Location("file:///sos/data/test.txt");
-        // The three forward slashes are compressed into one.
         assertEquals(location.getLocationPath().toString(), "file:///sos/data/test.txt");
     }
 

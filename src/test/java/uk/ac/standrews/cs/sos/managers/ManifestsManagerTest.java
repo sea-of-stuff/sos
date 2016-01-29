@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
+import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +69,8 @@ public class ManifestsManagerTest {
 
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
         FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getCacheDataPath()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
 
         configuration = null;
         cache = null;
@@ -132,6 +135,34 @@ public class ManifestsManagerTest {
             assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
             assertEquals(manifest.getContentGUID(), content.getGUID());
             assertEquals(manifest.isValid(), true);
+        } catch (ManifestSaveException e) {
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void testUpdateAtomManifest() throws Exception {
+        ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
+
+        Location firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
+        Location secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
+
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(
+                configuration, new ArrayList<Location>(Arrays.asList(firstLocation)));
+        GUID guid = atomManifest.getContentGUID();
+
+        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
+                configuration, new ArrayList<Location>(Arrays.asList(secondLocation)));
+        GUID anotherGUID = anotherManifest.getContentGUID();
+
+        assertEquals(guid, anotherGUID);
+
+        try {
+            manifestsManager.addManifest(atomManifest);
+            manifestsManager.addManifest(anotherManifest);
+            AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
+
+            assertEquals(manifest.getLocations().size(), 2);
         } catch (ManifestSaveException e) {
             throw new Exception();
         }

@@ -16,7 +16,11 @@ public class Helper {
     }
 
     public static Location createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
-        String location = configuration.getDataPath() + "testData.txt";
+        return createDummyDataFile(configuration, "testData.txt");
+    }
+
+    public static Location createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+        String location = configuration.getDataPath() + filename;
 
         File file = new File(location);
         File parent = file.getParentFile();

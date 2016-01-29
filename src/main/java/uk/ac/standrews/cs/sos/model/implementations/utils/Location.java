@@ -19,6 +19,8 @@ public class Location {
     private transient int port;
 
     public Location(String location) throws URISyntaxException {
+        if (location.startsWith("/"))
+            location = "file://" + location;
         uri = new URI(location);
     }
 
@@ -61,5 +63,9 @@ public class Location {
     public String toString() {
         return uri.toString();
         // return protocol + ":" + url.toString() + ":" + port;
+    }
+
+    public String getPathname() {
+        return uri.getPath();
     }
 }

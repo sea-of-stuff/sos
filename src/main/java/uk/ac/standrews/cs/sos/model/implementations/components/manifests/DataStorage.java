@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 
 import java.io.File;
@@ -10,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,7 +37,7 @@ public class DataStorage {
         }
 
         Collection<Location> newLocations = new ArrayList<>(locations);
-        for(Location location:locations) {
+        for(Location location:newLocations) {
             InputStream dataStream;
             try {
                 dataStream = getInputStreamFromLocation(location);
@@ -54,7 +53,7 @@ public class DataStorage {
                         touchDir(newLocation);
                     }
                     if (!dataInLocationAlreadyExists(newLocation)) {
-                        Files.copy(dataStream, locationToPath(newLocation));
+                        FileHelper.copyToFile(dataStream, newLocation);
                     }
                 } catch (IOException e) {
                     throw new DataStorageException();
@@ -78,10 +77,6 @@ public class DataStorage {
     private static String getNameFromURI(URI uri) {
         String[] segments = uri.getPath().split("/");
         return segments[segments.length-1];
-    }
-
-    private static Path locationToPath(Location location) {
-        return new File(location.getLocationPath().getPath()).toPath();
     }
 
     private static void removeUserLocations(SeaConfiguration configuration, Collection<Location> locations) {
