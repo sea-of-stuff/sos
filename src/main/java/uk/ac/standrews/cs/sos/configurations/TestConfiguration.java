@@ -11,6 +11,7 @@ public class TestConfiguration implements SeaConfiguration {
     private static final String HOME = System.getProperty("user.home") + "/sos/test/";
 
     private static final String DATA_LOCATION = HOME + "data/";
+    private static final String CACHED_DATA_LOCATION = HOME + "cached_data/";
     private final String INDEX_PATH = HOME + "index/" + RANDOM_SUBPATH;
     private static final String MANIFESTS_LOCATION = HOME + "manifests/";
     private static final String PRIVATE_KEY_FILE = HOME + "keys/private.der";
@@ -33,4 +34,9 @@ public class TestConfiguration implements SeaConfiguration {
 
     @Override
     public String getIndexPath() { return INDEX_PATH; }
+
+    @Override
+    public String getCacheDataPath() {
+        return CACHED_DATA_LOCATION;
+    }
 }

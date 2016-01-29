@@ -47,6 +47,8 @@ public class SeaOfStuffGeneralTest {
         cache.killInstance();
 
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
     }
 
     @Test(expectedExceptions = UnknownGUIDException.class)

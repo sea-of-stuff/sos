@@ -1,10 +1,8 @@
 package uk.ac.standrews.cs.sos.managers;
 
-import org.mockito.Mockito;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
@@ -31,6 +29,11 @@ public class CacheImplTest extends CacheBaseTest {
     @Factory(dataProvider = "cache-manager-provider")
     public CacheImplTest(CACHE_TYPE cacheType) {
         this.cacheType = cacheType;
+    }
+
+    @Override
+    public CACHE_TYPE getCacheType() {
+        return this.cacheType;
     }
 
     @Test
@@ -62,18 +65,6 @@ public class CacheImplTest extends CacheBaseTest {
         Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ATOM);
         assertEquals(guids.size(), 1);
     }
-
-    // TODO - move to common cache tests
-    @Test (expectedExceptions = UnknownManifestTypeException.class)
-    public void testAddManifestWithWrongType() throws Exception {
-        AtomManifest simpleManifestMocked = mock(AtomManifest.class);
-
-        Mockito.when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
-        Mockito.when(simpleManifestMocked.getManifestType()).thenReturn("WrongType");
-
-        cache.addManifest(simpleManifestMocked);
-    }
-
 
     @Test
     public void testAddSimpleCompoundManifest() throws Exception {
@@ -164,7 +155,6 @@ public class CacheImplTest extends CacheBaseTest {
         Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET);
         assertEquals(guids.size(), 1);
         assertTrue(guids.contains(new GUIDsha1("abc123")));
-
     }
 
     @Test
@@ -197,10 +187,5 @@ public class CacheImplTest extends CacheBaseTest {
         when(assetManifestMocked.getManifestType()).thenReturn("Asset");
 
         return assetManifestMocked;
-    }
-
-    @Override
-    public CACHE_TYPE getCacheType() {
-        return this.cacheType;
     }
 }

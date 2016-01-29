@@ -19,11 +19,11 @@ public class Location {
     private transient int port;
 
     public Location(String location) throws URISyntaxException {
-        uri = new URI(location); // TODO - store uri FIXME
+        uri = new URI(location);
     }
 
     public String getProtocol() {
-        return null;
+        return uri.getScheme();
     }
 
     public int getPort() {

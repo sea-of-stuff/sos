@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
-import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +58,8 @@ public class SeaOfStuffAddAssetTest {
         cache.killInstance();
 
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
     }
 
     @Test
@@ -80,9 +81,6 @@ public class SeaOfStuffAddAssetTest {
         assertEquals(assetContent, retrievedContent);
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
-
-        deleteStoredFiles(((AssetManifest) retrievedManifest).getVersionGUID());
-        deleteStoredFiles(compound.getContentGUID());
     }
 
     @Test
@@ -107,9 +105,6 @@ public class SeaOfStuffAddAssetTest {
         assertEquals(assetContent, retrievedContent);
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
-
-        deleteStoredFiles(((AssetManifest) retrievedManifest).getVersionGUID());
-        deleteStoredFiles(compound.getContentGUID());
     }
 
     @Test
@@ -153,13 +148,6 @@ public class SeaOfStuffAddAssetTest {
         assertTrue(retrievedPrevs.containsAll(prevs));
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
-
-        deleteStoredFiles(((AssetManifest) retrievedManifest).getVersionGUID());
-        deleteStoredFiles(compound.getContentGUID());
-    }
-
-    private void deleteStoredFiles(GUID guid) {
-        Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
     }
 
 }

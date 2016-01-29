@@ -1,22 +1,26 @@
 package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 
 
-import org.skyscreamer.jsonassert.JSONAssert;
+import com.google.gson.JsonArray;
+import org.apache.commons.io.FileUtils;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.IO.utils.StreamsUtils;
 import uk.ac.standrews.cs.constants.Hashes;
+import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
+import uk.ac.standrews.cs.utils.Helper;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -29,48 +33,56 @@ public class AtomManifestTest {
                     "\"Locations\":[\"" + Hashes.TEST_HTTP_BIN_URL + "\"]" +
                     "}";
 
-    @Test (expectedExceptions = ManifestNotMadeException.class)
-    public void testNoLocations() throws IOException, ManifestNotMadeException {
-        Collection<Location> locations = (Collection<Location>) mock(Collection.class);
-        when(locations.iterator())
-                .thenReturn(Collections.<Location>emptyIterator());
+    private SeaConfiguration configuration;
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+    @BeforeMethod
+    public void setUp() {
+        configuration = new TestConfiguration();
+    }
+
+    @AfterMethod
+    public void tearDown() throws IOException {
+        FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
+        FileUtils.cleanDirectory(new File(configuration.getDataPath()));
+    }
+
+    @Test (expectedExceptions = DataStorageException.class)
+    public void testNoLocations() throws IOException, ManifestNotMadeException, DataStorageException {
+        Collection<Location> locations = new ArrayList<Location>();
+        ManifestFactory.createAtomManifest(configuration, locations);
     }
 
     @Test
     public void testGetLocations() throws Exception {
-        Location locationMocked = mock(Location.class);
-
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        when(locationMocked.getSource())
-                .thenReturn(inputStreamFake);
-
         Collection<Location> locations = new ArrayList<Location>();
-        locations.add(locationMocked);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+        Location location = Helper.createDummyDataFile(configuration);
+        locations.add(location);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, locations);
 
-        assertEquals(atomManifest.getLocations(), locations);
+        // Locations change, since atom is cached.
+        assertNotEquals(atomManifest.getLocations(), locations);
     }
 
     @Test (timeOut = 10000)
     public void testToJSON() throws Exception {
         Location location = new Location(Hashes.TEST_HTTP_BIN_URL);
-
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, locations);
 
-        JSONAssert.assertEquals(EXPECT_JSON_MANIFEST, atomManifest.toJSON().toString(), true);
+        Collection<Location> newLocations = atomManifest.getLocations();
+        assertEquals(newLocations.size(), 2);
+
+        JsonArray jsonLocations = atomManifest.toJSON().getAsJsonArray("Locations");
+        assertEquals( jsonLocations.size(), 2);
     }
 
     @Test (timeOut = 10000)
     public void testIsValid() throws Exception {
         Location location = new Location(Hashes.TEST_HTTP_BIN_URL);
-
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, locations);
 
         assertEquals(atomManifest.isValid(), true);
     }
@@ -78,10 +90,9 @@ public class AtomManifestTest {
     @Test (timeOut = 10000)
     public void testIsVerified() throws Exception {
         Location location = new Location(Hashes.TEST_HTTP_BIN_URL);
-
         Collection<Location> locations = new ArrayList<Location>();
         locations.add(location);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(locations);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, locations);
 
         assertEquals(atomManifest.verify(), true);
     }

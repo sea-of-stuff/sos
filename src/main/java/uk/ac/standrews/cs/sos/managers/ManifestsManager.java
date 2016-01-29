@@ -211,10 +211,14 @@ public class ManifestsManager {
     }
 
     private String getManifestPath(GUID guid) {
-        return configuration.getLocalManifestsLocation() + guid.toString();
+        return configuration.getLocalManifestsLocation() + normaliseGUID(guid.toString());
     }
 
     private String getManifestPath(String guid) {
-        return configuration.getLocalManifestsLocation() + guid;
+        return configuration.getLocalManifestsLocation() + normaliseGUID(guid);
+    }
+
+    public static String normaliseGUID(String guid) {
+        return guid.substring(0, 2) + "/" + guid.substring(2) + ".json";
     }
 }

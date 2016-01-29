@@ -14,11 +14,9 @@ import uk.ac.standrews.cs.sos.managers.MemCache;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
-import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +56,8 @@ public class SeaOfStuffAddCompoundTest {
         cache.killInstance();
 
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
     }
 
     @Test
@@ -77,8 +77,6 @@ public class SeaOfStuffAddCompoundTest {
         assertEquals(cat, iterator.next());
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
-
-        deleteStoredFiles(retrievedManifest.getContentGUID());
     }
 
     @Test
@@ -101,12 +99,6 @@ public class SeaOfStuffAddCompoundTest {
         assertEquals(cat, iterator.next());
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
-
-        deleteStoredFiles(retrievedManifest.getContentGUID());
-    }
-
-    private void deleteStoredFiles(GUID guid) {
-        Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
     }
 
 }

@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -64,9 +63,9 @@ public class AtomManifest extends BasicManifest {
             return false;
 
         for(Location location:locations) {
-            InputStream dataStream = null;
+            InputStream dataStream;
             try {
-                dataStream = getInputStreamFromLocation(location);
+                dataStream = DataStorage.getInputStreamFromLocation(location);
             } catch (SourceLocationException e) {
                 continue;
             }
@@ -113,7 +112,7 @@ public class AtomManifest extends BasicManifest {
         for(Location location:locations) {
             InputStream dataStream;
             try {
-                dataStream = getInputStreamFromLocation(location);
+                dataStream = DataStorage.getInputStreamFromLocation(location);
             } catch (SourceLocationException e) {
                 continue;
             }
@@ -130,25 +129,10 @@ public class AtomManifest extends BasicManifest {
         return contentGUID;
     }
 
-    /**
-     *
-     * @return
-     */
-    public InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
-
-        InputStream stream;
-        try {
-            stream = location.getSource();
-        } catch (IOException e) {
-            throw new SourceLocationException(location.getLocationPath().toString());
-        }
-
-        return stream;
-    }
-
     private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {
         return inputStream != null &&
                 contentGUID.equals(generateGUID(inputStream));
     }
+
 
 }

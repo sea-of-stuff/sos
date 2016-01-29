@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.interfaces;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
@@ -88,7 +89,7 @@ public interface SeaOfStuff {
      * @see Manifest
      */
     AtomManifest addAtom(Collection<Location> locations)
-            throws ManifestNotMadeException, ManifestSaveException;
+            throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
 
     /**
      * Get an atom's data given an AtomManifest.

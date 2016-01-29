@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 
+import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
@@ -16,7 +18,7 @@ import java.util.Collection;
 public class ManifestFactory {
 
     // Suppresses default constructor, ensuring non-instantiability.
-    private ManifestFactory() {}
+    public ManifestFactory() {}
 
     /**
      * Creates an AtomManifest given an atom.
@@ -25,20 +27,11 @@ public class ManifestFactory {
      * @return the manifest for the atom
      * @throws ManifestNotMadeException
      */
-    public static AtomManifest createAtomManifest(Collection<Location> locations)
-            throws ManifestNotMadeException {
+    public static AtomManifest createAtomManifest(SeaConfiguration configuration, Collection<Location> locations)
+            throws ManifestNotMadeException, DataStorageException {
 
+        locations = DataStorage.storeAtom(configuration, locations);
         return new AtomManifest(locations);
-    }
-
-    public static AtomManifest createAtomManifest(GUID contentGUID, Collection<Location> locations)
-            throws ManifestNotMadeException {
-
-        AtomManifest manifest = new AtomManifest();
-        manifest.setContentGUID(contentGUID);
-        manifest.setLocations(locations);
-
-        return manifest;
     }
 
     public static CompoundManifest createCompoundManifest(Collection<Content> contents,

@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
-import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +67,8 @@ public class ManifestsManagerTest {
         cache.killInstance();
 
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
+
         configuration = null;
         cache = null;
     }
@@ -76,11 +77,12 @@ public class ManifestsManagerTest {
     public void testAddAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new ArrayList<Location>(Arrays.asList(new Location(Hashes.TEST_HTTP_BIN_URL))));
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(
+                configuration,
+                new ArrayList<Location>(Arrays.asList(new Location(Hashes.TEST_HTTP_BIN_URL))));
         GUID guid = atomManifest.getContentGUID();
         try {
             manifestsManager.addManifest(atomManifest);
-
             Manifest manifest = manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
@@ -88,8 +90,6 @@ public class ManifestsManagerTest {
             assertEquals(manifest.isValid(), true);
         } catch (ManifestSaveException e) {
             throw new Exception();
-        } finally {
-            Helper.deleteFile(cache.getConfiguration().getLocalManifestsLocation() + guid.toString());
         }
     }
 
@@ -106,7 +106,6 @@ public class ManifestsManagerTest {
         GUID guid = compoundManifest.getContentGUID();
         try {
             manifestsManager.addManifest(compoundManifest);
-
             Manifest manifest = manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
@@ -114,8 +113,6 @@ public class ManifestsManagerTest {
             assertEquals(manifest.isValid(), true);
         } catch (ManifestSaveException e) {
             throw new Exception();
-        } finally {
-            Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
         }
     }
 
@@ -130,7 +127,6 @@ public class ManifestsManagerTest {
         GUID guid = assetManifest.getVersionGUID();
         try {
             manifestsManager.addManifest(assetManifest);
-
             Manifest manifest = manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
@@ -138,8 +134,6 @@ public class ManifestsManagerTest {
             assertEquals(manifest.isValid(), true);
         } catch (ManifestSaveException e) {
             throw new Exception();
-        } finally {
-            Helper.deleteFile(configuration.getLocalManifestsLocation() + guid.toString());
         }
     }
 }

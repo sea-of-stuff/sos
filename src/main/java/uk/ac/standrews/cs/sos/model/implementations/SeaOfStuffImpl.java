@@ -10,13 +10,11 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.managers.MemCache;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -42,7 +40,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private Identity identity;
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
-    private MemCache cache;
 
     public SeaOfStuffImpl(SeaConfiguration configuration, MemCache cache) throws KeyGenerationException, KeyLoadedException, IOException {
         this.configuration = configuration;
@@ -62,9 +59,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(Collection<Location> locations)
-            throws ManifestNotMadeException, ManifestSaveException {
+            throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
-        AtomManifest manifest = ManifestFactory.createAtomManifest(locations);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(configuration, locations);
         manifestsManager.addManifest(manifest);
 
         return manifest;
@@ -100,7 +97,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         for(Location location:locations) {
 
             try {
-                dataStream = atomManifest.getInputStreamFromLocation(location);
+                dataStream = DataStorage.getInputStreamFromLocation(location);
             } catch (SourceLocationException e) {
                 continue;
             }
