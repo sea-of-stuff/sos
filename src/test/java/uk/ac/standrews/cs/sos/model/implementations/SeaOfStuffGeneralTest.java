@@ -22,9 +22,9 @@ import java.io.IOException;
  */
 public class SeaOfStuffGeneralTest {
 
-    private SeaOfStuff model;
-    private MemCache cache;
-    private SeaConfiguration configuration;
+    protected SeaOfStuff model;
+    protected MemCache cache;
+    protected SeaConfiguration configuration;
 
     @BeforeMethod
     public void setUp() {
@@ -49,6 +49,7 @@ public class SeaOfStuffGeneralTest {
         FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
         FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
         FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
+        FileUtils.cleanDirectory(new File(cache.getConfiguration().getCacheDataPath()));
     }
 
     @Test(expectedExceptions = UnknownGUIDException.class)
