@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -84,4 +85,33 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         assertEquals(dogs.size(), 1);
         assertTrue(dogs.contains(new GUIDsha1("343")));
     }
+
+    @Test
+    public void testFindVersions() throws Exception {
+        Content cat = new Content("cat", new GUIDsha1("123"));
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(cat);
+
+        CompoundManifest compound = model.addCompound(contents);
+        Content assetContent = new Content(compound.getContentGUID());
+
+        AssetManifest manifest = model.addAsset(assetContent, null, null, null);
+
+        Content feline = new Content("feline", new GUIDsha1("456"));
+        Collection<Content> newContents = new ArrayList<>();
+        newContents.add(feline);
+
+        CompoundManifest newCompound = model.addCompound(newContents);
+        Content newAssetContent = new Content(newCompound.getContentGUID());
+
+        Collection<GUID> prevs = new ArrayList<>();
+        prevs.add(manifest.getVersionGUID());
+        AssetManifest newManifest = model.addAsset(newAssetContent, manifest.getInvariantGUID(), prevs, null);
+
+        Collection<GUID> versions = model.findVersions(manifest.getInvariantGUID());
+        assertEquals(versions.size(), 2);
+        assertTrue(versions.contains(manifest.getVersionGUID()));
+        assertTrue(versions.contains(newManifest.getVersionGUID()));
+    }
+
 }

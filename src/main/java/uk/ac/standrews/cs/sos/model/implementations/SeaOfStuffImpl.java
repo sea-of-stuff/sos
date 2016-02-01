@@ -144,6 +144,11 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
+    public Collection<GUID> findVersions(GUID invariant) {
+        return manifestsManager.findVersions(invariant);
+    }
+
+    @Override
     public void findManifests(Metadata metadata) {
         // - look at manifests manager
         // - having a look at the redis storage would be very helpful!

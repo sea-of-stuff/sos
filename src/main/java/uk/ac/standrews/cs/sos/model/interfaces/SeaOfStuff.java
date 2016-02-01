@@ -167,6 +167,8 @@ public interface SeaOfStuff {
 
     Collection<GUID> findManifestByLabel(String label);
 
+    Collection<GUID> findVersions(GUID invariant);
+
     /**
      * Search the sea of stuff for manifests that match the specified metadata.
      *
