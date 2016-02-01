@@ -173,10 +173,51 @@ public class CacheImplTest extends CacheBaseTest {
         Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET);
         assertEquals(guids.size(), 2);
 
-        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"));
+        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"), 10, 0);
         assertEquals(versions.size(), 2);
         assertTrue(versions.contains(new GUIDsha1("123")));
         assertTrue(versions.contains(new GUIDsha1("456")));
+    }
+
+    @Test
+    public void testAddMultipleAssetManifestsAndSkipFirstResult() throws Exception {
+        AssetManifest firstAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("abc123"));
+        AssetManifest secondAsset = createMockedManifest(new GUIDsha1("456"), new GUIDsha1("abc123"));
+        AssetManifest thirdAsset = createMockedManifest(new GUIDsha1("123456"), new GUIDsha1("hgi678"));
+        // Cannot two assets with same version GUID and different incarnation.
+        AssetManifest invalidAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("def123"));
+
+        cache.addManifest(firstAsset);
+        cache.addManifest(secondAsset);
+        cache.addManifest(thirdAsset);
+        cache.addManifest(invalidAsset);
+
+        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET);
+        assertEquals(guids.size(), 2);
+
+        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"), 10, 1);
+        assertEquals(versions.size(), 1);
+        assertTrue(versions.contains(new GUIDsha1("456")));
+    }
+
+    @Test
+    public void testAddMultipleAssetManifestsAndSkipAllResults() throws Exception {
+        AssetManifest firstAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("abc123"));
+        AssetManifest secondAsset = createMockedManifest(new GUIDsha1("456"), new GUIDsha1("abc123"));
+        AssetManifest thirdAsset = createMockedManifest(new GUIDsha1("123456"), new GUIDsha1("hgi678"));
+        // Cannot two assets with same version GUID and different incarnation.
+        AssetManifest invalidAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("def123"));
+
+        cache.addManifest(firstAsset);
+        cache.addManifest(secondAsset);
+        cache.addManifest(thirdAsset);
+        cache.addManifest(invalidAsset);
+
+        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET);
+        assertEquals(guids.size(), 2);
+
+        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"), 10, 10);
+        assertEquals(versions.size(), 0);
     }
 
     private AssetManifest createMockedManifest(GUID version, GUID invariant) {

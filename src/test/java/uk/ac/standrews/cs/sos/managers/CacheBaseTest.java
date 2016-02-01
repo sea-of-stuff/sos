@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 import static uk.ac.standrews.cs.sos.managers.CacheBaseTest.CACHE_TYPE.LUCENE;
-import static uk.ac.standrews.cs.sos.managers.CacheBaseTest.CACHE_TYPE.REDIS;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -40,13 +39,12 @@ public abstract class CacheBaseTest {
     @DataProvider(name = "cache-manager-provider")
     public static Object[][] cacheProvider() throws IOException {
         return new Object[][] {
-                {REDIS},
                 {LUCENE}
         };
     }
 
     public enum CACHE_TYPE {
-        REDIS, LUCENE
+        LUCENE
     }
 
     public class CacheFactory {
@@ -55,8 +53,6 @@ public abstract class CacheBaseTest {
             switch(type) {
                 case LUCENE:
                     return LuceneCache.getInstance(configuration);
-                case REDIS:
-                    return RedisCache.getInstance(configuration);
             }
             return null;
         }

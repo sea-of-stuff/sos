@@ -22,11 +22,9 @@ public abstract class MemCache {
 
     public abstract void addManifest(Manifest manifest) throws UnknownManifestTypeException;
 
-    public abstract Collection<GUID> getVersions(GUID guid) throws IOException;
+    public abstract Collection<GUID> getVersions(GUID guid, int results, int skip) throws IOException;
 
     public abstract Collection<Content> getContents(GUID contentGUID);
-
-    public abstract Collection<GUID> getMetadata(GUID manifestGUID);
 
     public abstract Collection<GUID> getMetaLabelMatches(String label) throws IOException;
 

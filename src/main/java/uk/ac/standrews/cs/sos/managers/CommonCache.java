@@ -52,11 +52,4 @@ public abstract class CommonCache extends MemCache {
         return null;
     }
 
-
-    @Override
-    public Collection<GUID> getMetadata(GUID manifestGUID) {
-        // read file
-        return null;
-    }
-
 }

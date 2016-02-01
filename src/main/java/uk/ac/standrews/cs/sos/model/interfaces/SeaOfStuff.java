@@ -162,6 +162,9 @@ public interface SeaOfStuff {
      */
     boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException;
 
+
+    void findManifestByType(String type);
+
     /**
      * Search the sea of stuff for manifests that match the specified metadata.
      *

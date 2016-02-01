@@ -36,11 +36,12 @@ import java.util.Scanner;
  */
 public class ManifestsManager {
 
+    private final static String BACKUP_EXTENSION = ".bak";
+
     private SeaConfiguration configuration;
     private MemCache cache;
     private Gson gson;
 
-    private final static String BACKUP_EXTENSION = ".bak";
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
      * a policy for the sea of stuff. The configuration object is need to know the
@@ -54,18 +55,6 @@ public class ManifestsManager {
         this.cache = cache;
 
         configureGson();
-    }
-
-    private void configureGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        registerGSonTypeAdapters(gsonBuilder);
-        gson = gsonBuilder.create();
-    }
-
-    private void registerGSonTypeAdapters(GsonBuilder builder) {
-        builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
-        builder.registerTypeAdapter(CompoundManifest.class, new CompoundManifestDeserializer());
-        builder.registerTypeAdapter(AssetManifest.class, new AssetManifestDeserializer());
     }
 
     /**
@@ -89,8 +78,6 @@ public class ManifestsManager {
         }
     }
 
-    // Get manifest from file
-    // https://github.com/google/gson/blob/master/UserGuide.md#object-examples
     /**
      * Find a manifest in the sea of stuff given a GUID.
      *
@@ -112,6 +99,18 @@ public class ManifestsManager {
         }
 
         return manifest;
+    }
+
+    private void configureGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        registerGSonTypeAdapters(gsonBuilder);
+        gson = gsonBuilder.create();
+    }
+
+    private void registerGSonTypeAdapters(GsonBuilder builder) {
+        builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
+        builder.registerTypeAdapter(CompoundManifest.class, new CompoundManifestDeserializer());
+        builder.registerTypeAdapter(AssetManifest.class, new AssetManifestDeserializer());
     }
 
     private Manifest getManifestFromFile(GUID guid) throws UnknownGUIDException {

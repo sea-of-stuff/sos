@@ -134,6 +134,11 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
+    public void findManifestByType(String type) {
+
+    }
+
+    @Override
     public void findManifests(Metadata metadata) {
         // - look at manifests manager
         // - having a look at the redis storage would be very helpful!

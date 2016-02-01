@@ -40,8 +40,6 @@ public class LuceneCache extends CommonCache {
     private static IndexSearcher indexSearcher = null;
     private static SeaConfiguration instanceConfiguration;
 
-    private static final int QUERY_RESULTS = 10; // TODO - what to do if more than 10 results? have a buffer?
-
     public static MemCache getInstance(SeaConfiguration configuration) throws IOException {
         if(instance == null) {
             instanceConfiguration = configuration;
@@ -120,15 +118,15 @@ public class LuceneCache extends CommonCache {
     }
 
     @Override
-    public Collection<GUID> getVersions(GUID invariant) throws IOException {
+    public Collection<GUID> getVersions(GUID invariant, int results, int skip) throws IOException {
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_GUID, invariant.toString());
         Collection<GUID> retval = new ArrayList<>();
         Query query = new TermQuery(term);
-        TopDocs topDocs = indexSearcher.search(query, QUERY_RESULTS);
+        TopDocs topDocs = indexSearcher.search(query, results);
         ScoreDoc[] hits = topDocs.scoreDocs;
-        for (int i = 0; i < hits.length; i++) {
+        for (int i = skip; i < hits.length; i++) {
             Document doc = indexSearcher.doc(hits[i].doc);
             String guid = doc.get(LuceneKeys.HANDLE_VERSION);
             retval.add(new GUIDsha1(guid));
@@ -163,7 +161,7 @@ public class LuceneCache extends CommonCache {
     private Collection<GUID> getGUIDsFromSearch(Term term) throws IOException {
         Collection<GUID> retval = new HashSet<>();
         Query query = new TermQuery(term);
-        TopDocs topDocs = indexSearcher.search(query, QUERY_RESULTS);
+        TopDocs topDocs = indexSearcher.search(query, 10); // FIXME
         ScoreDoc[] hits = topDocs.scoreDocs;
         for (int i = 0; i < hits.length; i++) {
             Document doc = indexSearcher.doc(hits[i].doc);
