@@ -26,9 +26,9 @@ public abstract class MemCache {
 
     public abstract Collection<Content> getContents(GUID contentGUID);
 
-    public abstract Collection<GUID> getMetaLabelMatches(String label) throws IOException;
+    public abstract Collection<GUID> getMetaLabelMatches(String label, int results, int skip) throws IOException;
 
-    public abstract Collection<GUID> getManifestsOfType(String type) throws IOException, ParseException;
+    public abstract Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException, ParseException;
 
     public abstract SeaConfiguration getConfiguration();
 

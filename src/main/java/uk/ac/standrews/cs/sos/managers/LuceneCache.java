@@ -102,11 +102,11 @@ public class LuceneCache extends CommonCache {
     }
 
     @Override
-    public Collection<GUID> getManifestsOfType(String type) throws IOException, ParseException {
+    public Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException, ParseException {
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_TYPE, type);
-        Collection<GUID> retval = getGUIDsFromSearch(term);
+        Collection<GUID> retval = getGUIDsFromSearch(term, results, skip);
 
         releaseIndexSearcher();
         return retval;
@@ -137,11 +137,11 @@ public class LuceneCache extends CommonCache {
     }
 
     @Override
-    public Collection<GUID> getMetaLabelMatches(String value) throws IOException {
+    public Collection<GUID> getMetaLabelMatches(String value, int results, int skip) throws IOException {
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_LABEL, value);
-        Collection<GUID> retval = getGUIDsFromSearch(term);
+        Collection<GUID> retval = getGUIDsFromSearch(term, results, skip);
 
         releaseIndexSearcher();
         return retval;
@@ -158,12 +158,12 @@ public class LuceneCache extends CommonCache {
         indexSearcher = null;
     }
 
-    private Collection<GUID> getGUIDsFromSearch(Term term) throws IOException {
+    private Collection<GUID> getGUIDsFromSearch(Term term, int results, int skip) throws IOException {
         Collection<GUID> retval = new HashSet<>();
         Query query = new TermQuery(term);
-        TopDocs topDocs = indexSearcher.search(query, 10); // FIXME
+        TopDocs topDocs = indexSearcher.search(query, results);
         ScoreDoc[] hits = topDocs.scoreDocs;
-        for (int i = 0; i < hits.length; i++) {
+        for (int i = skip; i < hits.length; i++) {
             Document doc = indexSearcher.doc(hits[i].doc);
             String guid = doc.get(LuceneKeys.HANDLE_GUID);
             retval.add(new GUIDsha1(guid));
