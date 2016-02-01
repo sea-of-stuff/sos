@@ -6,6 +6,7 @@ package uk.ac.standrews.cs.sos.configurations;
 public interface SeaConfiguration {
 
     // TODO - javadocs
+    // TODO - load from file?
 
     String getDataPath();
 

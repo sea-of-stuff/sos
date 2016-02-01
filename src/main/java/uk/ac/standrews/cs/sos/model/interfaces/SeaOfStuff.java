@@ -163,7 +163,9 @@ public interface SeaOfStuff {
     boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException;
 
 
-    void findManifestByType(String type);
+    Collection<GUID> findManifestByType(String type);
+
+    Collection<GUID> findManifestByLabel(String label);
 
     /**
      * Search the sea of stuff for manifests that match the specified metadata.

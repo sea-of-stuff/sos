@@ -134,8 +134,13 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public void findManifestByType(String type) {
+    public Collection<GUID> findManifestByType(String type) {
+        return manifestsManager.findManifestsByType(type);
+    }
 
+    @Override
+    public Collection<GUID> findManifestByLabel(String label) {
+        return manifestsManager.findManifestsThatMatchLabel(label);
     }
 
     @Override

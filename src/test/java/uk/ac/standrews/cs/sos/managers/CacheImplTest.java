@@ -124,6 +124,27 @@ public class CacheImplTest extends CacheBaseTest {
     }
 
     @Test
+    public void testAddSimpleCompoundManifestSkipResult() throws Exception {
+        CompoundManifest simpleManifestMocked = mock(CompoundManifest.class);
+
+        Content content = new Content("cat", new GUIDsha1("321"));
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(content);
+
+        when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
+        when(simpleManifestMocked.getManifestType()).thenReturn("Compound");
+        when(simpleManifestMocked.getContents()).thenReturn(contents);
+
+        cache.addManifest(simpleManifestMocked);
+
+        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        assertTrue(guids.contains(new GUIDsha1("123")));
+
+        Collection<GUID> contentGUIDs = cache.getMetaLabelMatches("cat", DEFAULT_RESULTS, 1);
+        assertEquals(contentGUIDs.size(), 0);
+    }
+
+    @Test
     public void testAddTwoCompoundsWithSharedContent() throws Exception {
         CompoundManifest compoundOne = mock(CompoundManifest.class);
 

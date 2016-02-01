@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import org.apache.lucene.queryparser.classic.ParseException;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
@@ -25,6 +26,7 @@ import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -37,6 +39,11 @@ import java.util.Scanner;
 public class ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
+    private final static String JSON_EXTENSION = ".json";
+
+    // TODO - get these constants from SeaConfiguration
+    private static final int DEFAULT_RESULTS = 10;
+    private static final int DEFAULT_SKIP_RESULTS = 0;
 
     private SeaConfiguration configuration;
     private MemCache cache;
@@ -99,6 +106,39 @@ public class ManifestsManager {
         }
 
         return manifest;
+    }
+
+    public Collection<GUID> findManifestsByType(String type) {
+        Collection<GUID> retval = new ArrayList<>();
+        try {
+            retval = cache.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            // TODO - custom exception
+        }
+        return retval;
+    }
+
+    public Collection<GUID> findVersions(GUID guid) {
+        Collection<GUID> retval = new ArrayList<>();
+        try {
+            retval = cache.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO - custom exception
+        }
+        return retval;
+    }
+
+    public Collection<GUID> findManifestsThatMatchLabel(String label) {
+        Collection<GUID> retval = new ArrayList<>();
+        try {
+            retval = cache.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO - custom exception
+        }
+        return retval;
     }
 
     private void configureGson() {
@@ -261,7 +301,7 @@ public class ManifestsManager {
     }
 
     private String normaliseGUID(String guid) {
-        return guid.substring(0, 2) + "/" + guid.substring(2) + ".json";
+        return guid.substring(0, 2) + "/" + guid.substring(2) + JSON_EXTENSION;
     }
 
     private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
