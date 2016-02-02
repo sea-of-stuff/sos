@@ -27,7 +27,7 @@ public class CompoundManifestTest {
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
                     "\"ContentGUID\":\"5ddcc2228d3d80966b29f709774c2d5ee15a99a0\"," +
-                    "\"Signature\":\"000001\"," +
+                    "\"Signature\":\"AAAB\"," +
                     "\"Content\":" +
                     "[{" +
                     "\"Label\":\"cat\"," +
@@ -37,7 +37,7 @@ public class CompoundManifestTest {
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
                     "\"ContentGUID\":\"97d170e1550eee4afc0af065b78cda302a97674c\"," +
-                    "\"Signature\":\"000001\"," +
+                    "\"Signature\":\"AAAB\"," +
                     "\"Content\":" +
                     "[]}";
 

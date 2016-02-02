@@ -2,7 +2,9 @@ package uk.ac.standrews.cs.sos.model.interfaces.components;
 
 import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -32,11 +34,12 @@ public interface Manifest {
     /**
      * Verify this manifest's GUID against its content.
      *
+     * @param identity
      * @return true if the GUID of the manifest matches the content.
      * @throws GuidGenerationException if the GUIDs of the manifests could not be generated
      *                                  due to uk.ac.standrews.cs.IO, network or other issues.
      */
-    boolean verify() throws GuidGenerationException;
+    boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

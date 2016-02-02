@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
@@ -122,11 +123,16 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException {
+    public Identity getIdentity() {
+        return this.identity;
+    }
+
+    @Override
+    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
         boolean ret;
         try {
-            ret = manifest.verify();
-        } catch (GuidGenerationException e) {
+            ret = manifest.verify(identity);
+        } catch (GuidGenerationException | DecryptionException e) {
             throw new ManifestVerificationFailedException();
         }
 

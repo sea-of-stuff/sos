@@ -62,7 +62,6 @@ public class IdentityImpl implements Identity {
                 InvalidKeyException e) {
             throw new EncryptionException();
         }
-
         return retval;
     }
 
@@ -71,13 +70,13 @@ public class IdentityImpl implements Identity {
      * @param text to verify.
      * @return the plain text. Null if the input could not be decrypted.
      */
-    public boolean verify(String text, byte[] signatue) throws DecryptionException {
+    public boolean verify(String text, byte[] signatureToVerify) throws DecryptionException {
         boolean isValid;
         try {
             Signature signature = Signature.getInstance(IdentityConfiguration.SIGNATURE_ALGORITHM, IdentityConfiguration.PROVIDER);
             signature.initVerify(publicKey);
             signature.update(text.getBytes());
-            isValid = signature.verify(signatue);
+            isValid = signature.verify(signatureToVerify);
         } catch (NoSuchAlgorithmException |
                 NoSuchProviderException |
                 SignatureException |
@@ -87,6 +86,7 @@ public class IdentityImpl implements Identity {
 
         return isValid;
     }
+
 
     private void loadKeys(String[] pathsToKeys) throws KeyLoadedException {
         loadPrivateKey(pathsToKeys[0]);
@@ -187,5 +187,10 @@ public class IdentityImpl implements Identity {
         } catch (IOException e) {
             System.err.print(e.getMessage());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Public key: " + publicKey.toString();
     }
 }

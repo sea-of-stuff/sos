@@ -3,9 +3,9 @@ package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.configurations.identity.IdentityConfiguration;
+import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -150,8 +150,10 @@ public class AssetManifest extends SignedManifest {
     }
 
     @Override
-    public boolean verify() {
-        throw new NotImplementedException();
+    public boolean verify(Identity identity) throws DecryptionException {
+        String manifestSectionToSign = getManifestToSign();
+        byte[] decodedBytes = Base64.decodeBase64(signature);
+        return identity.verify(manifestSectionToSign, decodedBytes);
     }
 
     @Override
@@ -176,21 +178,10 @@ public class AssetManifest extends SignedManifest {
     }
 
     @Override
-    protected String generateSignature() throws EncryptionException {
-        JsonObject obj = new JsonObject();
-
-        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
-        obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
-
-        if (prevs != null && !prevs.isEmpty())
-            obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
-
-        if (metadata != null && !metadata.isEmpty())
-            obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
-
-        Gson gson = new Gson();
-        byte[] signatureBytes = this.identity.sign(gson.toJson(obj));
-        return IdentityConfiguration.bytesToHex(signatureBytes);
+    protected String generateSignature(String toSign) throws EncryptionException {
+        byte[] signatureBytes = this.identity.sign(toSign);
+        byte[] encodedBytes = Base64.encodeBase64(signatureBytes);
+        return new String(encodedBytes);
     }
 
     private JsonObject manifestToHashInJSON() {
@@ -223,10 +214,27 @@ public class AssetManifest extends SignedManifest {
 
     private void makeSignature() throws ManifestNotMadeException {
         try {
-            signature = generateSignature();
+            String manifestSectionToSign = getManifestToSign();
+            signature = generateSignature(manifestSectionToSign);
         } catch (Exception e) {
             throw new ManifestNotMadeException();
         }
+    }
+
+    private String getManifestToSign() {
+        JsonObject obj = new JsonObject();
+
+        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
+
+        if (prevs != null && !prevs.isEmpty())
+            obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
+
+        if (metadata != null && !metadata.isEmpty())
+            obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
+
+        Gson gson = new Gson();
+        return gson.toJson(obj);
     }
 
     private JsonArray getCollectionInJSON(Collection<?> collection) {

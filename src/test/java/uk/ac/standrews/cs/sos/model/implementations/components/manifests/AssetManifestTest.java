@@ -27,7 +27,7 @@ public class AssetManifestTest {
 
     private static final String EXPECTED_JSON_BASIC_ASSET =
             "{\"Type\":\"Asset\"," +
-                    "\"Signature\":\"000001\"," +
+                    "\"Signature\":\"AAAB\"," +
                     "\"Content\":" +
                     "{" +
                     "\"Label\":\"cat\"," +
@@ -36,7 +36,7 @@ public class AssetManifestTest {
 
     private static final String EXPECTED_JSON_METADATA_ASSET =
             "{\"Type\":\"Asset\"," +
-                    "\"Signature\":\"000001\"," +
+                    "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"Content\":" +
                     "{" +
@@ -47,7 +47,7 @@ public class AssetManifestTest {
     private static final String EXPECTED_JSON_PREVIOUS_ASSET =
             "{\"Type\":\"Asset\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Signature\":\"000001\"," +
+                    "\"Signature\":\"AAAB\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"Content\":" +
                     "{" +
@@ -58,7 +58,7 @@ public class AssetManifestTest {
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET =
             "{\"Type\":\"Asset\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Signature\":\"000001\"," +
+                    "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"Content\":" +

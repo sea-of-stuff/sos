@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
+import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -58,7 +59,7 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
-    public boolean verify() throws GuidGenerationException {
+    public boolean verify(Identity identity) throws GuidGenerationException {
         if (contentGUID == null)
             return false;
 

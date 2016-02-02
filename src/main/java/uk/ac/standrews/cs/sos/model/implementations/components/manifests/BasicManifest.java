@@ -3,9 +3,11 @@ package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 import com.google.gson.JsonObject;
 import org.apache.xmlbeans.impl.common.ReaderInputStream;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
+import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +48,7 @@ public abstract class BasicManifest implements Manifest {
      * @throws GuidGenerationException if the manifest's GUID could not be generated.
      */
     @Override
-    public abstract boolean verify() throws GuidGenerationException;
+    public abstract boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
 
     /**
      * Checks whether this manifest contains valid key-value entries.

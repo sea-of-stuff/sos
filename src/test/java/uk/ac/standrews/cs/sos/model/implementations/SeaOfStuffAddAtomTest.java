@@ -78,7 +78,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
-        assertTrue(retrievedManifest.verify());
+        assertTrue(retrievedManifest.verify(null));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         Location cachedLocation = retrievedLocations.iterator().next();
 
         Helper.appendToFile(cachedLocation, "Data has changed");
-        assertFalse(retrievedManifest.verify());
+        assertFalse(retrievedManifest.verify(null));
     }
 
     @Test

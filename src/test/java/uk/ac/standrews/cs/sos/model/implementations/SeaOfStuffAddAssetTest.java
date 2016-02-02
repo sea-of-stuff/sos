@@ -109,4 +109,20 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
     }
 
+    @Test
+    public void testAddAssetAndVerify() throws Exception {
+        Content cat = new Content("cat", new GUIDsha1("123"));
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(cat);
+
+        CompoundManifest compound = model.addCompound(contents);
+        Content assetContent = new Content(compound.getContentGUID());
+
+        AssetManifest manifest = model.addAsset(assetContent, null, null, null);
+        Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
+
+        assertTrue(model.verifyManifest(model.getIdentity(), retrievedManifest));
+    }
+
+
 }

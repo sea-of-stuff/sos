@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -59,5 +60,19 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
     }
+
+    @Test
+    public void testAddCompoundAndVerify() throws Exception {
+        Content cat = new Content("cat", new GUIDsha1("123"));
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(cat);
+
+        CompoundManifest manifest = model.addCompound(contents);
+        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+
+        boolean isVerified = model.verifyManifest(model.getIdentity(), retrievedManifest);
+        assertTrue(isVerified);
+    }
+
 
 }

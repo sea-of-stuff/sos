@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Metadata;
+import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -139,6 +140,8 @@ public interface SeaOfStuff {
      */
     Manifest getManifest(GUID guid) throws UnknownGUIDException;
 
+    Identity getIdentity();
+
     /**
      * Hash-based verification ensures that a file has not been corrupted by
      * comparing the data's hash value to a previously calculated value.
@@ -160,7 +163,7 @@ public interface SeaOfStuff {
      * @see Manifest
      * @see GUID
      */
-    boolean verifyManifest(Manifest manifest) throws ManifestVerificationFailedException;
+    boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException;
 
 
     Collection<GUID> findManifestByType(String type);

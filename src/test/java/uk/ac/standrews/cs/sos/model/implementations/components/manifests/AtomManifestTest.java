@@ -94,6 +94,6 @@ public class AtomManifestTest {
         locations.add(location);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, locations);
 
-        assertEquals(atomManifest.verify(), true);
+        assertEquals(atomManifest.verify(null), true);
     }
 }

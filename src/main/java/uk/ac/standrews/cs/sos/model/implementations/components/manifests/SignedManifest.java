@@ -43,5 +43,5 @@ public abstract class SignedManifest extends BasicManifest {
      *
      * @return signature of this manifest.
      */
-    protected abstract String generateSignature() throws EncryptionException;
+    protected abstract String generateSignature(String toSign) throws EncryptionException;
 }
