@@ -38,7 +38,6 @@ public class IdentityImpl implements Identity {
         }
     }
 
-
     @Override
     public Key getPublicKey() {
         return this.publicKey;
@@ -57,13 +56,10 @@ public class IdentityImpl implements Identity {
             signature.initSign(privateKey, new SecureRandom());
             signature.update(text.getBytes());
             retval = signature.sign();
-        } catch (NoSuchAlgorithmException e) {
-            throw new EncryptionException();
-        } catch (NoSuchProviderException e) {
-            throw new EncryptionException();
-        } catch (SignatureException e) {
-            throw new EncryptionException();
-        } catch (InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException |
+                NoSuchProviderException |
+                SignatureException |
+                InvalidKeyException e) {
             throw new EncryptionException();
         }
 
@@ -76,21 +72,19 @@ public class IdentityImpl implements Identity {
      * @return the plain text. Null if the input could not be decrypted.
      */
     public boolean verify(String text, byte[] signatue) throws DecryptionException {
-        boolean isValid = false;
+        boolean isValid;
         try {
             Signature signature = Signature.getInstance(IdentityConfiguration.SIGNATURE_ALGORITHM, IdentityConfiguration.PROVIDER);
             signature.initVerify(publicKey);
             signature.update(text.getBytes());
             isValid = signature.verify(signatue);
-        } catch (NoSuchAlgorithmException e) {
-            throw new DecryptionException();
-        } catch (NoSuchProviderException e) {
-            throw new DecryptionException();
-        } catch (SignatureException e) {
-            throw new DecryptionException();
-        } catch (InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException |
+                NoSuchProviderException |
+                SignatureException |
+                InvalidKeyException e) {
             throw new DecryptionException();
         }
+
         return isValid;
     }
 

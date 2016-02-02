@@ -55,9 +55,7 @@ public class DataStorage {
                     if (!dataInLocationAlreadyExists(newLocation)) {
                         FileHelper.copyToFile(dataStream, newLocation);
                     }
-                } catch (IOException e) {
-                    throw new DataStorageException();
-                } catch (URISyntaxException e) {
+                } catch (IOException | URISyntaxException e) {
                     throw new DataStorageException();
                 }
                 break; // Assume that all other locations point to the same source.
@@ -90,10 +88,7 @@ public class DataStorage {
     }
 
     private static boolean locationIsLocal(Location location) {
-        if (location.getProtocol() == null)
-            return false;
-
-        return location.getProtocol().equals("file");
+        return location.getProtocol() != null && location.getProtocol().equals("file");
     }
 
     private static boolean locationStartsWith(Location location, String dir) {

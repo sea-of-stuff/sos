@@ -40,6 +40,7 @@ public class ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
+    private final static int CHUNK_GUID_INITIALS_TO_FOLDER = 2;
 
     // TODO - get these constants from SeaConfiguration
     private static final int DEFAULT_RESULTS = 10;
@@ -270,13 +271,15 @@ public class ManifestsManager {
         if (file.exists())
             return;
 
+        writeToFile(file, manifestJSON);
+    }
+
+    private void writeToFile(File file, JsonObject manifest) throws ManifestPersistException {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             Gson gson = new Gson();
-            String json = gson.toJson(manifestJSON);
+            String json = gson.toJson(manifest);
             bufferedWriter.write(json);
-        } catch (IOException ioe) {
-            throw new ManifestPersistException();
         } catch (Exception e) {
             throw new ManifestPersistException();
         } finally {
@@ -301,7 +304,9 @@ public class ManifestsManager {
     }
 
     private String normaliseGUID(String guid) {
-        return guid.substring(0, 2) + "/" + guid.substring(2) + JSON_EXTENSION;
+        return guid.substring(0, CHUNK_GUID_INITIALS_TO_FOLDER) +
+                "/" + guid.substring(CHUNK_GUID_INITIALS_TO_FOLDER) +
+                JSON_EXTENSION;
     }
 
     private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
