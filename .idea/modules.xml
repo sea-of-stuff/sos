@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/sea_of_stuff.iml" filepath="$PROJECT_DIR$/sea_of_stuff.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-core.iml" filepath="$PROJECT_DIR$/sos-core.iml" />
     </modules>
   </component>
 </project>

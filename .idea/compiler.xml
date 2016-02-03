@@ -24,9 +24,17 @@
         <processorPath useClasspath="true" />
         <module name="sea_of_stuff" />
       </profile>
+      <profile default="false" name="Annotation profile for sos-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="sos-core" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="sea_of_stuff" target="1.8" />
+      <module name="sos-core" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
