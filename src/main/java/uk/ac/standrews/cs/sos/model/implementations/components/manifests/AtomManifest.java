@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 public class AtomManifest extends BasicManifest {
 
-    private Collection<Location> locations;
+    private Collection<OldLocation> locations;
 
     public AtomManifest() {
         super(ManifestConstants.ATOM);
@@ -37,11 +37,12 @@ public class AtomManifest extends BasicManifest {
      *
      * @param locations
      */
-    protected AtomManifest(Collection<Location> locations) throws ManifestNotMadeException {
+    protected AtomManifest(GUID guid, Collection<OldLocation> locations) throws ManifestNotMadeException {
         super(ManifestConstants.ATOM);
+        this.contentGUID = guid;
         this.locations = locations;
 
-        make();
+        //make();
     }
 
     /**
@@ -49,11 +50,11 @@ public class AtomManifest extends BasicManifest {
      *
      * @return locations of this atom.
      */
-    public Collection<Location> getLocations() {
+    public Collection<OldLocation> getLocations() {
         return locations;
     }
 
-    public void setLocations(Collection<Location> locations) {
+    public void setLocations(Collection<OldLocation> locations) {
         if (this.locations == null)
             this.locations = locations;
     }
@@ -63,7 +64,7 @@ public class AtomManifest extends BasicManifest {
         if (contentGUID == null)
             return false;
 
-        for(Location location:locations) {
+        for(OldLocation location:locations) {
             InputStream dataStream;
             try {
                 dataStream = DataStorage.getInputStreamFromLocation(location);
@@ -91,8 +92,8 @@ public class AtomManifest extends BasicManifest {
         JsonObject obj = super.toJSON();
 
         JsonArray array = new JsonArray();
-        Collection<Location> locations = getLocations();
-        for(Location location:locations)
+        Collection<OldLocation> locations = getLocations();
+        for(OldLocation location:locations)
             array.add(location.toString());
 
         obj.add(ManifestConstants.KEY_LOCATIONS, array);
@@ -110,7 +111,7 @@ public class AtomManifest extends BasicManifest {
     }
 
     private GUID generateContentGUID() throws GuidGenerationException {
-        for(Location location:locations) {
+        for(OldLocation location:locations) {
             InputStream dataStream;
             try {
                 dataStream = DataStorage.getInputStreamFromLocation(location);

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.utils;
+package uk.ac.standrews.cs.sos.model.implementations.locations;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +12,15 @@ import java.util.Objects;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Location {
+public class OldLocation {
 
-    private transient String protocol;
     private URI uri;
-    private transient int port;
 
-    public Location(String location) throws URISyntaxException {
+
+    // TODO - make OldLocation abstract and implement different types of locations
+    // e.g. repo, prov, index, etc
+
+    public OldLocation(String location) throws URISyntaxException {
         if (location.startsWith("/"))
             location = "file://" + location;
         uri = new URI(location);
@@ -26,10 +28,6 @@ public class Location {
 
     public String getProtocol() {
         return uri.getScheme();
-    }
-
-    public int getPort() {
-        return -1;
     }
 
     public URI getLocationPath() {
@@ -43,7 +41,6 @@ public class Location {
      * @return
      */
     public InputStream getSource() throws IOException {
-        // TODO - check if this can work for both local and remote paths!
         return uri.toURL().openStream();
     }
 
@@ -51,7 +48,7 @@ public class Location {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Location that = (Location) o;
+        OldLocation that = (OldLocation) o;
         return Objects.equals(uri, that.uri);
     }
 
@@ -62,10 +59,6 @@ public class Location {
 
     public String toString() {
         return uri.toString();
-        // return protocol + ":" + url.toString() + ":" + port;
     }
 
-    public String getPathname() {
-        return uri.getPath();
-    }
 }

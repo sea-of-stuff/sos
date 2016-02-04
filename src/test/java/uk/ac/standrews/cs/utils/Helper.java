@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.utils;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -11,15 +11,15 @@ import java.net.URISyntaxException;
  */
 public class Helper {
 
-    public static String localURItoPath(Location location) throws URISyntaxException {
+    public static String localURItoPath(OldLocation location) throws URISyntaxException {
         return location.getLocationPath().getPath();
     }
 
-    public static Location createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static OldLocation createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
         return createDummyDataFile(configuration, "testData.txt");
     }
 
-    public static Location createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static OldLocation createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
         String location = configuration.getDataPath() + filename;
 
         File file = new File(location);
@@ -33,10 +33,10 @@ public class Helper {
         writer.println("The second line");
         writer.close();
 
-        return new Location("file://"+location);
+        return new OldLocation("file://"+location);
     }
 
-    public static void appendToFile(Location location, String text) throws URISyntaxException, FileNotFoundException {
+    public static void appendToFile(OldLocation location, String text) throws URISyntaxException, FileNotFoundException {
         PrintWriter writer = new PrintWriter(new FileOutputStream(
                 new File(Helper.localURItoPath(location)),
                 true));

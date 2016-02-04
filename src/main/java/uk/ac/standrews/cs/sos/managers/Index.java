@@ -13,8 +13,8 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class MemCache {
-    // TODO - remove methods that are to be managed by the manifests manager, no need to be in the cache/index
+public abstract class Index {
+    // TODO - remove methods that are to be managed by the manifests manager, no need to be in the index/index
 
     public abstract void killInstance() throws IOException;
 

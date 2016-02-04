@@ -19,24 +19,24 @@ import static uk.ac.standrews.cs.sos.managers.CacheBaseTest.CACHE_TYPE.LUCENE;
 public abstract class CacheBaseTest {
 
     public abstract CACHE_TYPE getCacheType();
-    protected MemCache cache;
+    protected Index index;
 
     @BeforeMethod
     public void setUp(Method method) throws IOException {
         CACHE_TYPE type = getCacheType();
         System.out.println(type.toString() + " :: " + method.getName());
-        cache = new CacheFactory().getCache(type);
+        index = new CacheFactory().getCache(type);
     }
 
     @AfterMethod
     public void tearDown() throws IOException {
-        cache.flushDB();
-        cache.killInstance();
+        index.flushDB();
+        index.killInstance();
 
-        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        FileUtils.deleteDirectory(new File(index.getConfiguration().getIndexPath()));
     }
 
-    @DataProvider(name = "cache-manager-provider")
+    @DataProvider(name = "index-manager-provider")
     public static Object[][] cacheProvider() throws IOException {
         return new Object[][] {
                 {LUCENE}
@@ -49,15 +49,15 @@ public abstract class CacheBaseTest {
 
     public class CacheFactory {
 
-        public MemCache getCache(CACHE_TYPE type, SeaConfiguration configuration) throws IOException {
+        public Index getCache(CACHE_TYPE type, SeaConfiguration configuration) throws IOException {
             switch(type) {
                 case LUCENE:
-                    return LuceneCache.getInstance(configuration);
+                    return LuceneIndex.getInstance(configuration);
             }
             return null;
         }
 
-        public MemCache getCache(CACHE_TYPE type) throws IOException {
+        public Index getCache(CACHE_TYPE type) throws IOException {
             SeaConfiguration configuration = new TestConfiguration();
             return getCache(type, configuration);
         }

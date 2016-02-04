@@ -32,15 +32,15 @@ import java.util.HashSet;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LuceneCache extends CommonCache {
+public class LuceneIndex extends CommonIndex {
 
-    private static LuceneCache instance = null;
+    private static LuceneIndex instance = null;
     private static IndexWriter indexWriter = null;
     private static SearcherManager searcherManager = null;
     private static IndexSearcher indexSearcher = null;
     private static SeaConfiguration instanceConfiguration;
 
-    public static MemCache getInstance(SeaConfiguration configuration) throws IOException {
+    public static Index getInstance(SeaConfiguration configuration) throws IOException {
         if(instance == null) {
             instanceConfiguration = configuration;
             Directory dir = FSDirectory.open(new File(configuration.getIndexPath()).toPath());
@@ -53,7 +53,7 @@ public class LuceneCache extends CommonCache {
 
             boolean applyAllDeletes = true;
             searcherManager = new SearcherManager(indexWriter, applyAllDeletes, new SearcherFactory());
-            instance = new LuceneCache();
+            instance = new LuceneIndex();
         }
         return instance;
     }
@@ -119,6 +119,10 @@ public class LuceneCache extends CommonCache {
 
     @Override
     public Collection<GUID> getVersions(GUID invariant, int results, int skip) throws IOException {
+        if (skip > results) {
+            throw new IOException();
+        }
+
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_GUID, invariant.toString());
@@ -159,6 +163,10 @@ public class LuceneCache extends CommonCache {
     }
 
     private Collection<GUID> getGUIDsFromSearch(Term term, int results, int skip) throws IOException {
+        if (skip > results) {
+            throw new IOException();
+        }
+
         Collection<GUID> retval = new HashSet<>();
         Query query = new TermQuery(term);
         TopDocs topDocs = indexSearcher.search(query, results);

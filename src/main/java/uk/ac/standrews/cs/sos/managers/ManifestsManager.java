@@ -19,9 +19,9 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
+import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.io.*;
@@ -47,7 +47,7 @@ public class ManifestsManager {
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
     private SeaConfiguration configuration;
-    private MemCache cache;
+    private Index index;
     private Gson gson;
 
     /**
@@ -56,11 +56,11 @@ public class ManifestsManager {
      * locations for the manifests.
      *
      * @param configuration
-     * @param cache
+     * @param index
      */
-    public ManifestsManager(SeaConfiguration configuration, MemCache cache) {
+    public ManifestsManager(SeaConfiguration configuration, Index index) {
         this.configuration = configuration;
-        this.cache = cache;
+        this.index = index;
 
         configureGson();
     }
@@ -112,7 +112,7 @@ public class ManifestsManager {
     public Collection<GUID> findManifestsByType(String type) {
         Collection<GUID> retval = new ArrayList<>();
         try {
-            retval = cache.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+            retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
             // TODO - custom exception
@@ -123,7 +123,7 @@ public class ManifestsManager {
     public Collection<GUID> findVersions(GUID guid) {
         Collection<GUID> retval = new ArrayList<>();
         try {
-            retval = cache.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+            retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException e) {
             e.printStackTrace();
             // TODO - custom exception
@@ -134,7 +134,7 @@ public class ManifestsManager {
     public Collection<GUID> findManifestsThatMatchLabel(String label) {
         Collection<GUID> retval = new ArrayList<>();
         try {
-            retval = cache.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+            retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException e) {
             e.printStackTrace();
             // TODO - custom exception
@@ -229,8 +229,8 @@ public class ManifestsManager {
         GUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
         String originalPath = getManifestPath(guidUsedToStoreManifest);
         try {
-            FileHelper.copyToFile(new Location(originalPath).getSource(),
-                    new Location(originalPath + BACKUP_EXTENSION));
+            FileHelper.copyToFile(new OldLocation(originalPath).getSource(),
+                    new OldLocation(originalPath + BACKUP_EXTENSION));
         } catch (IOException | URISyntaxException e) {
             throw new ManifestMergeException();
         }
@@ -289,7 +289,7 @@ public class ManifestsManager {
 
     private void cacheManifest(Manifest manifest) throws ManifestCacheException {
         try {
-            cache.addManifest(manifest);
+            index.addManifest(manifest);
         } catch (UnknownManifestTypeException e) {
             throw new ManifestCacheException("Manifest could not be cached");
         }
@@ -304,13 +304,11 @@ public class ManifestsManager {
     }
 
     private String normaliseGUID(String guid) {
-        return guid.substring(0, CHUNK_GUID_INITIALS_TO_FOLDER) +
-                "/" + guid.substring(CHUNK_GUID_INITIALS_TO_FOLDER) +
-                JSON_EXTENSION;
+        return guid + JSON_EXTENSION;
     }
 
     private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
-        Collection<Location> locations = new HashSet<>();
+        Collection<OldLocation> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 

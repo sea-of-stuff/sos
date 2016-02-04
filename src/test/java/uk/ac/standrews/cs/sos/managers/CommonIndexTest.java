@@ -20,23 +20,23 @@ import static org.powermock.api.mockito.PowerMockito.when;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CommonCacheTest {
+public class CommonIndexTest {
 
     private SeaConfiguration configuration;
-    private MemCache cache;
+    private Index index;
 
     @BeforeMethod
     public void setUp(Method method) throws IOException {
         configuration = new TestConfiguration();
-        cache = LuceneCache.getInstance(configuration);
+        index = LuceneIndex.getInstance(configuration);
     }
 
     @AfterMethod
     public void tearDown() throws IOException {
-        cache.flushDB();
-        cache.killInstance();
+        index.flushDB();
+        index.killInstance();
 
-        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
+        FileUtils.deleteDirectory(new File(index.getConfiguration().getIndexPath()));
     }
 
     @Test(expectedExceptions = UnknownManifestTypeException.class)
@@ -46,6 +46,6 @@ public class CommonCacheTest {
         when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(simpleManifestMocked.getManifestType()).thenReturn("WrongType");
 
-        cache.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked);
     }
 }

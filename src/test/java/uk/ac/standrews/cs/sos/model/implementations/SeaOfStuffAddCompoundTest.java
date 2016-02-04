@@ -49,7 +49,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
-        cache.flushDB();
+        index.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.COMPOUND, retrievedManifest.getManifestType());

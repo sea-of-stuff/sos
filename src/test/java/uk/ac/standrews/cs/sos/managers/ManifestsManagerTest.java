@@ -12,10 +12,10 @@ import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
+import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.Helper;
@@ -54,35 +54,35 @@ public class ManifestsManagerTest {
     private JsonObject jsonAtomObj = parser.parse(EXPECTED_JSON_ATOM_MANIFEST).getAsJsonObject();
 
     private SeaConfiguration configuration;
-    private MemCache cache;
+    private Index index;
 
     @BeforeMethod
     public void setUp() throws IOException {
         configuration = new TestConfiguration();
-        cache = LuceneCache.getInstance(configuration);
+        index = LuceneIndex.getInstance(configuration);
     }
 
     @AfterMethod
     public void tearDown() throws IOException {
-        cache.flushDB();
-        cache.killInstance();
+        index.flushDB();
+        index.killInstance();
 
-        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
-        FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
-        FileUtils.cleanDirectory(new File(cache.getConfiguration().getCacheDataPath()));
-        FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
+        FileUtils.deleteDirectory(new File(index.getConfiguration().getIndexPath()));
+        FileUtils.cleanDirectory(new File(index.getConfiguration().getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(index.getConfiguration().getCacheDataPath()));
+        FileUtils.cleanDirectory(new File(index.getConfiguration().getDataPath()));
 
         configuration = null;
-        cache = null;
+        index = null;
     }
 
     @Test
     public void testAddAtomManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
+        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 configuration,
-                new ArrayList<Location>(Arrays.asList(new Location(Hashes.TEST_HTTP_BIN_URL))));
+                new ArrayList<OldLocation>(Arrays.asList(new OldLocation(Hashes.TEST_HTTP_BIN_URL))));
         GUID guid = atomManifest.getContentGUID();
         try {
             manifestsManager.addManifest(atomManifest);
@@ -98,7 +98,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddCompoundManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
+        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
         Identity identity = new IdentityImpl(configuration);
         Content content = new Content("Cat", new GUIDsha1("123"));
@@ -121,7 +121,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAssetManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
+        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
         Identity identity = new IdentityImpl(configuration);
         Content content = new Content("Cat", new GUIDsha1("123"));
@@ -142,17 +142,17 @@ public class ManifestsManagerTest {
 
     @Test
     public void testUpdateAtomManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, cache);
+        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
-        Location firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
-        Location secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
+        OldLocation firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
+        OldLocation secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<Location>(Arrays.asList(firstLocation)));
+                configuration, new ArrayList<OldLocation>(Arrays.asList(firstLocation)));
         GUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<Location>(Arrays.asList(secondLocation)));
+                configuration, new ArrayList<OldLocation>(Arrays.asList(secondLocation)));
         GUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);

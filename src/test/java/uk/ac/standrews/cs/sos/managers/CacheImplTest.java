@@ -28,7 +28,7 @@ public class CacheImplTest extends CacheBaseTest {
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
-    @Factory(dataProvider = "cache-manager-provider")
+    @Factory(dataProvider = "index-manager-provider")
     public CacheImplTest(CACHE_TYPE cacheType) {
         this.cacheType = cacheType;
     }
@@ -45,9 +45,9 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(simpleManifestMocked.getManifestType()).thenReturn("Atom");
 
-        cache.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(new GUIDsha1("123")));
     }
 
@@ -61,10 +61,10 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked2.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(simpleManifestMocked2.getManifestType()).thenReturn("Atom");
 
-        cache.addManifest(simpleManifestMocked);
-        cache.addManifest(simpleManifestMocked2);
+        index.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked2);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 1);
     }
 
@@ -78,10 +78,10 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked2.getContentGUID()).thenReturn(new GUIDsha1("456"));
         when(simpleManifestMocked2.getManifestType()).thenReturn("Atom");
 
-        cache.addManifest(simpleManifestMocked);
-        cache.addManifest(simpleManifestMocked2);
+        index.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked2);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, 1);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, 1);
         assertEquals(guids.size(), 1);
     }
 
@@ -95,10 +95,10 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked2.getContentGUID()).thenReturn(new GUIDsha1("456"));
         when(simpleManifestMocked2.getManifestType()).thenReturn("Atom");
 
-        cache.addManifest(simpleManifestMocked);
-        cache.addManifest(simpleManifestMocked2);
+        index.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked2);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_RESULTS);
         assertEquals(guids.size(), 0);
     }
 
@@ -114,12 +114,12 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked.getManifestType()).thenReturn("Compound");
         when(simpleManifestMocked.getContents()).thenReturn(contents);
 
-        cache.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(new GUIDsha1("123")));
 
-        Collection<GUID> contentGUIDs = cache.getMetaLabelMatches("cat", DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> contentGUIDs = index.getMetaLabelMatches("cat", DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(contentGUIDs.contains(new GUIDsha1("321")));
     }
 
@@ -135,12 +135,12 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked.getManifestType()).thenReturn("Compound");
         when(simpleManifestMocked.getContents()).thenReturn(contents);
 
-        cache.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(new GUIDsha1("123")));
 
-        Collection<GUID> contentGUIDs = cache.getMetaLabelMatches("cat", DEFAULT_RESULTS, 1);
+        Collection<GUID> contentGUIDs = index.getMetaLabelMatches("cat", DEFAULT_RESULTS, 1);
         assertEquals(contentGUIDs.size(), 0);
     }
 
@@ -168,13 +168,13 @@ public class CacheImplTest extends CacheBaseTest {
         when(compoundTwo.getManifestType()).thenReturn("Compound");
         when(compoundTwo.getContents()).thenReturn(otherContents);
 
-        cache.addManifest(compoundOne);
-        cache.addManifest(compoundTwo);
+        index.addManifest(compoundOne);
+        index.addManifest(compoundTwo);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.COMPOUND, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
-        Collection<GUID> contentGUIDs = cache.getMetaLabelMatches("cat", DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> contentGUIDs = index.getMetaLabelMatches("cat", DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(contentGUIDs.size(), 1);
     }
 
@@ -186,14 +186,14 @@ public class CacheImplTest extends CacheBaseTest {
         when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
         when(simpleManifestMocked.getManifestType()).thenReturn("Atom");
 
-        cache.addManifest(simpleManifestMocked);
+        index.addManifest(simpleManifestMocked);
 
         // Kill this instance, so that next instance used the dumped file.
-        SeaConfiguration configuration = cache.getConfiguration();
-        cache.killInstance();
-        cache = new CacheFactory().getCache(cacheType, configuration);
+        SeaConfiguration configuration = index.getConfiguration();
+        index.killInstance();
+        index = new CacheFactory().getCache(cacheType, configuration);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(new GUIDsha1("123")));
     }
 
@@ -207,9 +207,9 @@ public class CacheImplTest extends CacheBaseTest {
         when(assetManifestMocked.getInvariantGUID()).thenReturn(invariant);
         when(assetManifestMocked.getManifestType()).thenReturn("Asset");
 
-        cache.addManifest(assetManifestMocked);
+        index.addManifest(assetManifestMocked);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 1);
         assertTrue(guids.contains(new GUIDsha1("abc123")));
     }
@@ -222,15 +222,15 @@ public class CacheImplTest extends CacheBaseTest {
         // Cannot two assets with same version GUID and different incarnation.
         AssetManifest invalidAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("def123"));
 
-        cache.addManifest(firstAsset);
-        cache.addManifest(secondAsset);
-        cache.addManifest(thirdAsset);
-        cache.addManifest(invalidAsset);
+        index.addManifest(firstAsset);
+        index.addManifest(secondAsset);
+        index.addManifest(thirdAsset);
+        index.addManifest(invalidAsset);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
-        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"), DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> versions = index.getVersions(new GUIDsha1("abc123"), DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(versions.size(), 2);
         assertTrue(versions.contains(new GUIDsha1("123")));
         assertTrue(versions.contains(new GUIDsha1("456")));
@@ -244,15 +244,15 @@ public class CacheImplTest extends CacheBaseTest {
         // Cannot two assets with same version GUID and different incarnation.
         AssetManifest invalidAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("def123"));
 
-        cache.addManifest(firstAsset);
-        cache.addManifest(secondAsset);
-        cache.addManifest(thirdAsset);
-        cache.addManifest(invalidAsset);
+        index.addManifest(firstAsset);
+        index.addManifest(secondAsset);
+        index.addManifest(thirdAsset);
+        index.addManifest(invalidAsset);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
-        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"), DEFAULT_RESULTS, 1);
+        Collection<GUID> versions = index.getVersions(new GUIDsha1("abc123"), DEFAULT_RESULTS, 1);
         assertEquals(versions.size(), 1);
         assertTrue(versions.contains(new GUIDsha1("456")));
     }
@@ -265,15 +265,15 @@ public class CacheImplTest extends CacheBaseTest {
         // Cannot two assets with same version GUID and different incarnation.
         AssetManifest invalidAsset = createMockedManifest(new GUIDsha1("123"), new GUIDsha1("def123"));
 
-        cache.addManifest(firstAsset);
-        cache.addManifest(secondAsset);
-        cache.addManifest(thirdAsset);
-        cache.addManifest(invalidAsset);
+        index.addManifest(firstAsset);
+        index.addManifest(secondAsset);
+        index.addManifest(thirdAsset);
+        index.addManifest(invalidAsset);
 
-        Collection<GUID> guids = cache.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<GUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
-        Collection<GUID> versions = cache.getVersions(new GUIDsha1("abc123"), DEFAULT_RESULTS, DEFAULT_RESULTS);
+        Collection<GUID> versions = index.getVersions(new GUIDsha1("abc123"), DEFAULT_RESULTS, DEFAULT_RESULTS);
         assertEquals(versions.size(), 0);
     }
 

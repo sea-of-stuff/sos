@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class CommonCache extends MemCache {
+public abstract class CommonIndex extends Index {
 
     @Override
     public void addManifest(Manifest manifest) throws UnknownManifestTypeException {

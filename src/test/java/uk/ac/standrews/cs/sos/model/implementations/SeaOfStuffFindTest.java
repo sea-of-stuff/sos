@@ -4,10 +4,10 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Collection<Location> locations = new ArrayList<Location>();
-        Location location = Helper.createDummyDataFile(configuration);
+        Collection<OldLocation> locations = new ArrayList<OldLocation>();
+        OldLocation location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
 
-        Collection<Location> locationsOther = new ArrayList<Location>();
-        Location locationOther = Helper.createDummyDataFile(configuration, "another-file");
+        Collection<OldLocation> locationsOther = new ArrayList<OldLocation>();
+        OldLocation locationOther = Helper.createDummyDataFile(configuration, "another-file");
         Helper.appendToFile(locationOther, "another random line");
         locationsOther.add(locationOther);
         AtomManifest manifestOther = model.addAtom(locationsOther);
@@ -42,13 +42,13 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Collection<Location> locations = new ArrayList<Location>();
-        Location location = Helper.createDummyDataFile(configuration);
+        Collection<OldLocation> locations = new ArrayList<OldLocation>();
+        OldLocation location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
 
-        Collection<Location> locationsOther = new ArrayList<Location>();
-        Location locationOther = Helper.createDummyDataFile(configuration, "another-file");
+        Collection<OldLocation> locationsOther = new ArrayList<OldLocation>();
+        OldLocation locationOther = Helper.createDummyDataFile(configuration, "another-file");
         Helper.appendToFile(locationOther, "another random line");
         locationsOther.add(locationOther);
         AtomManifest manifestOther = model.addAtom(locationsOther);

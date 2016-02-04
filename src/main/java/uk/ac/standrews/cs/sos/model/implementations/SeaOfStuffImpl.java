@@ -14,12 +14,12 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedExce
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
-import uk.ac.standrews.cs.sos.managers.MemCache;
+import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Metadata;
@@ -42,11 +42,11 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
 
-    public SeaOfStuffImpl(SeaConfiguration configuration, MemCache cache) throws KeyGenerationException, KeyLoadedException, IOException {
+    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws KeyGenerationException, KeyLoadedException, IOException {
         this.configuration = configuration;
 
         identity = new IdentityImpl(configuration);
-        manifestsManager = new ManifestsManager(configuration, cache);
+        manifestsManager = new ManifestsManager(configuration, index);
 
         backgroundProcesses();
     }
@@ -59,7 +59,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(Collection<Location> locations)
+    public AtomManifest addAtom(Collection<OldLocation> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(configuration, locations);
@@ -94,8 +94,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public InputStream getAtomContent(AtomManifest atomManifest) {
         InputStream dataStream = null;
-        Collection<Location> locations = atomManifest.getLocations();
-        for(Location location:locations) {
+        Collection<OldLocation> locations = atomManifest.getLocations();
+        for(OldLocation location:locations) {
 
             try {
                 dataStream = DataStorage.getInputStreamFromLocation(location);

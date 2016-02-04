@@ -55,7 +55,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
-        cache.flushDB();
+        index.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);
@@ -89,7 +89,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
-        cache.flushDB();
+        index.flushDB();
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);

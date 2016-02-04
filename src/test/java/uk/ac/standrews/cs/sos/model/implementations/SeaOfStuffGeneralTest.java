@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.managers.LuceneCache;
-import uk.ac.standrews.cs.sos.managers.MemCache;
+import uk.ac.standrews.cs.sos.managers.LuceneIndex;
+import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 
@@ -23,15 +23,15 @@ import java.io.IOException;
 public class SeaOfStuffGeneralTest {
 
     protected SeaOfStuff model;
-    protected MemCache cache;
+    protected Index index;
     protected SeaConfiguration configuration;
 
     @BeforeMethod
     public void setUp() {
         try {
             configuration = new TestConfiguration();
-            cache = LuceneCache.getInstance(configuration);
-            model = new SeaOfStuffImpl(configuration, cache);
+            index = LuceneIndex.getInstance(configuration);
+            model = new SeaOfStuffImpl(configuration, index);
         } catch (KeyGenerationException e) {
             e.printStackTrace();
         } catch (KeyLoadedException e) {
@@ -43,13 +43,13 @@ public class SeaOfStuffGeneralTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        cache.flushDB();
-        cache.killInstance();
+        index.flushDB();
+        index.killInstance();
 
-        FileUtils.deleteDirectory(new File(cache.getConfiguration().getIndexPath()));
-        FileUtils.cleanDirectory(new File(cache.getConfiguration().getLocalManifestsLocation()));
-        FileUtils.cleanDirectory(new File(cache.getConfiguration().getDataPath()));
-        FileUtils.cleanDirectory(new File(cache.getConfiguration().getCacheDataPath()));
+        FileUtils.deleteDirectory(new File(index.getConfiguration().getIndexPath()));
+        FileUtils.cleanDirectory(new File(index.getConfiguration().getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(index.getConfiguration().getDataPath()));
+        FileUtils.cleanDirectory(new File(index.getConfiguration().getCacheDataPath()));
     }
 
     @Test(expectedExceptions = UnknownGUIDException.class)
