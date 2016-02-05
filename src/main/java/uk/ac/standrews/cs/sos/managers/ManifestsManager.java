@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -229,8 +230,8 @@ public class ManifestsManager {
         GUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
         String originalPath = getManifestPath(guidUsedToStoreManifest);
         try {
-            FileHelper.copyToFile(new OldLocation(originalPath).getSource(),
-                    new OldLocation(originalPath + BACKUP_EXTENSION));
+            FileHelper.copyToFile(new OldLocation(originalPath).getSource(), // FIXME
+                    originalPath + BACKUP_EXTENSION);
         } catch (IOException | URISyntaxException e) {
             throw new ManifestMergeException();
         }
@@ -308,7 +309,7 @@ public class ManifestsManager {
     }
 
     private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
-        Collection<OldLocation> locations = new HashSet<>();
+        Collection<LocationBundle> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 

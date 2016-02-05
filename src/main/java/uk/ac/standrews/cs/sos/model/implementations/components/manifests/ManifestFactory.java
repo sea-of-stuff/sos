@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -27,7 +28,7 @@ public class ManifestFactory {
      * @return the manifest for the atom
      * @throws ManifestNotMadeException
      */
-    public static AtomManifest createAtomManifest(SeaConfiguration configuration, Collection<OldLocation> locations)
+    public static AtomManifest createAtomManifest(SeaConfiguration configuration, Collection<LocationBundle> locations)
             throws ManifestNotMadeException, DataStorageException {
 
         GUID guid = DataStorage.storeAtom(configuration, locations);

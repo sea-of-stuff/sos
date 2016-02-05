@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 
-import com.sun.javafx.tools.ant.DeployFXTask;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
@@ -16,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -51,18 +49,10 @@ public class DataStorage {
         return stream;
     }
 
-    // TODO - consider passing only one location!
+    // TODO - consider passing only one bundle/location!?
     public static GUID storeAtom(SeaConfiguration configuration, Collection<LocationBundle> bundles) throws DataStorageException {
 
-        // STEPS
-        // 1 - get data
-        // 2 - calculate guid on data
-        // 3 - index data and rename it using guid
-        // 4 - annotate locations (prov, index, etc)
-
-        // return GUID
-        // update param locations
-        // deal with locations that fail
+        // TODO - deal with locations that fail
 
         GUID guid = null;
         if (bundles == null || bundles.isEmpty()) {
@@ -85,7 +75,7 @@ public class DataStorage {
                     throw new DataStorageException(); // TODO - use different exception?
                 }
 
-                boolean successful = storeData(configuration, bundle);
+                boolean successful = storeData(configuration, bundle, guid);
                 if (successful) {
                     LocationBundle cachedBundle = cacheBundle(bundle);
                     bundles.add(cachedBundle);
@@ -100,20 +90,22 @@ public class DataStorage {
         return guid;
     }
 
-    private static boolean storeData(SeaConfiguration configuration, LocationBundle bundle) throws DataStorageException {
+    private static boolean storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
+        boolean retval = false;
         try {
-            InputStream dataStream = getInputStreamFromLocation(bundle.getLocations()[0]); // FIXME - assume only one location
-            OldLocation newLocation = getAtomLocalLocation(configuration, location);
-            if (!location.equals(newLocation)) {
-                outLocations.add(newLocation);
-                touchDir(newLocation);
-            }
-            if (!dataInLocationAlreadyExists(newLocation)) {
-                FileHelper.copyToFile(dataStream, newLocation);
+            Location location = bundle.getLocations()[0];  // FIXME - assume only one location
+            InputStream dataStream = getInputStreamFromLocation(location);
+            String cachedLocationPath = getAtomCachedLocation(configuration, guid);
+
+            touchDir(cachedLocationPath);
+            if (!pathExists(cachedLocationPath)) {
+                FileHelper.copyToFile(dataStream, cachedLocationPath);
+                retval = true;
             }
         } catch (IOException | URISyntaxException | SourceLocationException e) {
             throw new DataStorageException();
         }
+        return retval;
     }
 
     private static LocationBundle cacheBundle(LocationBundle bundle) {
@@ -121,15 +113,8 @@ public class DataStorage {
         return null;
     }
 
-    private static OldLocation getAtomLocalLocation(SeaConfiguration configuration, OldLocation location) throws URISyntaxException {
-        URI uri = location.getLocationPath();
-        String filename = getNameFromURI(uri);
-        return new OldLocation("file://" + configuration.getCacheDataPath() + filename);
-    }
-
-    private static String getNameFromURI(URI uri) {
-        String[] segments = uri.getPath().split("/");
-        return segments[segments.length-1];
+    private static String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {
+        return configuration.getCacheDataPath() + guid.toString();
     }
 
     private static void removeUserLocations(SeaConfiguration configuration, Collection<OldLocation> locations) {
@@ -151,15 +136,15 @@ public class DataStorage {
         return path.startsWith(dir);
     }
 
-    private static void touchDir(OldLocation location) throws IOException {
-        File parent = new File(location.getLocationPath()).getParentFile();
+    private static void touchDir(String path) throws IOException {
+        File parent = new File(path).getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             parent.mkdirs();
         }
     }
 
-    private static boolean dataInLocationAlreadyExists(OldLocation location) {
-        File file = new File(location.getLocationPath());
+    private static boolean pathExists(String path) {
+        File file = new File(path);
         return file.exists();
     }
 }

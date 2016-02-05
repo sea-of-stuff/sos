@@ -18,11 +18,11 @@ public class FileHelper {
         file.delete();
     }
 
-    public static void copyToFile(InputStream inputStream, OldLocation destination) throws IOException {
+    public static void copyToFile(InputStream inputStream, String destination) throws IOException {
         Files.copy(inputStream, locationToPath(destination));
     }
 
-    public static Path locationToPath(OldLocation location) {
-        return new File(location.getLocationPath().getPath()).toPath();
+    public static Path locationToPath(String path) {
+        return new File(path).toPath();
     }
 }

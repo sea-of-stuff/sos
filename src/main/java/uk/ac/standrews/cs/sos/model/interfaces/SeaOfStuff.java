@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -89,7 +90,7 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    AtomManifest addAtom(Collection<OldLocation> locations)
+    AtomManifest addAtom(Collection<LocationBundle> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
 
     /**

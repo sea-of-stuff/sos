@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
@@ -59,7 +60,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(Collection<OldLocation> locations)
+    public AtomManifest addAtom(Collection<LocationBundle> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(configuration, locations);
@@ -94,11 +95,11 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public InputStream getAtomContent(AtomManifest atomManifest) {
         InputStream dataStream = null;
-        Collection<OldLocation> locations = atomManifest.getLocations();
-        for(OldLocation location:locations) {
+        Collection<LocationBundle> locations = atomManifest.getLocations();
+        for(LocationBundle location:locations) {
 
             try {
-                dataStream = DataStorage.getInputStreamFromLocation(location);
+                dataStream = DataStorage.getInputStreamFromLocation(location.getLocations()[0]); // FIXME
             } catch (SourceLocationException e) {
                 continue;
             }

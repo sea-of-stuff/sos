@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.deserializers;
 import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 
 import java.lang.reflect.Type;
@@ -20,12 +21,12 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
         JsonObject obj = json.getAsJsonObject();
 
         JsonArray jLocations = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
-        Collection<OldLocation> locations = new ArrayList<OldLocation>();
+        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
         for (int i = 0; i < jLocations.size(); i++) {
             JsonElement jLocation = jLocations.get(i);
             String sLocation = jLocation.getAsString();
             try {
-                locations.add(new OldLocation(sLocation));
+                locations.add(new LocationBundle(sLocation)); // FIXME
             } catch (URISyntaxException e) {
                 throw new JsonParseException("Unable to create location : " + sLocation);
             }
