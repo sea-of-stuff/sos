@@ -15,7 +15,7 @@ public class URILocationTest {
     @Test
     public void testConstructorLocalURL() throws URISyntaxException, IOException {
         Location location = new URILocation("/sos/data/test.txt");
-        assertEquals(location.getURI().toString(), "/sos/data/test.txt");
+        assertEquals(location.getURI().toString(), "file:///sos/data/test.txt");
     }
 
     @Test

@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
@@ -230,7 +230,7 @@ public class ManifestsManager {
         GUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
         String originalPath = getManifestPath(guidUsedToStoreManifest);
         try {
-            FileHelper.copyToFile(new OldLocation(originalPath).getSource(), // FIXME
+            FileHelper.copyToFile(new URILocation(originalPath).getSource(),
                     originalPath + BACKUP_EXTENSION);
         } catch (IOException | URISyntaxException e) {
             throw new ManifestMergeException();

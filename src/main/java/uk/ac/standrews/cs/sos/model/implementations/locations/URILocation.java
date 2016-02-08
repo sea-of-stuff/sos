@@ -16,6 +16,8 @@ public class URILocation implements Location{
     private URI uri;
 
     public URILocation(String location) throws URISyntaxException {
+        if (location.startsWith("/")) // assume this to be a local path
+            location = "file://" + location;
         uri = new URI(location);
     }
 
