@@ -215,9 +215,6 @@ public class LuceneIndex extends CommonIndex {
         GUID version = manifest.getVersionGUID();
         String type = manifest.getManifestType();
         GUID invariant = manifest.getInvariantGUID();
-        Collection<GUID> prevs = manifest.getPreviousManifests();
-        Collection<GUID> metadata = manifest.getMetadata();
-        Content content = manifest.getContent();
 
         doc.add(new StringField(LuceneKeys.HANDLE_VERSION, version.toString(), Field.Store.YES));
         doc.add(new StringField(LuceneKeys.HANDLE_TYPE, type, Field.Store.YES));

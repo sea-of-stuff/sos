@@ -32,11 +32,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
             configuration = SeaConfiguration.getInstance();
             index = LuceneIndex.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, index);
-        } catch (KeyGenerationException e) {
-            e.printStackTrace();
-        } catch (KeyLoadedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (KeyGenerationException | KeyLoadedException | IOException e) {
             e.printStackTrace();
         }
     }

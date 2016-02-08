@@ -23,12 +23,12 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         LocationBundle bundle = Helper.createDummyDataFile(configuration);
         bundles.add(bundle);
         AtomManifest manifest = model.addAtom(bundles);
 
-        Collection<LocationBundle> otherBundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> otherBundles = new ArrayList<>();
         LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
         Helper.appendToFile(otherBundle.getLocations()[0], "another random line");
         otherBundles.add(otherBundle);
@@ -42,12 +42,12 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         LocationBundle bundle = Helper.createDummyDataFile(configuration);
         bundles.add(bundle);
         AtomManifest manifest = model.addAtom(bundles);
 
-        Collection<LocationBundle> otherBundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> otherBundles = new ArrayList<>();
         LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
         Helper.appendToFile(otherBundle.getLocations()[0], "another random line");
         otherBundles.add(otherBundle);
@@ -57,7 +57,7 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compoundManifest = model.addCompound(contents);
+        model.addCompound(contents);
 
         Collection<GUID> manifests = model.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
@@ -70,12 +70,12 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Content cat = new Content("cat", new GUIDsha1("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
-        CompoundManifest compoundManifest = model.addCompound(contents);
+        model.addCompound(contents);
 
         Content dog = new Content("dog", new GUIDsha1("343"));
         Collection<Content> otherContents = new ArrayList<>();
         otherContents.add(dog);
-        CompoundManifest otherCompoundManifest = model.addCompound(otherContents);
+        model.addCompound(otherContents);
 
         Collection<GUID> cats = model.findManifestByLabel("cat");
         assertEquals(cats.size(), 1);

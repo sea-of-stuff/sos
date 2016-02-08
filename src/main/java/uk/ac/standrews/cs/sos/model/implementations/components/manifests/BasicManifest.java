@@ -29,7 +29,7 @@ public abstract class BasicManifest implements Manifest {
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
     protected GUID contentGUID;
-    protected final String manifestType;
+    private final String manifestType;
 
     /**
      * Constructor for a BasicManifest.

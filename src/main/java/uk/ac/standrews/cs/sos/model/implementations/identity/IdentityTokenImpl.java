@@ -11,7 +11,7 @@ public class IdentityTokenImpl implements IdentityToken {
 
     private long tokey;
 
-    public IdentityTokenImpl(long tokey) {
+    private IdentityTokenImpl(long tokey) {
         this.tokey = tokey;
     }
 

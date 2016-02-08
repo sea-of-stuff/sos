@@ -112,7 +112,7 @@ public class CompoundManifest extends SignedManifest {
         return new String(encodedBytes);
     }
 
-    public void makeContentGUID() throws ManifestNotMadeException {
+    private void makeContentGUID() throws ManifestNotMadeException {
         try {
             contentGUID = generateContentGUID();
         } catch (GuidGenerationException e) {

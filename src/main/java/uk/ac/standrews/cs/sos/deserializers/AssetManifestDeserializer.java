@@ -34,11 +34,11 @@ public class AssetManifestDeserializer implements JsonDeserializer<AssetManifest
         Content content = gson.fromJson(jContents, Content.class);
 
         JsonArray jPrevs = obj.getAsJsonArray(ManifestConstants.KEY_PREVIOUS_GUID);
-        Collection<GUID> prevs = new ArrayList<GUID>();
+        Collection<GUID> prevs = new ArrayList<>();
         fillGUIDCollection(jPrevs, prevs);
 
         JsonArray jMeta = obj.getAsJsonArray(ManifestConstants.KEY_METADATA_GUID);
-        Collection<GUID> metadata = new ArrayList<GUID>();
+        Collection<GUID> metadata = new ArrayList<>();
         fillGUIDCollection(jMeta, metadata);
 
         AssetManifest manifest = null;

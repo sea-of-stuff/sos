@@ -107,8 +107,7 @@ public class DataStorage {
 
     private static LocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) {
         Location location = new SOSLocation(configuration.getMachineID(), guid);
-        LocationBundle bundle = new LocationBundle("cache", new Location[]{location});
-        return bundle;
+        return new LocationBundle("cache", new Location[]{location});
     }
 
     private static String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {

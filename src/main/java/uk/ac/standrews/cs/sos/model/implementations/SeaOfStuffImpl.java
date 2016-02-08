@@ -57,7 +57,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
         } catch (Error e) {
             // Error is thrown if the factory has already been setup for the JVM.
-            return;
         }
     }
 

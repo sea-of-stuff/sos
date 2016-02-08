@@ -43,13 +43,13 @@ public class AtomManifestTest extends SetUpTest {
 
     @Test (expectedExceptions = DataStorageException.class)
     public void testNoLocations() throws IOException, ManifestNotMadeException, DataStorageException {
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         ManifestFactory.createAtomManifest(configuration, bundles);
     }
 
     @Test
     public void testGetLocations() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         LocationBundle bundle = Helper.createDummyDataFile(configuration);
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
@@ -62,7 +62,7 @@ public class AtomManifestTest extends SetUpTest {
     public void testToJSON() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
 
@@ -77,7 +77,7 @@ public class AtomManifestTest extends SetUpTest {
     public void testIsValid() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
 
@@ -88,7 +88,7 @@ public class AtomManifestTest extends SetUpTest {
     public void testIsVerified() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
 

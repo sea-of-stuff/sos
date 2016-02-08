@@ -20,7 +20,7 @@ public class FileHelper {
         Files.copy(inputStream, locationToPath(destination));
     }
 
-    public static Path locationToPath(String path) {
+    private static Path locationToPath(String path) {
         return new File(path).toPath();
     }
 }

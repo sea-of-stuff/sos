@@ -24,7 +24,7 @@ public class SOSLocationTest extends SetUpTest {
         try {
             URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
         } catch (Error e) {
-            return;
+            // Error is thrown if factory was already setup in previous tests
         }
     }
 

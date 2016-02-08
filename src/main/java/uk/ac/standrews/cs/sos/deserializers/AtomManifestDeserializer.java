@@ -21,7 +21,7 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
         JsonObject obj = json.getAsJsonObject();
 
         JsonArray jLocationBundles = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         for (int i = 0; i < jLocationBundles.size(); i++) {
             LocationBundle bundle = gson.fromJson(jLocationBundles.get(i), LocationBundle.class);
             bundles.add(bundle);

@@ -252,7 +252,7 @@ public class ManifestsManager {
         JsonObject manifestJSON = manifest.toJSON();
 
         // Remove content guid and use that for the manifest file name
-        String guid = "";
+        String guid;
         String type = manifest.getManifestType();
         if (type.equals(ManifestConstants.ASSET)) {
             guid = manifestJSON.remove(ManifestConstants.KEY_VERSION).getAsString();
@@ -309,7 +309,7 @@ public class ManifestsManager {
     }
 
     private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
-        HashSet<LocationBundle> locations = new HashSet<LocationBundle>();
+        HashSet<LocationBundle> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 

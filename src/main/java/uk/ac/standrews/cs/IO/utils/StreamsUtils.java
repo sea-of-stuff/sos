@@ -18,8 +18,6 @@ public class StreamsUtils {
 
     public static InputStream StringToInputStream(String input) throws UnsupportedEncodingException {
         StringReader reader = new StringReader(input);
-        InputStream inputStream = new ReaderInputStream(reader, "UTF-8");
-
-        return inputStream;
+        return new ReaderInputStream(reader, "UTF-8");
     }
 }

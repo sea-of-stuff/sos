@@ -22,7 +22,7 @@ public class GUIDsha1 extends GUID {
         hash(source);
     }
 
-    protected void hash(InputStream source) throws GuidGenerationException {
+    private void hash(InputStream source) throws GuidGenerationException {
         try {
             byte[] hash = DigestUtils.sha1(source);
             hashHex = Hex.encodeHexString(hash);

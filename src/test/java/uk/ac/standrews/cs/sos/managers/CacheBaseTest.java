@@ -17,7 +17,7 @@ import static uk.ac.standrews.cs.sos.managers.CacheBaseTest.CACHE_TYPE.LUCENE;
  */
 public abstract class CacheBaseTest {
 
-    public abstract CACHE_TYPE getCacheType();
+    protected abstract CACHE_TYPE getCacheType();
     protected Index index;
 
     @BeforeMethod

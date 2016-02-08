@@ -83,7 +83,7 @@ public class ManifestsManagerTest {
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
-        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
 
@@ -106,7 +106,7 @@ public class ManifestsManagerTest {
 
         Identity identity = new IdentityImpl(configuration);
         Content content = new Content("Cat", new GUIDsha1("123"));
-        Collection<Content> contents = new ArrayList<Content>();
+        Collection<Content> contents = new ArrayList<>();
         contents.add(content);
 
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(contents, identity);
@@ -152,11 +152,11 @@ public class ManifestsManagerTest {
         LocationBundle secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<LocationBundle>(Arrays.asList(firstLocation)));
+                configuration, new ArrayList<>(Arrays.asList(firstLocation)));
         GUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<LocationBundle>(Arrays.asList(secondLocation)));
+                configuration, new ArrayList<>(Arrays.asList(secondLocation)));
         GUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);

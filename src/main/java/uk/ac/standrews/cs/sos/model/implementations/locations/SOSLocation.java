@@ -36,7 +36,7 @@ public class SOSLocation implements Location {
     public SOSLocation(String location) {
         String[] segments = location.split(SCHEME_DIVIDER)[1].split("/");
         this.machineID = new GUIDsha1(segments[0]);
-        this.entity = new GUIDsha1(segments[1]);;
+        this.entity = new GUIDsha1(segments[1]);
     }
 
     @Override

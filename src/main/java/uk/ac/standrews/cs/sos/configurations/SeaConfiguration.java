@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -36,7 +35,7 @@ public class SeaConfiguration {
         return instance;
     }
 
-    public static void loadConfiguration() {
+    private static void loadConfiguration() {
         try (BufferedReader reader = new BufferedReader(new FileReader(HOME + "/config.txt")) ){
             machineid = new GUIDsha1(reader.readLine());
             root = reader.readLine();

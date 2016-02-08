@@ -24,7 +24,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtom() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         LocationBundle location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
@@ -40,7 +40,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testRetrieveAtomFromFile() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         LocationBundle location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
@@ -59,7 +59,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         LocationBundle location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
@@ -73,7 +73,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAtomDataVerify() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         LocationBundle location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
@@ -85,7 +85,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAtomDataVerifyFails() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         LocationBundle location = Helper.createDummyDataFile(configuration);
         locations.add(location);
         AtomManifest manifest = model.addAtom(locations);
@@ -101,7 +101,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURL() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         locations.add(new LocationBundle("prov", new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
@@ -115,7 +115,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURLHttps() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
         locations.add(new LocationBundle("prov", new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
@@ -129,7 +129,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURLHttpsPdf() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Lectures/W01/W01-Lecture.pdf");
         locations.add(new LocationBundle("prov", new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
@@ -143,7 +143,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Examples/W01/Example1/W01Example1.java");
         locations.add(new LocationBundle("prov", new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);

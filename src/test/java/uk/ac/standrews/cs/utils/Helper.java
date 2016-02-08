@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
  */
 public class Helper {
 
-    public static String localURItoPath(Location location) throws URISyntaxException, IOException {
+    private static String localURItoPath(Location location) throws URISyntaxException, IOException {
         return location.getURI().getPath();
     }
 
@@ -39,8 +39,7 @@ public class Helper {
         writer.println("The second line");
         writer.close();
 
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{new URILocation("file://"+location)});
-        return bundle;
+        return new LocationBundle("prov", new Location[]{new URILocation("file://"+location)});
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {

@@ -21,12 +21,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 public class CommonIndexTest {
 
-    private SeaConfiguration configuration;
     private Index index;
 
     @BeforeMethod
     public void setUp(Method method) throws IOException {
-        configuration = SeaConfiguration.getInstance();
+        SeaConfiguration configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
     }
 

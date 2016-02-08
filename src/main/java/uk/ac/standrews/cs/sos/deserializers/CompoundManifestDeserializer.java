@@ -25,7 +25,7 @@ public class CompoundManifestDeserializer implements JsonDeserializer<CompoundMa
         String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
         JsonArray jContents = obj.getAsJsonArray(ManifestConstants.KEY_CONTENTS);
-        Collection<Content> contents = new ArrayList<Content>();
+        Collection<Content> contents = new ArrayList<>();
         for(int i = 0; i < jContents.size(); i++) {
             Content content = gson.fromJson(jContents.get(i), Content.class);
             contents.add(content);
