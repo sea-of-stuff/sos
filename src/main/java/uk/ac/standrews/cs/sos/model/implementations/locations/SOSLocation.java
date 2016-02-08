@@ -1,11 +1,14 @@
 package uk.ac.standrews.cs.sos.model.implementations.locations;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Objects;
 
 /**
@@ -30,14 +33,21 @@ public class SOSLocation implements Location {
         this.entity = entity;
     }
 
+    public SOSLocation(String location) {
+        String[] segments = location.split(SCHEME_DIVIDER)[1].split("/");
+        this.machineID = new GUIDsha1(segments[0]);
+        this.entity = new GUIDsha1(segments[1]);;
+    }
+
     @Override
-    public URI getURI() {
-        throw new NotImplementedException();
+    public URI getURI() throws IOException, URISyntaxException {
+        return new URL("sos://" + machineID.toString() + "/" + entity.toString()).toURI();
     }
 
     @Override
     public InputStream getSource() throws IOException {
-        throw new NotImplementedException();
+        URLConnection connection = new URL("sos://" + machineID.toString() + "/" + entity.toString()).openConnection();
+        return connection.getInputStream();
     }
 
     @Override

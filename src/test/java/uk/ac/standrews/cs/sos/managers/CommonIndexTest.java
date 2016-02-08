@@ -5,7 +5,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -27,7 +26,7 @@ public class CommonIndexTest {
 
     @BeforeMethod
     public void setUp(Method method) throws IOException {
-        configuration = new TestConfiguration();
+        configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
     }
 

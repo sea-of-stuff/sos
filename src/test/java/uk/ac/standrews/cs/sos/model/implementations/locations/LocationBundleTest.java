@@ -6,8 +6,6 @@ import org.testng.annotations.Test;
 
 import java.net.URISyntaxException;
 
-import static org.testng.Assert.*;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -18,7 +16,7 @@ public class LocationBundleTest {
                     "[\"http://abc.com/123\"]}";
 
     private static final String EXPECTED_MULTIPLE_LOCATIONS =
-            "{\"chunked\":"+
+            "{\"prov\":"+
                     "[\"http://abc.com/123/1\", \"http://abc.com/123/2\"]}";
 
 
@@ -32,7 +30,7 @@ public class LocationBundleTest {
     @Test
     public void toStringMultipleLocationsTest() throws URISyntaxException, JSONException {
         Location[] locations = new Location[] {new URILocation("http://abc.com/123/1"), new URILocation("http://abc.com/123/2")};
-        LocationBundle bundle = new LocationBundle("chunked", locations);
+        LocationBundle bundle = new LocationBundle("prov", locations);
         JSONAssert.assertEquals(EXPECTED_MULTIPLE_LOCATIONS, bundle.toString(), true);
     }
 

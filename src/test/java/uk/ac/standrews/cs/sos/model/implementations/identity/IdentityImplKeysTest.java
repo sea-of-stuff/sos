@@ -4,7 +4,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -12,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -88,8 +88,8 @@ public class IdentityImplKeysTest {
             "03 31 41 d0 4f 6a fa 26 07 01 88 6e 23 52 77 60 \n";
 
     @BeforeMethod
-    public void setup() {
-        configuration = new TestConfiguration();
+    public void setup() throws IOException {
+        configuration = SeaConfiguration.getInstance();
 
         // Delete any left over keys from past
         deleteKeys(configuration);

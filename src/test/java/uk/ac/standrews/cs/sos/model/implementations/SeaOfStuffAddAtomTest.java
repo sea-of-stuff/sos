@@ -1,25 +1,11 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
-import org.apache.commons.io.IOUtils;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
-import uk.ac.standrews.cs.utils.Helper;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static org.testng.Assert.*;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
+    /*
     @Test
     public void testAddAtom() throws Exception {
         Collection<OldLocation> locations = new ArrayList<OldLocation>();
@@ -153,4 +139,5 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
         System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
     }
+    */
 }

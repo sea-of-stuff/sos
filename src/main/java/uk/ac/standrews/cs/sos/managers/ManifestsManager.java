@@ -309,7 +309,7 @@ public class ManifestsManager {
     }
 
     private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
-        Collection<LocationBundle> locations = new HashSet<>();
+        HashSet<LocationBundle> locations = new HashSet<LocationBundle>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 

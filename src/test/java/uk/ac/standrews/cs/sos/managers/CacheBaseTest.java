@@ -5,7 +5,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +57,7 @@ public abstract class CacheBaseTest {
         }
 
         public Index getCache(CACHE_TYPE type) throws IOException {
-            SeaConfiguration configuration = new TestConfiguration();
+            SeaConfiguration configuration = SeaConfiguration.getInstance();
             return getCache(type, configuration);
         }
     }

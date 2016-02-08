@@ -4,10 +4,8 @@ import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 
 import java.lang.reflect.Type;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -16,24 +14,21 @@ import java.util.Collection;
  */
 public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> {
 
+    private static Gson gson = new GsonBuilder().registerTypeAdapter(LocationBundle.class, new LocationBundleDeserializer()).create();
+
     @Override
     public AtomManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        JsonArray jLocations = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
-        for (int i = 0; i < jLocations.size(); i++) {
-            JsonElement jLocation = jLocations.get(i);
-            String sLocation = jLocation.getAsString();
-            try {
-                locations.add(new LocationBundle(sLocation)); // FIXME
-            } catch (URISyntaxException e) {
-                throw new JsonParseException("Unable to create location : " + sLocation);
-            }
+        JsonArray jLocationBundles = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        for (int i = 0; i < jLocationBundles.size(); i++) {
+            LocationBundle bundle = gson.fromJson(jLocationBundles.get(i), LocationBundle.class);
+            bundles.add(bundle);
         }
 
         AtomManifest manifest = new AtomManifest();
-        manifest.setLocations(locations);
+        manifest.setLocations(bundles);
 
         return manifest;
     }

@@ -13,7 +13,6 @@ import static org.testng.AssertJUnit.assertEquals;
  */
 public class GUIDTest {
 
-
     @Test
     public void testGetHashHexAndSize() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);

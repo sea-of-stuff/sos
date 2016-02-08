@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.utils;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -11,16 +13,20 @@ import java.net.URISyntaxException;
  */
 public class Helper {
 
-    public static String localURItoPath(OldLocation location) throws URISyntaxException {
-        return location.getLocationPath().getPath();
+    public static String localURItoPath(Location location) throws URISyntaxException, IOException {
+        return location.getURI().getPath();
     }
 
-    public static OldLocation createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static LocationBundle createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
         return createDummyDataFile(configuration, "testData.txt");
     }
 
-    public static OldLocation createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
-        String location = configuration.getDataPath() + filename;
+    public static LocationBundle createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+        return createDummyDataFile(configuration.getDataPath(), filename);
+    }
+
+    public static LocationBundle createDummyDataFile(String path, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+        String location = path + filename;
 
         File file = new File(location);
         File parent = file.getParentFile();
@@ -33,10 +39,11 @@ public class Helper {
         writer.println("The second line");
         writer.close();
 
-        return new OldLocation("file://"+location);
+        LocationBundle bundle = new LocationBundle("prov", new Location[]{new URILocation("file://"+location)});
+        return bundle;
     }
 
-    public static void appendToFile(OldLocation location, String text) throws URISyntaxException, FileNotFoundException {
+    public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {
         PrintWriter writer = new PrintWriter(new FileOutputStream(
                 new File(Helper.localURItoPath(location)),
                 true));

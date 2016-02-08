@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetMa
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;

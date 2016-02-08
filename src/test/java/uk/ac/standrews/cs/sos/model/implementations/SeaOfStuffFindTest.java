@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -23,16 +23,16 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Collection<OldLocation> locations = new ArrayList<OldLocation>();
-        OldLocation location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        LocationBundle bundle = Helper.createDummyDataFile(configuration);
+        bundles.add(bundle);
+        AtomManifest manifest = model.addAtom(bundles);
 
-        Collection<OldLocation> locationsOther = new ArrayList<OldLocation>();
-        OldLocation locationOther = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(locationOther, "another random line");
-        locationsOther.add(locationOther);
-        AtomManifest manifestOther = model.addAtom(locationsOther);
+        Collection<LocationBundle> otherBundles = new ArrayList<LocationBundle>();
+        LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
+        Helper.appendToFile(otherBundle.getLocations()[0], "another random line");
+        otherBundles.add(otherBundle);
+        AtomManifest manifestOther = model.addAtom(otherBundles);
 
         Collection<GUID> manifests = model.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
@@ -42,16 +42,16 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Collection<OldLocation> locations = new ArrayList<OldLocation>();
-        OldLocation location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        LocationBundle bundle = Helper.createDummyDataFile(configuration);
+        bundles.add(bundle);
+        AtomManifest manifest = model.addAtom(bundles);
 
-        Collection<OldLocation> locationsOther = new ArrayList<OldLocation>();
-        OldLocation locationOther = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(locationOther, "another random line");
-        locationsOther.add(locationOther);
-        AtomManifest manifestOther = model.addAtom(locationsOther);
+        Collection<LocationBundle> otherBundles = new ArrayList<LocationBundle>();
+        LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
+        Helper.appendToFile(otherBundle.getLocations()[0], "another random line");
+        otherBundles.add(otherBundle);
+        AtomManifest manifestOther = model.addAtom(otherBundles);
 
         Content cat = new Content("cat", manifest.getContentGUID());
         Collection<Content> contents = new ArrayList<>();

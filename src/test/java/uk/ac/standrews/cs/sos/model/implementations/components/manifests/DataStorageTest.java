@@ -3,14 +3,20 @@ package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
+import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -20,8 +26,8 @@ public class DataStorageTest {
     private SeaConfiguration configuration;
 
     @BeforeMethod
-    public void setUp() {
-        configuration = new TestConfiguration();
+    public void setUp() throws IOException {
+        configuration = SeaConfiguration.getInstance();
     }
 
     @AfterMethod
@@ -29,39 +35,41 @@ public class DataStorageTest {
         FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
         FileUtils.cleanDirectory(new File(configuration.getDataPath()));
     }
-/*
+
     @Test
     public void testStoreAtom() throws Exception {
-        Collection<OldLocation> locations = new ArrayList<OldLocation>();
-        OldLocation location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        LocationBundle bundle = Helper.createDummyDataFile(configuration);
+        bundles.add(bundle);
 
-        Collection<OldLocation> newLocations = DataStorage.storeAtom(configuration, locations);
-        assertFalse(newLocations.contains(location));
-        assertEquals(newLocations.size(), 1);
+        DataStorage.storeAtom(configuration, bundles);
+        assertTrue(bundles.contains(bundle));
+        assertEquals(bundles.size(), 2);
     }
+
 
     @Test
     public void testStoreRemoteAtom() throws Exception {
-        Collection<OldLocation> locations = new ArrayList<OldLocation>();
-        OldLocation location = new OldLocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        locations.add(location);
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        bundles.add(bundle);
 
-        Collection<OldLocation> newLocations = DataStorage.storeAtom(configuration, locations);
-        assertEquals(newLocations.size(), 2);
+        DataStorage.storeAtom(configuration, bundles);
+        assertEquals(bundles.size(), 2);
     }
 
     @Test
     public void testStoreAtomAlreadyCached() throws Exception {
-        Collection<OldLocation> locations = new ArrayList<OldLocation>();
-        OldLocation location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        bundles.add(bundle);
 
-        DataStorage.storeAtom(configuration, locations);
-        Collection<OldLocation> newLocations = DataStorage.storeAtom(configuration, locations);
-
-        assertFalse(newLocations.contains(location));
-        assertEquals(newLocations.size(), 1);
+        DataStorage.storeAtom(configuration, bundles);
+        DataStorage.storeAtom(configuration, bundles);
+        assertEquals(bundles.size(), 2);
     }
-*/
+
+
 }

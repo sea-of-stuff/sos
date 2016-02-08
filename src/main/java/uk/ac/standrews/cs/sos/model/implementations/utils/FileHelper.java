@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.sos.model.implementations.utils;
 
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

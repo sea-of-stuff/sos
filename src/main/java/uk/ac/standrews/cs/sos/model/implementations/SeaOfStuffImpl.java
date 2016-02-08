@@ -13,14 +13,14 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
-import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.managers.Index;
+import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Metadata;
@@ -28,6 +28,8 @@ import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 /**
@@ -50,6 +52,13 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         manifestsManager = new ManifestsManager(configuration, index);
 
         backgroundProcesses();
+
+        try {
+            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
+        } catch (Error e) {
+            // Error is thrown if the factory has already been setup for the JVM.
+            return;
+        }
     }
 
     private void backgroundProcesses() {
@@ -100,7 +109,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
             try {
                 dataStream = DataStorage.getInputStreamFromLocation(location.getLocations()[0]); // FIXME
-            } catch (SourceLocationException e) {
+            } catch (SourceLocationException | URISyntaxException | IOException e) {
                 continue;
             }
 

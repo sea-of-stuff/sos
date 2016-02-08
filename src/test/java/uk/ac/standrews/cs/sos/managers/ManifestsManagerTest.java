@@ -8,11 +8,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.configurations.TestConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
-import uk.ac.standrews.cs.sos.model.implementations.locations.OldLocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -58,7 +59,7 @@ public class ManifestsManagerTest {
 
     @BeforeMethod
     public void setUp() throws IOException {
-        configuration = new TestConfiguration();
+        configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
     }
 
@@ -80,9 +81,12 @@ public class ManifestsManagerTest {
     public void testAddAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                configuration,
-                new ArrayList<OldLocation>(Arrays.asList(new OldLocation(Hashes.TEST_HTTP_BIN_URL))));
+        Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
+        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        Collection<LocationBundle> bundles = new ArrayList<LocationBundle>();
+        bundles.add(bundle);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
+
         GUID guid = atomManifest.getContentGUID();
         try {
             manifestsManager.addManifest(atomManifest);
@@ -144,15 +148,15 @@ public class ManifestsManagerTest {
     public void testUpdateAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
-        OldLocation firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
-        OldLocation secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
+        LocationBundle firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
+        LocationBundle secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<OldLocation>(Arrays.asList(firstLocation)));
+                configuration, new ArrayList<LocationBundle>(Arrays.asList(firstLocation)));
         GUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<OldLocation>(Arrays.asList(secondLocation)));
+                configuration, new ArrayList<LocationBundle>(Arrays.asList(secondLocation)));
         GUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);
@@ -162,7 +166,7 @@ public class ManifestsManagerTest {
             manifestsManager.addManifest(anotherManifest);
             AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
 
-            assertEquals(manifest.getLocations().size(), 2);
+            assertEquals(manifest.getLocations().size(), 3);
         } catch (ManifestSaveException e) {
             throw new Exception();
         }
