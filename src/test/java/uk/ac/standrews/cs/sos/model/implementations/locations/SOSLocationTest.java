@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations.locations;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.Helper;
@@ -16,7 +17,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSLocationTest {
+public class SOSLocationTest extends SetUpTest {
 
     @BeforeMethod
     public void setUp() {

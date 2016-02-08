@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations.utils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IO.utils.StreamsUtils;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 
 import java.io.InputStream;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.mock;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContentTest {
+public class ContentTest extends SetUpTest {
 
     private static final String EXPECTED_JSON_CONTENT_GUID = "{\"GUID\":\""+
             Hashes.TEST_STRING_HASHED+"\"}";

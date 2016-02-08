@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.implementations.locations;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,7 +11,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class URILocationTest {
+public class URILocationTest extends SetUpTest {
 
     @Test
     public void testConstructorLocalURL() throws URISyntaxException, IOException {

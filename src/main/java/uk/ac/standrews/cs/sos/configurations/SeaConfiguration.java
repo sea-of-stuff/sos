@@ -46,8 +46,6 @@ public class SeaConfiguration {
             manifests = reader.readLine();
             privateKeyFile = reader.readLine();
             publicKeyFile = reader.readLine();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

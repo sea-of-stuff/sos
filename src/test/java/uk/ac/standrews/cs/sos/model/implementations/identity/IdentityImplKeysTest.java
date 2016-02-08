@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations.identity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
@@ -19,7 +20,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class IdentityImplKeysTest {
+public class IdentityImplKeysTest extends SetUpTest {
 
     private SeaConfiguration configuration;
     private final static String BYTES_3K = "c1 c3 c0 86 da 82 92 ea 9a 59 94 a1 fe a5 30 3a \n"+

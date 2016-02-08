@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -25,7 +26,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifestTest {
+public class AtomManifestTest extends SetUpTest {
 
     private SeaConfiguration configuration;
 

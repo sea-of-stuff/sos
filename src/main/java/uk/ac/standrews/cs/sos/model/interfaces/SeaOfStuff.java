@@ -92,6 +92,8 @@ public interface SeaOfStuff {
     AtomManifest addAtom(Collection<LocationBundle> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
 
+    AtomManifest addAtom(InputStream inputStream);
+
     /**
      * Get an atom's data given an AtomManifest.
      *

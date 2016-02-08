@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
@@ -21,7 +22,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataStorageTest {
+public class DataStorageTest extends SetUpTest {
 
     private SeaConfiguration configuration;
 

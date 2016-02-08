@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IO.utils.StreamsUtils;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -23,7 +24,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifestTest {
+public class AssetManifestTest extends SetUpTest {
 
     private static final String EXPECTED_JSON_BASIC_ASSET =
             "{\"Type\":\"Asset\"," +

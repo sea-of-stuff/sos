@@ -79,6 +79,11 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
+    public AtomManifest addAtom(InputStream inputStream) {
+        return null;
+    }
+
+    @Override
     public CompoundManifest addCompound(Collection<Content> contents)
             throws ManifestNotMadeException, ManifestSaveException {
 

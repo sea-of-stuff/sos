@@ -3,13 +3,14 @@ package uk.ac.standrews.cs.sos.model.implementations.locations;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 
 import java.net.URISyntaxException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocationBundleTest {
+public class LocationBundleTest extends SetUpTest {
 
     private static final String EXPECTED_LOCATIONS =
             "{\"cache\":"+

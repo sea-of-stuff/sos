@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -19,7 +20,7 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffGeneralTest {
+public class SeaOfStuffGeneralTest extends SetUpTest {
 
     protected SeaOfStuff model;
     protected Index index;
