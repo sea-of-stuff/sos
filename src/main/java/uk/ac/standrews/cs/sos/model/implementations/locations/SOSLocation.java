@@ -5,10 +5,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.Objects;
 
 /**
@@ -27,26 +24,29 @@ public class SOSLocation implements Location {
 
     private GUID machineID;
     private GUID entity;
+    private URL url;
 
-    public SOSLocation(GUID machineID, GUID entity) {
+    public SOSLocation(GUID machineID, GUID entity) throws MalformedURLException {
         this.machineID = machineID;
         this.entity = entity;
+        url = new URL("sos://" + machineID.toString() + "/" + entity.toString());
     }
 
-    public SOSLocation(String location) {
+    public SOSLocation(String location) throws MalformedURLException {
         String[] segments = location.split(SCHEME_DIVIDER)[1].split("/");
         this.machineID = new GUIDsha1(segments[0]);
         this.entity = new GUIDsha1(segments[1]);
+        url = new URL(location);
     }
 
     @Override
-    public URI getURI() throws IOException, URISyntaxException {
-        return new URL("sos://" + machineID.toString() + "/" + entity.toString()).toURI();
+    public URI getURI() throws URISyntaxException {
+        return url.toURI();
     }
 
     @Override
     public InputStream getSource() throws IOException {
-        URLConnection connection = new URL("sos://" + machineID.toString() + "/" + entity.toString()).openConnection();
+        URLConnection connection = url.openConnection();
         return connection.getInputStream();
     }
 

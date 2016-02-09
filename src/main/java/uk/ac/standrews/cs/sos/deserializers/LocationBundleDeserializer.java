@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
                     } else {
                         locations[i] = new URILocation(location);
                     }
-                } catch (URISyntaxException e) {
+                } catch (URISyntaxException | MalformedURLException e) {
                     e.printStackTrace();
                 }
             }

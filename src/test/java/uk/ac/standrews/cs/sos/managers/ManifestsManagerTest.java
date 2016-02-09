@@ -8,7 +8,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
+import uk.ac.standrews.cs.sos.model.implementations.SeaOfStuffImpl;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
@@ -17,6 +20,7 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
+import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.Helper;
@@ -34,33 +38,15 @@ import static org.testng.Assert.assertEquals;
  */
 public class ManifestsManagerTest {
 
-    private static final String EXPECTED_JSON_ATOM_MANIFEST =
-            "{\"Type\":\"Atom\"," +
-                    "\"ContentGUID\":" + Hashes.TEST_HTTP_BIN_STRING_HASHES + "," +
-                    "\"Locations\":[\"" + Hashes.TEST_HTTP_BIN_URL + "\"]" +
-                    "}";
-
-    private static final String EXPECTED_JSON_CONTENTS =
-            "{\"Type\":\"Compound\"," +
-                    "\"ContentGUID\":\"a412b829e2e1f4e982f4f75b99e4bbaebb73e411\"," +
-                    "\"Contents\":" +
-                    "[{" +
-                    "\"Type\":\"label\"," +
-                    "\"Value\":\"cat\"," +
-                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
-                    "}]}";
-
-    private JsonParser parser = new JsonParser();
-    private JsonObject jsonObj = parser.parse(EXPECTED_JSON_CONTENTS).getAsJsonObject();
-    private JsonObject jsonAtomObj = parser.parse(EXPECTED_JSON_ATOM_MANIFEST).getAsJsonObject();
-
     private SeaConfiguration configuration;
     private Index index;
+    private SeaOfStuff model;
 
     @BeforeMethod
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, KeyGenerationException, KeyLoadedException {
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
+        model = new SeaOfStuffImpl(configuration, index);
     }
 
     @AfterMethod
@@ -72,9 +58,6 @@ public class ManifestsManagerTest {
         FileUtils.cleanDirectory(new File(index.getConfiguration().getLocalManifestsLocation()));
         FileUtils.cleanDirectory(new File(index.getConfiguration().getCacheDataPath()));
         FileUtils.cleanDirectory(new File(index.getConfiguration().getDataPath()));
-
-        configuration = null;
-        index = null;
     }
 
     @Test

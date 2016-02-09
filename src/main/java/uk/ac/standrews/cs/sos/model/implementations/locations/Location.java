@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
  */
 public interface Location {
 
-    URI getURI() throws IOException, URISyntaxException;
+    URI getURI() throws URISyntaxException;
 
     /**
      * Gets an input stream for the source located at the given location.

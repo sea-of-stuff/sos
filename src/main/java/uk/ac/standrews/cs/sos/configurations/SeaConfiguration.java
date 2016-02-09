@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.configurations;
 
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
@@ -29,13 +30,28 @@ public class SeaConfiguration {
 
     public static SeaConfiguration getInstance() throws IOException {
         if(instance == null) {
-            loadConfiguration();
+            try {
+                loadConfiguration();
+            } catch (SeaConfigurationException e) {
+                loadFakeConfiguration();
+            }
             instance = new SeaConfiguration();
         }
         return instance;
     }
 
-    private static void loadConfiguration() {
+    private static void loadFakeConfiguration() {
+        machineid = new GUIDsha1("abcdefg12345");
+        root = "/sos/test/";
+        data = "data/";
+        cachedData = "cached_data/";
+        index = "index/";
+        manifests = "manifests/";
+        privateKeyFile = "keys/private.der";
+        publicKeyFile = "keys/public.der";
+    }
+
+    private static void loadConfiguration() throws SeaConfigurationException {
         try (BufferedReader reader = new BufferedReader(new FileReader(HOME + "/config.txt")) ){
             machineid = new GUIDsha1(reader.readLine());
             root = reader.readLine();
@@ -46,7 +62,7 @@ public class SeaConfiguration {
             privateKeyFile = reader.readLine();
             publicKeyFile = reader.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SeaConfigurationException();
         }
     }
 

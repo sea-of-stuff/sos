@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
@@ -77,7 +78,13 @@ public class DataStorage {
                 }
 
                 storeData(configuration, bundle, guid);
-                LocationBundle cachedBundle = getCacheBundle(configuration, guid);
+                LocationBundle cachedBundle;
+                try {
+                    cachedBundle = getCacheBundle(configuration, guid);
+                } catch (SourceLocationException e) {
+                    throw new DataStorageException();
+                }
+
                 if (!bundles.contains(cachedBundle))
                     bundles.add(cachedBundle);
 
@@ -105,8 +112,14 @@ public class DataStorage {
         }
     }
 
-    private static LocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) {
-        Location location = new SOSLocation(configuration.getMachineID(), guid);
+    private static LocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) throws SourceLocationException {
+        Location location;
+        try {
+            location = new SOSLocation(configuration.getMachineID(), guid);
+        } catch (MalformedURLException e) {
+            throw new SourceLocationException("SOSLocation could not be generated for machine-guid: " +
+                    configuration.getMachineID().toString() + " and entity: " + guid.toString() );
+        }
         return new LocationBundle("cache", new Location[]{location});
     }
 
