@@ -19,7 +19,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -41,7 +41,6 @@ public class ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
-    private final static int CHUNK_GUID_INITIALS_TO_FOLDER = 2;
 
     // TODO - get these constants from SeaConfiguration
     private static final int DEFAULT_RESULTS = 10;

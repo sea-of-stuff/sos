@@ -21,6 +21,8 @@ public class SOSLocation implements Location {
 
     private final static String SOS_SCHEME = "sos";
     private final static String SCHEME_DIVIDER = "://";
+    private final static int MACHINE_ID_SEGMENT = 0;
+    private final static int ENTIY_ID_SEGMENT = 1;
 
     private GUID machineID;
     private GUID entity;
@@ -34,8 +36,8 @@ public class SOSLocation implements Location {
 
     public SOSLocation(String location) throws MalformedURLException {
         String[] segments = location.split(SCHEME_DIVIDER)[1].split("/");
-        this.machineID = new GUIDsha1(segments[0]);
-        this.entity = new GUIDsha1(segments[1]);
+        this.machineID = new GUIDsha1(segments[MACHINE_ID_SEGMENT]);
+        this.entity = new GUIDsha1(segments[ENTIY_ID_SEGMENT]);
         url = new URL(location);
     }
 

@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.sos.managers;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -15,8 +13,9 @@ import uk.ac.standrews.cs.sos.model.implementations.SeaOfStuffImpl;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -65,7 +64,7 @@ public class ManifestsManagerTest {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);

@@ -5,7 +5,8 @@ import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
@@ -20,62 +21,50 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 
 /**
- * TODO - remove assumptions about bundles containing only one location!
+ * TODO - javadoc
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class DataStorage {
 
-    public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException, IOException, URISyntaxException {
-        InputStream stream;
-        try {
-            stream = location.getSource();
-        } catch (IOException e) {
-            throw new SourceLocationException(location.getURI().toString());
-        }
-
-        return stream;
-    }
+    private final static int FIRST_LOCATION = 0;
 
     public static InputStream getInputStreamFromLocations(Location[] locations) throws SourceLocationException {
         InputStream stream;
         try {
-            stream = locations[0].getSource();
+            stream = locations[FIRST_LOCATION].getSource();
             for(int i = 1; i < locations.length; i++) {
                 stream = new SequenceInputStream(stream, locations[i].getSource());
             }
         } catch (IOException e) {
-            throw new SourceLocationException(locations.toString()); // TODO - better output for printing array of location
+            throw new SourceLocationException("DataStorage " + locations.toString() + " " + e);
         }
 
         return stream;
     }
 
+    /**
+     * Store the data at the Location Bundles in the cache
+     *
+     * @param configuration
+     * @param bundles
+     * @return GUID generated from the data at the location bundles
+     * @throws DataStorageException
+     */
     // TODO - consider passing only one bundle/location!?
+    // TODO - deal with locations that fail
+    // TODO - do not: Assume that all other locations point to the same source.
     public static GUID storeAtom(SeaConfiguration configuration, Collection<LocationBundle> bundles) throws DataStorageException {
-
-        // TODO - deal with locations that fail
-
         GUID guid = null;
         if (bundles == null || bundles.isEmpty()) {
-            throw new DataStorageException(); // TODO - SourceLocationException
+            throw new DataStorageException();
         }
 
-        // TODO - prioritise bundles based on type
         for(LocationBundle bundle:bundles) {
-            InputStream dataStream;
             try {
-                dataStream = getInputStreamFromLocation(bundle.getLocations()[0]); // FIXME - assume only one location
-            } catch (SourceLocationException | URISyntaxException | IOException e) {
-                continue;
-            }
-
-            if (dataStream != null) {
-                try {
-                    guid = new GUIDsha1(dataStream);
-                } catch (GuidGenerationException e) {
-                    throw new DataStorageException(); // TODO - use different exception?
-                }
+                guid = generateGUID(bundle);
+                if (guid == null)
+                    continue;
 
                 storeData(configuration, bundle, guid);
                 LocationBundle cachedBundle;
@@ -88,19 +77,36 @@ public class DataStorage {
                 if (!bundles.contains(cachedBundle))
                     bundles.add(cachedBundle);
 
-                break; // FIXME - do not: Assume that all other locations point to the same source.
+                break;
+            } catch (GuidGenerationException e) {
+                e.printStackTrace();
+            } catch (SourceLocationException e) {
+                e.printStackTrace();
             }
         }
-
-        // TODO - Annotate locations
 
         return guid;
     }
 
+    private static GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {
+        GUID retval = null;
+        InputStream dataStream = getInputStreamFromLocations(bundle.getLocations());
+
+        if (dataStream != null) {
+            try {
+                retval = new GUIDsha1(dataStream);
+            } catch (GuidGenerationException e) {
+                throw new GuidGenerationException();
+            }
+        }
+
+        return retval;
+    }
+
     private static void storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
         try {
-            Location location = bundle.getLocations()[0];  // FIXME - assume only one location
-            InputStream dataStream = getInputStreamFromLocation(location);
+            Location[] locations = bundle.getLocations();
+            InputStream dataStream = getInputStreamFromLocations(locations);
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
 
             touchDir(cachedLocationPath);
@@ -120,7 +126,7 @@ public class DataStorage {
             throw new SourceLocationException("SOSLocation could not be generated for machine-guid: " +
                     configuration.getMachineID().toString() + " and entity: " + guid.toString() );
         }
-        return new LocationBundle("cache", new Location[]{location});
+        return new CacheLocationBundle(new Location[]{location});
     }
 
     private static String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {

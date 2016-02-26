@@ -6,8 +6,9 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.utils.Helper;
 
@@ -103,7 +104,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
     public void testAddAtomFromURL() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        locations.add(new LocationBundle("prov", new Location[]{location}));
+        locations.add(new ProvenanceLocationBundle(new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -117,7 +118,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
     public void testAddAtomFromURLHttps() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
-        locations.add(new LocationBundle("prov", new Location[]{location}));
+        locations.add(new ProvenanceLocationBundle(new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -131,7 +132,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
     public void testAddAtomFromURLHttpsPdf() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Lectures/W01/W01-Lecture.pdf");
-        locations.add(new LocationBundle("prov", new Location[]{location}));
+        locations.add(new ProvenanceLocationBundle(new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -145,7 +146,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Examples/W01/Example1/W01Example1.java");
-        locations.add(new LocationBundle("prov", new Location[]{location}));
+        locations.add(new ProvenanceLocationBundle(new Location[]{location}));
         AtomManifest manifest = model.addAtom(locations);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 

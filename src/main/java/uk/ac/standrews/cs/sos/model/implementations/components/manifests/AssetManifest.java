@@ -10,9 +10,9 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Metadata;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 
 /**
@@ -143,7 +143,6 @@ public class AssetManifest extends SignedManifest {
      * @return Metadata's GUID associated with the asset.
      *         Null if there is no metadata associated with the asset.
      *
-     * @see Metadata
      */
     public Collection<GUID> getMetadata() {
         return metadata;

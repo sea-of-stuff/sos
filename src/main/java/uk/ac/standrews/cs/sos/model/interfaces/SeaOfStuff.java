@@ -8,11 +8,10 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Metadata;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.InputStream;
@@ -43,41 +42,13 @@ import java.util.Collection;
  * entities - possibly metadata (assets). Atoms do exist in the sea of stuff
  * as sequence of bytes and are represented by an AtomManifest. Compounds and
  * assets, instead, are metadata information about aggregations, versions and
- * links. Therefore, compounds and assets exist only in the form of manifests -
+ * links to metadata. Therefore, compounds and assets exist only in the form of manifests:
  * CompoundManifest and AssetManifest.
- * </p>
- *
- * <p>
- * The operations defines in this interface are of 3 categories: <br>
- * 1. Manipulation of the sea of stuff - the operations change the state of the sea of stuff <br>
- * 2. Behaviour - describe how the operations in (1) behave
- * 3. XXX Local behaviours? session???
- * </p>
- *
- * <p>
- * Policies:
- * </p>
- *
- * <p>
- * Metadata:
- * </p>
- *
- * <p>
- *     Assumptions:
- *     - manifests can be inspected easily and quickly
- *     - manifests can be stored efficiently
- *     - manifests can be represented in JSON.
- *     We use JSON for simplicity, but it could be any other format in theory.
- *
  * </p>
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface SeaOfStuff {
-
-    // NOTE on identities and implicit contexts
-    // identity such as simone's work, simone's home, etc
-    // should be able to set multiple identities active (say I am at home and working)
 
     /**
      * Adds an atom to the Sea of Stuff.
@@ -92,6 +63,13 @@ public interface SeaOfStuff {
     AtomManifest addAtom(Collection<LocationBundle> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
 
+    /**
+     * TODO - create an atom from a sequence of bytes
+     *  pass System.in to inputstream in CLI
+     *
+     * @param inputStream
+     * @return
+     */
     AtomManifest addAtom(InputStream inputStream);
 
     /**
@@ -173,13 +151,5 @@ public interface SeaOfStuff {
     Collection<GUID> findManifestByLabel(String label);
 
     Collection<GUID> findVersions(GUID invariant);
-
-    /**
-     * Search the sea of stuff for manifests that match the specified metadata.
-     *
-     * @param metadata used for querying the sea of stuff.
-     * @return a stream of manifests that match the query.
-     */
-    void findManifests(Metadata metadata);
 
 }

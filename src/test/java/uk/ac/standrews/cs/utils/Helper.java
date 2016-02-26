@@ -2,8 +2,9 @@ package uk.ac.standrews.cs.utils;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -39,7 +40,7 @@ public class Helper {
         writer.println("The second line");
         writer.close();
 
-        return new LocationBundle("prov", new Location[]{new URILocation("file://"+location)});
+        return new ProvenanceLocationBundle(new Location[]{new URILocation("file://"+location)});
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {

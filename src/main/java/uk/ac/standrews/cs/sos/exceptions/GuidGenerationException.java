@@ -8,4 +8,6 @@ public class GuidGenerationException extends Exception {
     public GuidGenerationException(String message) {
         super(message);
     }
+
+    public GuidGenerationException() {}
 }

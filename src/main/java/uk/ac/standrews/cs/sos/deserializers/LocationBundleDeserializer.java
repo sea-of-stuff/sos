@@ -2,9 +2,12 @@ package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
@@ -22,8 +25,6 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
         LocationBundle ret = null;
 
         JsonObject obj = json.getAsJsonObject();
-
-
         Set<Map.Entry<String,JsonElement>> entrySet=obj.entrySet();
         for(Map.Entry<String,JsonElement> entry:entrySet){
             String type = entry.getKey();
@@ -44,7 +45,16 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
                 }
             }
 
-            ret = new LocationBundle(type, locations);
+            switch(type) {
+                case BundleTypes.CACHE:
+                    ret = new CacheLocationBundle(locations);
+                    break;
+                case BundleTypes.PROVENANCE:
+                    ret = new ProvenanceLocationBundle(locations);
+                    break;
+                default:
+                    throw new JsonParseException("Unknown location bundle type exception");
+            }
 
         }
 

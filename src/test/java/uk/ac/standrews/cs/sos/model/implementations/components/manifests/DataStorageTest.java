@@ -7,8 +7,9 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
@@ -53,7 +54,7 @@ public class DataStorageTest extends SetUpTest {
     public void testStoreRemoteAtom() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
         bundles.add(bundle);
 
         DataStorage.storeAtom(configuration, bundles);
@@ -64,7 +65,7 @@ public class DataStorageTest extends SetUpTest {
     public void testStoreAtomAlreadyCached() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
         bundles.add(bundle);
 
         DataStorage.storeAtom(configuration, bundles);

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
@@ -17,18 +16,16 @@ import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Metadata;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -52,11 +49,14 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         manifestsManager = new ManifestsManager(configuration, index);
 
         backgroundProcesses();
+        registerSOSProtocol();
+    }
 
+    private void registerSOSProtocol() {
         try {
             URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
         } catch (Error e) {
-            // Error is thrown if the factory has already been setup for the JVM.
+            // TODO - Error is thrown if the factory has already been setup for the JVM.
         }
     }
 
@@ -112,8 +112,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         for(LocationBundle location:locations) {
 
             try {
-                dataStream = DataStorage.getInputStreamFromLocation(location.getLocations()[0]); // FIXME
-            } catch (SourceLocationException | URISyntaxException | IOException e) {
+                dataStream = DataStorage.getInputStreamFromLocations(location.getLocations());
+            } catch (SourceLocationException e) {
                 continue;
             }
 
@@ -166,13 +166,5 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     @Override
     public Collection<GUID> findVersions(GUID invariant) {
         return manifestsManager.findVersions(invariant);
-    }
-
-    @Override
-    public void findManifests(Metadata metadata) {
-        // - look at manifests manager
-        // - having a look at the redis storage would be very helpful!
-        // - need to define what metadata is
-        throw new NotImplementedException();
     }
 }

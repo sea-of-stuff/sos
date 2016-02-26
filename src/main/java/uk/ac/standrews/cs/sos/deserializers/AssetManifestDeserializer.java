@@ -19,7 +19,6 @@ import java.util.Collection;
 public class AssetManifestDeserializer implements JsonDeserializer<AssetManifest> {
 
     private static Gson gson = new GsonBuilder().registerTypeAdapter(Content.class, new ContentDeserializer()).create();
-    private static final int CONTENT_INDEX = 1;
 
     @Override
     public AssetManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

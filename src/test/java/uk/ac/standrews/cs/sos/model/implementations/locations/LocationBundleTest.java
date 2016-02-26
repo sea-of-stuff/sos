@@ -4,6 +4,9 @@ import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 
 import java.net.URISyntaxException;
 
@@ -24,14 +27,14 @@ public class LocationBundleTest extends SetUpTest {
     @Test
     public void toStringTest() throws URISyntaxException, JSONException {
         Location[] locations = new Location[] {new URILocation("http://abc.com/123")};
-        LocationBundle bundle = new LocationBundle("cache", locations);
+        LocationBundle bundle = new CacheLocationBundle(locations);
         JSONAssert.assertEquals(EXPECTED_LOCATIONS, bundle.toString(), true);
     }
 
     @Test
     public void toStringMultipleLocationsTest() throws URISyntaxException, JSONException {
         Location[] locations = new Location[] {new URILocation("http://abc.com/123/1"), new URILocation("http://abc.com/123/2")};
-        LocationBundle bundle = new LocationBundle("prov", locations);
+        LocationBundle bundle = new ProvenanceLocationBundle(locations);
         JSONAssert.assertEquals(EXPECTED_MULTIPLE_LOCATIONS, bundle.toString(), true);
     }
 

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
@@ -43,8 +43,6 @@ public class AtomManifest extends BasicManifest {
         super(ManifestConstants.ATOM);
         this.contentGUID = guid;
         this.locations = locations;
-
-        //make();
     }
 
     /**
@@ -69,8 +67,8 @@ public class AtomManifest extends BasicManifest {
         for(LocationBundle location:locations) {
             InputStream dataStream;
             try {
-                dataStream = DataStorage.getInputStreamFromLocation(location.getLocations()[0]); // FIXME - assume only one location
-            } catch (SourceLocationException | URISyntaxException | IOException e) {
+                dataStream = DataStorage.getInputStreamFromLocations(location.getLocations());
+            } catch (SourceLocationException e) {
                 continue;
             }
 
@@ -108,6 +106,5 @@ public class AtomManifest extends BasicManifest {
         return inputStream != null &&
                 contentGUID.equals(generateGUID(inputStream));
     }
-
 
 }

@@ -12,8 +12,9 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
@@ -61,7 +62,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test (timeOut = 10000)
     public void testToJSON() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
@@ -76,7 +77,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test (timeOut = 10000)
     public void testIsValid() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
@@ -87,7 +88,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test (timeOut = 10000)
     public void testIsVerified() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new LocationBundle("prov", new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);

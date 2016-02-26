@@ -31,10 +31,6 @@ public class GUIDsha1 extends GUID {
         }
     }
 
-    public String getAlgorithm() {
-        return ALGORITHM;
-    }
-
     @Override
     public String toString() {
         return hashHex;

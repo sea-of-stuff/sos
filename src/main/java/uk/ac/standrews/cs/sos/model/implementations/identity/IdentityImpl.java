@@ -87,7 +87,6 @@ public class IdentityImpl implements Identity {
         return isValid;
     }
 
-
     private void loadKeys(String[] pathsToKeys) throws KeyLoadedException {
         loadPrivateKey(pathsToKeys[0]);
         loadPublicKey(pathsToKeys[1]);
