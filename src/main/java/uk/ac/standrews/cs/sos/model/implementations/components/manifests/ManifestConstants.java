@@ -30,4 +30,8 @@ public class ManifestConstants {
     public static final String CONTENT_KEY_GUID = "GUID";
     public static final String CONTENT_KEY_LABEL = "Label";
 
+    // Location bundle keys
+    public static final String BUNDLE_TYPE = "Type";
+    public static final String BUNDLE_LOCATION = "Location";
+
 }

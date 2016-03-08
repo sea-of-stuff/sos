@@ -19,8 +19,7 @@ public class ContentDeserializer implements JsonDeserializer<Content> {
 
         JsonObject obj = json.getAsJsonObject();
 
-        JsonElement jGUID = obj.get(ManifestConstants.CONTENT_KEY_GUID);
-        String sGUID = jGUID.getAsString();
+        String sGUID = obj.get(ManifestConstants.CONTENT_KEY_GUID).getAsString();
         GUID guid = new GUIDsha1(sGUID);
 
         JsonElement jLabel = obj.get(ManifestConstants.CONTENT_KEY_LABEL);

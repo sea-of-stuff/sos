@@ -16,13 +16,12 @@ import java.net.URISyntaxException;
 public class LocationBundleTest extends SetUpTest {
 
     private static final String EXPECTED_LOCATION =
-            "{\"cache\":"+
-                    "\"http://abc.com/123\"}";
+            "{\"Type\":\"cache\"," +
+                    "\"Location\":\"http://abc.com/123\"}";
 
     private static final String EXPECTED_PROV_LOCATION =
-            "{\"prov\":"+
-                    "\"http://abc.com/123/1\"}";
-
+            "{\"Type\":\"prov\"," +
+                    "\"Location\":\"http://abc.com/123/1\"}";
 
     @Test
     public void toStringTest() throws URISyntaxException, JSONException {
@@ -37,6 +36,5 @@ public class LocationBundleTest extends SetUpTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         JSONAssert.assertEquals(EXPECTED_PROV_LOCATION, bundle.toString(), true);
     }
-
 
 }

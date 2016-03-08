@@ -214,7 +214,7 @@ public class ManifestsManager {
             String backupPath = backupManifest(manifest);
 
             Manifest existingManifest = getManifestFromFile(guid);
-            manifest = mergeManifests((AtomManifest) existingManifest, (AtomManifest) manifest);
+            manifest = mergeManifests(guid, (AtomManifest) existingManifest, (AtomManifest) manifest);
 
             FileHelper.deleteFile(backupPath);
             saveToFile(manifest);
@@ -307,14 +307,14 @@ public class ManifestsManager {
         return guid + JSON_EXTENSION;
     }
 
-    private Manifest mergeManifests(AtomManifest first, AtomManifest second) throws ManifestMergeException {
+    private Manifest mergeManifests(GUID guid, AtomManifest first, AtomManifest second) throws ManifestMergeException {
         HashSet<LocationBundle> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 
         Manifest manifest;
         try {
-            manifest = ManifestFactory.createAtomManifest(configuration, locations);
+            manifest = ManifestFactory.createAtomManifest(guid, locations);
         } catch (ManifestNotMadeException | DataStorageException e) {
             throw new ManifestMergeException();
         }

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
+import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
@@ -25,34 +26,30 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
         LocationBundle ret = null;
 
         JsonObject obj = json.getAsJsonObject();
-        Set<Map.Entry<String,JsonElement>> entrySet=obj.entrySet();
-        for(Map.Entry<String,JsonElement> entry:entrySet){ // FIXME - not sure why we iterate
-            String type = entry.getKey();
 
+        String type = obj.get(ManifestConstants.BUNDLE_TYPE).getAsString();
+        String uri = obj.get(ManifestConstants.BUNDLE_LOCATION).getAsString();
 
-            String uri = entry.getValue().getAsString();
-            Location location = null;
-            try {
-                if (uri.startsWith("sos")) {
-                    location = new SOSLocation(uri);
-                } else {
-                    location = new URILocation(uri);
-                }
-            } catch (URISyntaxException | MalformedURLException e) {
-                e.printStackTrace();
+        Location location = null;
+        try {
+            if (uri.startsWith("sos")) {
+                location = new SOSLocation(uri);
+            } else {
+                location = new URILocation(uri);
             }
+        } catch (URISyntaxException | MalformedURLException e) {
+            e.printStackTrace();
+        }
 
-            switch(type) {
-                case BundleTypes.CACHE:
-                    ret = new CacheLocationBundle(location);
-                    break;
-                case BundleTypes.PROVENANCE:
-                    ret = new ProvenanceLocationBundle(location);
-                    break;
-                default:
-                    throw new JsonParseException("Unknown location bundle type exception");
-            }
-
+        switch(type) {
+            case BundleTypes.CACHE:
+                ret = new CacheLocationBundle(location);
+                break;
+            case BundleTypes.PROVENANCE:
+                ret = new ProvenanceLocationBundle(location);
+                break;
+            default:
+                throw new JsonParseException("Unknown location bundle type exception");
         }
 
         return ret;

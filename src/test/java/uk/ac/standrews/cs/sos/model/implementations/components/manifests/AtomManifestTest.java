@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
@@ -42,10 +43,13 @@ public class AtomManifestTest extends SetUpTest {
         FileUtils.cleanDirectory(new File(configuration.getDataPath()));
     }
 
-    @Test (expectedExceptions = DataStorageException.class)
+    @Test
     public void testNoLocations() throws IOException, ManifestNotMadeException, DataStorageException {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        ManifestFactory.createAtomManifest(configuration, bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_STRING_HASHED), bundles);
+
+        Collection<LocationBundle> others = atomManifest.getLocations();
+        assertEquals(others, bundles);
     }
 
     @Test
@@ -53,7 +57,7 @@ public class AtomManifestTest extends SetUpTest {
         Collection<LocationBundle> bundles = new ArrayList<>();
         LocationBundle bundle = Helper.createDummyDataFile(configuration);
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_STRING_HASHED), bundles);
 
         Collection<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
@@ -65,13 +69,13 @@ public class AtomManifestTest extends SetUpTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         Collection<LocationBundle> newBundles = atomManifest.getLocations();
-        assertEquals(newBundles.size(), 2);
+        assertEquals(newBundles.size(), 1);
 
         JsonArray jsonLocations = atomManifest.toJSON().getAsJsonArray("Locations");
-        assertEquals( jsonLocations.size(), 2);
+        assertEquals(jsonLocations.size(), 1);
     }
 
     @Test (timeOut = 10000)
@@ -80,7 +84,7 @@ public class AtomManifestTest extends SetUpTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertEquals(atomManifest.isValid(), true);
     }
@@ -91,7 +95,7 @@ public class AtomManifestTest extends SetUpTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertEquals(atomManifest.verify(null), true);
     }

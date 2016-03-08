@@ -67,7 +67,7 @@ public class ManifestsManagerTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         GUID guid = atomManifest.getContentGUID();
         try {
@@ -134,11 +134,11 @@ public class ManifestsManagerTest {
         LocationBundle secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<>(Arrays.asList(firstLocation)));
+                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Arrays.asList(firstLocation)));
         GUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                configuration, new ArrayList<>(Arrays.asList(secondLocation)));
+                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Arrays.asList(secondLocation)));
         GUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);
@@ -148,7 +148,7 @@ public class ManifestsManagerTest {
             manifestsManager.addManifest(anotherManifest);
             AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
 
-            assertEquals(manifest.getLocations().size(), 3);
+            assertEquals(manifest.getLocations().size(), 2);
         } catch (ManifestSaveException e) {
             throw new Exception();
         }

@@ -71,7 +71,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public AtomManifest addAtom(Collection<LocationBundle> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
-        AtomManifest manifest = ManifestFactory.createAtomManifest(configuration, locations);
+        GUID guid = DataStorage.storeAtom(configuration, locations);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
         manifestsManager.addManifest(manifest);
 
         return manifest;
