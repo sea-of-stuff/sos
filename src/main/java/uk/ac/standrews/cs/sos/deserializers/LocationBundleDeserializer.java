@@ -26,31 +26,28 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
 
         JsonObject obj = json.getAsJsonObject();
         Set<Map.Entry<String,JsonElement>> entrySet=obj.entrySet();
-        for(Map.Entry<String,JsonElement> entry:entrySet){
+        for(Map.Entry<String,JsonElement> entry:entrySet){ // FIXME - not sure why we iterate
             String type = entry.getKey();
 
 
-            JsonArray uris = entry.getValue().getAsJsonArray();
-            Location[] locations = new Location[uris.size()];
-            for(int i = 0; i < uris.size(); i++) {
-                String location = uris.get(i).getAsString();
-                try {
-                    if (location.startsWith("sos")) {
-                        locations[i] = new SOSLocation(location);
-                    } else {
-                        locations[i] = new URILocation(location);
-                    }
-                } catch (URISyntaxException | MalformedURLException e) {
-                    e.printStackTrace();
+            String uri = entry.getValue().getAsString();
+            Location location = null;
+            try {
+                if (uri.startsWith("sos")) {
+                    location = new SOSLocation(uri);
+                } else {
+                    location = new URILocation(uri);
                 }
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
             }
 
             switch(type) {
                 case BundleTypes.CACHE:
-                    ret = new CacheLocationBundle(locations);
+                    ret = new CacheLocationBundle(location);
                     break;
                 case BundleTypes.PROVENANCE:
-                    ret = new ProvenanceLocationBundle(locations);
+                    ret = new ProvenanceLocationBundle(location);
                     break;
                 default:
                     throw new JsonParseException("Unknown location bundle type exception");

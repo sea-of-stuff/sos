@@ -9,9 +9,7 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBu
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 /**
@@ -67,7 +65,7 @@ public class AtomManifest extends BasicManifest {
         for(LocationBundle location:locations) {
             InputStream dataStream;
             try {
-                dataStream = DataStorage.getInputStreamFromLocations(location.getLocations());
+                dataStream = DataStorage.getInputStreamFromLocation(location.getLocation());
             } catch (SourceLocationException e) {
                 continue;
             }

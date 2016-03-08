@@ -30,7 +30,7 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
         Collection<LocationBundle> otherBundles = new ArrayList<>();
         LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(otherBundle.getLocations()[0], "another random line");
+        Helper.appendToFile(otherBundle.getLocation(), "another random line");
         otherBundles.add(otherBundle);
         AtomManifest manifestOther = model.addAtom(otherBundles);
 
@@ -49,7 +49,7 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
         Collection<LocationBundle> otherBundles = new ArrayList<>();
         LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(otherBundle.getLocations()[0], "another random line");
+        Helper.appendToFile(otherBundle.getLocation(), "another random line");
         otherBundles.add(otherBundle);
         AtomManifest manifestOther = model.addAtom(otherBundles);
 

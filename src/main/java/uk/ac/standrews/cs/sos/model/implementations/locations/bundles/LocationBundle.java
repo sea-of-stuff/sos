@@ -17,19 +17,19 @@ public abstract class LocationBundle {
     private String type;
 
     // i.e. http://abc.com/123, sos://af318/492jv, etc.
-    private Location[] locations;
+    private Location location;
 
-    protected LocationBundle(String type, Location[] locations) {
+    protected LocationBundle(String type, Location location) {
         this.type = type;
-        this.locations = locations;
+        this.location = location;
     }
 
     public String getType() {
         return type;
     }
 
-    public Location[] getLocations() {
-        return locations;
+    public Location getLocation() {
+        return location;
     }
 
     @Override
@@ -41,12 +41,7 @@ public abstract class LocationBundle {
 
     public JsonObject toJSON() {
         JsonObject obj = new JsonObject();
-
-        JsonArray array = new JsonArray();
-        for(Location location:locations) {
-            array.add(location.toString());
-        }
-        obj.add(type, array);
+        obj.addProperty(type, location.toString());
 
         return obj;
     }
@@ -57,11 +52,11 @@ public abstract class LocationBundle {
         if (o == null || getClass() != o.getClass()) return false;
         LocationBundle that = (LocationBundle) o;
         return Objects.equals(type, that.type) &&
-                Arrays.equals(locations, that.locations);
+                Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, Arrays.hashCode(locations));
+        return Objects.hash(type, location);
     }
 }

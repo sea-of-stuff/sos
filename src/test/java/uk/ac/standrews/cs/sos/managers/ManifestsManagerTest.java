@@ -64,7 +64,7 @@ public class ManifestsManagerTest {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(location);
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(configuration, bundles);

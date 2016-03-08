@@ -15,27 +15,27 @@ import java.net.URISyntaxException;
  */
 public class LocationBundleTest extends SetUpTest {
 
-    private static final String EXPECTED_LOCATIONS =
+    private static final String EXPECTED_LOCATION =
             "{\"cache\":"+
-                    "[\"http://abc.com/123\"]}";
+                    "\"http://abc.com/123\"}";
 
-    private static final String EXPECTED_MULTIPLE_LOCATIONS =
+    private static final String EXPECTED_PROV_LOCATION =
             "{\"prov\":"+
-                    "[\"http://abc.com/123/1\", \"http://abc.com/123/2\"]}";
+                    "\"http://abc.com/123/1\"}";
 
 
     @Test
     public void toStringTest() throws URISyntaxException, JSONException {
-        Location[] locations = new Location[] {new URILocation("http://abc.com/123")};
-        LocationBundle bundle = new CacheLocationBundle(locations);
-        JSONAssert.assertEquals(EXPECTED_LOCATIONS, bundle.toString(), true);
+        Location location = new URILocation("http://abc.com/123");
+        LocationBundle bundle = new CacheLocationBundle(location);
+        JSONAssert.assertEquals(EXPECTED_LOCATION, bundle.toString(), true);
     }
 
     @Test
-    public void toStringMultipleLocationsTest() throws URISyntaxException, JSONException {
-        Location[] locations = new Location[] {new URILocation("http://abc.com/123/1"), new URILocation("http://abc.com/123/2")};
-        LocationBundle bundle = new ProvenanceLocationBundle(locations);
-        JSONAssert.assertEquals(EXPECTED_MULTIPLE_LOCATIONS, bundle.toString(), true);
+    public void toStringProvLocationTest() throws URISyntaxException, JSONException {
+        Location location = new URILocation("http://abc.com/123/1");
+        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        JSONAssert.assertEquals(EXPECTED_PROV_LOCATION, bundle.toString(), true);
     }
 
 

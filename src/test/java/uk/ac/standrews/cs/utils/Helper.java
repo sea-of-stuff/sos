@@ -40,7 +40,7 @@ public class Helper {
         writer.println("The second line");
         writer.close();
 
-        return new ProvenanceLocationBundle(new Location[]{new URILocation("file://"+location)});
+        return new ProvenanceLocationBundle(new URILocation("file://"+location));
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {

@@ -27,7 +27,7 @@ public class ManifestFactory {
      * @return the manifest for the atom
      * @throws ManifestNotMadeException
      */
-    public static AtomManifest createAtomManifest(SeaConfiguration configuration, Collection<LocationBundle> locations)
+    public static AtomManifest createAtomManifest(SeaConfiguration configuration, Collection<LocationBundle> locations) // TODO - reduce to only one location (prov)
             throws ManifestNotMadeException, DataStorageException {
 
         GUID guid = DataStorage.storeAtom(configuration, locations);

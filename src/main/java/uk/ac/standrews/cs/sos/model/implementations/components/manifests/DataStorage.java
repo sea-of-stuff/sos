@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.SequenceInputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -27,17 +26,12 @@ import java.util.Collection;
  */
 public class DataStorage {
 
-    private final static int FIRST_LOCATION = 0;
-
-    public static InputStream getInputStreamFromLocations(Location[] locations) throws SourceLocationException {
+    public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
         InputStream stream;
         try {
-            stream = locations[FIRST_LOCATION].getSource();
-            for(int i = 1; i < locations.length; i++) {
-                stream = new SequenceInputStream(stream, locations[i].getSource());
-            }
+            stream = location.getSource();
         } catch (IOException e) {
-            throw new SourceLocationException("DataStorage " + locations.toString() + " " + e);
+            throw new SourceLocationException("DataStorage " + location.toString() + " " + e);
         }
 
         return stream;
@@ -90,7 +84,8 @@ public class DataStorage {
 
     private static GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {
         GUID retval = null;
-        InputStream dataStream = getInputStreamFromLocations(bundle.getLocations());
+        Location location = bundle.getLocation();
+        InputStream dataStream = getInputStreamFromLocation(location);
 
         if (dataStream != null) {
             try {
@@ -105,8 +100,8 @@ public class DataStorage {
 
     private static void storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
         try {
-            Location[] locations = bundle.getLocations();
-            InputStream dataStream = getInputStreamFromLocations(locations);
+            Location location = bundle.getLocation();
+            InputStream dataStream = getInputStreamFromLocation(location);
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
 
             touchDir(cachedLocationPath);
@@ -126,7 +121,7 @@ public class DataStorage {
             throw new SourceLocationException("SOSLocation could not be generated for machine-guid: " +
                     configuration.getMachineID().toString() + " and entity: " + guid.toString() );
         }
-        return new CacheLocationBundle(new Location[]{location});
+        return new CacheLocationBundle(location);
     }
 
     private static String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {

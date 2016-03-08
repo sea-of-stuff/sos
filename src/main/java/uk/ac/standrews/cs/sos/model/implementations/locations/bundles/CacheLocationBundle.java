@@ -9,11 +9,11 @@ public class CacheLocationBundle extends LocationBundle {
 
     private final static String TYPE = "cache";
 
-    public CacheLocationBundle(Location[] locations) {
-        this(TYPE, locations);
+    public CacheLocationBundle(Location location) {
+        this(TYPE, location);
     }
 
-    private CacheLocationBundle(String type, Location[] locations) {
-        super(type, locations);
+    private CacheLocationBundle(String type, Location location) {
+        super(type, location);
     }
 }

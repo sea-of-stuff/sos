@@ -54,7 +54,7 @@ public class DataStorageTest extends SetUpTest {
     public void testStoreRemoteAtom() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(location);
         bundles.add(bundle);
 
         DataStorage.storeAtom(configuration, bundles);
@@ -65,7 +65,7 @@ public class DataStorageTest extends SetUpTest {
     public void testStoreAtomAlreadyCached() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        LocationBundle bundle = new ProvenanceLocationBundle(new Location[]{location});
+        LocationBundle bundle = new ProvenanceLocationBundle(location);
         bundles.add(bundle);
 
         DataStorage.storeAtom(configuration, bundles);

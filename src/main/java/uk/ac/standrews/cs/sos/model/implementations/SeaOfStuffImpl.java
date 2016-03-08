@@ -112,7 +112,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         for(LocationBundle location:locations) {
 
             try {
-                dataStream = DataStorage.getInputStreamFromLocations(location.getLocations());
+                dataStream = DataStorage.getInputStreamFromLocation(location.getLocation());
             } catch (SourceLocationException e) {
                 continue;
             }
