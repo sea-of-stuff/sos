@@ -53,10 +53,10 @@ public class ManifestsManagerTest {
         index.flushDB();
         index.killInstance();
 
-        FileUtils.deleteDirectory(new File(index.getConfiguration().getIndexPath()));
-        FileUtils.cleanDirectory(new File(index.getConfiguration().getLocalManifestsLocation()));
-        FileUtils.cleanDirectory(new File(index.getConfiguration().getCacheDataPath()));
-        FileUtils.cleanDirectory(new File(index.getConfiguration().getDataPath()));
+        FileUtils.deleteDirectory(new File(configuration.getIndexPath()));
+        FileUtils.cleanDirectory(new File(configuration.getLocalManifestsLocation()));
+        FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
+        FileUtils.cleanDirectory(new File(configuration.getDataPath()));
     }
 
     @Test
@@ -153,4 +153,5 @@ public class ManifestsManagerTest {
             throw new Exception();
         }
     }
+
 }

@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.model.implementations.locations;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
@@ -8,6 +10,8 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.Helper;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -19,13 +23,22 @@ import static org.testng.Assert.assertTrue;
  */
 public class SOSLocationTest extends SetUpTest {
 
+    private SeaConfiguration configuration;
+
     @BeforeMethod
-    public void setUp() {
+    public void setUp() throws IOException {
+        configuration = SeaConfiguration.getInstance();
+
         try {
             URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
         } catch (Error e) {
             // Error is thrown if factory was already setup in previous tests
         }
+    }
+
+    @AfterMethod
+    public void tearDown() throws IOException {
+        FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
     }
 
     @Test
@@ -51,5 +64,8 @@ public class SOSLocationTest extends SetUpTest {
 
         assertTrue(retrieved.contains("The first line"));
         assertTrue(retrieved.contains("The second line"));
+
+
     }
+
 }

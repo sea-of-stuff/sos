@@ -199,7 +199,6 @@ public class AssetManifest extends SignedManifest {
     }
 
     private void generateInvariant() throws GuidGenerationException {
-        // FIXME - generate invariant GUID - maybe based on identity
         invariant = generateGUID(Double.toString(Math.random()));
     }
 

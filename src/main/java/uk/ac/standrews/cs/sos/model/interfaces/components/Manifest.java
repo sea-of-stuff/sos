@@ -32,6 +32,12 @@ public interface Manifest {
     GUID getContentGUID();
 
     /**
+     * Set the content guid of this manifest
+     * @param guid
+     */
+    void setContentGUID(GUID guid);
+
+    /**
      * Verify this manifest's GUID against its content.
      *
      * @param identity

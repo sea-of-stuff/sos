@@ -145,7 +145,6 @@ public interface SeaOfStuff {
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException;
 
-
     Collection<GUID> findManifestByType(String type);
 
     Collection<GUID> findManifestByLabel(String label);

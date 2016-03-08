@@ -58,6 +58,28 @@ public class AtomManifest extends BasicManifest {
     }
 
     @Override
+    public JsonObject toJSON() {
+        JsonObject obj = super.toJSON();
+
+        JsonArray array = new JsonArray();
+        Collection<LocationBundle> locations = getLocations();
+        for(LocationBundle location:locations)
+            array.add(location.toJSON());
+
+        obj.add(ManifestConstants.KEY_LOCATIONS, array);
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getContentGUID().toString());
+
+        return obj;
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                !locations.isEmpty() &&
+                isGUIDValid(contentGUID);
+    }
+
+    @Override
     public boolean verify(Identity identity) throws GuidGenerationException {
         if (contentGUID == null)
             return false;
@@ -76,28 +98,6 @@ public class AtomManifest extends BasicManifest {
         }
 
         return true;
-    }
-
-    @Override
-    public boolean isValid() {
-        return super.isValid() &&
-                !locations.isEmpty() &&
-                isGUIDValid(contentGUID);
-    }
-
-    @Override
-    public JsonObject toJSON() {
-        JsonObject obj = super.toJSON();
-
-        JsonArray array = new JsonArray();
-        Collection<LocationBundle> locations = getLocations();
-        for(LocationBundle location:locations)
-            array.add(location.toJSON());
-
-        obj.add(ManifestConstants.KEY_LOCATIONS, array);
-        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getContentGUID().toString());
-
-        return obj;
     }
 
     private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {

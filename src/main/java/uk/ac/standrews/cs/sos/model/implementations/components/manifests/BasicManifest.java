@@ -42,38 +42,6 @@ public abstract class BasicManifest implements Manifest {
     }
 
     /**
-     * Verifies this manifest's GUID against its content.
-     *
-     * @return true if the GUID of the manifest matches the content.
-     * @throws GuidGenerationException if the manifest's GUID could not be generated.
-     */
-    @Override
-    public abstract boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
-
-    /**
-     * Checks whether this manifest contains valid key-value entries.
-     *
-     * @return true if the manifest is valid.
-     */
-    @Override
-    public boolean isValid() {
-        return isManifestTypeValid();
-    }
-
-    /**
-     * Transforms the content of this manifest to a JSON representation.
-     *
-     * @return JSON representation of this manifest.
-     */
-    @Override
-    public JsonObject toJSON() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty(ManifestConstants.KEY_TYPE, manifestType);
-
-        return obj;
-    }
-
-    /**
      * Gets the type of this manifest.
      *
      * @return the type of this manifest.
@@ -93,9 +61,42 @@ public abstract class BasicManifest implements Manifest {
         return this.contentGUID;
     }
 
+    @Override
     public void setContentGUID(GUID guid) {
         if (this.contentGUID == null)
             this.contentGUID = guid;
+    }
+
+    /**
+     * Transforms the content of this manifest to a JSON representation.
+     *
+     * @return JSON representation of this manifest.
+     */
+    @Override
+    public JsonObject toJSON() {
+        JsonObject obj = new JsonObject();
+        obj.addProperty(ManifestConstants.KEY_TYPE, manifestType);
+
+        return obj;
+    }
+
+    /**
+     * Verifies this manifest's GUID against its content.
+     *
+     * @return true if the GUID of the manifest matches the content.
+     * @throws GuidGenerationException if the manifest's GUID could not be generated.
+     */
+    @Override
+    public abstract boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
+
+    /**
+     * Checks whether this manifest contains valid key-value entries.
+     *
+     * @return true if the manifest is valid.
+     */
+    @Override
+    public boolean isValid() {
+        return isManifestTypeValid();
     }
 
     /**

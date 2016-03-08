@@ -26,17 +26,6 @@ import java.util.Collection;
  */
 public class DataStorage {
 
-    public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
-        InputStream stream;
-        try {
-            stream = location.getSource();
-        } catch (IOException e) {
-            throw new SourceLocationException("DataStorage " + location.toString() + " " + e);
-        }
-
-        return stream;
-    }
-
     /**
      * Store the data at the Location Bundles in the cache
      *
@@ -80,6 +69,17 @@ public class DataStorage {
         }
 
         return guid;
+    }
+
+    public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
+        InputStream stream;
+        try {
+            stream = location.getSource();
+        } catch (IOException e) {
+            throw new SourceLocationException("DataStorage " + location.toString() + " " + e);
+        }
+
+        return stream;
     }
 
     private static GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {

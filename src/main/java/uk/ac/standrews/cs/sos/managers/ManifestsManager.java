@@ -180,12 +180,13 @@ public class ManifestsManager {
     }
 
     private Manifest constructManifestFromJson(GUID guid, String type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+        // FIXME - guid will be added for all of the manifests, since manifests are self-describing.
         Manifest manifest;
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
                     manifest = gson.fromJson(manifestData, AtomManifest.class);
-                    ((AtomManifest) manifest).setContentGUID(guid);
+                    manifest.setContentGUID(guid);
                     break;
                 case ManifestConstants.COMPOUND:
                     manifest = gson.fromJson(manifestData, CompoundManifest.class);
@@ -206,23 +207,25 @@ public class ManifestsManager {
     // then merge and save
     // otherwise just save
     private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException, UnknownGUIDException, ManifestMergeException {
-        GUID guid = manifest.getContentGUID();
-
         if (manifest.getManifestType().equals(ManifestConstants.ATOM) &&
                 manifestExistsInLocalStorage(manifest.getContentGUID())) {
-
-            String backupPath = backupManifest(manifest);
-
-            Manifest existingManifest = getManifestFromFile(guid);
-            manifest = mergeManifests(guid, (AtomManifest) existingManifest, (AtomManifest) manifest);
-
-            FileHelper.deleteFile(backupPath);
-            saveToFile(manifest);
-            FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
+            mergeAtomManifestAndSave(manifest);
         } else {
             saveToFile(manifest);
         }
+
         cacheManifest(manifest);
+    }
+
+    private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestPersistException, UnknownGUIDException, ManifestMergeException{
+        GUID guid = manifest.getContentGUID();
+        String backupPath = backupManifest(manifest);
+        Manifest existingManifest = getManifestFromFile(guid);
+        manifest = mergeManifests(guid, (AtomManifest) existingManifest, (AtomManifest) manifest);
+
+        FileHelper.deleteFile(backupPath);
+        saveToFile(manifest);
+        FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
     }
 
     private String backupManifest(Manifest manifest) throws ManifestMergeException {
@@ -250,15 +253,7 @@ public class ManifestsManager {
     private void saveToFile(Manifest manifest) throws ManifestPersistException {
         JsonObject manifestJSON = manifest.toJSON();
 
-        // Remove content guid and use that for the manifest file name
-        String guid;
-        String type = manifest.getManifestType();
-        if (type.equals(ManifestConstants.ASSET)) {
-            guid = manifestJSON.remove(ManifestConstants.KEY_VERSION).getAsString();
-        } else {
-            guid = manifestJSON.remove(ManifestConstants.KEY_CONTENT_GUID).getAsString();
-        }
-
+        String guid = getGUIDForManifestFilename(manifest);
         final String path = getManifestPath(guid);
         File file = new File(path);
 
@@ -272,6 +267,19 @@ public class ManifestsManager {
             return;
 
         writeToFile(file, manifestJSON);
+    }
+
+    private String getGUIDForManifestFilename(Manifest manifest) {
+        JsonObject manifestJSON = manifest.toJSON();
+
+        String guid;
+        String type = manifest.getManifestType();
+        if (type.equals(ManifestConstants.ASSET)) {
+            guid = manifestJSON.get(ManifestConstants.KEY_VERSION).getAsString();
+        } else {
+            guid = manifestJSON.get(ManifestConstants.KEY_CONTENT_GUID).getAsString();
+        }
+        return guid;
     }
 
     private void writeToFile(File file, JsonObject manifest) throws ManifestPersistException {
@@ -325,4 +333,5 @@ public class ManifestsManager {
         String path = getManifestPath(guid);
         return new File(path).exists();
     }
+
 }
