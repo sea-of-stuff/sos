@@ -1,9 +1,13 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
+import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,6 +24,9 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
     public AtomManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
+        String scontentGUID = obj.get(ManifestConstants.KEY_CONTENT_GUID).getAsString();
+        GUID contentGUID = new GUIDsha1(scontentGUID);
+
         JsonArray jLocationBundles = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
         Collection<LocationBundle> bundles = new ArrayList<>();
         for (int i = 0; i < jLocationBundles.size(); i++) {
@@ -27,9 +34,7 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
             bundles.add(bundle);
         }
 
-        AtomManifest manifest = new AtomManifest();
-        manifest.setLocations(bundles);
-
+        AtomManifest manifest = new AtomManifest(contentGUID, bundles);
         return manifest;
     }
 }

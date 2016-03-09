@@ -56,7 +56,7 @@ public class CompoundManifestTest extends SetUpTest {
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
-        JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
+        JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toJSON().toString(), true);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class CompoundManifestTest extends SetUpTest {
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
 
-        JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
+        JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toJSON().toString(), true);
     }
 
     @Test

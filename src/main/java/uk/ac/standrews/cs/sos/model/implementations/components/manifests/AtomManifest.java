@@ -28,16 +28,12 @@ public class AtomManifest extends BasicManifest {
 
     private Collection<LocationBundle> locations;
 
-    public AtomManifest() {
-        super(ManifestConstants.ATOM);
-    }
-
     /**
      * Creates a valid atom manifest given an atom.
      *
      * @param locations
      */
-    protected AtomManifest(GUID guid, Collection<LocationBundle> locations) throws ManifestNotMadeException {
+    public AtomManifest(GUID guid, Collection<LocationBundle> locations) {
         super(ManifestConstants.ATOM);
         this.contentGUID = guid;
         this.locations = locations;
@@ -50,11 +46,6 @@ public class AtomManifest extends BasicManifest {
      */
     public Collection<LocationBundle> getLocations() {
         return locations;
-    }
-
-    public void setLocations(Collection<LocationBundle> locations) {
-        if (this.locations == null)
-            this.locations = locations;
     }
 
     @Override

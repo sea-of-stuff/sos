@@ -23,8 +23,6 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
 
     @Override
     public LocationBundle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        LocationBundle ret = null;
-
         JsonObject obj = json.getAsJsonObject();
 
         String type = obj.get(ManifestConstants.BUNDLE_TYPE).getAsString();
@@ -41,6 +39,7 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
             e.printStackTrace();
         }
 
+        LocationBundle ret;
         switch(type) {
             case BundleTypes.CACHE:
                 ret = new CacheLocationBundle(location);

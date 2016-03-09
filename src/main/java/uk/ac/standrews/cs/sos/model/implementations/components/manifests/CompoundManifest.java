@@ -101,11 +101,6 @@ public class CompoundManifest extends SignedManifest {
     }
 
     @Override
-    public String toString() {
-        return toJSON().toString();
-    }
-
-    @Override
     protected String generateSignature(String toSign) throws EncryptionException {
         byte[] signatureBytes = this.identity.sign(toSign);
         byte[] encodedBytes = Base64.encodeBase64(signatureBytes);

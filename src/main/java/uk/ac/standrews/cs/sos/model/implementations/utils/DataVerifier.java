@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.implementations.utils;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 
 /**
@@ -21,6 +20,6 @@ public class DataVerifier {
      * @return
      */
     public static boolean verify(Location location, GUID guid) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }
