@@ -4,7 +4,6 @@ import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.lang.reflect.Type;
 
@@ -15,7 +14,6 @@ public class ContentDeserializer extends CommonDeserializer implements JsonDeser
 
     @Override
     public Content deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
         JsonObject obj = json.getAsJsonObject();
 
         GUID guid = getGUID(obj, ManifestConstants.CONTENT_KEY_GUID);

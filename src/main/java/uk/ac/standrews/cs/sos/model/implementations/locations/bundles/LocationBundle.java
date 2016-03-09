@@ -1,12 +1,10 @@
 package uk.ac.standrews.cs.sos.model.implementations.locations.bundles;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**

@@ -5,9 +5,9 @@ import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -61,9 +61,7 @@ public class DataStorage {
                     bundles.add(cachedBundle);
 
                 break;
-            } catch (GuidGenerationException e) {
-                e.printStackTrace();
-            } catch (SourceLocationException e) {
+            } catch (GuidGenerationException | SourceLocationException e) {
                 e.printStackTrace();
             }
         }

@@ -3,18 +3,16 @@ package uk.ac.standrews.cs.sos.deserializers;
 import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
+import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
-import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

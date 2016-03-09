@@ -1,17 +1,12 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -36,8 +31,7 @@ public class AssetManifestDeserializer extends CommonDeserializer implements Jso
 
         String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
-        AssetManifest manifest = new AssetManifest(invariant, version, content, prevs, metadata, signature);
-        return manifest;
+        return new AssetManifest(invariant, version, content, prevs, metadata, signature);
     }
 
 

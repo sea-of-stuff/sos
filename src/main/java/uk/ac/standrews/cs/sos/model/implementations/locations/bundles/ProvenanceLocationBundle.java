@@ -10,10 +10,7 @@ public class ProvenanceLocationBundle extends LocationBundle {
     private final static String TYPE = "prov";
 
     public ProvenanceLocationBundle(Location location) {
-        this(TYPE, location);
+        super(TYPE, location);
     }
 
-    private ProvenanceLocationBundle(String type, Location location) {
-        super(type, location);
-    }
 }

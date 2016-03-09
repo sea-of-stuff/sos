@@ -5,14 +5,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 
 /**
@@ -68,25 +66,21 @@ public class AssetManifest extends SignedManifest {
                             Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.ASSET);
-        this.content = content;
 
         if (invariant != null) {
             this.invariant = invariant;
         } else {
-            try {
-                generateInvariant();
-            } catch (GuidGenerationException e) {
-                throw new ManifestNotMadeException();
-            }
+            this.invariant = makeInvariant();
         }
 
+        this.content = content;
         this.prevs = prevs;
         this.metadata = metadata;
+        this.version = makeVersionGUID();
 
-        makeVersionGUID();
-
-        if (identity != null)
-            makeSignature();
+        if (identity != null) {
+            this.signature = makeSignature();
+        }
     }
 
     public AssetManifest(GUID invariant, GUID version, Content content,
@@ -161,13 +155,6 @@ public class AssetManifest extends SignedManifest {
     }
 
     @Override
-    public boolean verify(Identity identity) throws DecryptionException {
-        String manifestSectionToSign = getManifestToSign();
-        byte[] decodedBytes = Base64.decodeBase64(signature);
-        return identity.verify(manifestSectionToSign, decodedBytes);
-    }
-
-    @Override
     public boolean isValid() {
         return super.isValid() &&
                 content != null &&
@@ -194,42 +181,49 @@ public class AssetManifest extends SignedManifest {
         JsonObject obj = super.toJSON();
 
         obj.addProperty(ManifestConstants.KEY_INVARIANT, invariant.toString());
-        obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
-
-        if (prevs != null && !prevs.isEmpty())
-            obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
-
-        if (metadata != null && !metadata.isEmpty())
-            obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
+        addVersionElemenetsToJSON(obj);
 
         return obj;
     }
 
-    private void generateInvariant() throws GuidGenerationException {
-        invariant = generateGUID(Double.toString(Math.random()));
-    }
-
-    private void makeVersionGUID() throws ManifestNotMadeException {
+    private GUID makeInvariant() throws ManifestNotMadeException {
+        GUID guid;
         try {
-            version = generateGUID(manifestToHashInJSON().toString());
+            guid = generateInvariant();
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
+
+        return guid;
     }
 
-    private void makeSignature() throws ManifestNotMadeException {
+    private GUID generateInvariant() throws GuidGenerationException {
+        return generateGUID(Double.toString(Math.random()));
+    }
+
+    private GUID makeVersionGUID() throws ManifestNotMadeException {
+        GUID guid;
         try {
-            String manifestSectionToSign = getManifestToSign();
-            signature = generateSignature(manifestSectionToSign);
-        } catch (Exception e) {
+            guid = generateGUID(manifestToHashInJSON().toString());
+        } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
+        return guid;
     }
 
-    private String getManifestToSign() {
+    @Override
+    protected String getManifestToSign() {
         JsonObject obj = new JsonObject();
 
         obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        addVersionElemenetsToJSON(obj);
+
+        Gson gson = new Gson();
+        return gson.toJson(obj);
+    }
+
+
+    private void addVersionElemenetsToJSON(JsonObject obj) {
         obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
 
         if (prevs != null && !prevs.isEmpty())
@@ -237,9 +231,6 @@ public class AssetManifest extends SignedManifest {
 
         if (metadata != null && !metadata.isEmpty())
             obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
-
-        Gson gson = new Gson();
-        return gson.toJson(obj);
     }
 
     private JsonArray getCollectionInJSON(Collection<?> collection) {

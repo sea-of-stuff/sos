@@ -1,13 +1,10 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -33,7 +30,6 @@ public class AtomManifestDeserializer extends CommonDeserializer implements Json
             bundles.add(bundle);
         }
 
-        AtomManifest manifest = new AtomManifest(contentGUID, bundles);
-        return manifest;
+        return new AtomManifest(contentGUID, bundles);
     }
 }

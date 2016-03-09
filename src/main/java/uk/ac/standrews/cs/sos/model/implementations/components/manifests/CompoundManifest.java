@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -58,11 +57,11 @@ public class CompoundManifest extends SignedManifest {
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.COMPOUND);
         this.contents = contents;
+        this.contentGUID = makeContentGUID();
 
-        makeContentGUID();
-
-        if (identity != null)
-            makeSignature();
+        if (identity != null) {
+            this.signature = makeSignature();
+        }
     }
 
     public CompoundManifest(GUID contentGUID, Collection<Content> contents, String signature) {
@@ -79,13 +78,6 @@ public class CompoundManifest extends SignedManifest {
      */
     public Collection<Content> getContents() {
         return contents;
-    }
-
-    @Override
-    public boolean verify(Identity identity) throws DecryptionException {
-        String manifestSectionToSign = getManifestToSign();
-        byte[] decodedBytes = Base64.decodeBase64(signature);
-        return identity.verify(manifestSectionToSign, decodedBytes);
     }
 
     @Override
@@ -114,24 +106,18 @@ public class CompoundManifest extends SignedManifest {
         return new String(encodedBytes);
     }
 
-    private void makeContentGUID() throws ManifestNotMadeException {
+    private GUID makeContentGUID() throws ManifestNotMadeException {
+        GUID guid;
         try {
-            contentGUID = generateContentGUID();
+            guid = generateContentGUID();
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }
+        return guid;
     }
 
-    private void makeSignature() throws ManifestNotMadeException  {
-        try {
-            String manifestSectionToSign = getManifestToSign();
-            signature = generateSignature(manifestSectionToSign);
-        } catch (Exception e) {
-            throw new ManifestNotMadeException();
-        }
-    }
-
-    private String getManifestToSign() {
+    @Override
+    protected String getManifestToSign() {
         JsonObject obj = new JsonObject();
 
         obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());

@@ -1,13 +1,10 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,7 +32,6 @@ public class CompoundManifestDeserializer extends CommonDeserializer implements 
             contents.add(content);
         }
 
-        CompoundManifest manifest = new CompoundManifest(contentGUID, contents, signature);
-        return manifest;
+        return new CompoundManifest(contentGUID, contents, signature);
     }
 }
