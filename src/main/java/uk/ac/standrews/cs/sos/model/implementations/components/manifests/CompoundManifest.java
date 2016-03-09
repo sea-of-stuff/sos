@@ -65,6 +65,13 @@ public class CompoundManifest extends SignedManifest {
             makeSignature();
     }
 
+    public CompoundManifest(GUID contentGUID, Collection<Content> contents, String signature) {
+        super(null, ManifestConstants.COMPOUND);
+        this.contentGUID = contentGUID;
+        this.contents = contents;
+        this.signature = signature;
+    }
+
     /**
      * Gets all the contents of this compound.
      *

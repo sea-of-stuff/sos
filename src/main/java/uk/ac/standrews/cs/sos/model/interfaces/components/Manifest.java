@@ -32,7 +32,7 @@ public interface Manifest {
     GUID getContentGUID();
 
     /**
-     * Set the content guid of this manifest
+     * Set the content guid of this manifest explicitly.
      * @param guid
      */
     void setContentGUID(GUID guid);

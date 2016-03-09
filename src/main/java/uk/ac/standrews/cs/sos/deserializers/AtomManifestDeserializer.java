@@ -16,7 +16,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> {
+public class AtomManifestDeserializer extends CommonDeserializer implements JsonDeserializer<AtomManifest> {
 
     private static Gson gson = new GsonBuilder().registerTypeAdapter(LocationBundle.class, new LocationBundleDeserializer()).create();
 
@@ -24,8 +24,7 @@ public class AtomManifestDeserializer implements JsonDeserializer<AtomManifest> 
     public AtomManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        String scontentGUID = obj.get(ManifestConstants.KEY_CONTENT_GUID).getAsString();
-        GUID contentGUID = new GUIDsha1(scontentGUID);
+        GUID contentGUID = getGUID(obj, ManifestConstants.KEY_CONTENT_GUID);
 
         JsonArray jLocationBundles = obj.getAsJsonArray(ManifestConstants.KEY_LOCATIONS);
         Collection<LocationBundle> bundles = new ArrayList<>();

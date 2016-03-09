@@ -11,18 +11,16 @@ import java.lang.reflect.Type;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContentDeserializer implements JsonDeserializer<Content> {
+public class ContentDeserializer extends CommonDeserializer implements JsonDeserializer<Content> {
 
     @Override
     public Content deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Content ret;
 
         JsonObject obj = json.getAsJsonObject();
 
-        String sGUID = obj.get(ManifestConstants.CONTENT_KEY_GUID).getAsString();
-        GUID guid = new GUIDsha1(sGUID);
-
+        GUID guid = getGUID(obj, ManifestConstants.CONTENT_KEY_GUID);
         JsonElement jLabel = obj.get(ManifestConstants.CONTENT_KEY_LABEL);
+        Content ret;
         if (jLabel != null) {
             String label = jLabel.getAsString();
             ret = new Content(label, guid);

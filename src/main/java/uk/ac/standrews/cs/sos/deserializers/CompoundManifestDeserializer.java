@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.sos.model.implementations.components.manifests.Compoun
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -14,13 +16,15 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CompoundManifestDeserializer implements JsonDeserializer<CompoundManifest> {
+public class CompoundManifestDeserializer extends CommonDeserializer implements JsonDeserializer<CompoundManifest> {
 
     private static Gson gson = new GsonBuilder().registerTypeAdapter(Content.class, new ContentDeserializer()).create();
 
     @Override
     public CompoundManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
+
+        GUID contentGUID = getGUID(obj, ManifestConstants.KEY_CONTENT_GUID);
 
         String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
@@ -31,13 +35,7 @@ public class CompoundManifestDeserializer implements JsonDeserializer<CompoundMa
             contents.add(content);
         }
 
-        CompoundManifest manifest = null;
-        try {
-            manifest = ManifestFactory.createCompoundManifest(contents, signature);
-        } catch (ManifestNotMadeException e) {
-            e.printStackTrace();
-        }
-
+        CompoundManifest manifest = new CompoundManifest(contentGUID, contents, signature);
         return manifest;
     }
 }

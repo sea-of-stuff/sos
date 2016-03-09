@@ -63,7 +63,7 @@ public class AssetManifest extends SignedManifest {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    protected AssetManifest(GUID invariant, Content content,
+    public AssetManifest(GUID invariant, Content content,
                             Collection<GUID> prevs, Collection<GUID> metadata,
                             Identity identity)
             throws ManifestNotMadeException {
@@ -87,6 +87,18 @@ public class AssetManifest extends SignedManifest {
 
         if (identity != null)
             makeSignature();
+    }
+
+    public AssetManifest(GUID invariant, GUID version, Content content,
+                            Collection<GUID> prevs, Collection<GUID> metadata,
+                            String signature) {
+        super(null, ManifestConstants.ASSET);
+        this.invariant = invariant;
+        this.version = version;
+        this.content = content;
+        this.prevs = prevs;
+        this.metadata = metadata;
+        this.signature = signature;
     }
 
     /**
