@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.utils;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 
 import java.io.*;
