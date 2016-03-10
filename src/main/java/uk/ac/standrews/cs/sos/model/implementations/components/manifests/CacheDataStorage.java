@@ -71,21 +71,12 @@ public class CacheDataStorage {
         return this.cache;
     }
 
-    public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
-        InputStream stream;
-        try {
-            stream = location.getSource();
-        } catch (IOException e) {
-            throw new SourceLocationException("CacheDataStorage " + location.toString() + " " + e);
-        }
 
-        return stream;
-    }
 
     private GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {
         GUID retval = null;
         Location location = bundle.getLocation();
-        InputStream dataStream = getInputStreamFromLocation(location);
+        InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
 
         if (dataStream != null) {
             try {
@@ -101,7 +92,7 @@ public class CacheDataStorage {
     private void storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
         try {
             Location location = bundle.getLocation();
-            InputStream dataStream = getInputStreamFromLocation(location);
+            InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
 
             touchDir(cachedLocationPath);

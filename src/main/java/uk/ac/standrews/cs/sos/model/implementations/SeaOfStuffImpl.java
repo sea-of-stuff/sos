@@ -72,16 +72,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
 
-        GUID guid = null;
-        for(LocationBundle location:locations) {
-            LocationBundle cacheLocation = null;
-            CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
-            guid = cacheDataStorage.cacheAtom();
-            if (guid != null) {
-                locations.add(cacheDataStorage.getCacheLocationBundle());
-                break;
-            }
-        }
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
         manifestsManager.addManifest(manifest);
@@ -124,7 +115,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         for(LocationBundle location:locations) {
 
             try {
-                dataStream = CacheDataStorage.getInputStreamFromLocation(location.getLocation());
+                dataStream = DataStorageHelper.getInputStreamFromLocation(location.getLocation());
             } catch (SourceLocationException e) {
                 continue;
             }

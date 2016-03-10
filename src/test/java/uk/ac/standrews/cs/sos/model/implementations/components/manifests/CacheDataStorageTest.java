@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 /**
@@ -46,8 +47,8 @@ public class CacheDataStorageTest extends SetUpTest {
         LocationBundle bundle = Helper.createDummyDataFile(configuration);
         locations.add(bundle);
 
-        cacheAtomAndUpdateLocationBundles(locations);
-
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
+        assertNotNull(guid);
         assertTrue(locations.contains(bundle));
         assertEquals(locations.size(), 2);
     }
@@ -59,21 +60,9 @@ public class CacheDataStorageTest extends SetUpTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         locations.add(bundle);
 
-        cacheAtomAndUpdateLocationBundles(locations);
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
+        assertNotNull(guid);
         assertEquals(locations.size(), 2);
-    }
-
-    private GUID cacheAtomAndUpdateLocationBundles(Collection<LocationBundle> locations) throws DataStorageException {
-        GUID guid = null;
-        for(LocationBundle location:locations) {
-            CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
-            guid = cacheDataStorage.cacheAtom();
-            if (guid != null) {
-                locations.add(cacheDataStorage.getCacheLocationBundle());
-                break;
-            }
-        }
-        return guid;
     }
 
 }

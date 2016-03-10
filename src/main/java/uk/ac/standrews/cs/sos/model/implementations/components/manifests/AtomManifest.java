@@ -77,7 +77,7 @@ public class AtomManifest extends BasicManifest {
         for(LocationBundle location:locations) {
             InputStream dataStream;
             try {
-                dataStream = CacheDataStorage.getInputStreamFromLocation(location.getLocation());
+                dataStream = DataStorageHelper.getInputStreamFromLocation(location.getLocation());
             } catch (SourceLocationException e) {
                 continue;
             }
