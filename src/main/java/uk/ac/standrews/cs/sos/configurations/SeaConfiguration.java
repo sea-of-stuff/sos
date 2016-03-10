@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -14,8 +15,12 @@ import java.io.IOException;
 public class SeaConfiguration {
 
     private static final String HOME = System.getProperty("user.home");
+    private static final String SOS_ROOT = "sos/";
+    private static final String SOS_NODE_CONFIG = "node.txt";
+    private static final String DATA_CONFIG = "config.txt";
+    private static final String DEFAULT_ROOT_NAME = "";
 
-    private static GUID machineid;
+    private static GUID nodeId;
     private static String root;
     private static String data;
     private static String cachedData;
@@ -27,68 +32,88 @@ public class SeaConfiguration {
     // XXX - other configs, such as #threads running, etc, could be useful
 
     private static SeaConfiguration instance;
+    private static String rootName;
+
+    public static void setRootName(String rootName) {
+        if (SeaConfiguration.rootName != null) {
+            SeaConfiguration.rootName = rootName;
+        }
+    }
 
     public static SeaConfiguration getInstance() throws IOException {
         if(instance == null) {
+            if (SeaConfiguration.rootName == null) {
+                SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
+            }
+
             try {
+                loadSOSNode();
+
+                root = HOME + SOS_ROOT + rootName + "/";
                 loadConfiguration();
             } catch (SeaConfigurationException e) {
-                loadFakeConfiguration();
+                throw new IOException();
             }
             instance = new SeaConfiguration();
         }
         return instance;
     }
 
-    private static void loadFakeConfiguration() {
-        machineid = new GUIDsha1("abcdefg12345");
-        root = "/sos/test/";
-        data = "data/";
-        cachedData = "cached_data/";
-        index = "index/";
-        manifests = "manifests/";
-        privateKeyFile = "keys/private.der";
-        publicKeyFile = "keys/public.der";
-    }
-
-    private static void loadConfiguration() throws SeaConfigurationException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(HOME + "/config.txt")) ){
-            machineid = new GUIDsha1(reader.readLine());
-            root = reader.readLine();
-            data = reader.readLine();
-            cachedData = reader.readLine();
-            index = reader.readLine();
-            manifests = reader.readLine();
-            privateKeyFile = reader.readLine();
-            publicKeyFile = reader.readLine();
+    private static void loadSOSNode() throws SeaConfigurationException {
+        try (BufferedReader reader = new BufferedReader
+                (new FileReader(HOME + SOS_ROOT + SOS_NODE_CONFIG)) ){
+            String nodeIdString = reader.readLine();
+            if (nodeIdString != null && nodeIdString.isEmpty()) {
+                nodeId = new GUIDsha1(nodeIdString);
+            }
         } catch (IOException e) {
             throw new SeaConfigurationException();
         }
     }
 
-    public GUID getMachineID() {
-     return machineid;
+    private static void loadConfiguration() throws SeaConfigurationException {
+        try (BufferedReader reader = new BufferedReader
+                (new FileReader(HOME + SOS_ROOT + DATA_CONFIG)) ){
+            data = "data/";
+            cachedData = "cached_data/";
+            index = "index/";
+            manifests = "manifests/";
+            privateKeyFile = "keys/" + reader.readLine();
+            publicKeyFile = "keys/" + reader.readLine();
+        } catch (IOException e) {
+            throw new SeaConfigurationException();
+        }
+    }
+
+    public GUID getNodeId() {
+     return nodeId;
+    }
+
+    public void setNodeId(GUID nodeId) {
+        if (SeaConfiguration.nodeId == null) {
+            SeaConfiguration.nodeId = nodeId;
+        }
     }
 
     public String getDataPath() {
-        return HOME + root + data;
+        return root + data;
     }
 
     public String getLocalManifestsLocation() {
-        return HOME + root + manifests;
+        return root + manifests;
     }
 
     public String[] getIdentityPaths() {
-         return new String[] { HOME + root + privateKeyFile,
-                 HOME + root + publicKeyFile };
+         return new String[] { root + privateKeyFile,
+                 root + publicKeyFile };
     }
 
     public String getIndexPath() {
-         return HOME + root + index;
+         return root + index;
     }
 
     public String getCacheDataPath() {
-        return HOME + root + cachedData;
+        return root + cachedData;
     }
 
 

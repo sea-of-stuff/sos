@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -64,8 +65,16 @@ public class SOSLocationTest extends SetUpTest {
 
         assertTrue(retrieved.contains("The first line"));
         assertTrue(retrieved.contains("The second line"));
+    }
 
+    @Test
+    public void testGetAnySourceFromOtherNode() throws Exception {
+        Helper.createDummyDataFile(SeaConfiguration.getInstance().getCacheDataPath(), "abc");
 
+        SOSLocation location = new SOSLocation(new GUIDsha1("123"), new GUIDsha1("abc"));
+        InputStream inputStream = location.getSource();
+
+        assertNotNull(inputStream);
     }
 
 }

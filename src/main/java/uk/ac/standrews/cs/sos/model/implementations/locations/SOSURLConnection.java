@@ -37,7 +37,7 @@ public class SOSURLConnection extends URLConnection {
         String[] segments = url.getPath().split("/");
         GUID urlMachineId = new GUIDsha1(url.getHost());
         GUID entityId = new GUIDsha1(segments[segments.length - 1]);
-        GUID thisMachineId = SeaConfiguration.getInstance().getMachineID();
+        GUID thisMachineId = SeaConfiguration.getInstance().getNodeId();
 
         if (urlMachineId.equals(thisMachineId)) {
             String path = SeaConfiguration.getInstance().getCacheDataPath();

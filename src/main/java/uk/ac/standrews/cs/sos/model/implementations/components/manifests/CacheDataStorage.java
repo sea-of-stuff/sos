@@ -107,10 +107,10 @@ public class CacheDataStorage {
     private CacheLocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) throws SourceLocationException {
         Location location;
         try {
-            location = new SOSLocation(configuration.getMachineID(), guid);
+            location = new SOSLocation(configuration.getNodeId(), guid);
         } catch (MalformedURLException e) {
             throw new SourceLocationException("SOSLocation could not be generated for machine-guid: " +
-                    configuration.getMachineID().toString() + " and entity: " + guid.toString() );
+                    configuration.getNodeId().toString() + " and entity: " + guid.toString() );
         }
         return new CacheLocationBundle(location);
     }
