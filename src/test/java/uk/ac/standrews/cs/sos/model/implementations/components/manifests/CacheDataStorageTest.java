@@ -6,10 +6,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
@@ -23,7 +25,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataStorageTest extends SetUpTest {
+public class CacheDataStorageTest extends SetUpTest {
 
     private SeaConfiguration configuration;
 
@@ -40,38 +42,38 @@ public class DataStorageTest extends SetUpTest {
 
     @Test
     public void testStoreAtom() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         LocationBundle bundle = Helper.createDummyDataFile(configuration);
-        bundles.add(bundle);
+        locations.add(bundle);
 
-        DataStorage.storeAtom(configuration, bundles);
-        assertTrue(bundles.contains(bundle));
-        assertEquals(bundles.size(), 2);
+        cacheAtomAndUpdateLocationBundles(locations);
+
+        assertTrue(locations.contains(bundle));
+        assertEquals(locations.size(), 2);
     }
-
 
     @Test
     public void testStoreRemoteAtom() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         LocationBundle bundle = new ProvenanceLocationBundle(location);
-        bundles.add(bundle);
+        locations.add(bundle);
 
-        DataStorage.storeAtom(configuration, bundles);
-        assertEquals(bundles.size(), 2);
+        cacheAtomAndUpdateLocationBundles(locations);
+        assertEquals(locations.size(), 2);
     }
 
-    @Test
-    public void testStoreAtomAlreadyCached() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
-        bundles.add(bundle);
-
-        DataStorage.storeAtom(configuration, bundles);
-        DataStorage.storeAtom(configuration, bundles);
-        assertEquals(bundles.size(), 2);
+    private GUID cacheAtomAndUpdateLocationBundles(Collection<LocationBundle> locations) throws DataStorageException {
+        GUID guid = null;
+        for(LocationBundle location:locations) {
+            CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
+            guid = cacheDataStorage.cacheAtom();
+            if (guid != null) {
+                locations.add(cacheDataStorage.getCacheLocationBundle());
+                break;
+            }
+        }
+        return guid;
     }
-
 
 }

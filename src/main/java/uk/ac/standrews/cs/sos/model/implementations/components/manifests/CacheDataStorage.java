@@ -17,56 +17,58 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 
 /**
  * TODO - javadoc
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataStorage {
+public class CacheDataStorage {
+
+    private SeaConfiguration configuration;
+    private LocationBundle origin;
+    private CacheLocationBundle cache;
+
+    public CacheDataStorage(SeaConfiguration configuration,
+                            LocationBundle origin) {
+        this.configuration = configuration;
+        this.origin = origin;
+    }
 
     /**
      * Store the data at the Location Bundles in the cache
      *
-     * @param configuration
-     * @param bundles
      * @return GUID generated from the data at the location bundles
      * @throws DataStorageException
      */
-    // TODO - consider passing only one bundle/location!?
-    // TODO - deal with locations that fail
-    // TODO - do not: Assume that all other locations point to the same source.
-    public static GUID storeAtom(SeaConfiguration configuration, Collection<LocationBundle> bundles) throws DataStorageException {
+    public GUID cacheAtom()
+            throws DataStorageException {
+
         GUID guid = null;
-        if (bundles == null || bundles.isEmpty()) {
+        if (origin == null) {
             throw new DataStorageException();
         }
 
-        for(LocationBundle bundle:bundles) {
+        try {
+            guid = generateGUID(origin);
+            if (guid == null)
+                return guid;
+
+            storeData(configuration, origin, guid);
             try {
-                guid = generateGUID(bundle);
-                if (guid == null)
-                    continue;
-
-                storeData(configuration, bundle, guid);
-                LocationBundle cachedBundle;
-                try {
-                    cachedBundle = getCacheBundle(configuration, guid);
-                } catch (SourceLocationException e) {
-                    throw new DataStorageException();
-                }
-
-                if (!bundles.contains(cachedBundle))
-                    bundles.add(cachedBundle);
-
-                break;
-            } catch (GuidGenerationException | SourceLocationException e) {
-                e.printStackTrace();
+                cache = getCacheBundle(configuration, guid);
+            } catch (SourceLocationException e) {
+                throw new DataStorageException();
             }
+        } catch (GuidGenerationException | SourceLocationException e) {
+            e.printStackTrace();
         }
 
         return guid;
+    }
+
+    public CacheLocationBundle getCacheLocationBundle() {
+        return this.cache;
     }
 
     public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
@@ -74,13 +76,13 @@ public class DataStorage {
         try {
             stream = location.getSource();
         } catch (IOException e) {
-            throw new SourceLocationException("DataStorage " + location.toString() + " " + e);
+            throw new SourceLocationException("CacheDataStorage " + location.toString() + " " + e);
         }
 
         return stream;
     }
 
-    private static GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {
+    private GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {
         GUID retval = null;
         Location location = bundle.getLocation();
         InputStream dataStream = getInputStreamFromLocation(location);
@@ -96,7 +98,7 @@ public class DataStorage {
         return retval;
     }
 
-    private static void storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
+    private void storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
         try {
             Location location = bundle.getLocation();
             InputStream dataStream = getInputStreamFromLocation(location);
@@ -111,7 +113,7 @@ public class DataStorage {
         }
     }
 
-    private static LocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) throws SourceLocationException {
+    private CacheLocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) throws SourceLocationException {
         Location location;
         try {
             location = new SOSLocation(configuration.getMachineID(), guid);
@@ -122,18 +124,18 @@ public class DataStorage {
         return new CacheLocationBundle(location);
     }
 
-    private static String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {
+    private String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {
         return configuration.getCacheDataPath() + guid.toString();
     }
 
-    private static void touchDir(String path) throws IOException {
+    private void touchDir(String path) throws IOException {
         File parent = new File(path).getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             parent.mkdirs();
         }
     }
 
-    private static boolean pathExists(String path) {
+    private boolean pathExists(String path) {
         File file = new File(path);
         return file.exists();
     }
