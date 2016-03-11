@@ -54,7 +54,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             e.printStackTrace(); // FIXME
         }
 
-
         identity = new IdentityImpl(configuration);
         manifestsManager = new ManifestsManager(configuration, index);
 

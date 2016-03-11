@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.implementations.locations;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -11,14 +10,11 @@ import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.Helper;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -41,7 +37,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
+        Helper.cleanDirectory(configuration.getCacheDataPath());
     }
 
     @Test

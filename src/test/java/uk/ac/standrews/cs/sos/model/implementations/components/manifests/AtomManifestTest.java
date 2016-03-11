@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
 
 
 import com.google.gson.JsonArray;
-import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,7 +17,6 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.Provenance
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.Helper;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,8 +37,8 @@ public class AtomManifestTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
-        FileUtils.cleanDirectory(new File(configuration.getDataPath()));
+        Helper.cleanDirectory(configuration.getCacheDataPath());
+        Helper.cleanDirectory(configuration.getDataPath());
     }
 
     @Test

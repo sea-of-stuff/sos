@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.managers;
 
-import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -24,7 +23,6 @@ import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.Helper;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,10 +51,10 @@ public class ManifestsManagerTest {
         index.flushDB();
         index.killInstance();
 
-        FileUtils.deleteDirectory(new File(configuration.getIndexPath()));
-        FileUtils.cleanDirectory(new File(configuration.getLocalManifestsLocation()));
-        FileUtils.cleanDirectory(new File(configuration.getCacheDataPath()));
-        FileUtils.cleanDirectory(new File(configuration.getDataPath()));
+        Helper.deleteDirectory(configuration.getIndexPath());
+        Helper.cleanDirectory(configuration.getLocalManifestsLocation());
+        Helper.cleanDirectory(configuration.getCacheDataPath());
+        Helper.cleanDirectory(configuration.getDataPath());
     }
 
     @Test

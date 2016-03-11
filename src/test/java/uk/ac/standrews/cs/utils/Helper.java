@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.utils;
 
+import org.apache.commons.io.FileUtils;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
@@ -52,4 +53,19 @@ public class Helper {
         writer.close();
     }
 
+    public static void cleanDirectory(String path) throws IOException {
+        File dir = new File(path);
+
+        if (dir.exists()) {
+            FileUtils.cleanDirectory(dir);
+        }
+    }
+
+    public static void deleteDirectory(String path) throws IOException {
+        File dir = new File(path);
+
+        if (dir.exists()) {
+            FileUtils.deleteDirectory(dir);
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.managers;
 
-import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -8,8 +7,8 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.Helper;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
@@ -34,7 +33,7 @@ public class CommonIndexTest {
         index.flushDB();
         index.killInstance();
 
-        FileUtils.deleteDirectory(new File(index.getConfiguration().getIndexPath()));
+        Helper.deleteDirectory(index.getConfiguration().getIndexPath());
     }
 
     @Test(expectedExceptions = UnknownManifestTypeException.class)

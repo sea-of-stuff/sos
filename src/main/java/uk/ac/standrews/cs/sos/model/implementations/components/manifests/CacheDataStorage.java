@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocat
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.io.File;
 import java.io.IOException;
