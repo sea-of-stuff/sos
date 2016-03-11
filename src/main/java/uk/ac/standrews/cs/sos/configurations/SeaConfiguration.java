@@ -33,7 +33,6 @@ public class SeaConfiguration {
 
     public static SeaConfiguration getInstance() throws IOException {
         if(instance == null) {
-
             try {
                 loadSOSNode();
             } catch (SeaConfigurationException e) {

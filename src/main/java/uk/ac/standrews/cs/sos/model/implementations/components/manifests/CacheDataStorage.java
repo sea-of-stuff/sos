@@ -57,7 +57,7 @@ public class CacheDataStorage {
      * @throws DataStorageException
      */
     public GUID cacheAtom() throws DataStorageException {
-        GUID guid = null;
+        GUID guid;
 
         switch(cacheOriginType) {
             case CACHE_ORIGIN_LOCATION_TYPE:
@@ -81,7 +81,7 @@ public class CacheDataStorage {
         try {
             guid = generateGUID(origin);
             if (guid == null)
-                return guid;
+                return null;
 
             storeData(configuration, origin, guid);
             try {
@@ -103,32 +103,18 @@ public class CacheDataStorage {
         }
 
         try {
-            // cache and then get guid?
             GUID tmpGUID = GUID.generateRandomGUID();
             storeData(configuration, inputStream, tmpGUID);
 
+            String tmpCachedLocationPath = getAtomCachedLocation(configuration, tmpGUID);
+            guid = generateGUID(new URILocation(tmpCachedLocationPath));
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
+            renameFile(tmpCachedLocationPath, cachedLocationPath);
+            cache = getCacheBundle(configuration, guid);
 
-            guid = generateGUID(new URILocation(cachedLocationPath));
-
-            /*
-            File oldfile =new File("oldfile.txt");
-            File newfile =new File("newfile.txt");
-
-            if(oldfile.renameTo(newfile)){
-                System.out.println("Rename succesful");
-            }else{
-                System.out.println("Rename failed");
-            }
-             */
-            // rename file with tmp GUID to guid
-
-        } catch (GuidGenerationException | SourceLocationException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
+        } catch (GuidGenerationException | SourceLocationException | URISyntaxException e) {
             e.printStackTrace();
         }
-
 
         return guid;
     }
@@ -154,7 +140,7 @@ public class CacheDataStorage {
     }
 
     private GUID generateGUID(InputStream inputStream) throws SourceLocationException, GuidGenerationException {
-        GUID retval = null;
+        GUID retval;
         try {
             retval = GUID.generateGUID(inputStream);
         } catch (GuidGenerationException e) {
@@ -201,6 +187,13 @@ public class CacheDataStorage {
 
     private String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {
         return configuration.getCacheDataPath() + guid.toString();
+    }
+
+    private void renameFile(String oldPathname, String newPathname) {
+        File oldfile =new File(oldPathname);
+        File newfile =new File(newPathname);
+
+        oldfile.renameTo(newfile);
     }
 
     // TODO - move to helper
