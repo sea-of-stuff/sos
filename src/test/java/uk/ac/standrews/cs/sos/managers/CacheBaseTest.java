@@ -56,6 +56,7 @@ public abstract class CacheBaseTest {
         }
 
         public Index getCache(CACHE_TYPE type) throws IOException {
+            SeaConfiguration.setRootName("test");
             SeaConfiguration configuration = SeaConfiguration.getInstance();
             return getCache(type, configuration);
         }

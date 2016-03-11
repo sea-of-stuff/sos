@@ -24,6 +24,7 @@ public class CommonIndexTest {
 
     @BeforeMethod
     public void setUp(Method method) throws IOException {
+        SeaConfiguration.setRootName("test");
         SeaConfiguration configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
     }

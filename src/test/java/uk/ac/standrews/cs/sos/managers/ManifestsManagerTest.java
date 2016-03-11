@@ -41,6 +41,7 @@ public class ManifestsManagerTest {
 
     @BeforeMethod
     public void setUp() throws IOException, KeyGenerationException, KeyLoadedException {
+        SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
         model = new SeaOfStuffImpl(configuration, index);

@@ -36,6 +36,7 @@ public class DataStorageHelperTest extends SetUpTest {
 
     @BeforeMethod
     public void setUp() throws IOException, SeaConfigurationException {
+        SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         configuration.setNodeId(new GUIDsha1("123456"));
 
@@ -90,6 +91,15 @@ public class DataStorageHelperTest extends SetUpTest {
         Collection<LocationBundle> locations = new ArrayList<>();
         InputStream inputStream = null;
         DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
+    }
+
+    @Test
+    public void testStoreAtomFromEmptyStream() throws Exception {
+        Collection<LocationBundle> locations = new ArrayList<>();
+        InputStream inputStream = StreamsUtils.StringToInputStream("");
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
+        assertNotNull(guid);
+        assertEquals(locations.size(), 1);
     }
 
     @Test

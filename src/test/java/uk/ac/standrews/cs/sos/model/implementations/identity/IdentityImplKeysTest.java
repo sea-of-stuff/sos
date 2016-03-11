@@ -90,6 +90,7 @@ public class IdentityImplKeysTest extends SetUpTest {
 
     @BeforeMethod
     public void setup() throws IOException {
+        SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
 
         // Delete any left over keys from past

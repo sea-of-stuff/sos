@@ -25,6 +25,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @BeforeMethod
     public void setUp() throws IOException, SeaConfigurationException {
+        SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         configuration.setNodeId(new GUIDsha1("12345678"));
 

@@ -64,7 +64,6 @@ public interface SeaOfStuff {
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
 
     /**
-     * TODO - create an atom from a sequence of bytes
      *  pass System.in to inputstream in CLI
      *
      * @param inputStream

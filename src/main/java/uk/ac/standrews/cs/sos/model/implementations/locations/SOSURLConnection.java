@@ -45,7 +45,13 @@ public class SOSURLConnection extends URLConnection {
             return new BufferedInputStream(fileStream);
         }
 
-        // TODO - deal with remote machine-ids!
+
+        /*
+         * TODO
+         * lookup for node id in local map
+         * otherwise contact registry/coordinator
+         * talk to coordinator via http
+         */
         return null;
     }
 

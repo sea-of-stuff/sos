@@ -28,6 +28,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
     @BeforeMethod
     public void setUp() {
         try {
+            SeaConfiguration.setRootName("test");
             configuration = SeaConfiguration.getInstance();
             index = LuceneIndex.getInstance(configuration);
             model = new SeaOfStuffImpl(configuration, index);

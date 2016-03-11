@@ -13,6 +13,7 @@ public class SeaConfiguration {
 
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final String SOS_ROOT = HOME + "sos/";
+    private static final String DEFAULT_ROOT_NAME = "";
     private static final String SOS_NODE_CONFIG = "node.txt";
     private static final String DATA_CONFIG = "config.txt";
 
@@ -30,9 +31,22 @@ public class SeaConfiguration {
     private static String publicKeyFile;
 
     private static SeaConfiguration instance;
+    private static String root;
+    private static String rootName;
+
+    public static void setRootName(String rootName) {
+        if (SeaConfiguration.rootName == null) {
+            SeaConfiguration.rootName = rootName;
+        }
+    }
 
     public static SeaConfiguration getInstance() throws IOException {
         if(instance == null) {
+            if (SeaConfiguration.rootName == null) {
+                SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
+            }
+            root = SOS_ROOT + SeaConfiguration.rootName + "/";
+
             try {
                 loadSOSNode();
             } catch (SeaConfigurationException e) {
@@ -92,30 +106,30 @@ public class SeaConfiguration {
     }
 
     public String getDataPath() {
-        return SOS_ROOT + DATA_FOLDER;
+        return root + DATA_FOLDER;
     }
 
     public String getLocalManifestsLocation() {
-        return SOS_ROOT + MANIFEST_FOLDER;
+        return root + MANIFEST_FOLDER;
     }
 
     public String[] getIdentityPaths() {
-         return new String[] { SOS_ROOT + KEYS_FOLDER + privateKeyFile,
-                 SOS_ROOT + KEYS_FOLDER + publicKeyFile };
+         return new String[] { root + KEYS_FOLDER + privateKeyFile,
+                 root + KEYS_FOLDER + publicKeyFile };
     }
 
     public String getIndexPath() {
-         return SOS_ROOT + INDEX_FOLDER;
+         return root + INDEX_FOLDER;
     }
 
     public String getCacheDataPath() {
-        return SOS_ROOT + CACHE_FOLDER;
+        return root + CACHE_FOLDER;
     }
 
     public void saveConfiguration() throws SeaConfigurationException {
 
         try (BufferedWriter writer = new BufferedWriter
-                (new FileWriter(SOS_ROOT + SOS_NODE_CONFIG)) ){
+                (new FileWriter(root + SOS_NODE_CONFIG)) ){
             if (nodeId != null) {
                 writer.write(nodeId.toString());
             }
