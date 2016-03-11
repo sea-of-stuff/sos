@@ -68,7 +68,7 @@ public class SeaConfiguration {
         try (BufferedReader reader = new BufferedReader
                 (new FileReader(SOS_ROOT + SOS_NODE_CONFIG)) ){
             String nodeIdString = reader.readLine();
-            if (nodeIdString != null && nodeIdString.isEmpty()) {
+            if (nodeIdString != null && !nodeIdString.isEmpty()) {
                 nodeId = new GUIDsha1(nodeIdString);
             }
         } catch (IOException e) {
@@ -129,7 +129,7 @@ public class SeaConfiguration {
     public void saveConfiguration() throws SeaConfigurationException {
 
         try (BufferedWriter writer = new BufferedWriter
-                (new FileWriter(root + SOS_NODE_CONFIG)) ){
+                (new FileWriter(SOS_ROOT + SOS_NODE_CONFIG)) ){
             if (nodeId != null) {
                 writer.write(nodeId.toString());
             }
