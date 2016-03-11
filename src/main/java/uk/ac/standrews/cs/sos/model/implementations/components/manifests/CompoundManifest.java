@@ -128,7 +128,7 @@ public class CompoundManifest extends SignedManifest {
     }
 
     private GUID generateContentGUID() throws GuidGenerationException {
-         return generateGUID(getContentsInJSON().toString());
+         return GUID.generateGUID(getContentsInJSON().toString());
     }
 
     private JsonArray getContentsInJSON() {

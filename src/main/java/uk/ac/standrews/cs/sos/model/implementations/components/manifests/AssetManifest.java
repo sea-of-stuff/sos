@@ -198,13 +198,13 @@ public class AssetManifest extends SignedManifest {
     }
 
     private GUID generateInvariant() throws GuidGenerationException {
-        return generateGUID(Double.toString(Math.random()));
+        return GUID.generateGUID(Double.toString(Math.random()));
     }
 
     private GUID makeVersionGUID() throws ManifestNotMadeException {
         GUID guid;
         try {
-            guid = generateGUID(manifestToHashInJSON().toString());
+            guid = GUID.generateGUID(manifestToHashInJSON().toString());
         } catch (GuidGenerationException e) {
             throw new ManifestNotMadeException();
         }

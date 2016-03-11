@@ -4,56 +4,48 @@ import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SeaConfiguration {
 
-    private static final String HOME = System.getProperty("user.home");
-    private static final String SOS_ROOT = "sos/";
+    private static final String HOME = System.getProperty("user.home") + "/";
+    private static final String SOS_ROOT = HOME + "sos/";
     private static final String SOS_NODE_CONFIG = "node.txt";
     private static final String DATA_CONFIG = "config.txt";
-    private static final String DEFAULT_ROOT_NAME = "";
+
+    private static final String DATA_FOLDER = "data/";
+    private static final String CACHE_FOLDER = "cached_data/";
+    private static final String INDEX_FOLDER = "index/";
+    private static final String MANIFEST_FOLDER = "manifests/";
+    private static final String KEYS_FOLDER = "keys/";
+
+    private static final String PRIVATE_KEY_FILE = "private.der";
+    private static final String PUBLIC_KEY_FILE = "public.der";
 
     private static GUID nodeId;
-    private static String root;
-    private static String data;
-    private static String cachedData;
-    private static String index;
-    private static String manifests;
     private static String privateKeyFile;
     private static String publicKeyFile;
 
-    // XXX - other configs, such as #threads running, etc, could be useful
-
     private static SeaConfiguration instance;
-    private static String rootName;
-
-    public static void setRootName(String rootName) {
-        if (SeaConfiguration.rootName != null) {
-            SeaConfiguration.rootName = rootName;
-        }
-    }
 
     public static SeaConfiguration getInstance() throws IOException {
         if(instance == null) {
-            if (SeaConfiguration.rootName == null) {
-                SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
-            }
 
             try {
                 loadSOSNode();
+            } catch (SeaConfigurationException e) {
+                e.printStackTrace();
+            }
 
-                root = HOME + SOS_ROOT + rootName + "/";
+            try {
                 loadConfiguration();
             } catch (SeaConfigurationException e) {
-                throw new IOException();
+                e.printStackTrace();
             }
+
             instance = new SeaConfiguration();
         }
         return instance;
@@ -61,7 +53,7 @@ public class SeaConfiguration {
 
     private static void loadSOSNode() throws SeaConfigurationException {
         try (BufferedReader reader = new BufferedReader
-                (new FileReader(HOME + SOS_ROOT + SOS_NODE_CONFIG)) ){
+                (new FileReader(SOS_ROOT + SOS_NODE_CONFIG)) ){
             String nodeIdString = reader.readLine();
             if (nodeIdString != null && nodeIdString.isEmpty()) {
                 nodeId = new GUIDsha1(nodeIdString);
@@ -73,15 +65,19 @@ public class SeaConfiguration {
 
     private static void loadConfiguration() throws SeaConfigurationException {
         try (BufferedReader reader = new BufferedReader
-                (new FileReader(HOME + SOS_ROOT + DATA_CONFIG)) ){
-            data = "data/";
-            cachedData = "cached_data/";
-            index = "index/";
-            manifests = "manifests/";
-            privateKeyFile = "keys/" + reader.readLine();
-            publicKeyFile = "keys/" + reader.readLine();
+                (new FileReader(SOS_ROOT + DATA_CONFIG)) ){
+            privateKeyFile = reader.readLine();
+            publicKeyFile =  reader.readLine();
+
         } catch (IOException e) {
-            throw new SeaConfigurationException();
+            // FIXME - check if file exist, if it does read otherwise write.
+            if (privateKeyFile == null) {
+                privateKeyFile = PRIVATE_KEY_FILE;
+            }
+
+            if (publicKeyFile == null) {
+                publicKeyFile = PUBLIC_KEY_FILE;
+            }
         }
     }
 
@@ -89,31 +85,44 @@ public class SeaConfiguration {
      return nodeId;
     }
 
-    public void setNodeId(GUID nodeId) {
+    public void setNodeId(GUID nodeId) throws SeaConfigurationException {
         if (SeaConfiguration.nodeId == null) {
             SeaConfiguration.nodeId = nodeId;
+            saveConfiguration();
         }
     }
 
     public String getDataPath() {
-        return root + data;
+        return SOS_ROOT + DATA_FOLDER;
     }
 
     public String getLocalManifestsLocation() {
-        return root + manifests;
+        return SOS_ROOT + MANIFEST_FOLDER;
     }
 
     public String[] getIdentityPaths() {
-         return new String[] { root + privateKeyFile,
-                 root + publicKeyFile };
+         return new String[] { SOS_ROOT + KEYS_FOLDER + privateKeyFile,
+                 SOS_ROOT + KEYS_FOLDER + publicKeyFile };
     }
 
     public String getIndexPath() {
-         return root + index;
+         return SOS_ROOT + INDEX_FOLDER;
     }
 
     public String getCacheDataPath() {
-        return root + cachedData;
+        return SOS_ROOT + CACHE_FOLDER;
+    }
+
+    public void saveConfiguration() throws SeaConfigurationException {
+
+        try (BufferedWriter writer = new BufferedWriter
+                (new FileWriter(SOS_ROOT + SOS_NODE_CONFIG)) ){
+            if (nodeId != null) {
+                writer.write(nodeId.toString());
+            }
+        } catch (IOException e) {
+            throw new SeaConfigurationException();
+        }
     }
 
 

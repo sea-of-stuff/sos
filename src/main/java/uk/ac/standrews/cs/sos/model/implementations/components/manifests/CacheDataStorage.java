@@ -80,7 +80,7 @@ public class CacheDataStorage {
 
         if (dataStream != null) {
             try {
-                retval = new GUIDsha1(dataStream);
+                retval = GUID.generateGUID(dataStream);
             } catch (GuidGenerationException e) {
                 throw new GuidGenerationException();
             }

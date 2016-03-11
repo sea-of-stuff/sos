@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.implementations;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
@@ -42,14 +43,31 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
 
-    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws KeyGenerationException, KeyLoadedException, IOException {
+    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws KeyGenerationException, KeyLoadedException, IOException { // TODO - have only one exception
         this.configuration = configuration;
+
+        try {
+            generateSOSNodeIfNone();
+        } catch (GuidGenerationException e) {
+            e.printStackTrace(); // FIXME - throw exception
+        } catch (SeaConfigurationException e) {
+            e.printStackTrace(); // FIXME
+        }
+
 
         identity = new IdentityImpl(configuration);
         manifestsManager = new ManifestsManager(configuration, index);
 
         backgroundProcesses();
         registerSOSProtocol();
+    }
+
+    private void generateSOSNodeIfNone() throws GuidGenerationException, SeaConfigurationException {
+        GUID nodeId = configuration.getNodeId();
+        if (nodeId == null) {
+            nodeId = GUID.generateGUID(Double.toString(Math.random()));
+            configuration.setNodeId(nodeId);
+        }
     }
 
     private void registerSOSProtocol() {

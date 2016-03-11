@@ -92,7 +92,7 @@ public class AtomManifest extends BasicManifest {
 
     private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {
         return inputStream != null &&
-                contentGUID.equals(generateGUID(inputStream));
+                contentGUID.equals(GUID.generateGUID(inputStream));
     }
 
 }

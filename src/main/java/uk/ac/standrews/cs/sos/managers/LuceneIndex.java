@@ -43,7 +43,8 @@ public class LuceneIndex extends CommonIndex {
     public static Index getInstance(SeaConfiguration configuration) throws IOException {
         if(instance == null) {
             instanceConfiguration = configuration;
-            Directory dir = FSDirectory.open(new File(configuration.getIndexPath()).toPath());
+            String indexPath = instanceConfiguration.getIndexPath();
+            Directory dir = FSDirectory.open(new File(indexPath).toPath());
             Analyzer analyzer = new StandardAnalyzer();
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 

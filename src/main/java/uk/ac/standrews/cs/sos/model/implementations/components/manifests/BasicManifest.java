@@ -114,39 +114,4 @@ public abstract class BasicManifest implements Manifest {
         return manifestType != null && !manifestType.isEmpty();
     }
 
-    /**
-     * Generates a GUID given a string.
-     *
-     * @param string used to generate the GUID.
-     * @return GUID of the string.
-     * @throws GuidGenerationException if the GUID could not be generated.
-     */
-    protected GUID generateGUID(String string) throws GuidGenerationException {
-        GUID guid;
-
-        try (StringReader reader = new StringReader(string);
-             InputStream inputStream = new ReaderInputStream(reader, "UTF-8")) {
-
-            guid = generateGUID(inputStream);
-        } catch (UnsupportedEncodingException e) {
-            throw new GuidGenerationException("Unsupported Encoding");
-        } catch (IOException e) {
-            throw new GuidGenerationException("uk.ac.standrews.cs.IO Exception");
-        } catch (Exception e) {
-            throw new GuidGenerationException("General Exception");
-        }
-        return guid;
-    }
-
-    /**
-     * Generates a GUID given an InputStream.
-     *
-     * @param inputStream used to generate the GUID.
-     * @return GUID of the input stream.
-     * @throws GuidGenerationException if the GUID could not be generated.
-     */
-    protected GUID generateGUID(InputStream inputStream) throws GuidGenerationException {
-        return new GUIDsha1(inputStream);
-    }
-
 }
