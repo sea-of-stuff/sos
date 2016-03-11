@@ -165,7 +165,10 @@ public class AssetManifest extends SignedManifest {
     public JsonObject toJSON() {
         JsonObject obj = manifestToHashInJSON();
         obj.addProperty(ManifestConstants.KEY_VERSION, version.toString());
-        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
+
+        if (signature != null && !signature.isEmpty()) {
+            obj.addProperty(ManifestConstants.KEY_SIGNATURE, signature);
+        }
 
         return obj;
     }

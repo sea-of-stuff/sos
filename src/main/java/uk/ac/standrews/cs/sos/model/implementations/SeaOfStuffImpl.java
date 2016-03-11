@@ -48,10 +48,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
         try {
             generateSOSNodeIfNone();
-        } catch (GuidGenerationException e) {
+        } catch (GuidGenerationException | SeaConfigurationException e) {
             e.printStackTrace(); // FIXME - throw exception
-        } catch (SeaConfigurationException e) {
-            e.printStackTrace(); // FIXME
         }
 
         identity = new IdentityImpl(configuration);
@@ -88,7 +86,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public AtomManifest addAtom(Collection<LocationBundle> locations)
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
-
         GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
@@ -99,6 +96,10 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(InputStream inputStream) {
+
+        // Cache the data
+        // generate manifest
+
         return null;
     }
 

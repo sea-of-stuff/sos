@@ -58,9 +58,8 @@ public class ManifestFactory {
                                                     Identity identity)
             throws ManifestNotMadeException {
 
-        if (content == null || identity == null) {
-            // FIXME - should be able to create asset with null identity!
-            throw new ManifestNotMadeException("Parameters missing or null : content or identity");
+        if (content == null) {
+            throw new ManifestNotMadeException("Content parameters missing or null");
         }
 
         return new AssetManifest(invariant, content, prevs, metadata, identity);

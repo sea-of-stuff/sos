@@ -92,9 +92,12 @@ public class CompoundManifest extends SignedManifest {
     public JsonObject toJSON() {
         JsonObject obj = super.toJSON();
 
-        obj.addProperty(ManifestConstants.KEY_SIGNATURE, getSignature());
         obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
         obj.add(ManifestConstants.KEY_CONTENTS, getContentsInJSON());
+
+        if (signature != null && !signature.isEmpty()) {
+            obj.addProperty(ManifestConstants.KEY_SIGNATURE, signature);
+        }
 
         return obj;
     }
