@@ -70,7 +70,8 @@ public interface SeaOfStuff {
      * @param inputStream
      * @return
      */
-    AtomManifest addAtom(InputStream inputStream);
+    AtomManifest addAtom(InputStream inputStream)
+            throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
 
     /**
      * Get an atom's data given an AtomManifest.

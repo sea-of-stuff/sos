@@ -45,4 +45,8 @@ public abstract class GUID {
         return new GUIDsha1(inputStream);
     }
 
+    public static GUID generateRandomGUID() throws GuidGenerationException {
+        return GUID.generateGUID(Double.toString(Math.random()));
+    }
+
 }

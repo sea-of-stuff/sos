@@ -26,7 +26,7 @@ public class ManifestFactory {
      * @return the manifest for the atom
      * @throws ManifestNotMadeException
      */
-    public static AtomManifest createAtomManifest(GUID guid, Collection<LocationBundle> locations) // TODO - reduce to only one location (prov)
+    public static AtomManifest createAtomManifest(GUID guid, Collection<LocationBundle> locations)
             throws ManifestNotMadeException, DataStorageException {
 
         return new AtomManifest(guid, locations);

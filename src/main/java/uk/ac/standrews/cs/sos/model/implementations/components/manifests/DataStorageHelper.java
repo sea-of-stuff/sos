@@ -39,4 +39,16 @@ public class DataStorageHelper {
         }
         return guid;
     }
+
+    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> locations) throws DataStorageException {
+
+        CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, inputStream);
+        GUID guid = cacheDataStorage.cacheAtom();
+        if (guid != null) {
+            locations.add(cacheDataStorage.getCacheLocationBundle());
+        }
+
+        return guid;
+    }
+
 }

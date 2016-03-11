@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -62,7 +63,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private void generateSOSNodeIfNone() throws GuidGenerationException, SeaConfigurationException {
         GUID nodeId = configuration.getNodeId();
         if (nodeId == null) {
-            nodeId = GUID.generateGUID(Double.toString(Math.random()));
+            nodeId = GUID.generateRandomGUID();
             configuration.setNodeId(nodeId);
         }
     }
@@ -87,7 +88,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
         GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
-
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
         manifestsManager.addManifest(manifest);
 
@@ -95,10 +95,15 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(InputStream inputStream) {
+    public AtomManifest addAtom(InputStream inputStream)
+            throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
 
         // Cache the data
         // generate manifest
+        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
+        manifestsManager.addManifest(manifest);
 
         return null;
     }
