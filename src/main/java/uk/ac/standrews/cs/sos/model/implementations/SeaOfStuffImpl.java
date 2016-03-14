@@ -1,18 +1,14 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.*;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
@@ -85,7 +81,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(Collection<LocationBundle> locations)
-            throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
+            throws ManifestNotMadeException, ManifestPersistException, DataStorageException {
 
         GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
@@ -96,7 +92,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(InputStream inputStream)
-            throws ManifestNotMadeException, ManifestSaveException, DataStorageException {
+            throws ManifestNotMadeException, ManifestPersistException, DataStorageException {
 
         // Cache the data
         // generate manifest
@@ -110,7 +106,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public CompoundManifest addCompound(Collection<Content> contents)
-            throws ManifestNotMadeException, ManifestSaveException {
+            throws ManifestNotMadeException, ManifestPersistException {
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(contents, identity);
         manifestsManager.addManifest(manifest);
@@ -123,7 +119,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
                                   GUID invariant,
                                   Collection<GUID> prevs,
                                   Collection<GUID> metadata)
-            throws ManifestNotMadeException, ManifestSaveException {
+            throws ManifestNotMadeException, ManifestPersistException {
 
         AssetManifest manifest = ManifestFactory.createAssetManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
@@ -152,12 +148,12 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Manifest getManifest(GUID guid) throws UnknownGUIDException {
+    public Manifest getManifest(GUID guid) throws ManifestNotFoundException {
         Manifest manifest;
         try {
             manifest = manifestsManager.findManifest(guid);
-        } catch (ManifestException e) {
-            throw new UnknownGUIDException();
+        } catch (ManifestNotFoundException e) {
+            throw new ManifestNotFoundException();
         }
         return manifest;
     }
@@ -180,17 +176,17 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Collection<GUID> findManifestByType(String type) {
+    public Collection<GUID> findManifestByType(String type) throws ManifestNotFoundException {
         return manifestsManager.findManifestsByType(type);
     }
 
     @Override
-    public Collection<GUID> findManifestByLabel(String label) {
+    public Collection<GUID> findManifestByLabel(String label) throws ManifestNotFoundException {
         return manifestsManager.findManifestsThatMatchLabel(label);
     }
 
     @Override
-    public Collection<GUID> findVersions(GUID invariant) {
+    public Collection<GUID> findVersions(GUID invariant) throws ManifestNotFoundException {
         return manifestsManager.findVersions(invariant);
     }
 }

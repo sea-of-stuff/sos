@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
@@ -48,12 +49,12 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
         Helper.cleanDirectory(index.getConfiguration().getCacheDataPath());
     }
 
-    @Test(expectedExceptions = UnknownGUIDException.class)
+    @Test(expectedExceptions = ManifestNotFoundException.class)
     public void testFailRetrieveManifest() throws Exception {
         model.getManifest(new GUIDsha1("123fail"));
     }
 
-    @Test (expectedExceptions = UnknownGUIDException.class)
+    @Test (expectedExceptions = ManifestNotFoundException.class)
     public void testFailRetrieveManifestNull() throws Exception {
         model.getManifest(null);
     }

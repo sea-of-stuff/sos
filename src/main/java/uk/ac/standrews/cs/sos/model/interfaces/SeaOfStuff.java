@@ -1,10 +1,11 @@
 package uk.ac.standrews.cs.sos.model.interfaces;
 
+import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
@@ -61,7 +62,7 @@ public interface SeaOfStuff {
      * @see Manifest
      */
     AtomManifest addAtom(Collection<LocationBundle> locations)
-            throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
+            throws ManifestNotMadeException, DataStorageException, ManifestPersistException;
 
     /**
      *  pass System.in to inputstream in CLI
@@ -70,7 +71,7 @@ public interface SeaOfStuff {
      * @return
      */
     AtomManifest addAtom(InputStream inputStream)
-            throws ManifestNotMadeException, ManifestSaveException, DataStorageException;
+            throws ManifestNotMadeException, DataStorageException, ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.
@@ -90,7 +91,7 @@ public interface SeaOfStuff {
      * @see Manifest
      */
     CompoundManifest addCompound(Collection<Content> contents)
-            throws ManifestNotMadeException, ManifestSaveException;
+            throws ManifestNotMadeException, ManifestPersistException;
 
     /**
      * Adds an asset to the Sea of Stuff.
@@ -105,7 +106,7 @@ public interface SeaOfStuff {
      */
     AssetManifest addAsset(Content content, GUID invariant,
                            Collection<GUID> prevs, Collection<GUID> metadata)
-            throws ManifestNotMadeException, ManifestSaveException;
+            throws ManifestNotMadeException, ManifestPersistException;
 
     /**
      * Get the manifest that matches a given GUID.
@@ -118,7 +119,7 @@ public interface SeaOfStuff {
      * @see Manifest
      * @see GUID
      */
-    Manifest getManifest(GUID guid) throws UnknownGUIDException;
+    Manifest getManifest(GUID guid) throws ManifestNotFoundException;
 
     Identity getIdentity();
 
@@ -145,10 +146,10 @@ public interface SeaOfStuff {
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException;
 
-    Collection<GUID> findManifestByType(String type);
+    Collection<GUID> findManifestByType(String type) throws ManifestNotFoundException;
 
-    Collection<GUID> findManifestByLabel(String label);
+    Collection<GUID> findManifestByLabel(String label) throws ManifestNotFoundException;
 
-    Collection<GUID> findVersions(GUID invariant);
+    Collection<GUID> findVersions(GUID invariant) throws ManifestNotFoundException;
 
 }

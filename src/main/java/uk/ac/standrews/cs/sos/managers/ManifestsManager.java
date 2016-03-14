@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
+import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestMergeException;
@@ -17,7 +18,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
@@ -70,19 +70,19 @@ public class ManifestsManager {
      *
      * @param manifest
      */
-    public void addManifest(Manifest manifest) throws ManifestSaveException {
+    public void addManifest(Manifest manifest) throws ManifestPersistException {
         if (manifest.isValid()) {
             try {
                 saveManifest(manifest);
             } catch (ManifestCacheException e) {
-                throw new ManifestSaveException("Manifest could not be cached");
+                throw new ManifestPersistException("Manifest could not be cached");
             } catch (ManifestPersistException e) {
-                throw new ManifestSaveException("Manifest could not be persisted");
+                throw new ManifestPersistException("Manifest could not be persisted");
             } catch (UnknownGUIDException | ManifestMergeException e) {
-                throw new ManifestSaveException("An equivalent manifest exists, but could not be fetched or merged");
+                throw new ManifestPersistException("An equivalent manifest exists, but could not be fetched or merged");
             }
         } else {
-            throw new ManifestSaveException("Manifest not valid");
+            throw new ManifestPersistException("Manifest not valid");
         }
     }
 
@@ -93,51 +93,47 @@ public class ManifestsManager {
      * @return
      * @throws ManifestException
      */
-    public Manifest findManifest(GUID guid) throws ManifestException {
+    public Manifest findManifest(GUID guid) throws ManifestNotFoundException {
         if (guid == null) {
-            throw new ManifestException();
+            throw new ManifestNotFoundException();
         }
 
         Manifest manifest;
         try {
             manifest = getManifestFromFile(guid);
-            // TODO - if manifest is not found, then get it from one of the registered services.
         } catch (UnknownGUIDException ex) {
-            throw new ManifestException();
+            throw new ManifestNotFoundException();
         }
 
         return manifest;
     }
 
-    public Collection<GUID> findManifestsByType(String type) {
+    public Collection<GUID> findManifestsByType(String type) throws ManifestNotFoundException {
         Collection<GUID> retval = new ArrayList<>();
         try {
             retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
-            // TODO - custom exception
+            throw new ManifestNotFoundException();
         }
         return retval;
     }
 
-    public Collection<GUID> findVersions(GUID guid) {
+    public Collection<GUID> findVersions(GUID guid) throws ManifestNotFoundException {
         Collection<GUID> retval = new ArrayList<>();
         try {
             retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException e) {
-            e.printStackTrace();
-            // TODO - custom exception
+            throw new ManifestNotFoundException();
         }
         return retval;
     }
 
-    public Collection<GUID> findManifestsThatMatchLabel(String label) {
+    public Collection<GUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
         Collection<GUID> retval = new ArrayList<>();
         try {
             retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException e) {
-            e.printStackTrace();
-            // TODO - custom exception
+            throw new ManifestNotFoundException();
         }
         return retval;
     }
@@ -261,7 +257,7 @@ public class ManifestsManager {
         // if filepath doesn't exists, then create it
         File parent = file.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
-            throw new IllegalStateException("Couldn't create dir: " + parent); // TODO - custom exception
+            throw new ManifestPersistException();
         }
 
         if (file.exists())

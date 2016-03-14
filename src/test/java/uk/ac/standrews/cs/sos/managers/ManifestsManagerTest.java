@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.implementations.SeaOfStuffImpl;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
@@ -76,7 +76,7 @@ public class ManifestsManagerTest {
             assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
-        } catch (ManifestSaveException e) {
+        } catch (ManifestPersistException e) {
             throw new Exception();
         }
     }
@@ -99,7 +99,7 @@ public class ManifestsManagerTest {
             assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
-        } catch (ManifestSaveException e) {
+        } catch (ManifestPersistException e) {
             throw new Exception();
         }
     }
@@ -120,7 +120,7 @@ public class ManifestsManagerTest {
             assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
             assertEquals(manifest.getContentGUID(), content.getGUID());
             assertEquals(manifest.isValid(), true);
-        } catch (ManifestSaveException e) {
+        } catch (ManifestPersistException e) {
             throw new Exception();
         }
     }
@@ -148,7 +148,7 @@ public class ManifestsManagerTest {
             AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getLocations().size(), 2);
-        } catch (ManifestSaveException e) {
+        } catch (ManifestPersistException e) {
             throw new Exception();
         }
     }
