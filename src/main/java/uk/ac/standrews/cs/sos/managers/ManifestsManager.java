@@ -217,12 +217,15 @@ public class ManifestsManager {
 
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestPersistException, UnknownGUIDException, ManifestMergeException{
         GUID guid = manifest.getContentGUID();
-        String backupPath = backupManifest(manifest);
         Manifest existingManifest = getManifestFromFile(guid);
-        manifest = mergeManifests(guid, (AtomManifest) existingManifest, (AtomManifest) manifest);
+        String backupPath = backupManifest(existingManifest);
 
-        FileHelper.deleteFile(backupPath);
-        saveToFile(manifest);
+        if (!existingManifest.equals(manifest)) {
+            manifest = mergeManifests(guid, (AtomManifest) existingManifest, (AtomManifest) manifest);
+            FileHelper.deleteFile(backupPath);
+            saveToFile(manifest);
+        }
+
         FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
     }
 

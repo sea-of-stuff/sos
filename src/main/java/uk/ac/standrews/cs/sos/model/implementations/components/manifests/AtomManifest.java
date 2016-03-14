@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Manifest describing an Atom.
@@ -95,4 +96,16 @@ public class AtomManifest extends BasicManifest {
                 contentGUID.equals(GUID.generateGUID(inputStream));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AtomManifest that = (AtomManifest) o;
+        return Objects.equals(locations, that.locations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(locations);
+    }
 }

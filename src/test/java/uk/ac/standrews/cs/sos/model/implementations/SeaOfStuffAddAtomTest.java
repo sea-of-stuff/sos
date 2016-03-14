@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations;
 import org.apache.commons.io.IOUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
@@ -162,7 +163,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
     @Test
     public void testAtomTwiceNoUpdate() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
-        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         locations.add(bundle);
         AtomManifest manifest = model.addAtom(locations);
@@ -172,10 +173,10 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
-        Thread.sleep(100);
+        Thread.sleep(500);
 
         Collection<LocationBundle> newLocations = new ArrayList<>();
-        Location newLocation = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        Location newLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle newBundle = new ProvenanceLocationBundle(newLocation);
         newLocations.add(newBundle);
         AtomManifest newManifest = model.addAtom(newLocations);
