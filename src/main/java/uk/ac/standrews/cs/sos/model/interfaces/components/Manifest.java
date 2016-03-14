@@ -32,18 +32,13 @@ public interface Manifest {
     GUID getContentGUID();
 
     /**
-     * Set the content guid of this manifest explicitly.
-     * @param guid
-     */
-    void setContentGUID(GUID guid);
-
-    /**
      * Verify this manifest's GUID against its content.
      *
      * @param identity
      * @return true if the GUID of the manifest matches the content.
      * @throws GuidGenerationException if the GUIDs of the manifests could not be generated
      *                                  due to uk.ac.standrews.cs.IO, network or other issues.
+     * @throws DecryptionException
      */
     boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
 

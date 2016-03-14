@@ -55,12 +55,6 @@ public abstract class BasicManifest implements Manifest {
         return this.contentGUID;
     }
 
-    @Override
-    public void setContentGUID(GUID guid) {
-        if (this.contentGUID == null)
-            this.contentGUID = guid;
-    }
-
     /**
      * Transforms the content of this manifest to a JSON representation.
      *
@@ -79,6 +73,7 @@ public abstract class BasicManifest implements Manifest {
      *
      * @return true if the GUID of the manifest matches the content.
      * @throws GuidGenerationException if the manifest's GUID could not be generated.
+     * @throws DecryptionException
      */
     @Override
     public abstract boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;

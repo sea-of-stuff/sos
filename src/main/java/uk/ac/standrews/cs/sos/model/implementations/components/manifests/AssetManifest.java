@@ -83,6 +83,15 @@ public class AssetManifest extends SignedManifest {
         }
     }
 
+    /**
+     *
+     * @param invariant
+     * @param version
+     * @param content
+     * @param prevs
+     * @param metadata
+     * @param signature
+     */
     public AssetManifest(GUID invariant, GUID version, Content content,
                             Collection<GUID> prevs, Collection<GUID> metadata,
                             String signature) {
@@ -135,12 +144,6 @@ public class AssetManifest extends SignedManifest {
     @Override
     public GUID getContentGUID() {
         return content.getGUID();
-    }
-
-    @Override
-    public void setContentGUID(GUID guid) {
-        if (content == null || content.getGUID() == null)
-            content = new Content(guid);
     }
 
     /**

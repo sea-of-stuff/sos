@@ -22,9 +22,11 @@ public class ManifestFactory {
     /**
      * Creates an AtomManifest given an atom.
      *
+     * @param guid
      * @param locations where the atom resides.
      * @return the manifest for the atom
      * @throws ManifestNotMadeException
+     * @throws DataStorageException
      */
     public static AtomManifest createAtomManifest(GUID guid, Collection<LocationBundle> locations)
             throws ManifestNotMadeException, DataStorageException {
@@ -32,6 +34,13 @@ public class ManifestFactory {
         return new AtomManifest(guid, locations);
     }
 
+    /**
+     *
+     * @param contents
+     * @param identity
+     * @return
+     * @throws ManifestNotMadeException
+     */
     public static CompoundManifest createCompoundManifest(Collection<Content> contents,
                                                           Identity identity)
             throws ManifestNotMadeException {
@@ -45,6 +54,7 @@ public class ManifestFactory {
      * asset and an identity which will be used to sign the manifest.
      *
      * @param content
+     * @param invariant
      * @param prevs - optional
      * @param metadata - optional
      * @param identity

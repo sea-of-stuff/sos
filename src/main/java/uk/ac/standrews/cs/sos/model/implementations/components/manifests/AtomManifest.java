@@ -31,6 +31,7 @@ public class AtomManifest extends BasicManifest {
     /**
      * Creates a valid atom manifest given an atom.
      *
+     * @param guid
      * @param locations
      */
     public AtomManifest(GUID guid, Collection<LocationBundle> locations) {

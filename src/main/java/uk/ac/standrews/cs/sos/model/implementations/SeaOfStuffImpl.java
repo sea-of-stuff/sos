@@ -1,7 +1,10 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.*;
+import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
@@ -96,12 +99,12 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
         // Cache the data
         // generate manifest
-        Collection<LocationBundle> locations = new ArrayList<LocationBundle>();
+        Collection<LocationBundle> locations = new ArrayList<>();
         GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
         manifestsManager.addManifest(manifest);
 
-        return null;
+        return manifest;
     }
 
     @Override

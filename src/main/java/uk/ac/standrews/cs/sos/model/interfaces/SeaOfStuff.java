@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.model.interfaces;
 
 import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -58,6 +57,8 @@ public interface SeaOfStuff {
      * @param locations of the atom.
      * @return AtomManifest for the added atom.
      * @throws ManifestNotMadeException
+     * @throws DataStorageException
+     * @throws ManifestPersistException
      *
      * @see Manifest
      */
@@ -65,10 +66,12 @@ public interface SeaOfStuff {
             throws ManifestNotMadeException, DataStorageException, ManifestPersistException;
 
     /**
-     *  pass System.in to inputstream in CLI
      *
-     * @param inputStream
-     * @return
+     * @param inputStream for this atom
+     * @return manifest for the added atom
+     * @throws ManifestNotMadeException
+     * @throws DataStorageException
+     * @throws ManifestPersistException
      */
     AtomManifest addAtom(InputStream inputStream)
             throws ManifestNotMadeException, DataStorageException, ManifestPersistException;
@@ -87,6 +90,7 @@ public interface SeaOfStuff {
      * @param contents of this compound.
      * @return CompoundManifest for the added compound.
      * @throws ManifestNotMadeException
+     * @throws ManifestPersistException
      *
      * @see Manifest
      */
@@ -102,6 +106,7 @@ public interface SeaOfStuff {
      * @param metadata of this asset.
      * @return AssetManifest for the added asset.
      * @throws ManifestNotMadeException
+     * @throws ManifestPersistException
      *
      */
     AssetManifest addAsset(Content content, GUID invariant,
@@ -113,7 +118,7 @@ public interface SeaOfStuff {
      *
      * @param guid                  of the manifest.
      * @return Manifest             the manifest associated with the GUID.
-     * @throws UnknownGUIDException if the GUID is not known within the currently
+     * @throws ManifestNotFoundException if the GUID is not known within the currently
      *                              explorable Sea of Stuff.
      *
      * @see Manifest

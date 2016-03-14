@@ -64,6 +64,12 @@ public class CompoundManifest extends SignedManifest {
         }
     }
 
+    /**
+     *
+     * @param contentGUID
+     * @param contents
+     * @param signature
+     */
     public CompoundManifest(GUID contentGUID, Collection<Content> contents, String signature) {
         super(null, ManifestConstants.COMPOUND);
         this.contentGUID = contentGUID;
