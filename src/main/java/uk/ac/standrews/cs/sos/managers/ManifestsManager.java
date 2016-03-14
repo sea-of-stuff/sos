@@ -163,7 +163,7 @@ public class ManifestsManager {
             JsonObject obj = gson.fromJson(manifestData, JsonObject.class);
             String type = obj.get(ManifestConstants.KEY_TYPE).getAsString();
 
-            manifest = constructManifestFromJson(guid, type, manifestData);
+            manifest = constructManifestFromJson(type, manifestData);
         } catch (FileNotFoundException | UnknownManifestTypeException | ManifestNotMadeException e) {
             throw new UnknownGUIDException();
         }
@@ -179,14 +179,12 @@ public class ManifestsManager {
         return text;
     }
 
-    private Manifest constructManifestFromJson(GUID guid, String type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
-        // FIXME - guid will be added for all of the manifests, since manifests are self-describing.
+    private Manifest constructManifestFromJson(String type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
                     manifest = gson.fromJson(manifestData, AtomManifest.class);
-                    manifest.setContentGUID(guid);
                     break;
                 case ManifestConstants.COMPOUND:
                     manifest = gson.fromJson(manifestData, CompoundManifest.class);

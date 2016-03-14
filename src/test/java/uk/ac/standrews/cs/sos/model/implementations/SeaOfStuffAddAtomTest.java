@@ -9,9 +9,11 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.utils.Helper;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -154,6 +156,39 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
         System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+    }
+
+
+    @Test
+    public void testAtomTwiceNoUpdate() throws Exception {
+        Collection<LocationBundle> locations = new ArrayList<>();
+        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        locations.add(bundle);
+        AtomManifest manifest = model.addAtom(locations);
+
+        File file = new File(configuration.getCacheDataPath() + manifest.getContentGUID());
+        File manifestFile = new File(configuration.getLocalManifestsLocation() + manifest.getContentGUID() + ".json");
+        long lmFile = file.lastModified();
+        long lmManifestFile = manifestFile.lastModified();
+
+        Thread.sleep(100);
+
+        Collection<LocationBundle> newLocations = new ArrayList<>();
+        Location newLocation = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        LocationBundle newBundle = new ProvenanceLocationBundle(newLocation);
+        newLocations.add(newBundle);
+        AtomManifest newManifest = model.addAtom(newLocations);
+
+        assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
+
+        File newFile = new File(configuration.getCacheDataPath() + newManifest.getContentGUID());
+        File newManifestFile = new File(configuration.getLocalManifestsLocation() + newManifest.getContentGUID() + ".json");
+        long newlmFile = newFile.lastModified();
+        long newlmManifestFile = newManifestFile.lastModified();
+
+        assertEquals(newlmFile, lmFile);
+        assertEquals(newlmManifestFile, lmManifestFile);
     }
 
 }
