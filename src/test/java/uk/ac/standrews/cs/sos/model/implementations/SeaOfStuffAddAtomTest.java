@@ -10,13 +10,11 @@ import uk.ac.standrews.cs.sos.model.implementations.components.manifests.Manifes
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.testng.AssertJUnit.*;
@@ -28,10 +26,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtom() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
-        LocationBundle location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -44,10 +40,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testRetrieveAtomFromFile() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
-        LocationBundle location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -63,24 +57,20 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
-        LocationBundle location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         InputStream inputStream = model.getAtomContent((AtomManifest) retrievedManifest);
 
-        assertTrue(IOUtils.contentEquals(location.getLocation().getSource(), inputStream));
+        assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
     }
 
     @Test
     public void testAtomDataVerify() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
-        LocationBundle location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -89,10 +79,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAtomDataVerifyFails() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
-        LocationBundle location = Helper.createDummyDataFile(configuration);
-        locations.add(location);
-        AtomManifest manifest = model.addAtom(locations);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -105,10 +93,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURL() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        locations.add(new ProvenanceLocationBundle(location));
-        AtomManifest manifest = model.addAtom(locations);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -119,10 +105,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURLHttps() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
-        locations.add(new ProvenanceLocationBundle(location));
-        AtomManifest manifest = model.addAtom(locations);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -133,10 +117,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURLHttpsPdf() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Lectures/W01/W01-Lecture.pdf");
-        locations.add(new ProvenanceLocationBundle(location));
-        AtomManifest manifest = model.addAtom(locations);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -147,10 +129,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Examples/W01/Example1/W01Example1.java");
-        locations.add(new ProvenanceLocationBundle(location));
-        AtomManifest manifest = model.addAtom(locations);
+        AtomManifest manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -161,11 +141,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomTwiceNoUpdate() throws Exception {
-        Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
-        locations.add(bundle);
-        AtomManifest manifest = model.addAtom(locations);
+        AtomManifest manifest = model.addAtom(location);
 
         File file = new File(configuration.getCacheDataPath() + manifest.getContentGUID());
         File manifestFile = new File(configuration.getLocalManifestsLocation() + manifest.getContentGUID() + ".json");
@@ -174,11 +151,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
         Thread.sleep(500);
 
-        Collection<LocationBundle> newLocations = new ArrayList<>();
         Location newLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle newBundle = new ProvenanceLocationBundle(newLocation);
-        newLocations.add(newBundle);
-        AtomManifest newManifest = model.addAtom(newLocations);
+        AtomManifest newManifest = model.addAtom(newLocation);
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 

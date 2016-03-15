@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -127,15 +128,17 @@ public class ManifestsManagerTest {
     public void testUpdateAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
-        LocationBundle firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
-        LocationBundle secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
+        Location firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
+        Location secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Collections.singletonList(firstLocation)));
+                new GUIDsha1(Hashes.TEST_STRING_HASHED),
+                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
         GUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Collections.singletonList(secondLocation)));
+                new GUIDsha1(Hashes.TEST_STRING_HASHED),
+                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
         GUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);

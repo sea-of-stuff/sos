@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -54,8 +55,8 @@ public class AtomManifestTest extends SetUpTest {
     @Test
     public void testGetLocations() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        LocationBundle bundle = Helper.createDummyDataFile(configuration);
-        bundles.add(bundle);
+        Location location = Helper.createDummyDataFile(configuration);
+        bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_STRING_HASHED), bundles);
 
         Collection<LocationBundle> others = atomManifest.getLocations();

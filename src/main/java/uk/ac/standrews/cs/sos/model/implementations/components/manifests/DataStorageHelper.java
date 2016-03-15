@@ -27,24 +27,21 @@ public class DataStorageHelper {
         return stream;
     }
 
-    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Collection<LocationBundle> locations) throws DataStorageException {
-        GUID guid = null;
-        for(LocationBundle location:locations) {
-            CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
-            guid = cacheDataStorage.cacheAtom();
-            if (guid != null) {
-                locations.add(cacheDataStorage.getCacheLocationBundle());
-                break;
-            }
+    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+        CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
+        GUID guid = cacheDataStorage.cacheAtom();
+        if (guid != null) {
+            bundles.add(cacheDataStorage.getCacheLocationBundle());
         }
+
         return guid;
     }
 
-    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> locations) throws DataStorageException {
+    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
         CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, inputStream);
         GUID guid = cacheDataStorage.cacheAtom();
         if (guid != null) {
-            locations.add(cacheDataStorage.getCacheLocationBundle());
+            bundles.add(cacheDataStorage.getCacheLocationBundle());
         }
 
         return guid;

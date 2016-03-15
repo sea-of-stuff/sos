@@ -16,8 +16,10 @@ import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
+import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
@@ -82,11 +84,14 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(Collection<LocationBundle> locations)
+    public AtomManifest addAtom(Location location)
             throws ManifestPersistException, DataStorageException {
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
+        Collection<LocationBundle> bundles = new ArrayList<>();
+        bundles.add(new ProvenanceLocationBundle(location));
+
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsManager.addManifest(manifest);
 
         return manifest;
@@ -96,8 +101,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public AtomManifest addAtom(InputStream inputStream)
             throws ManifestPersistException, DataStorageException {
 
-        // Cache the data
-        // generate manifest
         Collection<LocationBundle> locations = new ArrayList<>();
         GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);

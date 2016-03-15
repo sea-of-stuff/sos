@@ -4,8 +4,6 @@ import org.apache.commons.io.FileUtils;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -19,15 +17,15 @@ public class Helper {
         return location.getURI().getPath();
     }
 
-    public static LocationBundle createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static Location createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
         return createDummyDataFile(configuration, "testData.txt");
     }
 
-    public static LocationBundle createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, URISyntaxException {
         return createDummyDataFile(configuration.getDataPath(), filename);
     }
 
-    public static LocationBundle createDummyDataFile(String path, String filename) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(String path, String filename) throws FileNotFoundException, URISyntaxException {
         String location = path + filename;
 
         File file = new File(location);
@@ -41,7 +39,7 @@ public class Helper {
         writer.println("The second line");
         writer.close();
 
-        return new ProvenanceLocationBundle(new URILocation("file://"+location));
+        return new URILocation("file://"+location);
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {

@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -23,16 +23,12 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
-        LocationBundle bundle = Helper.createDummyDataFile(configuration);
-        bundles.add(bundle);
-        AtomManifest manifest = model.addAtom(bundles);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
 
-        Collection<LocationBundle> otherBundles = new ArrayList<>();
-        LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(otherBundle.getLocation(), "another random line");
-        otherBundles.add(otherBundle);
-        AtomManifest manifestOther = model.addAtom(otherBundles);
+        Location otherLocation = Helper.createDummyDataFile(configuration, "another-file");
+        Helper.appendToFile(otherLocation, "another random line");
+        AtomManifest manifestOther = model.addAtom(otherLocation);
 
         Collection<GUID> manifests = model.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
@@ -42,16 +38,12 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
-        LocationBundle bundle = Helper.createDummyDataFile(configuration);
-        bundles.add(bundle);
-        AtomManifest manifest = model.addAtom(bundles);
+        Location location = Helper.createDummyDataFile(configuration);
+        AtomManifest manifest = model.addAtom(location);
 
-        Collection<LocationBundle> otherBundles = new ArrayList<>();
-        LocationBundle otherBundle = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(otherBundle.getLocation(), "another random line");
-        otherBundles.add(otherBundle);
-        AtomManifest manifestOther = model.addAtom(otherBundles);
+        Location otherLocation = Helper.createDummyDataFile(configuration, "another-file");
+        Helper.appendToFile(otherLocation, "another random line");
+        AtomManifest manifestOther = model.addAtom(otherLocation);
 
         Content cat = new Content("cat", manifest.getContentGUID());
         Collection<Content> contents = new ArrayList<>();

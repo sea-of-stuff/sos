@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 public class CacheDataStorage {
 
     private SeaConfiguration configuration;
-    private LocationBundle origin;
+    private Location origin;
     private InputStream inputStream;
     private CacheLocationBundle cache;
 
@@ -35,7 +35,7 @@ public class CacheDataStorage {
     private int cacheOriginType;
 
     public CacheDataStorage(SeaConfiguration configuration,
-                            LocationBundle origin) {
+                            Location origin) {
         this.configuration = configuration;
         this.origin = origin;
 
@@ -150,11 +150,9 @@ public class CacheDataStorage {
         return retval;
     }
 
-    private void storeData(SeaConfiguration configuration, LocationBundle bundle, GUID guid) throws DataStorageException {
+    private void storeData(SeaConfiguration configuration, Location location, GUID guid) throws DataStorageException {
         try {
-            Location location = bundle.getLocation();
             InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
-
             storeData(configuration, dataStream, guid);
         } catch (SourceLocationException e) {
             throw new DataStorageException();
