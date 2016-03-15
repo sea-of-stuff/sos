@@ -35,7 +35,6 @@ public abstract class CommonIndex extends Index {
                     throw new UnknownManifestTypeException();
             }
         } catch (IOException e) {
-            // TODO - might occur in other cases too (e.g. index could not be created)
             throw new UnknownManifestTypeException();
         }
     }

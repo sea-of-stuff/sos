@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.managers;
 
+import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -7,6 +8,7 @@ import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.implementations.SeaOfStuffImpl;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
@@ -28,7 +30,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -96,6 +101,7 @@ public class ManifestsManagerTest {
             Manifest manifest = manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
+            assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException e) {
@@ -117,11 +123,18 @@ public class ManifestsManagerTest {
             Manifest manifest = manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
+            assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), content.getGUID());
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException e) {
             throw new Exception();
         }
+    }
+
+    @Test (expectedExceptions = ManifestNotMadeException.class)
+    public void testAddAssetManifestNullContent() throws Exception {
+        Identity identity = new IdentityImpl(configuration);
+        ManifestFactory.createAssetManifest(null, null, null, null, identity);
     }
 
     @Test
@@ -152,6 +165,15 @@ public class ManifestsManagerTest {
         } catch (ManifestPersistException e) {
             throw new Exception();
         }
+    }
+
+    @Test (expectedExceptions = ManifestPersistException.class)
+    public void testAddNullManifest() throws Exception {
+        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
+
+        BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
+        when(manifest.isValid()).thenReturn(false);
+        manifestsManager.addManifest(manifest);
     }
 
 }

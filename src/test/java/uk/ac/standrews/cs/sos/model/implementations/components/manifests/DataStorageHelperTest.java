@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -52,6 +53,26 @@ public class DataStorageHelperTest extends SetUpTest {
     }
 
     @Test
+    public void testStoreAtomNullBundles() throws Exception {
+        Location location = Helper.createDummyDataFile(configuration);
+        Collection<LocationBundle> bundles = null;
+
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        assertNotNull(guid);
+        assertNull(bundles);
+    }
+
+    @Test
+    public void testStoreAtomNullBundlesStream() throws Exception {
+        InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
+        Collection<LocationBundle> bundles = null;
+
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        assertNotNull(guid);
+        assertNull(bundles);
+    }
+
+    @Test
     public void testStoreAtom() throws Exception {
         Location location = Helper.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = new ArrayList<>();
@@ -70,6 +91,17 @@ public class DataStorageHelperTest extends SetUpTest {
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
+
+    @Test (expectedExceptions = DataStorageException.class)
+    public void testStoreAtomFromNullLocation() throws Exception {
+        Location location = null;
+        Collection<LocationBundle> bundles = new ArrayList<>();
+
+        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        assertNotNull(guid);
+        assertEquals(bundles.size(), 1);
+    }
+
 
     @Test
     public void testStoreAtomFromStream() throws Exception {

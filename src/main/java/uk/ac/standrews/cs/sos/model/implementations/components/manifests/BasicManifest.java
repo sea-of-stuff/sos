@@ -95,6 +95,9 @@ public abstract class BasicManifest implements Manifest {
      * @return true if the guid is valid.
      */
     protected boolean isGUIDValid(GUID guid) {
+        if (guid == null)
+            return false;
+
         Matcher matcher = HEX_PATTERN.matcher(guid.toString());
         return matcher.matches();
     }

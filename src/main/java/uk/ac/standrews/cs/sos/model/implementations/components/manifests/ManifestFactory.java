@@ -17,7 +17,7 @@ import java.util.Collection;
 public class ManifestFactory {
 
     // Suppresses default constructor, ensuring non-instantiability.
-    public ManifestFactory() {}
+    private ManifestFactory() {}
 
     /**
      * Creates an AtomManifest given an atom.
