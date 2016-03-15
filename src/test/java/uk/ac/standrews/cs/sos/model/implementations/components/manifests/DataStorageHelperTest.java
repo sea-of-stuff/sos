@@ -89,8 +89,7 @@ public class DataStorageHelperTest extends SetUpTest {
     @Test (expectedExceptions = DataStorageException.class)
     public void testStoreAtomFromNullStream() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
-        InputStream inputStream = null;
-        DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
+        DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, null, locations);
     }
 
     @Test

@@ -40,7 +40,7 @@ public class SeaConfiguration {
         }
     }
 
-    public static SeaConfiguration getInstance() throws IOException {
+    public static SeaConfiguration getInstance() {
         if(instance == null) {
             if (SeaConfiguration.rootName == null) {
                 SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
@@ -53,12 +53,7 @@ public class SeaConfiguration {
                 e.printStackTrace();
             }
 
-            try {
-                loadConfiguration();
-            } catch (SeaConfigurationException e) {
-                e.printStackTrace();
-            }
-
+            loadConfiguration();
             instance = new SeaConfiguration();
         }
         return instance;
@@ -76,7 +71,7 @@ public class SeaConfiguration {
         }
     }
 
-    private static void loadConfiguration() throws SeaConfigurationException {
+    private static void loadConfiguration() {
         try (BufferedReader reader = new BufferedReader
                 (new FileReader(SOS_ROOT + DATA_CONFIG)) ){
             privateKeyFile = reader.readLine();

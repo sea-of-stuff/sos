@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
  */
 public class Helper {
 
-    private static String localURItoPath(Location location) throws URISyntaxException, IOException {
+    private static String localURItoPath(Location location) throws URISyntaxException {
         return location.getURI().getPath();
     }
 
@@ -23,11 +23,11 @@ public class Helper {
         return createDummyDataFile(configuration, "testData.txt");
     }
 
-    public static LocationBundle createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static LocationBundle createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, URISyntaxException {
         return createDummyDataFile(configuration.getDataPath(), filename);
     }
 
-    public static LocationBundle createDummyDataFile(String path, String filename) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static LocationBundle createDummyDataFile(String path, String filename) throws FileNotFoundException, URISyntaxException {
         String location = path + filename;
 
         File file = new File(location);

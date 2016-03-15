@@ -139,7 +139,7 @@ public class CacheDataStorage {
         return retval;
     }
 
-    private GUID generateGUID(InputStream inputStream) throws SourceLocationException, GuidGenerationException {
+    private GUID generateGUID(InputStream inputStream) throws GuidGenerationException {
         GUID retval;
         try {
             retval = GUID.generateGUID(inputStream);
@@ -169,7 +169,7 @@ public class CacheDataStorage {
             if (!pathExists(cachedLocationPath)) {
                 FileHelper.copyToFile(inputStream, cachedLocationPath);
             }
-         } catch (IOException | URISyntaxException e) {
+         } catch (IOException e) {
              throw new DataStorageException();
          }
     }
@@ -185,7 +185,7 @@ public class CacheDataStorage {
         return new CacheLocationBundle(location);
     }
 
-    private String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) throws URISyntaxException {
+    private String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) {
         return configuration.getCacheDataPath() + guid.toString();
     }
 
@@ -197,7 +197,7 @@ public class CacheDataStorage {
     }
 
     // TODO - move to helper
-    private void touchDir(String path) throws IOException {
+    private void touchDir(String path) {
         File parent = new File(path).getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             parent.mkdirs();

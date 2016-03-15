@@ -63,7 +63,7 @@ public interface SeaOfStuff {
      * @see Manifest
      */
     AtomManifest addAtom(Collection<LocationBundle> locations)
-            throws ManifestNotMadeException, DataStorageException, ManifestPersistException;
+            throws DataStorageException, ManifestPersistException;
 
     /**
      *
@@ -74,7 +74,7 @@ public interface SeaOfStuff {
      * @throws ManifestPersistException
      */
     AtomManifest addAtom(InputStream inputStream)
-            throws ManifestNotMadeException, DataStorageException, ManifestPersistException;
+            throws DataStorageException, ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.

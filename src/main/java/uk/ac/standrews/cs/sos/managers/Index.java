@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.managers;
 
-import org.apache.lucene.queryparser.classic.ParseException;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
@@ -28,7 +27,7 @@ public abstract class Index {
 
     public abstract Collection<GUID> getMetaLabelMatches(String label, int results, int skip) throws IOException;
 
-    public abstract Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException, ParseException;
+    public abstract Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException;
 
     public abstract SeaConfiguration getConfiguration();
 

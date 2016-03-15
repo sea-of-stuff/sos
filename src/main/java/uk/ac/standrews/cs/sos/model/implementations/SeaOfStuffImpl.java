@@ -24,7 +24,6 @@ import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private ManifestsManager manifestsManager;
     private SeaConfiguration configuration;
 
-    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws KeyGenerationException, KeyLoadedException, IOException { // TODO - have only one exception
+    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws KeyGenerationException, KeyLoadedException { // TODO - have only one exception
         this.configuration = configuration;
 
         try {
@@ -84,7 +83,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(Collection<LocationBundle> locations)
-            throws ManifestNotMadeException, ManifestPersistException, DataStorageException {
+            throws ManifestPersistException, DataStorageException {
 
         GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, locations);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
@@ -95,7 +94,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     @Override
     public AtomManifest addAtom(InputStream inputStream)
-            throws ManifestNotMadeException, ManifestPersistException, DataStorageException {
+            throws ManifestPersistException, DataStorageException {
 
         // Cache the data
         // generate manifest

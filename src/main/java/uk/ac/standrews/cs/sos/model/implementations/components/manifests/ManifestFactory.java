@@ -28,8 +28,7 @@ public class ManifestFactory {
      * @throws ManifestNotMadeException
      * @throws DataStorageException
      */
-    public static AtomManifest createAtomManifest(GUID guid, Collection<LocationBundle> locations)
-            throws ManifestNotMadeException, DataStorageException {
+    public static AtomManifest createAtomManifest(GUID guid, Collection<LocationBundle> locations) {
 
         return new AtomManifest(guid, locations);
     }

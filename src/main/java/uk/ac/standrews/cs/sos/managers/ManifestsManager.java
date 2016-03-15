@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import org.apache.lucene.queryparser.classic.ParseException;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
@@ -15,7 +14,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestMergeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
@@ -27,7 +25,6 @@ import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -109,17 +106,17 @@ public class ManifestsManager {
     }
 
     public Collection<GUID> findManifestsByType(String type) throws ManifestNotFoundException {
-        Collection<GUID> retval = new ArrayList<>();
+        Collection<GUID> retval;
         try {
             retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             throw new ManifestNotFoundException();
         }
         return retval;
     }
 
     public Collection<GUID> findVersions(GUID guid) throws ManifestNotFoundException {
-        Collection<GUID> retval = new ArrayList<>();
+        Collection<GUID> retval;
         try {
             retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException e) {
@@ -129,7 +126,7 @@ public class ManifestsManager {
     }
 
     public Collection<GUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
-        Collection<GUID> retval = new ArrayList<>();
+        Collection<GUID> retval;
         try {
             retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IOException e) {
@@ -312,18 +309,12 @@ public class ManifestsManager {
         return guid + JSON_EXTENSION;
     }
 
-    private Manifest mergeManifests(GUID guid, AtomManifest first, AtomManifest second) throws ManifestMergeException {
+    private Manifest mergeManifests(GUID guid, AtomManifest first, AtomManifest second) {
         HashSet<LocationBundle> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 
-        Manifest manifest;
-        try {
-            manifest = ManifestFactory.createAtomManifest(guid, locations);
-        } catch (ManifestNotMadeException | DataStorageException e) {
-            throw new ManifestMergeException();
-        }
-        return manifest;
+        return ManifestFactory.createAtomManifest(guid, locations);
     }
 
     private boolean manifestExistsInLocalStorage(GUID guid) {

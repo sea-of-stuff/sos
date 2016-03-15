@@ -9,7 +9,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -52,8 +51,7 @@ public class LuceneIndex extends CommonIndex {
             indexWriter = new IndexWriter(dir, iwc);
             indexWriter.commit();
 
-            boolean applyAllDeletes = true;
-            searcherManager = new SearcherManager(indexWriter, applyAllDeletes, new SearcherFactory());
+            searcherManager = new SearcherManager(indexWriter, true, new SearcherFactory());
             instance = new LuceneIndex();
         }
         return instance;
@@ -103,7 +101,7 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    public Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException, ParseException {
+    public Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException {
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_TYPE, type);

@@ -18,15 +18,14 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.Provenance
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.testng.Assert.assertEquals;
 
@@ -37,14 +36,13 @@ public class ManifestsManagerTest {
 
     private SeaConfiguration configuration;
     private Index index;
-    private SeaOfStuff model;
 
     @BeforeMethod
     public void setUp() throws IOException, KeyGenerationException, KeyLoadedException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
-        model = new SeaOfStuffImpl(configuration, index);
+        new SeaOfStuffImpl(configuration, index);
     }
 
     @AfterMethod
@@ -133,11 +131,11 @@ public class ManifestsManagerTest {
         LocationBundle secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Arrays.asList(firstLocation)));
+                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Collections.singletonList(firstLocation)));
         GUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Arrays.asList(secondLocation)));
+                new GUIDsha1(Hashes.TEST_STRING_HASHED), new ArrayList<>(Collections.singletonList(secondLocation)));
         GUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);
