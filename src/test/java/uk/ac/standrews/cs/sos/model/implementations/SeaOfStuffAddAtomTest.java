@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.implementations;
 import org.apache.commons.io.IOUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.IO.utils.StreamsUtils;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
@@ -158,9 +159,8 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
     }
 
-
     @Test
-    public void testAtomTwiceNoUpdate() throws Exception {
+    public void testAddAtomTwiceNoUpdate() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -189,6 +189,14 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
         assertEquals(newlmFile, lmFile);
         assertEquals(newlmManifestFile, lmManifestFile);
+    }
+
+    @Test
+    public void testAddAtomFromStream() throws Exception {
+        InputStream stream = StreamsUtils.StringToInputStream("first line and second line");
+        AtomManifest manifest = model.addAtom(stream);
+        assertNotNull(manifest.getContentGUID());
+        assertEquals(manifest.getLocations().size(), 1);
     }
 
 }
