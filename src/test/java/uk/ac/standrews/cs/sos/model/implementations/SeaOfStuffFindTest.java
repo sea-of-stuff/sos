@@ -85,20 +85,16 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         contents.add(cat);
 
         CompoundManifest compound = model.addCompound(contents);
-        Content assetContent = new Content(compound.getContentGUID());
-
-        AssetManifest manifest = model.addAsset(assetContent, null, null, null);
+        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
 
         Content feline = new Content("feline", new GUIDsha1("456"));
         Collection<Content> newContents = new ArrayList<>();
         newContents.add(feline);
 
         CompoundManifest newCompound = model.addCompound(newContents);
-        Content newAssetContent = new Content(newCompound.getContentGUID());
-
         Collection<GUID> prevs = new ArrayList<>();
         prevs.add(manifest.getVersionGUID());
-        AssetManifest newManifest = model.addAsset(newAssetContent, manifest.getInvariantGUID(), prevs, null);
+        AssetManifest newManifest = model.addAsset(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
 
         Collection<GUID> versions = model.findVersions(manifest.getInvariantGUID());
         assertEquals(versions.size(), 2);

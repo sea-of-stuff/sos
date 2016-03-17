@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IO.utils.StreamsUtils;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
@@ -29,20 +28,14 @@ public class AssetManifestTest extends SetUpTest {
     private static final String EXPECTED_JSON_BASIC_ASSET =
             "{\"Type\":\"Asset\"," +
                     "\"Signature\":\"AAAB\"," +
-                    "\"Content\":" +
-                    "{" +
-                    "\"Label\":\"cat\"," +
-                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_ASSET =
             "{\"Type\":\"Asset\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"Content\":" +
-                    "{" +
-                    "\"Label\":\"cat\"," +
-                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_PREVIOUS_ASSET =
@@ -50,10 +43,7 @@ public class AssetManifestTest extends SetUpTest {
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"Content\":" +
-                    "{" +
-                    "\"Label\":\"cat\"," +
-                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET =
@@ -62,23 +52,19 @@ public class AssetManifestTest extends SetUpTest {
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"Content\":" +
-                    "{" +
-                    "\"Label\":\"cat\"," +
-                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     @Test
     public void testBasicAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-        Content cat = new Content("cat", guid);
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(null, cat, null, null, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, guid, null, null, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -90,7 +76,6 @@ public class AssetManifestTest extends SetUpTest {
     public void testMetadataAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-        Content cat = new Content("cat", guid);
 
         InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 metadataGUID = new GUIDsha1(metadataStreamFake);
@@ -101,7 +86,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(null, cat, null, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, guid, null, metadata, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -113,7 +98,6 @@ public class AssetManifestTest extends SetUpTest {
     public void testPreviousAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-        Content cat = new Content("cat", guid);
 
         InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 invariantGUID = new GUIDsha1(invariantStreamFake);
@@ -127,7 +111,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, null, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, null, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -138,7 +122,6 @@ public class AssetManifestTest extends SetUpTest {
     public void testMetadataAndPreviousAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-        Content cat = new Content("cat", guid);
 
         InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 invariantGUID = new GUIDsha1(invariantStreamFake);
@@ -157,7 +140,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -168,7 +151,6 @@ public class AssetManifestTest extends SetUpTest {
     public void testGetters() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 guid = new GUIDsha1(inputStreamFake);
-        Content cat = new Content("cat", guid);
 
         InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
         GUIDsha1 invariantGUID = new GUIDsha1(invariantStreamFake);
@@ -187,10 +169,9 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, cat, previous, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
         assertEquals(assetManifest.getContentGUID(), guid);
-        assertEquals(assetManifest.getContent(), cat);
         assertEquals(assetManifest.getInvariantGUID(), invariantGUID);
         assertEquals(assetManifest.getMetadata(), metadata);
         assertEquals(assetManifest.getPreviousManifests(), previous);

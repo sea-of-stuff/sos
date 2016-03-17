@@ -17,7 +17,7 @@ public class Helper {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, UnsupportedEncodingException, URISyntaxException {
+    public static Location createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, URISyntaxException {
         return createDummyDataFile(configuration, "testData.txt");
     }
 

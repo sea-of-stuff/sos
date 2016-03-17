@@ -120,7 +120,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AssetManifest addAsset(Content content,
+    public AssetManifest addAsset(GUID content,
                                   GUID invariant,
                                   Collection<GUID> prevs,
                                   Collection<GUID> metadata)

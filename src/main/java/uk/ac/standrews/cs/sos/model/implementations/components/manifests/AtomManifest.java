@@ -109,4 +109,5 @@ public class AtomManifest extends BasicManifest {
     public int hashCode() {
         return Objects.hash(locations);
     }
+
 }

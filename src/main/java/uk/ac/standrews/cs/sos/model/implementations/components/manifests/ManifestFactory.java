@@ -60,7 +60,7 @@ public class ManifestFactory {
      * @return an asset manifest
      * @throws ManifestNotMadeException
      */
-    public static AssetManifest createAssetManifest(Content content,
+    public static AssetManifest createAssetManifest(GUID content,
                                                     GUID invariant,
                                                     Collection<GUID> prevs,
                                                     Collection<GUID> metadata,

@@ -24,6 +24,8 @@ import static org.testng.AssertJUnit.*;
  */
 public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
+    private static final int PAUSE_TIME_MS = 500;
+
     @Test
     public void testAddAtom() throws Exception {
         Location location = Helper.createDummyDataFile(configuration);
@@ -149,7 +151,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
-        Thread.sleep(500);
+        Thread.sleep(PAUSE_TIME_MS);
 
         Location newLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         AtomManifest newManifest = model.addAtom(newLocation);

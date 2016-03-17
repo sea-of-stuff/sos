@@ -112,11 +112,10 @@ public class ManifestsManagerTest {
     @Test
     public void testAddAssetManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
-
         Identity identity = new IdentityImpl(configuration);
-        Content content = new Content("Cat", new GUIDsha1("123"));
 
-        AssetManifest assetManifest = ManifestFactory.createAssetManifest(content, null, null, null, identity);
+        GUID contentGUID = new GUIDsha1("123");
+        AssetManifest assetManifest = ManifestFactory.createAssetManifest(contentGUID, null, null, null, identity);
         GUID guid = assetManifest.getVersionGUID();
         try {
             manifestsManager.addManifest(assetManifest);
@@ -124,7 +123,7 @@ public class ManifestsManagerTest {
 
             assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
-            assertEquals(manifest.getContentGUID(), content.getGUID());
+            assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException e) {
             throw new Exception();

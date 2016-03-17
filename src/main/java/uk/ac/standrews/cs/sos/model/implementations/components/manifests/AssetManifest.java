@@ -7,7 +7,6 @@ import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
 
@@ -46,7 +45,6 @@ public class AssetManifest extends SignedManifest {
 
     private GUID version;
     private GUID invariant;
-    private Content content;
     private Collection<GUID> prevs;
     private Collection<GUID> metadata;
 
@@ -61,7 +59,7 @@ public class AssetManifest extends SignedManifest {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public AssetManifest(GUID invariant, Content content,
+    public AssetManifest(GUID invariant, GUID content,
                             Collection<GUID> prevs, Collection<GUID> metadata,
                             Identity identity)
             throws ManifestNotMadeException {
@@ -73,7 +71,7 @@ public class AssetManifest extends SignedManifest {
             this.invariant = makeInvariant();
         }
 
-        this.content = content;
+        this.contentGUID = content;
         this.prevs = prevs;
         this.metadata = metadata;
         this.version = makeVersionGUID();
@@ -92,13 +90,13 @@ public class AssetManifest extends SignedManifest {
      * @param metadata
      * @param signature
      */
-    public AssetManifest(GUID invariant, GUID version, Content content,
+    public AssetManifest(GUID invariant, GUID version, GUID content,
                             Collection<GUID> prevs, Collection<GUID> metadata,
                             String signature) {
         super(null, ManifestConstants.ASSET);
         this.invariant = invariant;
         this.version = version;
-        this.content = content;
+        this.contentGUID = content;
         this.prevs = prevs;
         this.metadata = metadata;
         this.signature = signature;
@@ -132,18 +130,9 @@ public class AssetManifest extends SignedManifest {
         return prevs;
     }
 
-    /**
-     * Get the content of this asset.
-     *
-     * @return the content of this asset.
-     */
-    public Content getContent() {
-        return content;
-    }
-
     @Override
     public GUID getContentGUID() {
-        return content.getGUID();
+        return contentGUID;
     }
 
     /**
@@ -160,8 +149,7 @@ public class AssetManifest extends SignedManifest {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                content != null &&
-                isGUIDValid(content.getGUID());
+                isGUIDValid(contentGUID);
     }
 
     @Override
@@ -230,7 +218,7 @@ public class AssetManifest extends SignedManifest {
 
 
     private void addVersionElemenetsToJSON(JsonObject obj) {
-        obj.add(ManifestConstants.KEY_CONTENTS, content.toJSON());
+        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
 
         if (prevs != null && !prevs.isEmpty())
             obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));

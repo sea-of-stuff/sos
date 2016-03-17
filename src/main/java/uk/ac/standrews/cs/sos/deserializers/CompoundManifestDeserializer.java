@@ -22,7 +22,6 @@ public class CompoundManifestDeserializer extends CommonDeserializer implements 
         JsonObject obj = json.getAsJsonObject();
 
         GUID contentGUID = getGUID(obj, ManifestConstants.KEY_CONTENT_GUID);
-
         String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
         JsonArray jContents = obj.getAsJsonArray(ManifestConstants.KEY_CONTENTS);

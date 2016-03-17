@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetMa
 import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -23,8 +24,7 @@ public class AssetManifestDeserializer extends CommonDeserializer implements Jso
         GUID invariant = getGUID(obj, ManifestConstants.KEY_INVARIANT);
         GUID version = getGUID(obj, ManifestConstants.KEY_VERSION);
 
-        JsonElement jContents = obj.get(ManifestConstants.KEY_CONTENTS);
-        Content content = gson.fromJson(jContents, Content.class);
+        GUID content = new GUIDsha1(obj.get(ManifestConstants.KEY_CONTENT_GUID).getAsString());
 
         Collection<GUID> prevs = getGUIDCollection(obj, ManifestConstants.KEY_PREVIOUS_GUID);
         Collection<GUID> metadata = getGUIDCollection(obj, ManifestConstants.KEY_METADATA_GUID);

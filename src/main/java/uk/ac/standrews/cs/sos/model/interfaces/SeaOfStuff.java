@@ -109,7 +109,7 @@ public interface SeaOfStuff {
      * @throws ManifestPersistException
      *
      */
-    AssetManifest addAsset(Content content, GUID invariant,
+    AssetManifest addAsset(GUID content, GUID invariant,
                            Collection<GUID> prevs, Collection<GUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException;
 

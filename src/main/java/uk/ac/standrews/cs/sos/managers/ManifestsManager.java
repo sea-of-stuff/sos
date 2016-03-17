@@ -38,8 +38,7 @@ public class ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
-
-    // TODO - get these constants from SeaConfiguration
+    
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 

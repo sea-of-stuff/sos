@@ -28,16 +28,11 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         contents.add(cat);
 
         CompoundManifest compound = model.addCompound(contents);
-        Content assetContent = new Content(compound.getContentGUID());
-
-        AssetManifest manifest = model.addAsset(assetContent, null, null, null);
+        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);
-
-        Content retrievedContent = ((AssetManifest) retrievedManifest).getContent();
-        assertEquals(assetContent, retrievedContent);
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
     }
@@ -49,9 +44,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         contents.add(cat);
 
         CompoundManifest compound = model.addCompound(contents);
-        Content assetContent = new Content(compound.getContentGUID());
-
-        AssetManifest manifest = model.addAsset(assetContent, null, null, null);
+        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -59,9 +52,6 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.ASSET);
-
-        Content retrievedContent = ((AssetManifest) retrievedManifest).getContent();
-        assertEquals(assetContent, retrievedContent);
 
         JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
     }
@@ -75,7 +65,6 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         contents.add(cat);
 
         CompoundManifest compound = model.addCompound(contents);
-        Content assetContent = new Content(compound.getContentGUID());
 
         Collection<GUID> prevs = new ArrayList<>();
         prevs.add(new GUIDsha1("321"));
@@ -85,7 +74,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         metadata.add(new GUIDsha1("897"));
         metadata.add(new GUIDsha1("456"));
 
-        AssetManifest manifest = model.addAsset(assetContent, invariant, prevs, metadata);
+        AssetManifest manifest = model.addAsset(compound.getContentGUID(), invariant, prevs, metadata);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -96,9 +85,6 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
 
         GUID retrievedInvariant = ((AssetManifest) retrievedManifest).getInvariantGUID();
         assertEquals(invariant, retrievedInvariant);
-
-        Content retrievedContent = ((AssetManifest) retrievedManifest).getContent();
-        assertEquals(assetContent, retrievedContent);
 
         Collection<GUID> retrievedMetadata = ((AssetManifest) retrievedManifest).getMetadata();
         assertTrue(retrievedMetadata.containsAll(metadata));
@@ -116,9 +102,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         contents.add(cat);
 
         CompoundManifest compound = model.addCompound(contents);
-        Content assetContent = new Content(compound.getContentGUID());
-
-        AssetManifest manifest = model.addAsset(assetContent, null, null, null);
+        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
 
         assertTrue(model.verifyManifest(model.getIdentity(), retrievedManifest));
