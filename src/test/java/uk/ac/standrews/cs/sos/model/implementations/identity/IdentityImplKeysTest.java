@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -89,7 +90,7 @@ public class IdentityImplKeysTest extends SetUpTest {
             "03 31 41 d0 4f 6a fa 26 07 01 88 6e 23 52 77 60 \n";
 
     @BeforeMethod
-    public void setup() throws IOException {
+    public void setup() throws IOException, SeaConfigurationException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
 

@@ -5,12 +5,12 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IO.utils.StreamsUtils;
 import uk.ac.standrews.cs.constants.Hashes;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.File;

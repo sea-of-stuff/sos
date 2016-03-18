@@ -1,11 +1,11 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.model.interfaces.manifests.Manifest;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -5,14 +5,14 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.AssetManifest;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.model.interfaces.manifests.Manifest;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -54,7 +54,7 @@ public interface SeaOfStuff {
      * Adds an atom to the Sea of Stuff.
      * The locations of the atom are used to generate a manifest.
      *
-     * @param locations of the atom.
+     * @param location of the atom.
      * @return AtomManifest for the added atom.
      * @throws ManifestNotMadeException
      * @throws DataStorageException

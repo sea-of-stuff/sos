@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
+import uk.ac.standrews.cs.sos.model.interfaces.manifests.Manifest;
 
 import java.io.IOException;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;

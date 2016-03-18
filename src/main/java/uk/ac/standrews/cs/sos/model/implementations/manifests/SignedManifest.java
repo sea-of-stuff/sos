@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
  */
 public abstract class SignedManifest extends BasicManifest {
 
-    protected Identity identity;
+    final protected Identity identity;
     protected String signature;
 
     /**

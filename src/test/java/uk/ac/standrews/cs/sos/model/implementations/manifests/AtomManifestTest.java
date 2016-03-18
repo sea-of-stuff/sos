@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 
 import com.google.gson.JsonArray;
@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
@@ -31,7 +32,7 @@ public class AtomManifestTest extends SetUpTest {
     private SeaConfiguration configuration;
 
     @BeforeMethod
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, SeaConfigurationException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
     }

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 public class AtomManifest extends BasicManifest {
 
-    private Collection<LocationBundle> locations;
+    final private Collection<LocationBundle> locations;
 
     /**
      * Creates a valid atom manifest given an atom.

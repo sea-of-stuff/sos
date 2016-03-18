@@ -1,10 +1,7 @@
 package uk.ac.standrews.cs.sos.model.implementations;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.*;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
@@ -14,17 +11,17 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.managers.ManifestsManager;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.*;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos.model.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.model.interfaces.manifests.Manifest;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -33,7 +30,7 @@ import java.util.Collection;
 
 /**
  * Implementation class for the SeaOfStuff interface.
- * The purpose of this class is to delegate jobs to the appropriate components
+ * The purpose of this class is to delegate jobs to the appropriate manifests
  * of the sea of stuff.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -42,19 +39,19 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     private Identity identity;
     private ManifestsManager manifestsManager;
-    private SeaConfiguration configuration;
+    final private SeaConfiguration configuration;
 
-    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws KeyGenerationException, KeyLoadedException { // TODO - have only one exception
+    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws SeaOfStuffException { // TODO - have only one exception
         this.configuration = configuration;
 
         try {
             generateSOSNodeIfNone();
-        } catch (GuidGenerationException | SeaConfigurationException e) {
-            e.printStackTrace(); // FIXME - throw exception
+            identity = new IdentityImpl(configuration);
+            manifestsManager = new ManifestsManager(configuration, index);
+        } catch (GuidGenerationException | SeaConfigurationException |
+                KeyGenerationException | KeyLoadedException e) {
+            throw new SeaOfStuffException();
         }
-
-        identity = new IdentityImpl(configuration);
-        manifestsManager = new ManifestsManager(configuration, index);
 
         backgroundProcesses();
         registerSOSProtocol();

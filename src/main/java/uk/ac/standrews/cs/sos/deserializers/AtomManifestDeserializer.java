@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 
 import java.lang.reflect.Type;

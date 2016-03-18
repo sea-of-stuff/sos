@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -43,10 +43,10 @@ import java.util.Collection;
  */
 public class AssetManifest extends SignedManifest {
 
-    private GUID version;
-    private GUID invariant;
-    private Collection<GUID> prevs;
-    private Collection<GUID> metadata;
+    final private GUID version;
+    final private GUID invariant;
+    final private Collection<GUID> prevs;
+    final private Collection<GUID> metadata;
 
     /**
      * Creates an AssetManifest given a content, an identity, the GUIDs of the previous

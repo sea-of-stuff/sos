@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
@@ -8,11 +8,9 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.utils.FileHelper;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -73,31 +71,28 @@ public class CacheDataStorage {
     }
 
     private GUID cacheAtomFromLocation() throws DataStorageException {
-        GUID guid = null;
+        GUID guid;
         if (origin == null) {
             throw new DataStorageException();
         }
 
         try {
             guid = generateGUID(origin);
-            if (guid == null)
+            if (guid == null) {
                 return null;
+            }
 
             storeData(configuration, origin, guid);
-            try {
-                cache = getCacheBundle(configuration, guid);
-            } catch (SourceLocationException e) {
-                throw new DataStorageException();
-            }
+            cache = getCacheBundle(configuration, guid);
         } catch (GuidGenerationException | SourceLocationException e) {
-            e.printStackTrace();
+            throw new DataStorageException();
         }
 
         return guid;
     }
 
     private GUID cacheAtomFromInputStream() throws DataStorageException {
-        GUID guid = null;
+        GUID guid;
         if (inputStream == null) {
             throw new DataStorageException();
         }
@@ -109,11 +104,11 @@ public class CacheDataStorage {
             String tmpCachedLocationPath = getAtomCachedLocation(configuration, tmpGUID);
             guid = generateGUID(new URILocation(tmpCachedLocationPath));
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
-            renameFile(tmpCachedLocationPath, cachedLocationPath);
+            FileHelper.renameFile(tmpCachedLocationPath, cachedLocationPath);
             cache = getCacheBundle(configuration, guid);
 
         } catch (GuidGenerationException | SourceLocationException | URISyntaxException e) {
-            e.printStackTrace();
+            throw new DataStorageException();
         }
 
         return guid;
@@ -121,11 +116,6 @@ public class CacheDataStorage {
 
     public CacheLocationBundle getCacheLocationBundle() {
         return this.cache;
-    }
-
-    private GUID generateGUID(LocationBundle bundle) throws SourceLocationException, GuidGenerationException {
-        Location location = bundle.getLocation();
-        return generateGUID(location);
     }
 
     private GUID generateGUID(Location location) throws SourceLocationException, GuidGenerationException {
@@ -163,8 +153,8 @@ public class CacheDataStorage {
          try {
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
 
-            touchDir(cachedLocationPath);
-            if (!pathExists(cachedLocationPath)) {
+             FileHelper.touchDir(cachedLocationPath);
+            if (!FileHelper.pathExists(cachedLocationPath)) {
                 FileHelper.copyToFile(inputStream, cachedLocationPath);
             }
          } catch (IOException e) {
@@ -187,24 +177,7 @@ public class CacheDataStorage {
         return configuration.getCacheDataPath() + guid.toString();
     }
 
-    private void renameFile(String oldPathname, String newPathname) {
-        File oldfile =new File(oldPathname);
-        File newfile =new File(newPathname);
 
-        oldfile.renameTo(newfile);
-    }
 
-    // TODO - move to helper
-    private void touchDir(String path) {
-        File parent = new File(path).getParentFile();
-        if(!parent.exists() && !parent.mkdirs()){
-            parent.mkdirs();
-        }
-    }
 
-    // TODO - move to helper
-    private boolean pathExists(String path) {
-        File file = new File(path);
-        return file.exists();
-    }
 }

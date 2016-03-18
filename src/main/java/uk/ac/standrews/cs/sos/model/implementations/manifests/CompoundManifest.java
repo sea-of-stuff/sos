@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -43,7 +43,7 @@ import java.util.Collection;
  */
 public class CompoundManifest extends SignedManifest {
 
-    private Collection<Content> contents;
+    final private Collection<Content> contents;
 
     /**
      * Creates a valid compound manifest given a collection of contents and an

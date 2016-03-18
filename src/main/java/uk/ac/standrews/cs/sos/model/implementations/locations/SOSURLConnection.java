@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.implementations.locations;
 
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
 
@@ -34,17 +35,20 @@ public class SOSURLConnection extends URLConnection {
     @Override
     public InputStream getInputStream() throws IOException {
 
-        String[] segments = url.getPath().split("/");
-        GUID urlMachineId = new GUIDsha1(url.getHost());
-        GUID entityId = new GUIDsha1(segments[segments.length - 1]);
-        GUID thisMachineId = SeaConfiguration.getInstance().getNodeId();
+        try {
+            String[] segments = url.getPath().split("/");
+            GUID urlMachineId = new GUIDsha1(url.getHost());
+            GUID entityId = new GUIDsha1(segments[segments.length - 1]);
+            GUID thisMachineId = SeaConfiguration.getInstance().getNodeId();
 
-        if (urlMachineId.equals(thisMachineId)) {
-            String path = SeaConfiguration.getInstance().getCacheDataPath();
-            FileInputStream fileStream = new FileInputStream(path + entityId);
-            return new BufferedInputStream(fileStream);
+            if (urlMachineId.equals(thisMachineId)) {
+                String path = SeaConfiguration.getInstance().getCacheDataPath();
+                FileInputStream fileStream = new FileInputStream(path + entityId);
+                return new BufferedInputStream(fileStream);
+            }
+        } catch (SeaConfigurationException e) {
+            throw new IOException(); // FIXME - this try/catch is a bit dirty.
         }
-
 
         /*
          * TODO

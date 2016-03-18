@@ -40,19 +40,14 @@ public class SeaConfiguration {
         }
     }
 
-    public static SeaConfiguration getInstance() {
+    public static SeaConfiguration getInstance() throws SeaConfigurationException {
         if(instance == null) {
             if (SeaConfiguration.rootName == null) {
                 SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
             }
             root = SOS_ROOT + SeaConfiguration.rootName + "/";
 
-            try {
-                loadSOSNode();
-            } catch (SeaConfigurationException e) {
-                e.printStackTrace();
-            }
-
+            loadSOSNode();
             loadConfiguration();
             instance = new SeaConfiguration();
         }

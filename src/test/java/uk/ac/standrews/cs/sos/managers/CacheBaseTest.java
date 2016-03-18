@@ -4,6 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public abstract class CacheBaseTest {
     protected Index index;
 
     @BeforeMethod
-    public void setUp(Method method) throws IOException {
+    public void setUp(Method method) throws IOException, SeaConfigurationException {
         CACHE_TYPE type = getCacheType();
         System.out.println(type.toString() + " :: " + method.getName());
         index = new CacheFactory().getCache(type);
@@ -55,7 +56,7 @@ public abstract class CacheBaseTest {
             return null;
         }
 
-        public Index getCache(CACHE_TYPE type) throws IOException {
+        public Index getCache(CACHE_TYPE type) throws IOException, SeaConfigurationException {
             SeaConfiguration.setRootName("test");
             SeaConfiguration configuration = SeaConfiguration.getInstance();
             return getCache(type, configuration);

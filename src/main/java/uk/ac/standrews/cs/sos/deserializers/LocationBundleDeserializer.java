@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
 import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
@@ -9,6 +8,7 @@ import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.BundleType
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
 
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
@@ -26,7 +26,7 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
         String type = obj.get(ManifestConstants.BUNDLE_TYPE).getAsString();
         String uri = obj.get(ManifestConstants.BUNDLE_LOCATION).getAsString();
 
-        Location location = null;
+        Location location;
         try {
             if (uri.startsWith("sos")) {
                 location = new SOSLocation(uri);
@@ -34,7 +34,7 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
                 location = new URILocation(uri);
             }
         } catch (URISyntaxException | MalformedURLException e) {
-            e.printStackTrace();
+            throw new JsonParseException(e);
         }
 
         LocationBundle ret;

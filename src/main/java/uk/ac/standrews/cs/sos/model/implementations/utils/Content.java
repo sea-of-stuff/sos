@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.implementations.utils;
 
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class Content {
 
-    private GUID guid;
+    final private GUID guid;
     private String label;
 
     /**
@@ -62,11 +62,11 @@ public class Content {
     public JsonObject toJSON() {
         JsonObject obj = new JsonObject();
 
-        if (label != null && !label.isEmpty())
-        obj.addProperty(ManifestConstants.CONTENT_KEY_LABEL, this.label);
+        if (label != null && !label.isEmpty()) {
+            obj.addProperty(ManifestConstants.CONTENT_KEY_LABEL, this.label);
+        }
 
         obj.addProperty(ManifestConstants.CONTENT_KEY_GUID, this.guid.toString());
-
         return obj;
     }
 

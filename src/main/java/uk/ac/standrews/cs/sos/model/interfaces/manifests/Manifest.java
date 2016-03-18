@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.interfaces.components;
+package uk.ac.standrews.cs.sos.model.interfaces.manifests;
 
 import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;

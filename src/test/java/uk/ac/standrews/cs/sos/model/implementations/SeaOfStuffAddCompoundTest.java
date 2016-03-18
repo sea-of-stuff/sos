@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.sos.model.implementations;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
+import uk.ac.standrews.cs.sos.model.interfaces.manifests.Manifest;
 
 import java.util.ArrayList;
 import java.util.Collection;

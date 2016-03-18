@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.managers.Index;
 import uk.ac.standrews.cs.sos.managers.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
@@ -26,15 +26,11 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
     protected SeaConfiguration configuration;
 
     @BeforeMethod
-    public void setUp() {
-        try {
-            SeaConfiguration.setRootName("test");
-            configuration = SeaConfiguration.getInstance();
-            index = LuceneIndex.getInstance(configuration);
-            model = new SeaOfStuffImpl(configuration, index);
-        } catch (KeyGenerationException | KeyLoadedException | IOException e) {
-            e.printStackTrace();
-        }
+    public void setUp() throws SeaOfStuffException, IOException, SeaConfigurationException {
+        SeaConfiguration.setRootName("test");
+        configuration = SeaConfiguration.getInstance();
+        index = LuceneIndex.getInstance(configuration);
+        model = new SeaOfStuffImpl(configuration, index);
     }
 
     @AfterMethod

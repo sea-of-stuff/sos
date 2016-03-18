@@ -23,4 +23,22 @@ public class FileHelper {
     private static Path locationToPath(String path) {
         return new File(path).toPath();
     }
+
+    public static void touchDir(String path) {
+        File parent = new File(path).getParentFile();
+        if(!parent.exists() && !parent.mkdirs()){
+            parent.mkdirs();
+        }
+    }
+
+    public static boolean pathExists(String path) {
+        File file = new File(path);
+        return file.exists();
+    }
+
+    public static void renameFile(String oldPathname, String newPathname) {
+        File oldfile =new File(oldPathname);
+        File newfile =new File(newPathname);
+        oldfile.renameTo(newfile);
+    }
 }

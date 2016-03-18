@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.implementations.components.manifests;
+package uk.ac.standrews.cs.sos.model.implementations.manifests;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
