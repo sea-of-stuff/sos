@@ -1,14 +1,14 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.SOSLocation;
-import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.BundleTypes;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.CacheLocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.model.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;

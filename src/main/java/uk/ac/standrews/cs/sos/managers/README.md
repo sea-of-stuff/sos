@@ -1,1 +1,0 @@
-manifest managers - some sort of garbage collectors?

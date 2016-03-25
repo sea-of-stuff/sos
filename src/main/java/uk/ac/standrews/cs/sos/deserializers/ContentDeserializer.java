@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.model.implementations.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Content;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
+import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.utils.GUID;
 
 import java.lang.reflect.Type;
 

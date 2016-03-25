@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDsha1;
 
 import java.util.ArrayList;
 import java.util.Collection;

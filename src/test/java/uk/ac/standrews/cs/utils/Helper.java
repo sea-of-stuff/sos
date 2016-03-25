@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.utils;
 
 import org.apache.commons.io.FileUtils;
-import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.implementations.locations.Location;
-import uk.ac.standrews.cs.sos.model.implementations.locations.URILocation;
+import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.locations.URILocation;
 
 import java.io.*;
 import java.net.URISyntaxException;
