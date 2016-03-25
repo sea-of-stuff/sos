@@ -34,21 +34,21 @@ public class Helper {
             throw new IllegalStateException("Couldn't create dir: " + parent);
         }
 
-        PrintWriter writer = new PrintWriter(file);
-        writer.println("The first line");
-        writer.println("The second line");
-        writer.close();
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("The first line");
+            writer.println("The second line");
+        }
 
         return new URILocation("file://"+location);
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {
-        PrintWriter writer = new PrintWriter(new FileOutputStream(
-                new File(Helper.localURItoPath(location)),
-                true));
 
-        writer.append(text);
-        writer.close();
+        try (PrintWriter writer = new PrintWriter(
+                new FileOutputStream(
+                new File(Helper.localURItoPath(location)), true))) {
+            writer.append(text);
+        }
     }
 
     public static void cleanDirectory(String path) throws IOException {

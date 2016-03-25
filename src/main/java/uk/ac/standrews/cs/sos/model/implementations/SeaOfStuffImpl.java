@@ -41,7 +41,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private ManifestsManager manifestsManager;
     final private SeaConfiguration configuration;
 
-    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws SeaOfStuffException { // TODO - have only one exception
+    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws SeaOfStuffException {
         this.configuration = configuration;
 
         try {
@@ -125,6 +125,15 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
         AssetManifest manifest = ManifestFactory.createAssetManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
+
+        return manifest;
+    }
+
+    @Override
+    public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
+        manifestsManager.addManifest(manifest);
+
+        // TODO - recursively look for other manifests to add to the SOS
 
         return manifest;
     }

@@ -16,16 +16,16 @@ public class SetUpTest {
     public void suiteSetup() throws IOException {
         String HOME = System.getProperty("user.home");
 
-        PrintWriter writer = new PrintWriter(HOME + "/config.txt");
-        writer.println("abcdefg12345");
-        writer.println("/sos/test/");
-        writer.println("data/");
-        writer.println("cached_data/");
-        writer.println("index/");
-        writer.println("manifests/");
-        writer.println("keys/private.der");
-        writer.println("keys/public.der");
-        writer.close();
+        try (PrintWriter writer = new PrintWriter(HOME + "/config.txt")) {
+            writer.println("abcdefg12345");
+            writer.println("/sos/test/");
+            writer.println("data/");
+            writer.println("cached_data/");
+            writer.println("index/");
+            writer.println("manifests/");
+            writer.println("keys/private.der");
+            writer.println("keys/public.der");
+        }
     }
 
     @AfterSuite

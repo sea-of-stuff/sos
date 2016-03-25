@@ -5,9 +5,5 @@ package uk.ac.standrews.cs.sos.exceptions;
  */
 public class GuidGenerationException extends Exception {
 
-    public GuidGenerationException(String message) {
-        super(message);
-    }
-
     public GuidGenerationException() {}
 }

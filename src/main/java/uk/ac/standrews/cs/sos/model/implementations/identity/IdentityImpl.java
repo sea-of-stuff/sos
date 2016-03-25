@@ -182,7 +182,6 @@ public class IdentityImpl implements Identity {
         try (DataOutputStream publicKeyOS =
                      new DataOutputStream(new FileOutputStream(file))) {
             publicKeyOS.write(key.getEncoded());
-            publicKeyOS.close();
         } catch (IOException e) {
             System.err.print(e.getMessage());
         }

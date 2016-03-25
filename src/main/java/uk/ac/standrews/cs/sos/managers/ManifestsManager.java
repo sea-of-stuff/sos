@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestMergeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
@@ -51,8 +50,8 @@ public class ManifestsManager {
      * a policy for the sea of stuff. The configuration object is need to know the
      * locations for the manifests.
      *
-     * @param configuration
-     * @param index
+     * @param configuration used by the manifest manager
+     * @param index used to record information for the manifests.
      */
     public ManifestsManager(SeaConfiguration configuration, Index index) {
         this.configuration = configuration;
@@ -64,7 +63,7 @@ public class ManifestsManager {
     /**
      * Adds a manifest to the sea of stuff.
      *
-     * @param manifest
+     * @param manifest to be added to the sea of stuff
      */
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         if (manifest.isValid()) {
@@ -85,9 +84,9 @@ public class ManifestsManager {
     /**
      * Find a manifest in the sea of stuff given a GUID.
      *
-     * @param guid
-     * @return
-     * @throws ManifestException
+     * @param guid of the manifest to be found
+     * @return Manifest
+     * @throws ManifestNotFoundException
      */
     public Manifest findManifest(GUID guid) throws ManifestNotFoundException {
         if (guid == null) {
@@ -165,9 +164,10 @@ public class ManifestsManager {
 
     private String readManifestFromFile(String path) throws FileNotFoundException {
         // http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
-        Scanner scanner = new Scanner(new File(path));
-        String text = scanner.useDelimiter("\\A").next();
-        scanner.close();
+        String text;
+        try (Scanner scanner = new Scanner(new File(path))) {
+            text = scanner.useDelimiter("\\A").next();
+        }
         return text;
     }
 

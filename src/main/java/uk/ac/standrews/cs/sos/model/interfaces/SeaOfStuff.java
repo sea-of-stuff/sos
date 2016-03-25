@@ -77,14 +77,6 @@ public interface SeaOfStuff {
             throws DataStorageException, ManifestPersistException;
 
     /**
-     * Get an atom's data given an AtomManifest.
-     *
-     * @param atomManifest describing the atom to retrieve.
-     * @return atom to retrieve in bytes.
-     */
-    InputStream getAtomContent(AtomManifest atomManifest);
-
-    /**
      * Adds a CompoundManifest to the Sea of Stuff.
      *
      * @param contents of this compound.
@@ -112,6 +104,23 @@ public interface SeaOfStuff {
     AssetManifest addAsset(GUID content, GUID invariant,
                            Collection<GUID> prevs, Collection<GUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException;
+
+
+    /**
+     *
+     * @param manifest to add to the SOS
+     * @param recursive if true adds the references manifests and data recursively.
+     * @return
+     */
+    Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
+
+    /**
+     * Get an atom's data given an AtomManifest.
+     *
+     * @param atomManifest describing the atom to retrieve.
+     * @return atom to retrieve in bytes.
+     */
+    InputStream getAtomContent(AtomManifest atomManifest);
 
     /**
      * Get the manifest that matches a given GUID.

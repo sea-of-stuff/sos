@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -26,8 +27,10 @@ public class GUIDsha1 extends GUID {
         try {
             byte[] hash = DigestUtils.sha1(source);
             hashHex = Hex.encodeHexString(hash);
+        } catch (IOException e) {
+            throw new GuidGenerationException();
         } catch (Exception e) {
-            throw new GuidGenerationException("InputStream could not be hashed");
+            throw new GuidGenerationException();
         }
     }
 
