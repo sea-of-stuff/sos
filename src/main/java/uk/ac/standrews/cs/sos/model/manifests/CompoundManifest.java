@@ -7,7 +7,8 @@ import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.interfaces.Identity;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.utils.GUID;
 
 import java.util.Collection;
@@ -40,7 +41,7 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CompoundManifest extends SignedManifest {
+public class CompoundManifest extends SignedManifest implements Compound {
 
     final private Collection<Content> contents;
 
@@ -81,6 +82,7 @@ public class CompoundManifest extends SignedManifest {
      *
      * @return the contents of this compound.
      */
+    @Override
     public Collection<Content> getContents() {
         return contents;
     }

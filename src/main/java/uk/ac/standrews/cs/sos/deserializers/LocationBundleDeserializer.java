@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;

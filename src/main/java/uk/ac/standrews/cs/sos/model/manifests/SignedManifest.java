@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.interfaces.Identity;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 
 /**
  * Abstract class for all manifests that support signatures.

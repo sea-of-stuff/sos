@@ -4,7 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.interfaces.Identity;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 import uk.ac.standrews.cs.utils.GUID;
@@ -25,7 +26,7 @@ import java.util.Objects;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifest extends BasicManifest {
+public class AtomManifest extends BasicManifest implements Atom {
 
     final private Collection<LocationBundle> locations;
 
@@ -46,6 +47,7 @@ public class AtomManifest extends BasicManifest {
      *
      * @return locations of this atom.
      */
+    @Override
     public Collection<LocationBundle> getLocations() {
         return locations;
     }

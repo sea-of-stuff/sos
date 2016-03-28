@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.interfaces.Location;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.GUID;
 import uk.ac.standrews.cs.utils.GUIDsha1;
@@ -24,11 +24,11 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
     @Test
     public void testFindAtoms() throws Exception {
         Location location = Helper.createDummyDataFile(configuration);
-        AtomManifest manifest = model.addAtom(location);
+        Atom manifest = model.addAtom(location);
 
         Location otherLocation = Helper.createDummyDataFile(configuration, "another-file");
         Helper.appendToFile(otherLocation, "another random line");
-        AtomManifest manifestOther = model.addAtom(otherLocation);
+        Atom manifestOther = model.addAtom(otherLocation);
 
         Collection<GUID> manifests = model.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
@@ -39,11 +39,11 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
         Location location = Helper.createDummyDataFile(configuration);
-        AtomManifest manifest = model.addAtom(location);
+        Atom manifest = model.addAtom(location);
 
         Location otherLocation = Helper.createDummyDataFile(configuration, "another-file");
         Helper.appendToFile(otherLocation, "another random line");
-        AtomManifest manifestOther = model.addAtom(otherLocation);
+        Atom manifestOther = model.addAtom(otherLocation);
 
         Content cat = new Content("cat", manifest.getContentGUID());
         Collection<Content> contents = new ArrayList<>();
@@ -84,17 +84,17 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compound = model.addCompound(contents);
-        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
+        Compound compound = model.addCompound(contents);
+        Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
 
         Content feline = new Content("feline", new GUIDsha1("456"));
         Collection<Content> newContents = new ArrayList<>();
         newContents.add(feline);
 
-        CompoundManifest newCompound = model.addCompound(newContents);
+        Compound newCompound = model.addCompound(newContents);
         Collection<GUID> prevs = new ArrayList<>();
         prevs.add(manifest.getVersionGUID());
-        AssetManifest newManifest = model.addAsset(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
+        Asset newManifest = model.addAsset(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
 
         Collection<GUID> versions = model.findVersions(manifest.getInvariantGUID());
         assertEquals(versions.size(), 2);

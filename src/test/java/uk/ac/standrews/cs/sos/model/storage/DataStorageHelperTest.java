@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;

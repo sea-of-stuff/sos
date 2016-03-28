@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces;
+package uk.ac.standrews.cs.sos.interfaces.identity;
 
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;

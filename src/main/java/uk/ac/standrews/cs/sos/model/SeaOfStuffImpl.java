@@ -12,8 +12,15 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedExce
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.identity.IdentityImpl;
-import uk.ac.standrews.cs.sos.interfaces.*;
+import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
@@ -78,7 +85,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(Location location)
+    public Atom addAtom(Location location)
             throws ManifestPersistException, DataStorageException {
 
         Collection<LocationBundle> bundles = new ArrayList<>();
@@ -92,7 +99,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AtomManifest addAtom(InputStream inputStream)
+    public Atom addAtom(InputStream inputStream)
             throws ManifestPersistException, DataStorageException {
 
         Collection<LocationBundle> locations = new ArrayList<>();
@@ -104,7 +111,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public CompoundManifest addCompound(Collection<Content> contents)
+    public Compound addCompound(Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(contents, identity);
@@ -114,10 +121,10 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public AssetManifest addAsset(GUID content,
-                                  GUID invariant,
-                                  Collection<GUID> prevs,
-                                  Collection<GUID> metadata)
+    public Asset addAsset(GUID content,
+                          GUID invariant,
+                          Collection<GUID> prevs,
+                          Collection<GUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException {
 
         AssetManifest manifest = ManifestFactory.createAssetManifest(content, invariant, prevs, metadata, identity);

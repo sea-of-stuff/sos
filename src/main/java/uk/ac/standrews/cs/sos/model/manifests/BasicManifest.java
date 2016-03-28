@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
-import uk.ac.standrews.cs.sos.interfaces.Identity;
-import uk.ac.standrews.cs.sos.interfaces.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.utils.GUID;
 
 import java.util.regex.Matcher;

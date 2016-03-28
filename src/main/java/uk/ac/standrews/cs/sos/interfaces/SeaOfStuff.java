@@ -5,9 +5,13 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedExce
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.GUID;
 
@@ -59,7 +63,7 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    AtomManifest addAtom(Location location)
+    Atom addAtom(Location location)
             throws DataStorageException, ManifestPersistException;
 
     /**
@@ -70,7 +74,7 @@ public interface SeaOfStuff {
      * @throws DataStorageException
      * @throws ManifestPersistException
      */
-    AtomManifest addAtom(InputStream inputStream)
+    Atom addAtom(InputStream inputStream)
             throws DataStorageException, ManifestPersistException;
 
     /**
@@ -83,7 +87,7 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    CompoundManifest addCompound(Collection<Content> contents)
+    Compound addCompound(Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException;
 
     /**
@@ -98,8 +102,8 @@ public interface SeaOfStuff {
      * @throws ManifestPersistException
      *
      */
-    AssetManifest addAsset(GUID content, GUID invariant,
-                           Collection<GUID> prevs, Collection<GUID> metadata)
+    Asset addAsset(GUID content, GUID invariant,
+                   Collection<GUID> prevs, Collection<GUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException;
 
 

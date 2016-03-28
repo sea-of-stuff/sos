@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.locations.bundles;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.util.Objects;

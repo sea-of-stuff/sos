@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations;
 
-import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.utils.GUID;
 import uk.ac.standrews.cs.utils.GUIDsha1;
 

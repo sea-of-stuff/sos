@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.utils;
 
 import org.apache.commons.io.FileUtils;
-import uk.ac.standrews.cs.sos.interfaces.Location;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 

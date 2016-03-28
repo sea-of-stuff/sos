@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.sos.interfaces;
+package uk.ac.standrews.cs.sos.interfaces.index;
 
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.utils.GUID;
 

@@ -3,9 +3,10 @@ package uk.ac.standrews.cs.sos.model;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.interfaces.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.utils.GUID;
@@ -28,8 +29,8 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compound = model.addCompound(contents);
-        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
+        Compound compound = model.addCompound(contents);
+        Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
@@ -44,8 +45,8 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compound = model.addCompound(contents);
-        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
+        Compound compound = model.addCompound(contents);
+        Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -65,7 +66,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compound = model.addCompound(contents);
+        Compound compound = model.addCompound(contents);
 
         Collection<GUID> prevs = new ArrayList<>();
         prevs.add(new GUIDsha1("321"));
@@ -75,7 +76,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         metadata.add(new GUIDsha1("897"));
         metadata.add(new GUIDsha1("456"));
 
-        AssetManifest manifest = model.addAsset(compound.getContentGUID(), invariant, prevs, metadata);
+        Asset manifest = model.addAsset(compound.getContentGUID(), invariant, prevs, metadata);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -102,8 +103,8 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest compound = model.addCompound(contents);
-        AssetManifest manifest = model.addAsset(compound.getContentGUID(), null, null, null);
+        Compound compound = model.addCompound(contents);
+        Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
 
         assertTrue(model.verifyManifest(model.getIdentity(), retrievedManifest));

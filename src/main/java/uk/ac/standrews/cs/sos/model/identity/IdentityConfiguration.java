@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.identity;
+package uk.ac.standrews.cs.sos.model.identity;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

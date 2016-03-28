@@ -4,7 +4,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
-import uk.ac.standrews.cs.sos.interfaces.Identity;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces;
+package uk.ac.standrews.cs.sos.interfaces.locations;
 
 import java.io.IOException;
 import java.io.InputStream;

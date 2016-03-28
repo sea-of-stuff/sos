@@ -3,7 +3,8 @@ package uk.ac.standrews.cs.sos.model;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.interfaces.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
@@ -27,7 +28,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest manifest = model.addCompound(contents);
+        Compound manifest = model.addCompound(contents);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -46,7 +47,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest manifest = model.addCompound(contents);
+        Compound manifest = model.addCompound(contents);
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -68,7 +69,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        CompoundManifest manifest = model.addCompound(contents);
+        Compound manifest = model.addCompound(contents);
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
 
         boolean isVerified = model.verifyManifest(model.getIdentity(), retrievedManifest);

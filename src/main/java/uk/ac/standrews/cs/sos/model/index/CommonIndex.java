@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.model.index;
 
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.interfaces.Index;
-import uk.ac.standrews.cs.sos.interfaces.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;

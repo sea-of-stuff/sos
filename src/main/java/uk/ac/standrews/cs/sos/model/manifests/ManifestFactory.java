@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.Identity;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.utils.GUID;
 
@@ -36,7 +36,7 @@ public class ManifestFactory {
      *
      * @param contents
      * @param identity
-     * @return
+     * @return a compound manifest
      * @throws ManifestNotMadeException
      */
     public static CompoundManifest createCompoundManifest(Collection<Content> contents,
@@ -51,10 +51,10 @@ public class ManifestFactory {
      * the GUID of a previous asset's version, the GUID of metadata associated to this
      * asset and an identity which will be used to sign the manifest.
      *
-     * @param content
+     * @param content - required
      * @param invariant
-     * @param prevs - optional
-     * @param metadata - optional
+     * @param prevs
+     * @param metadata
      * @param identity
      * @return an asset manifest
      * @throws ManifestNotMadeException
