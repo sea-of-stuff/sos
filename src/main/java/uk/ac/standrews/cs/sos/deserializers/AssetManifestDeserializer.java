@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.utils.GUID;
 import uk.ac.standrews.cs.utils.GUIDsha1;
@@ -14,8 +13,6 @@ import java.util.Collection;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AssetManifestDeserializer extends CommonDeserializer implements JsonDeserializer<AssetManifest> {
-
-    private static Gson gson = new GsonBuilder().registerTypeAdapter(Content.class, new ContentDeserializer()).create();
 
     @Override
     public AssetManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.locations;
+package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;

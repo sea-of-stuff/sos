@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.index;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.Index;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
@@ -22,14 +23,14 @@ public abstract class IndexBaseTest {
     protected Index index;
 
     @BeforeMethod
-    public void setUp(Method method) throws IOException, SeaConfigurationException {
+    public void setUp(Method method) throws IndexException, SeaConfigurationException {
         CACHE_TYPE type = getCacheType();
         System.out.println(type.toString() + " :: " + method.getName());
         index = new CacheFactory().getCache(type);
     }
 
     @AfterMethod
-    public void tearDown() throws IOException {
+    public void tearDown() throws IOException, IndexException {
         index.flushDB();
         index.killInstance();
 
@@ -49,7 +50,7 @@ public abstract class IndexBaseTest {
 
     public class CacheFactory {
 
-        public Index getCache(CACHE_TYPE type, SeaConfiguration configuration) throws IOException {
+        public Index getCache(CACHE_TYPE type, SeaConfiguration configuration) throws IndexException {
             switch(type) {
                 case LUCENE:
                     return LuceneIndex.getInstance(configuration);
@@ -57,7 +58,7 @@ public abstract class IndexBaseTest {
             return null;
         }
 
-        public Index getCache(CACHE_TYPE type) throws IOException, SeaConfigurationException {
+        public Index getCache(CACHE_TYPE type) throws IndexException, SeaConfigurationException {
             SeaConfiguration.setRootName("test");
             SeaConfiguration configuration = SeaConfiguration.getInstance();
             return getCache(type, configuration);

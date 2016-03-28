@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 public class CompoundManifestDeserializer extends CommonDeserializer implements JsonDeserializer<CompoundManifest> {
 
-    private static Gson gson = new GsonBuilder().registerTypeAdapter(Content.class, new ContentDeserializer()).create();
+    private static final Gson gson = new GsonBuilder().registerTypeAdapter(Content.class, new ContentDeserializer()).create();
 
     @Override
     public CompoundManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

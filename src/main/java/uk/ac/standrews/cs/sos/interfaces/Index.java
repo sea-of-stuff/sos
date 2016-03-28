@@ -1,33 +1,28 @@
 package uk.ac.standrews.cs.sos.interfaces;
 
-import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.GUID;
 
-import java.io.IOException;
 import java.util.Collection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Index {
-    // TODO - remove methods that are to be managed by the manifests manager, no need to be in the index/index
 
-    public abstract void killInstance() throws IOException;
+    void killInstance() throws IndexException;
 
-    public abstract void flushDB() throws IOException;
+    void flushDB() throws IndexException;
 
-    public abstract void addManifest(Manifest manifest) throws UnknownManifestTypeException;
+    void addManifest(Manifest manifest) throws IndexException;
 
-    public abstract Collection<GUID> getVersions(GUID guid, int results, int skip) throws IOException;
+    Collection<GUID> getVersions(GUID guid, int results, int skip) throws IndexException;
 
-    public abstract Collection<Content> getContents(GUID contentGUID);
+    Collection<GUID> getMetaLabelMatches(String label, int results, int skip) throws IndexException;
 
-    public abstract Collection<GUID> getMetaLabelMatches(String label, int results, int skip) throws IOException;
+    Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IndexException;
 
-    public abstract Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException;
-
-    public abstract SeaConfiguration getConfiguration();
+    SeaConfiguration getConfiguration();
 
 }

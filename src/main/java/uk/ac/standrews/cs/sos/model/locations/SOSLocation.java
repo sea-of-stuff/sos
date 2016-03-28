@@ -25,9 +25,9 @@ public class SOSLocation implements Location {
     private final static int MACHINE_ID_SEGMENT = 0;
     private final static int ENTIY_ID_SEGMENT = 1;
 
-    private GUID machineID;
-    private GUID entity;
-    private URL url;
+    private final GUID machineID;
+    private final GUID entity;
+    private final URL url;
 
     public SOSLocation(GUID machineID, GUID entity) throws MalformedURLException {
         this.machineID = machineID;

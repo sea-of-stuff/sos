@@ -17,20 +17,20 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 /**
- * TODO - javadoc
+ * Cache an atom - given its location or data stream - to this SOS node.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class CacheDataStorage {
 
-    private SeaConfiguration configuration;
+    private final SeaConfiguration configuration;
     private Location origin;
     private InputStream inputStream;
     private CacheLocationBundle cache;
 
     private static final int CACHE_ORIGIN_LOCATION_TYPE = 0;
     private static final int CACHE_ORIGIN_STREAM_TYPE = 1;
-    private int cacheOriginType;
+    private final int cacheOriginType;
 
     public CacheDataStorage(SeaConfiguration configuration,
                             Location origin) {
@@ -176,8 +176,5 @@ public class CacheDataStorage {
     private String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) {
         return configuration.getCacheDataPath() + guid.toString();
     }
-
-
-
 
 }

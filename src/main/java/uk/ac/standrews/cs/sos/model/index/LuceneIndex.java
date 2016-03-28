@@ -12,6 +12,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.Index;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
@@ -40,45 +41,60 @@ public class LuceneIndex extends CommonIndex {
     private static IndexSearcher indexSearcher = null;
     private static SeaConfiguration instanceConfiguration;
 
-    public static Index getInstance(SeaConfiguration configuration) throws IOException {
+    public static Index getInstance(SeaConfiguration configuration) throws IndexException {
         if(instance == null) {
-            instanceConfiguration = configuration;
-            String indexPath = instanceConfiguration.getIndexPath();
-            Directory dir = FSDirectory.open(new File(indexPath).toPath());
-            Analyzer analyzer = new StandardAnalyzer();
-            IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-
-            iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
-            indexWriter = new IndexWriter(dir, iwc);
-            indexWriter.commit();
-
-            searcherManager = new SearcherManager(indexWriter, true, new SearcherFactory());
-            instance = new LuceneIndex();
+            try {
+                init(configuration);
+            } catch (IOException e) {
+                throw new IndexException(e);
+            }
         }
         return instance;
     }
 
-    @Override
-    public void killInstance() throws IOException {
-        if (indexWriter != null && indexWriter.isOpen()) {
-            indexWriter.close();
-        }
+    private static void init(SeaConfiguration configuration) throws IOException {
+        instanceConfiguration = configuration;
+        String indexPath = instanceConfiguration.getIndexPath();
+        Directory dir = FSDirectory.open(new File(indexPath).toPath());
+        Analyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 
-        if (searcherManager != null) {
-            searcherManager.close();
+        iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
+        indexWriter = new IndexWriter(dir, iwc);
+        indexWriter.commit();
+
+        searcherManager = new SearcherManager(indexWriter, true, new SearcherFactory());
+        instance = new LuceneIndex();
+    }
+
+    @Override
+    public void killInstance() throws IndexException {
+        try {
+            if (indexWriter != null && indexWriter.isOpen()) {
+                indexWriter.close();
+            }
+
+            if (searcherManager != null) {
+                searcherManager.close();
+            }
+        } catch (IOException e) {
+            throw new IndexException(e);
         }
 
         instance = null;
     }
 
     @Override
-    public void flushDB() throws IOException {
-        indexWriter.commit();
+    public void flushDB() throws IndexException {
+        try {
+            indexWriter.commit();
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
     }
 
     @Override
-    protected void addAtomManifest(AtomManifest manifest) throws IOException {
-
+    protected void addAtomManifest(AtomManifest manifest) throws IndexException {
         boolean manifestAlreadyIndexed = guidExists(manifest.getContentGUID(), LuceneKeys.HANDLE_GUID);
         if(!manifestAlreadyIndexed) {
             indexAtomManifest(manifest);
@@ -86,7 +102,7 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    protected void addCompoundManifest(CompoundManifest manifest) throws IOException {
+    protected void addCompoundManifest(CompoundManifest manifest) throws IndexException {
         boolean manifestAlreadyIndexed = guidExists(manifest.getContentGUID(), LuceneKeys.HANDLE_GUID);
         if(!manifestAlreadyIndexed) {
             indexCompoundManifest(manifest);
@@ -94,19 +110,28 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    protected void addAssetManifest(AssetManifest manifest) throws IOException {
+    protected void addAssetManifest(AssetManifest manifest) throws IndexException {
         boolean manifestAlreadyIndexed = guidExists(manifest.getVersionGUID(), LuceneKeys.HANDLE_VERSION);
         if(!manifestAlreadyIndexed) {
-            indexAssetManifest(manifest);
+            try {
+                indexAssetManifest(manifest);
+            } catch (IOException e) {
+                throw new IndexException(e);
+            }
         }
     }
 
     @Override
-    public Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IOException {
+    public Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IndexException {
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_TYPE, type);
-        Collection<GUID> retval = getGUIDsFromSearch(term, results, skip);
+        Collection<GUID> retval;
+        try {
+            retval = getGUIDsFromSearch(term, results, skip);
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
 
         releaseIndexSearcher();
         return retval;
@@ -118,22 +143,26 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    public Collection<GUID> getVersions(GUID invariant, int results, int skip) throws IOException {
+    public Collection<GUID> getVersions(GUID invariant, int results, int skip) throws IndexException {
         if (skip > results) {
-            throw new IOException();
+            throw new IndexException();
         }
 
         updateIndexSearcher();
 
-        Term term = new Term(LuceneKeys.HANDLE_GUID, invariant.toString());
         Collection<GUID> retval = new ArrayList<>();
-        Query query = new TermQuery(term);
-        TopDocs topDocs = indexSearcher.search(query, results);
-        ScoreDoc[] hits = topDocs.scoreDocs;
-        for (int i = skip; i < hits.length; i++) {
-            Document doc = indexSearcher.doc(hits[i].doc);
-            String guid = doc.get(LuceneKeys.HANDLE_VERSION);
-            retval.add(new GUIDsha1(guid));
+        try {
+            Term term = new Term(LuceneKeys.HANDLE_GUID, invariant.toString());
+            Query query = new TermQuery(term);
+            TopDocs topDocs = indexSearcher.search(query, results);
+            ScoreDoc[] hits = topDocs.scoreDocs;
+            for (int i = skip; i < hits.length; i++) {
+                Document doc = indexSearcher.doc(hits[i].doc);
+                String guid = doc.get(LuceneKeys.HANDLE_VERSION);
+                retval.add(new GUIDsha1(guid));
+            }
+        } catch (IOException e) {
+            throw new IndexException(e);
         }
 
         releaseIndexSearcher();
@@ -141,30 +170,43 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    public Collection<GUID> getMetaLabelMatches(String value, int results, int skip) throws IOException {
+    public Collection<GUID> getMetaLabelMatches(String value, int results, int skip) throws IndexException {
         updateIndexSearcher();
 
         Term term = new Term(LuceneKeys.HANDLE_LABEL, value);
-        Collection<GUID> retval = getGUIDsFromSearch(term, results, skip);
+        Collection<GUID> retval;
+        try {
+            retval = getGUIDsFromSearch(term, results, skip);
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
 
         releaseIndexSearcher();
         return retval;
 
     }
 
-    private static void updateIndexSearcher() throws IOException {
-        searcherManager.maybeRefresh();
-        indexSearcher = searcherManager.acquire();
+    private static void updateIndexSearcher() throws IndexException {
+        try {
+            searcherManager.maybeRefresh();
+            indexSearcher = searcherManager.acquire();
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
     }
 
-    private static void releaseIndexSearcher() throws IOException {
-        searcherManager.release(indexSearcher);
-        indexSearcher = null;
+    private static void releaseIndexSearcher() throws IndexException {
+        try {
+            searcherManager.release(indexSearcher);
+            indexSearcher = null;
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
     }
 
-    private Collection<GUID> getGUIDsFromSearch(Term term, int results, int skip) throws IOException {
+    private Collection<GUID> getGUIDsFromSearch(Term term, int results, int skip) throws IndexException, IOException {
         if (skip > results) {
-            throw new IOException();
+            throw new IndexException();
         }
 
         Collection<GUID> retval = new HashSet<>();
@@ -180,7 +222,7 @@ public class LuceneIndex extends CommonIndex {
         return retval;
     }
 
-    private void indexAtomManifest(AtomManifest manifest) throws IOException {
+    private void indexAtomManifest(AtomManifest manifest) throws IndexException {
         Document doc = new Document();
 
         GUID guid = manifest.getContentGUID();
@@ -188,11 +230,15 @@ public class LuceneIndex extends CommonIndex {
         doc.add(new StringField(LuceneKeys.HANDLE_GUID, guid.toString(), Field.Store.YES));
         doc.add(new StringField(LuceneKeys.HANDLE_TYPE, type, Field.Store.YES));
 
-        indexWriter.addDocument(doc);
-        indexWriter.commit();
+        try {
+            indexWriter.addDocument(doc);
+            indexWriter.commit();
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
     }
 
-    private void indexCompoundManifest(CompoundManifest manifest) throws IOException {
+    private void indexCompoundManifest(CompoundManifest manifest) throws IndexException {
         Document doc = new Document();
         GUID guid = manifest.getContentGUID();
         String type = manifest.getManifestType();
@@ -206,8 +252,12 @@ public class LuceneIndex extends CommonIndex {
             }
         }
 
-        indexWriter.addDocument(doc);
-        indexWriter.commit();
+        try {
+            indexWriter.addDocument(doc);
+            indexWriter.commit();
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
     }
 
     private void indexAssetManifest(AssetManifest manifest) throws IOException {
@@ -220,31 +270,38 @@ public class LuceneIndex extends CommonIndex {
         doc.add(new StringField(LuceneKeys.HANDLE_TYPE, type, Field.Store.YES));
         doc.add(new StringField(LuceneKeys.HANDLE_GUID, invariant.toString(), Field.Store.YES));
 
-        // TODO - index rest of asset
-
         indexWriter.addDocument(doc);
         indexWriter.commit();
     }
 
-    private void indexContent(Content content) throws IOException {
+    private void indexContent(Content content) throws IndexException {
         Document contentDoc = new Document();
         contentDoc.add(new StringField(LuceneKeys.HANDLE_GUID, content.getGUID().toString(), Field.Store.YES));
         contentDoc.add(new StringField(LuceneKeys.HANDLE_LABEL, content.getLabel(), Field.Store.YES));
-        indexWriter.addDocument(contentDoc);
+        try {
+            indexWriter.addDocument(contentDoc);
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
     }
 
-    private boolean guidExists(GUID guid, String key) throws IOException {
+    private boolean guidExists(GUID guid, String key) throws IndexException {
         updateIndexSearcher();
 
         // http://stackoverflow.com/questions/30810879/how-to-check-if-document-exists-in-lucene-index
-        TopDocs results = indexSearcher.search(new TermQuery(new Term(key, guid.toString())), 1);
+        TopDocs results;
+        try {
+            results = indexSearcher.search(new TermQuery(new Term(key, guid.toString())), 1);
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
 
         releaseIndexSearcher();
 
         return results.totalHits > 0;
     }
 
-    private boolean contentExists(Content content) throws IOException {
+    private boolean contentExists(Content content) throws IndexException {
         updateIndexSearcher();
 
         GUID contentGUID = content.getGUID();
@@ -253,7 +310,12 @@ public class LuceneIndex extends CommonIndex {
         BooleanQuery matchingQuery = new BooleanQuery();
         matchingQuery.add(new TermQuery(new Term(LuceneKeys.HANDLE_GUID, contentGUID.toString())), BooleanClause.Occur.MUST);
         matchingQuery.add(new TermQuery(new Term(LuceneKeys.HANDLE_LABEL, label)), BooleanClause.Occur.MUST);
-        TopDocs results = indexSearcher.search(matchingQuery, 1);
+        TopDocs results;
+        try {
+            results = indexSearcher.search(matchingQuery, 1);
+        } catch (IOException e) {
+            throw new IndexException(e);
+        }
 
         releaseIndexSearcher();
 

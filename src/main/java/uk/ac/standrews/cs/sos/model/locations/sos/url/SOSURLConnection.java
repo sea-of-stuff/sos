@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.locations;
+package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
@@ -51,7 +51,6 @@ public class SOSURLConnection extends URLConnection {
         }
 
         /*
-         * TODO
          * lookup for node id in local map
          * otherwise contact registry/coordinator
          * talk to coordinator via http

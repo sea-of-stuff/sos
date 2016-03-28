@@ -5,10 +5,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.identity.IdentityImpl;
@@ -46,7 +45,7 @@ public class ManifestsManagerTest {
     private Index index;
 
     @BeforeMethod
-    public void setUp() throws IOException, KeyGenerationException, KeyLoadedException, SeaConfigurationException, SeaOfStuffException {
+    public void setUp() throws IndexException, SeaConfigurationException, SeaOfStuffException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
@@ -54,7 +53,7 @@ public class ManifestsManagerTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException {
+    public void tearDown() throws IOException, IndexException {
         index.flushDB();
         index.killInstance();
 

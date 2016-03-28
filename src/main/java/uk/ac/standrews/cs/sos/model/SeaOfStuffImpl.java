@@ -1,18 +1,22 @@
 package uk.ac.standrews.cs.sos.model;
 
-import uk.ac.standrews.cs.sos.exceptions.*;
+import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
+import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.interfaces.*;
-import uk.ac.standrews.cs.sos.model.locations.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 import uk.ac.standrews.cs.utils.GUID;
@@ -63,12 +67,11 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         try {
             URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
         } catch (Error e) {
-            // TODO - Error is thrown if the factory has already been setup for the JVM.
+            System.err.println("SeaOfStuffImpl::registerSOSProtocol:" + e.getMessage());
         }
     }
 
     private void backgroundProcesses() {
-        // TODO
         // - start background processes
         // - listen to incoming requests from other nodes / crawlers?
         // - make this node available to the rest of the sea of stuff

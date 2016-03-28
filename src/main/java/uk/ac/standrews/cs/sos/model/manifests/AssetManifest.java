@@ -35,10 +35,6 @@ import java.util.Collection;
  * Metadata - GUID
  * </p>
  *
- * @see GUID
- *
- * TODO - class needs some polishing
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AssetManifest extends SignedManifest {

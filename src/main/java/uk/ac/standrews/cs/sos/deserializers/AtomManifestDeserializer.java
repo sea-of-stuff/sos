@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 public class AtomManifestDeserializer extends CommonDeserializer implements JsonDeserializer<AtomManifest> {
 
-    private static Gson gson = new GsonBuilder().registerTypeAdapter(LocationBundle.class, new LocationBundleDeserializer()).create();
+    private static final Gson gson = new GsonBuilder().registerTypeAdapter(LocationBundle.class, new LocationBundleDeserializer()).create();
 
     @Override
     public AtomManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

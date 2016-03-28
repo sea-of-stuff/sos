@@ -7,13 +7,14 @@ import com.google.gson.JsonSyntaxException;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
-import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestMergeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.interfaces.Index;
 import uk.ac.standrews.cs.sos.interfaces.Manifest;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
@@ -107,7 +108,7 @@ public class ManifestsManager {
         Collection<GUID> retval;
         try {
             retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IOException e) {
+        } catch (IndexException e) {
             throw new ManifestNotFoundException();
         }
         return retval;
@@ -117,7 +118,7 @@ public class ManifestsManager {
         Collection<GUID> retval;
         try {
             retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IOException e) {
+        } catch (IndexException e) {
             throw new ManifestNotFoundException();
         }
         return retval;
@@ -127,11 +128,13 @@ public class ManifestsManager {
         Collection<GUID> retval;
         try {
             retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IOException e) {
+        } catch (IndexException e) {
             throw new ManifestNotFoundException();
         }
         return retval;
     }
+
+    /**************************************************************************/
 
     private void configureGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -291,7 +294,7 @@ public class ManifestsManager {
     private void cacheManifest(Manifest manifest) throws ManifestCacheException {
         try {
             index.addManifest(manifest);
-        } catch (UnknownManifestTypeException e) {
+        } catch (IndexException e) {
             throw new ManifestCacheException("Manifest could not be cached");
         }
     }

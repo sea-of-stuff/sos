@@ -4,9 +4,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.Index;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
@@ -25,7 +26,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
     protected SeaConfiguration configuration;
 
     @BeforeMethod
-    public void setUp() throws SeaOfStuffException, IOException, SeaConfigurationException {
+    public void setUp() throws SeaOfStuffException, IndexException, SeaConfigurationException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
@@ -33,7 +34,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException {
+    public void tearDown() throws IOException, IndexException {
         index.flushDB();
         index.killInstance();
 
