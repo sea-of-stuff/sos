@@ -9,12 +9,15 @@ package uk.ac.standrews.cs.utils;
  * Insert comment explaining purpose of class here.
  */
 public class RadixMethods {
+
+    private static final int HEX_BASE = 16;
+
     private static char[] lookup = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
             							   'g', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
             							   'u', 'v', 'w', 'x', 'y', 'z' };
 
     public static int hexCharToInt( char c ) {
-        return baseXCharToInt( c, 16 );
+        return baseXCharToInt(c, HEX_BASE);
     }  
     
     public static int baseXCharToInt( char c, int base ) {
