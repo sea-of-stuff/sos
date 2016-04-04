@@ -44,6 +44,7 @@ import java.util.Collection;
 public class CompoundManifest extends SignedManifest implements Compound {
 
     final private Collection<Content> contents;
+    final private CompoundType type;
 
     /**
      * Creates a valid compound manifest given a collection of contents and an
@@ -53,9 +54,10 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public CompoundManifest(Collection<Content> contents, Identity identity)
+    public CompoundManifest(CompoundType type, Collection<Content> contents, Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.COMPOUND);
+        this.type = type;
         this.contents = contents;
         this.contentGUID = makeContentGUID();
 
@@ -70,8 +72,9 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param contents
      * @param signature
      */
-    public CompoundManifest(GUID contentGUID, Collection<Content> contents, String signature) {
+    public CompoundManifest(CompoundType type, GUID contentGUID, Collection<Content> contents, String signature) {
         super(null, ManifestConstants.COMPOUND);
+        this.type = type;
         this.contentGUID = contentGUID;
         this.contents = contents;
         this.signature = signature;
@@ -88,8 +91,14 @@ public class CompoundManifest extends SignedManifest implements Compound {
     }
 
     @Override
+    public CompoundType getType() {
+        return type;
+    }
+
+    @Override
     public boolean isValid() {
         return super.isValid() &&
+                type != null &&
                 contents != null &&
                 !contents.isEmpty() &&
                 isGUIDValid(contentGUID);
@@ -99,6 +108,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
     public JsonObject toJSON() {
         JsonObject obj = super.toJSON();
 
+        obj.addProperty(ManifestConstants.KEY_COMPOUND_TYPE, type.toString());
         obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
         obj.add(ManifestConstants.KEY_CONTENTS, getContentsInJSON());
 
@@ -131,6 +141,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
         JsonObject obj = new JsonObject();
 
         obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
+        obj.addProperty(ManifestConstants.KEY_COMPOUND_TYPE, type.toString());
         obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
 
         Gson gson = new Gson();

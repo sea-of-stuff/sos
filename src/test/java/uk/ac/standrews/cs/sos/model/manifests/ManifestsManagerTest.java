@@ -95,7 +95,7 @@ public class ManifestsManagerTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(content);
 
-        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(contents, identity);
+        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, identity);
         GUID guid = compoundManifest.getContentGUID();
         try {
             manifestsManager.addManifest(compoundManifest);

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.utils.GUID;
@@ -24,6 +25,9 @@ public class CompoundManifestDeserializer extends CommonDeserializer implements 
         GUID contentGUID = getGUID(obj, ManifestConstants.KEY_CONTENT_GUID);
         String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
+        String compoundTypeString = obj.get(ManifestConstants.KEY_COMPOUND_TYPE).getAsString();
+        CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
+
         JsonArray jContents = obj.getAsJsonArray(ManifestConstants.KEY_CONTENTS);
         Collection<Content> contents = new ArrayList<>();
         for(int i = 0; i < jContents.size(); i++) {
@@ -31,6 +35,6 @@ public class CompoundManifestDeserializer extends CommonDeserializer implements 
             contents.add(content);
         }
 
-        return new CompoundManifest(contentGUID, contents, signature);
+        return new CompoundManifest(compoundType, contentGUID, contents, signature);
     }
 }

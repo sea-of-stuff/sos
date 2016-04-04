@@ -34,16 +34,17 @@ public class ManifestFactory {
 
     /**
      *
+     * @param type
      * @param contents
      * @param identity
      * @return a compound manifest
      * @throws ManifestNotMadeException
      */
-    public static CompoundManifest createCompoundManifest(Collection<Content> contents,
+    public static CompoundManifest createCompoundManifest(CompoundType type, Collection<Content> contents,
                                                           Identity identity)
             throws ManifestNotMadeException {
 
-        return new CompoundManifest(contents, identity);
+        return new CompoundManifest(type, contents, identity);
     }
 
     /**

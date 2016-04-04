@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.GUID;
 
@@ -87,7 +88,7 @@ public interface SeaOfStuff {
      *
      * @see Manifest
      */
-    Compound addCompound(Collection<Content> contents)
+    Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException;
 
     /**

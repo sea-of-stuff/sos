@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
+import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.utils.GUID;
@@ -29,7 +30,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(contents);
+        Compound compound = model.addCompound(CompoundType.DATA, contents);
         Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
@@ -45,7 +46,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(contents);
+        Compound compound = model.addCompound(CompoundType.DATA, contents);
         Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
 
@@ -66,7 +67,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(contents);
+        Compound compound = model.addCompound(CompoundType.DATA, contents);
 
         Collection<GUID> prevs = new ArrayList<>();
         prevs.add(new GUIDsha1("321"));
@@ -103,7 +104,7 @@ public class SeaOfStuffAddAssetTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(contents);
+        Compound compound = model.addCompound(CompoundType.DATA, contents);
         Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
 

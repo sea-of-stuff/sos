@@ -4,6 +4,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.utils.GUIDsha1;
 import uk.ac.standrews.cs.utils.StreamsUtils;
@@ -28,6 +29,7 @@ public class CompoundManifestTest extends SetUpTest {
             "{\"Type\":\"Compound\"," +
                     "\"ContentGUID\":\"5ddcc2228d3d80966b29f709774c2d5ee15a99a0\"," +
                     "\"Signature\":\"AAAB\"," +
+                    "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
                     "[{" +
                     "\"Label\":\"cat\"," +
@@ -38,6 +40,7 @@ public class CompoundManifestTest extends SetUpTest {
             "{\"Type\":\"Compound\"," +
                     "\"ContentGUID\":\"97d170e1550eee4afc0af065b78cda302a97674c\"," +
                     "\"Signature\":\"AAAB\"," +
+                    "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
                     "[]}";
 
@@ -53,7 +56,7 @@ public class CompoundManifestTest extends SetUpTest {
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toJSON().toString(), true);
     }
@@ -70,7 +73,7 @@ public class CompoundManifestTest extends SetUpTest {
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertNotNull(compoundManifest.getContents());
         assertEquals(compoundManifest.getContents().size(), 1);
@@ -86,7 +89,7 @@ public class CompoundManifestTest extends SetUpTest {
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertNotNull(compoundManifest.getContents());
         assertEquals(compoundManifest.getContents().size(), 0);
@@ -99,7 +102,7 @@ public class CompoundManifestTest extends SetUpTest {
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toJSON().toString(), true);
     }
@@ -116,7 +119,7 @@ public class CompoundManifestTest extends SetUpTest {
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertTrue(compoundManifest.isValid());
     }
@@ -128,8 +131,23 @@ public class CompoundManifestTest extends SetUpTest {
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(contents, identityMocked);
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertFalse(compoundManifest.isValid());
+    }
+
+    @Test (expectedExceptions = ManifestNotMadeException.class)
+    public void testIsNoCompoundTypeNotValidManifest() throws Exception {
+        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+
+        Content cat = new Content("cat", guid);
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(cat);
+
+        Identity identityMocked = mock(Identity.class);
+        byte[] fakedSignature = new byte[]{0, 0, 1};
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        CompoundManifest compoundManifest = new CompoundManifest(null, contents, identityMocked);
     }
 }

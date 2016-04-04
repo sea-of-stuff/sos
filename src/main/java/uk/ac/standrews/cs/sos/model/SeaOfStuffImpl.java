@@ -111,10 +111,10 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Compound addCompound(Collection<Content> contents)
+    public Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
 
-        CompoundManifest manifest = ManifestFactory.createCompoundManifest(contents, identity);
+        CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
         manifestsManager.addManifest(manifest);
 
         return manifest;

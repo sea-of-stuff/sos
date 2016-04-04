@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.GUID;
 import uk.ac.standrews.cs.utils.GUIDsha1;
@@ -49,7 +50,7 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        model.addCompound(contents);
+        model.addCompound(CompoundType.DATA, contents);
 
         Collection<GUID> manifests = model.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
@@ -62,12 +63,12 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Content cat = new Content("cat", new GUIDsha1("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
-        model.addCompound(contents);
+        model.addCompound(CompoundType.DATA, contents);
 
         Content dog = new Content("dog", new GUIDsha1("343"));
         Collection<Content> otherContents = new ArrayList<>();
         otherContents.add(dog);
-        model.addCompound(otherContents);
+        model.addCompound(CompoundType.DATA, otherContents);
 
         Collection<GUID> cats = model.findManifestByLabel("cat");
         assertEquals(cats.size(), 1);
@@ -84,14 +85,14 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(contents);
+        Compound compound = model.addCompound(CompoundType.DATA, contents);
         Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
 
         Content feline = new Content("feline", new GUIDsha1("456"));
         Collection<Content> newContents = new ArrayList<>();
         newContents.add(feline);
 
-        Compound newCompound = model.addCompound(newContents);
+        Compound newCompound = model.addCompound(CompoundType.DATA, newContents);
         Collection<GUID> prevs = new ArrayList<>();
         prevs.add(manifest.getVersionGUID());
         Asset newManifest = model.addAsset(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);

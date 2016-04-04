@@ -20,6 +20,7 @@ public class ManifestConstants {
     public static final String KEY_SIGNATURE ="Signature";
     public static final String KEY_LOCATIONS = "Locations";
     public static final String KEY_CONTENT_GUID = "ContentGUID";
+    public static final String KEY_COMPOUND_TYPE = "Compound_Type";
     public static final String KEY_CONTENTS = "Content";
     public static final String KEY_INVARIANT = "Invariant";
     public static final String KEY_VERSION = "Version";

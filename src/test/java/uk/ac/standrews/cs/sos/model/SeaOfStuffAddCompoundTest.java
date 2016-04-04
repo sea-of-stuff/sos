@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.utils.GUIDsha1;
@@ -28,7 +29,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = model.addCompound(contents);
+        Compound manifest = model.addCompound(CompoundType.DATA, contents);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
@@ -47,7 +48,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = model.addCompound(contents);
+        Compound manifest = model.addCompound(CompoundType.DATA, contents);
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -69,7 +70,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = model.addCompound(contents);
+        Compound manifest = model.addCompound(CompoundType.DATA, contents);
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
 
         boolean isVerified = model.verifyManifest(model.getIdentity(), retrievedManifest);
