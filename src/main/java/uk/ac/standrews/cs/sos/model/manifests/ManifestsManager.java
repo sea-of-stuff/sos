@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.utils.FileHelper;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -89,7 +89,7 @@ public class ManifestsManager {
      * @return Manifest
      * @throws ManifestNotFoundException
      */
-    public Manifest findManifest(GUID guid) throws ManifestNotFoundException {
+    public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
         if (guid == null) {
             throw new ManifestNotFoundException();
         }
@@ -104,8 +104,8 @@ public class ManifestsManager {
         return manifest;
     }
 
-    public Collection<GUID> findManifestsByType(String type) throws ManifestNotFoundException {
-        Collection<GUID> retval;
+    public Collection<IGUID> findManifestsByType(String type) throws ManifestNotFoundException {
+        Collection<IGUID> retval;
         try {
             retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IndexException e) {
@@ -114,8 +114,8 @@ public class ManifestsManager {
         return retval;
     }
 
-    public Collection<GUID> findVersions(GUID guid) throws ManifestNotFoundException {
-        Collection<GUID> retval;
+    public Collection<IGUID> findVersions(IGUID guid) throws ManifestNotFoundException {
+        Collection<IGUID> retval;
         try {
             retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IndexException e) {
@@ -124,8 +124,8 @@ public class ManifestsManager {
         return retval;
     }
 
-    public Collection<GUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
-        Collection<GUID> retval;
+    public Collection<IGUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
+        Collection<IGUID> retval;
         try {
             retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IndexException e) {
@@ -148,7 +148,7 @@ public class ManifestsManager {
         builder.registerTypeAdapter(AssetManifest.class, new AssetManifestDeserializer());
     }
 
-    private Manifest getManifestFromFile(GUID guid) throws UnknownGUIDException {
+    private Manifest getManifestFromFile(IGUID guid) throws UnknownGUIDException {
         Manifest manifest;
         final String path = getManifestPath(guid);
         try {
@@ -211,7 +211,7 @@ public class ManifestsManager {
     }
 
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestPersistException, UnknownGUIDException, ManifestMergeException{
-        GUID guid = manifest.getContentGUID();
+        IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromFile(guid);
         String backupPath = backupManifest(existingManifest);
 
@@ -225,7 +225,7 @@ public class ManifestsManager {
     }
 
     private String backupManifest(Manifest manifest) throws ManifestMergeException {
-        GUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
+        IGUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
         String originalPath = getManifestPath(guidUsedToStoreManifest);
         try {
             FileHelper.copyToFile(new URILocation(originalPath).getSource(),
@@ -236,8 +236,8 @@ public class ManifestsManager {
         return originalPath;
     }
 
-    private GUID getGUIDUsedToStoreManifest(Manifest manifest) {
-        GUID guid;
+    private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
+        IGUID guid;
         if (manifest.getManifestType().equals(ManifestConstants.ASSET)) {
             guid = ((AssetManifest) manifest).getVersionGUID();
         } else {
@@ -299,7 +299,7 @@ public class ManifestsManager {
         }
     }
 
-    private String getManifestPath(GUID guid) {
+    private String getManifestPath(IGUID guid) {
         return getManifestPath(guid.toString());
     }
 
@@ -311,7 +311,7 @@ public class ManifestsManager {
         return guid + JSON_EXTENSION;
     }
 
-    private Manifest mergeManifests(GUID guid, AtomManifest first, AtomManifest second) {
+    private Manifest mergeManifests(IGUID guid, AtomManifest first, AtomManifest second) {
         HashSet<LocationBundle> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
@@ -319,7 +319,7 @@ public class ManifestsManager {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    private boolean manifestExistsInLocalStorage(GUID guid) {
+    private boolean manifestExistsInLocalStorage(IGUID guid) {
         String path = getManifestPath(guid);
         return new File(path).exists();
     }

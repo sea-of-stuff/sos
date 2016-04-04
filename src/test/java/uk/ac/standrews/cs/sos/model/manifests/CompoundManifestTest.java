@@ -6,7 +6,8 @@ import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.InputStream;
@@ -47,7 +48,7 @@ public class CompoundManifestTest extends SetUpTest {
     @Test
     public void testToStringContents() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
         Collection<Content> contents = new ArrayList<>();
@@ -64,7 +65,7 @@ public class CompoundManifestTest extends SetUpTest {
     @Test
     public void testGetContents() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
         Collection<Content> contents = new ArrayList<>();
@@ -110,7 +111,7 @@ public class CompoundManifestTest extends SetUpTest {
     @Test
     public void testIsValidManifest() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
         Collection<Content> contents = new ArrayList<>();
@@ -139,7 +140,7 @@ public class CompoundManifestTest extends SetUpTest {
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testIsNoCompoundTypeNotValidManifest() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
         Collection<Content> contents = new ArrayList<>();

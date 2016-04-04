@@ -5,8 +5,9 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
+import uk.ac.standrews.cs.utils.KeyImpl;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.InputStream;
@@ -29,7 +30,7 @@ public class ContentTest extends SetUpTest {
 
     @Test
     public void testConstructorAndGetter() {
-        GUID mockedGUID = mock(GUIDsha1.class);
+        IGUID mockedGUID = mock(KeyImpl.class);
         Content content = new Content(mockedGUID);
 
         assertEquals(mockedGUID, content.getGUID());
@@ -37,7 +38,7 @@ public class ContentTest extends SetUpTest {
 
     @Test
     public void testOtherConstructorAndGetters() {
-        GUID mockedGUID = mock(GUIDsha1.class);
+        IGUID mockedGUID = mock(KeyImpl.class);
         Content content = new Content("testlabel", mockedGUID);
 
         assertEquals("testlabel", content.getLabel());
@@ -47,7 +48,7 @@ public class ContentTest extends SetUpTest {
     @Test
     public void testToStringGUID() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content(guid);
 
@@ -57,7 +58,7 @@ public class ContentTest extends SetUpTest {
     @Test
     public void testToStringWithLabel() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content("cat", guid);
 
@@ -67,7 +68,7 @@ public class ContentTest extends SetUpTest {
     @Test
     public void testToStringWithEmptyLabel() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content("", guid);
 
@@ -77,7 +78,7 @@ public class ContentTest extends SetUpTest {
     @Test
     public void testToStringWithNullLabel() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content(null, guid);
 

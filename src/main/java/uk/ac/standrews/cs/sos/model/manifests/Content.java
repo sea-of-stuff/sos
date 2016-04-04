@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class Content {
 
-    final private GUID guid;
+    final private IGUID guid;
     private String label;
 
     /**
@@ -20,7 +20,7 @@ public class Content {
      *
      * @param guid
      */
-    public Content(GUID guid) {
+    public Content(IGUID guid) {
         this.guid = guid;
     }
 
@@ -31,7 +31,7 @@ public class Content {
      * @param label
      * @param guid
      */
-    public Content(String label, GUID guid) {
+    public Content(String label, IGUID guid) {
         this(guid);
         this.label = label;
     }
@@ -41,7 +41,7 @@ public class Content {
      *
      * @return GUID of the content.
      */
-    public GUID getGUID() {
+    public IGUID getGUID() {
         return guid;
     }
 

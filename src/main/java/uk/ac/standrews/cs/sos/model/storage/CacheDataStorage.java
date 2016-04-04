@@ -1,15 +1,16 @@
 package uk.ac.standrews.cs.sos.model.storage;
 
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.utils.FileHelper;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,8 +55,8 @@ public class CacheDataStorage {
      * @return GUID generated from the data at the location bundles
      * @throws DataStorageException
      */
-    public GUID cacheAtom() throws DataStorageException {
-        GUID guid;
+    public IGUID cacheAtom() throws DataStorageException {
+        IGUID guid;
 
         switch(cacheOriginType) {
             case CACHE_ORIGIN_LOCATION_TYPE:
@@ -70,8 +71,8 @@ public class CacheDataStorage {
         return guid;
     }
 
-    private GUID cacheAtomFromLocation() throws DataStorageException {
-        GUID guid;
+    private IGUID cacheAtomFromLocation() throws DataStorageException {
+        IGUID guid;
         if (origin == null) {
             throw new DataStorageException();
         }
@@ -84,21 +85,21 @@ public class CacheDataStorage {
 
             storeData(configuration, origin, guid);
             cache = getCacheBundle(configuration, guid);
-        } catch (GuidGenerationException | SourceLocationException e) {
+        } catch (GUIDGenerationException | SourceLocationException e) {
             throw new DataStorageException();
         }
 
         return guid;
     }
 
-    private GUID cacheAtomFromInputStream() throws DataStorageException {
-        GUID guid;
+    private IGUID cacheAtomFromInputStream() throws DataStorageException {
+        IGUID guid;
         if (inputStream == null) {
             throw new DataStorageException();
         }
 
         try {
-            GUID tmpGUID = GUID.generateRandomGUID();
+            IGUID tmpGUID = GUIDFactory.generateRandomGUID();
             storeData(configuration, inputStream, tmpGUID);
 
             String tmpCachedLocationPath = getAtomCachedLocation(configuration, tmpGUID);
@@ -107,7 +108,7 @@ public class CacheDataStorage {
             FileHelper.renameFile(tmpCachedLocationPath, cachedLocationPath);
             cache = getCacheBundle(configuration, guid);
 
-        } catch (GuidGenerationException | SourceLocationException | URISyntaxException e) {
+        } catch (GUIDGenerationException | SourceLocationException | URISyntaxException e) {
             throw new DataStorageException();
         }
 
@@ -118,8 +119,8 @@ public class CacheDataStorage {
         return this.cache;
     }
 
-    private GUID generateGUID(Location location) throws SourceLocationException, GuidGenerationException {
-        GUID retval = null;
+    private IGUID generateGUID(Location location) throws SourceLocationException, GUIDGenerationException {
+        IGUID retval = null;
         InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
 
         if (dataStream != null) {
@@ -129,18 +130,15 @@ public class CacheDataStorage {
         return retval;
     }
 
-    private GUID generateGUID(InputStream inputStream) throws GuidGenerationException {
-        GUID retval;
-        try {
-            retval = GUID.generateGUID(inputStream);
-        } catch (GuidGenerationException e) {
-            throw new GuidGenerationException();
-        }
+    private IGUID generateGUID(InputStream inputStream) throws GUIDGenerationException {
+        IGUID retval;
+        retval = GUIDFactory.generateGUID(inputStream);
+
 
         return retval;
     }
 
-    private void storeData(SeaConfiguration configuration, Location location, GUID guid) throws DataStorageException {
+    private void storeData(SeaConfiguration configuration, Location location, IGUID guid) throws DataStorageException {
         try {
             InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
             storeData(configuration, dataStream, guid);
@@ -149,7 +147,7 @@ public class CacheDataStorage {
         }
     }
 
-    private void storeData(SeaConfiguration configuration, InputStream inputStream, GUID guid) throws DataStorageException {
+    private void storeData(SeaConfiguration configuration, InputStream inputStream, IGUID guid) throws DataStorageException {
          try {
             String cachedLocationPath = getAtomCachedLocation(configuration, guid);
 
@@ -162,7 +160,7 @@ public class CacheDataStorage {
          }
     }
 
-    private CacheLocationBundle getCacheBundle(SeaConfiguration configuration, GUID guid) throws SourceLocationException {
+    private CacheLocationBundle getCacheBundle(SeaConfiguration configuration, IGUID guid) throws SourceLocationException {
         Location location;
         try {
             location = new SOSLocation(configuration.getNodeId(), guid);
@@ -173,7 +171,7 @@ public class CacheDataStorage {
         return new CacheLocationBundle(location);
     }
 
-    private String getAtomCachedLocation(SeaConfiguration configuration, GUID guid) {
+    private String getAtomCachedLocation(SeaConfiguration configuration, IGUID guid) {
         return configuration.getCacheDataPath() + guid.toString();
     }
 

@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +22,7 @@ public abstract class BasicManifest implements Manifest {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
-    protected GUID contentGUID;
+    protected IGUID contentGUID;
     private final String manifestType;
 
     /**
@@ -51,7 +51,7 @@ public abstract class BasicManifest implements Manifest {
      * @return guid of the content.
      */
     @Override
-    public GUID getContentGUID() {
+    public IGUID getContentGUID() {
         return this.contentGUID;
     }
 
@@ -72,11 +72,11 @@ public abstract class BasicManifest implements Manifest {
      * Verifies this manifest's GUID against its content.
      *
      * @return true if the GUID of the manifest matches the content.
-     * @throws GuidGenerationException if the manifest's GUID could not be generated.
+     * @throws GUIDGenerationException if the manifest's GUID could not be generated.
      * @throws DecryptionException
      */
     @Override
-    public abstract boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
+    public abstract boolean verify(Identity identity) throws GUIDGenerationException, DecryptionException;
 
     /**
      * Checks whether this manifest contains valid key-value entries.
@@ -94,7 +94,7 @@ public abstract class BasicManifest implements Manifest {
      * @param guid to validated.
      * @return true if the guid is valid.
      */
-    protected boolean isGUIDValid(GUID guid) {
+    protected boolean isGUIDValid(IGUID guid) {
         if (guid == null)
             return false;
 

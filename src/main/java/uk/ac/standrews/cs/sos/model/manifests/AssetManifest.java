@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.Collection;
 
@@ -40,10 +41,10 @@ import java.util.Collection;
  */
 public class AssetManifest extends SignedManifest implements Asset {
 
-    final private GUID version;
-    final private GUID invariant;
-    final private Collection<GUID> prevs;
-    final private Collection<GUID> metadata;
+    final private IGUID version;
+    final private IGUID invariant;
+    final private Collection<IGUID> prevs;
+    final private Collection<IGUID> metadata;
 
     /**
      * Creates an AssetManifest given a content, an identity, the GUIDs of the previous
@@ -56,8 +57,8 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public AssetManifest(GUID invariant, GUID content,
-                            Collection<GUID> prevs, Collection<GUID> metadata,
+    public AssetManifest(IGUID invariant, IGUID content,
+                            Collection<IGUID> prevs, Collection<IGUID> metadata,
                             Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.ASSET);
@@ -71,7 +72,11 @@ public class AssetManifest extends SignedManifest implements Asset {
         this.contentGUID = content;
         this.prevs = prevs;
         this.metadata = metadata;
-        this.version = makeVersionGUID();
+        try {
+            this.version = makeVersionGUID();
+        } catch (GUIDGenerationException e) {
+            throw new ManifestNotMadeException();
+        }
 
         if (identity != null) {
             this.signature = makeSignature();
@@ -87,8 +92,8 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param metadata
      * @param signature
      */
-    public AssetManifest(GUID invariant, GUID version, GUID content,
-                            Collection<GUID> prevs, Collection<GUID> metadata,
+    public AssetManifest(IGUID invariant, IGUID version, IGUID content,
+                            Collection<IGUID> prevs, Collection<IGUID> metadata,
                             String signature) {
         super(null, ManifestConstants.ASSET);
         this.invariant = invariant;
@@ -105,7 +110,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @return version GUID of this asset manifest.
      */
     @Override
-    public GUID getVersionGUID() {
+    public IGUID getVersionGUID() {
         return version;
     }
 
@@ -115,7 +120,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @return the GUID of this asset
      */
     @Override
-    public GUID getInvariantGUID() {
+    public IGUID getInvariantGUID() {
         return invariant;
     }
 
@@ -126,12 +131,12 @@ public class AssetManifest extends SignedManifest implements Asset {
      *         Null if the asset does not have a previous version.
      */
     @Override
-    public Collection<GUID> getPreviousManifests() {
+    public Collection<IGUID> getPreviousManifests() {
         return prevs;
     }
 
     @Override
-    public GUID getContentGUID() {
+    public IGUID getContentGUID() {
         return contentGUID;
     }
 
@@ -143,7 +148,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      *
      */
     @Override
-    public Collection<GUID> getMetadata() {
+    public Collection<IGUID> getMetadata() {
         return metadata;
     }
 
@@ -181,29 +186,23 @@ public class AssetManifest extends SignedManifest implements Asset {
         return obj;
     }
 
-    private GUID makeInvariant() throws ManifestNotMadeException {
-        GUID guid;
+    private IGUID makeInvariant() throws ManifestNotMadeException {
+        IGUID guid;
         try {
             guid = generateInvariant();
-        } catch (GuidGenerationException e) {
+        } catch (GUIDGenerationException e) {
             throw new ManifestNotMadeException();
         }
 
         return guid;
     }
 
-    private GUID generateInvariant() throws GuidGenerationException {
-        return GUID.generateRandomGUID();
+    private IGUID generateInvariant() throws GUIDGenerationException {
+        return GUIDFactory.generateRandomGUID();
     }
 
-    private GUID makeVersionGUID() throws ManifestNotMadeException {
-        GUID guid;
-        try {
-            guid = GUID.generateGUID(manifestToHashInJSON().toString());
-        } catch (GuidGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-        return guid;
+    private IGUID makeVersionGUID() throws GUIDGenerationException {
+        return GUIDFactory.generateGUID(manifestToHashInJSON().toString());
     }
 
     @Override

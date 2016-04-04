@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddCompound() throws Exception {
-        Content cat = new Content("cat", new GUIDsha1("123"));
+        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
@@ -44,7 +44,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testRetrieveCompoundFromFile() throws Exception {
-        Content cat = new Content("cat", new GUIDsha1("123"));
+        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
@@ -66,7 +66,7 @@ public class SeaOfStuffAddCompoundTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddCompoundAndVerify() throws Exception {
-        Content cat = new Content("cat", new GUIDsha1("123"));
+        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 

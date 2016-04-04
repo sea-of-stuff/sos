@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.Collection;
 
@@ -27,7 +27,7 @@ public class ManifestFactory {
      * @throws ManifestNotMadeException
      * @throws DataStorageException
      */
-    public static AtomManifest createAtomManifest(GUID guid, Collection<LocationBundle> locations) {
+    public static AtomManifest createAtomManifest(IGUID guid, Collection<LocationBundle> locations) {
 
         return new AtomManifest(guid, locations);
     }
@@ -60,10 +60,10 @@ public class ManifestFactory {
      * @return an asset manifest
      * @throws ManifestNotMadeException
      */
-    public static AssetManifest createAssetManifest(GUID content,
-                                                    GUID invariant,
-                                                    Collection<GUID> prevs,
-                                                    Collection<GUID> metadata,
+    public static AssetManifest createAssetManifest(IGUID content,
+                                                    IGUID invariant,
+                                                    Collection<IGUID> prevs,
+                                                    Collection<IGUID> metadata,
                                                     Identity identity)
             throws ManifestNotMadeException {
 

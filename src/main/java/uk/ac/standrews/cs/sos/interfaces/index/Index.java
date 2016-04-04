@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.index;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.Collection;
 
@@ -18,11 +18,11 @@ public interface Index {
 
     void addManifest(Manifest manifest) throws IndexException;
 
-    Collection<GUID> getVersions(GUID guid, int results, int skip) throws IndexException;
+    Collection<IGUID> getVersions(IGUID guid, int results, int skip) throws IndexException;
 
-    Collection<GUID> getMetaLabelMatches(String label, int results, int skip) throws IndexException;
+    Collection<IGUID> getMetaLabelMatches(String label, int results, int skip) throws IndexException;
 
-    Collection<GUID> getManifestsOfType(String type, int results, int skip) throws IndexException;
+    Collection<IGUID> getManifestsOfType(String type, int results, int skip) throws IndexException;
 
     SeaConfiguration getConfiguration();
 

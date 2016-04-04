@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDFactory;
 
 import static org.testng.Assert.assertEquals;
 
@@ -14,7 +14,7 @@ public class BasicManifestTest extends SetUpTest {
 
     @Test
     public void testGenerateGUID() throws Exception {
-        assertEquals(GUID.generateGUID(Hashes.TEST_STRING).toString(), Hashes.TEST_STRING_HASHED);
+        assertEquals(GUIDFactory.generateGUID(Hashes.TEST_STRING).toString(), Hashes.TEST_STRING_HASHED);
     }
     
 }

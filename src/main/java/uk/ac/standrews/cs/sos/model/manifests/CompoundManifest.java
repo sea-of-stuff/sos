@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.binary.Base64;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.Collection;
 
@@ -72,7 +73,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param contents
      * @param signature
      */
-    public CompoundManifest(CompoundType type, GUID contentGUID, Collection<Content> contents, String signature) {
+    public CompoundManifest(CompoundType type, IGUID contentGUID, Collection<Content> contents, String signature) {
         super(null, ManifestConstants.COMPOUND);
         this.type = type;
         this.contentGUID = contentGUID;
@@ -126,11 +127,11 @@ public class CompoundManifest extends SignedManifest implements Compound {
         return new String(encodedBytes);
     }
 
-    private GUID makeContentGUID() throws ManifestNotMadeException {
-        GUID guid;
+    private IGUID makeContentGUID() throws ManifestNotMadeException {
+        IGUID guid;
         try {
             guid = generateContentGUID();
-        } catch (GuidGenerationException e) {
+        } catch (GUIDGenerationException e) {
             throw new ManifestNotMadeException();
         }
         return guid;
@@ -148,8 +149,8 @@ public class CompoundManifest extends SignedManifest implements Compound {
         return gson.toJson(obj);
     }
 
-    private GUID generateContentGUID() throws GuidGenerationException {
-         return GUID.generateGUID(getContentsInJSON().toString());
+    private IGUID generateContentGUID() throws GUIDGenerationException {
+         return GUIDFactory.generateGUID(getContentsInJSON().toString());
     }
 
     private JsonArray getContentsInJSON() {

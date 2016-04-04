@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.storage;
 
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 /**
  *
@@ -20,7 +20,7 @@ public class DataVerifier {
      * @param guid
      * @return
      */
-    public static boolean verify(Location location, GUID guid) {
+    public static boolean verify(Location location, IGUID guid) {
         throw new UnsupportedOperationException();
     }
 }

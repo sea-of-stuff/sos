@@ -6,8 +6,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.InputStream;
@@ -58,7 +58,7 @@ public class AssetManifestTest extends SetUpTest {
     @Test
     public void testBasicAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
@@ -75,11 +75,11 @@ public class AssetManifestTest extends SetUpTest {
     @Test
     public void testMetadataAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 metadataGUID = new GUIDsha1(metadataStreamFake);
-        Collection<GUID> metadata = new ArrayList<>();
+        IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
+        Collection<IGUID> metadata = new ArrayList<>();
         metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
@@ -97,14 +97,14 @@ public class AssetManifestTest extends SetUpTest {
     @Test
     public void testPreviousAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 invariantGUID = new GUIDsha1(invariantStreamFake);
+        IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
 
         InputStream previousStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 previousGUID = new GUIDsha1(previousStreamFake);
-        Collection<GUID> previous = new ArrayList<>();
+        IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
+        Collection<IGUID> previous = new ArrayList<>();
         previous.add(previousGUID);
 
         Identity identityMocked = mock(Identity.class);
@@ -121,19 +121,19 @@ public class AssetManifestTest extends SetUpTest {
     @Test
     public void testMetadataAndPreviousAssetConstructor() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 invariantGUID = new GUIDsha1(invariantStreamFake);
+        IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
 
         InputStream previousStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 previousGUID = new GUIDsha1(previousStreamFake);
-        Collection<GUID> previous = new ArrayList<>();
+        IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
+        Collection<IGUID> previous = new ArrayList<>();
         previous.add(previousGUID);
 
         InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 metadataGUID = new GUIDsha1(metadataStreamFake);
-        Collection<GUID> metadata = new ArrayList<>();
+        IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
+        Collection<IGUID> metadata = new ArrayList<>();
         metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
@@ -150,19 +150,19 @@ public class AssetManifestTest extends SetUpTest {
     @Test
     public void testGetters() throws Exception {
         InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 guid = new GUIDsha1(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 invariantGUID = new GUIDsha1(invariantStreamFake);
+        IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
 
         InputStream previousStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 previousGUID = new GUIDsha1(previousStreamFake);
-        Collection<GUID> previous = new ArrayList<>();
+        IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
+        Collection<IGUID> previous = new ArrayList<>();
         previous.add(previousGUID);
 
         InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
-        GUIDsha1 metadataGUID = new GUIDsha1(metadataStreamFake);
-        Collection<GUID> metadata = new ArrayList<>();
+        IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
+        Collection<IGUID> metadata = new ArrayList<>();
         metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);

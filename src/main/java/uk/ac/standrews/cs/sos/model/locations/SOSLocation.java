@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.sos.model.locations;
 
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +26,11 @@ public class SOSLocation implements Location {
     private final static int MACHINE_ID_SEGMENT = 0;
     private final static int ENTIY_ID_SEGMENT = 1;
 
-    private final GUID machineID;
-    private final GUID entity;
+    private final IGUID machineID;
+    private final IGUID entity;
     private final URL url;
 
-    public SOSLocation(GUID machineID, GUID entity) throws MalformedURLException {
+    public SOSLocation(IGUID machineID, IGUID entity) throws MalformedURLException {
         this.machineID = machineID;
         this.entity = entity;
         url = new URL("sos://" + machineID.toString() + "/" + entity.toString());
@@ -37,8 +38,12 @@ public class SOSLocation implements Location {
 
     public SOSLocation(String location) throws MalformedURLException {
         String[] segments = location.split(SCHEME_DIVIDER)[1].split("/");
-        this.machineID = new GUIDsha1(segments[MACHINE_ID_SEGMENT]);
-        this.entity = new GUIDsha1(segments[ENTIY_ID_SEGMENT]);
+        try {
+            this.machineID = GUIDFactory.recreateGUID(segments[MACHINE_ID_SEGMENT]);
+            this.entity = GUIDFactory.recreateGUID(segments[ENTIY_ID_SEGMENT]);
+        } catch (GUIDGenerationException e) {
+            throw new MalformedURLException();
+        }
         url = new URL(location);
     }
 

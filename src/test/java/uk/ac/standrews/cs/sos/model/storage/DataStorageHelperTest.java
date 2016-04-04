@@ -4,16 +4,15 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
 import uk.ac.standrews.cs.utils.Helper;
+import uk.ac.standrews.cs.utils.IGUID;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.IOException;
@@ -34,10 +33,10 @@ public class DataStorageHelperTest extends SetUpTest {
     private SeaConfiguration configuration;
 
     @BeforeMethod
-    public void setUp() throws IOException, SeaConfigurationException {
+    public void setUp() throws Exception {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
-        configuration.setNodeId(new GUIDsha1("123456"));
+        configuration.setNodeId(GUIDFactory.recreateGUID("123456"));
 
         try {
             URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
@@ -57,7 +56,7 @@ public class DataStorageHelperTest extends SetUpTest {
         Location location = Helper.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = null;
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
         assertNotNull(guid);
         assertNull(bundles);
     }
@@ -67,7 +66,7 @@ public class DataStorageHelperTest extends SetUpTest {
         InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
         Collection<LocationBundle> bundles = null;
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertNull(bundles);
     }
@@ -77,7 +76,7 @@ public class DataStorageHelperTest extends SetUpTest {
         Location location = Helper.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -87,7 +86,7 @@ public class DataStorageHelperTest extends SetUpTest {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -97,7 +96,7 @@ public class DataStorageHelperTest extends SetUpTest {
         Location location = null;
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -107,7 +106,7 @@ public class DataStorageHelperTest extends SetUpTest {
     public void testStoreAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -123,7 +122,7 @@ public class DataStorageHelperTest extends SetUpTest {
     public void testStoreAtomFromEmptyStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = StreamsUtils.StringToInputStream("");
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -132,13 +131,13 @@ public class DataStorageHelperTest extends SetUpTest {
     public void testStoreAtomFromTwoEqualStreams() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 
         Collection<LocationBundle> newBundles = new ArrayList<>();
         InputStream twinInputStream = StreamsUtils.StringToInputStream("Test-String");
-        GUID newGUID = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, twinInputStream, newBundles);
+        IGUID newGUID = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, twinInputStream, newBundles);
         assertNotNull(guid);
         assertEquals(newGUID, guid);
         assertEquals(newBundles.size(), 1);

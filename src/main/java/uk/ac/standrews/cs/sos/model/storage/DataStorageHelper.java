@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,9 +27,9 @@ public class DataStorageHelper {
         return stream;
     }
 
-    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
         CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
-        GUID guid = cacheDataStorage.cacheAtom();
+        IGUID guid = cacheDataStorage.cacheAtom();
         if (bundles!= null && guid != null) {
             bundles.add(cacheDataStorage.getCacheLocationBundle());
         }
@@ -37,9 +37,9 @@ public class DataStorageHelper {
         return guid;
     }
 
-    public static GUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
         CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, inputStream);
-        GUID guid = cacheDataStorage.cacheAtom();
+        IGUID guid = cacheDataStorage.cacheAtom();
         if (bundles!= null && guid != null) {
             bundles.add(cacheDataStorage.getCacheLocationBundle());
         }

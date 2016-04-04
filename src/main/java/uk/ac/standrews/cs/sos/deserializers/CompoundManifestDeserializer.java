@@ -1,11 +1,12 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -22,19 +23,23 @@ public class CompoundManifestDeserializer extends CommonDeserializer implements 
     public CompoundManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        GUID contentGUID = getGUID(obj, ManifestConstants.KEY_CONTENT_GUID);
-        String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
+        try {
+            IGUID contentGUID = getGUID(obj, ManifestConstants.KEY_CONTENT_GUID);
+            String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
-        String compoundTypeString = obj.get(ManifestConstants.KEY_COMPOUND_TYPE).getAsString();
-        CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
+            String compoundTypeString = obj.get(ManifestConstants.KEY_COMPOUND_TYPE).getAsString();
+            CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
 
-        JsonArray jContents = obj.getAsJsonArray(ManifestConstants.KEY_CONTENTS);
-        Collection<Content> contents = new ArrayList<>();
-        for(int i = 0; i < jContents.size(); i++) {
-            Content content = gson.fromJson(jContents.get(i), Content.class);
-            contents.add(content);
+            JsonArray jContents = obj.getAsJsonArray(ManifestConstants.KEY_CONTENTS);
+            Collection<Content> contents = new ArrayList<>();
+            for (int i = 0; i < jContents.size(); i++) {
+                Content content = gson.fromJson(jContents.get(i), Content.class);
+                contents.add(content);
+            }
+
+            return new CompoundManifest(compoundType, contentGUID, contents, signature);
+        } catch (GUIDGenerationException e) {
+            throw new JsonParseException("Could not recreated GUIDs");
         }
-
-        return new CompoundManifest(compoundType, contentGUID, contents, signature);
     }
 }

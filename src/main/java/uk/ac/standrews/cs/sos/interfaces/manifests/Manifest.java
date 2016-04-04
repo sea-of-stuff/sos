@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -29,18 +29,18 @@ public interface Manifest {
      *
      * @return guid of the content.
      */
-    GUID getContentGUID();
+    IGUID getContentGUID();
 
     /**
      * Verify this manifest's GUID against its content.
      *
      * @param identity
      * @return true if the GUID of the manifest matches the content.
-     * @throws GuidGenerationException if the GUIDs of the manifests could not be generated
+     * @throws GUIDGenerationException if the GUIDs of the manifests could not be generated
      *                                  due to uk.ac.standrews.cs.IO, network or other issues.
      * @throws DecryptionException
      */
-    boolean verify(Identity identity) throws GuidGenerationException, DecryptionException;
+    boolean verify(Identity identity) throws GUIDGenerationException, DecryptionException;
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

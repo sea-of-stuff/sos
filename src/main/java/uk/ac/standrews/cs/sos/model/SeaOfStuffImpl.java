@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model;
 
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
@@ -12,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedExce
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
@@ -26,7 +26,8 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -53,7 +54,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             generateSOSNodeIfNone();
             identity = new IdentityImpl(configuration);
             manifestsManager = new ManifestsManager(configuration, index);
-        } catch (GuidGenerationException | SeaConfigurationException |
+        } catch (GUIDGenerationException | SeaConfigurationException |
                 KeyGenerationException | KeyLoadedException e) {
             throw new SeaOfStuffException();
         }
@@ -62,10 +63,10 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         registerSOSProtocol();
     }
 
-    private void generateSOSNodeIfNone() throws GuidGenerationException, SeaConfigurationException {
-        GUID nodeId = configuration.getNodeId();
+    private void generateSOSNodeIfNone() throws GUIDGenerationException, SeaConfigurationException {
+        IGUID nodeId = configuration.getNodeId();
         if (nodeId == null) {
-            nodeId = GUID.generateRandomGUID();
+            nodeId = GUIDFactory.generateRandomGUID();
             configuration.setNodeId(nodeId);
         }
     }
@@ -91,7 +92,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(new ProvenanceLocationBundle(location));
 
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsManager.addManifest(manifest);
 
@@ -103,7 +104,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             throws ManifestPersistException, DataStorageException {
 
         Collection<LocationBundle> locations = new ArrayList<>();
-        GUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
+        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
         manifestsManager.addManifest(manifest);
 
@@ -121,10 +122,10 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Asset addAsset(GUID content,
-                          GUID invariant,
-                          Collection<GUID> prevs,
-                          Collection<GUID> metadata)
+    public Asset addAsset(IGUID content,
+                          IGUID invariant,
+                          Collection<IGUID> prevs,
+                          Collection<IGUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException {
 
         AssetManifest manifest = ManifestFactory.createAssetManifest(content, invariant, prevs, metadata, identity);
@@ -163,7 +164,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Manifest getManifest(GUID guid) throws ManifestNotFoundException {
+    public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
         Manifest manifest;
         try {
             manifest = manifestsManager.findManifest(guid);
@@ -183,7 +184,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         boolean ret;
         try {
             ret = manifest.verify(identity);
-        } catch (GuidGenerationException | DecryptionException e) {
+        } catch (GUIDGenerationException | DecryptionException e) {
             throw new ManifestVerificationFailedException();
         }
 
@@ -191,17 +192,17 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Collection<GUID> findManifestByType(String type) throws ManifestNotFoundException {
+    public Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException {
         return manifestsManager.findManifestsByType(type);
     }
 
     @Override
-    public Collection<GUID> findManifestByLabel(String label) throws ManifestNotFoundException {
+    public Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException {
         return manifestsManager.findManifestsThatMatchLabel(label);
     }
 
     @Override
-    public Collection<GUID> findVersions(GUID invariant) throws ManifestNotFoundException {
+    public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
         return manifestsManager.findVersions(invariant);
     }
 }

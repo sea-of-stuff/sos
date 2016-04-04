@@ -1,10 +1,11 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -18,17 +19,19 @@ public class AssetManifestDeserializer extends CommonDeserializer implements Jso
     public AssetManifest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        GUID invariant = getGUID(obj, ManifestConstants.KEY_INVARIANT);
-        GUID version = getGUID(obj, ManifestConstants.KEY_VERSION);
+        try {
+            IGUID invariant = getGUID(obj, ManifestConstants.KEY_INVARIANT);
+            IGUID version = getGUID(obj, ManifestConstants.KEY_VERSION);
+            IGUID content = GUIDFactory.recreateGUID(obj.get(ManifestConstants.KEY_CONTENT_GUID).getAsString());
+            Collection<IGUID> prevs = getGUIDCollection(obj, ManifestConstants.KEY_PREVIOUS_GUID);
+            Collection<IGUID> metadata = getGUIDCollection(obj, ManifestConstants.KEY_METADATA_GUID);
+            String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
 
-        GUID content = new GUIDsha1(obj.get(ManifestConstants.KEY_CONTENT_GUID).getAsString());
+            return new AssetManifest(invariant, version, content, prevs, metadata, signature);
+        } catch (GUIDGenerationException e) {
+            throw new JsonParseException("Could not recreated GUIDs");
+        }
 
-        Collection<GUID> prevs = getGUIDCollection(obj, ManifestConstants.KEY_PREVIOUS_GUID);
-        Collection<GUID> metadata = getGUIDCollection(obj, ManifestConstants.KEY_METADATA_GUID);
-
-        String signature = obj.get(ManifestConstants.KEY_SIGNATURE).getAsString();
-
-        return new AssetManifest(invariant, version, content, prevs, metadata, signature);
     }
 
 

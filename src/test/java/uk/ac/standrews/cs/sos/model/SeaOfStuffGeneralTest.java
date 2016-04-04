@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
 
     @Test(expectedExceptions = ManifestNotFoundException.class)
     public void testFailRetrieveManifest() throws Exception {
-        model.getManifest(new GUIDsha1("123fail"));
+        model.getManifest(GUIDFactory.recreateGUID("123fa11"));
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)

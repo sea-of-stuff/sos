@@ -22,9 +22,9 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
 import uk.ac.standrews.cs.utils.Helper;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,9 +71,9 @@ public class ManifestsManagerTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(new GUIDsha1(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
-        GUID guid = atomManifest.getContentGUID();
+        IGUID guid = atomManifest.getContentGUID();
         try {
             manifestsManager.addManifest(atomManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
@@ -91,12 +91,12 @@ public class ManifestsManagerTest {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
 
         Identity identity = new IdentityImpl(configuration);
-        Content content = new Content("Cat", new GUIDsha1("123"));
+        Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(content);
 
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, identity);
-        GUID guid = compoundManifest.getContentGUID();
+        IGUID guid = compoundManifest.getContentGUID();
         try {
             manifestsManager.addManifest(compoundManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
@@ -115,9 +115,9 @@ public class ManifestsManagerTest {
         ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
         Identity identity = new IdentityImpl(configuration);
 
-        GUID contentGUID = new GUIDsha1("123");
+        IGUID contentGUID = GUIDFactory.recreateGUID("123");
         AssetManifest assetManifest = ManifestFactory.createAssetManifest(contentGUID, null, null, null, identity);
-        GUID guid = assetManifest.getVersionGUID();
+        IGUID guid = assetManifest.getVersionGUID();
         try {
             manifestsManager.addManifest(assetManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
@@ -145,14 +145,14 @@ public class ManifestsManagerTest {
         Location secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                new GUIDsha1(Hashes.TEST_STRING_HASHED),
+                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new ArrayList<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
-        GUID guid = atomManifest.getContentGUID();
+        IGUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                new GUIDsha1(Hashes.TEST_STRING_HASHED),
+                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new ArrayList<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
-        GUID anotherGUID = anotherManifest.getContentGUID();
+        IGUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);
 

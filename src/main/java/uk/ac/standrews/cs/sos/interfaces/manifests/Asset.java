@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.Collection;
 
@@ -9,11 +9,11 @@ import java.util.Collection;
  */
 public interface Asset extends Manifest {
 
-    GUID getVersionGUID();
+    IGUID getVersionGUID();
 
-    GUID getInvariantGUID();
+    IGUID getInvariantGUID();
 
-    Collection<GUID> getPreviousManifests();
+    Collection<IGUID> getPreviousManifests();
 
-    Collection<GUID> getMetadata();
+    Collection<IGUID> getMetadata();
 }

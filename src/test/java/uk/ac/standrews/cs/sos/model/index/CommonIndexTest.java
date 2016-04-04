@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.utils.GUIDFactory;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class CommonIndexTest {
     public void testAddManifestWithWrongType() throws Exception {
         AtomManifest simpleManifestMocked = mock(AtomManifest.class);
 
-        when(simpleManifestMocked.getContentGUID()).thenReturn(new GUIDsha1("123"));
+        when(simpleManifestMocked.getContentGUID()).thenReturn(GUIDFactory.recreateGUID("123"));
         when(simpleManifestMocked.getManifestType()).thenReturn("WrongType");
 
         index.addManifest(simpleManifestMocked);

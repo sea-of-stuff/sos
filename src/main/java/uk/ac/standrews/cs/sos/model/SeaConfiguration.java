@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.utils.GUID;
-import uk.ac.standrews.cs.utils.GUIDsha1;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.*;
 
@@ -26,7 +27,7 @@ public class SeaConfiguration {
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
 
-    private static GUID nodeId;
+    private static IGUID nodeId;
     private static String privateKeyFile;
     private static String publicKeyFile;
 
@@ -59,9 +60,9 @@ public class SeaConfiguration {
                 (new FileReader(SOS_ROOT + SOS_NODE_CONFIG)) ){
             String nodeIdString = reader.readLine();
             if (nodeIdString != null && !nodeIdString.isEmpty()) {
-                nodeId = new GUIDsha1(nodeIdString);
+                nodeId = GUIDFactory.recreateGUID(nodeIdString);
             }
-        } catch (IOException e) {
+        } catch (IOException | GUIDGenerationException e) {
             throw new SeaConfigurationException();
         }
     }
@@ -84,11 +85,11 @@ public class SeaConfiguration {
         }
     }
 
-    public GUID getNodeId() {
+    public IGUID getNodeId() {
      return nodeId;
     }
 
-    public void setNodeId(GUID nodeId) throws SeaConfigurationException {
+    public void setNodeId(IGUID nodeId) throws SeaConfigurationException {
         if (SeaConfiguration.nodeId == null) {
             SeaConfiguration.nodeId = nodeId;
             saveConfiguration();

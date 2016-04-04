@@ -2,13 +2,14 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.exceptions.GuidGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -36,7 +37,7 @@ public class AtomManifest extends BasicManifest implements Atom {
      * @param guid
      * @param locations
      */
-    public AtomManifest(GUID guid, Collection<LocationBundle> locations) {
+    public AtomManifest(IGUID guid, Collection<LocationBundle> locations) {
         super(ManifestConstants.ATOM);
         this.contentGUID = guid;
         this.locations = locations;
@@ -75,7 +76,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public boolean verify(Identity identity) throws GuidGenerationException {
+    public boolean verify(Identity identity) throws GUIDGenerationException {
         if (contentGUID == null)
             return false;
 
@@ -95,9 +96,9 @@ public class AtomManifest extends BasicManifest implements Atom {
         return true;
     }
 
-    private boolean verifyStream(InputStream inputStream) throws GuidGenerationException {
+    private boolean verifyStream(InputStream inputStream) throws GUIDGenerationException {
         return inputStream != null &&
-                contentGUID.equals(GUID.generateGUID(inputStream));
+                contentGUID.equals(GUIDFactory.generateGUID(inputStream));
     }
 
     @Override

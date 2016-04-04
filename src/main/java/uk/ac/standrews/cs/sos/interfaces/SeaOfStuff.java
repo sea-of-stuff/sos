@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.utils.GUID;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -103,8 +103,8 @@ public interface SeaOfStuff {
      * @throws ManifestPersistException
      *
      */
-    Asset addAsset(GUID content, GUID invariant,
-                   Collection<GUID> prevs, Collection<GUID> metadata)
+    Asset addAsset(IGUID content, IGUID invariant,
+                   Collection<IGUID> prevs, Collection<IGUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException;
 
 
@@ -133,9 +133,9 @@ public interface SeaOfStuff {
      *                              explorable Sea of Stuff.
      *
      * @see Manifest
-     * @see GUID
+     * @see IGUID
      */
-    Manifest getManifest(GUID guid) throws ManifestNotFoundException;
+    Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
     Identity getIdentity();
 
@@ -158,14 +158,14 @@ public interface SeaOfStuff {
      * @throws ManifestVerificationFailedException
      *
      * @see Manifest
-     * @see GUID
+     * @see IGUID
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException;
 
-    Collection<GUID> findManifestByType(String type) throws ManifestNotFoundException;
+    Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException;
 
-    Collection<GUID> findManifestByLabel(String label) throws ManifestNotFoundException;
+    Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException;
 
-    Collection<GUID> findVersions(GUID invariant) throws ManifestNotFoundException;
+    Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
 
 }
