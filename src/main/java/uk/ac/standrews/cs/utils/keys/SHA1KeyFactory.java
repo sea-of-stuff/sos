@@ -1,7 +1,7 @@
 /*
  * Created on 26-Oct-2004
  */
-package uk.ac.standrews.cs.utils;
+package uk.ac.standrews.cs.utils.keys;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;

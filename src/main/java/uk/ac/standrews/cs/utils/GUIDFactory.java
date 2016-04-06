@@ -4,13 +4,15 @@
 package uk.ac.standrews.cs.utils;
 
 import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
+import uk.ac.standrews.cs.utils.keys.KeyImpl;
+import uk.ac.standrews.cs.utils.keys.SHA1KeyFactory;
 
 import java.io.InputStream;
 
 public class GUIDFactory {
     
     public static IGUID generateRandomGUID() throws GUIDGenerationException {
-        return (KeyImpl)SHA1KeyFactory.generateRandomKey();
+        return (KeyImpl) SHA1KeyFactory.generateRandomKey();
     }
     
     public static IGUID recreateGUID(String string) throws GUIDGenerationException {

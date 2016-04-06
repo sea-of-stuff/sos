@@ -3,6 +3,8 @@
  */
 package uk.ac.standrews.cs.utils;
 
+import uk.ac.standrews.cs.utils.keys.IKey;
+
 /**
  * A Globally Unique Identifier
  *

@@ -6,8 +6,8 @@ package uk.ac.standrews.cs.sos.model.utils;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
-import uk.ac.standrews.cs.utils.IKey;
-import uk.ac.standrews.cs.utils.SHA1KeyFactory;
+import uk.ac.standrews.cs.utils.keys.IKey;
+import uk.ac.standrews.cs.utils.keys.SHA1KeyFactory;
 
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.AssertJUnit.assertEquals;

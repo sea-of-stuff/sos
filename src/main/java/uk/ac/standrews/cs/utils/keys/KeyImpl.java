@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.utils;
+package uk.ac.standrews.cs.utils.keys;
 
 import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.math.BigInteger;
 

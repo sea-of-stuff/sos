@@ -6,7 +6,7 @@ package uk.ac.standrews.cs.sos.model.utils;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
-import uk.ac.standrews.cs.utils.KeyImpl;
+import uk.ac.standrews.cs.utils.keys.KeyImpl;
 
 import java.math.BigInteger;
 
@@ -46,7 +46,6 @@ public class KeyImplTest {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Tests whether the key integers are as expected. All should lie in range zero to keyspace_size - 1.

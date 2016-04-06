@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.GUIDFactory;
 import uk.ac.standrews.cs.utils.IGUID;
-import uk.ac.standrews.cs.utils.KeyImpl;
+import uk.ac.standrews.cs.utils.keys.KeyImpl;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.InputStream;

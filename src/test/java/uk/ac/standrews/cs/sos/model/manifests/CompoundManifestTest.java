@@ -134,7 +134,7 @@ public class CompoundManifestTest extends SetUpTest {
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
-        assertFalse(compoundManifest.isValid());
+        assertTrue(compoundManifest.isValid());
     }
 
     @Test (expectedExceptions = ManifestNotMadeException.class)

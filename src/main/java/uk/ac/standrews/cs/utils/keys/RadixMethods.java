@@ -1,7 +1,7 @@
 /*
  * Created on Jan 17, 2005 at 3:56:58 PM.
  */
-package uk.ac.standrews.cs.utils;
+package uk.ac.standrews.cs.utils.keys;
 
 /**
  * @author al

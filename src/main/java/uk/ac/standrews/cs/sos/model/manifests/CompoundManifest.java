@@ -101,7 +101,6 @@ public class CompoundManifest extends SignedManifest implements Compound {
         return super.isValid() &&
                 type != null &&
                 contents != null &&
-                !contents.isEmpty() &&
                 isGUIDValid(contentGUID);
     }
 
