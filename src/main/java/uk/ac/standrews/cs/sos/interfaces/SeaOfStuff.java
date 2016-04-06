@@ -119,10 +119,10 @@ public interface SeaOfStuff {
     /**
      * Get an atom's data given an AtomManifest.
      *
-     * @param atomManifest describing the atom to retrieve.
+     * @param atom describing the atom to retrieve.
      * @return atom to retrieve in bytes.
      */
-    InputStream getAtomContent(AtomManifest atomManifest);
+    InputStream getAtomContent(Atom atom);
 
     /**
      * Get the manifest that matches a given GUID.

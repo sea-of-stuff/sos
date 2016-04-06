@@ -144,9 +144,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public InputStream getAtomContent(AtomManifest atomManifest) {
+    public InputStream getAtomContent(Atom atom) {
         InputStream dataStream = null;
-        Collection<LocationBundle> locations = atomManifest.getLocations();
+        Collection<LocationBundle> locations = atom.getLocations();
         for(LocationBundle location:locations) {
 
             try {
