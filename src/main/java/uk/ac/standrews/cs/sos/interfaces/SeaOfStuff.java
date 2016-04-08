@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -11,10 +12,8 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -54,11 +53,13 @@ public interface SeaOfStuff {
 
     /**
      * Adds an atom to the Sea of Stuff.
+     *
      * The locations of the atom are used to generate a manifest.
      *
-     * @param location of the atom.
-     * @return AtomManifest for the added atom.
-     * @throws ManifestNotMadeException
+     * TODO - mention caching, fact that atom comes from the location
+     *
+     * @param location of the data for the atom.
+     * @return Atom for the added atom.
      * @throws DataStorageException
      * @throws ManifestPersistException
      *
@@ -70,8 +71,7 @@ public interface SeaOfStuff {
     /**
      *
      * @param inputStream for this atom
-     * @return manifest for the added atom
-     * @throws ManifestNotMadeException
+     * @return Atom for the added atom
      * @throws DataStorageException
      * @throws ManifestPersistException
      */
@@ -82,7 +82,7 @@ public interface SeaOfStuff {
      * Adds a CompoundManifest to the Sea of Stuff.
      *
      * @param contents of this compound.
-     * @return CompoundManifest for the added compound.
+     * @return Compound for the added compound.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
@@ -98,7 +98,7 @@ public interface SeaOfStuff {
      * @param invariant guid of this asset
      * @param prevs version of this asset.
      * @param metadata of this asset.
-     * @return AssetManifest for the added asset.
+     * @return Asset for the added asset.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
@@ -107,12 +107,16 @@ public interface SeaOfStuff {
                    Collection<IGUID> prevs, Collection<IGUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException;
 
-
     /**
+     * Add a manifest to the sea of stuff.
+     * If {@code recursive} is true, then manifests referenced from the specified one will also be added,
+     * assuming that such manifests are available and reachable.
+     * This operation will be performed recursively.
      *
      * @param manifest to add to the SOS
      * @param recursive if true adds the references manifests and data recursively.
-     * @return
+     * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
+     * @throws ManifestPersistException
      */
     Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
 
@@ -120,7 +124,7 @@ public interface SeaOfStuff {
      * Get an atom's data given an AtomManifest.
      *
      * @param atom describing the atom to retrieve.
-     * @return atom to retrieve in bytes.
+     * @return InputStream
      */
     InputStream getAtomContent(Atom atom);
 
@@ -132,11 +136,13 @@ public interface SeaOfStuff {
      * @throws ManifestNotFoundException if the GUID is not known within the currently
      *                              explorable Sea of Stuff.
      *
-     * @see Manifest
-     * @see IGUID
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
+    /**
+     *
+     * @return Identify for this instance of the sea of stuff.
+     */
     Identity getIdentity();
 
     /**
@@ -152,20 +158,36 @@ public interface SeaOfStuff {
      * content of the manifest.
      * </p>
      *
+     * @param identity                      used to verify the manifest
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
      * @throws ManifestVerificationFailedException
-     *
-     * @see Manifest
-     * @see IGUID
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException;
 
+    /**
+     *
+     * @param type
+     * @return
+     * @throws ManifestNotFoundException
+     */
     Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException;
 
+    /**
+     *
+     * @param label
+     * @return
+     * @throws ManifestNotFoundException
+     */
     Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException;
 
+    /**
+     *
+     * @param invariant
+     * @return
+     * @throws ManifestNotFoundException
+     */
     Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
 
 }

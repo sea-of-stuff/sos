@@ -1,15 +1,15 @@
 package uk.ac.standrews.cs.sos.model;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.utils.GUIDFactory;
 import uk.ac.standrews.cs.utils.Helper;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.utils.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

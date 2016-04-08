@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
-import uk.ac.standrews.cs.utils.GUIDFactory;
 
 import static org.testng.Assert.assertEquals;
 

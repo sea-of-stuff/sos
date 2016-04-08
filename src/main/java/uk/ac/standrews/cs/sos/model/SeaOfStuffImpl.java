@@ -1,5 +1,8 @@
 package uk.ac.standrews.cs.sos.model;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
@@ -11,7 +14,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedExce
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
@@ -26,8 +28,6 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
-import uk.ac.standrews.cs.utils.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.InputStream;
 import java.net.URL;

@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import com.google.gson.JsonObject;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.utils.IGUID;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by

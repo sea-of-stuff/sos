@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.utils.IGUID;
+import uk.ac.standrews.cs.IGUID;
 
 import java.util.Objects;
 

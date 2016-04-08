@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
-import uk.ac.standrews.cs.utils.IGUID;
+import uk.ac.standrews.cs.IGUID;
 
 import java.util.Collection;
 

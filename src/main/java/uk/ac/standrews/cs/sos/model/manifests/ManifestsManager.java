@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
@@ -21,7 +22,6 @@ import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.utils.FileHelper;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.*;
 import java.net.URISyntaxException;

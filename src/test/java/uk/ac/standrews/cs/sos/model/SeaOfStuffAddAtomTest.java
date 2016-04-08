@@ -170,10 +170,15 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
 
     @Test
     public void testAddAtomFromStream() throws Exception {
-        InputStream stream = StreamsUtils.StringToInputStream("first line and second line");
+        String testString = "first line and second line";
+        InputStream stream = StreamsUtils.StringToInputStream(testString);
         Atom manifest = model.addAtom(stream);
         assertNotNull(manifest.getContentGUID());
         assertEquals(manifest.getLocations().size(), 1);
+
+        InputStream resultStream = model.getAtomContent(manifest);
+        String resultString = Helper.InputStreamToString(resultStream);
+        assertEquals(testString, resultString);
     }
 
 }

@@ -3,11 +3,11 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import com.google.gson.JsonObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.utils.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.InputStream;

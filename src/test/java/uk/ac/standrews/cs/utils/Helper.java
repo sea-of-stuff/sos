@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.utils;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
@@ -65,5 +66,9 @@ public class Helper {
         if (dir.exists()) {
             FileUtils.deleteDirectory(dir);
         }
+    }
+
+    public static String InputStreamToString(InputStream stream) throws IOException {
+        return IOUtils.toString(stream);
     }
 }

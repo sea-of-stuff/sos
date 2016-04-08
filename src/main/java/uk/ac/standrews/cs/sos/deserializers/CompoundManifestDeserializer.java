@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.*;
-import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

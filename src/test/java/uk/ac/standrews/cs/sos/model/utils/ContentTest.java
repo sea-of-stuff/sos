@@ -2,12 +2,12 @@ package uk.ac.standrews.cs.sos.model.utils;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.constants.Hashes;
+import uk.ac.standrews.cs.impl.KeyImpl;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.utils.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
-import uk.ac.standrews.cs.utils.keys.KeyImpl;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.InputStream;

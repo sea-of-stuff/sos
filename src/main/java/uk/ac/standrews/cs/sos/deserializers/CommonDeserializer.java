@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.sos.deserializers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import uk.ac.standrews.cs.sos.exceptions.utils.GUIDGenerationException;
-import uk.ac.standrews.cs.utils.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 
 import java.util.ArrayList;
 import java.util.Collection;

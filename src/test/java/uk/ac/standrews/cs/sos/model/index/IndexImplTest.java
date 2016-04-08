@@ -2,10 +2,10 @@ package uk.ac.standrews.cs.sos.model.index;
 
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.utils.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
 
 import java.util.ArrayList;
 import java.util.Collection;
