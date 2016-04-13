@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
+import uk.ac.standrews.cs.sos.network.NodeManager;
 import uk.ac.standrews.cs.utils.Helper;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
@@ -38,8 +39,9 @@ public class DataStorageHelperTest extends SetUpTest {
         configuration = SeaConfiguration.getInstance();
         configuration.setNodeId(GUIDFactory.recreateGUID("123456"));
 
+        NodeManager nodeManager = new NodeManager();
         try {
-            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
+            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory(nodeManager));
         } catch (Error e) {
             // Error is thrown if factory was already setup in previous tests
         }

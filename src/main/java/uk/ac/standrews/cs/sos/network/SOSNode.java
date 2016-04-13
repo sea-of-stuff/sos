@@ -1,13 +1,8 @@
 package uk.ac.standrews.cs.sos.network;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 
 import java.net.InetSocketAddress;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -21,6 +16,7 @@ public class SOSNode implements Node {
 
     public SOSNode(IGUID guid) {
         this.nodeGUID = guid;
+        // TODO - this node?
     }
 
     public SOSNode() {

@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
@@ -28,9 +29,11 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
+import uk.ac.standrews.cs.sos.network.NodeManager;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -46,6 +49,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private Identity identity;
     private ManifestsManager manifestsManager;
     final private SeaConfiguration configuration;
+    private NodeManager nodeManager;
 
     public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws SeaOfStuffException {
         this.configuration = configuration;
@@ -56,7 +60,14 @@ public class SeaOfStuffImpl implements SeaOfStuff {
             manifestsManager = new ManifestsManager(configuration, index);
         } catch (GUIDGenerationException | SeaConfigurationException |
                 KeyGenerationException | KeyLoadedException e) {
-            throw new SeaOfStuffException();
+            throw new SeaOfStuffException(e);
+        }
+
+        try {
+            nodeManager = new NodeManager();
+            nodeManager.loadFromDB();
+        } catch (DatabasePersistenceException e) {
+            throw new SeaOfStuffException(e);
         }
 
         backgroundProcesses();
@@ -73,7 +84,8 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     private void registerSOSProtocol() {
         try {
-            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
+            URLStreamHandlerFactory urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(nodeManager);
+            URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
         } catch (Error e) {
             System.err.println("SeaOfStuffImpl::registerSOSProtocol:" + e.getMessage());
         }

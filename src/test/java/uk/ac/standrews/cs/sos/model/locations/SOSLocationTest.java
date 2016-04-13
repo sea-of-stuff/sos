@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
+import uk.ac.standrews.cs.sos.network.NodeManager;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.IOException;
@@ -30,8 +31,9 @@ public class SOSLocationTest extends SetUpTest {
         configuration = SeaConfiguration.getInstance();
         configuration.setNodeId(GUIDFactory.recreateGUID("12345678"));
 
+        NodeManager nodeManager = new NodeManager();
         try {
-            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory());
+            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory(nodeManager));
         } catch (Error e) {
             // Error is thrown if factory was already setup in previous tests
         }

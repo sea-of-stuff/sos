@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.network;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistanceException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 
 import java.net.InetSocketAddress;
@@ -86,14 +86,14 @@ public class SQLiteDB {
         return retval;
     }
 
-    protected static Connection getSQLiteConnection() throws DatabasePersistanceException {
+    protected static Connection getSQLiteConnection() throws DatabasePersistenceException {
         Connection connection;
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" +
                     SeaConfiguration.getInstance().getDBFolder()+ "test.db");
         } catch (Exception e) {
-            throw new DatabasePersistanceException(e.getClass().getName() + ": " + e.getMessage());
+            throw new DatabasePersistenceException(e.getClass().getName() + ": " + e.getMessage());
         }
 
         return connection;

@@ -4,11 +4,11 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistanceException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 
 import java.net.InetSocketAddress;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -16,7 +16,7 @@ import static org.testng.Assert.*;
 public class NodeManagerTest {
 
     @Test(priority=0)
-    public void persistTest() throws GUIDGenerationException, DatabasePersistanceException {
+    public void persistTest() throws GUIDGenerationException, DatabasePersistenceException {
 
         IGUID guid = GUIDFactory.generateGUID("test");
         InetSocketAddress inetSocketAddress = new InetSocketAddress("example.com", 8080);
@@ -31,7 +31,7 @@ public class NodeManagerTest {
     }
 
     @Test(priority=1)
-    public void getTest() throws GUIDGenerationException, DatabasePersistanceException {
+    public void getTest() throws GUIDGenerationException, DatabasePersistenceException {
 
         NodeManager nodeManager = new NodeManager();
         nodeManager.loadFromDB();

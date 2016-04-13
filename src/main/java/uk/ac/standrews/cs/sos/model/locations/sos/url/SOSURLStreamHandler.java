@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
+import uk.ac.standrews.cs.sos.network.NodeManager;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -10,8 +12,14 @@ import java.net.URLStreamHandler;
  */
 public class SOSURLStreamHandler extends URLStreamHandler {
 
+    public NodeManager nodeManager;
+
+    public SOSURLStreamHandler(NodeManager nodeManager) {
+        this.nodeManager = nodeManager;
+    }
+
     @Override
     protected URLConnection openConnection(URL url) throws IOException {
-        return new SOSURLConnection(url);
+        return new SOSURLConnection(nodeManager, url);
     }
 }

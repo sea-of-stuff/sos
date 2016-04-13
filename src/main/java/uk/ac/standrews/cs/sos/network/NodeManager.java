@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.sos.network;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistanceException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -28,7 +28,17 @@ public class NodeManager {
         return knownNodes;
     }
 
-    public void loadFromDB() throws DatabasePersistanceException {
+    public Node getNode(IGUID guid) {
+        for(Node knownNode:knownNodes) {
+            if (knownNode.getNodeGUID().equals(guid)) {
+                return knownNode;
+            }
+        }
+
+        return null;
+    }
+
+    public void loadFromDB() throws DatabasePersistenceException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
 
@@ -37,7 +47,7 @@ public class NodeManager {
             }
 
         } catch (SQLException | GUIDGenerationException e) {
-            throw new DatabasePersistanceException(e);
+            throw new DatabasePersistenceException(e);
         }
     }
 
@@ -45,7 +55,7 @@ public class NodeManager {
         // TODO - load from path
     }
 
-    public void persist() throws DatabasePersistanceException {
+    public void persist() throws DatabasePersistenceException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
 
@@ -58,7 +68,7 @@ public class NodeManager {
             }
 
         } catch (SQLException e) {
-            throw new DatabasePersistanceException(e);
+            throw new DatabasePersistenceException(e);
         }
     }
 

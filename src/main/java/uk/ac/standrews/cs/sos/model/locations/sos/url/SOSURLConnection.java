@@ -5,11 +5,14 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.network.Node;
+import uk.ac.standrews.cs.sos.network.NodeManager;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -18,14 +21,17 @@ import java.net.URLConnection;
  */
 public class SOSURLConnection extends URLConnection {
 
+    private NodeManager nodeManager;
+
     /**
      * Constructs a URL connection to the specified URL. A connection to
      * the object referenced by the URL is not created.
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(URL url) {
+    protected SOSURLConnection(NodeManager nodeManager, URL url) {
         super(url);
+        this.nodeManager = nodeManager;
     }
 
     @Override
@@ -52,6 +58,15 @@ public class SOSURLConnection extends URLConnection {
                  * check NodeManager to see if node is known
                  *
                  */
+                Node node = nodeManager.getNode(urlMachineId);
+                InetSocketAddress inetSocketAddress = node.getHostAddress();
+                String urlString = "http://" + inetSocketAddress.getHostName() +
+                        ":" + inetSocketAddress.getPort() +
+                        "/sos/find/manifest?guid=" + entityId.toString(); // TODO - this is hardcoded, plus this api end-point returns a manifest not data
+                URL url = new URL(urlString);
+                URLConnection conn = url.openConnection();
+
+                return conn.getInputStream();
             }
         } catch (SeaConfigurationException | GUIDGenerationException e) {
             throw new IOException(); // FIXME - this try/catch is a bit dirty.
@@ -62,7 +77,6 @@ public class SOSURLConnection extends URLConnection {
          * otherwise contact registry/coordinator
          * talk to coordinator via http
          */
-        return null;
     }
 
 }

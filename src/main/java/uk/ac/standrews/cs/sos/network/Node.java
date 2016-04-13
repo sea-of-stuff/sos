@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.network;
 import uk.ac.standrews.cs.IGUID;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
