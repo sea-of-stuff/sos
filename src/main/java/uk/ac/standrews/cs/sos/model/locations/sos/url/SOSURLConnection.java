@@ -46,6 +46,12 @@ public class SOSURLConnection extends URLConnection {
                 String path = SeaConfiguration.getInstance().getCacheDataPath();
                 FileInputStream fileStream = new FileInputStream(path + entityId);
                 return new BufferedInputStream(fileStream);
+            } else {
+                /*
+                 * TODO - get data from other nodes
+                 * check NodeManager to see if node is known
+                 *
+                 */
             }
         } catch (SeaConfigurationException | GUIDGenerationException e) {
             throw new IOException(); // FIXME - this try/catch is a bit dirty.

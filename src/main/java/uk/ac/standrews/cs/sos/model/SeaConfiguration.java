@@ -23,6 +23,7 @@ public class SeaConfiguration {
     private static final String INDEX_FOLDER = "index/";
     private static final String MANIFEST_FOLDER = "manifests/";
     private static final String KEYS_FOLDER = "keys/";
+    private static final String DB_FOLDER = "db/";
 
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
@@ -115,6 +116,10 @@ public class SeaConfiguration {
 
     public String getCacheDataPath() {
         return root + CACHE_FOLDER;
+    }
+
+    public String getDBFolder() {
+        return root + DB_FOLDER; // TODO - make directory if this does not exist
     }
 
     public void saveConfiguration() throws SeaConfigurationException {

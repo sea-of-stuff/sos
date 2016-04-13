@@ -15,13 +15,11 @@ public interface Node {
     InetSocketAddress getHostAddress();
 
     /**
-     * This returns an integer representing the type for this node.
+     * This returns an byte representing the type for this node.
      * @see NodeTypeMasks
      *
-     * @return integer representing the type for this node
+     * @return byte representing the type for this node
      */
-    int getNodeType();
-
-    Collection<IGUID> getKnownNodes();
+    byte getNodeType();
 
 }

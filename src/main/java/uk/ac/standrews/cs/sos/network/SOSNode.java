@@ -1,32 +1,70 @@
 package uk.ac.standrews.cs.sos.network;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 
 import java.net.InetSocketAddress;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSNode implements Node {
 
+    private IGUID nodeGUID;
+    private InetSocketAddress hostAddress;
+    private byte nodeType;
+
+    public SOSNode(IGUID guid) {
+        this.nodeGUID = guid;
+    }
+
+    public SOSNode() {
+        // TODO - load node
+    }
+
+    public SOSNode(IGUID guid, InetSocketAddress hostAddress) {
+        // Contact node and get port? or specify port here
+        this.nodeGUID = guid;
+        this.hostAddress = hostAddress;
+    }
+
     @Override
     public IGUID getNodeGUID() {
-        return null;
+        return nodeGUID;
     }
 
     @Override
     public InetSocketAddress getHostAddress() {
-        return null;
+        return hostAddress;
     }
 
     @Override
-    public NodeType getNodeType() {
-        return null;
+    public byte getNodeType() {
+        return nodeType;
+    }
+
+    public Node setNodeType(byte nodeType) {
+        this.nodeType = nodeType;
+        return this;
     }
 
     @Override
-    public Collection<IGUID> getKnownNodes() {
-        return null;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SOSNode sosNode = (SOSNode) o;
+        return Objects.equals(nodeGUID, sosNode.nodeGUID);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodeGUID);
+    }
+
+
 }
