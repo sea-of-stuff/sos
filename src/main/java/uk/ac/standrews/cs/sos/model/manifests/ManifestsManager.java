@@ -17,10 +17,14 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.utils.FileHelper;
 
 import java.io.*;
@@ -150,9 +154,9 @@ public class ManifestsManager {
 
     private Manifest getManifestFromFile(IGUID guid) throws UnknownGUIDException {
         Manifest manifest;
-        final String path = getManifestPath(guid);
+        SOSFile manifestFile = getManifest(guid);
         try {
-            String manifestData = readManifestFromFile(path);
+            String manifestData = readManifestFromFile(manifestFile);
 
             JsonObject obj = gson.fromJson(manifestData, JsonObject.class);
             String type = obj.get(ManifestConstants.KEY_TYPE).getAsString();
@@ -165,10 +169,10 @@ public class ManifestsManager {
         return manifest;
     }
 
-    private String readManifestFromFile(String path) throws FileNotFoundException {
+    private String readManifestFromFile(SOSFile manifestFile) throws FileNotFoundException {
         // http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
         String text;
-        try (Scanner scanner = new Scanner(new File(path))) {
+        try (Scanner scanner = new Scanner(new File(manifestFile.getPathname()))) {
             text = scanner.useDelimiter("\\A").next();
         }
         return text;
@@ -213,27 +217,27 @@ public class ManifestsManager {
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestPersistException, UnknownGUIDException, ManifestMergeException{
         IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromFile(guid);
-        String backupPath = backupManifest(existingManifest);
+        SOSFile backupPath = backupManifest(existingManifest);
 
         if (!existingManifest.equals(manifest)) {
-            manifest = mergeManifests(guid, (AtomManifest) existingManifest, (AtomManifest) manifest);
-            FileHelper.deleteFile(backupPath);
+            manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
+            FileHelper.deleteFile(backupPath.getPathname());
             saveToFile(manifest);
         }
 
         FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
     }
 
-    private String backupManifest(Manifest manifest) throws ManifestMergeException {
-        IGUID guidUsedToStoreManifest = getGUIDUsedToStoreManifest(manifest);
-        String originalPath = getManifestPath(guidUsedToStoreManifest);
+    private SOSFile backupManifest(Manifest manifest) throws ManifestMergeException {
+        IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
+        SOSFile backupManifest = getManifest(manifestGUID);
         try {
-            FileHelper.copyToFile(new URILocation(originalPath).getSource(),
-                    originalPath + BACKUP_EXTENSION);
+            FileHelper.copyToFile(new URILocation(backupManifest.getPathname()).getSource(),
+                    backupManifest + BACKUP_EXTENSION);
         } catch (IOException | URISyntaxException e) {
             throw new ManifestMergeException();
         }
-        return originalPath;
+        return backupManifest;
     }
 
     private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
@@ -250,19 +254,18 @@ public class ManifestsManager {
         JsonObject manifestJSON = manifest.toJSON();
 
         String guid = getGUIDForManifestFilename(manifest);
-        final String path = getManifestPath(guid);
-        File file = new File(path);
+        SOSFile manifestFile = getManifest(guid);
 
         // if filepath doesn't exists, then create it
-        File parent = file.getParentFile();
+        SOSDirectory parent = manifestFile.getParent();
         if(!parent.exists() && !parent.mkdirs()){
             throw new ManifestPersistException();
         }
 
-        if (file.exists())
+        if (manifestFile.exists())
             return;
 
-        writeToFile(file, manifestJSON);
+        writeToFile(manifestFile, manifestJSON);
     }
 
     private String getGUIDForManifestFilename(Manifest manifest) {
@@ -299,19 +302,19 @@ public class ManifestsManager {
         }
     }
 
-    private String getManifestPath(IGUID guid) {
-        return getManifestPath(guid.toString());
+    private SOSFile getManifest(IGUID guid) {
+        return getManifest(guid.toString());
     }
 
-    private String getManifestPath(String guid) {
-        return configuration.getLocalManifestsLocation() + normaliseGUID(guid);
+    private SOSFile getManifest(String guid) {
+        return configuration.getManifestsDirectory().addSOSFile(normaliseGUID(guid));
     }
 
     private String normaliseGUID(String guid) {
         return guid + JSON_EXTENSION;
     }
 
-    private Manifest mergeManifests(IGUID guid, AtomManifest first, AtomManifest second) {
+    private Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
         HashSet<LocationBundle> locations = new HashSet<>();
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
@@ -320,8 +323,9 @@ public class ManifestsManager {
     }
 
     private boolean manifestExistsInLocalStorage(IGUID guid) {
-        String path = getManifestPath(guid);
-        return new File(path).exists();
+        SOSFile path = getManifest(guid);
+        return path.exists();
+        // return new File(path).exists();
     }
 
 }

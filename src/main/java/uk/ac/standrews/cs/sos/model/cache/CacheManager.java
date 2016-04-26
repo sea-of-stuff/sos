@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.storage;
+package uk.ac.standrews.cs.sos.model.cache;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 import uk.ac.standrews.cs.utils.FileHelper;
 
 import java.io.IOException;
@@ -22,27 +23,29 @@ import java.net.URISyntaxException;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CacheDataStorage {
+public class CacheManager {
 
     private final SeaConfiguration configuration;
     private Location origin;
     private InputStream inputStream;
     private CacheLocationBundle cache;
 
+    // TODO - abstract cache types
     private static final int CACHE_ORIGIN_LOCATION_TYPE = 0;
     private static final int CACHE_ORIGIN_STREAM_TYPE = 1;
+
     private final int cacheOriginType;
 
-    public CacheDataStorage(SeaConfiguration configuration,
-                            Location origin) {
+    public CacheManager(SeaConfiguration configuration,
+                        Location origin) {
         this.configuration = configuration;
         this.origin = origin;
 
         cacheOriginType = CACHE_ORIGIN_LOCATION_TYPE;
     }
 
-    public CacheDataStorage(SeaConfiguration configuration,
-                            InputStream inputStream) {
+    public CacheManager(SeaConfiguration configuration,
+                        InputStream inputStream) {
         this.configuration = configuration;
         this.inputStream = inputStream;
 

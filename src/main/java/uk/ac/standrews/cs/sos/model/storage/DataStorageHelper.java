@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.cache.CacheManager;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
 import java.io.IOException;
@@ -21,27 +22,27 @@ public class DataStorageHelper {
         try {
             stream = location.getSource();
         } catch (IOException e) {
-            throw new SourceLocationException("CacheDataStorage " + location.toString() + " " + e);
+            throw new SourceLocationException("CacheManager " + location.toString() + " " + e);
         }
 
         return stream;
     }
 
     public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, location);
-        IGUID guid = cacheDataStorage.cacheAtom();
+        CacheManager cacheManager = new CacheManager(configuration, location);
+        IGUID guid = cacheManager.cacheAtom();
         if (bundles!= null && guid != null) {
-            bundles.add(cacheDataStorage.getCacheLocationBundle());
+            bundles.add(cacheManager.getCacheLocationBundle());
         }
 
         return guid;
     }
 
     public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        CacheDataStorage cacheDataStorage = new CacheDataStorage(configuration, inputStream);
-        IGUID guid = cacheDataStorage.cacheAtom();
+        CacheManager cacheManager = new CacheManager(configuration, inputStream);
+        IGUID guid = cacheManager.cacheAtom();
         if (bundles!= null && guid != null) {
-            bundles.add(cacheDataStorage.getCacheLocationBundle());
+            bundles.add(cacheManager.getCacheLocationBundle());
         }
 
         return guid;

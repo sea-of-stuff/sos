@@ -4,10 +4,14 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedDirectory;
 
 import java.io.*;
 
 /**
+ * FIXME - this should make use of the interfaces in storage
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SeaConfiguration {
@@ -21,7 +25,10 @@ public class SeaConfiguration {
     private static final String DATA_FOLDER = "data/";
     private static final String CACHE_FOLDER = "cached_data/";
     private static final String INDEX_FOLDER = "index/";
-    private static final String MANIFEST_FOLDER = "manifests/";
+
+    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory("sos"); // FIXME - this should be equivalent to String root
+    private static final SOSDirectory MANIFEST_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "manifests");
+
     private static final String KEYS_FOLDER = "keys/";
     private static final String DB_FOLDER = "db/";
 
@@ -101,8 +108,8 @@ public class SeaConfiguration {
         return root + DATA_FOLDER;
     }
 
-    public String getLocalManifestsLocation() {
-        return root + MANIFEST_FOLDER;
+    public SOSDirectory getManifestsDirectory() {
+        return MANIFEST_DIRECTORY;
     }
 
     public String[] getIdentityPaths() {

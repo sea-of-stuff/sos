@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.storage;
+package uk.ac.standrews.cs.sos.model.data;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;

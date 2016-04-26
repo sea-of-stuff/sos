@@ -39,7 +39,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
         index.killInstance();
 
         Helper.deleteDirectory(index.getConfiguration().getIndexPath());
-        Helper.cleanDirectory(index.getConfiguration().getLocalManifestsLocation());
+        Helper.cleanDirectory(index.getConfiguration().getManifestsDirectory());
         Helper.cleanDirectory(index.getConfiguration().getDataPath());
         Helper.cleanDirectory(index.getConfiguration().getCacheDataPath());
     }
