@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
+import uk.ac.standrews.cs.sos.network.roles.Coordinator;
+import uk.ac.standrews.cs.sos.network.roles.NodeRolesMasks;
 
 import java.net.InetSocketAddress;
 
@@ -20,7 +22,7 @@ public class NodeManagerTest {
 
         IGUID guid = GUIDFactory.generateGUID("test");
         InetSocketAddress inetSocketAddress = new InetSocketAddress("example.com", 8080);
-        Node node = new SOSNode(guid, inetSocketAddress).setNodeType(NodeTypeMasks.VOID_MASK);
+        Node node = new SOSNode(guid, inetSocketAddress).setNodeRole(new Coordinator()); // TODO - actually this should be external
 
         NodeManager nodeManager = new NodeManager();
         nodeManager.addNode(node);

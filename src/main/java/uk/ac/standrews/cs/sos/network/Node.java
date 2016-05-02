@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.network;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.network.roles.NodeRolesMasks;
 
 import java.net.InetSocketAddress;
 
@@ -15,10 +16,10 @@ public interface Node {
 
     /**
      * This returns an byte representing the type for this node.
-     * @see NodeTypeMasks
+     * @see NodeRolesMasks
      *
      * @return byte representing the type for this node
      */
-    byte getNodeType();
+    byte getNodeRole();
 
 }
