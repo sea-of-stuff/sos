@@ -59,6 +59,9 @@ public class SeaConfiguration {
 
             loadSOSNode();
             loadConfiguration();
+
+            DB_DIRECTORY.mkdirs();
+
             instance = new SeaConfiguration();
         }
         return instance;
