@@ -8,10 +8,10 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 
@@ -44,7 +44,7 @@ import java.util.Collection;
  * as sequence of bytes and are represented by an AtomManifest. Compounds and
  * assets, instead, are metadata information about aggregations, versions and
  * links to metadata. Therefore, compounds and assets exist only in the form of manifests:
- * CompoundManifest and AssetManifest.
+ * CompoundManifest and VersionManifest.
  * </p>
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -92,19 +92,19 @@ public interface SeaOfStuff {
             throws ManifestNotMadeException, ManifestPersistException;
 
     /**
-     * Adds an asset to the Sea of Stuff.
+     * Adds a version of an asset to the Sea of Stuff.
      *
-     * @param content of this asset.
+     * @param content of this version.
      * @param invariant guid of this asset
      * @param prevs version of this asset.
-     * @param metadata of this asset.
-     * @return Asset for the added asset.
+     * @param metadata of this version.
+     * @return Version for the added asset.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
      */
-    Asset addAsset(IGUID content, IGUID invariant,
-                   Collection<IGUID> prevs, Collection<IGUID> metadata)
+    Version addVersion(IGUID content, IGUID invariant,
+                       Collection<IGUID> prevs, Collection<IGUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException;
 
     /**

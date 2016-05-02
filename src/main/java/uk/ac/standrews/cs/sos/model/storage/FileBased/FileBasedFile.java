@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

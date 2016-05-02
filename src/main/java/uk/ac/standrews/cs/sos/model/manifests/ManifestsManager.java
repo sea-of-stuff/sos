@@ -24,7 +24,6 @@ import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.utils.FileHelper;
 
 import java.io.*;
@@ -149,7 +148,7 @@ public class ManifestsManager {
     private void registerGSonTypeAdapters(GsonBuilder builder) {
         builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
         builder.registerTypeAdapter(CompoundManifest.class, new CompoundManifestDeserializer());
-        builder.registerTypeAdapter(AssetManifest.class, new AssetManifestDeserializer());
+        builder.registerTypeAdapter(VersionManifest.class, new AssetManifestDeserializer());
     }
 
     private Manifest getManifestFromFile(IGUID guid) throws UnknownGUIDException {
@@ -188,8 +187,8 @@ public class ManifestsManager {
                 case ManifestConstants.COMPOUND:
                     manifest = gson.fromJson(manifestData, CompoundManifest.class);
                     break;
-                case ManifestConstants.ASSET:
-                    manifest = gson.fromJson(manifestData, AssetManifest.class);
+                case ManifestConstants.VERSION:
+                    manifest = gson.fromJson(manifestData, VersionManifest.class);
                     break;
                 default:
                     throw new UnknownManifestTypeException();
@@ -242,8 +241,8 @@ public class ManifestsManager {
 
     private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
         IGUID guid;
-        if (manifest.getManifestType().equals(ManifestConstants.ASSET)) {
-            guid = ((AssetManifest) manifest).getVersionGUID();
+        if (manifest.getManifestType().equals(ManifestConstants.VERSION)) {
+            guid = ((VersionManifest) manifest).getVersionGUID();
         } else {
             guid = manifest.getContentGUID();
         }
@@ -273,7 +272,7 @@ public class ManifestsManager {
 
         String guid;
         String type = manifest.getManifestType();
-        if (type.equals(ManifestConstants.ASSET)) {
+        if (type.equals(ManifestConstants.VERSION)) {
             guid = manifestJSON.get(ManifestConstants.KEY_VERSION).getAsString();
         } else {
             guid = manifestJSON.get(ManifestConstants.KEY_CONTENT_GUID).getAsString();

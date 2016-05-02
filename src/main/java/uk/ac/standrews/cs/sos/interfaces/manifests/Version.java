@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Asset extends Manifest {
+public interface Version extends Manifest {
 
     IGUID getVersionGUID();
 

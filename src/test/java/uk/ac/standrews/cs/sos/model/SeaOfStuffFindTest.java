@@ -4,9 +4,9 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.utils.Helper;
@@ -86,7 +86,7 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         contents.add(cat);
 
         Compound compound = model.addCompound(CompoundType.DATA, contents);
-        Asset manifest = model.addAsset(compound.getContentGUID(), null, null, null);
+        Version manifest = model.addVersion(compound.getContentGUID(), null, null, null);
 
         Content feline = new Content("feline", GUIDFactory.recreateGUID("456"));
         Collection<Content> newContents = new ArrayList<>();
@@ -95,7 +95,7 @@ public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
         Compound newCompound = model.addCompound(CompoundType.DATA, newContents);
         Collection<IGUID> prevs = new ArrayList<>();
         prevs.add(manifest.getVersionGUID());
-        Asset newManifest = model.addAsset(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
+        Version newManifest = model.addVersion(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
 
         Collection<IGUID> versions = model.findVersions(manifest.getInvariantGUID());
         assertEquals(versions.size(), 2);

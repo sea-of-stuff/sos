@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.sos.model.index;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -24,8 +24,8 @@ public abstract class CommonIndex implements Index {
                 case ManifestConstants.COMPOUND:
                     addCompoundManifest((CompoundManifest) manifest);
                     break;
-                case ManifestConstants.ASSET:
-                    addAssetManifest((AssetManifest) manifest);
+                case ManifestConstants.VERSION:
+                    addAssetManifest((VersionManifest) manifest);
                     break;
                 default:
                     throw new IndexException();
@@ -39,6 +39,6 @@ public abstract class CommonIndex implements Index {
 
     protected abstract void addCompoundManifest(CompoundManifest manifest) throws IndexException;
 
-    protected abstract void addAssetManifest(AssetManifest manifest) throws IndexException;
+    protected abstract void addAssetManifest(VersionManifest manifest) throws IndexException;
 
 }

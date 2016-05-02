@@ -195,35 +195,35 @@ public class IndexImplTest extends IndexBaseTest {
 
     @Test
     public void testAddAssetManifest() throws Exception {
-        AssetManifest assetManifestMocked = mock(AssetManifest.class);
+        VersionManifest assetManifestMocked = mock(VersionManifest.class);
 
         IGUID version = GUIDFactory.recreateGUID("123");
         IGUID invariant = GUIDFactory.recreateGUID("abc123");
         when(assetManifestMocked.getVersionGUID()).thenReturn(version);
         when(assetManifestMocked.getInvariantGUID()).thenReturn(invariant);
-        when(assetManifestMocked.getManifestType()).thenReturn("Asset");
+        when(assetManifestMocked.getManifestType()).thenReturn("Version");
 
         index.addManifest(assetManifestMocked);
 
-        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.VERSION, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 1);
         assertTrue(guids.contains(GUIDFactory.recreateGUID("abc123")));
     }
 
     @Test
     public void testAddMultipleAssetManifests() throws Exception {
-        AssetManifest firstAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("abc123"));
-        AssetManifest secondAsset = createMockedManifest(GUIDFactory.recreateGUID("456"), GUIDFactory.recreateGUID("abc123"));
-        AssetManifest thirdAsset = createMockedManifest(GUIDFactory.recreateGUID("123456"), GUIDFactory.recreateGUID("def678"));
+        VersionManifest firstAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("abc123"));
+        VersionManifest secondAsset = createMockedManifest(GUIDFactory.recreateGUID("456"), GUIDFactory.recreateGUID("abc123"));
+        VersionManifest thirdAsset = createMockedManifest(GUIDFactory.recreateGUID("123456"), GUIDFactory.recreateGUID("def678"));
         // Cannot have two assets with same version GUID and different incarnation.
-        AssetManifest invalidAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("def123"));
+        VersionManifest invalidAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("def123"));
 
         index.addManifest(firstAsset);
         index.addManifest(secondAsset);
         index.addManifest(thirdAsset);
         index.addManifest(invalidAsset);
 
-        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.VERSION, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
         Collection<IGUID> versions = index.getVersions(GUIDFactory.recreateGUID("abc123"), DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
@@ -234,18 +234,18 @@ public class IndexImplTest extends IndexBaseTest {
 
     @Test
     public void testAddMultipleAssetManifestsAndSkipFirstResult() throws Exception {
-        AssetManifest firstAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("abc123"));
-        AssetManifest secondAsset = createMockedManifest(GUIDFactory.recreateGUID("456"), GUIDFactory.recreateGUID("abc123"));
-        AssetManifest thirdAsset = createMockedManifest(GUIDFactory.recreateGUID("123456"), GUIDFactory.recreateGUID("def678"));
+        VersionManifest firstAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("abc123"));
+        VersionManifest secondAsset = createMockedManifest(GUIDFactory.recreateGUID("456"), GUIDFactory.recreateGUID("abc123"));
+        VersionManifest thirdAsset = createMockedManifest(GUIDFactory.recreateGUID("123456"), GUIDFactory.recreateGUID("def678"));
         // Cannot have two assets with same version GUID and different incarnation.
-        AssetManifest invalidAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("def123"));
+        VersionManifest invalidAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("def123"));
 
         index.addManifest(firstAsset);
         index.addManifest(secondAsset);
         index.addManifest(thirdAsset);
         index.addManifest(invalidAsset);
 
-        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.VERSION, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
         Collection<IGUID> versions = index.getVersions(GUIDFactory.recreateGUID("abc123"), DEFAULT_RESULTS, 1);
@@ -255,30 +255,30 @@ public class IndexImplTest extends IndexBaseTest {
 
     @Test
     public void testAddMultipleAssetManifestsAndSkipAllResults() throws Exception {
-        AssetManifest firstAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("abc123"));
-        AssetManifest secondAsset = createMockedManifest(GUIDFactory.recreateGUID("456"), GUIDFactory.recreateGUID("abc123"));
-        AssetManifest thirdAsset = createMockedManifest(GUIDFactory.recreateGUID("123456"), GUIDFactory.recreateGUID("def678"));
+        VersionManifest firstAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("abc123"));
+        VersionManifest secondAsset = createMockedManifest(GUIDFactory.recreateGUID("456"), GUIDFactory.recreateGUID("abc123"));
+        VersionManifest thirdAsset = createMockedManifest(GUIDFactory.recreateGUID("123456"), GUIDFactory.recreateGUID("def678"));
         // Cannot have two assets with same version GUID and different incarnation.
-        AssetManifest invalidAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("def123"));
+        VersionManifest invalidAsset = createMockedManifest(GUIDFactory.recreateGUID("123"), GUIDFactory.recreateGUID("def123"));
 
         index.addManifest(firstAsset);
         index.addManifest(secondAsset);
         index.addManifest(thirdAsset);
         index.addManifest(invalidAsset);
 
-        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ASSET, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
+        Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.VERSION, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertEquals(guids.size(), 2);
 
         Collection<IGUID> versions = index.getVersions(GUIDFactory.recreateGUID("abc123"), DEFAULT_RESULTS, DEFAULT_RESULTS);
         assertEquals(versions.size(), 0);
     }
 
-    private AssetManifest createMockedManifest(IGUID version, IGUID invariant) {
-        AssetManifest assetManifestMocked = mock(AssetManifest.class);
+    private VersionManifest createMockedManifest(IGUID version, IGUID invariant) {
+        VersionManifest assetManifestMocked = mock(VersionManifest.class);
 
         when(assetManifestMocked.getVersionGUID()).thenReturn(version);
         when(assetManifestMocked.getInvariantGUID()).thenReturn(invariant);
-        when(assetManifestMocked.getManifestType()).thenReturn("Asset");
+        when(assetManifestMocked.getManifestType()).thenReturn("Version");
 
         return assetManifestMocked;
     }

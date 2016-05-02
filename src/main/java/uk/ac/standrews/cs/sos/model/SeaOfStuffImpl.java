@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -19,10 +20,10 @@ import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
@@ -134,13 +135,13 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Asset addAsset(IGUID content,
-                          IGUID invariant,
-                          Collection<IGUID> prevs,
-                          Collection<IGUID> metadata)
+    public Version addVersion(IGUID content,
+                              IGUID invariant,
+                              Collection<IGUID> prevs,
+                              Collection<IGUID> metadata)
             throws ManifestNotMadeException, ManifestPersistException {
 
-        AssetManifest manifest = ManifestFactory.createAssetManifest(content, invariant, prevs, metadata, identity);
+        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
 
         return manifest;
@@ -151,7 +152,9 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         manifestsManager.addManifest(manifest);
 
         // TODO - recursively look for other manifests to add to the SOS
-
+        if (recursive) {
+            throw new NotImplementedException();
+        }
         return manifest;
     }
 

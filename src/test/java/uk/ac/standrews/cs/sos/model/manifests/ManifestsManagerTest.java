@@ -116,13 +116,13 @@ public class ManifestsManagerTest {
         Identity identity = new IdentityImpl(configuration);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        AssetManifest assetManifest = ManifestFactory.createAssetManifest(contentGUID, null, null, null, identity);
+        VersionManifest assetManifest = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
         IGUID guid = assetManifest.getVersionGUID();
         try {
             manifestsManager.addManifest(assetManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestConstants.ASSET);
+            assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);
@@ -134,7 +134,7 @@ public class ManifestsManagerTest {
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testAddAssetManifestNullContent() throws Exception {
         Identity identity = new IdentityImpl(configuration);
-        ManifestFactory.createAssetManifest(null, null, null, null, identity);
+        ManifestFactory.createVersionManifest(null, null, null, null, identity);
     }
 
     @Test

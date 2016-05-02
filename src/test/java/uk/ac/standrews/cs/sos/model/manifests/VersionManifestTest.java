@@ -23,23 +23,23 @@ import static org.testng.Assert.assertNotNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifestTest extends SetUpTest {
+public class VersionManifestTest extends SetUpTest {
 
     private static final String EXPECTED_JSON_BASIC_ASSET =
-            "{\"Type\":\"Asset\"," +
+            "{\"Type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_ASSET =
-            "{\"Type\":\"Asset\"," +
+            "{\"Type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_PREVIOUS_ASSET =
-            "{\"Type\":\"Asset\"," +
+            "{\"Type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
@@ -47,7 +47,7 @@ public class AssetManifestTest extends SetUpTest {
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET =
-            "{\"Type\":\"Asset\"," +
+            "{\"Type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
@@ -64,7 +64,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(null, guid, null, null, identityMocked);
+        VersionManifest assetManifest = new VersionManifest(null, guid, null, null, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -86,7 +86,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(null, guid, null, metadata, identityMocked);
+        VersionManifest assetManifest = new VersionManifest(null, guid, null, metadata, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -111,7 +111,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, null, identityMocked);
+        VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, null, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -140,7 +140,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
+        VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
         JsonObject gson = assetManifest.toJSON();
         assertNotNull(gson.get("Version"));
@@ -169,7 +169,7 @@ public class AssetManifestTest extends SetUpTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
+        VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
         assertEquals(assetManifest.getContentGUID(), guid);
         assertEquals(assetManifest.getInvariantGUID(), invariantGUID);

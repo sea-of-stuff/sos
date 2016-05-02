@@ -48,7 +48,7 @@ public class ManifestFactory {
     }
 
     /**
-     * Creates an AssetManifest given the content of the asset,
+     * Creates an VersionManifest given the content of the asset,
      * the GUID of a previous asset's version, the GUID of metadata associated to this
      * asset and an identity which will be used to sign the manifest.
      *
@@ -60,18 +60,18 @@ public class ManifestFactory {
      * @return an asset manifest
      * @throws ManifestNotMadeException
      */
-    public static AssetManifest createAssetManifest(IGUID content,
-                                                    IGUID invariant,
-                                                    Collection<IGUID> prevs,
-                                                    Collection<IGUID> metadata,
-                                                    Identity identity)
+    public static VersionManifest createVersionManifest(IGUID content,
+                                                        IGUID invariant,
+                                                        Collection<IGUID> prevs,
+                                                        Collection<IGUID> metadata,
+                                                        Identity identity)
             throws ManifestNotMadeException {
 
         if (content == null) {
             throw new ManifestNotMadeException("Content parameters missing or null");
         }
 
-        return new AssetManifest(invariant, content, prevs, metadata, identity);
+        return new VersionManifest(invariant, content, prevs, metadata, identity);
     }
 
 }

@@ -10,12 +10,12 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 
 import java.util.Collection;
 
 /**
- * An Asset is identified by an asset GUID (invariant).
+ * An Version is identified by an asset GUID (invariant).
  * Unlike other GUIDs, the asset's GUID is not derived from contents.
  * Instead an asset GUID is good for all time irrespective of the asset's contents.
  *
@@ -25,12 +25,12 @@ import java.util.Collection;
  * history of changes of unions. <br>
  *
  *
- * This class defines the manifest describing an Asset, which takes the
+ * This class defines the manifest describing an Version, which takes the
  * following form:
  * <p>
  * Version - GUID <br>
  * Invariant - GUID <br>
- * ManifestType - ASSET <br>
+ * ManifestType - VERSION <br>
  * Signature - ? <br>
  * Previous Assets - GUID <br>
  * Content - GUID <br>
@@ -39,7 +39,7 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifest extends SignedManifest implements Asset {
+public class VersionManifest extends SignedManifest implements Version {
 
     final private IGUID version;
     final private IGUID invariant;
@@ -47,7 +47,7 @@ public class AssetManifest extends SignedManifest implements Asset {
     final private Collection<IGUID> metadata;
 
     /**
-     * Creates an AssetManifest given a content, an identity, the GUIDs of the previous
+     * Creates an VersionManifest given a content, an identity, the GUIDs of the previous
      * asset's manifest, and the GUID of metadata associated to the asset.
      *
      * @param invariant - if null it will be generated
@@ -57,11 +57,11 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public AssetManifest(IGUID invariant, IGUID content,
-                            Collection<IGUID> prevs, Collection<IGUID> metadata,
-                            Identity identity)
+    public VersionManifest(IGUID invariant, IGUID content,
+                           Collection<IGUID> prevs, Collection<IGUID> metadata,
+                           Identity identity)
             throws ManifestNotMadeException {
-        super(identity, ManifestConstants.ASSET);
+        super(identity, ManifestConstants.VERSION);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -92,10 +92,10 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param metadata
      * @param signature
      */
-    public AssetManifest(IGUID invariant, IGUID version, IGUID content,
-                            Collection<IGUID> prevs, Collection<IGUID> metadata,
-                            String signature) {
-        super(null, ManifestConstants.ASSET);
+    public VersionManifest(IGUID invariant, IGUID version, IGUID content,
+                           Collection<IGUID> prevs, Collection<IGUID> metadata,
+                           String signature) {
+        super(null, ManifestConstants.VERSION);
         this.invariant = invariant;
         this.version = version;
         this.contentGUID = content;

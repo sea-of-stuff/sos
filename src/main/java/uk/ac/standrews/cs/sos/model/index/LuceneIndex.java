@@ -19,10 +19,10 @@ import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,7 +113,7 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    protected void addAssetManifest(AssetManifest manifest) throws IndexException {
+    protected void addAssetManifest(VersionManifest manifest) throws IndexException {
         boolean manifestAlreadyIndexed = guidExists(manifest.getVersionGUID(), LuceneKeys.HANDLE_VERSION);
         if(!manifestAlreadyIndexed) {
             try {
@@ -257,7 +257,7 @@ public class LuceneIndex extends CommonIndex {
         }
     }
 
-    private void indexAssetManifest(AssetManifest manifest) throws IOException {
+    private void indexAssetManifest(VersionManifest manifest) throws IOException {
         Document doc = new Document();
         IGUID version = manifest.getVersionGUID();
         String type = manifest.getManifestType();
