@@ -49,8 +49,8 @@ public class DataStorageHelperTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.cleanDirectory(configuration.getCacheDataPath());
-        Helper.cleanDirectory(configuration.getDataPath());
+        Helper.cleanDirectory(configuration.getCacheDirectory());
+        Helper.cleanDirectory(configuration.getDataDirectory());
     }
 
     @Test

@@ -38,10 +38,11 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(index.getConfiguration().getIndexPath());
+        Helper.deleteDirectory(index.getConfiguration().getIndexDirectory());
         Helper.cleanDirectory(index.getConfiguration().getManifestsDirectory());
-        Helper.cleanDirectory(index.getConfiguration().getDataPath());
-        Helper.cleanDirectory(index.getConfiguration().getCacheDataPath());
+        Helper.cleanDirectory(index.getConfiguration().getDataDirectory());
+        Helper.cleanDirectory(index.getConfiguration().getCacheDirectory());
+        Helper.cleanDirectory(index.getConfiguration().getDBDirectory());
     }
 
     @Test(expectedExceptions = ManifestNotFoundException.class)

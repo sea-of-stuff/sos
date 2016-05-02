@@ -57,10 +57,10 @@ public class ManifestsManagerTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(configuration.getIndexPath());
+        Helper.deleteDirectory(configuration.getIndexDirectory());
         Helper.cleanDirectory(configuration.getManifestsDirectory());
-        Helper.cleanDirectory(configuration.getCacheDataPath());
-        Helper.cleanDirectory(configuration.getDataPath());
+        Helper.cleanDirectory(configuration.getCacheDirectory());
+        Helper.cleanDirectory(configuration.getDataDirectory());
     }
 
     @Test

@@ -41,7 +41,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.cleanDirectory(configuration.getCacheDataPath());
+        Helper.cleanDirectory(configuration.getCacheDirectory());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @Test
     public void testGetSource() throws Exception {
-        Helper.createDummyDataFile(SeaConfiguration.getInstance().getCacheDataPath(), "0000000000000000000000000000000000000abc");
+        Helper.createDummyDataFile(SeaConfiguration.getInstance().getCacheDirectory(), "0000000000000000000000000000000000000abc");
 
         SOSLocation location = new SOSLocation(configuration.getNodeId(), GUIDFactory.recreateGUID("abc"));
         InputStream inputStream = location.getSource();

@@ -36,7 +36,7 @@ public class CommonIndexTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(index.getConfiguration().getIndexPath());
+        Helper.deleteDirectory(index.getConfiguration().getIndexDirectory());
     }
 
     @Test(expectedExceptions = IndexException.class)

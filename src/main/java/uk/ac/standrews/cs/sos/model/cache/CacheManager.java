@@ -179,7 +179,7 @@ public class CacheManager {
     }
 
     private SOSFile getAtomCachedLocation(SeaConfiguration configuration, IGUID guid) {
-        return new FileBasedFile(configuration.getCacheDataPath(), guid.toString());
+        return new FileBasedFile(configuration.getCacheDirectory(), guid.toString());
     }
 
 }

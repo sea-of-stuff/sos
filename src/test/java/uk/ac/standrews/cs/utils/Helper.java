@@ -26,7 +26,7 @@ public class Helper {
     }
 
     public static Location createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, URISyntaxException {
-        return createDummyDataFile(configuration.getDataPath(), filename);
+        return createDummyDataFile(configuration.getDataDirectory(), filename);
     }
 
     public static Location createDummyDataFile(SOSDirectory sosParent, String filename) throws FileNotFoundException, URISyntaxException {

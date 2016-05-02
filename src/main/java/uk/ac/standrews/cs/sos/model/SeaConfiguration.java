@@ -29,19 +29,19 @@ public class SeaConfiguration {
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
 
-    private static final SOSDirectory DATA_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "data");
-    private static final SOSDirectory CACHE_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "cached_data");
-    private static final SOSDirectory INDEX_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "index");
-    private static final SOSDirectory MANIFEST_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "manifests");
-    private static final SOSDirectory KEYS_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "keys");
-    private static final SOSDirectory DB_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "db");
+    private static SOSDirectory DATA_DIRECTORY;
+    private static SOSDirectory CACHE_DIRECTORY;
+    private static SOSDirectory INDEX_DIRECTORY;
+    private static SOSDirectory MANIFEST_DIRECTORY;
+    private static SOSDirectory KEYS_DIRECTORY;
+    private static SOSDirectory DB_DIRECTORY;
 
     private static IGUID nodeId;
     private static String privateKeyFile;
     private static String publicKeyFile;
 
     private static SeaConfiguration instance;
-    private static String root;
+    private static SOSDirectory root;
     private static String rootName;
 
     public static void setRootName(String rootName) {
@@ -55,12 +55,19 @@ public class SeaConfiguration {
             if (SeaConfiguration.rootName == null) {
                 SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
             }
-            root = SOS_ROOT + SeaConfiguration.rootName + "/";
+            root = new FileBasedDirectory(ROOT_DIRECTORY, SeaConfiguration.rootName);
+
+            DATA_DIRECTORY = new FileBasedDirectory(root, "data");
+            CACHE_DIRECTORY = new FileBasedDirectory(root, "cached_data");
+            INDEX_DIRECTORY = new FileBasedDirectory(root, "index");
+            MANIFEST_DIRECTORY = new FileBasedDirectory(root, "manifests");
+            KEYS_DIRECTORY = new FileBasedDirectory(root, "keys");
+            DB_DIRECTORY = new FileBasedDirectory(root, "db");
+
+            DB_DIRECTORY.mkdirs();
 
             loadSOSNode();
             loadConfiguration();
-
-            DB_DIRECTORY.mkdirs();
 
             instance = new SeaConfiguration();
         }
@@ -108,7 +115,7 @@ public class SeaConfiguration {
         }
     }
 
-    public SOSDirectory getDataPath() {
+    public SOSDirectory getDataDirectory() {
         return DATA_DIRECTORY;
     }
 
@@ -121,16 +128,16 @@ public class SeaConfiguration {
                  new FileBasedFile(KEYS_DIRECTORY, publicKeyFile) };
     }
 
-    public SOSDirectory getIndexPath() {
+    public SOSDirectory getIndexDirectory() {
          return INDEX_DIRECTORY;
     }
 
-    public SOSDirectory getCacheDataPath() {
+    public SOSDirectory getCacheDirectory() {
         return CACHE_DIRECTORY;
     }
 
-    public SOSDirectory getDBFolder() {
-        return DB_DIRECTORY; // TODO - make directory if this does not exist
+    public SOSDirectory getDBDirectory() {
+        return DB_DIRECTORY;
     }
 
     public void saveConfiguration() throws SeaConfigurationException {

@@ -51,7 +51,7 @@ public class SOSURLConnection extends URLConnection {
             IGUID thisMachineId = SeaConfiguration.getInstance().getNodeId();
 
             if (urlMachineId.equals(thisMachineId)) {
-                SOSFile path = new FileBasedFile(SeaConfiguration.getInstance().getCacheDataPath(), entityId.toString());
+                SOSFile path = new FileBasedFile(SeaConfiguration.getInstance().getCacheDirectory(), entityId.toString());
                 FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
             } else {

@@ -91,7 +91,7 @@ public class SQLiteDB {
     protected static Connection getSQLiteConnection() throws DatabasePersistenceException {
         Connection connection;
         try {
-            SOSFile dbDump = new FileBasedFile(SeaConfiguration.getInstance().getDBFolder(), "test.db");
+            SOSFile dbDump = new FileBasedFile(SeaConfiguration.getInstance().getDBDirectory(), "test.db");
 
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" +
