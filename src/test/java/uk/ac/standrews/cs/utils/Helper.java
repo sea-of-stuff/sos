@@ -3,8 +3,11 @@ package uk.ac.standrews.cs.utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -26,10 +29,10 @@ public class Helper {
         return createDummyDataFile(configuration.getDataPath(), filename);
     }
 
-    public static Location createDummyDataFile(String path, String filename) throws FileNotFoundException, URISyntaxException {
-        String location = path + filename;
+    public static Location createDummyDataFile(SOSDirectory sosParent, String filename) throws FileNotFoundException, URISyntaxException {
+        SOSFile sosFile = new FileBasedFile(sosParent, filename);
 
-        File file = new File(location);
+        File file = sosFile.toFile();
         File parent = file.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             throw new IllegalStateException("Couldn't create dir: " + parent);
@@ -40,7 +43,7 @@ public class Helper {
             writer.println("The second line");
         }
 
-        return new URILocation("file://"+location);
+        return new URILocation("file://"+sosFile.getPathname());
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {
@@ -52,16 +55,16 @@ public class Helper {
         }
     }
 
-    public static void cleanDirectory(String path) throws IOException {
-        File dir = new File(path);
+    public static void cleanDirectory(SOSDirectory directory) throws IOException {
+        File dir = new File(directory.getPathname());
 
         if (dir.exists()) {
             FileUtils.cleanDirectory(dir);
         }
     }
 
-    public static void deleteDirectory(String path) throws IOException {
-        File dir = new File(path);
+    public static void deleteDirectory(SOSDirectory directory) throws IOException {
+        File dir = new File(directory.getPathname());
 
         if (dir.exists()) {
             FileUtils.deleteDirectory(dir);

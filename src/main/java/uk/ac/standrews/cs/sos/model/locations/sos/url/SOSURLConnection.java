@@ -4,7 +4,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.network.Node;
 import uk.ac.standrews.cs.sos.network.NodeManager;
 
@@ -49,8 +51,8 @@ public class SOSURLConnection extends URLConnection {
             IGUID thisMachineId = SeaConfiguration.getInstance().getNodeId();
 
             if (urlMachineId.equals(thisMachineId)) {
-                String path = SeaConfiguration.getInstance().getCacheDataPath();
-                FileInputStream fileStream = new FileInputStream(path + entityId);
+                SOSFile path = new FileBasedFile(SeaConfiguration.getInstance().getCacheDataPath(), entityId.toString());
+                FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
             } else {
                 /*

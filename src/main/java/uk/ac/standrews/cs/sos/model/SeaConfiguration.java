@@ -5,7 +5,9 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedDirectory;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 
 import java.io.*;
 
@@ -24,18 +26,15 @@ public class SeaConfiguration {
 
     private static final String SOS_NODE_CONFIG = "node.txt";
     private static final String DATA_CONFIG = "config.txt";
-
-    private static final String DATA_FOLDER = "data/";
-    private static final String CACHE_FOLDER = "cached_data/";
-
-    private static final SOSDirectory INDEX_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "index");
-    private static final SOSDirectory MANIFEST_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "manifests");
-
-    private static final String KEYS_FOLDER = "keys/";
-    private static final String DB_FOLDER = "db/";
-
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
+
+    private static final SOSDirectory DATA_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "data");
+    private static final SOSDirectory CACHE_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "cached_data");
+    private static final SOSDirectory INDEX_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "index");
+    private static final SOSDirectory MANIFEST_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "manifests");
+    private static final SOSDirectory KEYS_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "keys");
+    private static final SOSDirectory DB_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "db");
 
     private static IGUID nodeId;
     private static String privateKeyFile;
@@ -106,29 +105,29 @@ public class SeaConfiguration {
         }
     }
 
-    public String getDataPath() {
-        return root + DATA_FOLDER;
+    public SOSDirectory getDataPath() {
+        return DATA_DIRECTORY;
     }
 
     public SOSDirectory getManifestsDirectory() {
         return MANIFEST_DIRECTORY;
     }
 
-    public String[] getIdentityPaths() {
-         return new String[] { root + KEYS_FOLDER + privateKeyFile,
-                 root + KEYS_FOLDER + publicKeyFile };
+    public SOSFile[] getIdentityPaths() {
+         return new SOSFile[] { new FileBasedFile(KEYS_DIRECTORY, privateKeyFile),
+                 new FileBasedFile(KEYS_DIRECTORY, publicKeyFile) };
     }
 
     public SOSDirectory getIndexPath() {
          return INDEX_DIRECTORY;
     }
 
-    public String getCacheDataPath() {
-        return root + CACHE_FOLDER;
+    public SOSDirectory getCacheDataPath() {
+        return CACHE_DIRECTORY;
     }
 
-    public String getDBFolder() {
-        return root + DB_FOLDER; // TODO - make directory if this does not exist
+    public SOSDirectory getDBFolder() {
+        return DB_DIRECTORY; // TODO - make directory if this does not exist
     }
 
     public void saveConfiguration() throws SeaConfigurationException {

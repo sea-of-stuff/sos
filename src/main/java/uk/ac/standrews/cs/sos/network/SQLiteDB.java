@@ -4,7 +4,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 
 import java.net.InetSocketAddress;
 import java.sql.*;
@@ -89,9 +91,11 @@ public class SQLiteDB {
     protected static Connection getSQLiteConnection() throws DatabasePersistenceException {
         Connection connection;
         try {
+            SOSFile dbDump = new FileBasedFile(SeaConfiguration.getInstance().getDBFolder(), "test.db");
+
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" +
-                    SeaConfiguration.getInstance().getDBFolder()+ "test.db");
+                    dbDump.getPathname());
         } catch (Exception e) {
             throw new DatabasePersistenceException(e.getClass().getName() + ": " + e.getMessage());
         }

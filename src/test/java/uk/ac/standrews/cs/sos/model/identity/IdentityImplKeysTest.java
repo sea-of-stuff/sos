@@ -144,8 +144,8 @@ public class IdentityImplKeysTest extends SetUpTest {
     }
 
     private void deleteKeys(SeaConfiguration configuration) {
-        File privKey = new File(configuration.getIdentityPaths()[0]);
-        File pubkey = new File(configuration.getIdentityPaths()[1]);
+        File privKey = new File(configuration.getIdentityPaths()[0].getPathname());
+        File pubkey = new File(configuration.getIdentityPaths()[1].getPathname());
 
         privKey.delete();
         pubkey.delete();

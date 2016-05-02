@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 
 import java.io.*;
@@ -23,17 +25,19 @@ public class IdentityImpl implements Identity {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
+    private SOSFile[] pathsToKeys;
+
     public IdentityImpl(SeaConfiguration configuration) throws KeyGenerationException, KeyLoadedException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        String[] pathsToKeys = configuration.getIdentityPaths();
+        this.pathsToKeys = configuration.getIdentityPaths();
 
-        File privateKeyFile = new File(pathsToKeys[0]);
-        File publicKeyFile = new File(pathsToKeys[1]);
+        File privateKeyFile = new File(pathsToKeys[0].getPathname());
+        File publicKeyFile = new File(pathsToKeys[1].getPathname());
         if (!privateKeyFile.exists() || !publicKeyFile.exists()) {
-            generateKeys(configuration);
+            generateKeys();
         } else {
-            loadKeys(pathsToKeys);
+            loadKeys();
         }
     }
 
@@ -86,14 +90,14 @@ public class IdentityImpl implements Identity {
         return isValid;
     }
 
-    private void loadKeys(String[] pathsToKeys) throws KeyLoadedException {
-        loadPrivateKey(pathsToKeys[0]);
-        loadPublicKey(pathsToKeys[1]);
+    private void loadKeys() throws KeyLoadedException {
+        loadPrivateKey();
+        loadPublicKey();
     }
 
-    private void loadPrivateKey(String privateKeyPath) throws KeyLoadedException {
+    private void loadPrivateKey() throws KeyLoadedException {
         try {
-            DataInputStream in=new DataInputStream(new FileInputStream(privateKeyPath));
+            DataInputStream in=new DataInputStream(new FileInputStream(pathsToKeys[0].getPathname()));
             byte[] data = new byte[in.available()];
             in.readFully(data);
 
@@ -109,9 +113,9 @@ public class IdentityImpl implements Identity {
         }
     }
 
-    private void loadPublicKey(String privateKeyPath) throws KeyLoadedException {
+    private void loadPublicKey() throws KeyLoadedException {
         try {
-            DataInputStream in=new DataInputStream(new FileInputStream(privateKeyPath));
+            DataInputStream in=new DataInputStream(new FileInputStream(pathsToKeys[1].getPathname()));
             byte[] data = new byte[in.available()];
             in.readFully(data);
 
@@ -132,11 +136,11 @@ public class IdentityImpl implements Identity {
      * Generate key which contains a pair of private and public key.
      * Store the set of keys in appropriate files based on the specified configuration.
      */
-    private void generateKeys(SeaConfiguration configuration) throws KeyGenerationException {
+    private void generateKeys() throws KeyGenerationException {
         final KeyPair key = generateKeyPair();
 
-        File privateKeyFile = createKeyFile(configuration.getIdentityPaths()[0]);
-        File publicKeyFile = createKeyFile(configuration.getIdentityPaths()[1]);
+        File privateKeyFile = createKeyFile(pathsToKeys[0].getPathname());
+        File publicKeyFile = createKeyFile(pathsToKeys[1].getPathname());
 
         // Saving the keys
         saveKeyToFile(publicKeyFile, key.getPublic());

@@ -6,11 +6,13 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.utils.FileHelper;
 
 import java.io.IOException;
@@ -105,10 +107,11 @@ public class CacheManager {
             IGUID tmpGUID = GUIDFactory.generateRandomGUID();
             storeData(configuration, inputStream, tmpGUID);
 
-            String tmpCachedLocationPath = getAtomCachedLocation(configuration, tmpGUID);
-            guid = generateGUID(new URILocation(tmpCachedLocationPath));
-            String cachedLocationPath = getAtomCachedLocation(configuration, guid);
-            FileHelper.renameFile(tmpCachedLocationPath, cachedLocationPath);
+            SOSFile tmpCachedLocation = getAtomCachedLocation(configuration, tmpGUID);
+            guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
+
+            SOSFile cachedLocation = getAtomCachedLocation(configuration, guid);
+            FileHelper.renameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
             cache = getCacheBundle(configuration, guid);
 
         } catch (GUIDGenerationException | SourceLocationException | URISyntaxException e) {
@@ -152,11 +155,12 @@ public class CacheManager {
 
     private void storeData(SeaConfiguration configuration, InputStream inputStream, IGUID guid) throws DataStorageException {
          try {
-            String cachedLocationPath = getAtomCachedLocation(configuration, guid);
+             SOSFile cachedLocation = getAtomCachedLocation(configuration, guid);
+             String path = cachedLocation.getPathname();
 
-             FileHelper.touchDir(cachedLocationPath);
-            if (!FileHelper.pathExists(cachedLocationPath)) {
-                FileHelper.copyToFile(inputStream, cachedLocationPath);
+             FileHelper.touchDir(path);
+            if (!FileHelper.pathExists(path)) {
+                FileHelper.copyToFile(inputStream, path);
             }
          } catch (IOException e) {
              throw new DataStorageException();
@@ -174,8 +178,8 @@ public class CacheManager {
         return new CacheLocationBundle(location);
     }
 
-    private String getAtomCachedLocation(SeaConfiguration configuration, IGUID guid) {
-        return configuration.getCacheDataPath() + guid.toString();
+    private SOSFile getAtomCachedLocation(SeaConfiguration configuration, IGUID guid) {
+        return new FileBasedFile(configuration.getCacheDataPath(), guid.toString());
     }
 
 }
