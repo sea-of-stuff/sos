@@ -265,7 +265,7 @@ public class ManifestsManager {
         if (manifestFile.exists())
             return;
 
-        writeToFile(manifestFile, manifestJSON);
+        writeToFile(manifestFile.toFile(), manifestJSON);
     }
 
     private String getGUIDForManifestFilename(Manifest manifest) {

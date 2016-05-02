@@ -148,7 +148,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         Atom manifest = model.addAtom(location);
 
         File file = new File(configuration.getCacheDataPath() + manifest.getContentGUID());
-        File manifestFile = new File(configuration.getManifestsDirectory() + manifest.getContentGUID() + ".json");
+        File manifestFile = new File(configuration.getManifestsDirectory().getPathname() + manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -160,7 +160,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
         File newFile = new File(configuration.getCacheDataPath() + newManifest.getContentGUID());
-        File newManifestFile = new File(configuration.getManifestsDirectory() + newManifest.getContentGUID() + ".json");
+        File newManifestFile = new File(configuration.getManifestsDirectory().getPathname() + newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 

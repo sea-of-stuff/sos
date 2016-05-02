@@ -34,7 +34,7 @@ public abstract class IndexBaseTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(index.getConfiguration().getIndexPath());
+        Helper.deleteDirectory(index.getConfiguration().getIndexPath().getPathname());
     }
 
     @DataProvider(name = "index-manager-provider")

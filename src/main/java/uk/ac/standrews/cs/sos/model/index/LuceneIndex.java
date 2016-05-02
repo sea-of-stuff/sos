@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
@@ -55,8 +56,9 @@ public class LuceneIndex extends CommonIndex {
 
     private static void init(SeaConfiguration configuration) throws IOException {
         instanceConfiguration = configuration;
-        String indexPath = instanceConfiguration.getIndexPath();
-        Directory dir = FSDirectory.open(new File(indexPath).toPath());
+        SOSDirectory indexPath = instanceConfiguration.getIndexPath();
+
+        Directory dir = FSDirectory.open(new File(indexPath.getPathname()).toPath());
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 

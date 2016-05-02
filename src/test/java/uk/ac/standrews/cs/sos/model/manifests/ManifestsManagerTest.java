@@ -57,8 +57,8 @@ public class ManifestsManagerTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(configuration.getIndexPath());
-        Helper.cleanDirectory(configuration.getManifestsDirectory());
+        Helper.deleteDirectory(configuration.getIndexPath().getPathname());
+        Helper.cleanDirectory(configuration.getManifestsDirectory().getPathname());
         Helper.cleanDirectory(configuration.getCacheDataPath());
         Helper.cleanDirectory(configuration.getDataPath());
     }

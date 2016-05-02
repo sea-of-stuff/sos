@@ -19,14 +19,16 @@ public class SeaConfiguration {
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final String SOS_ROOT = HOME + "sos/";
     private static final String DEFAULT_ROOT_NAME = "";
+
+    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory(HOME + "sos"); // FIXME - this should be equivalent to String root
+
     private static final String SOS_NODE_CONFIG = "node.txt";
     private static final String DATA_CONFIG = "config.txt";
 
     private static final String DATA_FOLDER = "data/";
     private static final String CACHE_FOLDER = "cached_data/";
-    private static final String INDEX_FOLDER = "index/";
 
-    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory("sos"); // FIXME - this should be equivalent to String root
+    private static final SOSDirectory INDEX_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "index");
     private static final SOSDirectory MANIFEST_DIRECTORY = new FileBasedDirectory(ROOT_DIRECTORY, "manifests");
 
     private static final String KEYS_FOLDER = "keys/";
@@ -117,8 +119,8 @@ public class SeaConfiguration {
                  root + KEYS_FOLDER + publicKeyFile };
     }
 
-    public String getIndexPath() {
-         return root + INDEX_FOLDER;
+    public SOSDirectory getIndexPath() {
+         return INDEX_DIRECTORY;
     }
 
     public String getCacheDataPath() {
