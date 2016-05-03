@@ -7,6 +7,10 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.network.roles.Consumer;
+import uk.ac.standrews.cs.sos.network.roles.Coordinator;
+import uk.ac.standrews.cs.sos.network.roles.Producer;
+import uk.ac.standrews.cs.sos.network.roles.RoleMasks;
 
 import java.net.InetSocketAddress;
 import java.sql.*;
@@ -59,7 +63,7 @@ public class SQLiteDB {
             preparedStatement.setString(1, node.getNodeGUID().toString());
             preparedStatement.setString(2, node.getHostAddress().getHostName());
             preparedStatement.setInt(3, node.getHostAddress().getPort());
-            preparedStatement.setInt(4, node.getNodeType());
+            preparedStatement.setInt(4, node.getNodeRole());
 
             retval = preparedStatement.execute();
         }
@@ -77,15 +81,31 @@ public class SQLiteDB {
                 IGUID guid = GUIDFactory.recreateGUID(resultSet.getString(1));
                 String hostname = resultSet.getString(2);
                 int port = resultSet.getInt(3);
-                byte nodeType = resultSet.getByte(4);
+                byte nodeRoles = resultSet.getByte(4);
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(hostname, port);
 
-                Node node = new SOSNode(guid, inetSocketAddress)
-                        .setNodeType(nodeType);
+                Node node = new SOSNode(guid, inetSocketAddress);
+                setRoles(node, nodeRoles);
                 retval.add(node);
             }
         }
         return retval;
+    }
+
+    private static void setRoles(Node node, byte nodeRoles) {
+
+        if ((nodeRoles & RoleMasks.CONSUMER_MASK) != 0) {
+            node.setNodeRole(new Consumer());
+        }
+
+        if ((nodeRoles & RoleMasks.COORDINATOR_MASK) != 0) {
+            node.setNodeRole(new Coordinator());
+        }
+
+        if ((nodeRoles & RoleMasks.PRODUCER_MASK) != 0) {
+            node.setNodeRole(new Producer());
+        }
+
     }
 
     protected static Connection getSQLiteConnection() throws DatabasePersistenceException {

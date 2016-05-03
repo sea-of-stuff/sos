@@ -5,12 +5,12 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 
 import java.io.InputStream;
 
+import static uk.ac.standrews.cs.sos.network.roles.RoleMasks.PRODUCER_MASK;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Producer implements Role {
-
-    public final static byte PRODUCER_MASK = 0b0010;
 
     @Override
     public byte getRoleMask() {

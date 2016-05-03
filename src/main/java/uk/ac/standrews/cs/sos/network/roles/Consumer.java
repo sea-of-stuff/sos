@@ -5,12 +5,12 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 
 import java.io.InputStream;
 
+import static uk.ac.standrews.cs.sos.network.roles.RoleMasks.CONSUMER_MASK;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Consumer implements Role {
-
-    public final static byte CONSUMER_MASK = 0b0100;
 
     @Override
     public byte getRoleMask() {

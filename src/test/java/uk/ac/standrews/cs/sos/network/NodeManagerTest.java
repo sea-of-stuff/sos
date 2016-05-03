@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.network.roles.Coordinator;
-import uk.ac.standrews.cs.sos.network.roles.NodeRolesMasks;
 
 import java.net.InetSocketAddress;
 
