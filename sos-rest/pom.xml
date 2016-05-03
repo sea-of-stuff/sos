@@ -14,7 +14,6 @@
     <artifactId>rest</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>sos-rest</name>
 
     <dependencyManagement>
         <dependencies>
