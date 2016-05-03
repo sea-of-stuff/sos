@@ -19,11 +19,19 @@ public class Consumer implements Role {
 
     @Override
     public Manifest getManifest(IGUID guid) {
+
+        // REST CALLS
+        // 1. get manifest given guid
+
         return null;
     }
 
     @Override
     public InputStream getAtom(IGUID guid) {
+
+        // 1. get data is location is known
+        // 2. otherwise look for manifest, then do step 1 once location is known
+
         return null;
     }
 }

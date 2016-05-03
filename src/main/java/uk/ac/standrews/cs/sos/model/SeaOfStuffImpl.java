@@ -77,8 +77,10 @@ public class SeaOfStuffImpl implements SeaOfStuff {
 
     private void registerSOSProtocol() {
         try {
-            URLStreamHandlerFactory urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(nodeManager);
-            URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
+            if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
+                URLStreamHandlerFactory urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(nodeManager);
+                URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
+            }
         } catch (Error e) {
             System.err.println("SeaOfStuffImpl::registerSOSProtocol:" + e.getMessage());
         }

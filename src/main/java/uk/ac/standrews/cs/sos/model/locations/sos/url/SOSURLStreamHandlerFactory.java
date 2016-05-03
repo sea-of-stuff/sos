@@ -10,10 +10,13 @@ import java.net.URLStreamHandlerFactory;
  */
 public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
+    public static boolean URLStreamHandlerFactoryIsSet = false;
+
     private NodeManager nodeManager;
 
     public SOSURLStreamHandlerFactory(NodeManager nodeManager) {
         this.nodeManager = nodeManager;
+        URLStreamHandlerFactoryIsSet = true;
     }
 
     @Override

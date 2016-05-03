@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.network.Node;
 import uk.ac.standrews.cs.sos.network.NodeManager;
+import uk.ac.standrews.cs.sos.network.SOSNode;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -46,30 +47,17 @@ public class SOSURLConnection extends URLConnection {
 
         try {
             String[] segments = url.getPath().split("/");
-            IGUID urlMachineId = GUIDFactory.recreateGUID(url.getHost());
+            Node resourceNode = new SOSNode(GUIDFactory.recreateGUID(url.getHost()));
             IGUID entityId = GUIDFactory.recreateGUID(segments[segments.length - 1]);
 
             Node node = SeaConfiguration.getInstance().getNode();
 
-            if (urlMachineId.equals(node.getNodeGUID())) {
+            if (resourceNode.equals(node)) {
                 SOSFile path = new FileBasedFile(SeaConfiguration.getInstance().getCacheDirectory(), entityId.toString());
                 FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
             } else {
-                /*
-                 * TODO - get data from other nodes
-                 * check NodeManager to see if node is known
-                 *
-                 */
-                Node nodeToContact = nodeManager.getNode(urlMachineId);
-                InetSocketAddress inetSocketAddress = nodeToContact.getHostAddress();
-                String urlString = "http://" + inetSocketAddress.getHostName() +
-                        ":" + inetSocketAddress.getPort() +
-                        "/sos/find/manifest?guid=" + entityId.toString(); // TODO - this is hardcoded, plus this api end-point returns a manifest not data
-                URL url = new URL(urlString);
-                URLConnection conn = url.openConnection();
-
-                return conn.getInputStream();
+                return contactNode(resourceNode, entityId);
             }
         } catch (SeaConfigurationException | GUIDGenerationException e) {
             throw new IOException(); // FIXME - this try/catch is a bit dirty.
@@ -80,6 +68,23 @@ public class SOSURLConnection extends URLConnection {
          * otherwise contact registry/coordinator
          * talk to coordinator via http
          */
+    }
+
+    private InputStream contactNode(Node resourceNode, IGUID entityId) throws IOException {
+        /*
+                 * TODO - get data from other nodes
+                 * check NodeManager to see if node is known
+                 *
+                 */
+        Node nodeToContact = nodeManager.getNode(resourceNode.getNodeGUID()); // TODO - check if node exists!
+        InetSocketAddress inetSocketAddress = nodeToContact.getHostAddress();
+        String urlString = "http://" + inetSocketAddress.getHostName() +
+                ":" + inetSocketAddress.getPort() +
+                "/sos/find/manifest?guid=" + entityId.toString(); // TODO - this is hardcoded, plus this api end-point returns a manifest not data
+        URL url = new URL(urlString);
+        URLConnection conn = url.openConnection();
+
+        return conn.getInputStream();
     }
 
 }

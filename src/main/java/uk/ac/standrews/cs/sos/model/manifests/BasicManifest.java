@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 
+import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ public abstract class BasicManifest implements Manifest {
 
     protected IGUID contentGUID;
     private final String manifestType;
+    private Timestamp timestamp;
 
     /**
      * Constructor for a BasicManifest.
@@ -33,6 +35,7 @@ public abstract class BasicManifest implements Manifest {
      */
     protected BasicManifest(String manifestType) {
         this.manifestType = manifestType;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -64,6 +67,8 @@ public abstract class BasicManifest implements Manifest {
     public JsonObject toJSON() {
         JsonObject obj = new JsonObject();
         obj.addProperty(ManifestConstants.KEY_TYPE, manifestType);
+        // TODO - use timestamps for manifests
+        // obj.addProperty(ManifestConstants.KEY_TIMESTAMP, timestamp.getTime());
 
         return obj;
     }
