@@ -33,7 +33,7 @@ public class SOSLocation implements Location {
     public SOSLocation(IGUID machineID, IGUID entity) throws MalformedURLException {
         this.machineID = machineID;
         this.entity = entity;
-        url = new URL("sos://" + machineID.toString() + "/" + entity.toString());
+        url = new URL(toString());
     }
 
     public SOSLocation(String location) throws MalformedURLException {

@@ -48,9 +48,10 @@ public class SOSURLConnection extends URLConnection {
             String[] segments = url.getPath().split("/");
             IGUID urlMachineId = GUIDFactory.recreateGUID(url.getHost());
             IGUID entityId = GUIDFactory.recreateGUID(segments[segments.length - 1]);
-            IGUID thisMachineId = SeaConfiguration.getInstance().getNodeId();
 
-            if (urlMachineId.equals(thisMachineId)) {
+            Node node = SeaConfiguration.getInstance().getNode();
+
+            if (urlMachineId.equals(node.getNodeGUID())) {
                 SOSFile path = new FileBasedFile(SeaConfiguration.getInstance().getCacheDirectory(), entityId.toString());
                 FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
@@ -60,8 +61,8 @@ public class SOSURLConnection extends URLConnection {
                  * check NodeManager to see if node is known
                  *
                  */
-                Node node = nodeManager.getNode(urlMachineId);
-                InetSocketAddress inetSocketAddress = node.getHostAddress();
+                Node nodeToContact = nodeManager.getNode(urlMachineId);
+                InetSocketAddress inetSocketAddress = nodeToContact.getHostAddress();
                 String urlString = "http://" + inetSocketAddress.getHostName() +
                         ":" + inetSocketAddress.getPort() +
                         "/sos/find/manifest?guid=" + entityId.toString(); // TODO - this is hardcoded, plus this api end-point returns a manifest not data

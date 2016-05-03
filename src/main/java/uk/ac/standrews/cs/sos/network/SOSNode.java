@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.network;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.network.roles.RoleMasks;
 import uk.ac.standrews.cs.sos.network.roles.Role;
+import uk.ac.standrews.cs.sos.network.roles.RoleMasks;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
@@ -58,6 +58,11 @@ public class SOSNode implements Node {
     public Node setNodeRole(Role role) {
         roles.add(role);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return nodeGUID + "\n" + getNodeRole();
     }
 
     @Override

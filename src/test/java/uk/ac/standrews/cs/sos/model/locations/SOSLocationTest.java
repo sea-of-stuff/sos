@@ -2,18 +2,15 @@ package uk.ac.standrews.cs.sos.model.locations;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
-import uk.ac.standrews.cs.sos.network.NodeManager;
+import uk.ac.standrews.cs.sos.network.Node;
 import uk.ac.standrews.cs.utils.Helper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -22,22 +19,6 @@ import static org.testng.Assert.assertTrue;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSLocationTest extends SetUpTest {
-
-    private SeaConfiguration configuration;
-
-    @BeforeMethod
-    public void setUp() throws Exception {
-        SeaConfiguration.setRootName("test");
-        configuration = SeaConfiguration.getInstance();
-        configuration.setNodeId(GUIDFactory.recreateGUID("12345678"));
-
-        NodeManager nodeManager = new NodeManager();
-        try {
-            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory(nodeManager));
-        } catch (Error e) {
-            // Error is thrown if factory was already setup in previous tests
-        }
-    }
 
     @AfterMethod
     public void tearDown() throws IOException {
@@ -61,7 +42,8 @@ public class SOSLocationTest extends SetUpTest {
     public void testGetSource() throws Exception {
         Helper.createDummyDataFile(SeaConfiguration.getInstance().getCacheDirectory(), "0000000000000000000000000000000000000abc");
 
-        SOSLocation location = new SOSLocation(configuration.getNodeId(), GUIDFactory.recreateGUID("abc"));
+        Node node = configuration.getNode();
+        SOSLocation location = new SOSLocation(node.getNodeGUID(), GUIDFactory.recreateGUID("abc"));
         InputStream inputStream = location.getSource();
         String retrieved = IOUtils.toString(inputStream);
 

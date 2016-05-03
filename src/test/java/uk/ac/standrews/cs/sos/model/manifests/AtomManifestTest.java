@@ -31,6 +31,7 @@ public class AtomManifestTest extends SetUpTest {
 
     private SeaConfiguration configuration;
 
+    @Override
     @BeforeMethod
     public void setUp() throws IOException, SeaConfigurationException {
         SeaConfiguration.setRootName("test");

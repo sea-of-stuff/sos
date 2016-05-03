@@ -1,10 +1,9 @@
 package uk.ac.standrews.cs.sos.model;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
@@ -50,24 +49,23 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     private Identity identity;
     private ManifestsManager manifestsManager;
     final private SeaConfiguration configuration;
+
     private NodeManager nodeManager;
 
     public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws SeaOfStuffException {
         this.configuration = configuration;
 
         try {
-            generateSOSNodeIfNone();
             identity = new IdentityImpl(configuration);
             manifestsManager = new ManifestsManager(configuration, index);
-        } catch (GUIDGenerationException | SeaConfigurationException |
-                KeyGenerationException | KeyLoadedException e) {
+        } catch (KeyGenerationException | KeyLoadedException e) {
             throw new SeaOfStuffException(e);
         }
 
         try {
             nodeManager = new NodeManager();
             nodeManager.loadFromDB();
-        } catch (DatabasePersistenceException e) {
+        } catch (DatabasePersistenceException | NodeManagerException e) {
             throw new SeaOfStuffException(e);
         }
 
@@ -75,13 +73,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
         registerSOSProtocol();
     }
 
-    private void generateSOSNodeIfNone() throws GUIDGenerationException, SeaConfigurationException {
-        IGUID nodeId = configuration.getNodeId();
-        if (nodeId == null) {
-            nodeId = GUIDFactory.generateRandomGUID();
-            configuration.setNodeId(nodeId);
-        }
-    }
+
 
     private void registerSOSProtocol() {
         try {

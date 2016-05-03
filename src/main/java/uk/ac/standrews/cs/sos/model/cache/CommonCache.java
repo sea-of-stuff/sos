@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.network.Node;
 import uk.ac.standrews.cs.utils.FileHelper;
 
 import java.io.IOException;
@@ -63,11 +64,12 @@ public abstract class CommonCache {
 
     protected CacheLocationBundle getCacheBundle(IGUID guid) throws SourceLocationException {
         Location location;
+        Node node = configuration.getNode();
         try {
-            location = new SOSLocation(configuration.getNodeId(), guid);
+            location = new SOSLocation(node.getNodeGUID(), guid);
         } catch (MalformedURLException e) {
             throw new SourceLocationException("SOSLocation could not be generated for machine-guid: " +
-                    configuration.getNodeId().toString() + " and entity: " + guid.toString() );
+                    node.toString() + " and entity: " + guid.toString() );
         }
         return new CacheLocationBundle(location);
     }

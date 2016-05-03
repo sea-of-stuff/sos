@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedDirectory;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.network.Node;
+import uk.ac.standrews.cs.sos.network.SOSNode;
 
 import java.io.*;
 
@@ -36,7 +38,7 @@ public class SeaConfiguration {
     private static SOSDirectory KEYS_DIRECTORY;
     private static SOSDirectory DB_DIRECTORY;
 
-    private static IGUID nodeId;
+    private static Node node;
     private static String privateKeyFile;
     private static String publicKeyFile;
 
@@ -78,8 +80,11 @@ public class SeaConfiguration {
         try (BufferedReader reader = new BufferedReader
                 (new FileReader(SOS_ROOT + SOS_NODE_CONFIG)) ){
             String nodeIdString = reader.readLine();
+            // TODO - get role
             if (nodeIdString != null && !nodeIdString.isEmpty()) {
-                nodeId = GUIDFactory.recreateGUID(nodeIdString);
+                IGUID guid = GUIDFactory.recreateGUID(nodeIdString);
+
+                node = new SOSNode(guid); // TODO - set address and roles
             }
         } catch (IOException | GUIDGenerationException e) {
             throw new SeaConfigurationException();
@@ -104,13 +109,13 @@ public class SeaConfiguration {
         }
     }
 
-    public IGUID getNodeId() {
-     return nodeId;
+    public Node getNode() {
+     return node;
     }
 
-    public void setNodeId(IGUID nodeId) throws SeaConfigurationException {
-        if (SeaConfiguration.nodeId == null) {
-            SeaConfiguration.nodeId = nodeId;
+    public void setNode(Node node) throws SeaConfigurationException {
+        if (SeaConfiguration.node == null) {
+            SeaConfiguration.node = node;
             saveConfiguration();
         }
     }
@@ -144,8 +149,8 @@ public class SeaConfiguration {
 
         try (BufferedWriter writer = new BufferedWriter
                 (new FileWriter(SOS_ROOT + SOS_NODE_CONFIG)) ){
-            if (nodeId != null) {
-                writer.write(nodeId.toString());
+            if (node != null) {
+                writer.write(node.toString());
             }
         } catch (IOException e) {
             throw new SeaConfigurationException();

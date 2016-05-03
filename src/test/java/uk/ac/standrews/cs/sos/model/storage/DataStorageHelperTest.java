@@ -1,24 +1,18 @@
 package uk.ac.standrews.cs.sos.model.storage;
 
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
-import uk.ac.standrews.cs.sos.network.NodeManager;
 import uk.ac.standrews.cs.utils.Helper;
 import uk.ac.standrews.cs.utils.StreamsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -30,22 +24,6 @@ import static org.testng.AssertJUnit.assertNull;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class DataStorageHelperTest extends SetUpTest {
-
-    private SeaConfiguration configuration;
-
-    @BeforeMethod
-    public void setUp() throws Exception {
-        SeaConfiguration.setRootName("test");
-        configuration = SeaConfiguration.getInstance();
-        configuration.setNodeId(GUIDFactory.recreateGUID("123456"));
-
-        NodeManager nodeManager = new NodeManager();
-        try {
-            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory(nodeManager));
-        } catch (Error e) {
-            // Error is thrown if factory was already setup in previous tests
-        }
-    }
 
     @AfterMethod
     public void tearDown() throws IOException {

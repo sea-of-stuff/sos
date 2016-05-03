@@ -25,6 +25,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
     protected Index index;
     protected SeaConfiguration configuration;
 
+    @Override
     @BeforeMethod
     public void setUp() throws SeaOfStuffException, IndexException, SeaConfigurationException {
         SeaConfiguration.setRootName("test");

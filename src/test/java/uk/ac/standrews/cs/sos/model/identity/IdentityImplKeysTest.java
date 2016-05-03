@@ -89,8 +89,9 @@ public class IdentityImplKeysTest extends SetUpTest {
             "1a 48 7f ab 37 87 56 e9 c5 c0 1d c7 d6 72 ff bb \n"+
             "03 31 41 d0 4f 6a fa 26 07 01 88 6e 23 52 77 60 \n";
 
+    @Override
     @BeforeMethod
-    public void setup() throws IOException, SeaConfigurationException {
+    public void setUp() throws IOException, SeaConfigurationException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
 

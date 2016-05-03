@@ -1,8 +1,12 @@
 package uk.ac.standrews.cs.sos.network;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
+import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,10 +18,21 @@ import java.util.HashSet;
  */
 public class NodeManager {
 
+    private Node node;
     private Collection<Node> knownNodes;
 
-    public NodeManager() {
+    public NodeManager() throws NodeManagerException {
+        generateSOSNodeIfNone();
+
         this.knownNodes = new HashSet<>();
+    }
+
+    /**
+     *
+     * @return node of this instance of the SOS
+     */
+    public Node getThisNode() {
+        return node;
     }
 
     public void addNode(Node node) {
@@ -69,6 +84,19 @@ public class NodeManager {
 
         } catch (SQLException e) {
             throw new DatabasePersistenceException(e);
+        }
+    }
+
+    private void generateSOSNodeIfNone() throws NodeManagerException {
+        try {
+            SeaConfiguration configuration = SeaConfiguration.getInstance();
+            node = configuration.getNode();
+            if (node == null) {
+                node = new SOSNode(GUIDFactory.generateRandomGUID());
+                configuration.setNode(node);
+            }
+        } catch (SeaConfigurationException e) {
+            throw new NodeManagerException();
         }
     }
 

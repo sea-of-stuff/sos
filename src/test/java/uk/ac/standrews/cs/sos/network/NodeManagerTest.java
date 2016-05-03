@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.network.roles.Coordinator;
 
@@ -17,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 public class NodeManagerTest {
 
     @Test(priority=0)
-    public void persistTest() throws GUIDGenerationException, DatabasePersistenceException {
+    public void persistTest() throws GUIDGenerationException, DatabasePersistenceException, NodeManagerException {
 
         IGUID guid = GUIDFactory.generateGUID("test");
         InetSocketAddress inetSocketAddress = new InetSocketAddress("example.com", 8080);
@@ -32,7 +33,7 @@ public class NodeManagerTest {
     }
 
     @Test(priority=1)
-    public void getTest() throws GUIDGenerationException, DatabasePersistenceException {
+    public void getTest() throws DatabasePersistenceException, NodeManagerException {
 
         NodeManager nodeManager = new NodeManager();
         nodeManager.loadFromDB();
