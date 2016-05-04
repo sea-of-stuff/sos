@@ -2,17 +2,11 @@ package uk.ac.standrews.cs.commands;
 
 import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.sos.exceptions.UnknownGUIDException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestSaveException;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
 import uk.ac.standrews.cs.sos.model.implementations.utils.GUIDsha1;
-import uk.ac.standrews.cs.sos.model.implementations.utils.Location;
 import uk.ac.standrews.cs.sos.model.interfaces.components.Manifest;
 import uk.ac.standrews.cs.sos_cli;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
