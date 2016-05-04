@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7dd04b89-266f-4d2c-bc2d-46d6455bd335" name="Default" comment="fix paths in sos-rest">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_12.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_9.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/sos_rest_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/sos_rest_war_exploded.xml" />
+    <list default="true" id="7dd04b89-266f-4d2c-bc2d-46d6455bd335" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-cli/src/main/java/uk/ac/standrews/cs.sos/commands/sos_cli_find.java" afterPath="$PROJECT_DIR$/sos-cli/src/main/java/uk/ac/standrews/cs.sos/commands/sos_cli_find.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-cli/src/main/java/uk/ac/standrews/cs.sos/commands/sos_cli_verify.java" afterPath="$PROJECT_DIR$/sos-cli/src/main/java/uk/ac/standrews/cs.sos/commands/sos_cli_verify.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/pom.xml" afterPath="$PROJECT_DIR$/sos-core/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/sos-core.iml" afterPath="$PROJECT_DIR$/sos-core/sos-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/utils/ContentTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/utils/ContentTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/pom.xml" afterPath="$PROJECT_DIR$/sos-rest/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/sos-rest.iml" afterPath="$PROJECT_DIR$/sos-rest/sos-rest.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos.iml" afterPath="$PROJECT_DIR$/sos.iml" />
     </list>
     <ignored path="sos.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -875,7 +861,7 @@
       <option name="presentableId" value="Default" />
       <updated>1462284451571</updated>
       <workItem from="1462284453975" duration="2716000" />
-      <workItem from="1462348946525" duration="4060000" />
+      <workItem from="1462348946525" duration="4106000" />
     </task>
     <task id="LOCAL-00001" summary="interim - pom --&gt; project devs">
       <created>1462288765493</created>
@@ -891,7 +877,14 @@
       <option name="project" value="LOCAL" />
       <updated>1462360038029</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="refactor maven dependencies">
+      <created>1462361380983</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1462361380983</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -921,7 +914,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6776000" />
+    <option name="totallyTimeSpent" value="6822000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="23" width="2556" height="1577" extended-state="0" />
@@ -961,7 +954,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="interim - pom --&gt; project devs" />
     <MESSAGE value="fix paths in sos-rest" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix paths in sos-rest" />
+    <MESSAGE value="refactor maven dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor maven dependencies" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -986,6 +980,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="26" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -993,6 +988,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1008,6 +1004,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
