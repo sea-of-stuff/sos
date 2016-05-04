@@ -1,7 +1,6 @@
-package uk.ac.standrews.sos;
+package uk.ac.standrews.cs.sos;
 
 import com.google.gson.Gson;
-
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;

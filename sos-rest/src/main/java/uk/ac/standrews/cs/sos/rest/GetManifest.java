@@ -1,9 +1,9 @@
-package uk.ac.standrews.sos.rest;
+package uk.ac.standrews.cs.sos.rest;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.sos.ServerState;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 

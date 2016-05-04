@@ -1,8 +1,8 @@
-package uk.ac.standrews.sos.rest;
+package uk.ac.standrews.cs.sos.rest;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import uk.ac.standrews.sos.ServerState;
+import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;

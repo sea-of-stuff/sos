@@ -1,4 +1,4 @@
-package uk.ac.standrews.sos.rest;
+package uk.ac.standrews.cs.sos.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

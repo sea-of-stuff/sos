@@ -1,4 +1,4 @@
-package uk.ac.standrews.sos;
+package uk.ac.standrews.cs.sos;
 
 import com.google.gson.GsonBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.deserializers.LocationBundleDeserializer;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 
@@ -19,27 +20,27 @@ import java.net.URI;
 public class GrizzlyServer {
 
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://0.0.0.0:8080/sos/";
+    public static final URI BASE_URI = UriBuilder.fromUri("http://0.0.0.0/sos/")
+            .port(8080)
+            .build();
 
     public static HttpServer startServer() throws IOException {
         ServerState.startSOS();
         configureGson();
 
         final ResourceConfig rc = new ResourceConfig()
-                .packages("uk.ac.standrews.cs.rest")
+                .packages("uk.ac.standrews.cs.sos.rest")
                 .register(LoggingFilter.class);
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(BASE_URI, rc);
     }
 
     public static void main(String[] args) throws IOException {
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI.toString()));
         System.in.read();
         server.shutdownNow();
     }
-
-
 
     private static void configureGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();

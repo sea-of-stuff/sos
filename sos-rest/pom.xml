@@ -108,7 +108,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>uk.ac.standrews.sos.GrizzlyServer</mainClass>
+                    <mainClass>uk.ac.standrews.cs.sos.GrizzlyServer</mainClass>
                 </configuration>
             </plugin>
         </plugins>

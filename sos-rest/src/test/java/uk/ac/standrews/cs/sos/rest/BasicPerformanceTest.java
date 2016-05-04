@@ -1,8 +1,8 @@
-package uk.ac.standrews.sos.rest;
+package uk.ac.standrews.cs.sos.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTestNg;
-import uk.ac.standrews.sos.ServerState;
+import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 
 import javax.ws.rs.core.Application;
@@ -22,6 +22,6 @@ public class BasicPerformanceTest extends JerseyTestNg.ContainerPerClassTest {
             e.printStackTrace();
         }
         return new ResourceConfig()
-                .packages("uk.ac.standrews.cs.rest");
+                .packages("uk.ac.standrews.cs.sos.rest");
     }
 }

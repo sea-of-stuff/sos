@@ -26,7 +26,6 @@ public class AddAtomTest extends BasicTest {
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json("{\"Location\":\"" + TEST_HTTP_BIN_URL +"\"}"));
 
-
         assertEquals(response.getStatus(), Response.Status.ACCEPTED.getStatusCode());
         String body = response.readEntity(String.class);
         assertTrue(body.length() > 0); // TODO - this is a weak test

@@ -1,8 +1,8 @@
-package uk.ac.standrews.sos.rest;
+package uk.ac.standrews.cs.sos.rest;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import uk.ac.standrews.sos.ServerState;
+import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
