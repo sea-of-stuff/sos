@@ -19,7 +19,6 @@ public class ServerState {
     public static Gson gson;
 
     public static void startSOS() {
-
         try {
             SeaConfiguration configuration = SeaConfiguration.getInstance();
             Index index = LuceneIndex.getInstance(configuration);
