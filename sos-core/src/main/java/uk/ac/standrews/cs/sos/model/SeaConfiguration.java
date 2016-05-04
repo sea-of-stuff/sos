@@ -43,7 +43,6 @@ public class SeaConfiguration {
     private static String publicKeyFile;
 
     private static SeaConfiguration instance;
-    private static SOSDirectory root;
     private static String rootName;
 
     public static void setRootName(String rootName) {
@@ -57,7 +56,7 @@ public class SeaConfiguration {
             if (SeaConfiguration.rootName == null) {
                 SeaConfiguration.rootName = DEFAULT_ROOT_NAME;
             }
-            root = new FileBasedDirectory(ROOT_DIRECTORY, SeaConfiguration.rootName);
+            SOSDirectory root = new FileBasedDirectory(ROOT_DIRECTORY, SeaConfiguration.rootName);
 
             DATA_DIRECTORY = new FileBasedDirectory(root, "data");
             CACHE_DIRECTORY = new FileBasedDirectory(root, "cached_data");

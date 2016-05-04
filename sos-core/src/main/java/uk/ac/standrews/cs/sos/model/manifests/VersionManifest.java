@@ -186,18 +186,7 @@ public class VersionManifest extends SignedManifest implements Version {
         return obj;
     }
 
-    private IGUID makeInvariant() throws ManifestNotMadeException {
-        IGUID guid;
-        try {
-            guid = generateInvariant();
-        } catch (GUIDGenerationException e) {
-            throw new ManifestNotMadeException();
-        }
-
-        return guid;
-    }
-
-    private IGUID generateInvariant() throws GUIDGenerationException {
+    private IGUID makeInvariant() {
         return GUIDFactory.generateRandomGUID();
     }
 

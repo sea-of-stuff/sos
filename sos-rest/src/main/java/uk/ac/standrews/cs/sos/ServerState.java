@@ -10,8 +10,6 @@ import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.SeaOfStuffImpl;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 
-import java.io.IOException;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -20,7 +18,7 @@ public class ServerState {
     public static SeaOfStuff sos;
     public static Gson gson;
 
-    public static void startSOS() throws IOException {
+    public static void startSOS() {
 
         try {
             SeaConfiguration configuration = SeaConfiguration.getInstance();

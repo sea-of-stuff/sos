@@ -9,7 +9,7 @@ public enum CompoundType {
 
     private final String text;
 
-    private CompoundType(final String text) {
+    CompoundType(final String text) {
         this.text = text;
     }
 

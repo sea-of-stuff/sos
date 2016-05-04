@@ -28,7 +28,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cli" target="1.7" />
-      <module name="sos" target="1.5" />
+      <module name="sos" target="1.8" />
       <module name="sos-core" target="1.8" />
       <module name="sos-rest" target="1.8" />
     </bytecodeTargetLevel>
