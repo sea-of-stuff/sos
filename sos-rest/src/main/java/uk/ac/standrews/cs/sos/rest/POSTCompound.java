@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.node.Roles;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -39,7 +40,7 @@ public class POSTCompound {
 
         uk.ac.standrews.cs.sos.interfaces.manifests.Compound manifest = null;
         try {
-            manifest = ServerState.sos.addCompound(CompoundType.COLLECTION, contents); // TODO - allow also other types of compounds
+            manifest = ServerState.sos.getSOS(Roles.CLIENT).addCompound(CompoundType.COLLECTION, contents); // TODO - allow also other types of compounds
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

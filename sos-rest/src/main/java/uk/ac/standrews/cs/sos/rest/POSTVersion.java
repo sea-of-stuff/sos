@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.node.Roles;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -62,7 +63,7 @@ public class POSTVersion {
 
         Compound manifest = null;
         try {
-            ServerState.sos.addVersion(content, invariant, prevs, metadata);
+            ServerState.sos.getSOS(Roles.CLIENT).addVersion(content, invariant, prevs, metadata);
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

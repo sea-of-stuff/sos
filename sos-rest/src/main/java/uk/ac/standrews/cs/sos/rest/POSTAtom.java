@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.node.Roles;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -50,7 +51,7 @@ public class POSTAtom {
 
         uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
         try {
-            manifest = ServerState.sos.addAtom(location);
+            manifest = ServerState.sos.getSOS(Roles.CLIENT).addAtom(location);
         } catch (DataStorageException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -72,7 +73,7 @@ public class POSTAtom {
 
         uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
         try {
-            manifest = ServerState.sos.addAtom(inputStream);
+            manifest = ServerState.sos.getSOS(Roles.CLIENT).addAtom(inputStream);
         } catch (DataStorageException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

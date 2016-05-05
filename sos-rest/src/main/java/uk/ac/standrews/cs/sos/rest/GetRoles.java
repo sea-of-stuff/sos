@@ -25,6 +25,7 @@ public class GetRoles {
     }
 
     @GET
+    @Path("guid")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRoles(@QueryParam("guid") String node) {
 
