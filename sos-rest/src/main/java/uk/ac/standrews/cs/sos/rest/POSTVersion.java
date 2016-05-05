@@ -24,13 +24,13 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("add/asset")
-public class AddAsset {
+@Path("version")
+public class POSTVersion {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAsset(String json) throws GUIDGenerationException {
+    public Response addVersion(String json) throws GUIDGenerationException {
 
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(json).getAsJsonObject();

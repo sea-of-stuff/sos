@@ -21,7 +21,7 @@ public class AddAtomTest extends BasicTest {
 
     @Test
     public void testAddAtomByLocation() {
-        Response response = target("add/atom")
+        Response response = target("atom")
                 .path("/location")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json("{\"Location\":\"" + TEST_HTTP_BIN_URL +"\"}"));
@@ -35,7 +35,7 @@ public class AddAtomTest extends BasicTest {
     public void testAddAtomByStream() {
         InputStream stream = new ByteArrayInputStream("Hello World!".getBytes(StandardCharsets.UTF_8));
 
-        Response response = target("add/atom")
+        Response response = target("atom")
                 .path("/stream")
                 .request()
                 .post(Entity.entity(stream, MediaType.MULTIPART_FORM_DATA_TYPE));

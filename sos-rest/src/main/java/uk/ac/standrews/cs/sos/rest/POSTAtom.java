@@ -24,8 +24,8 @@ import java.net.URISyntaxException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("add/atom")
-public class AddAtom {
+@Path("atom")
+public class POSTAtom {
 
     @POST
     @Path("/location")
@@ -48,7 +48,7 @@ public class AddAtom {
             e.printStackTrace();
         }
 
-        Atom manifest = null;
+        uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
         try {
             manifest = ServerState.sos.addAtom(location);
         } catch (DataStorageException | ManifestPersistException e) {
@@ -70,7 +70,7 @@ public class AddAtom {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final InputStream inputStream) {
 
-        Atom manifest = null;
+        uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
         try {
             manifest = ServerState.sos.addAtom(inputStream);
         } catch (DataStorageException | ManifestPersistException e) {

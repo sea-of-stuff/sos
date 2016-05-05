@@ -20,7 +20,7 @@ public class AddAtomPerformanceTest extends BasicPerformanceTest {
 
         for (int i = 400; i < 410; i++) {
             long start = System.currentTimeMillis();
-            Response response = target("add/atom")
+            Response response = target("atom")
                     .path("/location")
                     .request(MediaType.APPLICATION_JSON_TYPE)
                     .post(Entity.json("{\"Location\":\"" + UNSPLASH_URL + Integer.toString(i) + "\"}"));

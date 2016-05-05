@@ -21,8 +21,8 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("add/compound")
-public class AddCompound {
+@Path("compound")
+public class POSTCompound {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,7 +37,7 @@ public class AddCompound {
             contents.add(content);
         }
 
-        Compound manifest = null;
+        uk.ac.standrews.cs.sos.interfaces.manifests.Compound manifest = null;
         try {
             manifest = ServerState.sos.addCompound(CompoundType.COLLECTION, contents); // TODO - allow also other types of compounds
         } catch (ManifestNotMadeException | ManifestPersistException e) {
