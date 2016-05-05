@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node;
+package uk.ac.standrews.cs.sos.node.internals;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.net.InetSocketAddress;
 import java.sql.*;

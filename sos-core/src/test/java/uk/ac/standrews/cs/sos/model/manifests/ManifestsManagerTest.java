@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.node.SOSNodeManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -50,9 +50,9 @@ public class ManifestsManagerTest {
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
 
-        SOSNodeManager.setConfiguration(configuration);
-        SOSNodeManager.setIndex(index);
-        SOSNodeManager.getInstance();
+        NodeManager.setConfiguration(configuration);
+        NodeManager.setIndex(index);
+        NodeManager.getInstance();
     }
 
     @AfterMethod

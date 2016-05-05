@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node;
+package uk.ac.standrews.cs.sos.node.SOS;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class SOSClient extends SOSCommon {
     public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         manifestsManager.addManifest(manifest);
 
-        // TODO - recursively look for other manifests to add to the SOSNodeManager
+        // TODO - recursively look for other manifests to add to the NodeManager
         if (recursive) {
             throw new NotImplementedException();
         }

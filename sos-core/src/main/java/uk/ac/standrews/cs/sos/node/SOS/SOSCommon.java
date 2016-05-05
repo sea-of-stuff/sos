@@ -1,9 +1,10 @@
-package uk.ac.standrews.cs.sos.node;
+package uk.ac.standrews.cs.sos.node.SOS;
 
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

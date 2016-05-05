@@ -12,11 +12,14 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.node.SOS.SOSClient;
+import uk.ac.standrews.cs.sos.node.internals.SQLiteDB;
 
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
@@ -32,7 +35,7 @@ import java.util.HashSet;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSNodeManager {
+public class NodeManager {
 
     private static SeaConfiguration configuration;
     private static Index index;
@@ -40,13 +43,12 @@ public class SOSNodeManager {
 
     private Node node;
     private Collection<Node> knownNodes;
-
     private Identity identity;
-    private static HashMap<Roles, SeaOfStuff> sosMap;
+    private HashMap<Roles, SeaOfStuff> sosMap;
 
-    private static SOSNodeManager instance;
+    private static NodeManager instance;
 
-    private SOSNodeManager() throws NodeManagerException {
+    private NodeManager() throws NodeManagerException {
         try {
             init();
         } catch (SeaOfStuffException e) {
@@ -79,9 +81,9 @@ public class SOSNodeManager {
 
     }
 
-    public static SOSNodeManager getInstance() throws NodeManagerException {
+    public static NodeManager getInstance() throws NodeManagerException {
         if (instance == null) {
-            instance = new SOSNodeManager();
+            instance = new NodeManager();
         }
 
         return instance;
@@ -92,16 +94,16 @@ public class SOSNodeManager {
     }
 
     public static boolean setConfiguration(SeaConfiguration configuration) {
-        if (SOSNodeManager.configuration == null) {
-            SOSNodeManager.configuration = configuration;
+        if (NodeManager.configuration == null) {
+            NodeManager.configuration = configuration;
             return true;
         }
         return false;
     }
 
     public static boolean setIndex(Index index) {
-        if (SOSNodeManager.index == null) {
-            SOSNodeManager.index = index;
+        if (NodeManager.index == null) {
+            NodeManager.index = index;
             return true;
         }
         return false;
@@ -109,7 +111,7 @@ public class SOSNodeManager {
 
     /**
      *
-     * @return node of this instance of the SOSNodeManager
+     * @return node of this instance of the NodeManager
      */
     public Node getThisNode() {
         return node;
@@ -133,7 +135,7 @@ public class SOSNodeManager {
         return null;
     }
 
-    private void persist() throws DatabasePersistenceException {
+    public void persist() throws DatabasePersistenceException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
 
@@ -150,8 +152,9 @@ public class SOSNodeManager {
         }
     }
 
+    // TODO - the behaviour of this method depends on the configuration
     private void registerSOSRoles() {
-        sosMap = new HashMap();
+        sosMap = new HashMap<>();
         sosMap.put(Roles.CLIENT, new SOSClient(configuration, manifestsManager, identity));
     }
 

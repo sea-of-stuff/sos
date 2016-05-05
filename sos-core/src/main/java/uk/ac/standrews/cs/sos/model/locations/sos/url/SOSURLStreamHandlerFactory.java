@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
-import uk.ac.standrews.cs.sos.node.SOSNodeManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -12,9 +12,9 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     public static boolean URLStreamHandlerFactoryIsSet = false;
 
-    private SOSNodeManager nodeManager;
+    private NodeManager nodeManager;
 
-    public SOSURLStreamHandlerFactory(SOSNodeManager nodeManager) {
+    public SOSURLStreamHandlerFactory(NodeManager nodeManager) {
         this.nodeManager = nodeManager;
         URLStreamHandlerFactoryIsSet = true;
     }

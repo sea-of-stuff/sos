@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
-import uk.ac.standrews.cs.sos.node.SOSNodeManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,9 +12,9 @@ import java.net.URLStreamHandler;
  */
 public class SOSURLStreamHandler extends URLStreamHandler {
 
-    public SOSNodeManager nodeManager;
+    public NodeManager nodeManager;
 
-    public SOSURLStreamHandler(SOSNodeManager nodeManager) {
+    public SOSURLStreamHandler(NodeManager nodeManager) {
         this.nodeManager = nodeManager;
     }
 

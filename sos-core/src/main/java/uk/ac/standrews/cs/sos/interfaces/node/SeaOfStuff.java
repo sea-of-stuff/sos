@@ -113,7 +113,7 @@ public interface SeaOfStuff extends Role {
      * assuming that such manifests are available and reachable.
      * This operation will be performed recursively.
      *
-     * @param manifest to add to the SOSNodeManager
+     * @param manifest to add to the NodeManager
      * @param recursive if true adds the references manifests and data recursively.
      * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
      * @throws ManifestPersistException

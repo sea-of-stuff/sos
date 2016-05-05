@@ -12,8 +12,8 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
-import uk.ac.standrews.cs.sos.node.Roles;
-import uk.ac.standrews.cs.sos.node.SOSNodeManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 public class SeaOfStuffGeneralTest extends SetUpTest {
 
-    protected SOSNodeManager sosNodeManager;
+    protected NodeManager nodeManager;
     protected Index index;
     protected SeaConfiguration configuration;
 
@@ -36,11 +36,11 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
 
-        SOSNodeManager.setConfiguration(configuration);
-        SOSNodeManager.setIndex(index);
-        sosNodeManager = SOSNodeManager.getInstance();
+        NodeManager.setConfiguration(configuration);
+        NodeManager.setIndex(index);
+        nodeManager = NodeManager.getInstance();
 
-        model = sosNodeManager.getSOS(Roles.CLIENT);
+        model = nodeManager.getSOS(Roles.CLIENT);
     }
 
     @AfterMethod
