@@ -158,5 +158,4 @@ public class SOSClient extends SOSCommon {
         return manifestsManager.findVersions(invariant);
     }
 
-
 }

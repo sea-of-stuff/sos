@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;

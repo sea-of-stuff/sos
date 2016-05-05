@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.node.Roles;
