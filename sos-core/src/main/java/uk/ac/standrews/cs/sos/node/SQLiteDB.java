@@ -1,16 +1,13 @@
-package uk.ac.standrews.cs.sos.network;
+package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.network.roles.Consumer;
-import uk.ac.standrews.cs.sos.network.roles.Coordinator;
-import uk.ac.standrews.cs.sos.network.roles.Producer;
-import uk.ac.standrews.cs.sos.network.roles.RoleMasks;
 
 import java.net.InetSocketAddress;
 import java.sql.*;
@@ -60,10 +57,11 @@ public class SQLiteDB {
         boolean retval;
         try (PreparedStatement preparedStatement =
                      connection.prepareStatement(SQL_ADD_NODE)) {
+
             preparedStatement.setString(1, node.getNodeGUID().toString());
             preparedStatement.setString(2, node.getHostAddress().getHostName());
             preparedStatement.setInt(3, node.getHostAddress().getPort());
-            preparedStatement.setInt(4, node.getNodeRole());
+            preparedStatement.setInt(4, 0b0); // FIXME - this should not be hardcoded
 
             retval = preparedStatement.execute();
         }
@@ -93,18 +91,19 @@ public class SQLiteDB {
     }
 
     private static void setRoles(Node node, byte nodeRoles) {
-
-        if ((nodeRoles & RoleMasks.CONSUMER_MASK) != 0) {
+        /*
+        if ((nodeRoles & Roles.CONSUMER_MASK) != 0) {
             node.setNodeRole(new Consumer());
         }
 
-        if ((nodeRoles & RoleMasks.COORDINATOR_MASK) != 0) {
+        if ((nodeRoles & Roles.COORDINATOR_MASK) != 0) {
             node.setNodeRole(new Coordinator());
         }
 
-        if ((nodeRoles & RoleMasks.PRODUCER_MASK) != 0) {
+        if ((nodeRoles & Roles.PRODUCER_MASK) != 0) {
             node.setNodeRole(new Producer());
         }
+        */
 
     }
 

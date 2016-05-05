@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -17,13 +17,13 @@ import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.SeaOfStuffImpl;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.node.SOSNodeManager;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -45,11 +45,14 @@ public class ManifestsManagerTest {
     private Index index;
 
     @BeforeMethod
-    public void setUp() throws IndexException, SeaConfigurationException, SeaOfStuffException {
+    public void setUp() throws IndexException, SeaConfigurationException, NodeManagerException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
-        new SeaOfStuffImpl(configuration, index);
+
+        SOSNodeManager.setConfiguration(configuration);
+        SOSNodeManager.setIndex(index);
+        SOSNodeManager.getInstance();
     }
 
     @AfterMethod

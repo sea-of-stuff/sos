@@ -4,12 +4,12 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedDirectory;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.network.Node;
-import uk.ac.standrews.cs.sos.network.SOSNode;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.io.*;
 
@@ -44,6 +44,8 @@ public class SeaConfiguration {
 
     private static SeaConfiguration instance;
     private static String rootName;
+
+    private SeaConfiguration() {}
 
     public static void setRootName(String rootName) {
         if (SeaConfiguration.rootName == null) {

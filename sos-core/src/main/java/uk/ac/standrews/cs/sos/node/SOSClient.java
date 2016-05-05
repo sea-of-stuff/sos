@@ -1,39 +1,28 @@
-package uk.ac.standrews.cs.sos.model;
+package uk.ac.standrews.cs.sos.node;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
-import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
+import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
-import uk.ac.standrews.cs.sos.network.NodeManager;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -44,52 +33,11 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffImpl implements SeaOfStuff {
+public class SOSClient extends SOSCommon {
 
-    private Identity identity;
-    private ManifestsManager manifestsManager;
-    final private SeaConfiguration configuration;
-
-    private NodeManager nodeManager;
-
-    public SeaOfStuffImpl(SeaConfiguration configuration, Index index) throws SeaOfStuffException {
-        this.configuration = configuration;
-
-        try {
-            identity = new IdentityImpl(configuration);
-            manifestsManager = new ManifestsManager(configuration, index);
-        } catch (KeyGenerationException | KeyLoadedException e) {
-            throw new SeaOfStuffException(e);
-        }
-
-        try {
-            nodeManager = new NodeManager();
-            nodeManager.loadFromDB();
-        } catch (DatabasePersistenceException | NodeManagerException e) {
-            throw new SeaOfStuffException(e);
-        }
-
-        backgroundProcesses();
-        registerSOSProtocol();
-    }
-
-
-
-    private void registerSOSProtocol() {
-        try {
-            if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
-                URLStreamHandlerFactory urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(nodeManager);
-                URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
-            }
-        } catch (Error e) {
-            System.err.println("SeaOfStuffImpl::registerSOSProtocol:" + e.getMessage());
-        }
-    }
-
-    private void backgroundProcesses() {
-        // - start background processes
-        // - listen to incoming requests from other nodes / crawlers?
-        // - make this node available to the rest of the sea of stuff
+    public SOSClient(SeaConfiguration configuration, ManifestsManager manifestsManager,
+                     Identity identity) {
+        super(configuration, manifestsManager, identity, Roles.CLIENT);
     }
 
     @Override
@@ -145,7 +93,7 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         manifestsManager.addManifest(manifest);
 
-        // TODO - recursively look for other manifests to add to the SOS
+        // TODO - recursively look for other manifests to add to the SOSNodeManager
         if (recursive) {
             throw new NotImplementedException();
         }
@@ -184,11 +132,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     }
 
     @Override
-    public Identity getIdentity() {
-        return this.identity;
-    }
-
-    @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
         boolean ret;
         try {
@@ -214,4 +157,6 @@ public class SeaOfStuffImpl implements SeaOfStuff {
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
         return manifestsManager.findVersions(invariant);
     }
+
+
 }

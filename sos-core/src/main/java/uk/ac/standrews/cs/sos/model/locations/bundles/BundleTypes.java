@@ -7,4 +7,5 @@ public class BundleTypes {
 
     public static final String CACHE = "cache";
     public static final String PROVENANCE = "prov";
+    public static final String PERSISTENT = "persistent";
 }

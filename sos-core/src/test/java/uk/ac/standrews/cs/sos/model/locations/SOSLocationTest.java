@@ -5,8 +5,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.network.Node;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;

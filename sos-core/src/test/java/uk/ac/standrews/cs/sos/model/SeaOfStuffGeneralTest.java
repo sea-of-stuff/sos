@@ -6,12 +6,14 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.node.Roles;
+import uk.ac.standrews.cs.sos.node.SOSNodeManager;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -21,17 +23,24 @@ import java.io.IOException;
  */
 public class SeaOfStuffGeneralTest extends SetUpTest {
 
-    protected SeaOfStuff model;
+    protected SOSNodeManager sosNodeManager;
     protected Index index;
     protected SeaConfiguration configuration;
 
+    protected SeaOfStuff model;
+
     @Override
     @BeforeMethod
-    public void setUp() throws SeaOfStuffException, IndexException, SeaConfigurationException {
+    public void setUp() throws IndexException, SeaConfigurationException, NodeManagerException {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
         index = LuceneIndex.getInstance(configuration);
-        model = new SeaOfStuffImpl(configuration, index);
+
+        SOSNodeManager.setConfiguration(configuration);
+        SOSNodeManager.setIndex(index);
+        sosNodeManager = SOSNodeManager.getInstance();
+
+        model = sosNodeManager.getSOS(Roles.CLIENT);
     }
 
     @AfterMethod

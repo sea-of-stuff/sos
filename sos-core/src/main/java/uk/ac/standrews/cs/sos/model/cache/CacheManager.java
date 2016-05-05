@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import java.io.InputStream;
 
 /**
- * Cache an atom - given its location or data stream - to this SOS node.
+ * Cache an atom - given its location or data stream - to this SOSNodeManager node.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

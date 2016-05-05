@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces;
+package uk.ac.standrews.cs.sos.interfaces.node;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -49,7 +49,7 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SeaOfStuff {
+public interface SeaOfStuff extends Role {
 
     /**
      * Adds an atom to the Sea of Stuff.
@@ -113,7 +113,7 @@ public interface SeaOfStuff {
      * assuming that such manifests are available and reachable.
      * This operation will be performed recursively.
      *
-     * @param manifest to add to the SOS
+     * @param manifest to add to the SOSNodeManager
      * @param recursive if true adds the references manifests and data recursively.
      * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
      * @throws ManifestPersistException

@@ -4,12 +4,12 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.network.Node;
-import uk.ac.standrews.cs.sos.network.NodeManager;
-import uk.ac.standrews.cs.sos.network.SOSNode;
+import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.node.SOSNodeManager;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ import java.net.URLConnection;
  */
 public class SOSURLConnection extends URLConnection {
 
-    private NodeManager nodeManager;
+    private SOSNodeManager nodeManager;
 
     /**
      * Constructs a URL connection to the specified URL. A connection to
@@ -32,7 +32,7 @@ public class SOSURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(NodeManager nodeManager, URL url) {
+    protected SOSURLConnection(SOSNodeManager nodeManager, URL url) {
         super(url);
         this.nodeManager = nodeManager;
     }

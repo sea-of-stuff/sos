@@ -1,12 +1,9 @@
-package uk.ac.standrews.cs.sos.network;
+package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.network.roles.Role;
-import uk.ac.standrews.cs.sos.network.roles.RoleMasks;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 
 /**
@@ -17,8 +14,6 @@ public class SOSNode implements Node {
     private IGUID nodeGUID;
     private InetSocketAddress hostAddress;
 
-    private HashSet<Role> roles;
-
     public SOSNode(IGUID guid) {
         this();
         this.nodeGUID = guid;
@@ -26,7 +21,6 @@ public class SOSNode implements Node {
     }
 
     public SOSNode() {
-        roles = new LinkedHashSet<>();
     }
 
     public SOSNode(IGUID guid, InetSocketAddress hostAddress) {
@@ -46,23 +40,8 @@ public class SOSNode implements Node {
     }
 
     @Override
-    public byte getNodeRole() {
-        byte nodeRole = RoleMasks.VOID_MASK;
-        for(Role role:roles) {
-            nodeRole |= role.getRoleMask();
-        }
-        return nodeRole;
-    }
-
-    @Override
-    public Node setNodeRole(Role role) {
-        roles.add(role);
-        return this;
-    }
-
-    @Override
     public String toString() {
-        return nodeGUID + "\n" + getNodeRole();
+        return nodeGUID.toString();
     }
 
     @Override

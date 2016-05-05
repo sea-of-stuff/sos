@@ -4,16 +4,13 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
-import uk.ac.standrews.cs.sos.network.Node;
-import uk.ac.standrews.cs.sos.network.NodeManager;
-import uk.ac.standrews.cs.sos.network.SOSNode;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -53,12 +50,5 @@ public class SetUpTest {
 
         Node node = new SOSNode(GUIDFactory.recreateGUID("12345678"));
         configuration.setNode(node);
-
-        NodeManager nodeManager = new NodeManager();
-        try {
-            URL.setURLStreamHandlerFactory(new SOSURLStreamHandlerFactory(nodeManager));
-        } catch (Error e) {
-            // Error is thrown if factory was already setup in previous tests
-        }
     }
 }
