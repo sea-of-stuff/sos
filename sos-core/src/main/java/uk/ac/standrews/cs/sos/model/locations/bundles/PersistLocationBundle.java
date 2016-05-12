@@ -5,10 +5,9 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CacheLocationBundle extends LocationBundle {
+public class PersistLocationBundle extends LocationBundle {
 
-    public CacheLocationBundle(Location location) {
-        super(BundleTypes.CACHE, location);
+    public PersistLocationBundle(Location location) {
+        super(BundleTypes.PERSISTENT, location);
     }
-
 }

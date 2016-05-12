@@ -7,10 +7,8 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
  */
 public class ProvenanceLocationBundle extends LocationBundle {
 
-    private final static String TYPE = "prov";
-
     public ProvenanceLocationBundle(Location location) {
-        super(TYPE, location);
+        super(BundleTypes.PROVENANCE, location);
     }
 
 }

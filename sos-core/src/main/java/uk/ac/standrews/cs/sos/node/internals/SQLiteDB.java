@@ -33,7 +33,7 @@ public class SQLiteDB {
     private final static String SQL_GET_NODES = "SELECT nodeid, hostname, port, " +
             "nodetype FROM nodes";
 
-    protected static boolean checkSQLiteTableExists(Connection connection) throws SQLException {
+    public static boolean checkSQLiteTableExists(Connection connection) throws SQLException {
 
         boolean retval;
         try (PreparedStatement preparedStatement =
@@ -45,7 +45,7 @@ public class SQLiteDB {
         return retval;
     }
 
-    protected static void createNodesTable(Connection connection) throws SQLException {
+    public static void createNodesTable(Connection connection) throws SQLException {
 
         try (PreparedStatement preparedStatement =
                      connection.prepareStatement(SQL_CREATE_NODES_TABLE)) {
@@ -53,7 +53,7 @@ public class SQLiteDB {
         }
     }
 
-    protected static boolean addNodeToTable(Connection connection, Node node) throws SQLException {
+    public static boolean addNodeToTable(Connection connection, Node node) throws SQLException {
 
         boolean retval;
         try (PreparedStatement preparedStatement =
@@ -70,7 +70,7 @@ public class SQLiteDB {
         return retval;
     }
 
-    protected static Collection<Node> getNodes(Connection connection) throws SQLException, GUIDGenerationException {
+    public static Collection<Node> getNodes(Connection connection) throws SQLException, GUIDGenerationException {
 
         Collection<Node> retval = new HashSet<>();
         try (PreparedStatement preparedStatement =
@@ -91,7 +91,7 @@ public class SQLiteDB {
         return retval;
     }
 
-    private static void setRoles(Node node, byte nodeRoles) {
+    public static void setRoles(Node node, byte nodeRoles) {
         /*
         if ((nodeRoles & Roles.CONSUMER_MASK) != 0) {
             node.setNodeRole(new Consumer());
@@ -108,7 +108,7 @@ public class SQLiteDB {
 
     }
 
-    protected static Connection getSQLiteConnection() throws DatabasePersistenceException {
+    public static Connection getSQLiteConnection() throws DatabasePersistenceException {
         Connection connection;
         try {
             SOSFile dbDump = new FileBasedFile(SeaConfiguration.getInstance().getDBDirectory(), "test.db");

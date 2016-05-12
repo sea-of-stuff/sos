@@ -12,11 +12,11 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 
 import java.io.InputStream;
 import java.util.Collection;

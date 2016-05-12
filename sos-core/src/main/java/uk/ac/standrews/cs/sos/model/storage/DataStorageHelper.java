@@ -5,8 +5,8 @@ import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.cache.CacheManager;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.store.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,27 +22,41 @@ public class DataStorageHelper {
         try {
             stream = location.getSource();
         } catch (IOException e) {
-            throw new SourceLocationException("CacheManager " + location.toString() + " " + e);
+            throw new SourceLocationException(location.toString() + " " + e);
         }
 
         return stream;
     }
 
     public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        CacheManager cacheManager = new CacheManager(configuration, location);
-        IGUID guid = cacheManager.cacheAtom();
-        if (bundles!= null && guid != null) {
-            bundles.add(cacheManager.getCacheLocationBundle());
-        }
+        Store cache = new LocationCache(configuration, location);
 
-        return guid;
+        return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
     public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        CacheManager cacheManager = new CacheManager(configuration, inputStream);
-        IGUID guid = cacheManager.cacheAtom();
+        Store cache = new StreamCache(configuration, inputStream);
+
+        return storeAtomAndUpdateLocationBundles(cache, bundles);
+    }
+
+    public static IGUID persistAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+        Store cache = new LocationPersist(configuration, location);
+
+        return storeAtomAndUpdateLocationBundles(cache, bundles);
+    }
+
+    public static IGUID persistAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+        Store cache = new StreamPersist(configuration, inputStream);
+
+        return storeAtomAndUpdateLocationBundles(cache, bundles);
+    }
+
+    private static IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws DataStorageException {
+        StorageManager storageManager = new StorageManager(store);
+        IGUID guid = storageManager.storeAtom();
         if (bundles!= null && guid != null) {
-            bundles.add(cacheManager.getCacheLocationBundle());
+            bundles.add(storageManager.getLocationBundle());
         }
 
         return guid;

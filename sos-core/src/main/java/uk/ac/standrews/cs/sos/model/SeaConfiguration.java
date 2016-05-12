@@ -24,7 +24,7 @@ public class SeaConfiguration {
     private static final String SOS_ROOT = HOME + "sos/";
     private static final String DEFAULT_ROOT_NAME = "";
 
-    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory(HOME + "sos"); // FIXME - this should be equivalent to String root
+    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory(HOME + "sos");
 
     private static final String SOS_NODE_CONFIG = "node.txt";
     private static final String DATA_CONFIG = "config.txt";
@@ -32,6 +32,7 @@ public class SeaConfiguration {
     private static final String PUBLIC_KEY_FILE = "public.der";
 
     private static SOSDirectory DATA_DIRECTORY;
+    private static SOSDirectory PERSIST_DIRECTORY;
     private static SOSDirectory CACHE_DIRECTORY;
     private static SOSDirectory INDEX_DIRECTORY;
     private static SOSDirectory MANIFEST_DIRECTORY;
@@ -61,6 +62,7 @@ public class SeaConfiguration {
             SOSDirectory root = new FileBasedDirectory(ROOT_DIRECTORY, SeaConfiguration.rootName);
 
             DATA_DIRECTORY = new FileBasedDirectory(root, "data");
+            PERSIST_DIRECTORY = new FileBasedDirectory(root, "persist");
             CACHE_DIRECTORY = new FileBasedDirectory(root, "cached_data");
             INDEX_DIRECTORY = new FileBasedDirectory(root, "index");
             MANIFEST_DIRECTORY = new FileBasedDirectory(root, "manifests");
@@ -123,6 +125,10 @@ public class SeaConfiguration {
 
     public SOSDirectory getDataDirectory() {
         return DATA_DIRECTORY;
+    }
+
+    public SOSDirectory getPersistDirectory() {
+        return PERSIST_DIRECTORY;
     }
 
     public SOSDirectory getManifestsDirectory() {

@@ -16,12 +16,12 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 
 import java.io.InputStream;
 import java.util.ArrayList;
