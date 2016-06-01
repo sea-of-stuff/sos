@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,8 @@ public class SetUpTest {
     public void setUp() throws Exception {
         SeaConfiguration.setRootName("test");
         configuration = SeaConfiguration.getInstance();
+
+        Helper.cleanDirectory(configuration.getDBDirectory());
 
         Node node = new SOSNode(GUIDFactory.recreateGUID("12345678"));
         configuration.setNode(node);
