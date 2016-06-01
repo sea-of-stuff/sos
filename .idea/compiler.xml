@@ -24,6 +24,7 @@
         <processorPath useClasspath="true" />
         <module name="sos-core" />
         <module name="sos-rest" />
+        <module name="web-ui" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -31,6 +32,7 @@
       <module name="sos" target="1.8" />
       <module name="sos-core" target="1.8" />
       <module name="sos-rest" target="1.8" />
+      <module name="web-ui" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

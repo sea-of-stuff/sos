@@ -164,7 +164,7 @@ public class IdentityImpl implements Identity {
         return pair;
     }
 
-    // Create files to store public and private key
+    // Create files to storeLocation public and private key
     private File createKeyFile(String path) throws KeyGenerationException {
         File file = new File(path);
 

@@ -1,17 +1,22 @@
 package uk.ac.standrews.cs.sos.node;
 
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import static org.testng.Assert.assertEquals;
@@ -32,6 +37,11 @@ public class NodeManagerTest extends SetUpTest {
         NodeManager.setConfiguration(configuration);
         NodeManager.setIndex(index);
         nodeManager = NodeManager.getInstance();
+    }
+
+    @AfterSuite
+    public void tearDown() throws IOException, IndexException {
+        Helper.cleanDirectory(configuration.getDBDirectory());
     }
 
     @Test(priority=0)

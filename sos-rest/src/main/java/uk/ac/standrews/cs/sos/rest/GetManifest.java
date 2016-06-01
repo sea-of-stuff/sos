@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.node.Roles;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

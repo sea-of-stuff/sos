@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
@@ -47,6 +48,16 @@ public class SOSCoordinator extends SOSCommon {
 
     @Override
     public Version addVersion(IGUID content, IGUID invariant, Collection<IGUID> prevs, Collection<IGUID> metadata) throws ManifestNotMadeException, ManifestPersistException {
+        return null;
+    }
+
+    @Override
+    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+        return null;
+    }
+
+    @Override
+    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
         return null;
     }
 

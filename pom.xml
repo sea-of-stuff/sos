@@ -14,6 +14,7 @@
     <modules>
     	<module>sos-core</module>
         <module>sos-rest</module>
+        <module>web-ui</module>
         <!-- <module>sos-cli</module> -->
     </modules>
 

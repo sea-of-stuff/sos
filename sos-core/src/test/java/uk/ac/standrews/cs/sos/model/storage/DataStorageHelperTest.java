@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.Helper;
 import uk.ac.standrews.cs.sos.utils.StreamsUtils;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -28,6 +30,7 @@ public class DataStorageHelperTest extends SetUpTest {
     @AfterMethod
     public void tearDown() throws IOException {
         Helper.cleanDirectory(configuration.getCacheDirectory());
+        Helper.cleanDirectory(configuration.getPersistDirectory());
         Helper.cleanDirectory(configuration.getDataDirectory());
     }
 
@@ -121,6 +124,31 @@ public class DataStorageHelperTest extends SetUpTest {
         assertNotNull(guid);
         assertEquals(newGUID, guid);
         assertEquals(newBundles.size(), 1);
+    }
+
+    @Test
+    public void testStorePersistAtom() throws Exception {
+        Location location = Helper.createDummyDataFile(configuration);
+        Collection<LocationBundle> bundles = new ArrayList<>();
+
+        IGUID guid = DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles);
+        assertNotNull(guid);
+        assertEquals(bundles.size(), 1);
+
+        Iterator<LocationBundle> it = bundles.iterator();
+        assertEquals(it.next().getType(), BundleTypes.PERSISTENT);
+    }
+
+    @Test
+    public void testStorePersistAtomFromStream() throws Exception {
+        Collection<LocationBundle> bundles = new ArrayList<>();
+        InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
+        IGUID guid = DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        assertNotNull(guid);
+        assertEquals(bundles.size(), 1);
+
+        Iterator<LocationBundle> it = bundles.iterator();
+        assertEquals(it.next().getType(), BundleTypes.PERSISTENT);
     }
 
 }

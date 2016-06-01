@@ -33,35 +33,6 @@ public class SOSStorage extends SOSCommon {
     }
 
     @Override
-    public Atom addAtom(Location location) throws DataStorageException, ManifestPersistException {
-
-        Collection<LocationBundle> bundles = new ArrayList<>();
-        bundles.add(new ProvenanceLocationBundle(location));
-
-        // FIXME - do not cache, but store
-        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
-    }
-
-    @Override
-    public Atom addAtom(InputStream inputStream) throws DataStorageException, ManifestPersistException {
-        return null;
-    }
-
-    @Override
-    public Compound addCompound(CompoundType type, Collection<Content> contents) throws ManifestNotMadeException, ManifestPersistException {
-        return null;
-    }
-
-    @Override
-    public Version addVersion(IGUID content, IGUID invariant, Collection<IGUID> prevs, Collection<IGUID> metadata) throws ManifestNotMadeException, ManifestPersistException {
-        return null;
-    }
-
-    @Override
     public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         return null;
     }
@@ -94,5 +65,15 @@ public class SOSStorage extends SOSCommon {
     @Override
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
         return null;
+    }
+
+    @Override
+    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+        return DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles);
+    }
+
+    @Override
+    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+        return DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
     }
 }

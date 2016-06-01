@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
@@ -13,18 +12,14 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -39,55 +34,6 @@ public class SOSClient extends SOSCommon {
     public SOSClient(SeaConfiguration configuration, ManifestsManager manifestsManager,
                      Identity identity) {
         super(configuration, manifestsManager, identity, Roles.CLIENT);
-    }
-
-    @Override
-    public Atom addAtom(Location location)
-            throws ManifestPersistException, DataStorageException {
-
-        Collection<LocationBundle> bundles = new ArrayList<>();
-        bundles.add(new ProvenanceLocationBundle(location));
-
-        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
-    }
-
-    @Override
-    public Atom addAtom(InputStream inputStream)
-            throws ManifestPersistException, DataStorageException {
-
-        Collection<LocationBundle> locations = new ArrayList<>();
-        IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, locations);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
-    }
-
-    @Override
-    public Compound addCompound(CompoundType type, Collection<Content> contents)
-            throws ManifestNotMadeException, ManifestPersistException {
-
-        CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
-    }
-
-    @Override
-    public Version addVersion(IGUID content,
-                              IGUID invariant,
-                              Collection<IGUID> prevs,
-                              Collection<IGUID> metadata)
-            throws ManifestNotMadeException, ManifestPersistException {
-
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
     }
 
     @Override
@@ -159,4 +105,13 @@ public class SOSClient extends SOSCommon {
         return manifestsManager.findVersions(invariant);
     }
 
+    @Override
+    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+        return DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+    }
+
+    @Override
+    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+        return DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+    }
 }

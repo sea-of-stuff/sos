@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.node.Roles;
+import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

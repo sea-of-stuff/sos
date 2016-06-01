@@ -43,6 +43,7 @@
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/sos-rest" />
+    <file type="web" url="file://$PROJECT_DIR$/web-ui" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

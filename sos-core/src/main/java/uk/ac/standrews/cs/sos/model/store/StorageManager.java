@@ -18,7 +18,7 @@ public class StorageManager {
     }
 
     /**
-     * Store the data at the Location Bundles in the store
+     * Store the data at the Location Bundles in the storeLocation
      *
      * @return GUID generated from the data at the location bundles
      * @throws DataStorageException

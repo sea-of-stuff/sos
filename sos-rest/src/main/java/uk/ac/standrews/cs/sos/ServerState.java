@@ -7,14 +7,14 @@ import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
-import uk.ac.standrews.cs.sos.node.SOSNodeManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ServerState {
 
-    public static SOSNodeManager sos;
+    public static NodeManager sos;
     public static Gson gson;
 
     public static void startSOS() {
@@ -22,10 +22,10 @@ public class ServerState {
             SeaConfiguration configuration = SeaConfiguration.getInstance();
             Index index = LuceneIndex.getInstance(configuration);
 
-            SOSNodeManager.setConfiguration(configuration);
-            SOSNodeManager.setIndex(index);
+            NodeManager.setConfiguration(configuration);
+            NodeManager.setIndex(index);
 
-            ServerState.sos = SOSNodeManager.getInstance();
+            ServerState.sos = NodeManager.getInstance();
         } catch (NodeManagerException | IndexException | SeaConfigurationException e) {
             e.printStackTrace();
         }
