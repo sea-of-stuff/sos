@@ -62,7 +62,9 @@ public class SOSCoordinator extends SOSCommon {
 
     @Override
     public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        return null;
+        manifestsManager.addManifest(manifest);
+        
+        return manifest;
     }
 
     @Override
