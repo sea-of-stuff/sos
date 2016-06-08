@@ -4,8 +4,11 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
@@ -18,6 +21,8 @@ import java.io.PrintWriter;
  */
 public class SetUpTest {
 
+    protected NodeManager nodeManager;
+    protected Index index;
     protected SeaConfiguration configuration;
 
     @BeforeSuite
@@ -53,5 +58,11 @@ public class SetUpTest {
 
         Node node = new SOSNode(GUIDFactory.recreateGUID("12345678"));
         configuration.setNode(node);
+
+        index = LuceneIndex.getInstance(configuration);
+
+        NodeManager.setConfiguration(configuration);
+        NodeManager.setIndex(index);
+        nodeManager = NodeManager.getInstance();
     }
 }

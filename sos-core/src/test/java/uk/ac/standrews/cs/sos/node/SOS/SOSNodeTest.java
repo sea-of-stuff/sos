@@ -4,14 +4,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
-import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -21,22 +15,12 @@ import java.io.IOException;
  */
 public abstract class SOSNodeTest extends SetUpTest {
 
-    protected NodeManager nodeManager;
-    protected Index index;
-    protected SeaConfiguration configuration;
-
     protected SeaOfStuff model;
 
     @Override
     @BeforeMethod
-    public void setUp() throws IndexException, SeaConfigurationException, NodeManagerException {
-        SeaConfiguration.setRootName("test");
-        configuration = SeaConfiguration.getInstance();
-        index = LuceneIndex.getInstance(configuration);
-
-        NodeManager.setConfiguration(configuration);
-        NodeManager.setIndex(index);
-        nodeManager = NodeManager.getInstance();
+    public void setUp() throws Exception {
+        super.setUp();
 
         model = nodeManager.getSOS(nodeRole());
     }
