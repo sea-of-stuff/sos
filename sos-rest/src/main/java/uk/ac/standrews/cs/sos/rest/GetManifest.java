@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
+import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -25,7 +25,7 @@ public class GetManifest {
         IGUID guid = GUIDFactory.recreateGUID(input);
         Manifest manifest = null;
         try {
-            manifest = ServerState.sos.getSOS(Roles.CLIENT).getManifest(guid); // FIXME - pass role in header of request
+            manifest = ServerState.sos.getSOS(ROLE.CLIENT).getManifest(guid); // FIXME - pass role in header of request
         } catch (ManifestNotFoundException e) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -46,7 +46,7 @@ public class GetManifest {
         IGUID guid = GUIDFactory.recreateGUID(metadata);
         Manifest manifest = null;
         try {
-            manifest = ServerState.sos.getSOS(Roles.CLIENT).getManifest(guid); // FIXME
+            manifest = ServerState.sos.getSOS(ROLE.CLIENT).getManifest(guid); // FIXME
         } catch (ManifestNotFoundException e) {
             return Response
                     .status(Response.Status.NOT_FOUND)

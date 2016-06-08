@@ -93,15 +93,15 @@ public class SQLiteDB {
 
     public static void setRoles(Node node, byte nodeRoles) {
         /*
-        if ((nodeRoles & Roles.CONSUMER_MASK) != 0) {
+        if ((nodeRoles & ROLE.CONSUMER_MASK) != 0) {
             node.setNodeRole(new Consumer());
         }
 
-        if ((nodeRoles & Roles.COORDINATOR_MASK) != 0) {
+        if ((nodeRoles & ROLE.COORDINATOR_MASK) != 0) {
             node.setNodeRole(new Coordinator());
         }
 
-        if ((nodeRoles & Roles.PRODUCER_MASK) != 0) {
+        if ((nodeRoles & ROLE.PRODUCER_MASK) != 0) {
             node.setNodeRole(new Producer());
         }
         */

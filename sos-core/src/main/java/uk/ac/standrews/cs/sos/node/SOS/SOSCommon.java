@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.node.SOS;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
@@ -9,12 +10,12 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,24 +30,15 @@ public abstract class SOSCommon implements SeaOfStuff {
     protected ManifestsManager manifestsManager;
     final protected SeaConfiguration configuration;
 
-    private Roles role;
-
-    public SOSCommon(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity, Roles role) {
+    public SOSCommon(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity) {
         this.configuration = configuration;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
-
-        this.role = role;
     }
 
     @Override
     public Identity getIdentity() {
         return this.identity;
-    }
-
-    @Override
-    public Roles getRoleMask() {
-        return role;
     }
 
     @Override
@@ -95,6 +87,26 @@ public abstract class SOSCommon implements SeaOfStuff {
         manifestsManager.addManifest(manifest);
 
         return manifest;
+    }
+
+    @Override
+    public InputStream getAtomContent(Atom atom) {
+        InputStream dataStream = null;
+        Collection<LocationBundle> locations = atom.getLocations();
+        for(LocationBundle location:locations) {
+
+            try {
+                dataStream = DataStorageHelper.getInputStreamFromLocation(location.getLocation());
+            } catch (SourceLocationException e) {
+                continue;
+            }
+
+            if (dataStream != null) {
+                break;
+            }
+        }
+
+        return dataStream;
     }
 
     protected abstract IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException;

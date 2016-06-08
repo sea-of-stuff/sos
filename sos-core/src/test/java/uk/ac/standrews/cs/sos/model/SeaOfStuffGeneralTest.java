@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
+import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.node.NodeManager;
@@ -40,7 +40,7 @@ public class SeaOfStuffGeneralTest extends SetUpTest {
         NodeManager.setIndex(index);
         nodeManager = NodeManager.getInstance();
 
-        model = nodeManager.getSOS(Roles.CLIENT);
+        model = nodeManager.getSOS(ROLE.CLIENT);
     }
 
     @AfterMethod

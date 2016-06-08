@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.sos.node.SOS;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
@@ -9,18 +10,13 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -28,48 +24,43 @@ import java.util.Collection;
  */
 public class SOSStorage extends SOSCommon {
 
-    public SOSStorage(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity, Roles role) {
-        super(configuration, manifestsManager, identity, role);
+    public SOSStorage(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity) {
+        super(configuration, manifestsManager, identity);
     }
 
     @Override
     public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        return null;
-    }
-
-    @Override
-    public InputStream getAtomContent(Atom atom) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        return DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles);
+        return DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles); // NOTE - this might undo the cache locations!
     }
 
     @Override

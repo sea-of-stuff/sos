@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
@@ -27,38 +26,38 @@ import java.util.Collection;
  */
 public class SOSCoordinator extends SOSCommon {
 
-    public SOSCoordinator(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity, Roles role) {
-        super(configuration, manifestsManager, identity, role);
+    public SOSCoordinator(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity) {
+        super(configuration, manifestsManager, identity);
     }
 
     @Override
     public Atom addAtom(Location location) throws DataStorageException, ManifestPersistException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Atom addAtom(InputStream inputStream) throws DataStorageException, ManifestPersistException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Compound addCompound(CompoundType type, Collection<Content> contents) throws ManifestNotMadeException, ManifestPersistException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Version addVersion(IGUID content, IGUID invariant, Collection<IGUID> prevs, Collection<IGUID> metadata) throws ManifestNotMadeException, ManifestPersistException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -68,11 +67,12 @@ public class SOSCoordinator extends SOSCommon {
 
     @Override
     public InputStream getAtomContent(Atom atom) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
+        // TODO - might have to contact other coordinators!
         return null;
     }
 
@@ -95,4 +95,6 @@ public class SOSCoordinator extends SOSCommon {
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
         return null;
     }
+
+    // TODO - other find methods?
 }

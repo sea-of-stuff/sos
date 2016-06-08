@@ -49,7 +49,7 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SeaOfStuff extends Role {
+public interface SeaOfStuff {
 
     /**
      * Adds an atom to the Sea of Stuff.

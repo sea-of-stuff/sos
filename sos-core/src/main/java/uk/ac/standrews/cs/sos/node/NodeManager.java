@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
+import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
@@ -44,7 +44,7 @@ public class NodeManager {
     private Node node;
     private Collection<Node> knownNodes;
     private Identity identity;
-    private HashMap<Roles, SeaOfStuff> sosMap;
+    private HashMap<ROLE, SeaOfStuff> sosMap;
 
     private static NodeManager instance;
 
@@ -89,7 +89,11 @@ public class NodeManager {
         return instance;
     }
 
-    public SeaOfStuff getSOS(Roles role) {
+    public ROLE[] getRoles() {
+        return sosMap.keySet().toArray(new ROLE[sosMap.size()]);
+    }
+
+    public SeaOfStuff getSOS(ROLE role) {
         return sosMap.get(role);
     }
 
@@ -153,9 +157,10 @@ public class NodeManager {
     }
 
     // TODO - the behaviour of this method depends on the configuration
+    // NOTE - also I am not sure if it is possible to have concurrent SOS implementations!
     private void registerSOSRoles() {
         sosMap = new HashMap<>();
-        sosMap.put(Roles.CLIENT, new SOSClient(configuration, manifestsManager, identity));
+        sosMap.put(ROLE.CLIENT, new SOSClient(configuration, manifestsManager, identity));
     }
 
     private void registerSOSProtocol() {

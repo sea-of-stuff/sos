@@ -13,7 +13,6 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.node.Roles;
 import uk.ac.standrews.cs.sos.model.SeaConfiguration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
@@ -33,7 +32,7 @@ public class SOSClient extends SOSCommon {
 
     public SOSClient(SeaConfiguration configuration, ManifestsManager manifestsManager,
                      Identity identity) {
-        super(configuration, manifestsManager, identity, Roles.CLIENT);
+        super(configuration, manifestsManager, identity);
     }
 
     @Override
@@ -45,26 +44,6 @@ public class SOSClient extends SOSCommon {
             throw new NotImplementedException();
         }
         return manifest;
-    }
-
-    @Override
-    public InputStream getAtomContent(Atom atom) {
-        InputStream dataStream = null;
-        Collection<LocationBundle> locations = atom.getLocations();
-        for(LocationBundle location:locations) {
-
-            try {
-                dataStream = DataStorageHelper.getInputStreamFromLocation(location.getLocation());
-            } catch (SourceLocationException e) {
-                continue;
-            }
-
-            if (dataStream != null) {
-                break;
-            }
-        }
-
-        return dataStream;
     }
 
     @Override
