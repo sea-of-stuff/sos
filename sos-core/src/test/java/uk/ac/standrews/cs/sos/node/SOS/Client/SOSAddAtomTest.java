@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model;
+package uk.ac.standrews.cs.sos.node.SOS.Client;
 
 import org.apache.commons.io.IOUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -23,7 +23,7 @@ import static org.testng.AssertJUnit.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
+public class SOSAddAtomTest extends ClientTest {
 
     private static final int PAUSE_TIME_MS = 500;
 
@@ -103,7 +103,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class SeaOfStuffAddAtomTest extends SeaOfStuffGeneralTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
-        System.out.println("SeaOfStuffAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
     @Test

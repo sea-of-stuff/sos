@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model;
+package uk.ac.standrews.cs.sos.node.SOS.Client;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -20,7 +20,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffFindTest extends SeaOfStuffGeneralTest {
+public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtoms() throws Exception {

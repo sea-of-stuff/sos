@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.SOS.SOSClient;
+import uk.ac.standrews.cs.sos.node.SOS.SOSStorage;
 import uk.ac.standrews.cs.sos.node.internals.SQLiteDB;
 
 import java.net.URL;
@@ -161,6 +162,7 @@ public class NodeManager {
     private void registerSOSRoles() {
         sosMap = new HashMap<>();
         sosMap.put(ROLE.CLIENT, new SOSClient(configuration, manifestsManager, identity));
+        sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, manifestsManager, identity));
     }
 
     private void registerSOSProtocol() {

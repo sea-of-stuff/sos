@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model;
+package uk.ac.standrews.cs.sos.node.SOS.Client;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
@@ -22,7 +22,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SeaOfStuffAddVersionTest extends SeaOfStuffGeneralTest {
+public class SOSAddVersionTest extends ClientTest {
 
     @Test
     public void testAddAsset() throws Exception {
