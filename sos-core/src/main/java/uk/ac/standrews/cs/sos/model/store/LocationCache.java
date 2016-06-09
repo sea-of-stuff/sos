@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.store;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
  */
 public class LocationCache extends LocationStore {
 
-    public LocationCache(SeaConfiguration configuration, Location location) {
+    public LocationCache(Configuration configuration, Location location) {
         super(configuration, location);
     }
 

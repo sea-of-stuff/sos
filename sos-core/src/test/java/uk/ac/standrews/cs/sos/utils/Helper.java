@@ -5,7 +5,7 @@ import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 
@@ -21,11 +21,11 @@ public class Helper {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile(SeaConfiguration configuration) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(Configuration configuration) throws FileNotFoundException, URISyntaxException {
         return createDummyDataFile(configuration, "testData.txt");
     }
 
-    public static Location createDummyDataFile(SeaConfiguration configuration, String filename) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(Configuration configuration, String filename) throws FileNotFoundException, URISyntaxException {
         return createDummyDataFile(configuration.getDataDirectory(), filename);
     }
 
@@ -55,7 +55,11 @@ public class Helper {
         }
     }
 
-    public static void cleanDirectory(SOSDirectory directory) throws IOException {
+    public static String InputStreamToString(InputStream stream) throws IOException {
+        return IOUtils.toString(stream);
+    }
+
+    public static void DeletePath(SOSDirectory directory) throws IOException {
         File dir = new File(directory.getPathname());
 
         if (dir.exists()) {
@@ -63,15 +67,4 @@ public class Helper {
         }
     }
 
-    public static void deleteDirectory(SOSDirectory directory) throws IOException {
-        File dir = new File(directory.getPathname());
-
-        if (dir.exists()) {
-            FileUtils.deleteDirectory(dir);
-        }
-    }
-
-    public static String InputStreamToString(InputStream stream) throws IOException {
-        return IOUtils.toString(stream);
-    }
 }

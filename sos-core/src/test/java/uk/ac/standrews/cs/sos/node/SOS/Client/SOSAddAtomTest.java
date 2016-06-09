@@ -7,14 +7,15 @@ import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.utils.Helper;
 import uk.ac.standrews.cs.sos.utils.StreamsUtils;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -147,8 +148,8 @@ public class SOSAddAtomTest extends ClientTest {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         Atom manifest = model.addAtom(location);
 
-        File file = new File(configuration.getCacheDirectory().getPathname() + manifest.getContentGUID());
-        File manifestFile = new File(configuration.getManifestsDirectory().getPathname() + manifest.getContentGUID() + ".json");
+        SOSFile file = new FileBasedFile(configuration.getCacheDirectory(), manifest.getContentGUID().toString());
+        SOSFile manifestFile = new FileBasedFile(configuration.getManifestsDirectory(), manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -159,8 +160,8 @@ public class SOSAddAtomTest extends ClientTest {
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
-        File newFile = new File(configuration.getCacheDirectory().getPathname() + newManifest.getContentGUID());
-        File newManifestFile = new File(configuration.getManifestsDirectory().getPathname() + newManifest.getContentGUID() + ".json");
+        SOSFile newFile = new FileBasedFile(configuration.getCacheDirectory(), newManifest.getContentGUID().toString());
+        SOSFile newManifestFile = new FileBasedFile(configuration.getManifestsDirectory(), newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.rest;
 
 import uk.ac.standrews.cs.sos.ServerState;
-import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
+import uk.ac.standrews.cs.sos.node.ROLE;
 import uk.ac.standrews.cs.sos.node.SOS.SOSCoordinator;
 
 import javax.ws.rs.GET;
@@ -21,8 +21,16 @@ public class GetRoles {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles() {
+    public Response getRoles(@QueryParam("guid") String node) {
+        if (node != null) {
+            return getANodeRoles(node);
+        } else {
+            return getThisNodeRoles();
+        }
 
+    }
+
+    private Response getThisNodeRoles() {
         ROLE[] roles = ServerState.sos.getRoles();
         String jsonRoles = gson.toJson(roles);
 
@@ -33,11 +41,7 @@ public class GetRoles {
                 .build();
     }
 
-    @GET
-    @Path("guid")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(@QueryParam("guid") String node) {
-
+    private Response getANodeRoles(String node) {
         // TODO - check node manager for roles of specified node
         // this should be enabled only if this node is a coordinator
         // edge cases:
@@ -47,9 +51,11 @@ public class GetRoles {
 
         SOSCoordinator sos = (SOSCoordinator) ServerState.sos.getSOS(ROLE.COORDINATOR);
         if (sos != null) {
+            // TODO
             return null;
         }
 
         return null;
     }
+
 }

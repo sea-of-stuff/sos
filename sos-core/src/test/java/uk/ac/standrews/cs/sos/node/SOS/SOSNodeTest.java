@@ -4,8 +4,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
+import uk.ac.standrews.cs.sos.node.ROLE;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -30,11 +30,11 @@ public abstract class SOSNodeTest extends SetUpTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(index.getConfiguration().getIndexDirectory());
-        Helper.cleanDirectory(index.getConfiguration().getManifestsDirectory());
-        Helper.cleanDirectory(index.getConfiguration().getDataDirectory());
-        Helper.cleanDirectory(index.getConfiguration().getCacheDirectory());
-        Helper.cleanDirectory(index.getConfiguration().getDBDirectory());
+        Helper.DeletePath(index.getConfiguration().getIndexDirectory());
+        Helper.DeletePath(index.getConfiguration().getManifestsDirectory());
+        Helper.DeletePath(index.getConfiguration().getDataDirectory());
+        Helper.DeletePath(index.getConfiguration().getCacheDirectory());
+        Helper.DeletePath(index.getConfiguration().getDatabaseDump().getParent());
     }
 
     public abstract ROLE nodeRole();

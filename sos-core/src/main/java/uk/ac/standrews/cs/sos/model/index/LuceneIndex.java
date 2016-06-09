@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
@@ -41,9 +41,9 @@ public class LuceneIndex extends CommonIndex {
     private static IndexWriter indexWriter = null;
     private static SearcherManager searcherManager = null;
     private static IndexSearcher indexSearcher = null;
-    private static SeaConfiguration instanceConfiguration;
+    private static Configuration instanceConfiguration;
 
-    public static Index getInstance(SeaConfiguration configuration) throws IndexException {
+    public static Index getInstance(Configuration configuration) throws IndexException {
         if(instance == null) {
             try {
                 init(configuration);
@@ -54,7 +54,7 @@ public class LuceneIndex extends CommonIndex {
         return instance;
     }
 
-    private static void init(SeaConfiguration configuration) throws IOException {
+    private static void init(Configuration configuration) throws IOException {
         instanceConfiguration = configuration;
         SOSDirectory indexPath = instanceConfiguration.getIndexDirectory();
 
@@ -136,7 +136,7 @@ public class LuceneIndex extends CommonIndex {
     }
 
     @Override
-    public SeaConfiguration getConfiguration() {
+    public Configuration getConfiguration() {
         return instanceConfiguration;
     }
 

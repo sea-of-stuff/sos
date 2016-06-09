@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
@@ -23,9 +23,9 @@ import java.net.MalformedURLException;
  */
 public abstract class CommonStore implements Store {
 
-    protected SeaConfiguration configuration;
+    protected Configuration configuration;
 
-    public CommonStore(SeaConfiguration configuration) {
+    public CommonStore(Configuration configuration) {
         this.configuration = configuration;
     }
 

@@ -4,13 +4,13 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class IdentityImplKeysTest extends SetUpTest {
 
-    private SeaConfiguration configuration;
+    private Configuration configuration;
     private final static String BYTES_3K = "c1 c3 c0 86 da 82 92 ea 9a 59 94 a1 fe a5 30 3a \n"+
             "bb 10 13 ec 8c 0e 6d f6 be bb c3 34 dd f3 de 3b \n"+
             "b9 57 b6 6f d8 f8 7d e6 ab 8e ad 7a ac d9 6b 5c \n"+
@@ -91,9 +91,9 @@ public class IdentityImplKeysTest extends SetUpTest {
 
     @Override
     @BeforeMethod
-    public void setUp() throws IOException, SeaConfigurationException {
-        SeaConfiguration.setRootName("test");
-        configuration = SeaConfiguration.getInstance();
+    public void setUp() throws IOException, ConfigurationException {
+        Configuration.setRootName("test");
+        configuration = Configuration.getInstance();
 
         // Delete any left over keys from past
         deleteKeys(configuration);
@@ -144,7 +144,7 @@ public class IdentityImplKeysTest extends SetUpTest {
         assertTrue(identityLoaded.verify("hello", signature));
     }
 
-    private void deleteKeys(SeaConfiguration configuration) {
+    private void deleteKeys(Configuration configuration) {
         File privKey = new File(configuration.getIdentityPaths()[0].getPathname());
         File pubkey = new File(configuration.getIdentityPaths()[1].getPathname());
 

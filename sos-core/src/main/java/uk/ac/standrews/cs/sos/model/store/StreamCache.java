@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.store;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
@@ -15,7 +15,7 @@ import java.io.InputStream;
  */
 public class StreamCache extends StreamStore {
 
-    public StreamCache(SeaConfiguration configuration, InputStream inputStream) {
+    public StreamCache(Configuration configuration, InputStream inputStream) {
         super(configuration, inputStream);
     }
 

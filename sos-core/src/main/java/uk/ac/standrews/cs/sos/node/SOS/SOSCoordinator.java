@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 public class SOSCoordinator extends SOSCommon {
 
-    public SOSCoordinator(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity) {
+    public SOSCoordinator(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
         super(configuration, manifestsManager, identity);
     }
 

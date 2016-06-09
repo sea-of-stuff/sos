@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
@@ -21,7 +21,7 @@ import java.util.Collection;
  */
 public class SOSStorage extends SOSCommon {
 
-    public SOSStorage(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity) {
+    public SOSStorage(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
         super(configuration, manifestsManager, identity);
     }
 

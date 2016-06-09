@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.node;
+package uk.ac.standrews.cs.sos.node;
 
 public enum ROLE {
     VOID((byte) 0b0000),

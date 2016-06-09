@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.sos.model.locations.sos.url;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
@@ -50,16 +50,16 @@ public class SOSURLConnection extends URLConnection {
             Node resourceNode = new SOSNode(GUIDFactory.recreateGUID(url.getHost()));
             IGUID entityId = GUIDFactory.recreateGUID(segments[segments.length - 1]);
 
-            Node node = SeaConfiguration.getInstance().getNode();
+            Node node = Configuration.getInstance().getNode();
 
             if (resourceNode.equals(node)) {
-                SOSFile path = new FileBasedFile(SeaConfiguration.getInstance().getCacheDirectory(), entityId.toString());
+                SOSFile path = new FileBasedFile(Configuration.getInstance().getCacheDirectory(), entityId.toString());
                 FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
             } else {
                 return contactNode(resourceNode, entityId);
             }
-        } catch (SeaConfigurationException | GUIDGenerationException e) {
+        } catch (ConfigurationException | GUIDGenerationException e) {
             throw new IOException(); // FIXME - this try/catch is a bit dirty.
         }
 

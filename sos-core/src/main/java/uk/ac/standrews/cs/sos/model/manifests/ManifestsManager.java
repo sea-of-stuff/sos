@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
@@ -45,7 +45,7 @@ public class ManifestsManager {
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
-    final private SeaConfiguration configuration;
+    final private Configuration configuration;
     final private Index index;
     private Gson gson;
 
@@ -57,7 +57,7 @@ public class ManifestsManager {
      * @param configuration used by the manifest manager
      * @param index used to record information for the manifests.
      */
-    public ManifestsManager(SeaConfiguration configuration, Index index) {
+    public ManifestsManager(Configuration configuration, Index index) {
         this.configuration = configuration;
         this.index = index;
 
@@ -137,6 +137,8 @@ public class ManifestsManager {
         return retval;
     }
 
+    /**************************************************************************/
+    /* PRIVATE METHODS */
     /**************************************************************************/
 
     private void configureGson() {
@@ -324,7 +326,6 @@ public class ManifestsManager {
     private boolean manifestExistsInLocalStorage(IGUID guid) {
         SOSFile path = getManifest(guid);
         return path.exists();
-        // return new File(path).exists();
     }
 
 }

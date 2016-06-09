@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
@@ -28,9 +28,9 @@ public abstract class SOSCommon implements SeaOfStuff {
 
     protected Identity identity;
     protected ManifestsManager manifestsManager;
-    final protected SeaConfiguration configuration;
+    final protected Configuration configuration;
 
-    public SOSCommon(SeaConfiguration configuration, ManifestsManager manifestsManager, Identity identity) {
+    public SOSCommon(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
         this.configuration = configuration;
         this.manifestsManager = manifestsManager;
         this.identity = identity;

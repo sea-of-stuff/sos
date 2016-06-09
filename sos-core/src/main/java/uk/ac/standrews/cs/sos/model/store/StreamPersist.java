@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.store;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
@@ -15,7 +15,7 @@ import java.io.InputStream;
  */
 public class StreamPersist extends StreamStore {
 
-    public StreamPersist(SeaConfiguration configuration, InputStream inputStream) {
+    public StreamPersist(Configuration configuration, InputStream inputStream) {
         super(configuration, inputStream);
     }
 
@@ -26,6 +26,6 @@ public class StreamPersist extends StreamStore {
 
     @Override
     protected SOSFile getAtomLocation(IGUID guid) {
-        return new FileBasedFile(configuration.getPersistDirectory(), guid.toString());
+        return new FileBasedFile(configuration.getCacheDirectory(), guid.toString());
     }
 }

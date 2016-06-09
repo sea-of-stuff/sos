@@ -6,8 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.net.InetSocketAddress;
@@ -26,6 +25,7 @@ public class SQLiteDB {
             " hostname  TEXT                NOT NULL, " +
             " port      INT                 NOT NULL, " +
             " nodetype  INT                 NOT NULL)";
+
     // http://stackoverflow.com/questions/418898/sqlite-upsert-not-insert-or-replace/4330694#4330694
     private final static String SQL_ADD_NODE = "INSERT OR REPLACE INTO nodes " +
             "(nodeid, hostname, port, nodetype) " +
@@ -111,7 +111,7 @@ public class SQLiteDB {
     public static Connection getSQLiteConnection() throws DatabasePersistenceException {
         Connection connection;
         try {
-            SOSFile dbDump = new FileBasedFile(SeaConfiguration.getInstance().getDBDirectory(), "test.db");
+            SOSFile dbDump = Configuration.getInstance().getDatabaseDump();
 
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" +

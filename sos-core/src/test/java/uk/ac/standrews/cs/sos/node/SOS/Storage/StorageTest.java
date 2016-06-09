@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
+import uk.ac.standrews.cs.sos.node.ROLE;
 import uk.ac.standrews.cs.sos.node.SOS.SOSNodeTest;
 import uk.ac.standrews.cs.sos.utils.Helper;
 

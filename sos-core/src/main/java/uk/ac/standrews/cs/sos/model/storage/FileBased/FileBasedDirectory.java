@@ -55,6 +55,11 @@ public class FileBasedDirectory implements SOSDirectory {
     }
 
     @Override
+    public long lastModified() {
+        return new File(getPathname()).lastModified();
+    }
+
+    @Override
     public SOSFile addSOSFile(String fileName) {
         SOSFile file = new FileBasedFile(this, fileName);
         if (file != null) {

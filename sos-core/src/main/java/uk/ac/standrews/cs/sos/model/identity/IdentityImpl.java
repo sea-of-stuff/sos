@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 
 import java.io.*;
 import java.security.*;
@@ -26,7 +26,7 @@ public class IdentityImpl implements Identity {
 
     private SOSFile[] pathsToKeys;
 
-    public IdentityImpl(SeaConfiguration configuration) throws KeyGenerationException, KeyLoadedException {
+    public IdentityImpl(Configuration configuration) throws KeyGenerationException, KeyLoadedException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
         this.pathsToKeys = configuration.getIdentityPaths();

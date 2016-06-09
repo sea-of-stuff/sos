@@ -8,9 +8,9 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -29,19 +29,19 @@ import static org.testng.Assert.assertFalse;
  */
 public class AtomManifestTest extends SetUpTest {
 
-    private SeaConfiguration configuration;
+    private Configuration configuration;
 
     @Override
     @BeforeMethod
-    public void setUp() throws IOException, SeaConfigurationException {
-        SeaConfiguration.setRootName("test");
-        configuration = SeaConfiguration.getInstance();
+    public void setUp() throws IOException, ConfigurationException {
+        Configuration.setRootName("test");
+        configuration = Configuration.getInstance();
     }
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.cleanDirectory(configuration.getCacheDirectory());
-        Helper.cleanDirectory(configuration.getDataDirectory());
+        Helper.DeletePath(configuration.getCacheDirectory());
+        Helper.DeletePath(configuration.getDataDirectory());
     }
 
     @Test

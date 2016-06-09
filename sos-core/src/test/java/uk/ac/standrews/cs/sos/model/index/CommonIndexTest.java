@@ -4,10 +4,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
@@ -25,9 +25,9 @@ public class CommonIndexTest {
     private Index index;
 
     @BeforeMethod
-    public void setUp(Method method) throws IndexException, SeaConfigurationException {
-        SeaConfiguration.setRootName("test");
-        SeaConfiguration configuration = SeaConfiguration.getInstance();
+    public void setUp(Method method) throws IndexException, ConfigurationException {
+        Configuration.setRootName("test");
+        Configuration configuration = Configuration.getInstance();
         index = LuceneIndex.getInstance(configuration);
     }
 
@@ -36,7 +36,7 @@ public class CommonIndexTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(index.getConfiguration().getIndexDirectory());
+        Helper.DeletePath(index.getConfiguration().getIndexDirectory());
     }
 
     @Test(expectedExceptions = IndexException.class)

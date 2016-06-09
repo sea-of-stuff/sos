@@ -7,16 +7,16 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
@@ -41,13 +41,13 @@ import static org.testng.Assert.assertFalse;
  */
 public class ManifestsManagerTest {
 
-    private SeaConfiguration configuration;
+    private Configuration configuration;
     private Index index;
 
     @BeforeMethod
-    public void setUp() throws IndexException, SeaConfigurationException, NodeManagerException {
-        SeaConfiguration.setRootName("test");
-        configuration = SeaConfiguration.getInstance();
+    public void setUp() throws IndexException, ConfigurationException, NodeManagerException {
+        Configuration.setRootName("test");
+        configuration = Configuration.getInstance();
         index = LuceneIndex.getInstance(configuration);
 
         NodeManager.setConfiguration(configuration);
@@ -60,10 +60,10 @@ public class ManifestsManagerTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(configuration.getIndexDirectory());
-        Helper.cleanDirectory(configuration.getManifestsDirectory());
-        Helper.cleanDirectory(configuration.getCacheDirectory());
-        Helper.cleanDirectory(configuration.getDataDirectory());
+        Helper.DeletePath(configuration.getIndexDirectory());
+        Helper.DeletePath(configuration.getManifestsDirectory());
+        Helper.DeletePath(configuration.getCacheDirectory());
+        Helper.DeletePath(configuration.getDataDirectory());
     }
 
     @Test

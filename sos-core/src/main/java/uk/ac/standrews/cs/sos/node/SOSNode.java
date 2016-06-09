@@ -11,20 +11,17 @@ import java.util.Objects;
  */
 public class SOSNode implements Node {
 
+    private static int SOS_NODE_DEFAULT_PORT = 8080;
+
     private IGUID nodeGUID;
     private InetSocketAddress hostAddress;
 
     public SOSNode(IGUID guid) {
-        this();
         this.nodeGUID = guid;
-        // TODO - this node?
-    }
-
-    public SOSNode() {
+        this.hostAddress = new InetSocketAddress(SOS_NODE_DEFAULT_PORT);
     }
 
     public SOSNode(IGUID guid, InetSocketAddress hostAddress) {
-        // Contact node and get port? or specify port here
         this(guid);
         this.hostAddress = hostAddress;
     }
@@ -56,6 +53,5 @@ public class SOSNode implements Node {
     public int hashCode() {
         return Objects.hash(nodeGUID);
     }
-
 
 }

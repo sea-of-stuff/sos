@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.store.*;
 
@@ -28,25 +28,25 @@ public class DataStorageHelper {
         return stream;
     }
 
-    public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID cacheAtomAndUpdateLocationBundles(Configuration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
         Store cache = new LocationCache(configuration, location);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID cacheAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID cacheAtomAndUpdateLocationBundles(Configuration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
         Store cache = new StreamCache(configuration, inputStream);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID persistAtomAndUpdateLocationBundles(SeaConfiguration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID persistAtomAndUpdateLocationBundles(Configuration configuration, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
         Store cache = new LocationPersist(configuration, location);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID persistAtomAndUpdateLocationBundles(SeaConfiguration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID persistAtomAndUpdateLocationBundles(Configuration configuration, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
         Store cache = new StreamPersist(configuration, inputStream);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);

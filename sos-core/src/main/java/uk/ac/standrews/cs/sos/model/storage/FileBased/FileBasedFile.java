@@ -10,7 +10,6 @@ import java.io.File;
  */
 public class FileBasedFile implements SOSFile {
 
-
     private SOSDirectory parent;
     private String filename;
 
@@ -36,6 +35,11 @@ public class FileBasedFile implements SOSFile {
     @Override
     public String getPathname() {
         return parent.getPathname() + filename;
+    }
+
+    @Override
+    public long lastModified() {
+        return file.lastModified();
     }
 
     @Override

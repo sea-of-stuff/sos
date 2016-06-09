@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.store;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
  */
 public class LocationPersist extends LocationStore {
 
-    public LocationPersist(SeaConfiguration configuration, Location location) {
+    public LocationPersist(Configuration configuration, Location location) {
         super(configuration, location);
     }
 
@@ -24,6 +24,6 @@ public class LocationPersist extends LocationStore {
 
     @Override
     protected SOSFile getAtomLocation(IGUID guid) {
-        return new FileBasedFile(configuration.getPersistDirectory(), guid.toString());
+        return new FileBasedFile(configuration.getCacheDirectory(), guid.toString());
     }
 }

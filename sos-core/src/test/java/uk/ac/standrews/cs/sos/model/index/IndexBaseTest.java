@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.sos.model.index;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public abstract class IndexBaseTest {
     protected Index index;
 
     @BeforeMethod
-    public void setUp(Method method) throws IndexException, SeaConfigurationException {
+    public void setUp(Method method) throws IndexException, ConfigurationException {
         CACHE_TYPE type = getCacheType();
         System.out.println(type.toString() + " :: " + method.getName());
         index = new CacheFactory().getCache(type);
@@ -34,7 +34,7 @@ public abstract class IndexBaseTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.deleteDirectory(index.getConfiguration().getIndexDirectory());
+        Helper.DeletePath(index.getConfiguration().getIndexDirectory());
     }
 
     @DataProvider(name = "index-manager-provider")
@@ -50,7 +50,7 @@ public abstract class IndexBaseTest {
 
     public class CacheFactory {
 
-        public Index getCache(CACHE_TYPE type, SeaConfiguration configuration) throws IndexException {
+        public Index getCache(CACHE_TYPE type, Configuration configuration) throws IndexException {
             switch(type) {
                 case LUCENE:
                     return LuceneIndex.getInstance(configuration);
@@ -58,9 +58,9 @@ public abstract class IndexBaseTest {
             return null;
         }
 
-        public Index getCache(CACHE_TYPE type) throws IndexException, SeaConfigurationException {
-            SeaConfiguration.setRootName("test");
-            SeaConfiguration configuration = SeaConfiguration.getInstance();
+        public Index getCache(CACHE_TYPE type) throws IndexException, ConfigurationException {
+            Configuration.setRootName("test");
+            Configuration configuration = Configuration.getInstance();
             return getCache(type, configuration);
         }
     }

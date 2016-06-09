@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.node.SOS.Client;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
+import uk.ac.standrews.cs.sos.node.ROLE;
 import uk.ac.standrews.cs.sos.node.SOS.SOSNodeTest;
 
 /**

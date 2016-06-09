@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.cleanDirectory(configuration.getCacheDirectory());
+        Helper.DeletePath(configuration.getCacheDirectory());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @Test
     public void testGetSource() throws Exception {
-        Helper.createDummyDataFile(SeaConfiguration.getInstance().getCacheDirectory(), "0000000000000000000000000000000000000abc");
+        Helper.createDummyDataFile(Configuration.getInstance().getCacheDirectory(), "0000000000000000000000000000000000000abc");
 
         Node node = configuration.getNode();
         SOSLocation location = new SOSLocation(node.getNodeGUID(), GUIDFactory.recreateGUID("abc"));

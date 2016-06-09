@@ -3,18 +3,16 @@ package uk.ac.standrews.cs.sos.node;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.ROLE;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
@@ -38,7 +36,7 @@ import java.util.HashSet;
  */
 public class NodeManager {
 
-    private static SeaConfiguration configuration;
+    private static Configuration configuration;
     private static Index index;
     private static ManifestsManager manifestsManager;
 
@@ -50,13 +48,23 @@ public class NodeManager {
     private static NodeManager instance;
 
     private NodeManager() throws NodeManagerException {
+        init();
+
+        backgroundProcesses();
+        registerSOSProtocol();
+    }
+
+    private void init() throws NodeManagerException {
+        manifestsManager = new ManifestsManager(configuration, index);
+
         try {
-            init();
-        } catch (SeaOfStuffException e) {
-            throw new NodeManagerException();
+            identity = new IdentityImpl(configuration);
+        } catch (KeyGenerationException | KeyLoadedException e) {
+            throw new NodeManagerException(e);
         }
 
         generateSOSNodeIfNone();
+        registerSOSRoles();
 
         this.knownNodes = new HashSet<>();
         try {
@@ -64,22 +72,6 @@ public class NodeManager {
         } catch (DatabasePersistenceException e) {
             throw new NodeManagerException();
         }
-
-        backgroundProcesses();
-        registerSOSProtocol();
-
-        registerSOSRoles();
-    }
-
-    private void init() throws SeaOfStuffException {
-        manifestsManager = new ManifestsManager(configuration, index);
-
-        try {
-            identity = new IdentityImpl(configuration);
-        } catch (KeyGenerationException | KeyLoadedException e) {
-            throw new SeaOfStuffException(e);
-        }
-
     }
 
     public static NodeManager getInstance() throws NodeManagerException {
@@ -98,7 +90,7 @@ public class NodeManager {
         return sosMap.get(role);
     }
 
-    public static boolean setConfiguration(SeaConfiguration configuration) {
+    public static boolean setConfiguration(Configuration configuration) {
         if (NodeManager.configuration == null) {
             NodeManager.configuration = configuration;
             return true;
@@ -136,11 +128,10 @@ public class NodeManager {
                 return knownNode;
             }
         }
-
         return null;
     }
 
-    public void persist() throws DatabasePersistenceException {
+    public void persistNodesTable() throws DatabasePersistenceException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
 
@@ -158,6 +149,7 @@ public class NodeManager {
     }
 
     // TODO - the behaviour of this method depends on the configuration
+    // do not hardcode this
     // NOTE - also I am not sure if it is possible to have concurrent SOS implementations!
     private void registerSOSRoles() {
         sosMap = new HashMap<>();
@@ -184,13 +176,13 @@ public class NodeManager {
 
     private void generateSOSNodeIfNone() throws NodeManagerException {
         try {
-            SeaConfiguration configuration = SeaConfiguration.getInstance();
+            Configuration configuration = Configuration.getInstance();
             node = configuration.getNode();
             if (node == null) {
                 node = new SOSNode(GUIDFactory.generateRandomGUID());
                 configuration.setNode(node);
             }
-        } catch (SeaConfigurationException e) {
+        } catch (ConfigurationException e) {
             throw new NodeManagerException();
         }
     }

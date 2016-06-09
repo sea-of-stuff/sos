@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.node.SOS;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
@@ -11,7 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
@@ -28,7 +27,7 @@ import java.util.Collection;
  */
 public class SOSClient extends SOSCommon {
 
-    public SOSClient(SeaConfiguration configuration, ManifestsManager manifestsManager,
+    public SOSClient(Configuration configuration, ManifestsManager manifestsManager,
                      Identity identity) {
         super(configuration, manifestsManager, identity);
     }
@@ -39,7 +38,7 @@ public class SOSClient extends SOSCommon {
 
         // TODO - recursively look for other manifests to add to the NodeManager
         if (recursive) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
         return manifest;
     }

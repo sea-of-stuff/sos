@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
@@ -23,7 +23,7 @@ public abstract class StreamStore extends CommonStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(SeaConfiguration configuration, InputStream inputStream) {
+    public StreamStore(Configuration configuration, InputStream inputStream) {
         super(configuration);
         this.inputStream = inputStream;
     }
