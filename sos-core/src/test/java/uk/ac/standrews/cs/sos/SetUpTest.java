@@ -29,7 +29,7 @@ public class SetUpTest {
         Node node = new SOSNode(GUIDFactory.recreateGUID("12345678"));
         configuration.setNode(node);
 
-        index = LuceneIndex.getInstance(configuration);
+        index = LuceneIndex.getInstance();
 
         NodeManager.setConfiguration(configuration);
         NodeManager.setIndex(index);

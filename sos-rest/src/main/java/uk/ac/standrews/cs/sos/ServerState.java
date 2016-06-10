@@ -20,7 +20,7 @@ public class ServerState {
     public static void startSOS() {
         try {
             Configuration configuration = Configuration.getInstance();
-            Index index = LuceneIndex.getInstance(configuration);
+            Index index = LuceneIndex.getInstance();
 
             NodeManager.setConfiguration(configuration);
             NodeManager.setIndex(index);

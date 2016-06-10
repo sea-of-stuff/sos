@@ -27,7 +27,7 @@ public class NodeManagerTest extends SetUpTest {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        Index index = LuceneIndex.getInstance(configuration);
+        Index index = LuceneIndex.getInstance();
 
         NodeManager.setConfiguration(configuration);
         NodeManager.setIndex(index);

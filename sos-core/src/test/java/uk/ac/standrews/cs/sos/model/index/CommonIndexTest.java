@@ -27,16 +27,16 @@ public class CommonIndexTest {
     @BeforeMethod
     public void setUp(Method method) throws IndexException, ConfigurationException {
         Configuration.setRootName("test");
-        Configuration configuration = Configuration.getInstance();
-        index = LuceneIndex.getInstance(configuration);
+
+        index = LuceneIndex.getInstance();
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException {
+    public void tearDown() throws IOException, IndexException, ConfigurationException {
         index.flushDB();
         index.killInstance();
 
-        Helper.DeletePath(index.getConfiguration().getIndexDirectory());
+        Helper.DeletePath(Configuration.getInstance().getIndexDirectory());
     }
 
     @Test(expectedExceptions = IndexException.class)

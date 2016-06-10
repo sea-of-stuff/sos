@@ -4,7 +4,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 
 import java.util.ArrayList;
@@ -185,9 +184,8 @@ public class IndexImplTest extends IndexBaseTest {
         index.addManifest(simpleManifestMocked);
 
         // Kill this instance, so that next instance used the dumped file.
-        Configuration configuration = index.getConfiguration();
         index.killInstance();
-        index = new CacheFactory().getCache(cacheType, configuration);
+        index = new CacheFactory().getCache(cacheType);
 
         Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(GUIDFactory.recreateGUID("123")));

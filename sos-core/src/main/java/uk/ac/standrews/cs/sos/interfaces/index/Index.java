@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.interfaces.index;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.Configuration;
 
 import java.util.Collection;
 
@@ -23,7 +22,5 @@ public interface Index {
     Collection<IGUID> getMetaLabelMatches(String label, int results, int skip) throws IndexException;
 
     Collection<IGUID> getManifestsOfType(String type, int results, int skip) throws IndexException;
-
-    Configuration getConfiguration();
 
 }

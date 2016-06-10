@@ -15,6 +15,7 @@ import org.apache.lucene.store.FSDirectory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
@@ -32,6 +33,7 @@ import java.util.HashSet;
 
 /**
  * Caching mechanism based on Lucene-core.
+ * This is thread-safe
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -41,22 +43,20 @@ public class LuceneIndex extends CommonIndex {
     private static IndexWriter indexWriter = null;
     private static SearcherManager searcherManager = null;
     private static IndexSearcher indexSearcher = null;
-    private static Configuration instanceConfiguration;
 
-    public static Index getInstance(Configuration configuration) throws IndexException {
+    public static Index getInstance() throws IndexException {
         if(instance == null) {
             try {
-                init(configuration);
-            } catch (IOException e) {
+                init();
+            } catch (IOException | ConfigurationException e) {
                 throw new IndexException(e);
             }
         }
         return instance;
     }
 
-    private static void init(Configuration configuration) throws IOException {
-        instanceConfiguration = configuration;
-        SOSDirectory indexPath = instanceConfiguration.getIndexDirectory();
+    private static void init() throws IOException, ConfigurationException {
+        SOSDirectory indexPath = Configuration.getInstance().getIndexDirectory();
 
         Directory dir = FSDirectory.open(new File(indexPath.getPathname()).toPath());
         Analyzer analyzer = new StandardAnalyzer();
@@ -133,11 +133,6 @@ public class LuceneIndex extends CommonIndex {
 
         releaseIndexSearcher();
         return retval;
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        return instanceConfiguration;
     }
 
     @Override

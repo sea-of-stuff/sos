@@ -24,17 +24,19 @@ public abstract class IndexBaseTest {
 
     @BeforeMethod
     public void setUp(Method method) throws IndexException, ConfigurationException {
+        Configuration.setRootName("test");
+
         CACHE_TYPE type = getCacheType();
         System.out.println(type.toString() + " :: " + method.getName());
         index = new CacheFactory().getCache(type);
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException {
+    public void tearDown() throws IOException, IndexException, ConfigurationException {
         index.flushDB();
         index.killInstance();
 
-        Helper.DeletePath(index.getConfiguration().getIndexDirectory());
+        Helper.DeletePath(Configuration.getInstance().getIndexDirectory());
     }
 
     @DataProvider(name = "index-manager-provider")
@@ -50,18 +52,12 @@ public abstract class IndexBaseTest {
 
     public class CacheFactory {
 
-        public Index getCache(CACHE_TYPE type, Configuration configuration) throws IndexException {
+        public Index getCache(CACHE_TYPE type) throws IndexException {
             switch(type) {
                 case LUCENE:
-                    return LuceneIndex.getInstance(configuration);
+                    return LuceneIndex.getInstance();
             }
             return null;
-        }
-
-        public Index getCache(CACHE_TYPE type) throws IndexException, ConfigurationException {
-            Configuration.setRootName("test");
-            Configuration configuration = Configuration.getInstance();
-            return getCache(type, configuration);
         }
     }
 }

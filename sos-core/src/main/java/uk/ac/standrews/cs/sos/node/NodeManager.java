@@ -54,6 +54,8 @@ public class NodeManager {
     private static NodeManager instance;
 
     private NodeManager() throws NodeManagerException {
+        this.knownNodes = new HashSet<>();
+
         init();
         backgroundProcesses();
 
@@ -74,10 +76,9 @@ public class NodeManager {
         }
 
         generateSOSNodeIfNone();
-        registerSOSRoles();
+        makeSOSInstances();
 
-        this.knownNodes = new HashSet<>();
-        loadFromDB();
+        loadNodesFromDB();
     }
 
     /**
@@ -208,7 +209,11 @@ public class NodeManager {
         }
     }
 
-    private void registerSOSRoles() {
+    /**************************************************************************/
+    /* PRIVATE METHODS */
+    /**************************************************************************/
+
+    private void makeSOSInstances() {
         sosMap = new HashMap<>();
 
         // TODO read configuration for roles
@@ -217,10 +222,6 @@ public class NodeManager {
         sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, manifestsManager, identity));
         sosMap.put(ROLE.COORDINATOR, new SOSCoordinator(configuration, manifestsManager, identity));
     }
-
-    /**************************************************************************/
-    /* PRIVATE METHODS */
-    /**************************************************************************/
 
     private void registerSOSProtocol() throws SOSProtocolException {
         try {
@@ -252,7 +253,7 @@ public class NodeManager {
         }
     }
 
-    private void loadFromDB() throws NodeManagerException {
+    private void loadNodesFromDB() throws NodeManagerException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
 

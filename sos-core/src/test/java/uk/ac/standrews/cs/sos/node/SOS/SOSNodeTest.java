@@ -30,11 +30,11 @@ public abstract class SOSNodeTest extends SetUpTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.DeletePath(index.getConfiguration().getIndexDirectory());
-        Helper.DeletePath(index.getConfiguration().getManifestsDirectory());
-        Helper.DeletePath(index.getConfiguration().getTestDataDirectory());
-        Helper.DeletePath(index.getConfiguration().getDataDirectory());
-        Helper.DeletePath(index.getConfiguration().getDatabaseDump().getParent());
+        Helper.DeletePath(configuration.getIndexDirectory());
+        Helper.DeletePath(configuration.getManifestsDirectory());
+        Helper.DeletePath(configuration.getTestDataDirectory());
+        Helper.DeletePath(configuration.getDataDirectory());
+        Helper.DeletePath(configuration.getDatabaseDump().getParent());
     }
 
     public abstract ROLE nodeRole();
