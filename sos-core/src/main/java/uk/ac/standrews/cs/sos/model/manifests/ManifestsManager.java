@@ -8,14 +8,13 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestMergeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestManagerException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestCacheException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.storage.UnknownGUIDException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -45,7 +44,6 @@ public class ManifestsManager {
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
-    final private Configuration configuration;
     final private Index index;
     private Gson gson;
 
@@ -54,11 +52,9 @@ public class ManifestsManager {
      * a policy for the sea of stuff. The configuration object is need to know the
      * locations for the manifests.
      *
-     * @param configuration used by the manifest manager
      * @param index used to record information for the manifests.
      */
-    public ManifestsManager(Configuration configuration, Index index) {
-        this.configuration = configuration;
+    public ManifestsManager(Index index) {
         this.index = index;
 
         configureGson();
@@ -73,12 +69,8 @@ public class ManifestsManager {
         if (manifest.isValid()) {
             try {
                 saveManifest(manifest);
-            } catch (ManifestCacheException e) {
-                throw new ManifestPersistException("Manifest could not be cached");
-            } catch (ManifestPersistException e) {
-                throw new ManifestPersistException("Manifest could not be persisted");
-            } catch (UnknownGUIDException | ManifestMergeException e) {
-                throw new ManifestPersistException("An equivalent manifest exists, but could not be fetched or merged");
+            } catch (ManifestManagerException e) {
+                e.printStackTrace();
             }
         } else {
             throw new ManifestPersistException("Manifest not valid");
@@ -100,7 +92,7 @@ public class ManifestsManager {
         Manifest manifest;
         try {
             manifest = getManifestFromFile(guid);
-        } catch (UnknownGUIDException ex) {
+        } catch (ManifestManagerException ex) {
             throw new ManifestNotFoundException();
         }
 
@@ -153,7 +145,7 @@ public class ManifestsManager {
         builder.registerTypeAdapter(VersionManifest.class, new AssetManifestDeserializer());
     }
 
-    private Manifest getManifestFromFile(IGUID guid) throws UnknownGUIDException {
+    private Manifest getManifestFromFile(IGUID guid) throws ManifestManagerException {
         Manifest manifest;
         SOSFile manifestFile = getManifest(guid);
         try {
@@ -164,7 +156,7 @@ public class ManifestsManager {
 
             manifest = constructManifestFromJson(type, manifestData);
         } catch (FileNotFoundException | UnknownManifestTypeException | ManifestNotMadeException e) {
-            throw new UnknownGUIDException();
+            throw new ManifestManagerException(e);
         }
 
         return manifest;
@@ -204,7 +196,7 @@ public class ManifestsManager {
     // if atom-manifest, check if it exists already
     // then merge and save
     // otherwise just save
-    private void saveManifest(Manifest manifest) throws ManifestCacheException, ManifestPersistException, UnknownGUIDException, ManifestMergeException {
+    private void saveManifest(Manifest manifest) throws ManifestManagerException {
         if (manifest.getManifestType().equals(ManifestConstants.ATOM) &&
                 manifestExistsInLocalStorage(manifest.getContentGUID())) {
             mergeAtomManifestAndSave(manifest);
@@ -215,7 +207,7 @@ public class ManifestsManager {
         cacheManifest(manifest);
     }
 
-    private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestPersistException, UnknownGUIDException, ManifestMergeException{
+    private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestManagerException {
         IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromFile(guid);
         SOSFile backupPath = backupManifest(existingManifest);
@@ -229,14 +221,14 @@ public class ManifestsManager {
         FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
     }
 
-    private SOSFile backupManifest(Manifest manifest) throws ManifestMergeException {
+    private SOSFile backupManifest(Manifest manifest) throws ManifestManagerException {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
         SOSFile backupManifest = getManifest(manifestGUID);
         try {
             FileHelper.copyToFile(new URILocation(backupManifest.getPathname()).getSource(),
                     backupManifest + BACKUP_EXTENSION);
         } catch (IOException | URISyntaxException e) {
-            throw new ManifestMergeException();
+            throw new ManifestManagerException("Manifest could not be merged", e);
         }
         return backupManifest;
     }
@@ -251,7 +243,7 @@ public class ManifestsManager {
         return guid;
     }
 
-    private void saveToFile(Manifest manifest) throws ManifestPersistException {
+    private void saveToFile(Manifest manifest) throws ManifestManagerException {
         JsonObject manifestJSON = manifest.toJSON();
 
         String guid = getGUIDForManifestFilename(manifest);
@@ -260,7 +252,7 @@ public class ManifestsManager {
         // if filepath doesn't exists, then create it
         SOSDirectory parent = manifestFile.getParent();
         if(!parent.exists() && !parent.mkdirs()){
-            throw new ManifestPersistException();
+            throw new ManifestManagerException("Manifest path could not be created");
         }
 
         if (manifestFile.exists())
@@ -282,33 +274,37 @@ public class ManifestsManager {
         return guid;
     }
 
-    private void writeToFile(File file, JsonObject manifest) throws ManifestPersistException {
+    private void writeToFile(File file, JsonObject manifest) throws ManifestManagerException {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             Gson gson = new Gson();
             String json = gson.toJson(manifest);
             bufferedWriter.write(json);
         } catch (Exception e) {
-            throw new ManifestPersistException();
+            throw new ManifestManagerException("Manifest could not be written to file");
         } finally {
             file.setReadOnly();
         }
     }
 
-    private void cacheManifest(Manifest manifest) throws ManifestCacheException {
+    private void cacheManifest(Manifest manifest) throws ManifestManagerException {
         try {
             index.addManifest(manifest);
         } catch (IndexException e) {
-            throw new ManifestCacheException();
+            throw new ManifestManagerException(e);
         }
     }
 
-    private SOSFile getManifest(IGUID guid) {
+    private SOSFile getManifest(IGUID guid) throws ManifestManagerException {
         return getManifest(guid.toString());
     }
 
-    private SOSFile getManifest(String guid) {
-        return configuration.getManifestsDirectory().addSOSFile(normaliseGUID(guid));
+    private SOSFile getManifest(String guid) throws ManifestManagerException {
+        try {
+            return Configuration.getInstance().getManifestsDirectory().addSOSFile(normaliseGUID(guid));
+        } catch (ConfigurationException e) {
+            throw new ManifestManagerException();
+        }
     }
 
     private String normaliseGUID(String guid) {
@@ -323,7 +319,7 @@ public class ManifestsManager {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    private boolean manifestExistsInLocalStorage(IGUID guid) {
+    private boolean manifestExistsInLocalStorage(IGUID guid) throws ManifestManagerException {
         SOSFile path = getManifest(guid);
         return path.exists();
     }

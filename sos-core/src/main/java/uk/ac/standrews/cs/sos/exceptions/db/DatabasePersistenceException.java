@@ -5,10 +5,6 @@ package uk.ac.standrews.cs.sos.exceptions.db;
  */
 public class DatabasePersistenceException extends Exception {
 
-    public DatabasePersistenceException() {
-        super();
-    }
-
     public DatabasePersistenceException(String message) {
         super(message);
     }

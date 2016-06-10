@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -54,13 +55,17 @@ public class NodeManager {
 
     private NodeManager() throws NodeManagerException {
         init();
-
         backgroundProcesses();
-        registerSOSProtocol();
+
+        try {
+            registerSOSProtocol();
+        } catch (SOSProtocolException e) {
+            throw new NodeManagerException(e);
+        }
     }
 
     private void init() throws NodeManagerException {
-        manifestsManager = new ManifestsManager(configuration, index);
+        manifestsManager = new ManifestsManager(index);
 
         try {
             identity = new IdentityImpl(configuration);
@@ -217,14 +222,14 @@ public class NodeManager {
     /* PRIVATE METHODS */
     /**************************************************************************/
 
-    private void registerSOSProtocol() {
+    private void registerSOSProtocol() throws SOSProtocolException {
         try {
             if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
                 URLStreamHandlerFactory urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(this);
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
             }
         } catch (Error e) {
-            System.err.println("NodeManager::registerSOSProtocol:" + e.getMessage());
+            throw new SOSProtocolException(e);
         }
     }
 

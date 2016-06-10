@@ -68,7 +68,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAtomManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
+        ManifestsManager manifestsManager = new ManifestsManager(index);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -91,7 +91,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddCompoundManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
+        ManifestsManager manifestsManager = new ManifestsManager(index);
 
         Identity identity = new IdentityImpl(configuration);
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -115,7 +115,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAssetManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
+        ManifestsManager manifestsManager = new ManifestsManager(index);
         Identity identity = new IdentityImpl(configuration);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
@@ -142,7 +142,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testUpdateAtomManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
+        ManifestsManager manifestsManager = new ManifestsManager(index);
 
         Location firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
         Location secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
@@ -172,7 +172,7 @@ public class ManifestsManagerTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void testAddNullManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(configuration, index);
+        ManifestsManager manifestsManager = new ManifestsManager(index);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);
