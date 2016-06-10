@@ -26,6 +26,6 @@ public class StreamPersist extends StreamStore {
 
     @Override
     protected SOSFile getAtomLocation(IGUID guid) {
-        return new FileBasedFile(configuration.getCacheDirectory(), guid.toString());
+        return new FileBasedFile(configuration.getDataDirectory(), guid.toString());
     }
 }

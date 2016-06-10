@@ -62,8 +62,8 @@ public class ManifestsManagerTest {
 
         Helper.DeletePath(configuration.getIndexDirectory());
         Helper.DeletePath(configuration.getManifestsDirectory());
-        Helper.DeletePath(configuration.getCacheDirectory());
         Helper.DeletePath(configuration.getDataDirectory());
+        Helper.DeletePath(configuration.getTestDataDirectory());
     }
 
     @Test

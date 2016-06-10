@@ -24,6 +24,6 @@ public class LocationCache extends LocationStore {
 
     @Override
     protected SOSFile getAtomLocation(IGUID guid) {
-        return new FileBasedFile(configuration.getCacheDirectory(), guid.toString());
+        return new FileBasedFile(configuration.getDataDirectory(), guid.toString());
     }
 }

@@ -40,8 +40,8 @@ public class AtomManifestTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.DeletePath(configuration.getCacheDirectory());
         Helper.DeletePath(configuration.getDataDirectory());
+        Helper.DeletePath(configuration.getTestDataDirectory());
     }
 
     @Test

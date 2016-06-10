@@ -53,7 +53,7 @@ public class SOSURLConnection extends URLConnection {
             Node node = Configuration.getInstance().getNode();
 
             if (resourceNode.equals(node)) {
-                SOSFile path = new FileBasedFile(Configuration.getInstance().getCacheDirectory(), entityId.toString());
+                SOSFile path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString());
                 FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
             } else {

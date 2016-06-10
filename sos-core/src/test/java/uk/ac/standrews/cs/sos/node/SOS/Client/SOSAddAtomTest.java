@@ -148,7 +148,7 @@ public class SOSAddAtomTest extends ClientTest {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         Atom manifest = model.addAtom(location);
 
-        SOSFile file = new FileBasedFile(configuration.getCacheDirectory(), manifest.getContentGUID().toString());
+        SOSFile file = new FileBasedFile(configuration.getDataDirectory(), manifest.getContentGUID().toString());
         SOSFile manifestFile = new FileBasedFile(configuration.getManifestsDirectory(), manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
@@ -160,7 +160,7 @@ public class SOSAddAtomTest extends ClientTest {
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
-        SOSFile newFile = new FileBasedFile(configuration.getCacheDirectory(), newManifest.getContentGUID().toString());
+        SOSFile newFile = new FileBasedFile(configuration.getDataDirectory(), newManifest.getContentGUID().toString());
         SOSFile newManifestFile = new FileBasedFile(configuration.getManifestsDirectory(), newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();

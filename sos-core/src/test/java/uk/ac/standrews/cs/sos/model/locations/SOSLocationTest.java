@@ -22,7 +22,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.DeletePath(configuration.getCacheDirectory());
+        Helper.DeletePath(configuration.getDataDirectory());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @Test
     public void testGetSource() throws Exception {
-        Helper.createDummyDataFile(Configuration.getInstance().getCacheDirectory(), "0000000000000000000000000000000000000abc");
+        Helper.createDummyDataFile(Configuration.getInstance().getDataDirectory(), "0000000000000000000000000000000000000abc");
 
         Node node = configuration.getNode();
         SOSLocation location = new SOSLocation(node.getNodeGUID(), GUIDFactory.recreateGUID("abc"));

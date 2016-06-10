@@ -26,7 +26,7 @@ public class Helper {
     }
 
     public static Location createDummyDataFile(Configuration configuration, String filename) throws FileNotFoundException, URISyntaxException {
-        return createDummyDataFile(configuration.getDataDirectory(), filename);
+        return createDummyDataFile(configuration.getTestDataDirectory(), filename);
     }
 
     public static Location createDummyDataFile(SOSDirectory sosParent, String filename) throws FileNotFoundException, URISyntaxException {

@@ -32,8 +32,8 @@ public abstract class SOSNodeTest extends SetUpTest {
 
         Helper.DeletePath(index.getConfiguration().getIndexDirectory());
         Helper.DeletePath(index.getConfiguration().getManifestsDirectory());
+        Helper.DeletePath(index.getConfiguration().getTestDataDirectory());
         Helper.DeletePath(index.getConfiguration().getDataDirectory());
-        Helper.DeletePath(index.getConfiguration().getCacheDirectory());
         Helper.DeletePath(index.getConfiguration().getDatabaseDump().getParent());
     }
 
