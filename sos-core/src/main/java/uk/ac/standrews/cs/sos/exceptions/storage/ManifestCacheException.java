@@ -5,7 +5,4 @@ package uk.ac.standrews.cs.sos.exceptions.storage;
  */
 public class ManifestCacheException extends Exception {
 
-    public ManifestCacheException(String message) {
-        super(message);
-    }
 }

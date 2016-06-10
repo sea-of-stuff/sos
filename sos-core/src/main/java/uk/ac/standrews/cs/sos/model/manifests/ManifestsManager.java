@@ -299,7 +299,7 @@ public class ManifestsManager {
         try {
             index.addManifest(manifest);
         } catch (IndexException e) {
-            throw new ManifestCacheException("Manifest could not be cached");
+            throw new ManifestCacheException();
         }
     }
 
