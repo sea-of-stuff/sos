@@ -39,7 +39,7 @@ public class NodeManagerTest extends SetUpTest {
 
         IGUID guid = GUIDFactory.generateGUID("test");
         InetSocketAddress inetSocketAddress = new InetSocketAddress("example.com", 8080);
-        Node node = new SOSNode(guid, inetSocketAddress); // TODO - actually this should be external
+        Node node = new SOSNode(guid, inetSocketAddress);
 
         assertEquals(nodeManager.getKnownNodes().size(), 0);
 

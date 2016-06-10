@@ -104,7 +104,7 @@ public class NodeManager {
      * @return
      */
     public ROLE[] getRoles() {
-        return sosMap.keySet().toArray(new ROLE[sosMap.size()]);
+        return node.getRoles();
     }
 
     /**
@@ -114,6 +114,10 @@ public class NodeManager {
      */
     public SeaOfStuff getSOS(ROLE role) {
         return sosMap.get(role);
+    }
+
+    public boolean isRoleValid(ROLE role) {
+        return sosMap.containsKey(role);
     }
 
     /**
@@ -246,6 +250,7 @@ public class NodeManager {
             node = configuration.getNode();
             if (node == null) {
                 node = new SOSNode(GUIDFactory.generateRandomGUID());
+                node.setRoles(configuration.getRoles());
                 configuration.setNode(node);
             }
         } catch (ConfigurationException e) {

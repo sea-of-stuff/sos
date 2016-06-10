@@ -4,6 +4,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 
 /**
@@ -13,10 +15,13 @@ public class SOSNode implements Node {
 
     private static int SOS_NODE_DEFAULT_PORT = 8080;
 
+    private byte roles;
+    private HashSet<ROLE> rolesSet;
     private IGUID nodeGUID;
     private InetSocketAddress hostAddress;
 
     public SOSNode(IGUID guid) {
+        this.rolesSet = new LinkedHashSet<>();
         this.nodeGUID = guid;
         this.hostAddress = new InetSocketAddress(SOS_NODE_DEFAULT_PORT);
     }
@@ -34,6 +39,37 @@ public class SOSNode implements Node {
     @Override
     public InetSocketAddress getHostAddress() {
         return hostAddress;
+    }
+
+    @Override
+    public void setRoles(byte roles) {
+
+        if (!rolesSet.isEmpty()) {
+            return;
+        }
+
+        this.roles = roles;
+        if ((roles & ROLE.COORDINATOR.mask) != 0) {
+            rolesSet.add(ROLE.COORDINATOR);
+        }
+
+        if ((roles & ROLE.CLIENT.mask) != 0) {
+            rolesSet.add(ROLE.CLIENT);
+        }
+
+        if ((roles & ROLE.STORAGE.mask) != 0) {
+            rolesSet.add(ROLE.STORAGE);
+        }
+    }
+
+    @Override
+    public ROLE[] getRoles() {
+        return (ROLE[]) rolesSet.toArray();
+    }
+
+    @Override
+    public byte getRolesInBytes() {
+        return roles;
     }
 
     @Override

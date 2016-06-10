@@ -33,14 +33,13 @@ public class SOSClient extends SOSCommon {
     }
 
     @Override
-    public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
+    public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         manifestsManager.addManifest(manifest);
 
         // TODO - recursively look for other manifests to add to the NodeManager
         if (recursive) {
             throw new UnsupportedOperationException();
         }
-        return manifest;
     }
 
     @Override

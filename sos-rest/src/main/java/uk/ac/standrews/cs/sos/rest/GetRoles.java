@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.node.SOS.SOSCoordinator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,9 +22,9 @@ public class GetRoles {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(@QueryParam("guid") String node) {
-        if (node != null) {
-            return getANodeRoles(node);
+    public Response getRoles(@QueryParam("guid") String guid) throws GUIDGenerationException {
+        if (guid != null) {
+            return getANodeRoles(guid);
         } else {
             return getThisNodeRoles();
         }
@@ -41,17 +42,16 @@ public class GetRoles {
                 .build();
     }
 
-    private Response getANodeRoles(String node) {
+    private Response getANodeRoles(String guid) throws GUIDGenerationException {
         // TODO - check node manager for roles of specified node
         // this should be enabled only if this node is a coordinator
         // edge cases:
         // 1. the specified node is this one
         // 2. the specified node is unknown
 
-
-        SOSCoordinator sos = (SOSCoordinator) ServerState.sos.getSOS(ROLE.COORDINATOR);
-        if (sos != null) {
-            // TODO
+        boolean isCoordinator = ServerState.sos.isRoleValid(ROLE.COORDINATOR);
+        if (isCoordinator) {
+            ServerState.sos.getNode(GUIDFactory.recreateGUID(guid));
             return null;
         }
 

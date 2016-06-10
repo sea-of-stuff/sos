@@ -26,7 +26,7 @@ public class SOSStorage extends SOSCommon {
     }
 
     @Override
-    public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
+    public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         throw new UnsupportedOperationException();
     }
 

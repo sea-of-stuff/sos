@@ -61,42 +61,44 @@ public class SOSCoordinator extends SOSCommon {
     }
 
     @Override
-    public Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        manifestsManager.addManifest(manifest);
-        
-        return manifest;
-    }
-
-    @Override
     public InputStream getAtomContent(Atom atom) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
+        manifestsManager.addManifest(manifest);
+    }
+
+    @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        // TODO - might have to contact other coordinators!
-        return null;
+
+        Manifest manifest = manifestsManager.findManifest(guid);
+        // NOTE - might have to contact other coordinators!
+        return manifest;
     }
 
     @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
+        // TODO - how is this verified if identity is unknown?
         return false;
     }
 
     @Override
     public Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException {
-        return null;
+        return manifestsManager.findManifestsByType(type);
     }
 
     @Override
     public Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException {
-        return null;
+        return manifestsManager.findManifestsThatMatchLabel(label);
     }
 
     @Override
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
-        return null;
+        return manifestsManager.findVersions(invariant);
     }
 
     // TODO - other find methods?
+    // search using metadata ?
 }

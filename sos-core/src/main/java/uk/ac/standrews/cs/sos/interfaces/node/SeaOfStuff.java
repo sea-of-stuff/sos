@@ -118,7 +118,7 @@ public interface SeaOfStuff {
      * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
      * @throws ManifestPersistException
      */
-    Manifest addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
+    void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.

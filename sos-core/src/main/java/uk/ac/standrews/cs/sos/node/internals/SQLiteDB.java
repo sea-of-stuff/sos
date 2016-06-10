@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
+ * SQLite database used to store information about known nodes for this SOS node.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SQLiteDB {
@@ -62,7 +64,7 @@ public class SQLiteDB {
             preparedStatement.setString(1, node.getNodeGUID().toString());
             preparedStatement.setString(2, node.getHostAddress().getHostName());
             preparedStatement.setInt(3, node.getHostAddress().getPort());
-            preparedStatement.setInt(4, 0b0); // FIXME - this should not be hardcoded
+            preparedStatement.setInt(4, node.getRolesInBytes());
 
             retval = preparedStatement.execute();
         }
@@ -71,11 +73,12 @@ public class SQLiteDB {
     }
 
     public static Collection<Node> getNodes(Connection connection) throws SQLException, GUIDGenerationException {
-
         Collection<Node> retval = new HashSet<>();
+
         try (PreparedStatement preparedStatement =
                     connection.prepareStatement(SQL_GET_NODES);
              ResultSet resultSet = preparedStatement.executeQuery()) {
+
             while(resultSet.next()) {
                 IGUID guid = GUIDFactory.recreateGUID(resultSet.getString(1));
                 String hostname = resultSet.getString(2);
@@ -84,28 +87,13 @@ public class SQLiteDB {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(hostname, port);
 
                 Node node = new SOSNode(guid, inetSocketAddress);
-                setRoles(node, nodeRoles);
+                node.setRoles(nodeRoles);
+
                 retval.add(node);
             }
         }
+
         return retval;
-    }
-
-    public static void setRoles(Node node, byte nodeRoles) {
-        /*
-        if ((nodeRoles & ROLE.CONSUMER_MASK) != 0) {
-            node.setNodeRole(new Consumer());
-        }
-
-        if ((nodeRoles & ROLE.COORDINATOR_MASK) != 0) {
-            node.setNodeRole(new Coordinator());
-        }
-
-        if ((nodeRoles & ROLE.PRODUCER_MASK) != 0) {
-            node.setNodeRole(new Producer());
-        }
-        */
-
     }
 
     public static Connection getSQLiteConnection() throws DatabasePersistenceException {

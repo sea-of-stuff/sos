@@ -101,6 +101,10 @@ public class Configuration {
         }
     }
 
+    public byte getRoles() {
+        return 0; // TODO
+    }
+
     /**
      * Get the directory for the test data.
      * @return
