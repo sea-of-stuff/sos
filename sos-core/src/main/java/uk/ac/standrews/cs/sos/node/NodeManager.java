@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.SOS.SOSClient;
+import uk.ac.standrews.cs.sos.node.SOS.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOS.SOSStorage;
 import uk.ac.standrews.cs.sos.node.internals.SQLiteDB;
 
@@ -29,8 +30,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Manager for this SOS node.
- * Singleton
+ * This is the principal manager for this node.
+ * The NodeManager should be used to access this SOS node and its information.
+ * A node might have more than one role. A SOS instance is accessed by calling:
+ * NodeManager.getInstance().getSOS(ROLE);
+ *
+ * This is a singleton class.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -41,7 +46,7 @@ public class NodeManager {
     private static ManifestsManager manifestsManager;
 
     private Node node;
-    private Collection<Node> knownNodes;
+    private Collection<Node> knownNodes; // TODO - there is not info about their available roles?
     private Identity identity;
     private HashMap<ROLE, SeaOfStuff> sosMap;
 
@@ -67,29 +72,50 @@ public class NodeManager {
         registerSOSRoles();
 
         this.knownNodes = new HashSet<>();
-        try {
-            loadFromDB();
-        } catch (DatabasePersistenceException e) {
-            throw new NodeManagerException();
-        }
+        loadFromDB();
     }
 
+    /**
+     * Get the instance of the NodeManager.
+     * The following must be set in order to get a valid instance:
+     * - configuration
+     * - index
+     *
+     * @return
+     * @throws NodeManagerException
+     */
     public static NodeManager getInstance() throws NodeManagerException {
-        if (instance == null) {
+        if (instance == null && configuration != null) {
             instance = new NodeManager();
         }
 
         return instance;
     }
 
+    /**
+     * Get all roles available for this node.
+     *
+     * @return
+     */
     public ROLE[] getRoles() {
         return sosMap.keySet().toArray(new ROLE[sosMap.size()]);
     }
 
+    /**
+     * Get a SeaOfStuff instance for the given role.
+     * @param role
+     * @return
+     */
     public SeaOfStuff getSOS(ROLE role) {
         return sosMap.get(role);
     }
 
+    /**
+     * Set the configuration to be used for this node.
+     *
+     * @param configuration
+     * @return
+     */
     public static boolean setConfiguration(Configuration configuration) {
         if (NodeManager.configuration == null) {
             NodeManager.configuration = configuration;
@@ -98,6 +124,12 @@ public class NodeManager {
         return false;
     }
 
+    /**
+     * Set the index to be used for this node.
+     *
+     * @param index
+     * @return
+     */
     public static boolean setIndex(Index index) {
         if (NodeManager.index == null) {
             NodeManager.index = index;
@@ -107,6 +139,7 @@ public class NodeManager {
     }
 
     /**
+     * Get the instance of this node.
      *
      * @return node of this instance of the NodeManager
      */
@@ -114,14 +147,31 @@ public class NodeManager {
         return node;
     }
 
+    /**
+     * Add an arbitrary node to the manager.
+     * This will be used to discovery nodes/data in the SOS.
+     *
+     * @param node
+     */
     public void addNode(Node node) {
         knownNodes.add(node);
     }
 
+    /**
+     * Get all known nodes.
+     *
+     * @return
+     */
     public Collection<Node> getKnownNodes() {
         return knownNodes;
     }
 
+    /**
+     * Get a SOS node given its guid identifier.
+     *
+     * @param guid
+     * @return
+     */
     public Node getNode(IGUID guid) {
         for(Node knownNode:knownNodes) {
             if (knownNode.getNodeGUID().equals(guid)) {
@@ -131,6 +181,11 @@ public class NodeManager {
         return null;
     }
 
+    /**
+     * Persist the collection of known nodes.
+     *
+     * @throws DatabasePersistenceException
+     */
     public void persistNodesTable() throws DatabasePersistenceException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
@@ -148,14 +203,19 @@ public class NodeManager {
         }
     }
 
-    // TODO - the behaviour of this method depends on the configuration
-    // do not hardcode this
-    // NOTE - also I am not sure if it is possible to have concurrent SOS implementations!
     private void registerSOSRoles() {
         sosMap = new HashMap<>();
+
+        // TODO read configuration for roles
+
         sosMap.put(ROLE.CLIENT, new SOSClient(configuration, manifestsManager, identity));
         sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, manifestsManager, identity));
+        sosMap.put(ROLE.COORDINATOR, new SOSCoordinator(configuration, manifestsManager, identity));
     }
+
+    /**************************************************************************/
+    /* PRIVATE METHODS */
+    /**************************************************************************/
 
     private void registerSOSProtocol() {
         try {
@@ -164,7 +224,7 @@ public class NodeManager {
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
             }
         } catch (Error e) {
-            System.err.println("SeaOfStuffImpl::registerSOSProtocol:" + e.getMessage());
+            System.err.println("NodeManager::registerSOSProtocol:" + e.getMessage());
         }
     }
 
@@ -187,7 +247,7 @@ public class NodeManager {
         }
     }
 
-    private void loadFromDB() throws DatabasePersistenceException {
+    private void loadFromDB() throws NodeManagerException {
         try (Connection connection = SQLiteDB.getSQLiteConnection()) {
             boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
 
@@ -195,8 +255,8 @@ public class NodeManager {
                 knownNodes.addAll(SQLiteDB.getNodes(connection));
             }
 
-        } catch (SQLException | GUIDGenerationException e) {
-            throw new DatabasePersistenceException(e);
+        } catch (SQLException | GUIDGenerationException | DatabasePersistenceException e) {
+            throw new NodeManagerException(e);
         }
     }
 }

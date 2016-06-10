@@ -20,6 +20,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
+ * This class handles all requests on the URLs under the sos:// scheme.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSURLConnection extends URLConnection {
@@ -72,10 +74,10 @@ public class SOSURLConnection extends URLConnection {
 
     private InputStream contactNode(Node resourceNode, IGUID entityId) throws IOException {
         /*
-                 * TODO - get data from other nodes
-                 * check NodeManager to see if node is known
-                 *
-                 */
+         * TODO - get data from other nodes
+         * check NodeManager to see if node is known
+         *
+         */
         Node nodeToContact = nodeManager.getNode(resourceNode.getNodeGUID()); // TODO - check if node exists!
         InetSocketAddress inetSocketAddress = nodeToContact.getHostAddress();
         String urlString = "http://" + inetSocketAddress.getHostName() +
