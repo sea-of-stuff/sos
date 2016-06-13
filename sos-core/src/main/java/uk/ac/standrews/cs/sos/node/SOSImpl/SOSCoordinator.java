@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node.SOS;
+package uk.ac.standrews.cs.sos.node.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;

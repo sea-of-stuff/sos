@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * SQLite database used to store information about known nodes for this SOS node.
+ * SQLite database used to store information about known nodes for this SOSManager node.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

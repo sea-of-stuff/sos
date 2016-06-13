@@ -15,7 +15,7 @@ import java.io.*;
 
 /**
  * Singleton configuration class. This class contains any information about this
- * SOS node configuration.
+ * SOSManager node configuration.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -53,7 +53,7 @@ public class Configuration {
     private Configuration() {}
 
     /**
-     * Return a Configuration instance for this SOS node.
+     * Return a Configuration instance for this SOSManager node.
      * @return configuration
      * @throws ConfigurationException
      */

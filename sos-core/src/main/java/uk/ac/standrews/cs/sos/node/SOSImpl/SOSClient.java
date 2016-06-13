@@ -1,6 +1,8 @@
-package uk.ac.standrews.cs.sos.node.SOS;
+package uk.ac.standrews.cs.sos.node.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
@@ -17,51 +19,74 @@ import java.io.InputStream;
 import java.util.Collection;
 
 /**
+ * Implementation class for the SeaOfStuff interface.
+ * The purpose of this class is to delegate jobs to the appropriate manifests
+ * of the sea of stuff.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSStorage extends SOSCommon {
+public class SOSClient extends SOSCommon {
 
-    public SOSStorage(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
+    public SOSClient(Configuration configuration, ManifestsManager manifestsManager,
+                     Identity identity) {
         super(configuration, manifestsManager, identity);
     }
 
     @Override
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        throw new UnsupportedOperationException();
+        manifestsManager.addManifest(manifest);
+
+        // TODO - recursively look for other manifests to add to the NodeManager
+        if (recursive) {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        throw new UnsupportedOperationException();
+        Manifest manifest;
+        try {
+            manifest = manifestsManager.findManifest(guid);
+        } catch (ManifestNotFoundException e) {
+            throw new ManifestNotFoundException();
+        }
+        return manifest;
     }
 
     @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
-        throw new UnsupportedOperationException();
+        boolean ret;
+        try {
+            ret = manifest.verify(identity);
+        } catch (GUIDGenerationException | DecryptionException e) {
+            throw new ManifestVerificationFailedException();
+        }
+
+        return ret;
     }
 
     @Override
     public Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException {
-        throw new UnsupportedOperationException();
+        return manifestsManager.findManifestsByType(type);
     }
 
     @Override
     public Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException {
-        throw new UnsupportedOperationException();
+        return manifestsManager.findManifestsThatMatchLabel(label);
     }
 
     @Override
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
-        throw new UnsupportedOperationException();
+        return manifestsManager.findVersions(invariant);
     }
 
     @Override
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        return DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles); // NOTE - this might undo the cache locations!
+        return DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
     }
 
     @Override
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        return DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        return DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
     }
 }

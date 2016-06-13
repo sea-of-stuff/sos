@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node.SOS.Storage;
+package uk.ac.standrews.cs.sos.node.SOSImpl.Storage;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;

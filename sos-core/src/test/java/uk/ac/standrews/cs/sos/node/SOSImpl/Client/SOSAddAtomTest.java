@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node.SOS.Client;
+package uk.ac.standrews.cs.sos.node.SOSImpl.Client;
 
 import org.apache.commons.io.IOUtils;
 import org.skyscreamer.jsonassert.JSONAssert;

@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.node.ROLE;
 import java.net.InetSocketAddress;
 
 /**
- * Node class - this defines an entry point in the SOS and contains information
+ * Node class - this defines an entry point in the SOSManager and contains information
  * on how to talk to the node over the network
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node.SOS;
+package uk.ac.standrews.cs.sos.node.SOSImpl;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
