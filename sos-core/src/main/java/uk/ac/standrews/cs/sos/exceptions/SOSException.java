@@ -12,4 +12,8 @@ public class SOSException extends Exception {
     public SOSException(Throwable throwable) {
         super(throwable);
     }
+
+    public SOSException(String message) {
+        super(message);
+    }
 }

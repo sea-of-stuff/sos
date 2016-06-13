@@ -23,7 +23,6 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.IOException;
@@ -49,10 +48,6 @@ public class ManifestsManagerTest {
         Configuration.setRootName("test");
         configuration = Configuration.getInstance();
         index = LuceneIndex.getInstance();
-
-        NodeManager.setConfiguration(configuration);
-        NodeManager.setIndex(index);
-        NodeManager.getInstance();
     }
 
     @AfterMethod

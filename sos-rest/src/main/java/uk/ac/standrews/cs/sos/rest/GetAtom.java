@@ -4,10 +4,11 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.node.SOS.SOSClient;
+import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,10 +27,10 @@ public class GetAtom {
     @GET
     @Path("client")
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    public Response getAtom(@QueryParam("guid") String input) throws GUIDGenerationException, ManifestNotFoundException {
+    public Response getAtom(@QueryParam("guid") String input) throws GUIDGenerationException, ManifestNotFoundException, SOSException {
         IGUID guid = GUIDFactory.recreateGUID(input);
 
-        SOSClient sos = (SOSClient) ServerState.sos.getSOS(ROLE.CLIENT);
+        SOSClient sos = (SOSClient) ServerState.sos.getSeaOfStuff(ROLE.CLIENT);
 
         Atom atom = (Atom) sos.getManifest(guid);
         InputStream stream = sos.getAtomContent(atom);

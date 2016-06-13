@@ -1,17 +1,19 @@
 package uk.ac.standrews.cs.sos.node;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import static org.testng.Assert.assertEquals;
@@ -19,24 +21,23 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class NodeManagerTest extends SetUpTest {
+public class NodeManagerTest {
 
     NodeManager nodeManager;
 
-    @Override
     @BeforeMethod
     public void setUp() throws Exception {
-        super.setUp();
-        Index index = LuceneIndex.getInstance();
+        Configuration.setRootName("test");
+        nodeManager = new NodeManager();
+    }
 
-        NodeManager.setConfiguration(configuration);
-        NodeManager.setIndex(index);
-        nodeManager = NodeManager.getInstance();
+    @AfterClass
+    public void classTearDown() throws ConfigurationException, IOException {
+        Helper.DeletePath(Configuration.getInstance().getDatabaseDump().getParent());
     }
 
     @Test(priority=0)
     public void persistTest() throws GUIDGenerationException, DatabasePersistenceException, NodeManagerException {
-
         IGUID guid = GUIDFactory.generateGUID("test");
         InetSocketAddress inetSocketAddress = new InetSocketAddress("example.com", 8080);
         Node node = new SOSNode(guid, inetSocketAddress);
@@ -50,14 +51,9 @@ public class NodeManagerTest extends SetUpTest {
         assertEquals(nodeManager.getKnownNodes().size(), 1);
     }
 
-    @Test(priority=1)
+    @Test(priority=1, dependsOnMethods = { "persistTest" })
     public void getKnownNodesTest() throws DatabasePersistenceException, NodeManagerException {
         assertEquals(nodeManager.getKnownNodes().size(), 1);
-    }
-
-    @Test()
-    public void getNodeTest() throws DatabasePersistenceException, NodeManagerException {
-        assertEquals(nodeManager.getThisNode(), configuration.getNode());
     }
 
 }

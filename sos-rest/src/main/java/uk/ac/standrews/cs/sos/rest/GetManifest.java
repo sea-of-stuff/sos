@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.node.ROLE;
@@ -23,11 +24,11 @@ public class GetManifest {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getManifestGivenGUID(@QueryParam("guid") String input) throws GUIDGenerationException {
+    public Response getManifestGivenGUID(@QueryParam("guid") String input) throws GUIDGenerationException, SOSException {
         IGUID guid = GUIDFactory.recreateGUID(input);
         Manifest manifest = null;
         try {
-            manifest = ServerState.sos.getSOS(ROLE.CLIENT).getManifest(guid); // FIXME - pass role in header of request ?
+            manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).getManifest(guid); // FIXME - pass role in header of request ?
         } catch (ManifestNotFoundException e) {
             return Response
                     .status(Response.Status.NOT_FOUND)

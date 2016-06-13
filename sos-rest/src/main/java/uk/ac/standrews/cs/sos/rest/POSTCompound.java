@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.rest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
@@ -27,7 +28,7 @@ public class POSTCompound {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCompound(String json) {
+    public Response addCompound(String json) throws SOSException {
 
         JsonParser parser = new JsonParser();
         JsonArray jsonContentArray = parser.parse(json).getAsJsonArray();
@@ -39,7 +40,7 @@ public class POSTCompound {
 
         uk.ac.standrews.cs.sos.interfaces.manifests.Compound manifest = null;
         try {
-            manifest = ServerState.sos.getSOS(ROLE.CLIENT).addCompound(CompoundType.COLLECTION, contents); // TODO - allow also other types of compounds
+            manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addCompound(CompoundType.COLLECTION, contents); // TODO - allow also other types of compounds
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

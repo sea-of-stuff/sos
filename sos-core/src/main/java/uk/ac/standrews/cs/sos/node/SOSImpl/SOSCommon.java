@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -107,6 +108,11 @@ public abstract class SOSCommon implements SeaOfStuff {
         }
 
         return dataStream;
+    }
+
+    @Override
+    public Node getNode(IGUID guid) {
+        throw new UnsupportedOperationException();
     }
 
     protected abstract IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException;

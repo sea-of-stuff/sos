@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.rest;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
@@ -31,7 +32,7 @@ public class POSTAtom {
     @Path("/location")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomLocations(String json) {
+    public Response addAtomLocations(String json) throws SOSException {
 
         JsonParser parser = new JsonParser();
         JsonObject jsonLocation = parser.parse(json).getAsJsonObject();
@@ -50,7 +51,7 @@ public class POSTAtom {
 
         uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
         try {
-            manifest = ServerState.sos.getSOS(ROLE.CLIENT).addAtom(location);
+            manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addAtom(location);
         } catch (DataStorageException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -68,11 +69,11 @@ public class POSTAtom {
     @Path("/stream")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomStream(final InputStream inputStream) {
+    public Response addAtomStream(final InputStream inputStream) throws SOSException {
 
         uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
         try {
-            manifest = ServerState.sos.getSOS(ROLE.CLIENT).addAtom(inputStream);
+            manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addAtom(inputStream);
         } catch (DataStorageException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

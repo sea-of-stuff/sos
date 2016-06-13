@@ -13,16 +13,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * This is the principal manager for this node.
- * The NodeManager should be used to access this SOSManager node and its information.
- * A node might have more than one role. A SOSManager instance is accessed by calling:
- * NodeManager.getInstance().getSOS(ROLE);
+ * This is the node manager for this node. That is, it keeps track of the known nodes.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class NodeManager {
 
-    private Collection<Node> knownNodes; // TODO - there is not info about their available roles?
+    private Collection<Node> knownNodes;
 
     public NodeManager() throws NodeManagerException {
         this.knownNodes = new HashSet<>();
@@ -32,7 +29,7 @@ public class NodeManager {
 
     /**
      * Add an arbitrary node to the manager.
-     * This will be used to discovery nodes/data in the SOSManager.
+     * This will be used to discovery nodes/data in the LocalSOSNode.
      *
      * @param node
      */
@@ -50,7 +47,7 @@ public class NodeManager {
     }
 
     /**
-     * Get a SOSManager node given its guid identifier.
+     * Get a LocalSOSNode node given its guid identifier.
      *
      * @param guid
      * @return

@@ -12,11 +12,13 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -26,8 +28,11 @@ import java.util.Collection;
  */
 public class SOSCoordinator extends SOSCommon {
 
-    public SOSCoordinator(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
+    private NodeManager nodeManager;
+
+    public SOSCoordinator(Configuration configuration, ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
         super(configuration, manifestsManager, identity);
+        this.nodeManager = nodeManager;
     }
 
     @Override
@@ -97,6 +102,11 @@ public class SOSCoordinator extends SOSCommon {
     @Override
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
         return manifestsManager.findVersions(invariant);
+    }
+
+    @Override
+    public Node getNode(IGUID guid) {
+        return nodeManager.getNode(guid);
     }
 
     // TODO - other find methods?

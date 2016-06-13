@@ -15,7 +15,7 @@ import java.io.*;
 
 /**
  * Singleton configuration class. This class contains any information about this
- * SOSManager node configuration.
+ * LocalSOSNode node configuration.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -53,7 +53,7 @@ public class Configuration {
     private Configuration() {}
 
     /**
-     * Return a Configuration instance for this SOSManager node.
+     * Return a Configuration instance for this LocalSOSNode node.
      * @return configuration
      * @throws ConfigurationException
      */
@@ -94,7 +94,7 @@ public class Configuration {
      * @param node
      * @throws ConfigurationException
      */
-    public void setNode(Node node) throws ConfigurationException {
+    public static void setNode(Node node) throws ConfigurationException {
         if (Configuration.node == null) {
             Configuration.node = node;
             saveConfiguration();
@@ -158,7 +158,7 @@ public class Configuration {
      * Save the configuration for this node.
      * @throws ConfigurationException
      */
-    public void saveConfiguration() throws ConfigurationException {
+    public static void saveConfiguration() throws ConfigurationException {
         try (BufferedWriter writer = new BufferedWriter
                 (new FileWriter(SOS_ROOT + NODE_FILE)) ){
             if (node != null) {

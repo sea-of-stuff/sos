@@ -190,4 +190,6 @@ public interface SeaOfStuff {
      */
     Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
 
+    Node getNode(IGUID guid);
+
 }

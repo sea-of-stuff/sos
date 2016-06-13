@@ -31,6 +31,13 @@ public class SOSNode implements Node {
         this.hostAddress = hostAddress;
     }
 
+    /**
+     * Copy constructor
+     */
+    public SOSNode(Node node) {
+        this(node.getNodeGUID(), node.getHostAddress());
+    }
+
     @Override
     public IGUID getNodeGUID() {
         return nodeGUID;
@@ -45,7 +52,7 @@ public class SOSNode implements Node {
     public void setRoles(byte roles) {
 
         if (!rolesSet.isEmpty()) {
-            return;
+            return; // Cannot change/update the roles of this node if already set once.
         }
 
         this.roles = roles;

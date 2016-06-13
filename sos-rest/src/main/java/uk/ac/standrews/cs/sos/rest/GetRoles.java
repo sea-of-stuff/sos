@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.node.ROLE;
@@ -49,9 +48,9 @@ public class GetRoles {
         // 1. the specified node is this one
         // 2. the specified node is unknown
 
-        boolean isCoordinator = ServerState.sos.isRoleValid(ROLE.COORDINATOR);
+        boolean isCoordinator = ServerState.sos.hasRole(ROLE.COORDINATOR);
         if (isCoordinator) {
-            ServerState.sos.getNode(GUIDFactory.recreateGUID(guid));
+
             return null;
         }
 

@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
@@ -31,7 +32,7 @@ public class POSTVersion {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addVersion(String json) throws GUIDGenerationException {
+    public Response addVersion(String json) throws GUIDGenerationException, SOSException {
 
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = parser.parse(json).getAsJsonObject();
@@ -63,7 +64,7 @@ public class POSTVersion {
 
         Compound manifest = null;
         try {
-            ServerState.sos.getSOS(ROLE.CLIENT).addVersion(content, invariant, prevs, metadata);
+            ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addVersion(content, invariant, prevs, metadata);
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
