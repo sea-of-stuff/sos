@@ -37,7 +37,7 @@ public class GetAtom {
 
         return Response.ok()
                 .entity(stream)
-                .type(MediaType.MULTIPART_FORM_DATA) // TODO - this is a general media-type. will not render on browser.
+                .type(MediaType.MULTIPART_FORM_DATA) // Note - this is a general media-type. will not render on browser.
                 .build();
     }
 

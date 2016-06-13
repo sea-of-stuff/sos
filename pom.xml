@@ -18,6 +18,17 @@
         <!-- <module>sos-cli</module> -->
     </modules>
 
+    <properties>
+        <jdk.version>1.8</jdk.version>
+        <testng.version>6.1.1</testng.version>
+
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+
+        <!-- http://stackoverflow.com/questions/3017695/how-to-configure-encoding-in-maven -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -31,19 +42,12 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
-
-        <!-- http://stackoverflow.com/questions/3017695/how-to-configure-encoding-in-maven -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.1.1</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
 
