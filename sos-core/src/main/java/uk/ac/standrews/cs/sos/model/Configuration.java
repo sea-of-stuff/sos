@@ -203,6 +203,8 @@ public class Configuration {
                 IGUID guid = GUIDFactory.recreateGUID(nodeIdString);
 
                 node = new SOSNode(guid); // TODO - set address and roles
+
+                System.out.println("Node initialised with GUID " + guid.toString());
             }
         } catch (IOException | GUIDGenerationException e) {
             throw new ConfigurationException();

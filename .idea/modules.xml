@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/rest-app/rest-app.iml" filepath="$PROJECT_DIR$/rest-app/rest-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-core/sos-core.iml" filepath="$PROJECT_DIR$/sos-core/sos-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-rest/sos-rest.iml" filepath="$PROJECT_DIR$/sos-rest/sos-rest.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-ui/web-ui.iml" filepath="$PROJECT_DIR$/web-ui/web-ui.iml" />
     </modules>
   </component>

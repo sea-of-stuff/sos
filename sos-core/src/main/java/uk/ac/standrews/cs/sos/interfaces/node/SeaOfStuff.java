@@ -190,6 +190,16 @@ public interface SeaOfStuff {
      */
     Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
 
+    /**
+     * Get a known node to this Sea Of Stuff.
+     * Client and Storage will not support this call.
+     *
+     * @param guid
+     * @return
+     */
     Node getNode(IGUID guid);
 
+
+    // TODO - other find methods?
+    // search using metadata ?
 }

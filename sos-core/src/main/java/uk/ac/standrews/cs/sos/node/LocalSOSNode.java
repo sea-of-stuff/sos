@@ -48,7 +48,7 @@ public class LocalSOSNode extends SOSNode {
      * @param configuration
      * @throws SOSException
      */
-    public static void create(Configuration configuration) throws SOSException {
+    public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         checkRequisites();
 
         LocalSOSNode.configuration = configuration;
@@ -139,23 +139,23 @@ public class LocalSOSNode extends SOSNode {
 
         // TODO read configuration for roles
 
+        System.out.println("Creating SOS instances");
         sosMap.put(ROLE.CLIENT, new SOSClient(configuration, manifestsManager, identity));
         sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, manifestsManager, identity));
         sosMap.put(ROLE.COORDINATOR, new SOSCoordinator(configuration, manifestsManager, identity, nodeManager));
+
+        System.out.println("Created SOS instances. Now adding roles.");
+        instance.setRoles((byte) (ROLE.CLIENT.mask | ROLE.COORDINATOR.mask | ROLE.STORAGE.mask));
     }
 
-    private static void registerSOSProtocol() throws SOSException {
+    private static void registerSOSProtocol() throws SOSProtocolException {
         try {
             if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
                 URLStreamHandlerFactory urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(nodeManager);
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
             }
         } catch (Error e) {
-            try {
-                throw new SOSProtocolException(e);
-            } catch (SOSProtocolException e1) {
-                throw new SOSException(e1);
-            }
+            throw new SOSProtocolException(e);
         }
     }
 

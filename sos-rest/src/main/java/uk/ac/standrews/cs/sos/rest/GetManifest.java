@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.node.ROLE;
 
 import javax.ws.rs.GET;
@@ -23,12 +24,25 @@ import javax.ws.rs.core.Response;
 public class GetManifest {
 
     @GET
+    @Path("coordinator")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getManifestGivenGUID(@QueryParam("guid") String input) throws GUIDGenerationException, SOSException {
+    public Response getManifestGivenGUIDCoordinator(@QueryParam("guid") String input) throws GUIDGenerationException, SOSException {
+        return getManifestGivenGUID(ROLE.COORDINATOR, input);
+    }
+
+    @GET
+    @Path("storage")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getManifestGivenGUIDStorage(@QueryParam("guid") String input) throws GUIDGenerationException, SOSException {
+        return getManifestGivenGUID(ROLE.STORAGE, input);
+    }
+
+    public Response getManifestGivenGUID(ROLE role, @QueryParam("guid") String input) throws GUIDGenerationException, SOSException {
         IGUID guid = GUIDFactory.recreateGUID(input);
         Manifest manifest = null;
+        SeaOfStuff sos = ServerState.sos.getSeaOfStuff(role);
         try {
-            manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).getManifest(guid); // FIXME - pass role in header of request ?
+            manifest = sos.getManifest(guid);
         } catch (ManifestNotFoundException e) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -42,47 +56,4 @@ public class GetManifest {
                 .build();
     }
 
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getManifestGivenMetadata(@QueryParam("metadata") String metadata) throws GUIDGenerationException {
-//        IGUID guid = GUIDFactory.recreateGUID(metadata);
-//        Manifest manifest = null;
-//        try {
-//            manifest = ServerState.sos.getSOS(ROLE.CLIENT).getManifest(guid); // FIXME
-//        } catch (ManifestNotFoundException e) {
-//            return Response
-//                    .status(Response.Status.NOT_FOUND)
-//                    .build();
-//        }
-//
-//        return Response
-//                .status(Response.Status.ACCEPTED)
-//                .entity(manifest.toJSON().toString())
-//                .type(MediaType.APPLICATION_JSON_TYPE)
-//                .build();
-//    }
-
-//    @GET
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getManifestGivenMetadata() throws GUIDGenerationException {
-        /*
-        IGUID guid = GUIDFactory.recreateGUID(metadata);
-        Manifest manifest = null;
-        try {
-            manifest = ServerState.sos.getManifest(guid); // FIXME
-        } catch (ManifestNotFoundException e) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .build();
-        }
-
-        return Response
-                .status(Response.Status.ACCEPTED)
-                .entity(manifest.toJSON().toString())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .build();
-                */
-//        return null;
-//    }
 }

@@ -1,7 +1,12 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.node.ROLE;
 
 import javax.ws.rs.GET;
@@ -21,13 +26,16 @@ public class GetRoles {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(@QueryParam("guid") String guid) throws GUIDGenerationException {
-        if (guid != null) {
-            return getANodeRoles(guid);
-        } else {
-            return getThisNodeRoles();
-        }
+    public Response getRoles() throws GUIDGenerationException {
+        return getThisNodeRoles();
+    }
 
+    @GET
+    @Path("coordinator")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRolesCoordinator(@QueryParam("guid") String input) throws GUIDGenerationException, SOSException {
+        IGUID guid = GUIDFactory.recreateGUID(input);
+        return getNodeRoles(guid);
     }
 
     private Response getThisNodeRoles() {
@@ -41,20 +49,22 @@ public class GetRoles {
                 .build();
     }
 
-    private Response getANodeRoles(String guid) throws GUIDGenerationException {
-        // TODO - check node manager for roles of specified node
-        // this should be enabled only if this node is a coordinator
-        // edge cases:
-        // 1. the specified node is this one
-        // 2. the specified node is unknown
+    private Response getNodeRoles(IGUID guid) throws SOSException {
+        SeaOfStuff sos = ServerState.sos.getSeaOfStuff(ROLE.COORDINATOR);
+        Node node = sos.getNode(guid);
 
-        boolean isCoordinator = ServerState.sos.hasRole(ROLE.COORDINATOR);
-        if (isCoordinator) {
+        if (node != null) {
+            String jsonRoles = gson.toJson(node.getRoles());
 
-            return null;
+            return Response
+                    .status(Response.Status.ACCEPTED)
+                    .entity(jsonRoles)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .build();
+
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        return null;
     }
 
 }

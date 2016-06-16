@@ -4,14 +4,14 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.node.NodeTest;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.node.SOSImpl.SOSNodeTest;
 import uk.ac.standrews.cs.sos.utils.Helper;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StorageTest extends SOSNodeTest {
+public class StorageTest extends NodeTest {
 
     @Override
     public ROLE nodeRole() {

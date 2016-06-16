@@ -109,6 +109,4 @@ public class SOSCoordinator extends SOSCommon {
         return nodeManager.getNode(guid);
     }
 
-    // TODO - other find methods?
-    // search using metadata ?
 }

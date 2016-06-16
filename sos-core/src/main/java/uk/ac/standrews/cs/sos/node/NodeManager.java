@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.node;
 
+import com.j256.ormlite.logger.LocalLog;
+import com.j256.ormlite.support.ConnectionSource;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
@@ -7,7 +9,6 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.internals.SQLiteDB;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,6 +25,8 @@ public class NodeManager {
     public NodeManager() throws NodeManagerException {
         this.knownNodes = new HashSet<>();
 
+        // Setting log-level for ORMLite to ERROR
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         loadNodesFromDB();
     }
 
@@ -67,30 +70,28 @@ public class NodeManager {
      * @throws DatabasePersistenceException
      */
     public void persistNodesTable() throws DatabasePersistenceException {
-        try (Connection connection = SQLiteDB.getSQLiteConnection()) {
-            boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
-
-            if (!sqliteTableExists) {
-                SQLiteDB.createNodesTable(connection);
-            }
+        try {
+            ConnectionSource connection = SQLiteDB.getSQLiteConnection();
+            SQLiteDB.createNodesTable(connection);
 
             for (Node knownNode : knownNodes) {
                 SQLiteDB.addNodeToTable(connection, knownNode);
             }
 
+            connection.close();
         } catch (SQLException e) {
             throw new DatabasePersistenceException(e);
         }
     }
 
     private void loadNodesFromDB() throws NodeManagerException {
-        try (Connection connection = SQLiteDB.getSQLiteConnection()) {
-            boolean sqliteTableExists = SQLiteDB.checkSQLiteTableExists(connection);
+        try {
+            ConnectionSource connection = SQLiteDB.getSQLiteConnection();
 
-            if (sqliteTableExists) {
-                knownNodes.addAll(SQLiteDB.getNodes(connection));
-            }
+            SQLiteDB.createNodesTable(connection);
+            knownNodes.addAll(SQLiteDB.getNodes(connection));
 
+            connection.close();
         } catch (SQLException | GUIDGenerationException | DatabasePersistenceException e) {
             throw new NodeManagerException(e);
         }
