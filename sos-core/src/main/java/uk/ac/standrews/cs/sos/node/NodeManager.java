@@ -72,13 +72,15 @@ public class NodeManager {
     public void persistNodesTable() throws DatabasePersistenceException {
         try {
             ConnectionSource connection = SQLiteDB.getSQLiteConnection();
-            SQLiteDB.createNodesTable(connection);
+            try {
+                SQLiteDB.createNodesTable(connection);
 
-            for (Node knownNode : knownNodes) {
-                SQLiteDB.addNodeToTable(connection, knownNode);
+                for (Node knownNode : knownNodes) {
+                    SQLiteDB.addNodeToTable(connection, knownNode);
+                }
+            } finally {
+                connection.close();
             }
-
-            connection.close();
         } catch (SQLException e) {
             throw new DatabasePersistenceException(e);
         }
@@ -87,11 +89,12 @@ public class NodeManager {
     private void loadNodesFromDB() throws NodeManagerException {
         try {
             ConnectionSource connection = SQLiteDB.getSQLiteConnection();
-
-            SQLiteDB.createNodesTable(connection);
-            knownNodes.addAll(SQLiteDB.getNodes(connection));
-
-            connection.close();
+            try {
+                SQLiteDB.createNodesTable(connection);
+                knownNodes.addAll(SQLiteDB.getNodes(connection));
+            } finally {
+                connection.close();
+            }
         } catch (SQLException | GUIDGenerationException | DatabasePersistenceException e) {
             throw new NodeManagerException(e);
         }

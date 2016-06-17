@@ -22,6 +22,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="rest" />
         <module name="rest-app" />
         <module name="sos-core" />
         <module name="web-ui" />
@@ -29,6 +30,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cli" target="1.7" />
+      <module name="rest" target="1.8" />
       <module name="rest-app" target="1.7" />
       <module name="sos" target="1.8" />
       <module name="sos-core" target="1.8" />

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
@@ -26,7 +27,7 @@ public class ServerState {
             LocalSOSNode.create(configuration);
 
             ServerState.sos = LocalSOSNode.getInstance();
-        } catch (SOSException | IndexException | ConfigurationException e) {
+        } catch (SOSException | SOSProtocolException | IndexException | ConfigurationException e) {
             e.printStackTrace();
         }
     }

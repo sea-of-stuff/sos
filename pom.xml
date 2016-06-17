@@ -13,7 +13,7 @@
 
     <modules>
     	<module>sos-core</module>
-        <!-- <module>sos-rest</module> -->
+        <module>sos-rest</module>
         <module>web-ui</module>
         <module>rest-app</module>
         <!-- <module>sos-cli</module> -->
