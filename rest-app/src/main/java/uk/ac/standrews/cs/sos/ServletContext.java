@@ -1,11 +1,5 @@
 package uk.ac.standrews.cs.sos;
 
-import com.google.gson.GsonBuilder;
-import uk.ac.standrews.cs.sos.deserializers.ContentDeserializer;
-import uk.ac.standrews.cs.sos.deserializers.LocationBundleDeserializer;
-import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -21,7 +15,6 @@ public class ServletContext implements ServletContextListener {
         System.out.println("Starting SOS");
         ServerState.startSOS();
         System.out.println("SOS started");
-        configureGson();
     }
 
     @Override
@@ -29,14 +22,4 @@ public class ServletContext implements ServletContextListener {
 
     }
 
-    private static void configureGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        registerGSonTypeAdapters(gsonBuilder);
-        ServerState.gson = gsonBuilder.create();
-    }
-
-    private static void registerGSonTypeAdapters(GsonBuilder builder) {
-        builder.registerTypeAdapter(LocationBundle.class, new LocationBundleDeserializer());
-        builder.registerTypeAdapter(Content.class, new ContentDeserializer());
-    }
 }

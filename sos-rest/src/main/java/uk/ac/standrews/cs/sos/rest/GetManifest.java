@@ -51,7 +51,7 @@ public class GetManifest {
 
         return Response
                 .status(Response.Status.ACCEPTED)
-                .entity(manifest.toJSON().toString())
+                .entity(manifest.toString())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }

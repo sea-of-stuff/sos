@@ -1,8 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -11,6 +10,8 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
+import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
 
 import java.util.Collection;
 
@@ -39,6 +40,8 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = VersionManifestSerializer.class)
+@JsonDeserialize(using = VersionManifestDeserializer.class)
 public class VersionManifest extends SignedManifest implements Version {
 
     final private IGUID version;
@@ -159,31 +162,26 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     @Override
-    public JsonObject toJSON() {
-        JsonObject obj = manifestToHashInJSON();
-        obj.addProperty(ManifestConstants.KEY_VERSION, version.toString());
-
-        if (signature != null && !signature.isEmpty()) {
-            obj.addProperty(ManifestConstants.KEY_SIGNATURE, signature);
-        }
-
-        return obj;
-    }
-
-    @Override
     protected String generateSignature(String toSign) throws EncryptionException {
         byte[] signatureBytes = this.identity.sign(toSign);
         byte[] encodedBytes = Base64.encodeBase64(signatureBytes);
         return new String(encodedBytes);
     }
 
-    private JsonObject manifestToHashInJSON() {
-        JsonObject obj = super.toJSON();
+    private String manifestToHash() {
+        String toHash = getManifestType() +
+                "I" + getInvariantGUID() +
+                "C" + getContentGUID();
 
-        obj.addProperty(ManifestConstants.KEY_INVARIANT, invariant.toString());
-        addVersionElemenetsToJSON(obj);
+        if (prevs != null && !prevs.isEmpty()) {
+            toHash += "P"  + getCollectionToHashOrSign(prevs);
+        }
 
-        return obj;
+        if (metadata != null && !metadata.isEmpty()) {
+            toHash += "M"  + getCollectionToHashOrSign(metadata);
+        }
+
+        return toHash;
     }
 
     private IGUID makeInvariant() {
@@ -191,36 +189,31 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     private IGUID makeVersionGUID() throws GUIDGenerationException {
-        return GUIDFactory.generateGUID(manifestToHashInJSON().toString());
+        return GUIDFactory.generateGUID(manifestToHash());
     }
 
     @Override
     protected String getManifestToSign() {
-        JsonObject obj = new JsonObject();
+        String toSign = getManifestType() +
+                "C" + getContentGUID();
 
-        obj.addProperty(ManifestConstants.KEY_TYPE, this.getManifestType());
-        addVersionElemenetsToJSON(obj);
-
-        Gson gson = new Gson();
-        return gson.toJson(obj);
-    }
-
-    private void addVersionElemenetsToJSON(JsonObject obj) {
-        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, contentGUID.toString());
-
-        if (prevs != null && !prevs.isEmpty())
-            obj.add(ManifestConstants.KEY_PREVIOUS_GUID, getCollectionInJSON(prevs));
-
-        if (metadata != null && !metadata.isEmpty())
-            obj.add(ManifestConstants.KEY_METADATA_GUID, getCollectionInJSON(metadata));
-    }
-
-    private JsonArray getCollectionInJSON(Collection<?> collection) {
-        JsonArray arr = new JsonArray();
-        for (Object obj : collection) {
-            arr.add(obj.toString());
+        if (prevs != null && !prevs.isEmpty()) {
+            toSign += "P"  + getCollectionToHashOrSign(prevs);
         }
-        return arr;
+
+        if (metadata != null && !metadata.isEmpty()) {
+            toSign += "M"  + getCollectionToHashOrSign(metadata);
+        }
+
+        return toSign;
+    }
+
+    private String getCollectionToHashOrSign(Collection<?> collection) {
+        String toHash = "";
+        for(Object obj:collection) {
+            toHash += obj.toString() + ".";
+        }
+        return toHash;
     }
 
 }

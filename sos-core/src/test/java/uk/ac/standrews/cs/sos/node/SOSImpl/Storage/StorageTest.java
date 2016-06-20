@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.node.NodeTest;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -25,7 +25,7 @@ public class StorageTest extends NodeTest {
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testFailAddManifest() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
 
         model.addManifest(manifest, false);
@@ -33,7 +33,7 @@ public class StorageTest extends NodeTest {
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testFailVerifyManifest() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
 
         model.verifyManifest(model.getIdentity(), manifest);

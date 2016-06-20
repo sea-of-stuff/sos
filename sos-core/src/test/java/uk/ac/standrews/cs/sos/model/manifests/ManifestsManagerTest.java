@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,10 +55,10 @@ public class ManifestsManagerTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.DeletePath(configuration.getIndexDirectory());
-        Helper.DeletePath(configuration.getManifestsDirectory());
-        Helper.DeletePath(configuration.getDataDirectory());
-        Helper.DeletePath(configuration.getTestDataDirectory());
+        HelperTest.DeletePath(configuration.getIndexDirectory());
+        HelperTest.DeletePath(configuration.getManifestsDirectory());
+        HelperTest.DeletePath(configuration.getDataDirectory());
+        HelperTest.DeletePath(configuration.getTestDataDirectory());
     }
 
     @Test
@@ -139,8 +139,8 @@ public class ManifestsManagerTest {
     public void testUpdateAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(index);
 
-        Location firstLocation = Helper.createDummyDataFile(configuration, "first.txt");
-        Location secondLocation = Helper.createDummyDataFile(configuration, "second.txt");
+        Location firstLocation = HelperTest.createDummyDataFile(configuration, "first.txt");
+        Location secondLocation = HelperTest.createDummyDataFile(configuration, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),

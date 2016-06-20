@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class SetUpTest {
         Node testNode = new SOSNode(GUIDFactory.recreateGUID("12345678"));
         Configuration.setNode(testNode);
         configuration = Configuration.getInstance();
-        Helper.DeletePath(configuration.getDatabaseDump().getParent());
+        HelperTest.DeletePath(configuration.getDatabaseDump().getParent());
 
         index = LuceneIndex.getInstance();
 
@@ -44,10 +44,10 @@ public class SetUpTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.DeletePath(configuration.getIndexDirectory());
-        Helper.DeletePath(configuration.getManifestsDirectory());
-        Helper.DeletePath(configuration.getTestDataDirectory());
-        Helper.DeletePath(configuration.getDataDirectory());
-        Helper.DeletePath(configuration.getDatabaseDump().getParent());
+        HelperTest.DeletePath(configuration.getIndexDirectory());
+        HelperTest.DeletePath(configuration.getManifestsDirectory());
+        HelperTest.DeletePath(configuration.getTestDataDirectory());
+        HelperTest.DeletePath(configuration.getDataDirectory());
+        HelperTest.DeletePath(configuration.getDatabaseDump().getParent());
     }
 }

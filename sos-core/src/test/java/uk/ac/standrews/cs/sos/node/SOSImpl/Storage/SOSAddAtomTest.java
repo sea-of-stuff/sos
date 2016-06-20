@@ -9,8 +9,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.utils.Helper;
-import uk.ac.standrews.cs.sos.utils.StreamsUtils;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -26,7 +25,7 @@ public class SOSAddAtomTest extends StorageTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -36,7 +35,7 @@ public class SOSAddAtomTest extends StorageTest {
 
     @Test
     public void testAddAtomPersistentLocation() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -54,7 +53,7 @@ public class SOSAddAtomTest extends StorageTest {
     @Test
     public void testAddAtomStreamPersistentLocation() throws Exception {
         String testString = "first line and second line";
-        InputStream stream = StreamsUtils.StringToInputStream(testString);
+        InputStream stream = HelperTest.StringToInputStream(testString);
         Atom manifest = model.addAtom(stream);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 

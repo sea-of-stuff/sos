@@ -1,14 +1,16 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.utils.StreamsUtils;
+import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,7 +20,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -57,7 +58,7 @@ public class VersionManifestTest extends SetUpTest {
 
     @Test
     public void testBasicAssetConstructor() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Identity identityMocked = mock(Identity.class);
@@ -66,18 +67,19 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(null, guid, null, null, identityMocked);
 
-        JsonObject gson = assetManifest.toJSON();
-        assertNotNull(gson.get("Version"));
-        assertNotNull(gson.get("Invariant"));
-        JSONAssert.assertEquals(EXPECTED_JSON_BASIC_ASSET, gson.toString(), false);
+        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+
+        JSONAssert.assertEquals(EXPECTED_JSON_BASIC_ASSET, assetManifest.toString(), false);
     }
 
     @Test
     public void testMetadataAssetConstructor() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
         Collection<IGUID> metadata = new ArrayList<>();
         metadata.add(metadataGUID);
@@ -88,21 +90,22 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(null, guid, null, metadata, identityMocked);
 
-        JsonObject gson = assetManifest.toJSON();
-        assertNotNull(gson.get("Version"));
-        assertNotNull(gson.get("Invariant"));
-        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_ASSET, gson.toString(), false);
+        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+
+        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_ASSET, assetManifest.toString(), false);
     }
 
     @Test
     public void testPreviousAssetConstructor() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream invariantStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
 
-        InputStream previousStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
         Collection<IGUID> previous = new ArrayList<>();
         previous.add(previousGUID);
@@ -113,25 +116,27 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, null, identityMocked);
 
-        JsonObject gson = assetManifest.toJSON();
-        assertNotNull(gson.get("Version"));
-        JSONAssert.assertEquals(EXPECTED_JSON_PREVIOUS_ASSET, gson.toString(), false);
+        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+
+        JSONAssert.assertEquals(EXPECTED_JSON_PREVIOUS_ASSET, assetManifest.toString(), false);
     }
 
     @Test
     public void testMetadataAndPreviousAssetConstructor() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream invariantStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
 
-        InputStream previousStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
         Collection<IGUID> previous = new ArrayList<>();
         previous.add(previousGUID);
 
-        InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
         Collection<IGUID> metadata = new ArrayList<>();
         metadata.add(metadataGUID);
@@ -142,25 +147,27 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
-        JsonObject gson = assetManifest.toJSON();
-        assertNotNull(gson.get("Version"));
-        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET, gson.toString(), false);
+        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+
+        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET, assetManifest.toString(), false);
     }
 
     @Test
     public void testGetters() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        InputStream invariantStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream invariantStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
 
-        InputStream previousStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
         Collection<IGUID> previous = new ArrayList<>();
         previous.add(previousGUID);
 
-        InputStream metadataStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
         Collection<IGUID> metadata = new ArrayList<>();
         metadata.add(metadataGUID);

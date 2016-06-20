@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -33,7 +33,7 @@ public class NodeManagerTest {
 
     @AfterClass
     public void classTearDown() throws ConfigurationException, IOException {
-        Helper.DeletePath(Configuration.getInstance().getDatabaseDump().getParent());
+        HelperTest.DeletePath(Configuration.getInstance().getDatabaseDump().getParent());
     }
 
     @Test(priority=0)

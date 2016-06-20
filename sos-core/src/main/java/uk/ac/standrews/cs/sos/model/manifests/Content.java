@@ -1,7 +1,12 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.json.ContentDeserializer;
+import uk.ac.standrews.cs.sos.json.ContentSerializer;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.util.Objects;
 
@@ -10,6 +15,8 @@ import java.util.Objects;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = ContentSerializer.class)
+@JsonDeserialize(using = ContentDeserializer.class)
 public class Content {
 
     final private IGUID guid;
@@ -54,25 +61,15 @@ public class Content {
         return label;
     }
 
-    /**
-     * Gets a JSON representation of the content.
-     *
-     * @return JSON object representing this content.
-     */
-    public JsonObject toJSON() {
-        JsonObject obj = new JsonObject();
-
-        if (label != null && !label.isEmpty()) {
-            obj.addProperty(ManifestConstants.CONTENT_KEY_LABEL, this.label);
-        }
-
-        obj.addProperty(ManifestConstants.CONTENT_KEY_GUID, this.guid.toString());
-        return obj;
-    }
-
     @Override
     public String toString() {
-        return toJSON().toString();
+        try {
+            return Helper.JsonObjMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override

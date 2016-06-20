@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
-import com.google.gson.JsonObject;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
@@ -59,10 +58,4 @@ public interface Manifest {
      */
     String getManifestType();
 
-    /**
-     * Get a JSON representation of this manifest.
-     *
-     * @return JSON representation of this manifest.
-     */
-    JsonObject toJSON();
 }

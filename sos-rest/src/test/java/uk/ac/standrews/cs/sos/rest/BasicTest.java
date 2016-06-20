@@ -14,7 +14,7 @@ public class BasicTest extends JerseyTestNg.ContainerPerMethodTest {
 
     @Override
     protected Application configure() {
-        Configuration.setRootName("test-rest"); // FIXME - never called because it was set already somewhere else (perf-tests!)
+        Configuration.setRootName("test-rest");
         ServerState.startSOS();
         return new ResourceConfig()
                 .packages("uk.ac.standrews.cs.sos.rest");

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos;
 
-import com.google.gson.Gson;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -16,7 +15,6 @@ import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 public class ServerState {
 
     public static LocalSOSNode sos;
-    public static Gson gson;
 
     public static void startSOS() {
         try {

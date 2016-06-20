@@ -1,13 +1,8 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.deserializers.AssetManifestDeserializer;
-import uk.ac.standrews.cs.sos.deserializers.AtomManifestDeserializer;
-import uk.ac.standrews.cs.sos.deserializers.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestManagerException;
@@ -24,12 +19,12 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Manage the manifests of the sea of stuff.
@@ -45,7 +40,6 @@ public class ManifestsManager {
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
     final private Index index;
-    private Gson gson;
 
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
@@ -56,8 +50,6 @@ public class ManifestsManager {
      */
     public ManifestsManager(Index index) {
         this.index = index;
-
-        configureGson();
     }
 
     /**
@@ -133,63 +125,45 @@ public class ManifestsManager {
     /* PRIVATE METHODS */
     /**************************************************************************/
 
-    private void configureGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        registerGSonTypeAdapters(gsonBuilder);
-        gson = gsonBuilder.create();
-    }
-
-    private void registerGSonTypeAdapters(GsonBuilder builder) {
-        builder.registerTypeAdapter(AtomManifest.class, new AtomManifestDeserializer());
-        builder.registerTypeAdapter(CompoundManifest.class, new CompoundManifestDeserializer());
-        builder.registerTypeAdapter(VersionManifest.class, new AssetManifestDeserializer());
-    }
-
     private Manifest getManifestFromFile(IGUID guid) throws ManifestManagerException {
-        Manifest manifest;
-        SOSFile manifestFile = getManifest(guid);
+        Manifest manifest = null;
+        SOSFile manifestFile = getManifestFile(guid);
         try {
-            String manifestData = readManifestFromFile(manifestFile);
+            JsonNode node = Helper.JsonObjMapper().readTree(manifestFile.toFile());
+            String type = node.get(ManifestConstants.KEY_TYPE).textValue();
 
-            JsonObject obj = gson.fromJson(manifestData, JsonObject.class);
-            String type = obj.get(ManifestConstants.KEY_TYPE).getAsString();
-
-            manifest = constructManifestFromJson(type, manifestData);
+            manifest = constructManifestFromJson(type, manifestFile);
         } catch (FileNotFoundException | UnknownManifestTypeException | ManifestNotMadeException e) {
             throw new ManifestManagerException(e);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return manifest;
     }
 
-    private String readManifestFromFile(SOSFile manifestFile) throws FileNotFoundException {
-        // http://stackoverflow.com/questions/326390/how-to-create-a-java-string-from-the-contents-of-a-file
-        String text;
-        try (Scanner scanner = new Scanner(new File(manifestFile.getPathname()))) {
-            text = scanner.useDelimiter("\\A").next();
-        }
-        return text;
-    }
-
-    private Manifest constructManifestFromJson(String type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
-        Manifest manifest;
+    private Manifest constructManifestFromJson(String type, SOSFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+        Manifest manifest = null;
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
-                    manifest = gson.fromJson(manifestData, AtomManifest.class);
+                    manifest = Helper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
                     break;
                 case ManifestConstants.COMPOUND:
-                    manifest = gson.fromJson(manifestData, CompoundManifest.class);
+                    manifest = Helper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
                     break;
                 case ManifestConstants.VERSION:
-                    manifest = gson.fromJson(manifestData, VersionManifest.class);
+                    manifest = Helper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
                     break;
                 default:
                     throw new UnknownManifestTypeException();
             }
-        } catch (JsonSyntaxException e) {
+        } catch (IOException e) {
             throw new ManifestNotMadeException();
         }
+
         return manifest;
     }
 
@@ -223,7 +197,7 @@ public class ManifestsManager {
 
     private SOSFile backupManifest(Manifest manifest) throws ManifestManagerException {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
-        SOSFile backupManifest = getManifest(manifestGUID);
+        SOSFile backupManifest = getManifestFile(manifestGUID);
         try {
             FileHelper.copyToFile(new URILocation(backupManifest.getPathname()).getSource(),
                     backupManifest + BACKUP_EXTENSION);
@@ -244,10 +218,8 @@ public class ManifestsManager {
     }
 
     private void saveToFile(Manifest manifest) throws ManifestManagerException {
-        JsonObject manifestJSON = manifest.toJSON();
-
-        String guid = getGUIDForManifestFilename(manifest);
-        SOSFile manifestFile = getManifest(guid);
+        IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
+        SOSFile manifestFile = getManifestFile(manifestGUID.toString());
 
         // if filepath doesn't exists, then create it
         SOSDirectory parent = manifestFile.getParent();
@@ -258,28 +230,13 @@ public class ManifestsManager {
         if (manifestFile.exists())
             return;
 
-        writeToFile(manifestFile.toFile(), manifestJSON);
+        writeToFile(manifestFile.toFile(), manifest);
     }
 
-    private String getGUIDForManifestFilename(Manifest manifest) {
-        JsonObject manifestJSON = manifest.toJSON();
-
-        String guid;
-        String type = manifest.getManifestType();
-        if (type.equals(ManifestConstants.VERSION)) {
-            guid = manifestJSON.get(ManifestConstants.KEY_VERSION).getAsString();
-        } else {
-            guid = manifestJSON.get(ManifestConstants.KEY_CONTENT_GUID).getAsString();
-        }
-        return guid;
-    }
-
-    private void writeToFile(File file, JsonObject manifest) throws ManifestManagerException {
+    private void writeToFile(File file, Manifest manifest) throws ManifestManagerException {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            Gson gson = new Gson();
-            String json = gson.toJson(manifest);
-            bufferedWriter.write(json);
+            bufferedWriter.write(manifest.toString());
         } catch (Exception e) {
             throw new ManifestManagerException("Manifest could not be written to file");
         } finally {
@@ -295,11 +252,11 @@ public class ManifestsManager {
         }
     }
 
-    private SOSFile getManifest(IGUID guid) throws ManifestManagerException {
-        return getManifest(guid.toString());
+    private SOSFile getManifestFile(IGUID guid) throws ManifestManagerException {
+        return getManifestFile(guid.toString());
     }
 
-    private SOSFile getManifest(String guid) throws ManifestManagerException {
+    private SOSFile getManifestFile(String guid) throws ManifestManagerException {
         try {
             return Configuration.getInstance().getManifestsDirectory().addSOSFile(normaliseGUID(guid));
         } catch (ConfigurationException e) {
@@ -320,7 +277,7 @@ public class ManifestsManager {
     }
 
     private boolean manifestExistsInLocalStorage(IGUID guid) throws ManifestManagerException {
-        SOSFile path = getManifest(guid);
+        SOSFile path = getManifestFile(guid);
         return path.exists();
     }
 

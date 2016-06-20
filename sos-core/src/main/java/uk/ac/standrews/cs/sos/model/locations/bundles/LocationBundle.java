@@ -1,15 +1,20 @@
 package uk.ac.standrews.cs.sos.model.locations.bundles;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.json.LocationBundleDeserializer;
+import uk.ac.standrews.cs.sos.json.LocationBundleSerializer;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.util.Objects;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = LocationBundleSerializer.class)
+@JsonDeserialize(using = LocationBundleDeserializer.class)
 public abstract class LocationBundle {
 
     // i.e. cache, prov, chunks, etc.
@@ -33,17 +38,13 @@ public abstract class LocationBundle {
 
     @Override
     public String toString() {
-        Gson gson = new Gson();
-        JsonObject obj = toJSON();
-        return gson.toJson(obj);
-    }
+        try {
+            return Helper.JsonObjMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
-    public JsonObject toJSON() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty(ManifestConstants.BUNDLE_TYPE, type);
-        obj.addProperty(ManifestConstants.BUNDLE_LOCATION, location.toString());
-
-        return obj;
+        return null;
     }
 
     @Override

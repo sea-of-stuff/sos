@@ -37,7 +37,7 @@ public class SOSAddVersionTest extends ClientTest {
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class SOSAddVersionTest extends ClientTest {
         Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<IGUID> retrievedPrevs = ((VersionManifest) retrievedManifest).getPreviousManifests();
         assertTrue(retrievedPrevs.containsAll(prevs));
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), false);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
     @Test

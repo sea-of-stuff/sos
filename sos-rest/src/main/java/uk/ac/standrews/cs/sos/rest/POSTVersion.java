@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -10,9 +8,11 @@ import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.json.CommonJson;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.node.ROLE;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -20,7 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -32,39 +32,26 @@ public class POSTVersion {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addVersion(String json) throws GUIDGenerationException, SOSException {
+    public Response addVersion(String json) throws GUIDGenerationException, SOSException, IOException {
 
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+        JsonNode tree = Helper.JsonObjMapper().readTree(json);
 
         IGUID invariant = null;
+        if (tree.has(ManifestConstants.KEY_INVARIANT)) {
+            invariant = GUIDFactory.recreateGUID(tree.get(ManifestConstants.KEY_INVARIANT).textValue());
+        }
+
         IGUID content = null;
-
-        if (jsonObject.has(ManifestConstants.KEY_INVARIANT)) {
-            invariant = GUIDFactory.recreateGUID(jsonObject.get(ManifestConstants.KEY_INVARIANT).getAsString());
+        if (tree.has(ManifestConstants.KEY_CONTENT_GUID)) {
+            content = GUIDFactory.recreateGUID(tree.get(ManifestConstants.KEY_CONTENT_GUID).textValue());
         }
 
-        if (jsonObject.has(ManifestConstants.KEY_CONTENT_GUID)) {
-            content = GUIDFactory.recreateGUID(jsonObject.get(ManifestConstants.KEY_CONTENT_GUID).getAsString());
-        }
+        Collection<IGUID> prevs = CommonJson.GetGUIDCollection(tree, ManifestConstants.KEY_PREVIOUS_GUID);
+        Collection<IGUID> metadata = CommonJson.GetGUIDCollection(tree, ManifestConstants.KEY_METADATA_GUID);
 
-        JsonArray jsonPrevsArray = jsonObject.getAsJsonArray(ManifestConstants.KEY_PREVIOUS_GUID);
-        Collection<IGUID> prevs = new ArrayList<>();
-        for (int i = 0; i < jsonPrevsArray.size(); i++) {
-            IGUID guid = GUIDFactory.recreateGUID(jsonPrevsArray.get(i).getAsString());
-            prevs.add(guid);
-        }
-
-        JsonArray jsonMetaArray = jsonObject.getAsJsonArray(ManifestConstants.KEY_METADATA_GUID);
-        Collection<IGUID> metadata = new ArrayList<>();
-        for (int i = 0; i < jsonMetaArray.size(); i++) {
-            IGUID guid = GUIDFactory.recreateGUID(jsonMetaArray.get(i).getAsString());
-            metadata.add(guid);
-        }
-
-        Compound manifest = null;
+        Version version;
         try {
-            ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addVersion(content, invariant, prevs, metadata);
+            version = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addVersion(content, invariant, prevs, metadata);
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -73,8 +60,9 @@ public class POSTVersion {
 
         return Response
                 .status(Response.Status.ACCEPTED)
-                .entity(manifest.toJSON().toString())
+                .entity(version.toString())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }
+
 }

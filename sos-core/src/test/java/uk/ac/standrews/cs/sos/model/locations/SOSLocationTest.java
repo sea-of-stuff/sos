@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.DeletePath(configuration.getDataDirectory());
+        HelperTest.DeletePath(configuration.getDataDirectory());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @Test
     public void testGetSource() throws Exception {
-        Helper.createDummyDataFile(Configuration.getInstance().getDataDirectory(), "0000000000000000000000000000000000000abc");
+        HelperTest.createDummyDataFile(Configuration.getInstance().getDataDirectory(), "0000000000000000000000000000000000000abc");
 
         Node node = configuration.getNode();
         SOSLocation location = new SOSLocation(node.getNodeGUID(), GUIDFactory.recreateGUID("abc"));

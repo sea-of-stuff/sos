@@ -1,6 +1,9 @@
-package uk.ac.standrews.cs.sos.deserializers;
+package uk.ac.standrews.cs.sos.json;
 
-import com.google.gson.*;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
@@ -10,22 +13,29 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocationBundleDeserializer implements JsonDeserializer<LocationBundle> {
+public class LocationBundleDeserializer extends JsonDeserializer<LocationBundle> {
 
     @Override
-    public LocationBundle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject obj = json.getAsJsonObject();
+    public LocationBundle deserialize(JsonParser jsonParser,
+                                      DeserializationContext deserializationContext)
+            throws IOException {
 
-        String type = obj.get(ManifestConstants.BUNDLE_TYPE).getAsString();
-        String uri = obj.get(ManifestConstants.BUNDLE_LOCATION).getAsString();
+        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
+        String type = node.get(ManifestConstants.BUNDLE_TYPE).textValue();
+        String uri = node.get(ManifestConstants.BUNDLE_LOCATION).textValue();
+
+        return makeLocationBundle(type, uri);
+    }
+
+    private LocationBundle makeLocationBundle(String type, String uri) throws IOException {
         Location location;
         try {
             if (uri.startsWith("sos")) {
@@ -34,7 +44,7 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
                 location = new URILocation(uri);
             }
         } catch (URISyntaxException | MalformedURLException e) {
-            throw new JsonParseException(e);
+            throw new IOException(e);
         }
 
         LocationBundle ret;
@@ -46,9 +56,10 @@ public class LocationBundleDeserializer implements JsonDeserializer<LocationBund
                 ret = new ProvenanceLocationBundle(location);
                 break;
             default:
-                throw new JsonParseException("Unknown location bundle type exception");
+                throw new IOException("Unknown location bundle type exception");
         }
 
         return ret;
     }
+
 }

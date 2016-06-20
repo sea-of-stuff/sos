@@ -33,13 +33,13 @@ public class SOSAddCompoundTest extends ClientTest {
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestConstants.COMPOUND, retrievedManifest.getManifestType());
+        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.COMPOUND);
 
         Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
         Iterator<Content> iterator = retrievedContents.iterator();
         assertEquals(cat, iterator.next());
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class SOSAddCompoundTest extends ClientTest {
         Iterator<Content> iterator = retrievedContents.iterator();
         assertEquals(cat, iterator.next());
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }
 
     @Test

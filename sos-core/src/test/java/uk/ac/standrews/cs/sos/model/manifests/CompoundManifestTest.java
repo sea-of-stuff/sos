@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.utils.StreamsUtils;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class CompoundManifestTest extends SetUpTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ContentGUID\":\"5ddcc2228d3d80966b29f709774c2d5ee15a99a0\"," +
+                    "\"ContentGUID\":\"c3150d68468db3b6fbf7ef2e6486ec188e368248\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
@@ -39,7 +39,7 @@ public class CompoundManifestTest extends SetUpTest {
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ContentGUID\":\"97d170e1550eee4afc0af065b78cda302a97674c\"," +
+                    "\"ContentGUID\":\"32096c2e0eff33d844ee6d675407ace18289357d\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
@@ -47,7 +47,7 @@ public class CompoundManifestTest extends SetUpTest {
 
     @Test
     public void testToStringContents() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
@@ -59,12 +59,12 @@ public class CompoundManifestTest extends SetUpTest {
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
-        JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toJSON().toString(), true);
+        JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
     }
 
     @Test
     public void testGetContents() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
@@ -105,12 +105,12 @@ public class CompoundManifestTest extends SetUpTest {
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
-        JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toJSON().toString(), true);
+        JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
     }
 
     @Test
     public void testIsValidManifest() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
@@ -139,7 +139,7 @@ public class CompoundManifestTest extends SetUpTest {
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testIsNoCompoundTypeNotValidManifest() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);

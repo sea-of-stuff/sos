@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -8,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.node.ROLE;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,8 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import static uk.ac.standrews.cs.sos.ServerState.gson;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -40,11 +40,11 @@ public class Roles {
 
     private Response getThisNodeRoles() {
         ROLE[] roles = ServerState.sos.getRoles();
-        String jsonRoles = gson.toJson(roles);
+        String json = rolesToJsonArray(roles);
 
         return Response
                 .status(Response.Status.ACCEPTED)
-                .entity(jsonRoles)
+                .entity(json)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }
@@ -54,17 +54,27 @@ public class Roles {
         Node node = sos.getNode(guid);
 
         if (node != null) {
-            String jsonRoles = gson.toJson(node.getRoles());
+            ROLE[] roles = node.getRoles();
+            String json = rolesToJsonArray(roles);
 
             return Response
                     .status(Response.Status.ACCEPTED)
-                    .entity(jsonRoles)
+                    .entity(json)
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .build();
 
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    private String rolesToJsonArray(ROLE[] roles) {
+        ArrayNode node = Helper.JsonObjMapper().createArrayNode();
+        for(ROLE role:roles) {
+            node.add(role.toString());
+        }
+
+        return node.toString();
     }
 
 }

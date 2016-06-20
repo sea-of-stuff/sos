@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,11 +24,11 @@ public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
 
-        Location otherLocation = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(otherLocation, "another random line");
+        Location otherLocation = HelperTest.createDummyDataFile(configuration, "another-file");
+        HelperTest.appendToFile(otherLocation, "another random line");
         Atom manifestOther = model.addAtom(otherLocation);
 
         Collection<IGUID> manifests = model.findManifestByType("Atom");
@@ -39,11 +39,11 @@ public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
 
-        Location otherLocation = Helper.createDummyDataFile(configuration, "another-file");
-        Helper.appendToFile(otherLocation, "another random line");
+        Location otherLocation = HelperTest.createDummyDataFile(configuration, "another-file");
+        HelperTest.appendToFile(otherLocation, "another random line");
         Atom manifestOther = model.addAtom(otherLocation);
 
         Content cat = new Content("cat", manifest.getContentGUID());

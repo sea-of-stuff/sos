@@ -1,16 +1,17 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.node.ROLE;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -18,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -32,11 +34,10 @@ public class POSTAtom {
     @Path("/location")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomLocations(String json) throws SOSException {
+    public Response addAtomLocations(String json) throws SOSException, IOException {
 
-        JsonParser parser = new JsonParser();
-        JsonObject jsonLocation = parser.parse(json).getAsJsonObject();
-        String uri = jsonLocation.get(ManifestConstants.BUNDLE_LOCATION).getAsString();
+        JsonNode node = Helper.JsonObjMapper().readTree(json);
+        String uri = node.get(ManifestConstants.BUNDLE_LOCATION).textValue();
 
         Location location = null;
         try {
@@ -49,7 +50,7 @@ public class POSTAtom {
             e.printStackTrace();
         }
 
-        uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
+        Atom manifest = null;
         try {
             manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addAtom(location);
         } catch (DataStorageException | ManifestPersistException e) {
@@ -60,7 +61,7 @@ public class POSTAtom {
 
         return Response
                 .status(Response.Status.ACCEPTED)
-                .entity(manifest.toJSON().toString())
+                .entity(manifest.toString())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }
@@ -71,7 +72,7 @@ public class POSTAtom {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final InputStream inputStream) throws SOSException {
 
-        uk.ac.standrews.cs.sos.interfaces.manifests.Atom manifest = null;
+        Atom manifest = null;
         try {
             manifest = ServerState.sos.getSeaOfStuff(ROLE.CLIENT).addAtom(inputStream);
         } catch (DataStorageException | ManifestPersistException e) {
@@ -82,7 +83,7 @@ public class POSTAtom {
 
         return Response
                 .status(Response.Status.ACCEPTED)
-                .entity(manifest.toJSON().toString())
+                .entity(manifest.toString())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .build();
     }

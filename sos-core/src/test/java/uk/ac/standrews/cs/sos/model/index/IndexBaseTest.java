@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ public abstract class IndexBaseTest {
         index.flushDB();
         index.killInstance();
 
-        Helper.DeletePath(Configuration.getInstance().getIndexDirectory());
+        HelperTest.DeletePath(Configuration.getInstance().getIndexDirectory());
     }
 
     @DataProvider(name = "index-manager-provider")

@@ -1,11 +1,12 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.utils.Helper;
 
 import java.sql.Timestamp;
 import java.util.regex.Matcher;
@@ -59,21 +60,6 @@ public abstract class BasicManifest implements Manifest {
     }
 
     /**
-     * Transforms the content of this manifest to a JSON representation.
-     *
-     * @return JSON representation of this manifest.
-     */
-    @Override
-    public JsonObject toJSON() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty(ManifestConstants.KEY_TYPE, manifestType);
-        // TODO - use timestamps for manifests
-        // obj.addProperty(ManifestConstants.KEY_TIMESTAMP, timestamp.getTime());
-
-        return obj;
-    }
-
-    /**
      * Verifies this manifest's GUID against its content.
      *
      * @return true if the GUID of the manifest matches the content.
@@ -109,6 +95,16 @@ public abstract class BasicManifest implements Manifest {
 
     private boolean isManifestTypeValid() {
         return manifestType != null && !manifestType.isEmpty();
+    }
+
+    public String toString() {
+        try {
+            return Helper.JsonObjMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

@@ -9,8 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.utils.Helper;
-import uk.ac.standrews.cs.sos.utils.StreamsUtils;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,14 +28,14 @@ public class DataStorageHelperTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        Helper.DeletePath(configuration.getDataDirectory());
-        Helper.DeletePath(configuration.getDatabaseDump().getParent());
-        Helper.DeletePath(configuration.getTestDataDirectory());
+        HelperTest.DeletePath(configuration.getDataDirectory());
+        HelperTest.DeletePath(configuration.getDatabaseDump().getParent());
+        HelperTest.DeletePath(configuration.getTestDataDirectory());
     }
 
     @Test
     public void testStoreAtomNullBundles() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = null;
 
         IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
@@ -46,7 +45,7 @@ public class DataStorageHelperTest extends SetUpTest {
 
     @Test
     public void testStoreAtomNullBundlesStream() throws Exception {
-        InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
+        InputStream inputStream = HelperTest.StringToInputStream("Test-String");
         Collection<LocationBundle> bundles = null;
 
         IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
@@ -56,7 +55,7 @@ public class DataStorageHelperTest extends SetUpTest {
 
     @Test
     public void testStoreAtom() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
@@ -88,7 +87,7 @@ public class DataStorageHelperTest extends SetUpTest {
     @Test
     public void testStoreAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
+        InputStream inputStream = HelperTest.StringToInputStream("Test-String");
         IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
@@ -104,7 +103,7 @@ public class DataStorageHelperTest extends SetUpTest {
     @Test
     public void testStoreAtomFromEmptyStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        InputStream inputStream = StreamsUtils.StringToInputStream("");
+        InputStream inputStream = HelperTest.StringToInputStream("");
         IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
@@ -113,13 +112,13 @@ public class DataStorageHelperTest extends SetUpTest {
     @Test
     public void testStoreAtomFromTwoEqualStreams() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
+        InputStream inputStream = HelperTest.StringToInputStream("Test-String");
         IGUID guid = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 
         Collection<LocationBundle> newBundles = new ArrayList<>();
-        InputStream twinInputStream = StreamsUtils.StringToInputStream("Test-String");
+        InputStream twinInputStream = HelperTest.StringToInputStream("Test-String");
         IGUID newGUID = DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, twinInputStream, newBundles);
         assertNotNull(guid);
         assertEquals(newGUID, guid);
@@ -128,7 +127,7 @@ public class DataStorageHelperTest extends SetUpTest {
 
     @Test
     public void testStorePersistAtom() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles);
@@ -142,7 +141,7 @@ public class DataStorageHelperTest extends SetUpTest {
     @Test
     public void testStorePersistAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        InputStream inputStream = StreamsUtils.StringToInputStream("Test-String");
+        InputStream inputStream = HelperTest.StringToInputStream("Test-String");
         IGUID guid = DataStorageHelper.persistAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);

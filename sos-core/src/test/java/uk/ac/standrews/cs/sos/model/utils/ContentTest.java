@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.impl.KeyImpl;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.utils.StreamsUtils;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
 
@@ -47,7 +47,7 @@ public class ContentTest extends SetUpTest {
 
     @Test
     public void testToStringGUID() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content(guid);
@@ -57,7 +57,7 @@ public class ContentTest extends SetUpTest {
 
     @Test
     public void testToStringWithLabel() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content("cat", guid);
@@ -67,7 +67,7 @@ public class ContentTest extends SetUpTest {
 
     @Test
     public void testToStringWithEmptyLabel() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content("", guid);
@@ -77,7 +77,7 @@ public class ContentTest extends SetUpTest {
 
     @Test
     public void testToStringWithNullLabel() throws Exception {
-        InputStream inputStreamFake = StreamsUtils.StringToInputStream(Hashes.TEST_STRING);
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content content = new Content(null, guid);

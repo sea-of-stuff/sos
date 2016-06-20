@@ -66,7 +66,7 @@ public class sos_cli_find {
                 String guidS = line.getOptionValue(GUID);
                 GUID guid = new GUIDsha1(guidS);
                 Manifest manifest = sos_cli.seaOfStuff.getManifest(guid);
-                System.out.print(manifest.toJSON());
+                System.out.print(manifest.toString());
             } else if (line.hasOption(TYPE)) {
                 String type = line.getOptionValue(TYPE);
                 Collection<GUID> guids = sos_cli.seaOfStuff.findManifestByType(type);

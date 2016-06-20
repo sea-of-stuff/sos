@@ -11,11 +11,17 @@ import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Helper {
+public class HelperTest {
+
+    public static InputStream StringToInputStream(String input) throws UnsupportedEncodingException {
+        InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+        return stream;
+    }
 
     private static String localURItoPath(Location location) throws URISyntaxException {
         return location.getURI().getPath();
@@ -50,7 +56,7 @@ public class Helper {
 
         try (PrintWriter writer = new PrintWriter(
                 new FileOutputStream(
-                new File(Helper.localURItoPath(location)), true))) {
+                new File(HelperTest.localURItoPath(location)), true))) {
             writer.append(text);
         }
     }

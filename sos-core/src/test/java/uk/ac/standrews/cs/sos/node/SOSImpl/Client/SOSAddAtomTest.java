@@ -13,8 +13,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.utils.Helper;
-import uk.ac.standrews.cs.sos.utils.StreamsUtils;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -30,7 +29,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAddAtom() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -39,12 +38,12 @@ public class SOSAddAtomTest extends ClientTest {
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         assertEquals(retrievedLocations.size(), 2);
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }
 
     @Test
     public void testRetrieveAtomFromFile() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -56,12 +55,12 @@ public class SOSAddAtomTest extends ClientTest {
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         assertEquals(retrievedLocations.size(), 2);
 
-        JSONAssert.assertEquals(manifest.toJSON().toString(), retrievedManifest.toJSON().toString(), true);
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -73,7 +72,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerify() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -83,7 +82,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerifyFails() throws Exception {
-        Location location = Helper.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile(configuration);
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -91,7 +90,7 @@ public class SOSAddAtomTest extends ClientTest {
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         LocationBundle cachedLocation = retrievedLocations.iterator().next();
 
-        Helper.appendToFile(cachedLocation.getLocation(), "Data has changed");
+        HelperTest.appendToFile(cachedLocation.getLocation(), "Data has changed");
         assertFalse(retrievedManifest.verify(null));
     }
 
@@ -172,13 +171,13 @@ public class SOSAddAtomTest extends ClientTest {
     @Test
     public void testAddAtomFromStream() throws Exception {
         String testString = "first line and second line";
-        InputStream stream = StreamsUtils.StringToInputStream(testString);
+        InputStream stream = HelperTest.StringToInputStream(testString);
         Atom manifest = model.addAtom(stream);
         assertNotNull(manifest.getContentGUID());
         assertEquals(manifest.getLocations().size(), 1);
 
         InputStream resultStream = model.getAtomContent(manifest);
-        String resultString = Helper.InputStreamToString(resultStream);
+        String resultString = HelperTest.InputStreamToString(resultStream);
         assertEquals(testString, resultString);
     }
 

@@ -1,13 +1,15 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
+import uk.ac.standrews.cs.sos.json.AtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 
@@ -27,6 +29,8 @@ import java.util.Objects;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = AtomManifestSerializer.class)
+@JsonDeserialize(using = AtomManifestDeserializer.class)
 public class AtomManifest extends BasicManifest implements Atom {
 
     final private Collection<LocationBundle> locations;
@@ -51,21 +55,6 @@ public class AtomManifest extends BasicManifest implements Atom {
     @Override
     public Collection<LocationBundle> getLocations() {
         return locations;
-    }
-
-    @Override
-    public JsonObject toJSON() {
-        JsonObject obj = super.toJSON();
-
-        JsonArray array = new JsonArray();
-        Collection<LocationBundle> locations = getLocations();
-        for(LocationBundle location:locations)
-            array.add(location.toJSON());
-
-        obj.add(ManifestConstants.KEY_LOCATIONS, array);
-        obj.addProperty(ManifestConstants.KEY_CONTENT_GUID, getContentGUID().toString());
-
-        return obj;
     }
 
     @Override
