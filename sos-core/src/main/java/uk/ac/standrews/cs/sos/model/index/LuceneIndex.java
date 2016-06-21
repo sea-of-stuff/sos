@@ -146,14 +146,7 @@ public class LuceneIndex extends CommonIndex {
         Collection<IGUID> retval = new ArrayList<>();
         try {
             Term term = new Term(LuceneKeys.HANDLE_GUID, invariant.toString());
-            Query query = new TermQuery(term);
-            TopDocs topDocs = indexSearcher.search(query, results);
-            ScoreDoc[] hits = topDocs.scoreDocs;
-            for (int i = skip; i < hits.length; i++) {
-                Document doc = indexSearcher.doc(hits[i].doc);
-                String guid = doc.get(LuceneKeys.HANDLE_VERSION);
-                retval.add(GUIDFactory.recreateGUID(guid));
-            }
+            findOccurrencesOfTerm(retval, term, LuceneKeys.HANDLE_VERSION, results, skip);
         } catch (IOException | GUIDGenerationException e) {
             throw new IndexException(e);
         }
@@ -161,6 +154,8 @@ public class LuceneIndex extends CommonIndex {
         releaseIndexSearcher();
         return retval;
     }
+
+
 
     @Override
     public Collection<IGUID> getMetaLabelMatches(String value, int results, int skip) throws IndexException {
@@ -199,19 +194,23 @@ public class LuceneIndex extends CommonIndex {
 
         Collection<IGUID> retval = new HashSet<>();
         try {
-            Query query = new TermQuery(term);
-            TopDocs topDocs = indexSearcher.search(query, results);
-            ScoreDoc[] hits = topDocs.scoreDocs;
-            for (int i = skip; i < hits.length; i++) {
-                Document doc = indexSearcher.doc(hits[i].doc);
-                String guid = doc.get(LuceneKeys.HANDLE_GUID);
-                retval.add(GUIDFactory.recreateGUID(guid));
-            }
+            findOccurrencesOfTerm(retval, term, LuceneKeys.HANDLE_GUID, results, skip);
         } catch (IOException | GUIDGenerationException e) {
             throw new IndexException(e);
         }
 
         return retval;
+    }
+
+    private void findOccurrencesOfTerm(Collection<IGUID> collection, Term term, String luceneKey, int results, int skip) throws IOException, GUIDGenerationException {
+        Query query = new TermQuery(term);
+        TopDocs topDocs = indexSearcher.search(query, results);
+        ScoreDoc[] hits = topDocs.scoreDocs;
+        for (int i = skip; i < hits.length; i++) {
+            Document doc = indexSearcher.doc(hits[i].doc);
+            String guid = doc.get(luceneKey);
+            collection.add(GUIDFactory.recreateGUID(guid));
+        }
     }
 
     private void indexAtomManifest(AtomManifest manifest) throws IndexException {

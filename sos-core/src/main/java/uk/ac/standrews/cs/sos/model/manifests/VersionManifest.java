@@ -173,15 +173,21 @@ public class VersionManifest extends SignedManifest implements Version {
                 "I" + getInvariantGUID() +
                 "C" + getContentGUID();
 
-        if (prevs != null && !prevs.isEmpty()) {
-            toHash += "P"  + getCollectionToHashOrSign(prevs);
-        }
-
-        if (metadata != null && !metadata.isEmpty()) {
-            toHash += "M"  + getCollectionToHashOrSign(metadata);
-        }
+        toHash += getPreviousToHashOrSign();
+        toHash += getMetadataToHashOrSign();
 
         return toHash;
+    }
+
+    @Override
+    protected String getManifestToSign() {
+        String toSign = getManifestType() +
+                "C" + getContentGUID();
+
+        toSign += getPreviousToHashOrSign();
+        toSign += getMetadataToHashOrSign();
+
+        return toSign;
     }
 
     private IGUID makeInvariant() {
@@ -192,20 +198,20 @@ public class VersionManifest extends SignedManifest implements Version {
         return GUIDFactory.generateGUID(manifestToHash());
     }
 
-    @Override
-    protected String getManifestToSign() {
-        String toSign = getManifestType() +
-                "C" + getContentGUID();
-
+    private String getPreviousToHashOrSign() {
+        String retval = "";
         if (prevs != null && !prevs.isEmpty()) {
-            toSign += "P"  + getCollectionToHashOrSign(prevs);
+            retval = "P"  + getCollectionToHashOrSign(prevs);
         }
+        return retval;
+    }
 
+    private String getMetadataToHashOrSign() {
+        String retval = "";
         if (metadata != null && !metadata.isEmpty()) {
-            toSign += "M"  + getCollectionToHashOrSign(metadata);
+            retval = "M"  + getCollectionToHashOrSign(metadata);
         }
-
-        return toSign;
+        return retval;
     }
 
     private String getCollectionToHashOrSign(Collection<?> collection) {
