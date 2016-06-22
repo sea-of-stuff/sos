@@ -13,6 +13,8 @@ import java.net.URLStreamHandlerFactory;
  */
 public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
+    private final static String SOS_PROTOCOL_SCHEME = "sos";
+
     public static boolean URLStreamHandlerFactoryIsSet = false;
 
     private NodeManager nodeManager;
@@ -29,7 +31,7 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        if ("sos".equals(protocol)) {
+        if (protocol.equals(SOS_PROTOCOL_SCHEME)) {
             return new SOSURLStreamHandler(nodeManager);
         }
 

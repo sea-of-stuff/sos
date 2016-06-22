@@ -48,15 +48,12 @@ public class LocationBundleDeserializer extends JsonDeserializer<LocationBundle>
         }
 
         LocationBundle ret;
-        switch(type) {
-            case BundleTypes.CACHE:
-                ret = new CacheLocationBundle(location);
-                break;
-            case BundleTypes.PROVENANCE:
-                ret = new ProvenanceLocationBundle(location);
-                break;
-            default:
-                throw new IOException("Unknown location bundle type exception");
+        if (type.equals(BundleTypes.CACHE.toString())) {
+            ret = new CacheLocationBundle(location);
+        } else if (type.equals(BundleTypes.PROVENANCE.toString())) {
+            ret = new ProvenanceLocationBundle(location);
+        } else {
+            throw new IOException("Unknown location bundle type exception");
         }
 
         return ret;

@@ -20,7 +20,7 @@ public class LocationBundleSerializer extends JsonSerializer<LocationBundle> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.BUNDLE_TYPE, locationBundle.getType());
+        jsonGenerator.writeStringField(ManifestConstants.BUNDLE_TYPE, locationBundle.getType().toString());
         jsonGenerator.writeStringField(ManifestConstants.BUNDLE_LOCATION, locationBundle.getLocation().toString());
 
         jsonGenerator.writeEndObject();

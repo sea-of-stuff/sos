@@ -5,10 +5,6 @@ package uk.ac.standrews.cs.sos.exceptions;
  */
 public class NodeManagerException extends Exception {
 
-    public NodeManagerException() {
-        super();
-    }
-
     public NodeManagerException(Throwable throwable) {
         super(throwable);
     }

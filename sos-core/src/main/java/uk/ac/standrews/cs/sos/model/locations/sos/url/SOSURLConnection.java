@@ -62,7 +62,7 @@ public class SOSURLConnection extends URLConnection {
                 return contactNode(resourceNode, entityId);
             }
         } catch (ConfigurationException | GUIDGenerationException e) {
-            throw new IOException(); // FIXME - this try/catch is a bit dirty.
+            throw new IOException(e);
         }
 
         /*

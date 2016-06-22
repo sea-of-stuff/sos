@@ -18,17 +18,17 @@ import java.util.Objects;
 public abstract class LocationBundle {
 
     // i.e. cache, prov, chunks, etc.
-    final private String type;
+    final private BundleType type;
 
     // i.e. http://abc.com/123, sos://af318/492jv, etc.
     final private Location location;
 
-    protected LocationBundle(String type, Location location) {
+    protected LocationBundle(BundleType type, Location location) {
         this.type = type;
         this.location = location;
     }
 
-    public String getType() {
+    public BundleType getType() {
         return type;
     }
 

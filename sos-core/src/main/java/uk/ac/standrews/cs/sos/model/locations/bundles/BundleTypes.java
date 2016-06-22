@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.sos.model.locations.bundles;
  */
 public class BundleTypes {
 
-    public static final String CACHE = "cache";
-    public static final String PROVENANCE = "prov";
-    public static final String PERSISTENT = "persistent";
+    public static final BundleType CACHE = new BundleType("cache");
+    public static final BundleType PROVENANCE = new BundleType("prov");
+    public static final BundleType PERSISTENT = new BundleType("persistent");
 }

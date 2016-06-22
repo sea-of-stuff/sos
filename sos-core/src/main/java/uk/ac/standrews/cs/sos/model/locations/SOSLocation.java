@@ -12,7 +12,7 @@ import java.util.Objects;
 
 /**
  * sos://machine-id/object-GUID
- * sos://machine-id/object-GUID/part
+ * TODO - sos://machine-id/object-GUID/part
  *
  * How to register custom schemes in Java
  * http://stackoverflow.com/questions/26363573/registering-and-using-a-custom-java-net-url-protocol
@@ -60,7 +60,8 @@ public class SOSLocation implements Location {
 
     @Override
     public String toString() {
-        return SOS_SCHEME + SCHEME_DIVIDER + machineID.toString() + "/" + entity.toString();
+        return SOS_SCHEME + SCHEME_DIVIDER +
+                machineID.toString() + "/" + entity.toString();
     }
 
     @Override

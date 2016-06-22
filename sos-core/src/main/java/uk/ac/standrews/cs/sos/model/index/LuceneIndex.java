@@ -128,7 +128,7 @@ public class LuceneIndex extends CommonIndex {
     public Collection<IGUID> getManifestsOfType(String type, int results, int skip) throws IndexException {
         updateIndexSearcher();
 
-        Term term = new Term(LuceneKeys.HANDLE_TYPE, type);
+        Term term = new Term(LuceneKeys.HANDLE_TYPE.toString(), type);
         Collection<IGUID> retval = getGUIDsFromSearch(term, results, skip);
 
         releaseIndexSearcher();
@@ -145,7 +145,7 @@ public class LuceneIndex extends CommonIndex {
 
         Collection<IGUID> retval = new ArrayList<>();
         try {
-            Term term = new Term(LuceneKeys.HANDLE_GUID, invariant.toString());
+            Term term = new Term(LuceneKeys.HANDLE_GUID.toString(), invariant.toString());
             findOccurrencesOfTerm(retval, term, LuceneKeys.HANDLE_VERSION, results, skip);
         } catch (IOException | GUIDGenerationException e) {
             throw new IndexException(e);
@@ -161,7 +161,7 @@ public class LuceneIndex extends CommonIndex {
     public Collection<IGUID> getMetaLabelMatches(String value, int results, int skip) throws IndexException {
         updateIndexSearcher();
 
-        Term term = new Term(LuceneKeys.HANDLE_LABEL, value);
+        Term term = new Term(LuceneKeys.HANDLE_LABEL.toString(), value);
         Collection<IGUID> retval = getGUIDsFromSearch(term, results, skip);
 
         releaseIndexSearcher();
@@ -202,13 +202,13 @@ public class LuceneIndex extends CommonIndex {
         return retval;
     }
 
-    private void findOccurrencesOfTerm(Collection<IGUID> collection, Term term, String luceneKey, int results, int skip) throws IOException, GUIDGenerationException {
+    private void findOccurrencesOfTerm(Collection<IGUID> collection, Term term, LuceneKey luceneKey, int results, int skip) throws IOException, GUIDGenerationException {
         Query query = new TermQuery(term);
         TopDocs topDocs = indexSearcher.search(query, results);
         ScoreDoc[] hits = topDocs.scoreDocs;
         for (int i = skip; i < hits.length; i++) {
             Document doc = indexSearcher.doc(hits[i].doc);
-            String guid = doc.get(luceneKey);
+            String guid = doc.get(luceneKey.toString());
             collection.add(GUIDFactory.recreateGUID(guid));
         }
     }
@@ -218,8 +218,8 @@ public class LuceneIndex extends CommonIndex {
 
         IGUID guid = manifest.getContentGUID();
         String type = manifest.getManifestType();
-        doc.add(new StringField(LuceneKeys.HANDLE_GUID, guid.toString(), Field.Store.YES));
-        doc.add(new StringField(LuceneKeys.HANDLE_TYPE, type, Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_GUID.toString(), guid.toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_TYPE.toString(), type, Field.Store.YES));
 
         try {
             indexWriter.addDocument(doc);
@@ -233,8 +233,8 @@ public class LuceneIndex extends CommonIndex {
         Document doc = new Document();
         IGUID guid = manifest.getContentGUID();
         String type = manifest.getManifestType();
-        doc.add(new StringField(LuceneKeys.HANDLE_GUID, guid.toString(), Field.Store.YES));
-        doc.add(new StringField(LuceneKeys.HANDLE_TYPE, type, Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_GUID.toString(), guid.toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_TYPE.toString(), type, Field.Store.YES));
 
         Collection<Content> contents = manifest.getContents();
         for (Content content : contents) {
@@ -257,9 +257,9 @@ public class LuceneIndex extends CommonIndex {
         String type = manifest.getManifestType();
         IGUID invariant = manifest.getInvariantGUID();
 
-        doc.add(new StringField(LuceneKeys.HANDLE_VERSION, version.toString(), Field.Store.YES));
-        doc.add(new StringField(LuceneKeys.HANDLE_TYPE, type, Field.Store.YES));
-        doc.add(new StringField(LuceneKeys.HANDLE_GUID, invariant.toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_VERSION.toString(), version.toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_TYPE.toString(), type, Field.Store.YES));
+        doc.add(new StringField(LuceneKeys.HANDLE_GUID.toString(), invariant.toString(), Field.Store.YES));
 
         indexWriter.addDocument(doc);
         indexWriter.commit();
@@ -267,8 +267,8 @@ public class LuceneIndex extends CommonIndex {
 
     private void indexContent(Content content) throws IndexException {
         Document contentDoc = new Document();
-        contentDoc.add(new StringField(LuceneKeys.HANDLE_GUID, content.getGUID().toString(), Field.Store.YES));
-        contentDoc.add(new StringField(LuceneKeys.HANDLE_LABEL, content.getLabel(), Field.Store.YES));
+        contentDoc.add(new StringField(LuceneKeys.HANDLE_GUID.toString(), content.getGUID().toString(), Field.Store.YES));
+        contentDoc.add(new StringField(LuceneKeys.HANDLE_LABEL.toString(), content.getLabel(), Field.Store.YES));
         try {
             indexWriter.addDocument(contentDoc);
         } catch (IOException e) {
@@ -276,13 +276,13 @@ public class LuceneIndex extends CommonIndex {
         }
     }
 
-    private boolean guidExists(IGUID guid, String key) throws IndexException {
+    private boolean guidExists(IGUID guid, LuceneKey luceneKey) throws IndexException {
         updateIndexSearcher();
 
         // http://stackoverflow.com/questions/30810879/how-to-check-if-document-exists-in-lucene-index
         TopDocs results;
         try {
-            results = indexSearcher.search(new TermQuery(new Term(key, guid.toString())), 1);
+            results = indexSearcher.search(new TermQuery(new Term(luceneKey.toString(), guid.toString())), 1);
         } catch (IOException e) {
             throw new IndexException(e);
         }
@@ -299,8 +299,8 @@ public class LuceneIndex extends CommonIndex {
         String label = content.getLabel();
 
         BooleanQuery matchingQuery = new BooleanQuery();
-        matchingQuery.add(new TermQuery(new Term(LuceneKeys.HANDLE_GUID, contentGUID.toString())), BooleanClause.Occur.MUST);
-        matchingQuery.add(new TermQuery(new Term(LuceneKeys.HANDLE_LABEL, label)), BooleanClause.Occur.MUST);
+        matchingQuery.add(new TermQuery(new Term(LuceneKeys.HANDLE_GUID.toString(), contentGUID.toString())), BooleanClause.Occur.MUST);
+        matchingQuery.add(new TermQuery(new Term(LuceneKeys.HANDLE_LABEL.toString(), label)), BooleanClause.Occur.MUST);
         TopDocs results;
         try {
             results = indexSearcher.search(matchingQuery, 1);
