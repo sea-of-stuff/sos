@@ -10,11 +10,7 @@ public class ServletContext implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        System.out.println("INIT CONTEXT");
-
-        System.out.println("Starting SOS");
-        ServerState.startSOS();
-        System.out.println("SOS started");
+       ServerState.init();
     }
 
     @Override

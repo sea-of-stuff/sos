@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos;
 
 
+import uk.ac.standrews.cs.sos.rest.Hello;
 import uk.ac.standrews.cs.sos.rest.Roles;
 
 import javax.ws.rs.ApplicationPath;
