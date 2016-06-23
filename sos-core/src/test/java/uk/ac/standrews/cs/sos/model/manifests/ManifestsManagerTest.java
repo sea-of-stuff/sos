@@ -26,10 +26,12 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
@@ -106,6 +108,22 @@ public class ManifestsManagerTest {
         } catch (ManifestPersistException e) {
             throw new Exception();
         }
+    }
+
+    @Test (expectedExceptions = ManifestNotMadeException.class)
+    public void testNoCompoundTypeYieldsNotValidManifest() throws Exception {
+        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
+        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+
+        Content cat = new Content("cat", guid);
+        Collection<Content> contents = new ArrayList<>();
+        contents.add(cat);
+
+        Identity identityMocked = mock(Identity.class);
+        byte[] fakedSignature = new byte[]{0, 0, 1};
+        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+
+        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, identityMocked);
     }
 
     @Test

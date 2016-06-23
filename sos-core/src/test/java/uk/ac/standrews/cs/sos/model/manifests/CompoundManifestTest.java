@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
@@ -137,18 +136,4 @@ public class CompoundManifestTest extends SetUpTest {
         assertTrue(compoundManifest.isValid());
     }
 
-    @Test (expectedExceptions = ManifestNotMadeException.class)
-    public void testIsNoCompoundTypeNotValidManifest() throws Exception {
-        InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
-
-        Content cat = new Content("cat", guid);
-        Collection<Content> contents = new ArrayList<>();
-        contents.add(cat);
-
-        Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
-        CompoundManifest compoundManifest = new CompoundManifest(null, contents, identityMocked);
-    }
 }

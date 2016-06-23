@@ -13,7 +13,7 @@
     <groupId>uk.ac.standrews.cs.sos</groupId>
     <artifactId>rest-app</artifactId>
     <packaging>war</packaging>
-    <name>rest-app Maven Webapp</name>
+    <name>rest-app</name>
     <url>http://maven.apache.org</url>
 
     <properties>

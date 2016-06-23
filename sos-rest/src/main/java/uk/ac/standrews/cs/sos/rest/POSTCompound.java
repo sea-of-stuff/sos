@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -32,12 +32,12 @@ public class POSTCompound {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCompound(String json) throws SOSException, IOException {
 
-        JsonNode tree = Helper.JsonObjMapper().readTree(json);
+        JsonNode tree = JSONHelper.JsonObjMapper().readTree(json);
         assert tree.isArray();
 
         Collection<Content> contents = new ArrayList<>();
         for(final JsonNode node:tree) {
-            Content content = Helper.JsonObjMapper().convertValue(node, Content.class);
+            Content content = JSONHelper.JsonObjMapper().convertValue(node, Content.class);
             contents.add(content);
         }
 

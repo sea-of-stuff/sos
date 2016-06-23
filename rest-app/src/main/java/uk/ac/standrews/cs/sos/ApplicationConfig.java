@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@ApplicationPath("/rest/sos")
+@ApplicationPath("/sos")
 public class ApplicationConfig extends Application {
 
     public Set<Class<?>> getClasses() {

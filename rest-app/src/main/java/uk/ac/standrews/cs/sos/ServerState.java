@@ -9,9 +9,6 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -20,23 +17,9 @@ public class ServerState {
     public static LocalSOSNode sos;
 
     public static void init() {
-        System.out.println("INIT CONTEXT");
-
         System.out.println("Starting SOS");
         ServerState.startSOS();
         System.out.println("SOS started");
-
-        File file = new File("~/test-sos.txt");
-
-        try {
-            if (file.createNewFile()){
-                System.out.println("File is created!");
-            }else{
-                System.out.println("File already exists.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void kill() {

@@ -15,10 +15,12 @@ import java.net.URI;
  */
 
 public class App {
-    // Base URI the Grizzly HTTP server will listen on
-    public static final URI BASE_URI = UriBuilder.fromUri("http://0.0.0.0/sos/")
-            .port(8080)
-            .build();
+
+    public static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/sos/");
+
+    private static final int DEFAULT_SERVER_PORT = 8080;
+    private static int serverPort;
+    private static URI baseUri;
 
     public static HttpServer startServer() throws IOException {
         final ResourceConfig rc = new ResourceConfig()
@@ -26,14 +28,22 @@ public class App {
                 .register(LoggingFilter.class);
 
         ServerState.init();
-        return GrizzlyHttpServerFactory.createHttpServer(BASE_URI, rc);
+
+        baseUri = uriBuilder.port(serverPort).build();
+        return GrizzlyHttpServerFactory.createHttpServer(baseUri, rc);
     }
 
     public static void main(String[] args) throws IOException {
+        if (args.length > 0) {
+            serverPort = Integer.parseInt(args[0]);
+        } else {
+            serverPort = DEFAULT_SERVER_PORT;
+        }
+
         final HttpServer server = startServer();
 
         System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI.toString()));
+                + "%sapplication.wadl\nHit enter to stop it...", baseUri.toString()));
         System.in.read();
 
         server.shutdownNow();

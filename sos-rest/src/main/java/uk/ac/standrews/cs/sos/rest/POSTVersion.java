@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.json.CommonJson;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -34,7 +34,7 @@ public class POSTVersion {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addVersion(String json) throws GUIDGenerationException, SOSException, IOException {
 
-        JsonNode tree = Helper.JsonObjMapper().readTree(json);
+        JsonNode tree = JSONHelper.JsonObjMapper().readTree(json);
 
         IGUID invariant = null;
         if (tree.has(ManifestConstants.KEY_INVARIANT)) {

@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -36,7 +36,7 @@ public class POSTAtom {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomLocations(String json) throws SOSException, IOException {
 
-        JsonNode node = Helper.JsonObjMapper().readTree(json);
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
         String uri = node.get(ManifestConstants.BUNDLE_LOCATION).textValue();
 
         Location location = null;

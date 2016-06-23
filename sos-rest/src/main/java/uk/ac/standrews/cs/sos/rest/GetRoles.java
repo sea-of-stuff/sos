@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -68,7 +68,7 @@ public class GetRoles {
     }
 
     private String rolesToJsonArray(ROLE[] roles) {
-        ArrayNode node = Helper.JsonObjMapper().createArrayNode();
+        ArrayNode node = JSONHelper.JsonObjMapper().createArrayNode();
         for(ROLE role:roles) {
             node.add(role.toString());
         }

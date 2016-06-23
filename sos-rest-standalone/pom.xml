@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sos-rest-standalone</artifactId>
     <packaging>war</packaging>
-    <name>sos-rest-standalone Maven Webapp</name>
+    <name>sos-rest-standalone</name>
     <url>http://maven.apache.org</url>
 
     <properties>
