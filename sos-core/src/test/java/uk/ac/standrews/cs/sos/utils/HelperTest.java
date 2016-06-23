@@ -19,8 +19,7 @@ import java.nio.charset.StandardCharsets;
 public class HelperTest {
 
     public static InputStream StringToInputStream(String input) throws UnsupportedEncodingException {
-        InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-        return stream;
+        return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
     }
 
     private static String localURItoPath(Location location) throws URISyntaxException {

@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.utils;
 
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +24,11 @@ public class FileHelper {
 
     private static Path locationToPath(String path) {
         return new File(path).toPath();
+    }
+
+
+    public static void touchDir(SOSFile file) {
+        touchDir(file.getPathname());
     }
 
     public static void touchDir(String path) {

@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class LuceneKey {
 
-    private String key;
+    private final String key;
 
     public LuceneKey(String key) {
         this.key = key;

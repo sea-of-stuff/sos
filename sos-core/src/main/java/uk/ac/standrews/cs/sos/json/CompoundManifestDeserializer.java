@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
             Collection<Content> contents = new ArrayList<>();
             if (contentsNode.isArray()) {
                 for(final JsonNode contentNode:contentsNode) {
-                    Content content = Helper.JsonObjMapper().convertValue(contentNode, Content.class); // TODO - not sure if this works
+                    Content content = JSONHelper.JsonObjMapper().convertValue(contentNode, Content.class);
                     contents.add(content);
                 }
             }

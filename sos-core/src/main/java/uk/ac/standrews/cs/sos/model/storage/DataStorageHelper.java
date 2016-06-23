@@ -17,6 +17,14 @@ import java.util.Collection;
  */
 public class DataStorageHelper {
 
+    /**
+     * Return an InputStream for the given location.
+     * The method calling this function should ensure that the stream is closed.
+     *
+     * @param location
+     * @return
+     * @throws SourceLocationException
+     */
     public static InputStream getInputStreamFromLocation(Location location) throws SourceLocationException {
         InputStream stream;
         try {

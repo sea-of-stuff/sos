@@ -68,6 +68,7 @@ public class SOSAddAtomTest extends ClientTest {
         InputStream inputStream = model.getAtomContent((AtomManifest) retrievedManifest);
 
         assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
+        inputStream.close();
     }
 
     @Test
@@ -94,7 +95,7 @@ public class SOSAddAtomTest extends ClientTest {
         assertFalse(retrievedManifest.verify(null));
     }
 
-    @Test
+    @Test (timeOut = 10000)
     public void testAddAtomFromURL() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         Atom manifest = model.addAtom(location);
@@ -106,7 +107,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test
+    @Test (timeOut = 10000)
     public void testAddAtomFromURLHttps() throws Exception {
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
         Atom manifest = model.addAtom(location);
@@ -118,7 +119,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test
+    @Test (timeOut = 10000)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Lectures/W01/W01-Lecture.pdf");
         Atom manifest = model.addAtom(location);
@@ -130,7 +131,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test
+    @Test (timeOut = 10000)
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Examples/W01/Example1/W01Example1.java");
         Atom manifest = model.addAtom(location);
@@ -142,7 +143,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test
+    @Test (timeOut = 10000)
     public void testAddAtomTwiceNoUpdate() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         Atom manifest = model.addAtom(location);
@@ -176,9 +177,10 @@ public class SOSAddAtomTest extends ClientTest {
         assertNotNull(manifest.getContentGUID());
         assertEquals(manifest.getLocations().size(), 1);
 
-        InputStream resultStream = model.getAtomContent(manifest);
-        String resultString = HelperTest.InputStreamToString(resultStream);
+        InputStream inputStream = model.getAtomContent(manifest);
+        String resultString = HelperTest.InputStreamToString(inputStream);
         assertEquals(testString, resultString);
+        inputStream.close();
     }
 
 }

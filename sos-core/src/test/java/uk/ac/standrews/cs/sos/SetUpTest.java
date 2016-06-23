@@ -27,7 +27,7 @@ public class SetUpTest {
     public void setUp() throws Exception {
 
         Configuration.setRootName("test");
-        Node testNode = new SOSNode(GUIDFactory.recreateGUID("12345678"));
+        Node testNode = new SOSNode(GUIDFactory.generateRandomGUID());
         Configuration.setNode(testNode);
         configuration = Configuration.getInstance();
         HelperTest.DeletePath(configuration.getDatabaseDump().getParent());

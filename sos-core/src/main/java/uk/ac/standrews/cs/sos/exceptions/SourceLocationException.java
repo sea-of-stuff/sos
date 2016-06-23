@@ -8,4 +8,8 @@ public class SourceLocationException extends Exception {
     public SourceLocationException(String message) {
         super(message);
     }
+
+    public SourceLocationException(Throwable throwable) {
+        super(throwable);
+    }
 }

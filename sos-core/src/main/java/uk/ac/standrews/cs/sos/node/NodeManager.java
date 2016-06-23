@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.node.internals.SQLiteDB;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * This is the node manager for this node. That is, it keeps track of the known nodes.
@@ -56,12 +57,11 @@ public class NodeManager {
      * @return
      */
     public Node getNode(IGUID guid) {
-        for(Node knownNode:knownNodes) {
-            if (knownNode.getNodeGUID().equals(guid)) {
-                return knownNode;
-            }
-        }
-        return null;
+        Optional<Node> node = knownNodes.stream()
+                .filter(n -> n.getNodeGUID().equals(guid))
+                .findFirst();
+
+        return node.isPresent() ? node.get() : null;
     }
 
     /**
@@ -74,7 +74,6 @@ public class NodeManager {
             ConnectionSource connection = SQLiteDB.getSQLiteConnection();
             try {
                 SQLiteDB.createNodesTable(connection);
-
                 for (Node knownNode : knownNodes) {
                     SQLiteDB.addNodeToTable(connection, knownNode);
                 }

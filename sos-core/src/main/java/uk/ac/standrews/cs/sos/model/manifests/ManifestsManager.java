@@ -13,13 +13,12 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -129,7 +128,7 @@ public class ManifestsManager {
         Manifest manifest = null;
         SOSFile manifestFile = getManifestFile(guid);
         try {
-            JsonNode node = Helper.JsonObjMapper().readTree(manifestFile.toFile());
+            JsonNode node = JSONHelper.JsonObjMapper().readTree(manifestFile.toFile());
             String type = node.get(ManifestConstants.KEY_TYPE).textValue();
 
             manifest = constructManifestFromJson(type, manifestFile);
@@ -149,13 +148,13 @@ public class ManifestsManager {
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
-                    manifest = Helper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
                     break;
                 case ManifestConstants.COMPOUND:
-                    manifest = Helper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
                     break;
                 case ManifestConstants.VERSION:
-                    manifest = Helper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
                     break;
                 default:
                     throw new UnknownManifestTypeException();
@@ -198,22 +197,27 @@ public class ManifestsManager {
     private SOSFile backupManifest(Manifest manifest) throws ManifestManagerException {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
         SOSFile backupManifest = getManifestFile(manifestGUID);
+
         try {
-            FileHelper.copyToFile(new URILocation(backupManifest.getPathname()).getSource(),
+            FileHelper.copyToFile(
+                    new URILocation(backupManifest.getPathname()).getSource(),
                     backupManifest + BACKUP_EXTENSION);
         } catch (IOException | URISyntaxException e) {
             throw new ManifestManagerException("Manifest could not be merged", e);
         }
+
         return backupManifest;
     }
 
     private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
         IGUID guid;
+
         if (manifest.getManifestType().equals(ManifestConstants.VERSION)) {
             guid = ((VersionManifest) manifest).getVersionGUID();
         } else {
             guid = manifest.getContentGUID();
         }
+
         return guid;
     }
 
@@ -221,12 +225,7 @@ public class ManifestsManager {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
         SOSFile manifestFile = getManifestFile(manifestGUID.toString());
 
-        // if filepath doesn't exists, then create it
-        SOSDirectory parent = manifestFile.getParent();
-        if(!parent.exists() && !parent.mkdirs()){
-            throw new ManifestManagerException("Manifest path could not be created");
-        }
-
+        FileHelper.touchDir(manifestFile);
         if (manifestFile.exists())
             return;
 
@@ -258,7 +257,9 @@ public class ManifestsManager {
 
     private SOSFile getManifestFile(String guid) throws ManifestManagerException {
         try {
-            return Configuration.getInstance().getManifestsDirectory().addSOSFile(normaliseGUID(guid));
+            return Configuration.getInstance()
+                    .getManifestsDirectory()
+                    .addSOSFile(normaliseGUID(guid));
         } catch (ConfigurationException e) {
             throw new ManifestManagerException();
         }

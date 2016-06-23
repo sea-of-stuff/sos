@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.json.ContentDeserializer;
 import uk.ac.standrews.cs.sos.json.ContentSerializer;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.Objects;
 
@@ -64,7 +64,7 @@ public class Content {
     @Override
     public String toString() {
         try {
-            return Helper.JsonObjMapper().writeValueAsString(this);
+            return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

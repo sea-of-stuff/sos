@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 /**
  * This class represents the SOSNode of this machine.
- * This node is a singleton. // TODO - what if I want multiple nodes at different ports? consider this.
+ * This node is a singleton.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -138,13 +138,10 @@ public class LocalSOSNode extends SOSNode {
         sosMap = new HashMap<>();
 
         // TODO read configuration for roles
-
-        System.out.println("Creating SOS instances");
         sosMap.put(ROLE.CLIENT, new SOSClient(configuration, manifestsManager, identity));
         sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, manifestsManager, identity));
         sosMap.put(ROLE.COORDINATOR, new SOSCoordinator(configuration, manifestsManager, identity, nodeManager));
 
-        System.out.println("Created SOS instances. Now adding roles.");
         instance.setRoles((byte) (ROLE.CLIENT.mask | ROLE.COORDINATOR.mask | ROLE.STORAGE.mask));
     }
 

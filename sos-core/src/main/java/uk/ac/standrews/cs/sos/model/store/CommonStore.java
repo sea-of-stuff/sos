@@ -36,12 +36,15 @@ public abstract class CommonStore implements Store {
         return retval;
     }
 
-    protected IGUID generateGUID(Location location) throws SourceLocationException, GUIDGenerationException {
+    protected IGUID generateGUID(Location location) throws GUIDGenerationException, SourceLocationException {
         IGUID retval = null;
-        InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
-
-        if (dataStream != null) {
-            retval = generateGUID(dataStream);
+        try (InputStream dataStream =
+                     DataStorageHelper.getInputStreamFromLocation(location)) {
+            if (dataStream != null) {
+                retval = generateGUID(dataStream);
+            }
+        } catch (IOException e) {
+            throw new SourceLocationException(e);
         }
 
         return retval;

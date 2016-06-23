@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -53,10 +54,11 @@ public abstract class LocationStore extends CommonStore {
     }
 
     private void storeData(Location location, IGUID guid) throws DataStorageException {
-        try {
-            InputStream dataStream = DataStorageHelper.getInputStreamFromLocation(location);
+
+        try (InputStream dataStream =
+                     DataStorageHelper.getInputStreamFromLocation(location)){
             storeData(dataStream, guid);
-        } catch (SourceLocationException e) {
+        } catch (SourceLocationException | IOException e) {
             throw new DataStorageException();
         }
     }

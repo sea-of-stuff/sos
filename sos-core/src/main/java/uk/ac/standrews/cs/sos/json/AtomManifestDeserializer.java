@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class AtomManifestDeserializer extends JsonDeserializer<AtomManifest> {
             Collection<LocationBundle> bundles = new ArrayList<>();
             if (bundlesNode.isArray()) {
                 for(final JsonNode bundleNode:bundlesNode) {
-                    LocationBundle bundle = Helper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class); // TODO - not sure if this works
+                    LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
                     bundles.add(bundle);
                 }
             }

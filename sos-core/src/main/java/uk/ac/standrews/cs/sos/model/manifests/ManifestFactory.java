@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import java.util.Collection;
 
 /**
- * This factory is used to create manifests for atoms, compounds and assets.
+ * This factory is used to create manifests for atoms, compounds and versions.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -27,7 +27,8 @@ public class ManifestFactory {
      * @throws ManifestNotMadeException
      * @throws DataStorageException
      */
-    public static AtomManifest createAtomManifest(IGUID guid, Collection<LocationBundle> locations) {
+    public static AtomManifest createAtomManifest(IGUID guid,
+                                                  Collection<LocationBundle> locations) {
 
         return new AtomManifest(guid, locations);
     }
@@ -40,9 +41,14 @@ public class ManifestFactory {
      * @return a compound manifest
      * @throws ManifestNotMadeException
      */
-    public static CompoundManifest createCompoundManifest(CompoundType type, Collection<Content> contents,
+    public static CompoundManifest createCompoundManifest(CompoundType type,
+                                                          Collection<Content> contents,
                                                           Identity identity)
             throws ManifestNotMadeException {
+
+        if (type == null) {
+            throw new ManifestNotMadeException();
+        }
 
         return new CompoundManifest(type, contents, identity);
     }

@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.utils.Helper;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(null, guid, null, null, identityMocked);
 
-        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
@@ -90,7 +90,7 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(null, guid, null, metadata, identityMocked);
 
-        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
@@ -116,7 +116,7 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, null, identityMocked);
 
-        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
@@ -147,7 +147,7 @@ public class VersionManifestTest extends SetUpTest {
 
         VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
-        JsonNode node = Helper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 

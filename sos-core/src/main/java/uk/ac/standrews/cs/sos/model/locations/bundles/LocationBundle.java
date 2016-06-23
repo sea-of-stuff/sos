@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.json.LocationBundleDeserializer;
 import uk.ac.standrews.cs.sos.json.LocationBundleSerializer;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.Objects;
 
@@ -39,7 +39,7 @@ public abstract class LocationBundle {
     @Override
     public String toString() {
         try {
-            return Helper.JsonObjMapper().writeValueAsString(this);
+            return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

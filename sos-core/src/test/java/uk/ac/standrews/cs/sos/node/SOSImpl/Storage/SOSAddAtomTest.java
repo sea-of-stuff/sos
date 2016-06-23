@@ -31,6 +31,7 @@ public class SOSAddAtomTest extends StorageTest {
 
         InputStream inputStream = model.getAtomContent(manifest);
         assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
+        inputStream.close();
     }
 
     @Test

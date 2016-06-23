@@ -26,16 +26,12 @@ public class SOSNode implements Node {
     /******************
      * ORMLite fields *
      ******************/
-
     @DatabaseField(id = true)
     private String DB_nodeid;
-
     @DatabaseField(canBeNull = false)
     private String DB_hostname;
-
     @DatabaseField(canBeNull = false)
     private int DB_port;
-
     @DatabaseField(canBeNull = false)
     private int DB_roles;
 
@@ -108,6 +104,13 @@ public class SOSNode implements Node {
         return nodeGUID.toString();
     }
 
+    private void fillDBFields() {
+        this.DB_nodeid = nodeGUID.toString();
+        this.DB_hostname = hostAddress.getHostName();
+        this.DB_port = hostAddress.getPort();
+        this.DB_roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,10 +124,4 @@ public class SOSNode implements Node {
         return Objects.hash(nodeGUID);
     }
 
-    private void fillDBFields() {
-        this.DB_nodeid = nodeGUID.toString();
-        this.DB_hostname = hostAddress.getHostName();
-        this.DB_port = hostAddress.getPort();
-        this.DB_roles = roles;
-    }
 }

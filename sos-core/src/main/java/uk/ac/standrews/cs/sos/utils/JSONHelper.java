@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Helper {
+public class JSONHelper {
 
     private static ObjectMapper mapper;
 

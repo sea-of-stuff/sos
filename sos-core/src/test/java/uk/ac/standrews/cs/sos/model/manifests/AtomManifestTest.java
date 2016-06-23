@@ -15,8 +15,8 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.utils.Helper;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class AtomManifestTest extends SetUpTest {
         Collection<LocationBundle> newBundles = atomManifest.getLocations();
         assertEquals(newBundles.size(), 1);
 
-        JsonNode node = Helper.JsonObjMapper().readTree(atomManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(atomManifest.toString());
         JsonNode locationsNode = node.get(ManifestConstants.KEY_LOCATIONS);
         assertTrue(locationsNode.isArray());
         assertEquals(locationsNode.size(), 1);

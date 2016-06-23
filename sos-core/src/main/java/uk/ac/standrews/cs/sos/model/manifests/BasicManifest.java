@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.utils.Helper;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.sql.Timestamp;
 import java.util.regex.Matcher;
@@ -76,7 +76,7 @@ public abstract class BasicManifest implements Manifest {
      */
     @Override
     public boolean isValid() {
-        return isManifestTypeValid();
+        return hasManifestType();
     }
 
     /**
@@ -93,13 +93,14 @@ public abstract class BasicManifest implements Manifest {
         return matcher.matches();
     }
 
-    private boolean isManifestTypeValid() {
+    private boolean hasManifestType() {
         return manifestType != null && !manifestType.isEmpty();
     }
 
+    @Override
     public String toString() {
         try {
-            return Helper.JsonObjMapper().writeValueAsString(this);
+            return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

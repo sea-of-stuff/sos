@@ -62,10 +62,6 @@ public class CompoundManifest extends SignedManifest implements Compound {
             throws ManifestNotMadeException {
         super(identity, ManifestConstants.COMPOUND);
 
-        if (type == null) {
-            throw new ManifestNotMadeException();
-        }
-
         this.type = type;
         this.contents = contents;
         this.contentGUID = makeContentGUID();

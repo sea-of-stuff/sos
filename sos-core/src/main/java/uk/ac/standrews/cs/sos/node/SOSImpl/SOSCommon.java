@@ -90,6 +90,13 @@ public abstract class SOSCommon implements SeaOfStuff {
         return manifest;
     }
 
+    /**
+     * Return an InputStream for the given Atom.
+     * The caller should ensure that the stream is closed.
+     *
+     * @param atom describing the atom to retrieve.
+     * @return
+     */
     @Override
     public InputStream getAtomContent(Atom atom) {
         InputStream dataStream = null;

@@ -36,24 +36,40 @@ public abstract class SignedManifest extends BasicManifest {
         return this.signature;
     }
 
+    /**
+     * Verify this manifest against the given identity
+     * @param identity
+     * @return
+     * @throws DecryptionException
+     */
     @Override
     public boolean verify(Identity identity) throws DecryptionException {
-        String manifestSectionToSign = getManifestToSign();
+        String manifestToSign = getManifestToSign();
+
         byte[] decodedBytes = Base64.decodeBase64(signature);
-        return identity.verify(manifestSectionToSign, decodedBytes);
+        return identity.verify(manifestToSign, decodedBytes);
     }
 
+    /**
+     * Generate the signature for this manifest
+     * @return
+     * @throws ManifestNotMadeException
+     */
     protected String makeSignature() throws ManifestNotMadeException {
         String signature;
         try {
-            String manifestSectionToSign = getManifestToSign();
-            signature = generateSignature(manifestSectionToSign);
+            String manifestToSign = getManifestToSign();
+            signature = generateSignature(manifestToSign);
         } catch (Exception e) {
             throw new ManifestNotMadeException();
         }
         return signature;
     }
 
+    /**
+     * Get the manifest sections to sign
+     * @return manifest sections to sign as a string
+     */
     protected abstract String getManifestToSign();
 
     /**

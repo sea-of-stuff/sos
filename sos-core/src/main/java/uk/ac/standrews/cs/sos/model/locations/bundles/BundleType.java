@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class BundleType {
 
-    private String type;
+    private final String type;
 
     public BundleType(String type) {
         this.type = type;
