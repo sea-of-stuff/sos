@@ -31,20 +31,16 @@ public class Configuration {
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String KEYS_DIRECTORY_NAME = "keys";
-    private static final String DATABASE_DIRECTORY_NAME = "db";
 
     private static final String NODE_FILE = "node.txt";
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
-    private static final String DB_DUMP_FILE_NAME = "test.db";
 
     private static SOSDirectory TEST_DATA_DIRECTORY;
     private static SOSDirectory DATA_DIRECTORY;
     private static SOSDirectory INDEX_DIRECTORY;
     private static SOSDirectory MANIFEST_DIRECTORY;
     private static SOSDirectory KEYS_DIRECTORY;
-    private static SOSDirectory DB_DIRECTORY;
-    private static SOSFile DB_DUMP_FILE;
 
     private static String rootName;
     private static Node node;
@@ -61,7 +57,6 @@ public class Configuration {
         if(instance == null) {
             initRootName();
             initDirectories();
-            initDB();
             loadSOSNode();
 
             instance = new Configuration();
@@ -143,14 +138,6 @@ public class Configuration {
     }
 
     /**
-     * Get the internal DB dump.
-     * @return
-     */
-    public SOSFile getDatabaseDump() {
-        return DB_DUMP_FILE;
-    }
-
-    /**
      * Save the configuration for this node.
      * @throws ConfigurationException
      */
@@ -180,14 +167,6 @@ public class Configuration {
         INDEX_DIRECTORY = new FileBasedDirectory(root, INDEX_DIRECTORY_NAME);
         MANIFEST_DIRECTORY = new FileBasedDirectory(root, MANIFESTS_DIRECTORY_NAME);
         KEYS_DIRECTORY = new FileBasedDirectory(root, KEYS_DIRECTORY_NAME);
-        DB_DIRECTORY = new FileBasedDirectory(root, DATABASE_DIRECTORY_NAME);
-    }
-
-    private static void initDB() {
-        DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME);
-        if (!DB_DUMP_FILE.exists() && DB_DIRECTORY.mkdirs()) {
-            DB_DUMP_FILE.toFile();
-        }
     }
 
     private static void loadSOSNode() throws ConfigurationException {

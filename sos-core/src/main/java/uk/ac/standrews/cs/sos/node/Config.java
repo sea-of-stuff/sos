@@ -20,14 +20,15 @@ public class Config {
     @DatabaseField(generatedId = true)
     private int id; // Must be provided for ORMLite
 
-    /**
-     * DEFAULT CONFIG VALUES
+    /*
+     * DEFAULT CONFIG VALUES - START
      */
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final String SOS_ROOT = HOME + "sos/";
     private static final SOSDirectory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME + "sos");
     private static final String DEFAULT_ROOT_NAME = "";
 
+    // Directories
     private static final String TEST_DATA_DIRECTORY_NAME = "test_data";
     private static final String DATA_DIRECTORY_NAME = "data";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
@@ -35,12 +36,14 @@ public class Config {
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
 
+    // Filenames
     private static final String NODE_FILE = "node.txt";
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
     private static final String DB_DUMP_FILE_NAME_DEFAULT = "dump.db";
-
-
+    /*
+     * DEFAULT CONFIG VALUES - END
+     */
 
     public static SOSDirectory STORAGE_DIRECTORY;
     public static SOSDirectory TEST_DATA_DIRECTORY;
@@ -80,6 +83,8 @@ public class Config {
     public String s_password;
     public String s_access_key;
     public String s_secret_key;
+
+    //
 
     public static void initDatabase() {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path);
