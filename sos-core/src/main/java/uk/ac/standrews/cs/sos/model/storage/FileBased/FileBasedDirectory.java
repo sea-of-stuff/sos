@@ -46,6 +46,11 @@ public class FileBasedDirectory implements SOSDirectory {
     }
 
     @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
     public String getPathname() {
         if (parent == null) {
             return "";

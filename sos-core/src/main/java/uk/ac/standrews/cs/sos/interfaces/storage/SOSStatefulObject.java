@@ -9,6 +9,8 @@ public interface SOSStatefulObject {
 
     boolean exists();
 
+    String getName();
+
     String getPathname();
 
     long lastModified();

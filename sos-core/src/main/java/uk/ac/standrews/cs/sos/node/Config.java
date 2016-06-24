@@ -83,6 +83,9 @@ public class Config {
 
     public static void initDatabase() {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path);
+        if (!DB_DIRECTORY.exists()) {
+            DB_DIRECTORY.mkdirs();
+        }
         DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME_DEFAULT);
     }
 

@@ -33,6 +33,11 @@ public class FileBasedFile implements SOSFile {
     }
 
     @Override
+    public String getName() {
+        return this.filename;
+    }
+
+    @Override
     public String getPathname() {
         return parent.getPathname() + filename;
     }
