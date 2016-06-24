@@ -10,35 +10,34 @@ import static org.testng.Assert.*;
  */
 public class ConfigTest {
 
-    @Test
-    public void initDefaultDBTest() {
-        assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
-        assertNull(Config.DB_DUMP_FILE);
+    private final static String TEST_PATH = "test";
 
-        Config.initDatabase();
-
-        assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
-        assertNotNull(Config.DB_DUMP_FILE);
-    }
-
-    @Test
-    public void initCustomDBTest() {
-        Config.db_path = "custom";
-        Config.initDatabase();
-
-        assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
-        assertNotNull(Config.DB_DUMP_FILE);
-        assertEquals(Config.DB_DUMP_FILE.getParent().getName(), "custom");
-    }
-
-    @Test
+    @Test(priority=0)
     public void dbAuthNullByDefaultTest() {
         assertNull(Config.db_hostname);
         assertNull(Config.db_username);
         assertNull(Config.db_password);
     }
 
-    @Test
+    @Test(priority=1)
+    public void initDefaultDBTest() {
+        Config.initDatabase();
+
+        assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
+        assertNotNull(Config.DB_DUMP_FILE);
+    }
+
+    @Test(priority=2)
+    public void initCustomDBTest() {
+        Config.db_path = TEST_PATH;
+        Config.initDatabase();
+
+        assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
+        assertNotNull(Config.DB_DUMP_FILE);
+        assertEquals(Config.DB_DUMP_FILE.getParent().getName(), TEST_PATH);
+    }
+
+    @Test(priority=3)
     public void DBDumpFileChangesOnInitialisationTest() {
         Config.initDatabase();
 
@@ -47,7 +46,7 @@ public class ConfigTest {
         SOSFile actual = Config.DB_DUMP_FILE;
 
         // Update path, but do not initialise
-        Config.db_path = "custom";
+        Config.db_path = TEST_PATH;
         assertEquals(actual, Config.DB_DUMP_FILE);
 
         // Initialise and verify that dump file has changed

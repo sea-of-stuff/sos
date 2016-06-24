@@ -36,7 +36,6 @@ public class AtomManifestTest extends SetUpTest {
     @Override
     @BeforeMethod
     public void setUp() throws IOException, ConfigurationException {
-        Configuration.setRootName("test");
         configuration = Configuration.getInstance();
     }
 

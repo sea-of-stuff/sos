@@ -11,11 +11,11 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.model.storage.Storage;
 import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
@@ -38,7 +38,7 @@ public class LocalSOSNode extends SOSNode {
     private static Config config;
 
     // This is the main entry point for storage
-    private static SOSDirectory storage;
+    private static Storage storage;
 
 
     private static Index index;
@@ -61,9 +61,7 @@ public class LocalSOSNode extends SOSNode {
      */
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
-
-        StorageHelper.connectToStorage(config);
-        Config.initStorageRelativeDirectories();
+        storage = StorageHelper.createStorage(config);
 
         // TODO : index
         // TODO : readSystemProperties();

@@ -24,8 +24,6 @@ public abstract class IndexBaseTest {
 
     @BeforeMethod
     public void setUp(Method method) throws IndexException, ConfigurationException {
-        Configuration.setRootName("test");
-
         CACHE_TYPE type = getCacheType();
         System.out.println(type.toString() + " :: " + method.getName());
         index = new CacheFactory().getCache(type);

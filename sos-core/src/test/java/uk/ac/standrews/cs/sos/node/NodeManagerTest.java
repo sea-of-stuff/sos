@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
@@ -27,8 +26,6 @@ public class NodeManagerTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        Configuration.setRootName("test");
-
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabase();
 

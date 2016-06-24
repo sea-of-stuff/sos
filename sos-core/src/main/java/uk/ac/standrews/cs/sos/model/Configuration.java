@@ -66,16 +66,6 @@ public class Configuration {
     }
 
     /**
-     * Set the rootname if this has not been set already.
-     * @param rootName
-     */
-    public static void setRootName(String rootName) {
-        if (Configuration.rootName == null) {
-            Configuration.rootName = rootName;
-        }
-    }
-
-    /**
      * Get the node for this configuration.
      *
      * @return
@@ -155,9 +145,7 @@ public class Configuration {
     }
 
     private static void initRootName() {
-        if (Configuration.rootName == null) {
-            Configuration.rootName = DEFAULT_ROOT_NAME;
-        }
+        Configuration.rootName = DEFAULT_ROOT_NAME;
     }
 
     private static void initDirectories() {

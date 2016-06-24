@@ -26,8 +26,6 @@ public class CommonIndexTest {
 
     @BeforeMethod
     public void setUp(Method method) throws IndexException, ConfigurationException {
-        Configuration.setRootName("test");
-
         index = LuceneIndex.getInstance();
     }
 

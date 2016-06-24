@@ -24,14 +24,9 @@ public class Config {
      * DEFAULT CONFIG VALUES - START
      */
     private static final String HOME = System.getProperty("user.home") + "/";
-    private static final String SOS_ROOT = HOME + "sos/";
     private static final SOSDirectory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME + "sos");
-    private static final String DEFAULT_ROOT_NAME = "";
 
     // Directories
-    private static final String TEST_DATA_DIRECTORY_NAME = "test_data";
-    private static final String DATA_DIRECTORY_NAME = "data";
-    private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
@@ -45,17 +40,13 @@ public class Config {
      * DEFAULT CONFIG VALUES - END
      */
 
-    public static SOSDirectory STORAGE_DIRECTORY;
-    public static SOSDirectory TEST_DATA_DIRECTORY;
-    public static SOSDirectory DATA_DIRECTORY;
-    public static SOSDirectory MANIFEST_DIRECTORY;
     private static SOSDirectory INDEX_DIRECTORY;
     private static SOSDirectory KEYS_DIRECTORY;
+
     public static SOSDirectory DB_DIRECTORY;
     public static SOSFile DB_DUMP_FILE;
 
     private static SOSDirectory root = ROOT_DIRECTORY_DEFAULT;
-    public static SOSDirectory storage_root = ROOT_DIRECTORY_DEFAULT;
 
     // Database
     public final static String DB_TYPE_SQLITE = "sqlite";
@@ -84,21 +75,12 @@ public class Config {
     public String s_access_key;
     public String s_secret_key;
 
-    //
-
     public static void initDatabase() {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path);
         if (!DB_DIRECTORY.exists()) {
             DB_DIRECTORY.mkdirs();
         }
         DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME_DEFAULT);
-    }
-
-    // FIXME - this might not be a file based directory!!!!!
-    public static void initStorageRelativeDirectories() {
-        TEST_DATA_DIRECTORY = new FileBasedDirectory(storage_root, TEST_DATA_DIRECTORY_NAME);
-        DATA_DIRECTORY = new FileBasedDirectory(storage_root, DATA_DIRECTORY_NAME);
-        MANIFEST_DIRECTORY = new FileBasedDirectory(storage_root, MANIFESTS_DIRECTORY_NAME);
     }
 
 }

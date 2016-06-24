@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedDirectory;
+import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedStorage;
 import uk.ac.standrews.cs.sos.model.store.*;
 import uk.ac.standrews.cs.sos.node.Config;
 
@@ -19,11 +19,12 @@ import java.util.Collection;
  */
 public class StorageHelper {
 
-    public static void connectToStorage(Config config) {
+    public static Storage createStorage(Config config) {
+        Storage storage = null;
 
         switch(config.s_type) {
             case Config.S_TYPE_LOCAL:
-                connectToLocalStorage(config);
+                storage = new FileBasedStorage(config);
                 break;
             case Config.S_TYPE_NETWORK:
                 // TODO
@@ -36,12 +37,7 @@ public class StorageHelper {
                 break;
         }
 
-    }
-
-    private static void connectToLocalStorage(Config config) {
-        if (config.s_location != null && !config.s_location.isEmpty()) {
-            Config.storage_root = new FileBasedDirectory(config.s_location);
-        }
+        return storage;
     }
 
     /**

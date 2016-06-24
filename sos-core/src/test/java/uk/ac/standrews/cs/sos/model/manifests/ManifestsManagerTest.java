@@ -47,7 +47,6 @@ public class ManifestsManagerTest {
 
     @BeforeMethod
     public void setUp() throws IndexException, ConfigurationException, NodeManagerException {
-        Configuration.setRootName("test");
         configuration = Configuration.getInstance();
         index = LuceneIndex.getInstance();
     }

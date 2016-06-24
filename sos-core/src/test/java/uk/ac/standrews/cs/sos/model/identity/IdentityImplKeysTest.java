@@ -92,7 +92,6 @@ public class IdentityImplKeysTest extends SetUpTest {
     @Override
     @BeforeMethod
     public void setUp() throws IOException, ConfigurationException {
-        Configuration.setRootName("test");
         configuration = Configuration.getInstance();
 
         // Delete any left over keys from past

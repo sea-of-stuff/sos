@@ -26,8 +26,6 @@ public class SetUpTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-
-        Configuration.setRootName("test");
         Node testNode = new SOSNode(GUIDFactory.generateRandomGUID());
         Configuration.setNode(testNode);
         configuration = Configuration.getInstance();
