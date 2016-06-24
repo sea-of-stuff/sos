@@ -28,12 +28,16 @@ public class NodeManagerTest {
     @BeforeMethod
     public void setUp() throws Exception {
         Configuration.setRootName("test");
+
+        Config.db_type = Config.DB_TYPE_SQLITE;
+        Config.initDatabase();
+
         nodeManager = new NodeManager();
     }
 
     @AfterClass
     public void classTearDown() throws ConfigurationException, IOException {
-        HelperTest.DeletePath(Configuration.getInstance().getDatabaseDump().getParent());
+        HelperTest.DeletePath(Config.DB_DIRECTORY);
     }
 
     @Test(priority=0)

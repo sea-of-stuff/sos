@@ -49,8 +49,10 @@ public class FileBasedDirectory implements SOSDirectory {
     public String getPathname() {
         if (parent == null) {
             return "";
+        } else if (name == null || name.isEmpty()) {
+            return parent.getPathname() + "/";
         } else {
-            return parent.getPathname() + "/" + name + "/";
+            return parent.getPathname() + name + "/";
         }
     }
 

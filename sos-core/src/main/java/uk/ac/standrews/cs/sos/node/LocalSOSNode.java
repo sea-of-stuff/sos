@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.node;
 
+import com.j256.ormlite.support.ConnectionSource;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -9,16 +11,19 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSStorage;
 
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -30,6 +35,12 @@ import java.util.HashMap;
 public class LocalSOSNode extends SOSNode {
 
     private static Configuration configuration;
+    private static Config config;
+
+    // This is the main entry point for storage
+    private static SOSDirectory storage;
+
+
     private static Index index;
     private static Identity identity;
     private static ManifestsManager manifestsManager;
@@ -49,8 +60,13 @@ public class LocalSOSNode extends SOSNode {
      * @throws SOSException
      */
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
-        hardcodeConfiguration();
-        checkSystemProperties();
+        config = hardcodedConfiguration();
+
+        StorageHelper.connectToStorage(config);
+        Config.initStorageRelativeDirectories();
+
+        // TODO : index
+        // TODO : readSystemProperties();
 
         checkRequisites();
 
@@ -63,16 +79,26 @@ public class LocalSOSNode extends SOSNode {
         registerSOSProtocol();
     }
 
-    private static void hardcodeConfiguration() {
-        Config.db_type = Config.DB_TYPE_SQLITE;
+    // REMOVEME - use system properties or info passed by user
+    private static Config hardcodedConfiguration() {
+        Config retval = null;
 
-        Config.reInitialise();
+        Config.db_type = Config.DB_TYPE_SQLITE;
+        Config.initDatabase();
+
+        try {
+            ConnectionSource connection = SQLDB.getSQLConnection();
+            retval = SQLDB.getConfiguration(connection);
+        } catch (DatabasePersistenceException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return retval;
     }
 
-    private static void checkSystemProperties() {
-        // TODO - read system properties about db
+    // TODO - read system properties about db
+    private static void readSystemProperties() {
         Config.db_path = "";
-
     }
 
     /**

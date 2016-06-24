@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
+import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -82,11 +82,11 @@ public class SOSClient extends SOSCommon {
 
     @Override
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        return DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        return StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
     }
 
     @Override
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        return DataStorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        return StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
     }
 }

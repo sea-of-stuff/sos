@@ -11,27 +11,16 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
- * SQLite database used to store information about known nodes for this LocalSOSNode node.
+ * SQLite database used to store information about:
+ * - configuration for this node
+ * - known nodes for this LocalSOSNode node.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SQLDB {
-
-    public static void createNodesTable(ConnectionSource connection) throws SQLException {
-        TableUtils.createTableIfNotExists(connection, SOSNode.class);
-    }
-
-    public static void addNodeToTable(ConnectionSource connection, Node node) throws SQLException {
-        Dao<SOSNode,String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
-        nodesDAO.create((SOSNode) node);
-    }
-
-    public static Collection<SOSNode> getNodes(ConnectionSource connection) throws SQLException, GUIDGenerationException {
-        Dao<SOSNode,String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
-        return nodesDAO.queryForAll();
-    }
 
     public static ConnectionSource getSQLConnection() throws DatabasePersistenceException {
 
@@ -50,6 +39,31 @@ public class SQLDB {
         return connection;
     }
 
+    public static Config getConfiguration(ConnectionSource connection) throws SQLException {
+        Dao<Config, String> confiDAO = DaoManager.createDao(connection, Config.class);
+        Iterator<Config> iterator = confiDAO.queryForAll().iterator();
+
+        if (iterator.hasNext()) {
+            return iterator.next();
+        } else {
+          throw new SQLException("No configuration row in DB");
+        }
+    }
+
+    public static void createNodesTable(ConnectionSource connection) throws SQLException {
+        TableUtils.createTableIfNotExists(connection, SOSNode.class);
+    }
+
+    public static void addNodeToTable(ConnectionSource connection, Node node) throws SQLException {
+        Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
+        nodesDAO.create((SOSNode) node);
+    }
+
+    public static Collection<SOSNode> getNodes(ConnectionSource connection) throws SQLException, GUIDGenerationException {
+        Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
+        return nodesDAO.queryForAll();
+    }
+
     private static ConnectionSource getSQLiteConnection() throws DatabasePersistenceException {
         ConnectionSource connection;
         try {
@@ -63,6 +77,7 @@ public class SQLDB {
     }
 
     private static ConnectionSource getMySQLConnection() {
-        return null;
+        throw new UnsupportedOperationException();
     }
+
 }

@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
+import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public abstract class SOSCommon implements SeaOfStuff {
         for(LocationBundle location:locations) {
 
             try {
-                dataStream = DataStorageHelper.getInputStreamFromLocation(location.getLocation());
+                dataStream = StorageHelper.getInputStreamFromLocation(location.getLocation());
             } catch (SourceLocationException e) {
                 continue;
             }

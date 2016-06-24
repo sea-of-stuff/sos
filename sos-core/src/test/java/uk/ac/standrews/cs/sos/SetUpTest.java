@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -30,7 +31,9 @@ public class SetUpTest {
         Node testNode = new SOSNode(GUIDFactory.generateRandomGUID());
         Configuration.setNode(testNode);
         configuration = Configuration.getInstance();
-        HelperTest.DeletePath(configuration.getDatabaseDump().getParent());
+
+        HelperTest.DeletePath(Config.DB_DIRECTORY);
+        HelperTest.CreateDBTestDump();
 
         index = LuceneIndex.getInstance();
 
@@ -48,6 +51,7 @@ public class SetUpTest {
         HelperTest.DeletePath(configuration.getManifestsDirectory());
         HelperTest.DeletePath(configuration.getTestDataDirectory());
         HelperTest.DeletePath(configuration.getDataDirectory());
-        HelperTest.DeletePath(configuration.getDatabaseDump().getParent());
+
+        HelperTest.DeletePath(Config.DB_DIRECTORY);
     }
 }

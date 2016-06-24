@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.DataStorageHelper;
+import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public abstract class CommonStore implements Store {
     protected IGUID generateGUID(Location location) throws GUIDGenerationException, SourceLocationException {
         IGUID retval = null;
         try (InputStream dataStream =
-                     DataStorageHelper.getInputStreamFromLocation(location)) {
+                     StorageHelper.getInputStreamFromLocation(location)) {
             if (dataStream != null) {
                 retval = generateGUID(dataStream);
             }
