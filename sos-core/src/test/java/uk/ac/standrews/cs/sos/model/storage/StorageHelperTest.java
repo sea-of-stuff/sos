@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.storage;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -11,7 +10,6 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,13 +23,6 @@ import static org.testng.AssertJUnit.assertNull;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class StorageHelperTest extends SetUpTest {
-
-    @AfterMethod
-    public void tearDown() throws IOException {
-        HelperTest.DeletePath(configuration.getDataDirectory());
-        HelperTest.DeletePath(configuration.getDatabaseDump().getParent());
-        HelperTest.DeletePath(configuration.getTestDataDirectory());
-    }
 
     @Test
     public void testStoreAtomNullBundles() throws Exception {

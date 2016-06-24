@@ -32,7 +32,6 @@ public class SetUpTest {
         Configuration.setNode(testNode);
         configuration = Configuration.getInstance();
 
-        HelperTest.DeletePath(Config.DB_DIRECTORY);
         HelperTest.CreateDBTestDump();
 
         index = LuceneIndex.getInstance();

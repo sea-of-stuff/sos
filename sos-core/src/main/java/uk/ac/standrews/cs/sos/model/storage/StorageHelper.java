@@ -25,6 +25,9 @@ public class StorageHelper {
             case Config.S_TYPE_LOCAL:
                 connectToLocalStorage(config);
                 break;
+            case Config.S_TYPE_NETWORK:
+                // TODO
+                break;
             case Config.S_TYPE_AWS_S3:
                 // TODO
                 break;
@@ -40,7 +43,6 @@ public class StorageHelper {
             Config.storage_root = new FileBasedDirectory(config.s_location);
         }
     }
-
 
     /**
      * Return an InputStream for the given location.
