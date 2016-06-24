@@ -27,7 +27,7 @@ public class NodeManagerTest {
     @BeforeMethod
     public void setUp() throws Exception {
         Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabase();
+        Config.initDatabaseInfo();
 
         nodeManager = new NodeManager();
     }

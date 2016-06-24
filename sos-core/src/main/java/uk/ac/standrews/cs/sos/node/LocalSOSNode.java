@@ -36,8 +36,6 @@ public class LocalSOSNode extends SOSNode {
 
     private static Configuration configuration;
     private static Config config;
-
-    // This is the main entry point for storage
     private static Storage storage;
 
 
@@ -71,8 +69,11 @@ public class LocalSOSNode extends SOSNode {
         LocalSOSNode.configuration = configuration;
         instance = new LocalSOSNode(configuration.getNode());
 
-        init();
-        makeSOSInstances();
+        initManifestManager();
+        initNodeManager();
+        initIdentity();
+        initSOSInstances();
+
         backgroundProcesses();
         registerSOSProtocol();
     }
@@ -82,7 +83,7 @@ public class LocalSOSNode extends SOSNode {
         Config retval = null;
 
         Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabase();
+        Config.initDatabaseInfo();
 
         try {
             ConnectionSource connection = SQLDB.getSQLConnection();
@@ -156,15 +157,20 @@ public class LocalSOSNode extends SOSNode {
         }
     }
 
-    private static void init() throws SOSException {
+    private static void initManifestManager() {
         manifestsManager = new ManifestsManager(index);
+    }
 
+    private static void initNodeManager() throws SOSException {
         try {
             nodeManager = new NodeManager();
         } catch (NodeManagerException e) {
             throw new SOSException(e);
         }
+    }
 
+
+    private static void initIdentity() throws SOSException {
         try {
             identity = new IdentityImpl(configuration);
         } catch (KeyGenerationException | KeyLoadedException e) {
@@ -173,7 +179,7 @@ public class LocalSOSNode extends SOSNode {
 
     }
 
-    private static void makeSOSInstances() {
+    private static void initSOSInstances() {
         sosMap = new HashMap<>();
 
         // TODO read configuration for roles

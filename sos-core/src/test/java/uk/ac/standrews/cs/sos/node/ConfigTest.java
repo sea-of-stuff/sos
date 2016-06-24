@@ -21,7 +21,7 @@ public class ConfigTest {
 
     @Test(priority=1)
     public void initDefaultDBTest() {
-        Config.initDatabase();
+        Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
         assertNotNull(Config.DB_DUMP_FILE);
@@ -30,7 +30,7 @@ public class ConfigTest {
     @Test(priority=2)
     public void initCustomDBTest() {
         Config.db_path = TEST_PATH;
-        Config.initDatabase();
+        Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
         assertNotNull(Config.DB_DUMP_FILE);
@@ -39,7 +39,7 @@ public class ConfigTest {
 
     @Test(priority=3)
     public void DBDumpFileChangesOnInitialisationTest() {
-        Config.initDatabase();
+        Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
         assertNotNull(Config.DB_DUMP_FILE);
@@ -50,7 +50,7 @@ public class ConfigTest {
         assertEquals(actual, Config.DB_DUMP_FILE);
 
         // Initialise and verify that dump file has changed
-        Config.initDatabase();
+        Config.initDatabaseInfo();
         assertNotEquals(actual, Config.DB_DUMP_FILE);
     }
 }

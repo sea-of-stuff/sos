@@ -82,7 +82,7 @@ public class HelperTest {
 
     public static void CreateDBTestDump() throws DatabasePersistenceException, SQLException {
         Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabase();
+        Config.initDatabaseInfo();
 
         ConnectionSource connection = SQLDB.getSQLConnection();
         TableUtils.createTableIfNotExists(connection, Config.class);

@@ -17,22 +17,16 @@ public class Config {
 
     // no-args constructor needed for ORMLite
     public Config() {}
-    @DatabaseField(generatedId = true)
-    private int id; // Must be provided for ORMLite
 
     /*
      * DEFAULT CONFIG VALUES - START
      */
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final SOSDirectory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME + "sos");
-
-    // Directories
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
 
-    // Filenames
-    private static final String NODE_FILE = "node.txt";
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
     private static final String DB_DUMP_FILE_NAME_DEFAULT = "dump.db";
@@ -59,6 +53,16 @@ public class Config {
     public static String db_username;
     public static String db_password;
 
+    // Node (this)
+    @DatabaseField(id = true)
+    private String n_id;
+    @DatabaseField(canBeNull = false)
+    private String n_hostname;
+    @DatabaseField(canBeNull = false)
+    private int n_port;
+    @DatabaseField(canBeNull = false)
+    private int n_roles;
+
     // Storage
     public final static String S_TYPE_LOCAL = "local";
     public final static String S_TYPE_NETWORK = "network";
@@ -75,8 +79,8 @@ public class Config {
     public String s_access_key;
     public String s_secret_key;
 
-    public static void initDatabase() {
-        DB_DIRECTORY = new FileBasedDirectory(root, db_path);
+    public static void initDatabaseInfo() {
+        DB_DIRECTORY = new FileBasedDirectory(root, db_path); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
         if (!DB_DIRECTORY.exists()) {
             DB_DIRECTORY.mkdirs();
         }
