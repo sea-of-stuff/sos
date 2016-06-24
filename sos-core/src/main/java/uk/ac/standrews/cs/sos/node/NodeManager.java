@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.node.internals.SQLiteDB;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -71,11 +70,11 @@ public class NodeManager {
      */
     public void persistNodesTable() throws DatabasePersistenceException {
         try {
-            ConnectionSource connection = SQLiteDB.getSQLiteConnection();
+            ConnectionSource connection = SQLDB.getSQLConnection();
             try {
-                SQLiteDB.createNodesTable(connection);
+                SQLDB.createNodesTable(connection);
                 for (Node knownNode : knownNodes) {
-                    SQLiteDB.addNodeToTable(connection, knownNode);
+                    SQLDB.addNodeToTable(connection, knownNode);
                 }
             } finally {
                 connection.close();
@@ -87,10 +86,10 @@ public class NodeManager {
 
     private void loadNodesFromDB() throws NodeManagerException {
         try {
-            ConnectionSource connection = SQLiteDB.getSQLiteConnection();
+            ConnectionSource connection = SQLDB.getSQLConnection();
             try {
-                SQLiteDB.createNodesTable(connection);
-                knownNodes.addAll(SQLiteDB.getNodes(connection));
+                SQLDB.createNodesTable(connection);
+                knownNodes.addAll(SQLDB.getNodes(connection));
             } finally {
                 connection.close();
             }

@@ -49,6 +49,9 @@ public class LocalSOSNode extends SOSNode {
      * @throws SOSException
      */
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
+        hardcodeConfiguration();
+        checkSystemProperties();
+
         checkRequisites();
 
         LocalSOSNode.configuration = configuration;
@@ -58,6 +61,18 @@ public class LocalSOSNode extends SOSNode {
         makeSOSInstances();
         backgroundProcesses();
         registerSOSProtocol();
+    }
+
+    private static void hardcodeConfiguration() {
+        Config.db_type = Config.DB_TYPE_SQLITE;
+
+        Config.reInitialise();
+    }
+
+    private static void checkSystemProperties() {
+        // TODO - read system properties about db
+        Config.db_path = "";
+
     }
 
     /**
