@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.storage.datastore;
+package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;

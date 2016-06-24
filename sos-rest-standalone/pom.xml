@@ -1,16 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>sos</artifactId>
         <groupId>uk.ac.standrews.cs</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>sos-rest-standalone</artifactId>
+
+    <groupId>uk.ac.standrews.cs.sos</groupId>
+    <artifactId>rest-standalone</artifactId>
     <packaging>war</packaging>
-    <name>sos-rest-standalone</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
         <jersey.version>2.23</jersey.version>

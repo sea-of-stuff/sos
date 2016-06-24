@@ -1,27 +1,25 @@
-package uk.ac.standrews.cs.sos.model.storage.datastore;
+package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
-
-import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StreamPersist extends StreamStore {
+public class LocationCache extends LocationStore {
 
-    public StreamPersist(Configuration configuration, InputStream inputStream) {
-        super(configuration, inputStream);
+    public LocationCache(Configuration configuration, Location location) {
+        super(configuration, location);
     }
 
     @Override
     protected LocationBundle getBundle(Location location) {
-        return new PersistLocationBundle(location);
+        return new CacheLocationBundle(location);
     }
 
     @Override

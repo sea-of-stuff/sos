@@ -12,11 +12,13 @@
     <description>Sea Of Stuff</description>
 
     <modules>
-    	<module>sos-core</module>
+        <module>sos-storage</module>
+        <module>sos-core</module>
         <module>sos-rest</module>
         <module>web-ui</module>
         <module>rest-app</module>
         <module>sos-rest-standalone</module>
+
         <!-- <module>sos-cli</module> -->
     </modules>
 

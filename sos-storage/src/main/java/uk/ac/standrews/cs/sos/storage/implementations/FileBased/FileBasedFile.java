@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.storage.FileBased;
+package uk.ac.standrews.cs.sos.storage.implementations.FileBased;
 
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
