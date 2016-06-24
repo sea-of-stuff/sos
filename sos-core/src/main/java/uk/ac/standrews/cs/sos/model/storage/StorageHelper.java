@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedStorage;
-import uk.ac.standrews.cs.sos.model.store.*;
+import uk.ac.standrews.cs.sos.model.storage.datastore.*;
 import uk.ac.standrews.cs.sos.node.Config;
 
 import java.io.IOException;

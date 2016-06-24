@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.store;
+package uk.ac.standrews.cs.sos.model.storage.datastore;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
