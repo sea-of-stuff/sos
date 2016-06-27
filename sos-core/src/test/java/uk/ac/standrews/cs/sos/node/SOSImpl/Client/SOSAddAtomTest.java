@@ -7,12 +7,12 @@ import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;

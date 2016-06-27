@@ -5,11 +5,11 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

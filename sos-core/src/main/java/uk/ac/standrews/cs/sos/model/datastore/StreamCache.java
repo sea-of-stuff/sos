@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 
 import java.io.InputStream;
 

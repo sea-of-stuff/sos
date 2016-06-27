@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.node;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 
 import static org.testng.Assert.*;
 

@@ -15,11 +15,12 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.model.storage.Storage;
-import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSStorage;
+import uk.ac.standrews.cs.sos.storage.StorageFactory;
+import uk.ac.standrews.cs.sos.storage.StorageType;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
@@ -59,7 +60,7 @@ public class LocalSOSNode extends SOSNode {
      */
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
-        storage = StorageHelper.createStorage(config);
+        storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
 
         // TODO : index
         // TODO : readSystemProperties();

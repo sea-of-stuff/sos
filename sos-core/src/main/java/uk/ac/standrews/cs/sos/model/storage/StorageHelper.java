@@ -7,8 +7,6 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.datastore.*;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedStorage;
-import uk.ac.standrews.cs.sos.node.Config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,27 +16,6 @@ import java.util.Collection;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class StorageHelper {
-
-    public static Storage createStorage(Config config) {
-        Storage storage = null;
-
-        switch(config.s_type) {
-            case Config.S_TYPE_LOCAL:
-                storage = new FileBasedStorage(config);
-                break;
-            case Config.S_TYPE_NETWORK:
-                // TODO
-                break;
-            case Config.S_TYPE_AWS_S3:
-                // TODO
-                break;
-            default:
-                System.out.println("I should throw an error, but instead I will just tell you I do not know this type of storage");
-                break;
-        }
-
-        return storage;
-    }
 
     /**
      * Return an InputStream for the given location.

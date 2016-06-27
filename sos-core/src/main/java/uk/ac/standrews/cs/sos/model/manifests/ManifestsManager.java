@@ -13,10 +13,10 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 

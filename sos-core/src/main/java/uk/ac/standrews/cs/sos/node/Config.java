@@ -2,10 +2,10 @@ package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSDirectory;
-import uk.ac.standrews.cs.sos.interfaces.storage.SOSFile;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedDirectory;
-import uk.ac.standrews.cs.sos.model.storage.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedDirectory;
+import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 
 /**
  * This class contains all information to configure this SOS node.
@@ -56,11 +56,11 @@ public class Config {
     // Node (this)
     @DatabaseField(id = true)
     private String n_id;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = true)
     private String n_hostname;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = true)
     private int n_port;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = true)
     private int n_roles;
 
     // Storage

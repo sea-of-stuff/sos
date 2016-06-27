@@ -20,4 +20,9 @@ public enum StorageType {
         return text;
     }
 
+    public static StorageType getEnum(String value) {
+        for(StorageType v : values())
+            if(v.toString().equalsIgnoreCase(value)) return v;
+        throw new IllegalArgumentException();
+    }
 }
