@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.AWSBased;
 
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 /**
@@ -29,6 +30,21 @@ public class AWSStorage implements Storage {
 
     @Override
     public SOSDirectory getTestDirectory() {
+        return null;
+    }
+
+    @Override
+    public SOSDirectory createDirectory(SOSDirectory parent, String name) {
+        return null;
+    }
+
+    @Override
+    public SOSDirectory createDirectory(String name) {
+        return null;
+    }
+
+    @Override
+    public SOSFile createFile(SOSDirectory parent, String filename) {
         return null;
     }
 }

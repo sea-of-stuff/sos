@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.storage.implementations.FileBased;
 
 
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 /**
@@ -39,5 +40,20 @@ public class FileBasedStorage implements Storage {
     @Override
     public SOSDirectory getTestDirectory() {
         return new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME);
+    }
+
+    @Override
+    public SOSDirectory createDirectory(SOSDirectory parent, String name) {
+        return new FileBasedDirectory(parent, name);
+    }
+
+    @Override
+    public SOSDirectory createDirectory(String name) {
+        return new FileBasedDirectory(name);
+    }
+
+    @Override
+    public SOSFile createFile(SOSDirectory parent, String filename) {
+        return new FileBasedFile(parent, filename);
     }
 }

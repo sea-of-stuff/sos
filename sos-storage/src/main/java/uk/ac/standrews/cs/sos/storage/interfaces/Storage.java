@@ -12,4 +12,9 @@ public interface Storage {
     SOSDirectory getManifestDirectory();
 
     SOSDirectory getTestDirectory();
+
+    SOSDirectory createDirectory(SOSDirectory parent, String name);
+    SOSDirectory createDirectory(String name);
+
+    SOSFile createFile(SOSDirectory parent, String filename);
 }
