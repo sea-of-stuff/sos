@@ -14,13 +14,16 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -128,7 +131,7 @@ public class ManifestsManager {
 
     private Manifest getManifestFromFile(IGUID guid) throws ManifestManagerException {
         Manifest manifest = null;
-        SOSFile manifestFile = getManifestFile(guid);
+        File manifestFile = getManifestFile(guid);
         try {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(manifestFile.toFile());
             String type = node.get(ManifestConstants.KEY_TYPE).textValue();
@@ -145,7 +148,7 @@ public class ManifestsManager {
         return manifest;
     }
 
-    private Manifest constructManifestFromJson(String type, SOSFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+    private Manifest constructManifestFromJson(String type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest = null;
         try {
             switch (type) {
@@ -182,7 +185,7 @@ public class ManifestsManager {
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestManagerException {
         IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromFile(guid);
-        SOSFile backupPath = backupManifest(existingManifest);
+        File backupPath = backupManifest(existingManifest);
 
         if (!existingManifest.equals(manifest)) {
             manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
@@ -193,9 +196,9 @@ public class ManifestsManager {
         FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
     }
 
-    private SOSFile backupManifest(Manifest manifest) throws ManifestManagerException {
+    private File backupManifest(Manifest manifest) throws ManifestManagerException {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
-        SOSFile backupManifest = getManifestFile(manifestGUID);
+        File backupManifest = getManifestFile(manifestGUID);
 
         try {
             FileHelper.copyToFile(
@@ -222,7 +225,7 @@ public class ManifestsManager {
 
     private void saveToFile(Manifest manifest) throws ManifestManagerException {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
-        SOSFile manifestFile = getManifestFile(manifestGUID.toString());
+        File manifestFile = getManifestFile(manifestGUID.toString());
 
         FileHelper.touchDir(manifestFile);
         if (manifestFile.exists())
@@ -231,7 +234,7 @@ public class ManifestsManager {
         writeToFile(manifestFile.toFile(), manifest);
     }
 
-    private void writeToFile(File file, Manifest manifest) throws ManifestManagerException {
+    private void writeToFile(java.io.File file, Manifest manifest) throws ManifestManagerException {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             bufferedWriter.write(manifest.toString());
@@ -250,12 +253,12 @@ public class ManifestsManager {
         }
     }
 
-    private SOSFile getManifestFile(IGUID guid) {
+    private File getManifestFile(IGUID guid) {
         return getManifestFile(guid.toString());
     }
 
-    private SOSFile getManifestFile(String guid) {
-        SOSDirectory manifestsDir = storage.getManifestDirectory();
+    private File getManifestFile(String guid) {
+        Directory manifestsDir = storage.getManifestDirectory();
         return storage.createFile(manifestsDir, normaliseGUID(guid));
     }
 
@@ -272,7 +275,7 @@ public class ManifestsManager {
     }
 
     private boolean manifestExistsInLocalStorage(IGUID guid) {
-        SOSFile path = getManifestFile(guid);
+        File path = getManifestFile(guid);
         return path.exists();
     }
 

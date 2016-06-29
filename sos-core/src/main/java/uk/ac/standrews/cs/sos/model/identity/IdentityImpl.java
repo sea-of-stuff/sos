@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 import java.io.*;
 import java.security.*;
@@ -24,15 +24,15 @@ public class IdentityImpl implements Identity {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    private SOSFile[] pathsToKeys;
+    private File[] pathsToKeys;
 
     public IdentityImpl(Configuration configuration) throws KeyGenerationException, KeyLoadedException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
         this.pathsToKeys = configuration.getIdentityPaths();
 
-        File privateKeyFile = new File(pathsToKeys[0].getPathname());
-        File publicKeyFile = new File(pathsToKeys[1].getPathname());
+        java.io.File privateKeyFile = new java.io.File(pathsToKeys[0].getPathname());
+        java.io.File publicKeyFile = new java.io.File(pathsToKeys[1].getPathname());
         if (!privateKeyFile.exists() || !publicKeyFile.exists()) {
             generateKeys();
         } else {
@@ -138,8 +138,8 @@ public class IdentityImpl implements Identity {
     private void generateKeys() throws KeyGenerationException {
         final KeyPair key = generateKeyPair();
 
-        File privateKeyFile = createKeyFile(pathsToKeys[0].getPathname());
-        File publicKeyFile = createKeyFile(pathsToKeys[1].getPathname());
+        java.io.File privateKeyFile = createKeyFile(pathsToKeys[0].getPathname());
+        java.io.File publicKeyFile = createKeyFile(pathsToKeys[1].getPathname());
 
         // Saving the keys
         saveKeyToFile(publicKeyFile, key.getPublic());
@@ -165,8 +165,8 @@ public class IdentityImpl implements Identity {
     }
 
     // Create files to storeLocation public and private key
-    private File createKeyFile(String path) throws KeyGenerationException {
-        File file = new File(path);
+    private java.io.File createKeyFile(String path) throws KeyGenerationException {
+        java.io.File file = new java.io.File(path);
 
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
@@ -180,7 +180,7 @@ public class IdentityImpl implements Identity {
         return file;
     }
 
-    private static void saveKeyToFile(File file, Key key) {
+    private static void saveKeyToFile(java.io.File file, Key key) {
         try (DataOutputStream publicKeyOS =
                      new DataOutputStream(new FileOutputStream(file))) {
             publicKeyOS.write(key.getEncoded());

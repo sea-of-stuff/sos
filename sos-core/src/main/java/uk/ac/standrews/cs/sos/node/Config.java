@@ -2,12 +2,11 @@ package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedDirectory;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
-
-import java.io.File;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedDirectory;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 /**
  * This class contains all information to configure this SOS node.
@@ -24,8 +23,8 @@ public class Config {
      * DEFAULT CONFIG VALUES - START
      */
     private static final String HOME = System.getProperty("user.home") + "/";
-    private static final SOSDirectory HOME_DIR = new FileBasedDirectory(new File(HOME));
-    private static final SOSDirectory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos");
+    private static final Directory HOME_DIR = new FileBasedDirectory(new java.io.File(HOME));
+    private static final Directory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos");
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
@@ -37,13 +36,13 @@ public class Config {
      * DEFAULT CONFIG VALUES - END
      */
 
-    private static SOSDirectory INDEX_DIRECTORY;
-    private static SOSDirectory KEYS_DIRECTORY;
+    private static Directory INDEX_DIRECTORY;
+    private static Directory KEYS_DIRECTORY;
 
-    public static SOSDirectory DB_DIRECTORY;
-    public static SOSFile DB_DUMP_FILE;
+    public static Directory DB_DIRECTORY;
+    public static File DB_DUMP_FILE;
 
-    private static SOSDirectory root = ROOT_DIRECTORY_DEFAULT;
+    private static Directory root = ROOT_DIRECTORY_DEFAULT;
 
     // Database
     public final static String DB_TYPE_SQLITE = "sqlite";
@@ -82,10 +81,10 @@ public class Config {
     public String s_access_key;
     public String s_secret_key;
 
-    public static void initDatabaseInfo() {
+    public static void initDatabaseInfo() throws PersistenceException {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
         if (!DB_DIRECTORY.exists()) {
-            DB_DIRECTORY.mkdir();
+            DB_DIRECTORY.persist();
         }
         DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME_DEFAULT);
     }

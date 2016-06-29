@@ -10,7 +10,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -23,7 +22,7 @@ import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,9 +55,9 @@ public class LuceneIndex extends CommonIndex {
     }
 
     private static void init() throws IOException, ConfigurationException {
-        SOSDirectory indexPath = Configuration.getInstance().getIndexDirectory();
+        Directory indexPath = Configuration.getInstance().getIndexDirectory();
 
-        Directory dir = FSDirectory.open(new File(indexPath.getPathname()).toPath());
+        org.apache.lucene.store.Directory dir = FSDirectory.open(new File(indexPath.getPathname()).toPath());
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 

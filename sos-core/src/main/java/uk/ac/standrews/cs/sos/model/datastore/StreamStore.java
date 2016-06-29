@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.InputStream;
@@ -39,10 +39,10 @@ public abstract class StreamStore extends CommonStore {
                 IGUID tmpGUID = GUIDFactory.generateRandomGUID();
                 storeData(inputStream, tmpGUID);
 
-                SOSFile tmpCachedLocation = getAtomLocation(tmpGUID);
+                File tmpCachedLocation = getAtomLocation(tmpGUID);
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
 
-                SOSFile cachedLocation = getAtomLocation(guid);
+                File cachedLocation = getAtomLocation(guid);
                 FileHelper.renameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
 
                 Location location = getLocation(guid);

@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public abstract class CommonStore implements Store {
 
     protected void storeData(InputStream inputStream, IGUID guid) throws DataStorageException {
         try {
-            SOSFile cachedLocation = getAtomLocation(guid);
+            File cachedLocation = getAtomLocation(guid);
             String path = cachedLocation.getPathname();
 
             FileHelper.touchDir(path);
@@ -77,6 +77,6 @@ public abstract class CommonStore implements Store {
 
     protected abstract LocationBundle getBundle(Location location);
 
-    protected abstract SOSFile getAtomLocation(IGUID guid);
+    protected abstract File getAtomLocation(IGUID guid);
 
 }

@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.sos.node;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 import static org.testng.Assert.*;
 
@@ -20,7 +21,7 @@ public class ConfigTest {
     }
 
     @Test(priority=1)
-    public void initDefaultDBTest() {
+    public void initDefaultDBTest() throws PersistenceException {
         Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
@@ -28,7 +29,7 @@ public class ConfigTest {
     }
 
     @Test(priority=2)
-    public void initCustomDBTest() {
+    public void initCustomDBTest() throws PersistenceException {
         Config.db_path = TEST_PATH;
         Config.initDatabaseInfo();
 
@@ -38,12 +39,12 @@ public class ConfigTest {
     }
 
     @Test(priority=3)
-    public void DBDumpFileChangesOnInitialisationTest() {
+    public void DBDumpFileChangesOnInitialisationTest() throws PersistenceException {
         Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
         assertNotNull(Config.DB_DUMP_FILE);
-        SOSFile actual = Config.DB_DUMP_FILE;
+        File actual = Config.DB_DUMP_FILE;
 
         // Update path, but do not initialise
         Config.db_path = TEST_PATH;

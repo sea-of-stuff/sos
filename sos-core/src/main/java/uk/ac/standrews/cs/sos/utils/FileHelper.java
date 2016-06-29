@@ -1,8 +1,7 @@
 package uk.ac.standrews.cs.sos.utils;
 
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -14,7 +13,7 @@ import java.nio.file.Path;
 public class FileHelper {
 
     public static void deleteFile(final String path) {
-        File file = new File(path);
+        java.io.File file = new java.io.File(path);
         file.delete();
     }
 
@@ -23,29 +22,29 @@ public class FileHelper {
     }
 
     private static Path locationToPath(String path) {
-        return new File(path).toPath();
+        return new java.io.File(path).toPath();
     }
 
 
-    public static void touchDir(SOSFile file) {
+    public static void touchDir(File file) {
         touchDir(file.getPathname());
     }
 
     public static void touchDir(String path) {
-        File parent = new File(path).getParentFile();
+        java.io.File parent = new java.io.File(path).getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             parent.mkdirs();
         }
     }
 
     public static boolean pathExists(String path) {
-        File file = new File(path);
+        java.io.File file = new java.io.File(path);
         return file.exists();
     }
 
     public static void renameFile(String oldPathname, String newPathname) {
-        File oldfile =new File(oldPathname);
-        File newfile =new File(newPathname);
+        java.io.File oldfile =new java.io.File(oldPathname);
+        java.io.File newfile =new java.io.File(newPathname);
         oldfile.renameTo(newfile);
     }
 }

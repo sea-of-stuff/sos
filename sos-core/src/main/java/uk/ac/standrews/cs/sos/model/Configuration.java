@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedDirectory;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedDirectory;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 import java.io.*;
 
@@ -23,7 +23,7 @@ public class Configuration {
 
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final String SOS_ROOT = HOME + "sos/";
-    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory(new File(HOME + "sos"));
+    private static final Directory ROOT_DIRECTORY = new FileBasedDirectory(new java.io.File(HOME + "sos"));
     private static final String DEFAULT_ROOT_NAME = "";
 
     private static final String TEST_DATA_DIRECTORY_NAME = "test_data";
@@ -36,11 +36,11 @@ public class Configuration {
     private static final String PRIVATE_KEY_FILE = "private.der";
     private static final String PUBLIC_KEY_FILE = "public.der";
 
-    private static SOSDirectory TEST_DATA_DIRECTORY;
-    private static SOSDirectory DATA_DIRECTORY;
-    private static SOSDirectory INDEX_DIRECTORY;
-    private static SOSDirectory MANIFEST_DIRECTORY;
-    private static SOSDirectory KEYS_DIRECTORY;
+    private static Directory TEST_DATA_DIRECTORY;
+    private static Directory DATA_DIRECTORY;
+    private static Directory INDEX_DIRECTORY;
+    private static Directory MANIFEST_DIRECTORY;
+    private static Directory KEYS_DIRECTORY;
 
     private static String rootName;
     private static Node node;
@@ -90,7 +90,7 @@ public class Configuration {
      * Get the directory for the test data.
      * @return
      */
-    public SOSDirectory getTestDataDirectory() {
+    public Directory getTestDataDirectory() {
         return TEST_DATA_DIRECTORY;
     }
 
@@ -98,7 +98,7 @@ public class Configuration {
      * Get the directory for the manifests.
      * @return
      */
-    public SOSDirectory getManifestsDirectory() {
+    public Directory getManifestsDirectory() {
         return MANIFEST_DIRECTORY;
     }
 
@@ -106,8 +106,8 @@ public class Configuration {
      * Get the key files for this node.
      * @return
      */
-    public SOSFile[] getIdentityPaths() {
-         return new SOSFile[] { new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE),
+    public File[] getIdentityPaths() {
+         return new File[] { new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE),
                  new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE) };
     }
 
@@ -115,7 +115,7 @@ public class Configuration {
      * Get the directory containing the index files.
      * @return
      */
-    public SOSDirectory getIndexDirectory() {
+    public Directory getIndexDirectory() {
          return INDEX_DIRECTORY;
     }
 
@@ -123,7 +123,7 @@ public class Configuration {
      * Get the directory containing the data of this node.
      * @return
      */
-    public SOSDirectory getDataDirectory() {
+    public Directory getDataDirectory() {
         return DATA_DIRECTORY;
     }
 
@@ -149,7 +149,7 @@ public class Configuration {
     }
 
     private static void initDirectories() {
-        SOSDirectory root = new FileBasedDirectory(ROOT_DIRECTORY, Configuration.rootName);
+        Directory root = new FileBasedDirectory(ROOT_DIRECTORY, Configuration.rootName);
         TEST_DATA_DIRECTORY = new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME);
         DATA_DIRECTORY = new FileBasedDirectory(root, DATA_DIRECTORY_NAME);
         INDEX_DIRECTORY = new FileBasedDirectory(root, INDEX_DIRECTORY_NAME);

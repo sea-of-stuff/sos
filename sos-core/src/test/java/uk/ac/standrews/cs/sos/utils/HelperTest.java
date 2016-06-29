@@ -12,9 +12,10 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.node.SQLDB;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -42,11 +43,11 @@ public class HelperTest {
         return createDummyDataFile(configuration.getTestDataDirectory(), filename);
     }
 
-    public static Location createDummyDataFile(SOSDirectory sosParent, String filename) throws FileNotFoundException, URISyntaxException {
-        SOSFile sosFile = new FileBasedFile(sosParent, filename);
+    public static Location createDummyDataFile(Directory sosParent, String filename) throws FileNotFoundException, URISyntaxException {
+        File sosFile = new FileBasedFile(sosParent, filename);
 
-        File file = sosFile.toFile();
-        File parent = file.getParentFile();
+        java.io.File file = sosFile.toFile();
+        java.io.File parent = file.getParentFile();
         if(!parent.exists() && !parent.mkdirs()){
             throw new IllegalStateException("Couldn't create dir: " + parent);
         }
@@ -63,7 +64,7 @@ public class HelperTest {
 
         try (PrintWriter writer = new PrintWriter(
                 new FileOutputStream(
-                new File(HelperTest.localURItoPath(location)), true))) {
+                new java.io.File(HelperTest.localURItoPath(location)), true))) {
             writer.append(text);
         }
     }
@@ -72,15 +73,15 @@ public class HelperTest {
         return IOUtils.toString(stream);
     }
 
-    public static void DeletePath(SOSDirectory directory) throws IOException {
-        File dir = new File(directory.getPathname());
+    public static void DeletePath(Directory directory) throws IOException {
+        java.io.File dir = new java.io.File(directory.getPathname());
 
         if (dir.exists()) {
             FileUtils.cleanDirectory(dir);
         }
     }
 
-    public static void CreateDBTestDump() throws DatabasePersistenceException, SQLException {
+    public static void CreateDBTestDump() throws DatabasePersistenceException, SQLException, PersistenceException {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 

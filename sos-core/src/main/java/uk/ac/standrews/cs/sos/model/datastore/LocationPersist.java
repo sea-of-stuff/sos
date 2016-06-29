@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 /**
@@ -26,7 +26,7 @@ public class LocationPersist extends LocationStore {
     }
 
     @Override
-    protected SOSFile getAtomLocation(IGUID guid) {
+    protected File getAtomLocation(IGUID guid) {
         return storage.createFile(configuration.getDataDirectory(), guid.toString()); // FIXME - do not use config
     }
 }

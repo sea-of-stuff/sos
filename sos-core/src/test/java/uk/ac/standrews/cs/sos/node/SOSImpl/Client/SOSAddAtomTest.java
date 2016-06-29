@@ -11,8 +11,8 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -148,8 +148,8 @@ public class SOSAddAtomTest extends ClientTest {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         Atom manifest = model.addAtom(location);
 
-        SOSFile file = new FileBasedFile(configuration.getDataDirectory(), manifest.getContentGUID().toString());
-        SOSFile manifestFile = new FileBasedFile(configuration.getManifestsDirectory(), manifest.getContentGUID() + ".json");
+        File file = new FileBasedFile(configuration.getDataDirectory(), manifest.getContentGUID().toString());
+        File manifestFile = new FileBasedFile(configuration.getManifestsDirectory(), manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -160,8 +160,8 @@ public class SOSAddAtomTest extends ClientTest {
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
-        SOSFile newFile = new FileBasedFile(configuration.getDataDirectory(), newManifest.getContentGUID().toString());
-        SOSFile newManifestFile = new FileBasedFile(configuration.getManifestsDirectory(), newManifest.getContentGUID() + ".json");
+        File newFile = new FileBasedFile(configuration.getDataDirectory(), newManifest.getContentGUID().toString());
+        File newManifestFile = new FileBasedFile(configuration.getManifestsDirectory(), newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 

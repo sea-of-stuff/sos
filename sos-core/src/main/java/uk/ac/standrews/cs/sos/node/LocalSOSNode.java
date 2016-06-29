@@ -20,6 +20,8 @@ import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.sos.storage.StorageFactory;
 import uk.ac.standrews.cs.sos.storage.StorageType;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.net.URL;
@@ -59,7 +61,11 @@ public class LocalSOSNode extends SOSNode {
      */
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
-        storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
+        try {
+            storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
+        } catch (StorageException e) {
+            throw new SOSException(e);
+        }
 
         // TODO : index
         // TODO : readSystemProperties();
@@ -83,7 +89,11 @@ public class LocalSOSNode extends SOSNode {
         Config retval = null;
 
         Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabaseInfo();
+        try {
+            Config.initDatabaseInfo();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
 
         try {
             ConnectionSource connection = SQLDB.getSQLConnection();

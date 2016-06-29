@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -55,7 +55,7 @@ public class SOSURLConnection extends URLConnection {
             Node node = Configuration.getInstance().getNode();
 
             if (resourceNode.equals(node)) {
-                SOSFile path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString());
+                File path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString());
                 FileInputStream fileStream = new FileInputStream(path.getPathname());
                 return new BufferedInputStream(fileStream);
             } else {
