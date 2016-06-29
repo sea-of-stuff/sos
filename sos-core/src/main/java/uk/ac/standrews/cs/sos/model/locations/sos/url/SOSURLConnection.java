@@ -8,11 +8,10 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
 import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -55,13 +54,12 @@ public class SOSURLConnection extends URLConnection {
             Node node = Configuration.getInstance().getNode();
 
             if (resourceNode.equals(node)) {
-                File path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString());
-                FileInputStream fileStream = new FileInputStream(path.getPathname());
-                return new BufferedInputStream(fileStream);
+                File path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString(), false);
+                return path.getData().getInputStream();
             } else {
                 return contactNode(resourceNode, entityId);
             }
-        } catch (ConfigurationException | GUIDGenerationException e) {
+        } catch (ConfigurationException | GUIDGenerationException | DataException e) {
             throw new IOException(e);
         }
 

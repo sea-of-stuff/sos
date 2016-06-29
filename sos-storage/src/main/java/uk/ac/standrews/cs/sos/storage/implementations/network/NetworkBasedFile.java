@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.storage.interfaces.File;
  */
 public class NetworkBasedFile extends FileBasedFile implements File {
 
-    public NetworkBasedFile(Directory parent, String name) {
-        super(parent, name);
+    public NetworkBasedFile(Directory parent, String name, boolean isImmutable) {
+        super(parent, name, isImmutable);
     }
 }

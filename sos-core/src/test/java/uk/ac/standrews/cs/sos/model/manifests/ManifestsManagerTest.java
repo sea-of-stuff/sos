@@ -57,7 +57,7 @@ public class ManifestsManagerTest {
         configuration = Configuration.getInstance();
 
         Config config = new Config(); // create default configuration
-        storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
+        storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location, true);
         index = LuceneIndex.getInstance();
     }
 

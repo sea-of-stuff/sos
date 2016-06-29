@@ -9,7 +9,9 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.storage.data.InputStreamData;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.InputStream;
@@ -23,8 +25,8 @@ public abstract class StreamStore extends CommonStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(Configuration configuration, InputStream inputStream) {
-        super(configuration);
+    public StreamStore(Configuration configuration, Storage storage, InputStream inputStream) {
+        super(configuration, storage);
         this.inputStream = inputStream;
     }
 
@@ -37,7 +39,7 @@ public abstract class StreamStore extends CommonStore {
 
             try {
                 IGUID tmpGUID = GUIDFactory.generateRandomGUID();
-                storeData(inputStream, tmpGUID);
+                storeData(tmpGUID, new InputStreamData((inputStream)));
 
                 File tmpCachedLocation = getAtomLocation(tmpGUID);
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));

@@ -12,6 +12,8 @@ import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.node.SQLDB;
+import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.data.StringData;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
@@ -44,17 +46,13 @@ public class HelperTest {
     }
 
     public static Location createDummyDataFile(Directory sosParent, String filename) throws FileNotFoundException, URISyntaxException {
-        File sosFile = new FileBasedFile(sosParent, filename);
 
-        java.io.File file = sosFile.toFile();
-        java.io.File parent = file.getParentFile();
-        if(!parent.exists() && !parent.mkdirs()){
-            throw new IllegalStateException("Couldn't create dir: " + parent);
-        }
-
-        try (PrintWriter writer = new PrintWriter(file)) {
-            writer.println("The first line");
-            writer.println("The second line");
+        Data data = new StringData("The first line\nThe second line");
+        File sosFile = new FileBasedFile(sosParent, filename, data, false);
+        try {
+            sosFile.persist();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
         }
 
         return new URILocation("file://"+sosFile.getPathname());

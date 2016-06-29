@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.interfaces;
 
+import uk.ac.standrews.cs.sos.storage.data.Data;
+
 /**
  * This interface allow SOS implementations to interact with different
  * types of storage implementations
@@ -7,6 +9,8 @@ package uk.ac.standrews.cs.sos.storage.interfaces;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Storage {
+
+    boolean isImmutable();
 
     /**
      * Get the root directory of this storage
@@ -54,4 +58,6 @@ public interface Storage {
      * @return
      */
     File createFile(Directory parent, String filename);
+
+    File createFile(Directory parent, String filename, Data data);
 }

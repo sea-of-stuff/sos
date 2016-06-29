@@ -15,12 +15,12 @@ public class StorageFactory {
 
     private static final Logger log = Logger.getLogger( StorageFactory.class.getName() );
 
-    public static Storage createStorage(StorageType type, String location) throws StorageException {
+    public static Storage createStorage(StorageType type, String location, boolean immutable) throws StorageException {
         Storage storage = null;
 
         switch(type) {
             case LOCAL:
-                storage = new FileBasedStorage(new File(location));
+                storage = new FileBasedStorage(new File(location), immutable);
                 break;
             case NETWORK:
                 // TODO

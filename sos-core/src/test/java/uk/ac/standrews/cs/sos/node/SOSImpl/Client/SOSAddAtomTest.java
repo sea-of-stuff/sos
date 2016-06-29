@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
@@ -26,6 +26,7 @@ import static org.testng.AssertJUnit.*;
 public class SOSAddAtomTest extends ClientTest {
 
     private static final int PAUSE_TIME_MS = 500;
+    private static final int TEST_TIMEOUT = 10000;
 
     @Test
     public void testAddAtom() throws Exception {
@@ -95,7 +96,7 @@ public class SOSAddAtomTest extends ClientTest {
         assertFalse(retrievedManifest.verify(null));
     }
 
-    @Test (timeOut = 10000)
+    @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURL() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         Atom manifest = model.addAtom(location);
@@ -107,7 +108,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test (timeOut = 10000)
+    @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttps() throws Exception {
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
         Atom manifest = model.addAtom(location);
@@ -119,7 +120,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test (timeOut = 10000)
+    @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Lectures/W01/W01-Lecture.pdf");
         Atom manifest = model.addAtom(location);
@@ -131,7 +132,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test (timeOut = 10000)
+    @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
         Location location = new URILocation("https://studres.cs.st-andrews.ac.uk/CS1002/Examples/W01/Example1/W01Example1.java");
         Atom manifest = model.addAtom(location);
@@ -143,13 +144,16 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
-    @Test (timeOut = 10000)
+    @Test (timeOut = 100000)
     public void testAddAtomTwiceNoUpdate() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         Atom manifest = model.addAtom(location);
 
-        File file = new FileBasedFile(configuration.getDataDirectory(), manifest.getContentGUID().toString());
-        File manifestFile = new FileBasedFile(configuration.getManifestsDirectory(), manifest.getContentGUID() + ".json");
+        Directory dataDir = storage.getDataDirectory();
+        Directory manifestsDir = storage.getManifestDirectory();
+
+        File file = storage.createFile(dataDir, manifest.getContentGUID().toString());
+        File manifestFile = storage.createFile(manifestsDir, manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -160,8 +164,8 @@ public class SOSAddAtomTest extends ClientTest {
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
-        File newFile = new FileBasedFile(configuration.getDataDirectory(), newManifest.getContentGUID().toString());
-        File newManifestFile = new FileBasedFile(configuration.getManifestsDirectory(), newManifest.getContentGUID() + ".json");
+        File newFile = storage.createFile(dataDir, newManifest.getContentGUID().toString());
+        File newManifestFile = storage.createFile(manifestsDir, newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 

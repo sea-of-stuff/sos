@@ -3,6 +3,8 @@
  */
 package uk.ac.standrews.cs.sos.storage.data;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,14 @@ public class InputStreamData implements Data {
     private static final Logger log = Logger.getLogger(InputStreamData.class.getName());
 
     private byte[] state;
+
+    public InputStreamData(InputStream inputStream) {
+        try {
+            state = IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "IO Exception during stream read", e);
+        }
+    }
 
     /**
      * Creates an instance using a given stream.

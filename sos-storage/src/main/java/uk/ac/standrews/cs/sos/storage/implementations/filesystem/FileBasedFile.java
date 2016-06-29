@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.data.FileData;
 import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
@@ -15,14 +16,20 @@ import java.io.IOException;
 public class FileBasedFile extends FileBasedStatefulObject implements File {
 
     private Data data;
+    private boolean isImmutable;
+    private boolean persisted;
 
-    public FileBasedFile(Directory parent, String name) {
-        super(parent, name);
+    public FileBasedFile(Directory parent, String name, boolean isImmutable) {
+        super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);
+        this.persisted = false;
+        this.data = new FileData(realFile);
     }
 
-    public FileBasedFile(Directory parent, String name, Data data) {
-        this(parent, name);
+    public FileBasedFile(Directory parent, String name, Data data, boolean isImmutable) {
+        super(parent, name, isImmutable);
+        realFile = new java.io.File(parent.toFile(), name);
+        this.persisted = false;
         this.data = data;
     }
 
@@ -33,8 +40,13 @@ public class FileBasedFile extends FileBasedStatefulObject implements File {
 
     @Override
     public void persist() throws PersistenceException {
+        if (isImmutable && persisted) {
+            return;
+        }
+
         createFile();
         writeData();
+        persisted = true;
     }
 
     private void createFile() throws PersistenceException {

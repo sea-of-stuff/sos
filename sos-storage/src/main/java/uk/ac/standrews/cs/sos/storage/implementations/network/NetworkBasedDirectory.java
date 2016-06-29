@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
  */
 public class NetworkBasedDirectory extends FileBasedDirectory {
 
-    public NetworkBasedDirectory(Directory parent, String name) {
-        super(parent, name);
+    public NetworkBasedDirectory(Directory parent, String name, boolean isImmutable) {
+        super(parent, name, isImmutable);
     }
 }

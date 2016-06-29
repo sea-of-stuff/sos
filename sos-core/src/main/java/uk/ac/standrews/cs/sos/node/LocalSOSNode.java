@@ -62,7 +62,7 @@ public class LocalSOSNode extends SOSNode {
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
         try {
-            storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
+            storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location, true);
         } catch (StorageException e) {
             throw new SOSException(e);
         }

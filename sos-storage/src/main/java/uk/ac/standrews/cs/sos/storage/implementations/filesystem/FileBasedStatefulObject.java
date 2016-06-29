@@ -14,10 +14,12 @@ public abstract class FileBasedStatefulObject implements StatefulObject {
     protected Directory logicalParent;
     protected String name;
     protected File realFile;
+    protected boolean isImmutable;
 
-    public FileBasedStatefulObject(Directory parent, String name) {
+    public FileBasedStatefulObject(Directory parent, String name, boolean isImmutable) {
         this.logicalParent = parent;
         this.name = name;
+        this.isImmutable = isImmutable;
     }
 
     public FileBasedStatefulObject() {
@@ -56,4 +58,9 @@ public abstract class FileBasedStatefulObject implements StatefulObject {
 
     @Override
     public abstract void persist() throws PersistenceException;
+
+    @Override
+    public boolean isImmutable() {
+        return isImmutable;
+    }
 }

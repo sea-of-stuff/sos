@@ -107,8 +107,8 @@ public class Configuration {
      * @return
      */
     public File[] getIdentityPaths() {
-         return new File[] { new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE),
-                 new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE) };
+         return new File[] { new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE, false),
+                 new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE, false) };
     }
 
     /**
@@ -149,12 +149,12 @@ public class Configuration {
     }
 
     private static void initDirectories() {
-        Directory root = new FileBasedDirectory(ROOT_DIRECTORY, Configuration.rootName);
-        TEST_DATA_DIRECTORY = new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME);
-        DATA_DIRECTORY = new FileBasedDirectory(root, DATA_DIRECTORY_NAME);
-        INDEX_DIRECTORY = new FileBasedDirectory(root, INDEX_DIRECTORY_NAME);
-        MANIFEST_DIRECTORY = new FileBasedDirectory(root, MANIFESTS_DIRECTORY_NAME);
-        KEYS_DIRECTORY = new FileBasedDirectory(root, KEYS_DIRECTORY_NAME);
+        Directory root = new FileBasedDirectory(ROOT_DIRECTORY, Configuration.rootName, true);
+        TEST_DATA_DIRECTORY = new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME, true);
+        DATA_DIRECTORY = new FileBasedDirectory(root, DATA_DIRECTORY_NAME, true);
+        INDEX_DIRECTORY = new FileBasedDirectory(root, INDEX_DIRECTORY_NAME, true);
+        MANIFEST_DIRECTORY = new FileBasedDirectory(root, MANIFESTS_DIRECTORY_NAME, true);
+        KEYS_DIRECTORY = new FileBasedDirectory(root, KEYS_DIRECTORY_NAME, true);
     }
 
     private static void loadSOSNode() throws ConfigurationException {

@@ -1,11 +1,9 @@
 package uk.ac.standrews.cs.sos.model.datastore;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.InputStream;
@@ -15,12 +13,8 @@ import java.io.InputStream;
  */
 public class StreamPersist extends StreamStore {
 
-    private Storage storage;
-
     public StreamPersist(Configuration configuration, Storage storage, InputStream inputStream) {
-        super(configuration, inputStream);
-
-        this.storage = storage;
+        super(configuration, storage, inputStream);
     }
 
     @Override
@@ -28,8 +22,4 @@ public class StreamPersist extends StreamStore {
         return new PersistLocationBundle(location);
     }
 
-    @Override
-    protected File getAtomLocation(IGUID guid) {
-        return storage.createFile(configuration.getDataDirectory(), guid.toString());
-    }
 }

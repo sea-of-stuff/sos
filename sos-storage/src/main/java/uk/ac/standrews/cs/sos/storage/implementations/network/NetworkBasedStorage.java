@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.storage.implementations.network;
 
+import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -34,6 +35,11 @@ public class NetworkBasedStorage implements Storage {
     }
 
     @Override
+    public boolean isImmutable() {
+        return false;
+    }
+
+    @Override
     public Directory getRoot() {
         return root;
     }
@@ -65,6 +71,11 @@ public class NetworkBasedStorage implements Storage {
 
     @Override
     public File createFile(Directory parent, String filename) {
+        return null;
+    }
+
+    @Override
+    public File createFile(Directory parent, String filename, Data data) {
         return null;
     }
 }

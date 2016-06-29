@@ -4,14 +4,16 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
-import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +25,11 @@ import java.net.MalformedURLException;
 public abstract class CommonStore implements Store {
 
     protected Configuration configuration;
+    protected Storage storage;
 
-    public CommonStore(Configuration configuration) {
+    public CommonStore(Configuration configuration, Storage storage) {
         this.configuration = configuration;
+        this.storage = storage;
     }
 
     protected IGUID generateGUID(InputStream inputStream) throws GUIDGenerationException {
@@ -49,20 +53,6 @@ public abstract class CommonStore implements Store {
         return retval;
     }
 
-    protected void storeData(InputStream inputStream, IGUID guid) throws DataStorageException {
-        try {
-            File cachedLocation = getAtomLocation(guid);
-            String path = cachedLocation.getPathname();
-
-            FileHelper.touchDir(path);
-            if (!FileHelper.pathExists(path)) {
-                FileHelper.copyToFile(inputStream, path);
-            }
-        } catch (IOException e) {
-            throw new DataStorageException();
-        }
-    }
-
     protected Location getLocation(IGUID guid) throws SourceLocationException {
         Location location;
         Node node = configuration.getNode();
@@ -77,6 +67,18 @@ public abstract class CommonStore implements Store {
 
     protected abstract LocationBundle getBundle(Location location);
 
-    protected abstract File getAtomLocation(IGUID guid);
+    protected File getAtomLocation(IGUID guid) {
+        return storage.createFile(configuration.getDataDirectory(), guid.toString()); // FIXME - do not use config
+    }
 
+    protected void storeData(IGUID guid, Data data) {
+        Directory dataDirectory = storage.getDataDirectory();
+        File file = storage.createFile(dataDirectory, guid.toString(), data);
+
+        try {
+            file.persist();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+    }
 }

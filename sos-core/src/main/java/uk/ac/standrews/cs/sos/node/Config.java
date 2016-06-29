@@ -24,7 +24,7 @@ public class Config {
      */
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final Directory HOME_DIR = new FileBasedDirectory(new java.io.File(HOME));
-    private static final Directory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos");
+    private static final Directory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos", false);
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
@@ -82,11 +82,11 @@ public class Config {
     public String s_secret_key;
 
     public static void initDatabaseInfo() throws PersistenceException {
-        DB_DIRECTORY = new FileBasedDirectory(root, db_path); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
+        DB_DIRECTORY = new FileBasedDirectory(root, db_path, false); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
         if (!DB_DIRECTORY.exists()) {
             DB_DIRECTORY.persist();
         }
-        DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME_DEFAULT);
+        DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME_DEFAULT, false);
     }
 
 }
