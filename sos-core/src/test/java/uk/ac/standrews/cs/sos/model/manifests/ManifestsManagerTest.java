@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.j256.ormlite.support.ConnectionSource;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -11,7 +10,6 @@ import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -26,7 +24,6 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.node.Config;
-import uk.ac.standrews.cs.sos.node.SQLDB;
 import uk.ac.standrews.cs.sos.storage.StorageFactory;
 import uk.ac.standrews.cs.sos.storage.StorageType;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -34,7 +31,6 @@ import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,16 +55,7 @@ public class ManifestsManagerTest {
     public void setUp() throws IndexException, ConfigurationException, NodeManagerException {
         configuration = Configuration.getInstance();
 
-        // Load configuration -- TODO - have a method for this!
-        Config.initDatabaseInfo();
-
-        try {
-            ConnectionSource connection = SQLDB.getSQLConnection();
-            config = SQLDB.getConfiguration(connection);
-        } catch (DatabasePersistenceException | SQLException e) {
-            e.printStackTrace();
-        }
-
+        Config config = new Config(); // create default configuration
         storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
         index = LuceneIndex.getInstance();
     }

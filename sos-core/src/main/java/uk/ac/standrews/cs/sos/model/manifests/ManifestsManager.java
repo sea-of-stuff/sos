@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestManagerException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -13,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
@@ -252,19 +250,13 @@ public class ManifestsManager {
         }
     }
 
-    private SOSFile getManifestFile(IGUID guid) throws ManifestManagerException {
+    private SOSFile getManifestFile(IGUID guid) {
         return getManifestFile(guid.toString());
     }
 
-    private SOSFile getManifestFile(String guid) throws ManifestManagerException {
-        try {
-            SOSDirectory manifestsDir = Configuration.getInstance()
-                    .getManifestsDirectory();
-
-            return storage.createFile(manifestsDir, normaliseGUID(guid));
-        } catch (ConfigurationException e) {
-            throw new ManifestManagerException();
-        }
+    private SOSFile getManifestFile(String guid) {
+        SOSDirectory manifestsDir = storage.getManifestDirectory();
+        return storage.createFile(manifestsDir, normaliseGUID(guid));
     }
 
     private String normaliseGUID(String guid) {
@@ -279,7 +271,7 @@ public class ManifestsManager {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    private boolean manifestExistsInLocalStorage(IGUID guid) throws ManifestManagerException {
+    private boolean manifestExistsInLocalStorage(IGUID guid) {
         SOSFile path = getManifestFile(guid);
         return path.exists();
     }
