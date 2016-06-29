@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.interfaces;
 
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+
 import java.io.File;
 
 /**
@@ -18,5 +20,7 @@ public interface StatefulObject {
     long lastModified();
 
     File toFile();
+
+    void persist() throws PersistenceException;
 
 }

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class StorageFactory {
 
-    private static final Logger log= Logger.getLogger( StorageFactory.class.getName() );
+    private static final Logger log = Logger.getLogger( StorageFactory.class.getName() );
 
     public static Storage createStorage(StorageType type, String location) throws StorageException {
         Storage storage = null;

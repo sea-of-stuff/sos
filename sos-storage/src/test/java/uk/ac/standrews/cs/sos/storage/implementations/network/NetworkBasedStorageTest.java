@@ -9,7 +9,8 @@ import java.util.Iterator;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class NetworkBasedStorageTest {
-    @Test
+
+    @Test (enabled = false)
     public void testGetRoot() throws Exception {
 
         NetworkBasedStorage storage = new NetworkBasedStorage("sic2", "public_html");

@@ -21,6 +21,4 @@ public interface Directory extends StatefulObject {
 
     Iterator<StatefulObject> getIterator();
 
-    boolean mkdir();
-
 }

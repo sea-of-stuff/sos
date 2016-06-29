@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBindingImpl;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class FileBasedDirectory extends FileBasedStatefulObject implements Directory {
 
-    private static final Logger log= Logger.getLogger( FileBasedDirectory.class.getName() );
+    private static final Logger log = Logger.getLogger(FileBasedDirectory.class.getName());
 
     public FileBasedDirectory(Directory parent, String name) {
         super(parent, name);
@@ -45,6 +46,23 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
             return logicalParent.getPathname() + "/";
         } else {
             return logicalParent.getPathname() + name + "/";
+        }
+    }
+
+    @Override
+    public void persist() throws PersistenceException {
+        if (realFile.exists()) {
+            if (!realFile.isDirectory()) {
+                throw new PersistenceException(realFile.getAbsolutePath() + " is not a directory");
+            }
+        } else {
+            createDirectory();
+        }
+    }
+
+    private void createDirectory() throws PersistenceException {
+        if (!realFile.mkdirs()) {
+            throw new PersistenceException("Could not create directory " + realFile.getAbsolutePath());
         }
     }
 
@@ -85,8 +103,9 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
     @Override
     public void remove(String name) throws BindingAbsentException {
         java.io.File candidate = new java.io.File(realFile, name);
-        if (!candidate.exists())
+        if (!candidate.exists()) {
             throw new BindingAbsentException("file " + name + " not present");
+        }
 
         candidate.delete();    // Ignore result - nothing to do with it.
     }
@@ -96,12 +115,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
         return new DirectoryIterator(realFile);
     }
 
-    @Override
-    public boolean mkdir() {
-        return realFile.mkdirs();
-    }
-
-    private class DirectoryIterator implements Iterator {
+    private class DirectoryIterator<T> implements Iterator {
 
         String[] names;
         int index;
