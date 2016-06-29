@@ -5,9 +5,9 @@ import java.io.File;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SOSStatefulObject {
+public interface StatefulObject {
 
-    SOSDirectory getParent();
+    Directory getParent();
 
     boolean exists();
 
@@ -18,4 +18,5 @@ public interface SOSStatefulObject {
     long lastModified();
 
     File toFile();
+
 }

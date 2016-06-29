@@ -7,19 +7,19 @@ import java.util.Iterator;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SOSDirectory extends SOSStatefulObject {
+public interface Directory extends StatefulObject {
 
-    SOSStatefulObject get(String name) throws BindingAbsentException;
+    StatefulObject get(String name) throws BindingAbsentException;
 
     boolean contains(String name);
 
-    void addSOSFile(SOSFile file, String name);
+    void addSOSFile(File file, String name);
 
-    void addSOSDirectory(SOSDirectory directory, String name);
+    void addSOSDirectory(Directory directory, String name);
 
     void remove(String name) throws BindingAbsentException;
 
-    Iterator<SOSStatefulObject> getIterator();
+    Iterator<StatefulObject> getIterator();
 
     boolean mkdir();
 

@@ -1,7 +1,7 @@
-package uk.ac.standrews.cs.sos.storage.implementations.NetworkBased;
+package uk.ac.standrews.cs.sos.storage.implementations.network;
 
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 /**
@@ -13,7 +13,7 @@ public class NetworkBasedStorage implements Storage {
     private String mountPoint;
     private String rootPath;
 
-    private SOSDirectory root;
+    private Directory root;
 
     /**
      * Create the Storage for a mounted network folder.
@@ -34,37 +34,37 @@ public class NetworkBasedStorage implements Storage {
     }
 
     @Override
-    public SOSDirectory getRoot() {
+    public Directory getRoot() {
         return root;
     }
 
     @Override
-    public SOSDirectory getDataDirectory() {
+    public Directory getDataDirectory() {
         return null;
     }
 
     @Override
-    public SOSDirectory getManifestDirectory() {
+    public Directory getManifestDirectory() {
         return null;
     }
 
     @Override
-    public SOSDirectory getTestDirectory() {
+    public Directory getTestDirectory() {
         return null;
     }
 
     @Override
-    public SOSDirectory createDirectory(SOSDirectory parent, String name) {
+    public Directory createDirectory(Directory parent, String name) {
         return null;
     }
 
     @Override
-    public SOSDirectory createDirectory(String name) {
+    public Directory createDirectory(String name) {
         return null;
     }
 
     @Override
-    public SOSFile createFile(SOSDirectory parent, String filename) {
+    public File createFile(Directory parent, String filename) {
         return null;
     }
 }

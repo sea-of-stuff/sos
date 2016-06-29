@@ -1,11 +1,9 @@
-package uk.ac.standrews.cs.sos.storage.implementations.FileBased;
+package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
-
-import java.io.File;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -16,44 +14,44 @@ public class FileBasedStorage implements Storage {
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String TEST_DATA_DIRECTORY_NAME = "test_data";
 
-    private SOSDirectory root;
+    private Directory root;
 
-    public FileBasedStorage(File rootDirectory) {
+    public FileBasedStorage(java.io.File rootDirectory) {
         root = new FileBasedDirectory(rootDirectory);
     }
 
     @Override
-    public SOSDirectory getRoot() {
+    public Directory getRoot() {
         return root;
     }
 
     @Override
-    public SOSDirectory getDataDirectory() {
+    public Directory getDataDirectory() {
         return new FileBasedDirectory(root, DATA_DIRECTORY_NAME);
     }
 
     @Override
-    public SOSDirectory getManifestDirectory() {
+    public Directory getManifestDirectory() {
         return new FileBasedDirectory(root, MANIFESTS_DIRECTORY_NAME);
     }
 
     @Override
-    public SOSDirectory getTestDirectory() {
+    public Directory getTestDirectory() {
         return new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME);
     }
 
     @Override
-    public SOSDirectory createDirectory(SOSDirectory parent, String name) {
+    public Directory createDirectory(Directory parent, String name) {
         return new FileBasedDirectory(parent, name);
     }
 
     @Override
-    public SOSDirectory createDirectory(String name) {
+    public Directory createDirectory(String name) {
         return new FileBasedDirectory(root, name);
     }
 
     @Override
-    public SOSFile createFile(SOSDirectory parent, String filename) {
+    public File createFile(Directory parent, String filename) {
         return new FileBasedFile(parent, filename);
     }
 }

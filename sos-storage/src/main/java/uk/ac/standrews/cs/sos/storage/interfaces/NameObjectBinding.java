@@ -3,7 +3,8 @@ package uk.ac.standrews.cs.sos.storage.interfaces;
 /**
  * @author al
  */
-public interface INameObjectBinding {
+public interface NameObjectBinding {
+
     /**
      * Gets the name.
      *
@@ -12,9 +13,9 @@ public interface INameObjectBinding {
     String getName();
 
     /**
-     * Gets the IAttributedStatefulObject.
+     * Gets the NameObjectBinding.
      *
-     * @return the IAttributedStatefulObject
+     * @return the NameObjectBinding
      */
-    SOSStatefulObject getObject();
+    StatefulObject getObject();
 }

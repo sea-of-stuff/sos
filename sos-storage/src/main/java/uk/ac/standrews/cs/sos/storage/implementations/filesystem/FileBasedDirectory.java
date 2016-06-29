@@ -1,12 +1,11 @@
-package uk.ac.standrews.cs.sos.storage.implementations.FileBased;
+package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBinding;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSStatefulObject;
+import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBindingImpl;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,22 +13,22 @@ import java.util.logging.Logger;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FileBasedDirectory extends FileBasedStatefulObject implements SOSDirectory {
+public class FileBasedDirectory extends FileBasedStatefulObject implements Directory {
 
     private static final Logger log= Logger.getLogger( FileBasedDirectory.class.getName() );
 
-    public FileBasedDirectory(SOSDirectory parent, String name) {
+    public FileBasedDirectory(Directory parent, String name) {
         super(parent, name);
-        realFile = new File(parent.toFile(), name);
+        realFile = new java.io.File(parent.toFile(), name);
     }
 
-    public FileBasedDirectory(File directory) {
+    public FileBasedDirectory(java.io.File directory) {
         super();
         realFile = directory;
     }
 
     @Override
-    public SOSDirectory getParent() {
+    public Directory getParent() {
         return logicalParent;
     }
 
@@ -50,8 +49,8 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements SOSDi
     }
 
     @Override
-    public SOSStatefulObject get(String name) throws BindingAbsentException {
-        File candidate = new File(realFile, name);
+    public StatefulObject get(String name) throws BindingAbsentException {
+        java.io.File candidate = new java.io.File(realFile, name);
         if (!candidate.exists()) {
             throw new BindingAbsentException("Object " + name + " is not present");
         }
@@ -69,23 +68,23 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements SOSDi
 
     @Override
     public boolean contains(String name) {
-        File candidate = new File(realFile, name);
+        java.io.File candidate = new java.io.File(realFile, name);
         return candidate.exists();
     }
 
     @Override
-    public void addSOSFile(SOSFile file, String name) {
+    public void addSOSFile(File file, String name) {
         // Don't need to do anything since file can't be created in isolation from parent directory.
     }
 
     @Override
-    public void addSOSDirectory(SOSDirectory directory, String name) {
+    public void addSOSDirectory(Directory directory, String name) {
         // Don't need to do anything since directory can't be created in isolation from parent directory.
     }
 
     @Override
     public void remove(String name) throws BindingAbsentException {
-        File candidate = new File(realFile, name);
+        java.io.File candidate = new java.io.File(realFile, name);
         if (!candidate.exists())
             throw new BindingAbsentException("file " + name + " not present");
 
@@ -93,7 +92,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements SOSDi
     }
 
     @Override
-    public Iterator<SOSStatefulObject> getIterator() {
+    public Iterator<StatefulObject> getIterator() {
         return new DirectoryIterator(realFile);
     }
 
@@ -107,7 +106,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements SOSDi
         String[] names;
         int index;
 
-        public DirectoryIterator(File realFile) {
+        public DirectoryIterator(java.io.File realFile) {
 
             names = realFile.list();
             if (names == null) {
@@ -127,12 +126,12 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements SOSDi
         public Object next() {
 
             String name = names[index];
-            SOSStatefulObject obj = null;
+            StatefulObject obj = null;
             try {
                 obj = get(name);
                 index++;
 
-                return new NameObjectBinding(name, obj);
+                return new NameObjectBindingImpl(name, obj);
             } catch (BindingAbsentException e) {
                 e.printStackTrace();
             }

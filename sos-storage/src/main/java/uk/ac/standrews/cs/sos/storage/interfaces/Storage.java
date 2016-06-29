@@ -1,20 +1,57 @@
 package uk.ac.standrews.cs.sos.storage.interfaces;
 
 /**
+ * This interface allow SOS implementations to interact with different
+ * types of storage implementations
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Storage {
 
-    SOSDirectory getRoot();
+    /**
+     * Get the root directory of this storage
+     * @return
+     */
+    Directory getRoot();
 
-    SOSDirectory getDataDirectory();
+    /**
+     * Get the directory where data is stored
+     * @return
+     */
+    Directory getDataDirectory();
 
-    SOSDirectory getManifestDirectory();
+    /**
+     * Get the directory where manifests are stored
+     * @return
+     */
+    Directory getManifestDirectory();
 
-    SOSDirectory getTestDirectory();
+    /**
+     * Get a directory that can be used for any test purposes
+     * @return
+     */
+    Directory getTestDirectory();
 
-    SOSDirectory createDirectory(SOSDirectory parent, String name);
-    SOSDirectory createDirectory(String name);
+    /**
+     * Create a directory within the specified parent and with the given name
+     * @param parent
+     * @param name
+     * @return
+     */
+    Directory createDirectory(Directory parent, String name);
 
-    SOSFile createFile(SOSDirectory parent, String filename);
+    /**
+     * Create a directory at the root of this storage with the given name
+     * @param name
+     * @return
+     */
+    Directory createDirectory(String name);
+
+    /**
+     * Create a file a the specified parent directory
+     * @param parent
+     * @param filename
+     * @return
+     */
+    File createFile(Directory parent, String filename);
 }

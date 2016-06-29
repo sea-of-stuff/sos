@@ -1,7 +1,7 @@
-package uk.ac.standrews.cs.sos.storage.implementations.NetworkBased;
+package uk.ac.standrews.cs.sos.storage.implementations.network;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 
 import java.util.Iterator;
 
@@ -14,7 +14,7 @@ public class NetworkBasedStorageTest {
 
         NetworkBasedStorage storage = new NetworkBasedStorage("sic2", "public_html");
 
-        SOSDirectory dir = storage.getRoot();
+        Directory dir = storage.getRoot();
         Iterator it = dir.getIterator();
         while(it.hasNext()) {
             System.out.println(it.next().toString());

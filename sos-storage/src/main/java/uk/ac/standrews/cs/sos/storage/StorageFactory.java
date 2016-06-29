@@ -1,16 +1,21 @@
 package uk.ac.standrews.cs.sos.storage;
 
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedStorage;
+import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class StorageFactory {
 
-    public static Storage createStorage(StorageType type, String location) {
+    private static final Logger log= Logger.getLogger( StorageFactory.class.getName() );
+
+    public static Storage createStorage(StorageType type, String location) throws StorageException {
         Storage storage = null;
 
         switch(type) {
@@ -24,8 +29,8 @@ public class StorageFactory {
                 // TODO
                 break;
             default:
-                System.out.println("I should throw an error, but instead I will just tell you I do not know this type of storage");
-                break;
+                log.log(Level.SEVERE, "Storage type: " + type + " is unknown. Impossible to create a storage.");
+                throw new StorageException();
         }
 
         return storage;

@@ -1,20 +1,20 @@
-package uk.ac.standrews.cs.sos.storage.implementations.FileBased;
+package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
-import uk.ac.standrews.cs.sos.storage.interfaces.SOSStatefulObject;
+import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
 import java.io.File;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FileBasedStatefulObject implements SOSStatefulObject{
+public class FileBasedStatefulObject implements StatefulObject {
 
-    protected SOSDirectory logicalParent;
+    protected Directory logicalParent;
     protected String name;
     protected File realFile;
 
-    public FileBasedStatefulObject(SOSDirectory parent, String name) {
+    public FileBasedStatefulObject(Directory parent, String name) {
         this.logicalParent = parent;
         this.name = name;
     }
@@ -24,7 +24,7 @@ public class FileBasedStatefulObject implements SOSStatefulObject{
     }
 
     @Override
-    public SOSDirectory getParent() {
+    public Directory getParent() {
         return logicalParent;
     }
 
