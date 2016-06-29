@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.storage;
+package uk.ac.standrews.cs.sos.model.datastore;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IGUID;
@@ -29,7 +29,7 @@ public class StorageHelperTest extends SetUpTest {
         Location location = HelperTest.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = null;
 
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, location, bundles);
         assertNotNull(guid);
         assertNull(bundles);
     }
@@ -39,7 +39,7 @@ public class StorageHelperTest extends SetUpTest {
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
         Collection<LocationBundle> bundles = null;
 
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
         assertNotNull(guid);
         assertNull(bundles);
     }
@@ -49,7 +49,7 @@ public class StorageHelperTest extends SetUpTest {
         Location location = HelperTest.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -59,7 +59,7 @@ public class StorageHelperTest extends SetUpTest {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -69,7 +69,7 @@ public class StorageHelperTest extends SetUpTest {
         Location location = null;
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -79,7 +79,7 @@ public class StorageHelperTest extends SetUpTest {
     public void testStoreAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -88,14 +88,14 @@ public class StorageHelperTest extends SetUpTest {
     public void testStoreAtomFromNullStream() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         InputStream inputStream = null;
-        StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, locations);
+        StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, inputStream, locations);
     }
 
     @Test
     public void testStoreAtomFromEmptyStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("");
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -104,13 +104,13 @@ public class StorageHelperTest extends SetUpTest {
     public void testStoreAtomFromTwoEqualStreams() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 
         Collection<LocationBundle> newBundles = new ArrayList<>();
         InputStream twinInputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID newGUID = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, twinInputStream, newBundles);
+        IGUID newGUID = StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, twinInputStream, newBundles);
         assertNotNull(guid);
         assertEquals(newGUID, guid);
         assertEquals(newBundles.size(), 1);
@@ -121,7 +121,7 @@ public class StorageHelperTest extends SetUpTest {
         Location location = HelperTest.createDummyDataFile(configuration);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = StorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles);
+        IGUID guid = StorageHelper.persistAtomAndUpdateLocationBundles(configuration, storage, location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 
@@ -133,7 +133,7 @@ public class StorageHelperTest extends SetUpTest {
     public void testStorePersistAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID guid = StorageHelper.persistAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        IGUID guid = StorageHelper.persistAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 

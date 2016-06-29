@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
+import com.j256.ormlite.support.ConnectionSource;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -23,10 +25,16 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.node.Config;
+import uk.ac.standrews.cs.sos.node.SQLDB;
+import uk.ac.standrews.cs.sos.storage.StorageFactory;
+import uk.ac.standrews.cs.sos.storage.StorageType;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,11 +51,25 @@ import static org.testng.Assert.assertFalse;
 public class ManifestsManagerTest {
 
     private Configuration configuration;
+    private Config config;
+    private Storage storage;
     private Index index;
 
     @BeforeMethod
     public void setUp() throws IndexException, ConfigurationException, NodeManagerException {
         configuration = Configuration.getInstance();
+
+        // Load configuration -- TODO - have a method for this!
+        Config.initDatabaseInfo();
+
+        try {
+            ConnectionSource connection = SQLDB.getSQLConnection();
+            config = SQLDB.getConfiguration(connection);
+        } catch (DatabasePersistenceException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location);
         index = LuceneIndex.getInstance();
     }
 
@@ -64,7 +86,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAtomManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(index);
+        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -87,7 +109,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddCompoundManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(index);
+        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         Identity identity = new IdentityImpl(configuration);
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -127,7 +149,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testAddAssetManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(index);
+        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
         Identity identity = new IdentityImpl(configuration);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
@@ -154,7 +176,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void testUpdateAtomManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(index);
+        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         Location firstLocation = HelperTest.createDummyDataFile(configuration, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(configuration, "second.txt");
@@ -184,7 +206,7 @@ public class ManifestsManagerTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void testAddNullManifest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(index);
+        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);

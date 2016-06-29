@@ -5,16 +5,19 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocationPersist extends LocationStore {
 
-    public LocationPersist(Configuration configuration, Location location) {
+    private Storage storage;
+
+    public LocationPersist(Configuration configuration, Storage storage, Location location) {
         super(configuration, location);
+        this.storage = storage;
     }
 
     @Override
@@ -24,6 +27,6 @@ public class LocationPersist extends LocationStore {
 
     @Override
     protected SOSFile getAtomLocation(IGUID guid) {
-        return new FileBasedFile(configuration.getDataDirectory(), guid.toString());
+        return storage.createFile(configuration.getDataDirectory(), guid.toString()); // FIXME - do not use config
     }
 }

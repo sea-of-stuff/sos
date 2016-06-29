@@ -23,7 +23,7 @@ public class Configuration {
 
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final String SOS_ROOT = HOME + "sos/";
-    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory(HOME + "sos");
+    private static final SOSDirectory ROOT_DIRECTORY = new FileBasedDirectory(new File(HOME + "sos"));
     private static final String DEFAULT_ROOT_NAME = "";
 
     private static final String TEST_DATA_DIRECTORY_NAME = "test_data";

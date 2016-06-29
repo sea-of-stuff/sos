@@ -31,7 +31,7 @@ public class SOSCoordinator extends SOSCommon {
     private NodeManager nodeManager;
 
     public SOSCoordinator(Configuration configuration, ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
-        super(configuration, manifestsManager, identity);
+        super(configuration, null, manifestsManager, identity); // FIXME - not sure if passing null is a good idea!
         this.nodeManager = nodeManager;
     }
 

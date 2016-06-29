@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class SetUpTest {
 
     protected LocalSOSNode localSOSNode;
+    protected Storage storage;
     protected Index index;
     protected Configuration configuration;
 
@@ -37,6 +39,7 @@ public class SetUpTest {
         LocalSOSNode.setIndex(index);
         LocalSOSNode.create(configuration);
         localSOSNode = LocalSOSNode.getInstance();
+        storage = localSOSNode.getStorage();
     }
 
     @AfterMethod

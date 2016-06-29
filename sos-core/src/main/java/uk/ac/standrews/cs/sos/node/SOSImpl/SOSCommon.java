@@ -13,10 +13,11 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
 import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,12 +28,15 @@ import java.util.Collection;
  */
 public abstract class SOSCommon implements SeaOfStuff {
 
+    protected Storage storage;
+
     protected Identity identity;
     protected ManifestsManager manifestsManager;
     final protected Configuration configuration;
 
-    public SOSCommon(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
+    public SOSCommon(Configuration configuration, Storage storage, ManifestsManager manifestsManager, Identity identity) {
         this.configuration = configuration;
+        this.storage = storage;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
     }

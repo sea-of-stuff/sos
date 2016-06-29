@@ -7,6 +7,8 @@ import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 
+import java.io.File;
+
 /**
  * This class contains all information to configure this SOS node.
  *
@@ -22,7 +24,8 @@ public class Config {
      * DEFAULT CONFIG VALUES - START
      */
     private static final String HOME = System.getProperty("user.home") + "/";
-    private static final SOSDirectory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME + "sos");
+    private static final SOSDirectory HOME_DIR = new FileBasedDirectory(new File(HOME));
+    private static final SOSDirectory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos");
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
@@ -69,11 +72,11 @@ public class Config {
     public final static String S_TYPE_AWS_S3 = "aws_s3";
 
     @DatabaseField(canBeNull = true)
-    public String s_type;
+    public String s_type = S_TYPE_LOCAL;
     @DatabaseField(canBeNull = true)
     public String s_hostname; // Will be used if storage is over the network
     @DatabaseField(canBeNull = true)
-    public String s_location; // This is the folder where we store internal properties of system (e.g. manifests, etc)
+    public String s_location = root.getPathname(); // This is the folder where we store internal properties of system (e.g. manifests, etc)
     public String s_username;
     public String s_password;
     public String s_access_key;
@@ -82,7 +85,7 @@ public class Config {
     public static void initDatabaseInfo() {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
         if (!DB_DIRECTORY.exists()) {
-            DB_DIRECTORY.mkdirs();
+            DB_DIRECTORY.mkdir();
         }
         DB_DUMP_FILE = new FileBasedFile(DB_DIRECTORY, DB_DUMP_FILE_NAME_DEFAULT);
     }

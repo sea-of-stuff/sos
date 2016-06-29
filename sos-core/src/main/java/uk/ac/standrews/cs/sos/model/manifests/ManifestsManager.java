@@ -16,7 +16,9 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -38,6 +40,7 @@ public class ManifestsManager {
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
+    final private Storage storage;
     final private Index index;
 
     /**
@@ -47,7 +50,8 @@ public class ManifestsManager {
      *
      * @param index used to record information for the manifests.
      */
-    public ManifestsManager(Index index) {
+    public ManifestsManager(Storage storage, Index index) {
+        this.storage = storage;
         this.index = index;
     }
 
@@ -166,9 +170,6 @@ public class ManifestsManager {
         return manifest;
     }
 
-    // if atom-manifest, check if it exists already
-    // then merge and save
-    // otherwise just save
     private void saveManifest(Manifest manifest) throws ManifestManagerException {
         if (manifest.getManifestType().equals(ManifestConstants.ATOM) &&
                 manifestExistsInLocalStorage(manifest.getContentGUID())) {
@@ -257,9 +258,10 @@ public class ManifestsManager {
 
     private SOSFile getManifestFile(String guid) throws ManifestManagerException {
         try {
-            return Configuration.getInstance()
-                    .getManifestsDirectory()
-                    .addSOSFile(normaliseGUID(guid));
+            SOSDirectory manifestsDir = Configuration.getInstance()
+                    .getManifestsDirectory();
+
+            return storage.createFile(manifestsDir, normaliseGUID(guid));
         } catch (ConfigurationException e) {
             throw new ManifestManagerException();
         }

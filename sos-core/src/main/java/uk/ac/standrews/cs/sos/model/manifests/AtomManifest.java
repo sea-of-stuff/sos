@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.AtomManifestSerializer;
+import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 
 import java.io.IOException;
 import java.io.InputStream;

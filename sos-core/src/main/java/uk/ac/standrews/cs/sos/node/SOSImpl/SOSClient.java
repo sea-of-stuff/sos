@@ -11,9 +11,10 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -27,9 +28,9 @@ import java.util.Collection;
  */
 public class SOSClient extends SOSCommon {
 
-    public SOSClient(Configuration configuration, ManifestsManager manifestsManager,
+    public SOSClient(Configuration configuration, Storage storage, ManifestsManager manifestsManager,
                      Identity identity) {
-        super(configuration, manifestsManager, identity);
+        super(configuration, storage, manifestsManager, identity);
     }
 
     @Override
@@ -82,11 +83,11 @@ public class SOSClient extends SOSCommon {
 
     @Override
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        return StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, location, bundles);
+        return StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, location, bundles);
     }
 
     @Override
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        return StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        return StorageHelper.cacheAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
     }
 }

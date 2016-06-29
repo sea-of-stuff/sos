@@ -39,7 +39,6 @@ public class LocalSOSNode extends SOSNode {
     private static Config config;
     private static Storage storage;
 
-
     private static Index index;
     private static Identity identity;
     private static ManifestsManager manifestsManager;
@@ -148,6 +147,10 @@ public class LocalSOSNode extends SOSNode {
         }
     }
 
+    public Storage getStorage() {
+        return storage;
+    }
+
     /**************************************************************************/
     /* PRIVATE METHODS */
     /**************************************************************************/
@@ -159,7 +162,7 @@ public class LocalSOSNode extends SOSNode {
     }
 
     private static void initManifestManager() {
-        manifestsManager = new ManifestsManager(index);
+        manifestsManager = new ManifestsManager(storage, index);
     }
 
     private static void initNodeManager() throws SOSException {
@@ -184,8 +187,8 @@ public class LocalSOSNode extends SOSNode {
         sosMap = new HashMap<>();
 
         // TODO read configuration for roles
-        sosMap.put(ROLE.CLIENT, new SOSClient(configuration, manifestsManager, identity));
-        sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, manifestsManager, identity));
+        sosMap.put(ROLE.CLIENT, new SOSClient(configuration, storage, manifestsManager, identity));
+        sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, storage, manifestsManager, identity));
         sosMap.put(ROLE.COORDINATOR, new SOSCoordinator(configuration, manifestsManager, identity, nodeManager));
 
         instance.setRoles((byte) (ROLE.CLIENT.mask | ROLE.COORDINATOR.mask | ROLE.STORAGE.mask));

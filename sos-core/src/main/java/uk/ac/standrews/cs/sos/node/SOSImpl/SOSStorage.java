@@ -9,9 +9,10 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -21,8 +22,8 @@ import java.util.Collection;
  */
 public class SOSStorage extends SOSCommon {
 
-    public SOSStorage(Configuration configuration, ManifestsManager manifestsManager, Identity identity) {
-        super(configuration, manifestsManager, identity);
+    public SOSStorage(Configuration configuration, Storage storage, ManifestsManager manifestsManager, Identity identity) {
+        super(configuration, storage, manifestsManager, identity);
     }
 
     @Override
@@ -57,11 +58,11 @@ public class SOSStorage extends SOSCommon {
 
     @Override
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
-        return StorageHelper.persistAtomAndUpdateLocationBundles(configuration, location, bundles); // NOTE - this might undo the cache locations!
+        return StorageHelper.persistAtomAndUpdateLocationBundles(configuration, storage, location, bundles); // NOTE - this might undo the cache locations!
     }
 
     @Override
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
-        return StorageHelper.persistAtomAndUpdateLocationBundles(configuration, inputStream, bundles);
+        return StorageHelper.persistAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
     }
 }

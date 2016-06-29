@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.storage.StorageHelper;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 

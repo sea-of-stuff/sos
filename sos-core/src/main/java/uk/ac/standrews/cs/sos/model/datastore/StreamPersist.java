@@ -5,8 +5,8 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
+import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
 import java.io.InputStream;
 
@@ -15,8 +15,12 @@ import java.io.InputStream;
  */
 public class StreamPersist extends StreamStore {
 
-    public StreamPersist(Configuration configuration, InputStream inputStream) {
+    private Storage storage;
+
+    public StreamPersist(Configuration configuration, Storage storage, InputStream inputStream) {
         super(configuration, inputStream);
+
+        this.storage = storage;
     }
 
     @Override
@@ -26,6 +30,6 @@ public class StreamPersist extends StreamStore {
 
     @Override
     protected SOSFile getAtomLocation(IGUID guid) {
-        return new FileBasedFile(configuration.getDataDirectory(), guid.toString());
+        return storage.createFile(configuration.getDataDirectory(), guid.toString());
     }
 }
