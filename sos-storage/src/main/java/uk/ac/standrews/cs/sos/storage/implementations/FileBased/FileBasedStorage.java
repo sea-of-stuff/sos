@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.storage.interfaces.SOSDirectory;
 import uk.ac.standrews.cs.sos.storage.interfaces.SOSFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
+import java.io.File;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -16,10 +18,8 @@ public class FileBasedStorage implements Storage {
 
     private SOSDirectory root;
 
-    public FileBasedStorage(String location) {
-        if (location != null && !location.isEmpty()) {
-            root = new FileBasedDirectory(location);
-        }
+    public FileBasedStorage(File rootDirectory) {
+        root = new FileBasedDirectory(rootDirectory);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FileBasedStorage implements Storage {
 
     @Override
     public SOSDirectory createDirectory(String name) {
-        return new FileBasedDirectory(name);
+        return new FileBasedDirectory(root, name);
     }
 
     @Override

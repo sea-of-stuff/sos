@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.interfaces;
 
+import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+
 import java.util.Iterator;
 
 /**
@@ -7,11 +9,18 @@ import java.util.Iterator;
  */
 public interface SOSDirectory extends SOSStatefulObject {
 
-    SOSFile addSOSFile(String fileName);
+    SOSStatefulObject get(String name) throws BindingAbsentException;
 
-    SOSDirectory addSOSDirectory(String directoryName);
+    boolean contains(String name);
+
+    void addSOSFile(SOSFile file, String name);
+
+    void addSOSDirectory(SOSDirectory directory, String name);
+
+    void remove(String name) throws BindingAbsentException;
 
     Iterator<SOSStatefulObject> getIterator();
 
-    boolean mkdirs();
+    boolean mkdir();
+
 }

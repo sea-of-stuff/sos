@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.storage;
 import uk.ac.standrews.cs.sos.storage.implementations.FileBased.FileBasedStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
+import java.io.File;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -13,7 +15,7 @@ public class StorageFactory {
 
         switch(type) {
             case LOCAL:
-                storage = new FileBasedStorage(location);
+                storage = new FileBasedStorage(new File(location));
                 break;
             case NETWORK:
                 // TODO
