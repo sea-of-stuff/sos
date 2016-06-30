@@ -17,15 +17,30 @@ import java.io.IOException;
 public class AWSFile extends AWSStatefulObject implements File {
 
     private Data data;
-    private boolean persisted; // TODO - use this!
+    private boolean persisted;
 
     public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent, String name, boolean isImmutable) {
         super(s3Client, bucketName, parent, name, isImmutable);
+
+        if (isImmutable && exists()) {
+            this.persisted = true;
+        } else {
+            this.persisted = false;
+            // FIXME - not sure what to do here
+            // this.data = data;
+        }
     }
 
     public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent, String name, Data data, boolean isImmutable) {
         super(s3Client, bucketName, parent, name, isImmutable);
         this.data = data;
+
+        if (isImmutable && exists()) {
+            this.persisted = true;
+        } else {
+            this.persisted = false;
+            this.data = data;
+        }
     }
 
     @Override
@@ -35,18 +50,21 @@ public class AWSFile extends AWSStatefulObject implements File {
 
     @Override
     public void persist() throws PersistenceException {
-        String objectPath = getPathname();
+        if (isImmutable && persisted) {
+            return;
+        }
 
-        System.out.println("path: " + objectPath);
+        String objectPath = getPathname();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(data.getSize());
 
-        System.out.println("meta: " + metadata.toString());
         try {
             PutObjectRequest putObjectRequest =
                     new PutObjectRequest(bucketName, objectPath, data.getInputStream(), metadata);
             s3Client.putObject(putObjectRequest);
+
+            persisted = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
