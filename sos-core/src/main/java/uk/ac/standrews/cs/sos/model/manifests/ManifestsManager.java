@@ -269,8 +269,8 @@ public class ManifestsManager {
     }
 
     private boolean manifestExistsInLocalStorage(IGUID guid) {
-        File path = getManifestFile(guid);
-        return path.exists();
+        File manifest = getManifestFile(guid);
+        return manifest.exists();
     }
 
 }
