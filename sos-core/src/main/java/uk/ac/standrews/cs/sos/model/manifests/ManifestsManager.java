@@ -14,15 +14,17 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.data.StringData;
+import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -200,12 +202,13 @@ public class ManifestsManager {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
         File backupManifest = getManifestFile(manifestGUID);
 
+        // TODO - use storage API for persisting this!
         try {
             FileHelper.copyToFile(
                     new URILocation(backupManifest.getPathname()).getSource(),
                     backupManifest + BACKUP_EXTENSION);
         } catch (IOException | URISyntaxException e) {
-            throw new ManifestManagerException("Manifest could not be merged", e);
+            throw new ManifestManagerException("Manifest could not be backed up ", e);
         }
 
         return backupManifest;
@@ -227,21 +230,12 @@ public class ManifestsManager {
         IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
         File manifestFile = getManifestFile(manifestGUID.toString());
 
-        FileHelper.touchDir(manifestFile);
-        if (manifestFile.exists())
-            return;
-
-        writeToFile(manifestFile.toFile(), manifest);
-    }
-
-    private void writeToFile(java.io.File file, Manifest manifest) throws ManifestManagerException {
-        try (FileWriter fileWriter = new FileWriter(file);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write(manifest.toString());
-        } catch (Exception e) {
-            throw new ManifestManagerException("Manifest could not be written to file");
-        } finally {
-            file.setReadOnly();
+        try {
+            Data manifestData = new StringData(manifest.toString());
+            manifestFile.setData(manifestData);
+            manifestFile.persist();
+        } catch (PersistenceException | DataException e) {
+            throw new ManifestManagerException(e);
         }
     }
 
