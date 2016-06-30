@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.network;
 
 import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -8,7 +9,7 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class NetworkBasedStorage implements Storage {
+public class NetworkBasedStorage extends CommonStorage implements Storage {
 
     private static final String VOLUMES_PATH = "/Volumes/";
     private String mountPoint;
@@ -23,7 +24,9 @@ public class NetworkBasedStorage implements Storage {
      * @param mountPoint
      * @param rootPath
      */
-    public NetworkBasedStorage(String mountPoint, String rootPath) {
+    public NetworkBasedStorage(String mountPoint, String rootPath, boolean isImmutable) {
+        super(isImmutable);
+
         if (mountPoint != null && !mountPoint.isEmpty() &&
                 rootPath != null && !rootPath.isEmpty()) {
             this.mountPoint = mountPoint;
@@ -32,31 +35,6 @@ public class NetworkBasedStorage implements Storage {
 //            root = new NetworkBasedDirectory(VOLUMES_PATH +
 //                    mountPoint + "/" + rootPath);
         }
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return false;
-    }
-
-    @Override
-    public Directory getRoot() {
-        return root;
-    }
-
-    @Override
-    public Directory getDataDirectory() {
-        return null;
-    }
-
-    @Override
-    public Directory getManifestDirectory() {
-        return null;
-    }
-
-    @Override
-    public Directory getTestDirectory() {
-        return null;
     }
 
     @Override

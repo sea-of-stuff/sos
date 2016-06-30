@@ -13,7 +13,7 @@ public class NetworkBasedStorageTest {
     @Test (enabled = false)
     public void testGetRoot() throws Exception {
 
-        NetworkBasedStorage storage = new NetworkBasedStorage("sic2", "public_html");
+        NetworkBasedStorage storage = new NetworkBasedStorage("sic2", "public_html", false);
 
         Directory dir = storage.getRoot();
         Iterator it = dir.getIterator();

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 
 import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -9,16 +10,14 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FileBasedStorage implements Storage {
-
-    private static final String DATA_DIRECTORY_NAME = "data";
-    private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
-    private static final String TEST_DATA_DIRECTORY_NAME = "test_data";
+public class FileBasedStorage extends CommonStorage implements Storage {
 
     private Directory root;
     private boolean isImmutable;
 
     public FileBasedStorage(java.io.File rootDirectory, boolean isImmutable) {
+        super(isImmutable);
+
         root = new FileBasedDirectory(rootDirectory);
         this.isImmutable = isImmutable;
     }
@@ -33,20 +32,6 @@ public class FileBasedStorage implements Storage {
         return root;
     }
 
-    @Override
-    public Directory getDataDirectory() {
-        return createDirectory(DATA_DIRECTORY_NAME);
-    }
-
-    @Override
-    public Directory getManifestDirectory() {
-        return createDirectory(MANIFESTS_DIRECTORY_NAME);
-    }
-
-    @Override
-    public Directory getTestDirectory() {
-        return createDirectory(TEST_DATA_DIRECTORY_NAME);
-    }
 
     @Override
     public Directory createDirectory(Directory parent, String name) {
