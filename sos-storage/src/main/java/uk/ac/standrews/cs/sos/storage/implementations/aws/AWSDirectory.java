@@ -41,7 +41,8 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
     @Override
     public boolean contains(String name) {
-        return false;
+        File file = new AWSFile(s3Client, bucketName, this, name, isImmutable);
+        return file.exists();
     }
 
     @Override

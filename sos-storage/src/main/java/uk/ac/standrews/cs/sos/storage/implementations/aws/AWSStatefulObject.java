@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
@@ -16,6 +17,8 @@ import java.util.Date;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class AWSStatefulObject implements StatefulObject {
+
+    private static final int RESOURCE_NOT_FOUND = 404;
 
     protected AmazonS3 s3Client;
     protected String bucketName;
@@ -53,6 +56,11 @@ public abstract class AWSStatefulObject implements StatefulObject {
             boolean objectExist = s3Object != null;
 
             return objectExist;
+        } catch (AmazonS3Exception e) {
+            if (e.getStatusCode() == RESOURCE_NOT_FOUND) {
+                return false;
+            }
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
