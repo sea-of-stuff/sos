@@ -18,8 +18,6 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
 
     private static final Logger log = Logger.getLogger(FileBasedDirectory.class.getName());
 
-
-
     public FileBasedDirectory(Directory parent, String name, boolean isImmutable) {
         super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);

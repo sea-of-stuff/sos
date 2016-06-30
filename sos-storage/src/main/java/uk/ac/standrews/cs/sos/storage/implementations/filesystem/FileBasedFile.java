@@ -16,21 +16,31 @@ import java.io.IOException;
 public class FileBasedFile extends FileBasedStatefulObject implements File {
 
     private Data data;
-    private boolean isImmutable;
     private boolean persisted;
 
     public FileBasedFile(Directory parent, String name, boolean isImmutable) {
         super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);
-        this.persisted = false;
-        this.data = new FileData(realFile);
+
+        if (isImmutable && exists()) {
+            this.persisted = true;
+        } else {
+            this.persisted = false;
+            this.data = new FileData(realFile);
+        }
     }
 
     public FileBasedFile(Directory parent, String name, Data data, boolean isImmutable) {
         super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);
-        this.persisted = false;
-        this.data = data;
+
+        if (isImmutable && exists()) {
+            this.persisted = true;
+        } else {
+            this.persisted = false;
+            this.data = data;
+        }
+
     }
 
     @Override
