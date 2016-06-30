@@ -45,7 +45,7 @@ public class FileBasedFile extends FileBasedStatefulObject implements File {
 
     @Override
     public String getPathname() {
-        return logicalParent.getPathname() + "/" + name;
+        return logicalParent.getPathname() + name;
     }
 
     @Override

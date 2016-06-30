@@ -42,9 +42,7 @@ public abstract class FileBasedStatefulObject implements StatefulObject {
     }
 
     @Override
-    public String getPathname() {
-        return null;
-    }
+    public abstract String getPathname();
 
     @Override
     public long lastModified() {

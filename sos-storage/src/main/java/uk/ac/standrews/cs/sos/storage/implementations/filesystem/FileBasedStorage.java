@@ -35,17 +35,17 @@ public class FileBasedStorage implements Storage {
 
     @Override
     public Directory getDataDirectory() {
-        return new FileBasedDirectory(root, DATA_DIRECTORY_NAME, isImmutable);
+        return createDirectory(DATA_DIRECTORY_NAME);
     }
 
     @Override
     public Directory getManifestDirectory() {
-        return new FileBasedDirectory(root, MANIFESTS_DIRECTORY_NAME, isImmutable);
+        return createDirectory(MANIFESTS_DIRECTORY_NAME);
     }
 
     @Override
     public Directory getTestDirectory() {
-        return new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME, isImmutable);
+        return createDirectory(TEST_DATA_DIRECTORY_NAME);
     }
 
     @Override
