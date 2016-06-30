@@ -89,6 +89,15 @@ public class FileBasedFile extends FileBasedStatefulObject implements File {
     }
 
     @Override
+    public void setData(Data data) throws DataException {
+        if (!persisted) {
+            this.data = data;
+        } else {
+            throw new DataException("Could not set data for file " + getPathname());
+        }
+    }
+
+    @Override
     public Data getData() throws DataException {
         if (data == null) {
             throw new DataException("The file " + getPathname() + " does not have any data");

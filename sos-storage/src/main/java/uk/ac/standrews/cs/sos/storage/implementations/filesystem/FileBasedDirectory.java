@@ -107,7 +107,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
             throw new BindingAbsentException("file " + name + " not present");
         }
 
-        candidate.delete();    // Ignore result - nothing to do with it.
+        candidate.delete(); // Ignore result - nothing to do with it.
     }
 
     @Override
@@ -116,12 +116,10 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
     }
 
     private class DirectoryIterator<T> implements Iterator {
-
         String[] names;
         int index;
 
         public DirectoryIterator(java.io.File realFile) {
-
             names = realFile.list();
             if (names == null) {
                 log.log(Level.FINE, "File " + realFile.getPath() + " is not a directory");
@@ -138,7 +136,6 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
         }
 
         public Object next() {
-
             String name = names[index];
             StatefulObject obj = null;
             try {

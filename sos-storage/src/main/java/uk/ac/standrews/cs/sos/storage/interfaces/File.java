@@ -8,5 +8,7 @@ import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
  */
 public interface File extends StatefulObject {
 
+    void setData(Data data) throws DataException;
+
     Data getData() throws DataException;
 }

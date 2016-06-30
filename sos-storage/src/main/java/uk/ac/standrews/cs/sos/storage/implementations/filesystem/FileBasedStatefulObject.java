@@ -59,8 +59,4 @@ public abstract class FileBasedStatefulObject implements StatefulObject {
     @Override
     public abstract void persist() throws PersistenceException;
 
-    @Override
-    public boolean isImmutable() {
-        return isImmutable;
-    }
 }

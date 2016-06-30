@@ -23,6 +23,4 @@ public interface StatefulObject {
 
     void persist() throws PersistenceException;
 
-    boolean isImmutable();
-
 }

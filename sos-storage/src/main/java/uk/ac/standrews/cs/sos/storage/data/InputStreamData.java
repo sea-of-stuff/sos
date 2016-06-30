@@ -24,6 +24,7 @@ public class InputStreamData implements Data {
     private byte[] state;
 
     public InputStreamData(InputStream inputStream) {
+        // TODO - do not convert it to a byte array. This could be used for large chunks of data!
         try {
             state = IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
