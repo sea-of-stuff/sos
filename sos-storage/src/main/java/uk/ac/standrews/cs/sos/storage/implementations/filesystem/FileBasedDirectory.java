@@ -111,13 +111,14 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
     }
 
     @Override
-    public Iterator<StatefulObject> getIterator() {
+    public Iterator<NameObjectBindingImpl> getIterator() {
         return new DirectoryIterator(realFile);
     }
 
-    private class DirectoryIterator<T> implements Iterator {
-        String[] names;
-        int index;
+    private class DirectoryIterator implements Iterator<NameObjectBindingImpl>  {
+
+        private String[] names;
+        private int index;
 
         public DirectoryIterator(java.io.File realFile) {
             names = realFile.list();
@@ -127,15 +128,11 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
             index = 0;
         }
 
-        public void remove() {
-            log.log(Level.FINE, "Unimplemented method");
-        }
-
         public boolean hasNext() {
             return index < names.length;
         }
 
-        public Object next() {
+        public NameObjectBindingImpl next() {
             String name = names[index];
             StatefulObject obj = null;
             try {
