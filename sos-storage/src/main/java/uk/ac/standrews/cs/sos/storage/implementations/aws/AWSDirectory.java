@@ -66,13 +66,7 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
     @Override
     public Iterator<NameObjectBindingImpl> getIterator() {
-        ListObjectsRequest objectsRequest =
-                new ListObjectsRequest(bucketName, getPathname(),
-                        "", "/",
-                        1000 /* Not sure how this should be set
-                        * check ObjectListing.getNextMarker
-                        */);
-        return new DirectoryIterator(s3Client, objectsRequest);
+        return new DirectoryIterator();
     }
 
     @Override
@@ -82,23 +76,62 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
     private class DirectoryIterator implements Iterator<NameObjectBindingImpl> {
 
+        private static final int OBJECTS_PER_REQUESTS = 2;
+        private static final String DELIMITER = "/";
+
         private ObjectListing listing;
         private Iterator<S3ObjectSummary> summary;
+        private String marker = null;
 
-        public DirectoryIterator(AmazonS3 s3Client, ListObjectsRequest objectsRequest) {
+        public DirectoryIterator() {
+            ListObjectsRequest objectsRequest = getListObjectRequest(null);
             listing = s3Client.listObjects(objectsRequest);
-
             summary = listing.getObjectSummaries().iterator();
+        }
+
+        private ListObjectsRequest getListObjectRequest(String marker) {
+            ListObjectsRequest objectsRequest =
+                    new ListObjectsRequest(bucketName,
+                            getPathname(),
+                            marker,
+                            DELIMITER,
+                            OBJECTS_PER_REQUESTS /* Not sure how this should be set
+                        * check ObjectListing.getNextMarker
+                        */);
+
+            return objectsRequest;
         }
 
         @Override
         public boolean hasNext() {
-            return summary.hasNext();
+            boolean next = summary.hasNext();
+
+            if (!next) {
+                marker = listing.getNextMarker();
+
+                if (marker == null) {
+                    next = false;
+                } else {
+                    ListObjectsRequest objectsRequest = getListObjectRequest(marker);
+                    listing = s3Client.listObjects(objectsRequest);
+                    summary = listing.getObjectSummaries().iterator();
+                    next = true;
+                }
+            }
+
+            return next;
         }
 
         @Override
         public NameObjectBindingImpl next() {
+
+            if(!hasNext()) {
+                return null;
+            }
+
             S3ObjectSummary object = summary.next();
+
+            System.out.println(object.getKey());
 
             // TODO - create stateful objects from S3Object
             return null;

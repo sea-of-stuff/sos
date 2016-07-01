@@ -133,6 +133,11 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
         }
 
         public NameObjectBindingImpl next() {
+
+            if (!hasNext()) {
+                return null;
+            }
+
             String name = names[index];
             StatefulObject obj = null;
             try {
