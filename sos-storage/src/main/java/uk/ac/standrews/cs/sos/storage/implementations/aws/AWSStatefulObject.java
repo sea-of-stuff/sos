@@ -1,16 +1,19 @@
 package uk.ac.standrews.cs.sos.storage.implementations.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import org.apache.commons.io.input.NullInputStream;
+import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -18,14 +21,16 @@ import java.util.Date;
  */
 public abstract class AWSStatefulObject implements StatefulObject {
 
-    private static final int RESOURCE_NOT_FOUND = 404;
+    protected static final int RESOURCE_NOT_FOUND = 404;
 
     protected AmazonS3 s3Client;
     protected String bucketName;
     protected Directory logicalParent;
     protected String name;
+    protected Data data;
     protected GetObjectRequest getObjectRequest;
     protected boolean isImmutable;
+    protected boolean persisted;
 
     public AWSStatefulObject(AmazonS3 s3Client, String bucketName,
                              Directory parent, String name, boolean isImmutable) {
@@ -39,6 +44,12 @@ public abstract class AWSStatefulObject implements StatefulObject {
         getObjectRequest = new GetObjectRequest(bucketName, objectPath);
     }
 
+    public AWSStatefulObject(AmazonS3 s3Client, String bucketName,
+                             Directory parent, String name, Data data,
+                             boolean isImmutable) {
+        this(s3Client, bucketName, parent, name, isImmutable);
+    }
+
     public AWSStatefulObject(AmazonS3 s3Client, String bucketName) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
@@ -47,25 +58,6 @@ public abstract class AWSStatefulObject implements StatefulObject {
     @Override
     public Directory getParent() {
         return logicalParent;
-    }
-
-    @Override
-    public boolean exists() {
-
-        try (S3Object s3Object = s3Client.getObject(getObjectRequest)) {
-            boolean objectExist = s3Object != null;
-
-            return objectExist;
-        } catch (AmazonS3Exception e) {
-            if (e.getStatusCode() == RESOURCE_NOT_FOUND) {
-                return false;
-            }
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 
     @Override
@@ -99,5 +91,35 @@ public abstract class AWSStatefulObject implements StatefulObject {
     }
 
     @Override
-    public abstract void persist() throws PersistenceException;
+    public void persist() throws PersistenceException {
+        if (isImmutable && persisted) {
+            return;
+        }
+
+        try (InputStream inputStream = getInputStream()) {
+
+            String objectPath = getPathname();
+            ObjectMetadata metadata = getObjectMetadata();
+
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest(bucketName, objectPath, inputStream, metadata);
+            s3Client.putObject(putObjectRequest);
+
+            persisted = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected InputStream getInputStream() throws IOException {
+        return data != null ? data.getInputStream() : new NullInputStream(0);
+    }
+
+    protected ObjectMetadata getObjectMetadata() {
+        long contentLength = data != null ? data.getSize() : 0;
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(contentLength);
+
+        return metadata;
+    }
 }

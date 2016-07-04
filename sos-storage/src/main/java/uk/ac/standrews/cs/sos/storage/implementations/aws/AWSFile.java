@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.sos.storage.implementations.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.S3Object;
 import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.data.InputStreamData;
 import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
-import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
@@ -16,24 +16,25 @@ import java.io.IOException;
  */
 public class AWSFile extends AWSStatefulObject implements File {
 
-    private Data data;
-    private boolean persisted;
-
-    public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent, String name, boolean isImmutable) {
+    public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent,
+                   String name, boolean isImmutable) {
         super(s3Client, bucketName, parent, name, isImmutable);
 
-        if (isImmutable && exists()) {
-            this.persisted = true;
-        } else {
-            this.persisted = false;
-            // FIXME - not sure what to do here
-            // this.data = data;
+        if (exists()) {
+            retrieveData();
+
+            if (isImmutable) {
+                this.persisted = true;
+            } else {
+                this.persisted = false;
+            }
         }
+
     }
 
-    public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent, String name, Data data, boolean isImmutable) {
-        super(s3Client, bucketName, parent, name, isImmutable);
-        this.data = data;
+    public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent,
+                   String name, Data data, boolean isImmutable) {
+        super(s3Client, bucketName, parent, name, data, isImmutable);
 
         if (isImmutable && exists()) {
             this.persisted = true;
@@ -44,30 +45,28 @@ public class AWSFile extends AWSStatefulObject implements File {
     }
 
     @Override
-    public String getPathname() {
-        return logicalParent.getPathname() + name;
-    }
+    public boolean exists() {
 
-    @Override
-    public void persist() throws PersistenceException {
-        if (isImmutable && persisted) {
-            return;
-        }
+        try (S3Object s3Object = s3Client.getObject(getObjectRequest)) {
+            boolean objectExists = s3Object != null;
+            updateData(s3Object, objectExists);
 
-        String objectPath = getPathname();
-
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(data.getSize());
-
-        try {
-            PutObjectRequest putObjectRequest =
-                    new PutObjectRequest(bucketName, objectPath, data.getInputStream(), metadata);
-            s3Client.putObject(putObjectRequest);
-
-            persisted = true;
+            return objectExists;
+        } catch (AmazonS3Exception e) {
+            if (e.getStatusCode() == RESOURCE_NOT_FOUND) {
+                return false;
+            }
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return false;
+    }
+
+    @Override
+    public String getPathname() {
+        return logicalParent.getPathname() + name;
     }
 
     @Override
@@ -81,6 +80,28 @@ public class AWSFile extends AWSStatefulObject implements File {
 
     @Override
     public Data getData() throws DataException {
-        return null; // TODO - I am not sure what I should return here!
+        return data;
+    }
+
+    private void retrieveData() {
+        try (S3Object s3Object = s3Client.getObject(getObjectRequest)) {
+            boolean objectExists = s3Object != null;
+            updateData(s3Object, objectExists);
+
+        } catch (AmazonS3Exception e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateData(S3Object s3Object, boolean objectExists) {
+        if (objectExists) {
+            if (isImmutable && !persisted) {
+                data = new InputStreamData(s3Object.getObjectContent());
+            } else {
+                data = new InputStreamData(s3Object.getObjectContent());
+            }
+        }
     }
 }

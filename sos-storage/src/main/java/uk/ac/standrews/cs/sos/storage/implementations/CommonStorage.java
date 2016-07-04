@@ -8,9 +8,9 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
  */
 public abstract class CommonStorage implements Storage {
 
-    private static final String DATA_DIRECTORY_NAME = "data";
-    private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
-    private static final String TEST_DATA_DIRECTORY_NAME = "test_data";
+    public static final String DATA_DIRECTORY_NAME = "data";
+    public static final String MANIFESTS_DIRECTORY_NAME = "manifests";
+    public static final String TEST_DATA_DIRECTORY_NAME = "test_data";
 
     protected Directory root;
     protected boolean isImmutable;

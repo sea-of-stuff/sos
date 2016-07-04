@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBindingImpl;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.sos.storage.interfaces.NameObjectBinding;
 import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
 import java.util.Iterator;
@@ -75,9 +76,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
 
         if (candidate.isFile()) {
             return new FileBasedFile(this, name, isImmutable);
-        }
-
-        if (candidate.isDirectory()) {
+        } else if (candidate.isDirectory()) {
             return new FileBasedDirectory(this, name, isImmutable);
         }
 
@@ -111,11 +110,11 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
     }
 
     @Override
-    public Iterator<NameObjectBindingImpl> getIterator() {
+    public Iterator<NameObjectBinding> getIterator() {
         return new DirectoryIterator(realFile);
     }
 
-    private class DirectoryIterator implements Iterator<NameObjectBindingImpl>  {
+    private class DirectoryIterator implements Iterator<NameObjectBinding>  {
 
         private String[] names;
         private int index;
@@ -132,16 +131,15 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
             return index < names.length;
         }
 
-        public NameObjectBindingImpl next() {
+        public NameObjectBinding next() {
 
             if (!hasNext()) {
                 return null;
             }
 
-            String name = names[index];
-            StatefulObject obj = null;
             try {
-                obj = get(name);
+                String name = names[index];
+                StatefulObject obj = get(name);
                 index++;
 
                 return new NameObjectBindingImpl(name, obj);

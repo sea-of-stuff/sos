@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.storage.interfaces;
 
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBindingImpl;
 
 import java.util.Iterator;
 
@@ -20,6 +19,6 @@ public interface Directory extends StatefulObject {
 
     void remove(String name) throws BindingAbsentException;
 
-    Iterator<NameObjectBindingImpl> getIterator();
+    Iterator<NameObjectBinding> getIterator();
 
 }

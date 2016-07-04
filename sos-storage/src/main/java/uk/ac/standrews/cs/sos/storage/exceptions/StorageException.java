@@ -5,4 +5,12 @@ package uk.ac.standrews.cs.sos.storage.exceptions;
  */
 public class StorageException extends Exception {
 
+    public StorageException() {
+        super();
+    }
+
+    public StorageException(Throwable throwable) {
+        super(throwable);
+    }
+
 }
