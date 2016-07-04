@@ -19,6 +19,10 @@ public interface Directory extends StatefulObject {
 
     void remove(String name) throws BindingAbsentException;
 
+    /**
+     * An iterator of the Stateful objects contained in this directory.
+     * @return
+     */
     Iterator<NameObjectBinding> getIterator();
 
 }

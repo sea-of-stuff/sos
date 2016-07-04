@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 
 import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
@@ -19,6 +21,12 @@ public class FileBasedStorage extends CommonStorage implements Storage {
         super(isImmutable);
 
         root = new FileBasedDirectory(rootDirectory);
+        try {
+            root.persist();
+            createSOSDirectories();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
         this.isImmutable = isImmutable;
     }
 
@@ -51,5 +59,16 @@ public class FileBasedStorage extends CommonStorage implements Storage {
     @Override
     public File createFile(Directory parent, String filename, Data data) {
         return new FileBasedFile(parent, filename, data, isImmutable);
+    }
+
+    @Override
+    public void destroy() throws BindingAbsentException {
+        // TODO
+    }
+
+    private void createSOSDirectories() throws PersistenceException {
+        createDirectory(DATA_DIRECTORY_NAME).persist();
+        createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
+        createDirectory(TEST_DATA_DIRECTORY_NAME).persist();
     }
 }

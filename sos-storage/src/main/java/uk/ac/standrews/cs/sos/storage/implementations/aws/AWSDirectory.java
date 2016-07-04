@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBindingImpl;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
@@ -61,6 +62,11 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
         } else {
             return logicalParent.getPathname() + name + FOLDER_DELIMITER;
         }
+    }
+
+    @Override
+    public void persist() throws PersistenceException {
+
     }
 
     @Override
@@ -175,12 +181,12 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
         private static final int OBJECTS_PER_REQUESTS = 20;
         private static final int FIRST_FOLDER = 0;
+        private static final String NO_PREFIX = "";
 
         private ObjectListing listing;
         private Iterator<S3ObjectSummary> summary;
         private List<String> folders = new LinkedList<>();
         private String prefix;
-        private String marker = null;
         private String delimiter;
 
         public DirectoryIterator(String prefix, boolean allLevels) {
@@ -197,7 +203,7 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
         }
 
         public DirectoryIterator(boolean allLevels) {
-            this("", allLevels);
+            this(NO_PREFIX, allLevels);
         }
 
         private void initSummary(ListObjectsRequest objectsRequest) {
@@ -223,7 +229,7 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
             boolean next = summary.hasNext() || !folders.isEmpty();
 
             if (!next) {
-                marker = listing.getNextMarker();
+                String marker = listing.getNextMarker();
 
                 if (marker == null) {
                     next = !folders.isEmpty();

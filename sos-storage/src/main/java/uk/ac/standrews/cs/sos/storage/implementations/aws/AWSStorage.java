@@ -12,7 +12,6 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
@@ -40,10 +39,7 @@ public class AWSStorage extends CommonStorage implements Storage {
             createAndSetBucket(bucketName);
             createRoot();
 
-            createSOSDirectories(); // TODO - this is SOS specific
         } catch (StorageException e) {
-            e.printStackTrace();
-        } catch (PersistenceException e) {
             e.printStackTrace();
         }
     }
@@ -58,10 +54,7 @@ public class AWSStorage extends CommonStorage implements Storage {
             createAndSetBucket(bucketName);
             createRoot();
 
-            createSOSDirectories(); // TODO - this is SOS specific
         } catch (StorageException e) {
-            e.printStackTrace();
-        } catch (PersistenceException e) {
             e.printStackTrace();
         }
     }
@@ -86,7 +79,8 @@ public class AWSStorage extends CommonStorage implements Storage {
         return new AWSFile(s3Client, bucketName, parent, filename, data, isImmutable);
     }
 
-    public void deleteBucket() throws BindingAbsentException {
+    @Override
+    public void destroy() throws BindingAbsentException {
 
         final ListObjectsV2Request req = new ListObjectsV2Request()
                 .withBucketName(bucketName)
@@ -122,9 +116,4 @@ public class AWSStorage extends CommonStorage implements Storage {
         root = new AWSDirectory(s3Client, bucketName);
     }
 
-    private void createSOSDirectories() throws PersistenceException {
-        createDirectory(DATA_DIRECTORY_NAME).persist();
-        createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
-        createDirectory(TEST_DATA_DIRECTORY_NAME).persist();
-    }
 }

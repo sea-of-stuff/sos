@@ -2,14 +2,18 @@ package uk.ac.standrews.cs.sos.storage.implementations.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.data.InputStreamData;
 import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -41,6 +45,27 @@ public class AWSFile extends AWSStatefulObject implements File {
         } else {
             this.persisted = false;
             this.data = data;
+        }
+    }
+
+    @Override
+    public void persist() throws PersistenceException {
+        if (isImmutable && persisted) {
+            return;
+        }
+
+        try (InputStream inputStream = getInputStream()) {
+
+            String objectPath = getPathname();
+            ObjectMetadata metadata = getObjectMetadata();
+
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest(bucketName, objectPath, inputStream, metadata);
+            s3Client.putObject(putObjectRequest);
+
+            persisted = true;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

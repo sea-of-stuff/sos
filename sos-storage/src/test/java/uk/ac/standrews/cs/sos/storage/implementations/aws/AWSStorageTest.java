@@ -36,7 +36,7 @@ public class AWSStorageTest {
 
     @AfterMethod
     public void tearDown() throws BindingAbsentException, InterruptedException {
-        ((AWSStorage) storage).deleteBucket();
+        storage.destroy();
 
         Thread.sleep(TEST_DELAY);
     }
@@ -76,7 +76,7 @@ public class AWSStorageTest {
 
     @Test
     public void directoryDeletion() throws PersistenceException, BindingAbsentException {
-        assertTrue(storage.getRoot().contains(CommonStorage.TEST_DATA_DIRECTORY_NAME + "/"));
+        assertFalse(storage.getRoot().contains(CommonStorage.TEST_DATA_DIRECTORY_NAME + "/"));
 
         storage.getRoot().remove(CommonStorage.TEST_DATA_DIRECTORY_NAME + "/");
         Iterator iterator = storage.getTestDirectory().getIterator();
@@ -89,7 +89,7 @@ public class AWSStorageTest {
         file.persist();
 
         StatefulObject object = storage.getTestDirectory().get("test.txt");
-        assertTrue(object instanceof AWSFile);
+        assertTrue(object instanceof File);
     }
 
     @Test
@@ -103,41 +103,58 @@ public class AWSStorageTest {
         int testCounter = 0;
         Iterator<NameObjectBinding> it = storage.getTestDirectory().getIterator();
         while(it.hasNext()) {
-            NameObjectBinding objectBinding = it.next();
+            it.next();
             testCounter++;
         }
 
-        assertEquals(testCounter, 16); // Expecting parent directory too
+        assertEquals(testCounter, 15); // Expecting parent directory too
     }
 
     @Test
-    public void folderWithFileExistsTest() throws PersistenceException {
+    public void folderWithFileTest() throws PersistenceException {
         Directory directory = storage.createDirectory(storage.getTestDirectory(), "folder_with_file");
         storage.createFile(directory, "empty_file.txt").persist();
 
-        assertTrue(storage.getTestDirectory().contains("folder_with_file/"));
-    }
-
-    @Test
-    public void emptyFolderExistsTest() throws PersistenceException {
-        storage.createDirectory(storage.getTestDirectory(), "empty_folder").persist();
-
-        boolean contains = storage.getTestDirectory().contains("empty_folder/");
+        boolean contains = storage.getTestDirectory().contains("folder_with_file/");
         assertTrue(contains);
     }
 
     @Test
-    public void folderWithFolderExistsTest() throws PersistenceException {
+    public void emptyFolderTest() throws PersistenceException {
+        storage.createDirectory(storage.getTestDirectory(), "empty_folder");
+
+        boolean contains = storage.getTestDirectory().contains("empty_folder/");
+        assertFalse(contains);
+    }
+
+    @Test
+    public void folderWithFolderTest() throws PersistenceException {
         Directory directory = storage.createDirectory(storage.getTestDirectory(), "folder_with_folder");
-        storage.createDirectory(directory, "inner_folder").persist();
+        storage.createDirectory(directory, "inner_folder");
+
+        boolean contains = storage.getTestDirectory().contains("folder_with_folder/");
+        assertFalse(contains);
+
+        boolean containsInner = directory.contains("inner_folder/");
+        assertFalse(containsInner);
+    }
+
+    @Test
+    public void nestedFolderWithFileTest() throws PersistenceException {
+        Directory directory = storage.createDirectory(storage.getTestDirectory(), "folder_with_folder");
+        Directory innerDirectory = storage.createDirectory(directory, "inner_folder");
+        File file = storage.createFile(innerDirectory, "test.txt", TEST_DATA);
+        file.persist();
 
         boolean contains = storage.getTestDirectory().contains("folder_with_folder/");
         assertTrue(contains);
+
+        boolean containsInner = directory.contains("inner_folder/");
+        assertTrue(containsInner);
     }
 
     @Test
     public void getDataTest() throws PersistenceException, DataException {
-
         File file = storage.createFile(storage.getTestDirectory(), "test.txt", TEST_DATA);
         file.persist();
 
