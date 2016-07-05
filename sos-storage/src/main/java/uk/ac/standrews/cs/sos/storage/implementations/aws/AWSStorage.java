@@ -20,7 +20,15 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
+import java.io.IOException;
+
 /**
+ * AWSStorage abstracts the AWS S3 complexity. In doing so, it is possible to use
+ * AWS as any normal data storage.
+ *
+ *
+ * TODO - check if files are cached
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AWSStorage extends CommonStorage implements Storage {
@@ -32,7 +40,7 @@ public class AWSStorage extends CommonStorage implements Storage {
     private String bucketName;
     private Region region = DEFAULT_REGION;
 
-    public AWSStorage(String bucketName, boolean isImmutable) {
+    public AWSStorage(String bucketName, boolean isImmutable) throws StorageException {
         super(isImmutable);
 
         try {
@@ -42,14 +50,12 @@ public class AWSStorage extends CommonStorage implements Storage {
 
             createRoot();
             createSOSDirectories();
-        } catch (StorageException e) {
-            e.printStackTrace();
-        } catch (PersistenceException e) {
-            e.printStackTrace();
+        } catch (PersistenceException | IOException e) {
+            throw new StorageException(e);
         }
     }
 
-    public AWSStorage(String accessKeyId, String secretAccessKey, String bucketName, boolean isImmutable) {
+    public AWSStorage(String accessKeyId, String secretAccessKey, String bucketName, boolean isImmutable) throws StorageException {
         super(isImmutable);
 
         try {
@@ -60,10 +66,8 @@ public class AWSStorage extends CommonStorage implements Storage {
 
             createRoot();
             createSOSDirectories();
-        } catch (StorageException e) {
-            e.printStackTrace();
-        } catch (PersistenceException e) {
-            e.printStackTrace();
+        } catch (PersistenceException | IOException e) {
+            throw new StorageException(e);
         }
     }
 

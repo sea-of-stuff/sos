@@ -7,8 +7,11 @@ import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.data.StringData;
 import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
+
+import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
 
@@ -25,7 +28,7 @@ public class AWSStorageImmutableTest {
     private Storage storage;
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp() throws StorageException {
         storage = new AWSStorage(AWS_S3_TEST_BUCKET, true);
     }
 
@@ -37,7 +40,7 @@ public class AWSStorageImmutableTest {
     }
 
     @Test
-    public void createFile() throws PersistenceException {
+    public void createFile() throws PersistenceException, IOException {
         File file = storage.createFile(storage.getTestDirectory(), "test-immutable.txt", TEST_DATA);
         file.persist();
 

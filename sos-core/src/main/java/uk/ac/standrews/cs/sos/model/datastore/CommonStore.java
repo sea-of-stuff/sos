@@ -67,11 +67,11 @@ public abstract class CommonStore implements Store {
 
     protected abstract LocationBundle getBundle(Location location);
 
-    protected File getAtomLocation(IGUID guid) {
+    protected File getAtomLocation(IGUID guid) throws IOException {
         return storage.createFile(configuration.getDataDirectory(), guid.toString()); // FIXME - do not use config
     }
 
-    protected void storeData(IGUID guid, Data data) {
+    protected void storeData(IGUID guid, Data data) throws IOException {
         Directory dataDirectory = storage.getDataDirectory();
         File file = storage.createFile(dataDirectory, guid.toString(), data);
 

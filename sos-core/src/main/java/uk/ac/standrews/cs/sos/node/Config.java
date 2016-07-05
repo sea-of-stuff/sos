@@ -9,6 +9,8 @@ import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
+import java.io.IOException;
+
 /**
  * This class contains all information to configure this SOS node.
  *
@@ -25,7 +27,16 @@ public class Config {
      */
     private static final String HOME = System.getProperty("user.home") + "/";
     private static final Directory HOME_DIR = new FileBasedDirectory(new java.io.File(HOME));
-    private static final Directory ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos", false);
+
+    private static Directory ROOT_DIRECTORY_DEFAULT;
+    static {
+        try {
+            ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
@@ -69,7 +80,7 @@ public class Config {
     // Storage
 
     @DatabaseField(canBeNull = true)
-    public StorageType s_type = StorageType.LOCAL;
+    public StorageType s_type = StorageType.AWS_S3; // StorageType.LOCAL;
 
     // Will be used if storage is over the network
     @DatabaseField(canBeNull = true)
@@ -78,13 +89,13 @@ public class Config {
     // This is the folder where we store internal properties of system (e.g. manifests, etc)
     // For AWS S3 this will be the bucket name
     @DatabaseField(canBeNull = true)
-    public String s_location = root.getPathname();
+    public String s_location = "simone-core-test"; //root.getPathname();
     public String s_username; // optional
     public String s_password; // optional
     public String s_access_key; // optional
     public String s_secret_key; // optional
 
-    public static void initDatabaseInfo() throws PersistenceException {
+    public static void initDatabaseInfo() throws PersistenceException, IOException {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path, false); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
         if (!DB_DIRECTORY.exists()) {
             DB_DIRECTORY.persist();

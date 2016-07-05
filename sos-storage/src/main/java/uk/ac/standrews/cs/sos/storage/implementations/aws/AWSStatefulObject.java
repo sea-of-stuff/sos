@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
@@ -12,6 +13,7 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -22,6 +24,8 @@ import java.util.Date;
 public abstract class AWSStatefulObject implements StatefulObject {
 
     protected static final int RESOURCE_NOT_FOUND = 404;
+    private static final String TMP_FILE_PREFIX = "aws";
+    private static final String TMP_FILE_SUFFIX = ".tmp";
 
     protected AmazonS3 s3Client;
     protected String bucketName;
@@ -84,10 +88,14 @@ public abstract class AWSStatefulObject implements StatefulObject {
     }
 
     @Override
-    public File toFile() {
-        File file = null;
-        s3Client.getObject(getObjectRequest, file);
-        return file;
+    public File toFile() throws IOException {
+        final File tempFile = File.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX);
+        tempFile.deleteOnExit();
+        try (FileOutputStream output = new FileOutputStream(tempFile)) {
+            InputStream input = s3Client.getObject(getObjectRequest).getObjectContent();
+            IOUtils.copy(input, output);
+        }
+        return tempFile;
     }
 
     @Override

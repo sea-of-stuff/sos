@@ -18,7 +18,7 @@ public class FileBasedFile extends FileBasedStatefulObject implements File {
     private Data data;
     private boolean persisted;
 
-    public FileBasedFile(Directory parent, String name, boolean isImmutable) {
+    public FileBasedFile(Directory parent, String name, boolean isImmutable) throws IOException {
         super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);
 
@@ -30,7 +30,7 @@ public class FileBasedFile extends FileBasedStatefulObject implements File {
         }
     }
 
-    public FileBasedFile(Directory parent, String name, Data data, boolean isImmutable) {
+    public FileBasedFile(Directory parent, String name, Data data, boolean isImmutable) throws IOException {
         super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);
 

@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
@@ -50,11 +51,11 @@ public abstract class StreamStore extends CommonStore {
                 Location location = getLocation(guid);
                 locationBundle = getBundle(location);
 
-            } catch (GUIDGenerationException | SourceLocationException | URISyntaxException e) {
+            } catch (GUIDGenerationException | SourceLocationException | URISyntaxException | IOException e) {
                 throw new DataStorageException();
             }
 
-            return guid;
+        return guid;
         }
 
     @Override

@@ -4,6 +4,8 @@ import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
+import java.io.IOException;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -31,21 +33,21 @@ public abstract class CommonStorage implements Storage {
     }
 
     @Override
-    public Directory getDataDirectory() {
+    public Directory getDataDirectory() throws IOException {
         return createDirectory(DATA_DIRECTORY_NAME);
     }
 
     @Override
-    public Directory getManifestDirectory() {
+    public Directory getManifestDirectory() throws IOException {
         return createDirectory(MANIFESTS_DIRECTORY_NAME);
     }
 
     @Override
-    public Directory getTestDirectory() {
+    public Directory getTestDirectory() throws IOException {
         return createDirectory(TEST_DATA_DIRECTORY_NAME);
     }
 
-    protected void createSOSDirectories() throws PersistenceException {
+    protected void createSOSDirectories() throws PersistenceException, IOException {
         createDirectory(DATA_DIRECTORY_NAME).persist();
         createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
         createDirectory(TEST_DATA_DIRECTORY_NAME).persist();

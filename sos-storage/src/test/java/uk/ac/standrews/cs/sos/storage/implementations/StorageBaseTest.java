@@ -4,6 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
+import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.implementations.aws.AWSStorage;
 import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -30,7 +31,7 @@ public abstract class StorageBaseTest {
     protected Storage storage;
 
     @BeforeMethod
-    public void setUp(Method method)  {
+    public void setUp(Method method) throws StorageException {
         STORAGE_TYPE type = getStorageType();
         System.out.println(type.toString() + " :: " + method.getName());
         storage = new StorageFactory().getStorage(type);
@@ -56,7 +57,7 @@ public abstract class StorageBaseTest {
 
     public class StorageFactory {
 
-        public Storage getStorage(STORAGE_TYPE type) {
+        public Storage getStorage(STORAGE_TYPE type) throws StorageException {
             switch(type) {
                 case LOCAL:
                     return new FileBasedStorage(ROOT_TEST_DIRECTORY, false);

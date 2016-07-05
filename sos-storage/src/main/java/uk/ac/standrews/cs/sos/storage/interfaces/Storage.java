@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.storage.interfaces;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 
+import java.io.IOException;
+
 /**
  * This interface allow SOS implementations to interact with different
  * types of storage implementations
@@ -23,19 +25,19 @@ public interface Storage {
      * Get the directory where data is stored
      * @return
      */
-    Directory getDataDirectory();
+    Directory getDataDirectory() throws IOException;
 
     /**
      * Get the directory where manifests are stored
      * @return
      */
-    Directory getManifestDirectory();
+    Directory getManifestDirectory() throws IOException;
 
     /**
      * Get a directory that can be used for any test purposes
      * @return
      */
-    Directory getTestDirectory();
+    Directory getTestDirectory() throws IOException;
 
     /**
      * Create a directory within the specified parent and with the given name
@@ -43,14 +45,14 @@ public interface Storage {
      * @param name
      * @return
      */
-    Directory createDirectory(Directory parent, String name);
+    Directory createDirectory(Directory parent, String name) throws IOException;
 
     /**
      * Create a directory at the root of this storage with the given name
      * @param name
      * @return
      */
-    Directory createDirectory(String name);
+    Directory createDirectory(String name) throws IOException;
 
     /**
      * Create a file a the specified parent directory
@@ -58,9 +60,9 @@ public interface Storage {
      * @param filename
      * @return
      */
-    File createFile(Directory parent, String filename);
+    File createFile(Directory parent, String filename) throws IOException;
 
-    File createFile(Directory parent, String filename, Data data);
+    File createFile(Directory parent, String filename, Data data) throws IOException;
 
     void destroy() throws DestroyException;
 }

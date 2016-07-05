@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
 import java.sql.SQLException;
@@ -90,7 +91,7 @@ public class LocalSOSNode extends SOSNode {
         Config.db_type = Config.DB_TYPE_SQLITE;
         try {
             Config.initDatabaseInfo();
-        } catch (PersistenceException e) {
+        } catch (PersistenceException | IOException e) {
             e.printStackTrace();
         }
 

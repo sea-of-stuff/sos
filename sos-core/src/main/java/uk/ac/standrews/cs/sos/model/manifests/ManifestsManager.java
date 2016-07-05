@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
@@ -24,7 +23,6 @@ import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -132,22 +130,22 @@ public class ManifestsManager {
     /**************************************************************************/
 
     private Manifest getManifestFromFile(IGUID guid) throws ManifestManagerException {
-        Manifest manifest = null;
-        File manifestFile = getManifestFile(guid);
+
         try {
+            Manifest manifest = null;
+            File manifestFile = getManifestFile(guid);
+
             JsonNode node = JSONHelper.JsonObjMapper().readTree(manifestFile.toFile());
             String type = node.get(ManifestConstants.KEY_TYPE).textValue();
 
             manifest = constructManifestFromJson(type, manifestFile);
-        } catch (FileNotFoundException | UnknownManifestTypeException | ManifestNotMadeException e) {
+
+            return manifest;
+        } catch (UnknownManifestTypeException | ManifestNotMadeException
+                | IOException e) {
             throw new ManifestManagerException(e);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        return manifest;
     }
 
     private Manifest constructManifestFromJson(String type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
@@ -174,14 +172,23 @@ public class ManifestsManager {
     }
 
     private void saveManifest(Manifest manifest) throws ManifestManagerException {
-        if (manifest.getManifestType().equals(ManifestConstants.ATOM) &&
-                manifestExistsInLocalStorage(manifest.getContentGUID())) {
-            mergeAtomManifestAndSave(manifest);
-        } else {
-            saveToFile(manifest);
+
+        try {
+            boolean isAtomManifest = manifest.getManifestType().equals(ManifestConstants.ATOM);
+            boolean manifestExists = manifestExistsInStorage(manifest.getContentGUID());
+
+            if (isAtomManifest && manifestExists) {
+                mergeAtomManifestAndSave(manifest);
+            } else {
+                saveToFile(manifest);
+            }
+
+            cacheManifest(manifest);
+
+        } catch (IOException e) {
+            throw new ManifestManagerException(e);
         }
 
-        cacheManifest(manifest);
     }
 
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestManagerException {
@@ -199,19 +206,21 @@ public class ManifestsManager {
     }
 
     private File backupManifest(Manifest manifest) throws ManifestManagerException {
-        IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
-        File backupManifest = getManifestFile(manifestGUID);
 
         // TODO - use storage API for persisting this!
         try {
+            IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
+            File backupManifest = getManifestFile(manifestGUID);
+
             FileHelper.copyToFile(
                     new URILocation(backupManifest.getPathname()).getSource(),
                     backupManifest + BACKUP_EXTENSION);
+
+            return backupManifest;
         } catch (IOException | URISyntaxException e) {
             throw new ManifestManagerException("Manifest could not be backed up ", e);
         }
 
-        return backupManifest;
     }
 
     private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
@@ -227,14 +236,15 @@ public class ManifestsManager {
     }
 
     private void saveToFile(Manifest manifest) throws ManifestManagerException {
-        IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
-        File manifestFile = getManifestFile(manifestGUID.toString());
 
         try {
+            IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
+            File manifestFile = getManifestFile(manifestGUID.toString());
+
             Data manifestData = new StringData(manifest.toString());
             manifestFile.setData(manifestData);
             manifestFile.persist();
-        } catch (PersistenceException | DataException e) {
+        } catch (PersistenceException | DataException | IOException e) {
             throw new ManifestManagerException(e);
         }
     }
@@ -247,11 +257,11 @@ public class ManifestsManager {
         }
     }
 
-    private File getManifestFile(IGUID guid) {
+    private File getManifestFile(IGUID guid) throws IOException {
         return getManifestFile(guid.toString());
     }
 
-    private File getManifestFile(String guid) {
+    private File getManifestFile(String guid) throws IOException {
         Directory manifestsDir = storage.getManifestDirectory();
         return storage.createFile(manifestsDir, normaliseGUID(guid));
     }
@@ -268,7 +278,7 @@ public class ManifestsManager {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    private boolean manifestExistsInLocalStorage(IGUID guid) {
+    private boolean manifestExistsInStorage(IGUID guid) throws IOException {
         File manifest = getManifestFile(guid);
         return manifest.exists();
     }

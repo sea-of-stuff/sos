@@ -56,7 +56,13 @@ public class Configuration {
     public static Configuration getInstance() throws ConfigurationException {
         if(instance == null) {
             initRootName();
-            initDirectories();
+
+            try {
+                initDirectories();
+            } catch (IOException e) {
+                throw new ConfigurationException();
+            }
+
             loadSOSNode();
 
             instance = new Configuration();
@@ -107,8 +113,14 @@ public class Configuration {
      * @return
      */
     public File[] getIdentityPaths() {
-         return new File[] { new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE, false),
-                 new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE, false) };
+        try {
+            return new File[] { new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE, false),
+                    new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE, false) };
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -148,7 +160,7 @@ public class Configuration {
         Configuration.rootName = DEFAULT_ROOT_NAME;
     }
 
-    private static void initDirectories() {
+    private static void initDirectories() throws IOException {
         Directory root = new FileBasedDirectory(ROOT_DIRECTORY, Configuration.rootName, true);
         TEST_DATA_DIRECTORY = new FileBasedDirectory(root, TEST_DATA_DIRECTORY_NAME, true);
         DATA_DIRECTORY = new FileBasedDirectory(root, DATA_DIRECTORY_NAME, true);

@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.NameObjectBinding;
 import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
 
     private static final Logger log = Logger.getLogger(FileBasedDirectory.class.getName());
 
-    public FileBasedDirectory(Directory parent, String name, boolean isImmutable) {
+    public FileBasedDirectory(Directory parent, String name, boolean isImmutable) throws IOException {
         super(parent, name, isImmutable);
         realFile = new java.io.File(parent.toFile(), name);
     }
@@ -74,10 +75,14 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
             throw new BindingAbsentException("Object " + name + " is not present");
         }
 
-        if (candidate.isFile()) {
-            return new FileBasedFile(this, name, isImmutable);
-        } else if (candidate.isDirectory()) {
-            return new FileBasedDirectory(this, name, isImmutable);
+        try {
+            if (candidate.isFile()) {
+                return new FileBasedFile(this, name, isImmutable);
+            } else if (candidate.isDirectory()) {
+                return new FileBasedDirectory(this, name, isImmutable);
+            }
+        } catch (IOException e) {
+            throw new BindingAbsentException("Unable to get file/directory " + name + " at " + getPathname());
         }
 
         return null;

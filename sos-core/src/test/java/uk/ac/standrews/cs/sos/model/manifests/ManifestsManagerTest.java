@@ -47,7 +47,6 @@ import static org.testng.Assert.assertFalse;
 public class ManifestsManagerTest {
 
     private Configuration configuration;
-    private Config config;
     private Storage storage;
     private Index index;
 

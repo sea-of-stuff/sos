@@ -16,6 +16,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * This class represent an AWS directory.
+ * AWS S3 does not have the concept of folders. Everything is a file.
+ * To achieve consistent behaviour with the storage interfaces, we allow AWS directories
+ * to be persisted by creating files with content-length zero.
+ * E.g. on directory.persist(), we actually create the file "<DIR_NAME>/"
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AWSDirectory extends AWSStatefulObject implements Directory {
@@ -184,6 +190,13 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
         private String delimiter;
         private boolean allLevels;
 
+        /**
+         *
+         * @param prefix allows to narrow down the iteration on this folder
+         * @param allLevels if true, return all files in the directory and subdirectories.
+         *                  if false, return just the files in the directory and folders.
+         *                  if false, skip this directory
+         */
         public DirectoryIterator(String prefix, boolean allLevels) {
             this.prefix = prefix;
             this.allLevels = allLevels;
@@ -269,7 +282,7 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
 
         private void skipThisFolder() {
-            if (!allLevels && summary.hasNext()) {
+            if (!allLevels && persisted && summary.hasNext()) {
                 summary.next();
                 allLevels = true;
             }

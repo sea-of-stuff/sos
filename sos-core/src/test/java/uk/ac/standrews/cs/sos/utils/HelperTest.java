@@ -37,23 +37,19 @@ public class HelperTest {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile(Configuration configuration) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(Configuration configuration) throws IOException, URISyntaxException, PersistenceException {
         return createDummyDataFile(configuration, "testData.txt");
     }
 
-    public static Location createDummyDataFile(Configuration configuration, String filename) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(Configuration configuration, String filename) throws IOException, URISyntaxException, PersistenceException {
         return createDummyDataFile(configuration.getTestDataDirectory(), filename);
     }
 
-    public static Location createDummyDataFile(Directory sosParent, String filename) throws FileNotFoundException, URISyntaxException {
+    public static Location createDummyDataFile(Directory sosParent, String filename) throws IOException, URISyntaxException, PersistenceException {
 
         Data data = new StringData("The first line\nThe second line");
         File sosFile = new FileBasedFile(sosParent, filename, data, false);
-        try {
-            sosFile.persist();
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-        }
+        sosFile.persist();
 
         return new URILocation("file://"+sosFile.getPathname());
     }
@@ -79,7 +75,7 @@ public class HelperTest {
         }
     }
 
-    public static void CreateDBTestDump() throws DatabasePersistenceException, SQLException, PersistenceException {
+    public static void CreateDBTestDump() throws DatabasePersistenceException, SQLException, PersistenceException, IOException {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 

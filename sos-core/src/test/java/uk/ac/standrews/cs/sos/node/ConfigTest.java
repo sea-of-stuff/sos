@@ -4,6 +4,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 
+import java.io.IOException;
+
 import static org.testng.Assert.*;
 
 /**
@@ -21,7 +23,7 @@ public class ConfigTest {
     }
 
     @Test(priority=1)
-    public void initDefaultDBTest() throws PersistenceException {
+    public void initDefaultDBTest() throws PersistenceException, IOException {
         Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
@@ -29,7 +31,7 @@ public class ConfigTest {
     }
 
     @Test(priority=2)
-    public void initCustomDBTest() throws PersistenceException {
+    public void initCustomDBTest() throws PersistenceException, IOException {
         Config.db_path = TEST_PATH;
         Config.initDatabaseInfo();
 
@@ -39,7 +41,7 @@ public class ConfigTest {
     }
 
     @Test(priority=3)
-    public void DBDumpFileChangesOnInitialisationTest() throws PersistenceException {
+    public void DBDumpFileChangesOnInitialisationTest() throws PersistenceException, IOException {
         Config.initDatabaseInfo();
 
         assertEquals(Config.db_type, Config.DB_TYPE_SQLITE);
