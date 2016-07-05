@@ -54,9 +54,16 @@ public class FileBasedFile extends FileBasedStatefulObject implements File {
             return;
         }
 
+        createParentFolderIfNone();
         createFile();
         writeData();
         persisted = true;
+    }
+
+    private void createParentFolderIfNone() throws PersistenceException {
+        if (!logicalParent.exists()) {
+            logicalParent.persist();
+        }
     }
 
     private void createFile() throws PersistenceException {

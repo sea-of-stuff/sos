@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.NameObjectBindingImpl;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
@@ -62,11 +61,6 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
         } else {
             return logicalParent.getPathname() + name + FOLDER_DELIMITER;
         }
-    }
-
-    @Override
-    public void persist() throws PersistenceException {
-
     }
 
     @Override
@@ -188,9 +182,11 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
         private List<String> folders = new LinkedList<>();
         private String prefix;
         private String delimiter;
+        private boolean allLevels;
 
         public DirectoryIterator(String prefix, boolean allLevels) {
             this.prefix = prefix;
+            this.allLevels = allLevels;
 
             if (allLevels) {
                 delimiter = NO_DELIMITER;
@@ -226,6 +222,8 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
         @Override
         public boolean hasNext() {
+            skipThisFolder();
+
             boolean next = summary.hasNext() || !folders.isEmpty();
 
             if (!next) {
@@ -245,6 +243,7 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
 
         @Override
         public NameObjectBinding next() {
+            skipThisFolder();
 
             if(!hasNext()) {
                 return null;
@@ -268,5 +267,12 @@ public class AWSDirectory extends AWSStatefulObject implements Directory {
             return null;
         }
 
+
+        private void skipThisFolder() {
+            if (!allLevels && summary.hasNext()) {
+                summary.next();
+                allLevels = true;
+            }
+        }
     }
 }

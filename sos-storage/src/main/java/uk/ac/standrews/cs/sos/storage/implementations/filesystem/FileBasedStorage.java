@@ -1,13 +1,16 @@
 package uk.ac.standrews.cs.sos.storage.implementations.filesystem;
 
 
+import org.apache.commons.io.FileUtils;
 import uk.ac.standrews.cs.sos.storage.data.Data;
-import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
+
+import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -62,13 +65,12 @@ public class FileBasedStorage extends CommonStorage implements Storage {
     }
 
     @Override
-    public void destroy() throws BindingAbsentException {
-        // TODO
+    public void destroy() throws DestroyException {
+        try {
+            FileUtils.deleteDirectory(root.toFile());
+        } catch (IOException e) {
+            throw new DestroyException("Unable to destroy root directory");
+        }
     }
 
-    private void createSOSDirectories() throws PersistenceException {
-        createDirectory(DATA_DIRECTORY_NAME).persist();
-        createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
-        createDirectory(TEST_DATA_DIRECTORY_NAME).persist();
-    }
 }

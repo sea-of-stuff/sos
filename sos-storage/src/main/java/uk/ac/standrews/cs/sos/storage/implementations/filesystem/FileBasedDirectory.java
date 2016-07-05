@@ -128,7 +128,7 @@ public class FileBasedDirectory extends FileBasedStatefulObject implements Direc
         }
 
         public boolean hasNext() {
-            return index < names.length;
+            return names != null && index < names.length;
         }
 
         public NameObjectBinding next() {

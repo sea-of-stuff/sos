@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.interfaces;
 
 import uk.ac.standrews.cs.sos.storage.data.Data;
-import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 
 /**
  * This interface allow SOS implementations to interact with different
@@ -62,5 +62,5 @@ public interface Storage {
 
     File createFile(Directory parent, String filename, Data data);
 
-    void destroy() throws BindingAbsentException; // TODO - throw destroy exception
+    void destroy() throws DestroyException;
 }

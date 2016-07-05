@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.data.StringData;
+import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -19,6 +20,8 @@ public class AWSStorageImmutableTest {
     private static final String AWS_S3_TEST_BUCKET = "sos-simone-test";
     private static final Data TEST_DATA = new StringData("hello world");
 
+    private static final int TEST_DELAY = 1000; // Needed to allow any background ops
+
     private Storage storage;
 
     @BeforeMethod
@@ -27,8 +30,10 @@ public class AWSStorageImmutableTest {
     }
 
     @AfterMethod
-    public void tearDown() {
-        // TODO - delete info in bucket
+    public void tearDown() throws DestroyException, InterruptedException {
+        storage.destroy();
+
+        Thread.sleep(TEST_DELAY);
     }
 
     @Test

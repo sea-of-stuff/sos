@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.network;
 
 import uk.ac.standrews.cs.sos.storage.data.Data;
-import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.File;
@@ -59,7 +59,7 @@ public class NetworkBasedStorage extends CommonStorage implements Storage {
     }
 
     @Override
-    public void destroy() throws BindingAbsentException {
+    public void destroy() throws DestroyException {
 
     }
 }

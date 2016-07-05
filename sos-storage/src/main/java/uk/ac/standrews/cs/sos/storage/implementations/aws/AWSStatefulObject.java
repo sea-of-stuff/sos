@@ -3,9 +3,11 @@ package uk.ac.standrews.cs.sos.storage.implementations.aws;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.sos.storage.data.Data;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.StatefulObject;
 
@@ -88,7 +90,26 @@ public abstract class AWSStatefulObject implements StatefulObject {
         return file;
     }
 
+    @Override
+    public void persist() throws PersistenceException {
+        if (isImmutable && persisted) {
+            return;
+        }
 
+        try (InputStream inputStream = getInputStream()) {
+
+            String objectPath = getPathname();
+            ObjectMetadata metadata = getObjectMetadata();
+
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest(bucketName, objectPath, inputStream, metadata);
+            s3Client.putObject(putObjectRequest);
+
+            persisted = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     protected InputStream getInputStream() throws IOException {
         return data != null ? data.getInputStream() : new NullInputStream(0);

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.storage.implementations;
 
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 
@@ -44,4 +45,9 @@ public abstract class CommonStorage implements Storage {
         return createDirectory(TEST_DATA_DIRECTORY_NAME);
     }
 
+    protected void createSOSDirectories() throws PersistenceException {
+        createDirectory(DATA_DIRECTORY_NAME).persist();
+        createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
+        createDirectory(TEST_DATA_DIRECTORY_NAME).persist();
+    }
 }

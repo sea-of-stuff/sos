@@ -12,6 +12,8 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
+import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.implementations.CommonStorage;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
@@ -37,9 +39,12 @@ public class AWSStorage extends CommonStorage implements Storage {
             s3Client = new AmazonS3Client();
             s3Client.setRegion(region);
             createAndSetBucket(bucketName);
-            createRoot();
 
+            createRoot();
+            createSOSDirectories();
         } catch (StorageException e) {
+            e.printStackTrace();
+        } catch (PersistenceException e) {
             e.printStackTrace();
         }
     }
@@ -52,9 +57,12 @@ public class AWSStorage extends CommonStorage implements Storage {
             s3Client = new AmazonS3Client(awsCreds);
             s3Client.setRegion(region);
             createAndSetBucket(bucketName);
-            createRoot();
 
+            createRoot();
+            createSOSDirectories();
         } catch (StorageException e) {
+            e.printStackTrace();
+        } catch (PersistenceException e) {
             e.printStackTrace();
         }
     }
@@ -80,22 +88,26 @@ public class AWSStorage extends CommonStorage implements Storage {
     }
 
     @Override
-    public void destroy() throws BindingAbsentException {
+    public void destroy() throws DestroyException {
 
-        final ListObjectsV2Request req = new ListObjectsV2Request()
-                .withBucketName(bucketName)
-                .withMaxKeys(KEYS_PER_ITERATION);
-        ListObjectsV2Result result;
-        do {
-            result = s3Client.listObjectsV2(req);
+        try {
+            final ListObjectsV2Request req = new ListObjectsV2Request()
+                    .withBucketName(bucketName)
+                    .withMaxKeys(KEYS_PER_ITERATION);
+            ListObjectsV2Result result;
+            do {
+                result = s3Client.listObjectsV2(req);
 
-            for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
-                root.remove(objectSummary.getKey());
-            }
-            req.setContinuationToken(result.getNextContinuationToken());
-        } while(result.isTruncated() == true );
+                for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+                    root.remove(objectSummary.getKey());
+                }
+                req.setContinuationToken(result.getNextContinuationToken());
+            } while (result.isTruncated() == true);
 
-        s3Client.deleteBucket(bucketName);
+            s3Client.deleteBucket(bucketName);
+        } catch (BindingAbsentException e) {
+            throw new DestroyException(e);
+        }
     }
 
     private void createAndSetBucket(String bucketName) throws StorageException {
