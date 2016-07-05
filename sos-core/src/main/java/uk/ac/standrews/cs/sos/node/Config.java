@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import uk.ac.standrews.cs.sos.storage.StorageType;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedDirectory;
 import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
@@ -66,20 +67,22 @@ public class Config {
     private int n_roles;
 
     // Storage
-    public final static String S_TYPE_LOCAL = "local";
-    public final static String S_TYPE_NETWORK = "network";
-    public final static String S_TYPE_AWS_S3 = "aws_s3";
 
     @DatabaseField(canBeNull = true)
-    public String s_type = S_TYPE_LOCAL;
+    public StorageType s_type = StorageType.LOCAL;
+
+    // Will be used if storage is over the network
     @DatabaseField(canBeNull = true)
-    public String s_hostname; // Will be used if storage is over the network
+    public String s_hostname;
+
+    // This is the folder where we store internal properties of system (e.g. manifests, etc)
+    // For AWS S3 this will be the bucket name
     @DatabaseField(canBeNull = true)
-    public String s_location = root.getPathname(); // This is the folder where we store internal properties of system (e.g. manifests, etc)
-    public String s_username;
-    public String s_password;
-    public String s_access_key;
-    public String s_secret_key;
+    public String s_location = root.getPathname();
+    public String s_username; // optional
+    public String s_password; // optional
+    public String s_access_key; // optional
+    public String s_secret_key; // optional
 
     public static void initDatabaseInfo() throws PersistenceException {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path, false); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)

@@ -12,21 +12,21 @@ import uk.ac.standrews.cs.sos.utils.HelperTest;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-import static uk.ac.standrews.cs.sos.model.index.IndexBaseTest.CACHE_TYPE.LUCENE;
+import static uk.ac.standrews.cs.sos.model.index.IndexBaseTest.INDEX_TYPE.LUCENE;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class IndexBaseTest {
 
-    protected abstract CACHE_TYPE getCacheType();
+    protected abstract INDEX_TYPE getIndexType();
     protected Index index;
 
     @BeforeMethod
     public void setUp(Method method) throws IndexException, ConfigurationException {
-        CACHE_TYPE type = getCacheType();
+        INDEX_TYPE type = getIndexType();
         System.out.println(type.toString() + " :: " + method.getName());
-        index = new CacheFactory().getCache(type);
+        index = new IndexFactory().getIndex(type);
     }
 
     @AfterMethod
@@ -38,19 +38,19 @@ public abstract class IndexBaseTest {
     }
 
     @DataProvider(name = "index-manager-provider")
-    public static Object[][] cacheProvider() throws IOException {
+    public static Object[][] indexProvider() throws IOException {
         return new Object[][] {
                 {LUCENE}
         };
     }
 
-    public enum CACHE_TYPE {
+    public enum INDEX_TYPE {
         LUCENE
     }
 
-    public class CacheFactory {
+    public class IndexFactory {
 
-        public Index getCache(CACHE_TYPE type) throws IndexException {
+        public Index getIndex(INDEX_TYPE type) throws IndexException {
             switch(type) {
                 case LUCENE:
                     return LuceneIndex.getInstance();

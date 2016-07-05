@@ -19,18 +19,18 @@ import static org.testng.Assert.assertTrue;
  */
 public class IndexImplTest extends IndexBaseTest {
 
-    private final CACHE_TYPE cacheType;
+    private final INDEX_TYPE indexType;
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
     @Factory(dataProvider = "index-manager-provider")
-    public IndexImplTest(CACHE_TYPE cacheType) {
-        this.cacheType = cacheType;
+    public IndexImplTest(INDEX_TYPE indexType) {
+        this.indexType = indexType;
     }
 
     @Override
-    public CACHE_TYPE getCacheType() {
-        return this.cacheType;
+    public INDEX_TYPE getIndexType() {
+        return this.indexType;
     }
 
     @Test
@@ -185,7 +185,7 @@ public class IndexImplTest extends IndexBaseTest {
 
         // Kill this instance, so that next instance used the dumped file.
         index.killInstance();
-        index = new CacheFactory().getCache(cacheType);
+        index = new IndexFactory().getIndex(indexType);
 
         Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(GUIDFactory.recreateGUID("123")));

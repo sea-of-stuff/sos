@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.sos.storage.StorageFactory;
-import uk.ac.standrews.cs.sos.storage.StorageType;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
@@ -62,7 +61,7 @@ public class LocalSOSNode extends SOSNode {
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
         try {
-            storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location, true);
+            storage = StorageFactory.createStorage(config.s_type, config.s_location, true);
         } catch (StorageException e) {
             throw new SOSException(e);
         }

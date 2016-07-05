@@ -25,7 +25,6 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.storage.StorageFactory;
-import uk.ac.standrews.cs.sos.storage.StorageType;
 import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -57,7 +56,7 @@ public class ManifestsManagerTest {
         configuration = Configuration.getInstance();
 
         Config config = new Config(); // create default configuration
-        storage = StorageFactory.createStorage(StorageType.getEnum(config.s_type), config.s_location, true);
+        storage = StorageFactory.createStorage(config.s_type, config.s_location, true);
         index = LuceneIndex.getInstance();
     }
 

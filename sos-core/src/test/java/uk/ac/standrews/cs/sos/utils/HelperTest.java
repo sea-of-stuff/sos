@@ -87,9 +87,8 @@ public class HelperTest {
         TableUtils.createTableIfNotExists(connection, Config.class);
 
         Config config = new Config();
-        config.s_type = Config.S_TYPE_LOCAL;
         Dao<Config, String> nodesDAO = DaoManager.createDao(connection, Config.class);
-        nodesDAO.create((Config) config);
+        nodesDAO.create(config);
     }
 
 }

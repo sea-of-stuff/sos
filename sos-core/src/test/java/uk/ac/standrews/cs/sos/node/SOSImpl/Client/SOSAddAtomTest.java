@@ -122,7 +122,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
-        Location location = new URILocation("https://www.gutenberg.org/files/11/11-pdf.pdf");
+        Location location = new URILocation("https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf");
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -134,7 +134,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
-        Location location = new URILocation("https://www.gutenberg.org/cache/epub/11/pg11.txt");
+        Location location = new URILocation("http://www.umich.edu/~umfandsf/other/ebooks/alice30.txt");
         Atom manifest = model.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
