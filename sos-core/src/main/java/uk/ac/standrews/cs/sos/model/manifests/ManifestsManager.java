@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.data.StringData;
@@ -24,7 +23,6 @@ import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -212,12 +210,18 @@ public class ManifestsManager {
             IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
             File backupManifest = getManifestFile(manifestGUID);
 
-            FileHelper.copyToFile(
-                    new URILocation(backupManifest.getPathname()).getSource(),
-                    backupManifest + BACKUP_EXTENSION);
+            Directory manifestsDirectory = storage.getManifestDirectory();
+            storage.createFile(manifestsDirectory,
+                    backupManifest.getName() + BACKUP_EXTENSION,
+                    backupManifest.getData())
+                .persist();
+
+//            FileHelper.copyToFile(
+//                    new URILocation(backupManifest.getPathname()).getSource(),
+//                    backupManifest + BACKUP_EXTENSION);
 
             return backupManifest;
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException | DataException | PersistenceException e) {
             throw new ManifestManagerException("Manifest could not be backed up ", e);
         }
 

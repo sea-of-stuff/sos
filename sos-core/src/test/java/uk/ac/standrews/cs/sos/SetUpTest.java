@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
@@ -28,7 +29,7 @@ public class SetUpTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        Node testNode = new SOSNode(GUIDFactory.generateRandomGUID());
+        Node testNode = new SOSNode(GUIDFactory.generateRandomGUID()); // FIXME - some tests fail because still using Configuration.getNode (old code)
         Configuration.setNode(testNode);
         configuration = Configuration.getInstance();
 
@@ -43,7 +44,7 @@ public class SetUpTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException {
+    public void tearDown() throws IOException, IndexException, DestroyException, InterruptedException {
         index.flushDB();
         index.killInstance();
 
@@ -53,5 +54,8 @@ public class SetUpTest {
         HelperTest.DeletePath(configuration.getDataDirectory());
 
         HelperTest.DeletePath(Config.DB_DIRECTORY);
+
+        storage.destroy();
+        Thread.sleep(1000);
     }
 }

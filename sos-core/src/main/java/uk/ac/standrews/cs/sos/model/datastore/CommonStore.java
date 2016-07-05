@@ -3,12 +3,13 @@ package uk.ac.standrews.cs.sos.model.datastore;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.storage.data.Data;
 import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
@@ -54,21 +55,20 @@ public abstract class CommonStore implements Store {
     }
 
     protected Location getLocation(IGUID guid) throws SourceLocationException {
-        Location location;
-        Node node = configuration.getNode();
+
         try {
-            location = new SOSLocation(node.getNodeGUID(), guid);
-        } catch (MalformedURLException e) {
-            throw new SourceLocationException("SOSLocation could not be generated for machine-guid: " +
-                    node.toString() + " and entity: " + guid.toString());
+            IGUID nodeGUID = LocalSOSNode.getInstance().getNodeGUID();
+            return new SOSLocation(nodeGUID, guid);
+        } catch (MalformedURLException | SOSException e) {
+            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toString());
         }
-        return location;
+
     }
 
     protected abstract LocationBundle getBundle(Location location);
 
     protected File getAtomLocation(IGUID guid) throws IOException {
-        return storage.createFile(configuration.getDataDirectory(), guid.toString()); // FIXME - do not use config
+        return storage.createFile(storage.getDataDirectory(), guid.toString()); // FIXME - do not use config
     }
 
     protected void storeData(IGUID guid, Data data) throws IOException {

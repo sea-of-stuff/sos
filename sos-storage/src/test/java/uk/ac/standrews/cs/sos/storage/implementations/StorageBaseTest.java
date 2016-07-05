@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-import static uk.ac.standrews.cs.sos.storage.implementations.StorageBaseTest.STORAGE_TYPE.AWS;
 import static uk.ac.standrews.cs.sos.storage.implementations.StorageBaseTest.STORAGE_TYPE.LOCAL;
 
 /**
@@ -47,7 +46,7 @@ public abstract class StorageBaseTest {
     @DataProvider(name = "storage-manager-provider")
     public static Object[][] indexProvider() throws IOException {
         return new Object[][] {
-                {LOCAL}, {AWS}
+                {LOCAL} /* Disabled , {AWS} */
         };
     }
 

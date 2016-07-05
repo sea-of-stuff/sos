@@ -18,7 +18,7 @@ public class ClientTest extends NodeTest {
 
     @Test(expectedExceptions = ManifestNotFoundException.class)
     public void testFailGetManifest() throws Exception {
-        model.getManifest(GUIDFactory.recreateGUID("123fa11"));
+        model.getManifest(GUIDFactory.generateRandomGUID());
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)

@@ -34,7 +34,7 @@ public class AWSFile extends AWSStatefulObject implements File {
 
     public AWSFile(AmazonS3 s3Client, String bucketName, Directory parent,
                    String name, Data data, boolean isImmutable) {
-        super(s3Client, bucketName, parent, name, data, isImmutable);
+        super(s3Client, bucketName, parent, name, isImmutable);
 
         if (isImmutable && exists()) {
             this.persisted = true;
@@ -49,7 +49,7 @@ public class AWSFile extends AWSStatefulObject implements File {
 
         try (S3Object s3Object = s3Client.getObject(getObjectRequest)) {
             boolean objectExists = s3Object != null;
-            updateData(s3Object, objectExists);
+            // updateData(s3Object, objectExists); // FIXME - have this somewhere else?
 
             return objectExists;
         } catch (AmazonS3Exception e) {
@@ -97,11 +97,7 @@ public class AWSFile extends AWSStatefulObject implements File {
 
     private void updateData(S3Object s3Object, boolean objectExists) {
         if (objectExists) {
-            if (isImmutable && !persisted) {
-                data = new InputStreamData(s3Object.getObjectContent());
-            } else {
-                data = new InputStreamData(s3Object.getObjectContent());
-            }
+            data = new InputStreamData(s3Object.getObjectContent());
         }
     }
 }

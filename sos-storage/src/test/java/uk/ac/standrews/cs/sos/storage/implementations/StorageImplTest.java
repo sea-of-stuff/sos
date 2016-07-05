@@ -120,7 +120,8 @@ public class StorageImplTest extends StorageBaseTest {
         int testCounter = 0;
         Iterator<NameObjectBinding> it = directory.getIterator();
         while(it.hasNext()) {
-            it.next().getName();
+            String name = it.next().getName();
+            System.out.println(name);
             testCounter++;
         }
 

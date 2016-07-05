@@ -37,7 +37,7 @@ public class SOSAddAtomTest extends ClientTest {
         Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
-        assertEquals(retrievedLocations.size(), 2);
+        assertEquals(2, retrievedLocations.size());
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }

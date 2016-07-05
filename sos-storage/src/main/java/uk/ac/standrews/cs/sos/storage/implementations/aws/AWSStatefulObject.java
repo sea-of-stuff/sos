@@ -1,10 +1,7 @@
 package uk.ac.standrews.cs.sos.storage.implementations.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.sos.storage.data.Data;
@@ -48,12 +45,6 @@ public abstract class AWSStatefulObject implements StatefulObject {
         getObjectRequest = new GetObjectRequest(bucketName, objectPath);
     }
 
-    public AWSStatefulObject(AmazonS3 s3Client, String bucketName,
-                             Directory parent, String name, Data data,
-                             boolean isImmutable) {
-        this(s3Client, bucketName, parent, name, isImmutable);
-    }
-
     public AWSStatefulObject(AmazonS3 s3Client, String bucketName) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
@@ -89,13 +80,18 @@ public abstract class AWSStatefulObject implements StatefulObject {
 
     @Override
     public File toFile() throws IOException {
-        final File tempFile = File.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX);
-        tempFile.deleteOnExit();
-        try (FileOutputStream output = new FileOutputStream(tempFile)) {
-            InputStream input = s3Client.getObject(getObjectRequest).getObjectContent();
-            IOUtils.copy(input, output);
+
+        try {
+            final File tempFile = File.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX);
+            tempFile.deleteOnExit();
+            try (FileOutputStream output = new FileOutputStream(tempFile)) {
+                InputStream input = s3Client.getObject(getObjectRequest).getObjectContent();
+                IOUtils.copy(input, output);
+            }
+            return tempFile;
+        } catch (AmazonS3Exception e) {
+            throw new IOException(e);
         }
-        return tempFile;
     }
 
     @Override

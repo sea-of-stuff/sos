@@ -80,7 +80,7 @@ public class Config {
     // Storage
 
     @DatabaseField(canBeNull = true)
-    public StorageType s_type = StorageType.AWS_S3; // StorageType.LOCAL;
+    public StorageType s_type = StorageType.LOCAL;
 
     // Will be used if storage is over the network
     @DatabaseField(canBeNull = true)
@@ -89,7 +89,7 @@ public class Config {
     // This is the folder where we store internal properties of system (e.g. manifests, etc)
     // For AWS S3 this will be the bucket name
     @DatabaseField(canBeNull = true)
-    public String s_location = "simone-core-test"; //root.getPathname();
+    public String s_location = root.getPathname();
     public String s_username; // optional
     public String s_password; // optional
     public String s_access_key; // optional
