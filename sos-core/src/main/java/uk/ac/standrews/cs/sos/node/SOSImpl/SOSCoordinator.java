@@ -1,74 +1,43 @@
 package uk.ac.standrews.cs.sos.node.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Coordinator;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
-import java.io.InputStream;
 import java.util.Collection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSCoordinator extends SOSCommon implements Coordinator {
+public class SOSCoordinator implements Coordinator {
+
+    protected Identity identity;
+    protected ManifestsManager manifestsManager;
+    final protected Configuration configuration;
 
     private NodeManager nodeManager;
 
+    // TODO - pass storage (this is needed to be used by manifest manager or just give it to the manifest manager ????)
     public SOSCoordinator(Configuration configuration, ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
-        super(configuration, null, manifestsManager, identity); // FIXME - not sure if passing null is a good idea!
+
+        this.configuration = configuration;
+        this.manifestsManager = manifestsManager;
+        this.identity = identity;
+
         this.nodeManager = nodeManager;
     }
 
     @Override
-    public Atom addAtom(Location location) throws StorageException, ManifestPersistException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Atom addAtom(InputStream inputStream) throws StorageException, ManifestPersistException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Compound addCompound(CompoundType type, Collection<Content> contents) throws ManifestNotMadeException, ManifestPersistException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Version addVersion(IGUID content, IGUID invariant, Collection<IGUID> prevs, Collection<IGUID> metadata) throws ManifestNotMadeException, ManifestPersistException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public InputStream getAtomContent(Atom atom) {
-        throw new UnsupportedOperationException();
+    public Identity getIdentity() {
+        return this.identity;
     }
 
     @Override
