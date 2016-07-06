@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
@@ -25,7 +24,7 @@ public class ManifestFactory {
      * @param locations where the atom resides.
      * @return the manifest for the atom
      * @throws ManifestNotMadeException
-     * @throws DataStorageException
+     * @throws StorageException
      */
     public static AtomManifest createAtomManifest(IGUID guid,
                                                   Collection<LocationBundle> locations) {

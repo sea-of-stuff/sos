@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.utils;
 
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;

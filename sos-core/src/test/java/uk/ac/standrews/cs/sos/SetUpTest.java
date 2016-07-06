@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.storage.exceptions.DestroyException;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.storage.exceptions.DestroyException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ import java.io.IOException;
 public class SetUpTest {
 
     protected LocalSOSNode localSOSNode;
-    protected Storage storage;
+    protected IStorage storage;
     protected Index index;
     protected Configuration configuration;
 
@@ -55,7 +55,7 @@ public class SetUpTest {
 
         HelperTest.DeletePath(Config.DB_DIRECTORY);
 
-        storage.destroy();
-        Thread.sleep(1000);
+        //storage.destroy();
+        //Thread.sleep(1000);
     }
 }

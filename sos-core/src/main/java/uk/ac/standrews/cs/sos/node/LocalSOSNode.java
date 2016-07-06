@@ -18,10 +18,10 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSStorage;
-import uk.ac.standrews.cs.sos.storage.StorageFactory;
-import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +39,7 @@ public class LocalSOSNode extends SOSNode {
 
     private static Configuration configuration;
     private static Config config;
-    private static Storage storage;
+    private static IStorage storage;
 
     private static Index index;
     private static Identity identity;
@@ -62,7 +62,7 @@ public class LocalSOSNode extends SOSNode {
     public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
         try {
-            storage = StorageFactory.createStorage(config.s_type, config.s_location, false);
+            storage = StorageFactory.createStorage(config.s_type, config.s_location, true); // FIXME - storage have very different behaviours if mutable or not
         } catch (StorageException e) {
             throw new SOSException(e);
         }
@@ -157,7 +157,7 @@ public class LocalSOSNode extends SOSNode {
         }
     }
 
-    public Storage getStorage() {
+    public IStorage getStorage() {
         return storage;
     }
 

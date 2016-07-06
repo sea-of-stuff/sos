@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,31 +36,31 @@ public class StorageHelper {
         return stream;
     }
 
-    public static IGUID cacheAtomAndUpdateLocationBundles(Configuration configuration, Storage storage, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID cacheAtomAndUpdateLocationBundles(Configuration configuration, IStorage storage, Location location, Collection<LocationBundle> bundles) throws StorageException {
         Store cache = new LocationCache(configuration, storage, location);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID cacheAtomAndUpdateLocationBundles(Configuration configuration, Storage storage, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID cacheAtomAndUpdateLocationBundles(Configuration configuration, IStorage storage, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
         Store cache = new StreamCache(configuration, storage, inputStream);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID persistAtomAndUpdateLocationBundles(Configuration configuration, Storage storage, Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID persistAtomAndUpdateLocationBundles(Configuration configuration, IStorage storage, Location location, Collection<LocationBundle> bundles) throws StorageException {
         Store cache = new LocationPersist(configuration, storage, location);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID persistAtomAndUpdateLocationBundles(Configuration configuration, Storage storage, InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+    public static IGUID persistAtomAndUpdateLocationBundles(Configuration configuration, IStorage storage, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
         Store cache = new StreamPersist(configuration, storage, inputStream);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    private static IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws DataStorageException {
+    private static IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {
         StorageManager storageManager = new StorageManager(store);
         IGUID guid = storageManager.storeAtom();
         if (bundles!= null && guid != null) {

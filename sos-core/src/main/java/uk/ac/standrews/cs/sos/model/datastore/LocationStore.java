@@ -3,12 +3,12 @@ package uk.ac.standrews.cs.sos.model.datastore;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.data.InputStreamData;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
+import uk.ac.standrews.cs.storage.data.InputStreamData;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,16 +21,16 @@ public abstract class LocationStore extends CommonStore {
     private Location origin;
     private LocationBundle locationBundle;
 
-    public LocationStore(Configuration configuration, Storage storage, Location location) {
+    public LocationStore(Configuration configuration, IStorage storage, Location location) {
         super(configuration, storage);
         this.origin = location;
     }
 
     @Override
-    public IGUID store() throws DataStorageException {
+    public IGUID store() throws StorageException {
         IGUID guid;
         if (origin == null) {
-            throw new DataStorageException();
+            throw new StorageException();
         }
 
         try {
@@ -43,7 +43,7 @@ public abstract class LocationStore extends CommonStore {
             Location location = getLocation(guid);
             locationBundle = getBundle(location);
         } catch (GUIDGenerationException | SourceLocationException e) {
-            throw new DataStorageException();
+            throw new StorageException();
         }
 
         return guid;
@@ -54,14 +54,14 @@ public abstract class LocationStore extends CommonStore {
         return locationBundle;
     }
 
-    private void storeData(Location location, IGUID guid) throws DataStorageException {
+    private void storeData(Location location, IGUID guid) throws StorageException {
 
         try (InputStream dataStream =
                      StorageHelper.getInputStreamFromLocation(location)) {
 
             storeData(guid, new InputStreamData((dataStream)));
         } catch (SourceLocationException | IOException e) {
-            throw new DataStorageException();
+            throw new StorageException();
         }
     }
 

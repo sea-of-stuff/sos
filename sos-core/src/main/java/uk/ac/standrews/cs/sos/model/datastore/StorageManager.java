@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 /**
  * Store an atom - given its location or data stream - to this NodeManager node.
@@ -21,9 +21,9 @@ public class StorageManager {
      * Store the data at the Location Bundles in the storeLocation
      *
      * @return GUID generated from the data at the location bundles
-     * @throws DataStorageException
+     * @throws StorageException
      */
-    public IGUID storeAtom() throws DataStorageException {
+    public IGUID storeAtom() throws StorageException {
         return store.store();
     }
 

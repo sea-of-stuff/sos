@@ -8,9 +8,9 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
-import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.exceptions.DataException;
+import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;

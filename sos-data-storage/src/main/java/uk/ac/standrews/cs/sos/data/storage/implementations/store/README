@@ -1,3 +1,0 @@
-check webdav-server-standalone --> StoreBased file system
-
-The store package will contain all the code to maintain the store (in memory, using guids?)

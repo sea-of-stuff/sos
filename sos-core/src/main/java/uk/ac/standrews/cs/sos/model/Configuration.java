@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedDirectory;
-import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedDirectory;
+import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 

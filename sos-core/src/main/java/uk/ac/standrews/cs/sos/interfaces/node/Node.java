@@ -6,8 +6,7 @@ import uk.ac.standrews.cs.sos.node.ROLE;
 import java.net.InetSocketAddress;
 
 /**
- * Node class - this defines an entry point in the LocalSOSNode and contains information
- * on how to talk to the node over the network
+ * Node interface
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

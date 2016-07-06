@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.node.SOSImpl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -12,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.Coordinator;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -26,7 +27,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSCoordinator extends SOSCommon {
+public class SOSCoordinator extends SOSCommon implements Coordinator {
 
     private NodeManager nodeManager;
 
@@ -36,12 +37,12 @@ public class SOSCoordinator extends SOSCommon {
     }
 
     @Override
-    public Atom addAtom(Location location) throws DataStorageException, ManifestPersistException {
+    public Atom addAtom(Location location) throws StorageException, ManifestPersistException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Atom addAtom(InputStream inputStream) throws DataStorageException, ManifestPersistException {
+    public Atom addAtom(InputStream inputStream) throws StorageException, ManifestPersistException {
         throw new UnsupportedOperationException();
     }
 
@@ -56,12 +57,12 @@ public class SOSCoordinator extends SOSCommon {
     }
 
     @Override
-    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException {
+    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException {
+    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
         throw new UnsupportedOperationException();
     }
 

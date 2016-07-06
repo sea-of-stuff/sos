@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.interfaces.node;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -14,6 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -60,23 +60,23 @@ public interface SeaOfStuff {
      *
      * @param location of the data for the atom.
      * @return Atom for the added atom.
-     * @throws DataStorageException
+     * @throws StorageException
      * @throws ManifestPersistException
      *
      * @see Manifest
      */
     Atom addAtom(Location location)
-            throws DataStorageException, ManifestPersistException;
+            throws StorageException, ManifestPersistException;
 
     /**
      *
      * @param inputStream for this atom
      * @return Atom for the added atom
-     * @throws DataStorageException
+     * @throws StorageException
      * @throws ManifestPersistException
      */
     Atom addAtom(InputStream inputStream)
-            throws DataStorageException, ManifestPersistException;
+            throws StorageException, ManifestPersistException;
 
     /**
      * Adds a CompoundManifest to the Sea of Stuff.
@@ -192,7 +192,7 @@ public interface SeaOfStuff {
 
     /**
      * Get a known node to this Sea Of Stuff.
-     * Client and Storage will not support this call.
+     * Client and IStorage will not support this call.
      *
      * @param guid
      * @return

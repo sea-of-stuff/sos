@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.Configuration;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.security.*;

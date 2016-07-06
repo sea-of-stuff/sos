@@ -1,16 +1,22 @@
 package uk.ac.standrews.cs.sos;
 
-import org.glassfish.jersey.server.ResourceConfig;
+
+import uk.ac.standrews.cs.sos.rest.Hello;
+import uk.ac.standrews.cs.sos.rest.Roles;
 
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@ApplicationPath("rest")
-public class ApplicationConfig extends ResourceConfig {
+@ApplicationPath("/sos")
+public class ApplicationConfig extends Application {
 
-    public ApplicationConfig() {
-        packages("uk.ac.standrews.cs.sos.rest");
+    public Set<Class<?>> getClasses() {
+        return new HashSet<Class<?>>(Arrays.asList(Hello.class, Roles.class));
     }
 }

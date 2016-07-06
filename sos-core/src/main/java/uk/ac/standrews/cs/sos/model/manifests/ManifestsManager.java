@@ -12,15 +12,15 @@ import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.data.Data;
-import uk.ac.standrews.cs.sos.storage.data.StringData;
-import uk.ac.standrews.cs.sos.storage.exceptions.DataException;
-import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.storage.data.Data;
+import uk.ac.standrews.cs.storage.data.StringData;
+import uk.ac.standrews.cs.storage.exceptions.DataException;
+import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class ManifestsManager {
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
-    final private Storage storage;
+    final private IStorage storage;
     final private Index index;
 
     /**
@@ -49,7 +49,7 @@ public class ManifestsManager {
      *
      * @param index used to record information for the manifests.
      */
-    public ManifestsManager(Storage storage, Index index) {
+    public ManifestsManager(IStorage storage, Index index) {
         this.storage = storage;
         this.index = index;
     }

@@ -3,12 +3,12 @@ package uk.ac.standrews.cs.sos.model.datastore;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class StorageHelperTest extends SetUpTest {
         assertEquals(bundles.size(), 1);
     }
 
-    @Test (expectedExceptions = DataStorageException.class)
+    @Test (expectedExceptions = StorageException.class)
     public void testStoreAtomFromNullLocation() throws Exception {
         Location location = null;
         Collection<LocationBundle> bundles = new ArrayList<>();
@@ -84,7 +84,7 @@ public class StorageHelperTest extends SetUpTest {
         assertEquals(bundles.size(), 1);
     }
 
-    @Test (expectedExceptions = DataStorageException.class)
+    @Test (expectedExceptions = StorageException.class)
     public void testStoreAtomFromNullStream() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         InputStream inputStream = null;

@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.node.SOSImpl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
@@ -17,7 +16,8 @@ import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,13 +28,13 @@ import java.util.Collection;
  */
 public abstract class SOSCommon implements SeaOfStuff {
 
-    protected Storage storage;
+    protected IStorage storage;
 
     protected Identity identity;
     protected ManifestsManager manifestsManager;
     final protected Configuration configuration;
 
-    public SOSCommon(Configuration configuration, Storage storage, ManifestsManager manifestsManager, Identity identity) {
+    public SOSCommon(Configuration configuration, IStorage storage, ManifestsManager manifestsManager, Identity identity) {
         this.configuration = configuration;
         this.storage = storage;
         this.manifestsManager = manifestsManager;
@@ -47,7 +47,7 @@ public abstract class SOSCommon implements SeaOfStuff {
     }
 
     @Override
-    public Atom addAtom(Location location) throws DataStorageException, ManifestPersistException {
+    public Atom addAtom(Location location) throws StorageException, ManifestPersistException {
 
         Collection<LocationBundle> bundles = new ArrayList<>();
         bundles.add(new ProvenanceLocationBundle(location));
@@ -61,7 +61,7 @@ public abstract class SOSCommon implements SeaOfStuff {
 
     @Override
     public Atom addAtom(InputStream inputStream)
-            throws ManifestPersistException, DataStorageException {
+            throws ManifestPersistException, StorageException {
 
         Collection<LocationBundle> bundles = new ArrayList<>();
         IGUID guid = store(inputStream, bundles);
@@ -126,7 +126,7 @@ public abstract class SOSCommon implements SeaOfStuff {
         throw new UnsupportedOperationException();
     }
 
-    protected abstract IGUID store(Location location, Collection<LocationBundle> bundles) throws DataStorageException;
+    protected abstract IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException;
 
-    protected abstract IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws DataStorageException;
+    protected abstract IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException;
 }

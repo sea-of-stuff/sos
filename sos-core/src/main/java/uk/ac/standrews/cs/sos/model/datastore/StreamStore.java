@@ -4,15 +4,15 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.data.InputStreamData;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.storage.data.InputStreamData;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,16 +26,16 @@ public abstract class StreamStore extends CommonStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(Configuration configuration, Storage storage, InputStream inputStream) {
+    public StreamStore(Configuration configuration, IStorage storage, InputStream inputStream) {
         super(configuration, storage);
         this.inputStream = inputStream;
     }
 
     @Override
-    public IGUID store() throws DataStorageException {
+    public IGUID store() throws StorageException {
             IGUID guid;
             if (inputStream == null) {
-                throw new DataStorageException();
+                throw new StorageException();
             }
 
             try {
@@ -52,7 +52,7 @@ public abstract class StreamStore extends CommonStore {
                 locationBundle = getBundle(location);
 
             } catch (GUIDGenerationException | SourceLocationException | URISyntaxException | IOException e) {
-                throw new DataStorageException();
+                throw new StorageException();
             }
 
         return guid;

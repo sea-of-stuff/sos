@@ -24,10 +24,10 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.node.Config;
-import uk.ac.standrews.cs.sos.storage.StorageFactory;
-import uk.ac.standrews.cs.sos.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.sos.storage.interfaces.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ import static org.testng.Assert.assertFalse;
 public class ManifestsManagerTest {
 
     private Configuration configuration;
-    private Storage storage;
+    private IStorage storage;
     private Index index;
 
     @BeforeMethod

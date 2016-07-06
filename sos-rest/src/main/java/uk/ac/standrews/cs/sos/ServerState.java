@@ -16,16 +16,30 @@ public class ServerState {
 
     public static LocalSOSNode sos;
 
-    public static void startSOS() {
+    public static void init() {
+        System.out.println("Starting SOS");
+        ServerState.startSOS();
+        System.out.println("SOS started");
+    }
+
+    public static void kill() {
+        // TODO
+    }
+
+    private static void startSOS() {
         try {
             Configuration configuration = Configuration.getInstance();
             Index index = LuceneIndex.getInstance();
 
             LocalSOSNode.setIndex(index);
-            LocalSOSNode.create(configuration);
+            try {
+                LocalSOSNode.create(configuration);
+            } catch (SOSProtocolException e) {
+                e.printStackTrace();
+            }
 
             ServerState.sos = LocalSOSNode.getInstance();
-        } catch (SOSException | SOSProtocolException | IndexException | ConfigurationException e) {
+        } catch (SOSException | IndexException | ConfigurationException e) {
             e.printStackTrace();
         }
     }

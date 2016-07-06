@@ -2,12 +2,12 @@ package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import uk.ac.standrews.cs.sos.storage.StorageType;
-import uk.ac.standrews.cs.sos.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedDirectory;
-import uk.ac.standrews.cs.sos.storage.implementations.filesystem.FileBasedFile;
-import uk.ac.standrews.cs.sos.storage.interfaces.Directory;
-import uk.ac.standrews.cs.sos.storage.interfaces.File;
+import uk.ac.standrews.cs.storage.StorageType;
+import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedDirectory;
+import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 
@@ -77,7 +77,7 @@ public class Config {
     @DatabaseField(canBeNull = true)
     private int n_roles;
 
-    // Storage
+    // IStorage
 
     @DatabaseField(canBeNull = true)
     public StorageType s_type = StorageType.LOCAL;
