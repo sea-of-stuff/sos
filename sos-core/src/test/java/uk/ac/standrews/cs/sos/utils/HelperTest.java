@@ -90,9 +90,13 @@ public class HelperTest {
         ConnectionSource connection = SQLDB.getSQLConnection();
         TableUtils.createTableIfNotExists(connection, Config.class);
 
-        Config config = new Config();
-        Dao<Config, String> nodesDAO = DaoManager.createDao(connection, Config.class);
-        nodesDAO.create(config);
+        try {
+            SQLDB.getConfiguration(connection);
+        } catch (SQLException e) {
+            Config config = new Config();
+            Dao<Config, String> nodesDAO = DaoManager.createDao(connection, Config.class);
+            nodesDAO.create(config);
+        }
     }
 
 }

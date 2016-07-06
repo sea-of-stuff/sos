@@ -205,7 +205,6 @@ public class ManifestsManager {
 
     private File backupManifest(Manifest manifest) throws ManifestManagerException {
 
-        // TODO - use storage API for persisting this!
         try {
             IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
             File backupManifest = getManifestFile(manifestGUID);
@@ -215,10 +214,6 @@ public class ManifestsManager {
                     backupManifest.getName() + BACKUP_EXTENSION,
                     backupManifest.getData())
                 .persist();
-
-//            FileHelper.copyToFile(
-//                    new URILocation(backupManifest.getPathname()).getSource(),
-//                    backupManifest + BACKUP_EXTENSION);
 
             return backupManifest;
         } catch (IOException | DataException | PersistenceException e) {

@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
-import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
-import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.bundles.*;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.io.IOException;
@@ -52,6 +49,8 @@ public class LocationBundleDeserializer extends JsonDeserializer<LocationBundle>
             ret = new CacheLocationBundle(location);
         } else if (type.equals(BundleTypes.PROVENANCE.toString())) {
             ret = new ProvenanceLocationBundle(location);
+        } else if (type.equals(BundleTypes.PERSISTENT.toString())) {
+            ret = new PersistLocationBundle(location);
         } else {
             throw new IOException("Unknown location bundle type exception");
         }

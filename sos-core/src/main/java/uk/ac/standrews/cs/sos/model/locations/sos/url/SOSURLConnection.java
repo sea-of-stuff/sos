@@ -1,8 +1,16 @@
 package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.storage.exceptions.DataException;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,24 +45,26 @@ public class SOSURLConnection extends URLConnection {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        throw new IOException();
-//        try {
-//            String[] segments = url.getPath().split("/");
-//
-//            Node resourceNode = new SOSNode(GUIDFactory.recreateGUID(url.getHost()));
-//            IGUID entityId = GUIDFactory.recreateGUID(segments[segments.length - 1]);
-//
-//            Node node = Configuration.getInstance().getNode();
-//
-//            if (resourceNode.equals(node)) {
-//                File path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString(), false);
-//                return path.getData().getInputStream();
-//            } else {
-//                return contactNode(resourceNode, entityId);
-//            }
-//        } catch (ConfigurationException | GUIDGenerationException | DataException e) {
-//            throw new IOException(e);
-//        }
+
+        try {
+
+            IGUID thisGUID = LocalSOSNode.getInstance().getNodeGUID();
+            IGUID nodeGuid = GUIDFactory.recreateGUID(url.getHost());
+            IGUID entityId = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial / sign
+
+            if (thisGUID.equals(nodeGuid)) {
+
+                Directory dataDir = LocalSOSNode.getInstance().getInternalStorage().getDataDirectory();
+
+                File path = (File) dataDir.get(entityId.toString());
+                return path.getData().getInputStream();
+            } else {
+                return null; // contactNode(resourceNode, entityId);
+            }
+        } catch ( GUIDGenerationException | DataException |
+                SOSException | BindingAbsentException e) {
+            throw new IOException(e);
+        }
 
         /*
          * lookup for node id in local map
