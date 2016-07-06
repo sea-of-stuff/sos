@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.storage.interfaces.IStorage;
@@ -11,8 +10,8 @@ import uk.ac.standrews.cs.storage.interfaces.IStorage;
  */
 public class LocationCache extends LocationStore {
 
-    public LocationCache(Configuration configuration, IStorage storage, Location location) {
-        super(configuration, storage, location);
+    public LocationCache(IStorage storage, Location location) {
+        super(storage, location);
     }
 
     @Override

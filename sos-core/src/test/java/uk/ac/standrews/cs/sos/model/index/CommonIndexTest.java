@@ -4,12 +4,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -25,16 +22,16 @@ public class CommonIndexTest {
     private Index index;
 
     @BeforeMethod
-    public void setUp(Method method) throws IndexException, ConfigurationException {
+    public void setUp(Method method) throws IndexException {
         index = LuceneIndex.getInstance();
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException, ConfigurationException {
+    public void tearDown() throws IOException, IndexException {
         index.flushDB();
         index.killInstance();
 
-        HelperTest.DeletePath(Configuration.getInstance().getIndexDirectory());
+        // HelperTest.DeletePath(Configuration.getInstance().getIndexDirectory());
     }
 
     @Test(expectedExceptions = IndexException.class)

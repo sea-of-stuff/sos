@@ -14,14 +14,13 @@ import org.apache.lucene.store.FSDirectory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
+import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 
 import java.io.File;
@@ -47,15 +46,16 @@ public class LuceneIndex extends CommonIndex {
         if(instance == null) {
             try {
                 init();
-            } catch (IOException | ConfigurationException e) {
+            } catch (IOException e) {
                 throw new IndexException(e);
             }
         }
         return instance;
     }
 
-    private static void init() throws IOException, ConfigurationException {
-        Directory indexPath = Configuration.getInstance().getIndexDirectory();
+    private static void init() throws IOException {
+
+        Directory indexPath = Config.INDEX_DIRECTORY;
 
         org.apache.lucene.store.Directory dir = FSDirectory.open(new File(indexPath.getPathname()).toPath());
         Analyzer analyzer = new StandardAnalyzer();

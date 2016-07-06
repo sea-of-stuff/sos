@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
@@ -25,11 +24,9 @@ import java.net.MalformedURLException;
  */
 public abstract class CommonStore implements Store {
 
-    protected Configuration configuration;
     protected IStorage storage;
 
-    public CommonStore(Configuration configuration, IStorage storage) {
-        this.configuration = configuration;
+    public CommonStore(IStorage storage) {
         this.storage = storage;
     }
 

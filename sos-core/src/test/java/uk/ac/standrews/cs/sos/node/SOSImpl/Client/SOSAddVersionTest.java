@@ -30,11 +30,11 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(CompoundType.DATA, contents);
-        Version manifest = model.addVersion(compound.getContentGUID(), null, null, null);
+        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -46,14 +46,14 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(CompoundType.DATA, contents);
-        Version manifest = model.addVersion(compound.getContentGUID(), null, null, null);
+        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
-        // Flush the storage, so to force the manifest to be retrieved from file.
+        // Flush the internalStorage, so to force the manifest to be retrieved from file.
         index.flushDB();
 
-        Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -67,7 +67,7 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(CompoundType.DATA, contents);
+        Compound compound = client.addCompound(CompoundType.DATA, contents);
 
         Collection<IGUID> prevs = new ArrayList<>();
         prevs.add(GUIDFactory.recreateGUID("321"));
@@ -77,13 +77,13 @@ public class SOSAddVersionTest extends ClientTest {
         metadata.add(GUIDFactory.recreateGUID("897"));
         metadata.add(GUIDFactory.recreateGUID("456"));
 
-        Version manifest = model.addVersion(compound.getContentGUID(), invariant, prevs, metadata);
+        Version manifest = client.addVersion(compound.getContentGUID(), invariant, prevs, metadata);
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
-        // Flush the storage, so to force the manifest to be retrieved from file.
+        // Flush the internalStorage, so to force the manifest to be retrieved from file.
         index.flushDB();
 
-        Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
 
         IGUID retrievedInvariant = ((VersionManifest) retrievedManifest).getInvariantGUID();
@@ -104,11 +104,11 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(CompoundType.DATA, contents);
-        Version manifest = model.addVersion(compound.getContentGUID(), null, null, null);
-        Manifest retrievedManifest = model.getManifest(manifest.getVersionGUID());
+        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
 
-        assertTrue(model.verifyManifest(model.getIdentity(), retrievedManifest));
+        assertTrue(client.verifyManifest(client.getIdentity(), retrievedManifest));
     }
 
 

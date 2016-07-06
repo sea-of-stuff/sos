@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.Storage;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
@@ -32,10 +31,8 @@ public class SOSStorage implements Storage {
 
     protected Identity identity;
     protected ManifestsManager manifestsManager;
-    final protected Configuration configuration;
 
-    public SOSStorage(Configuration configuration, IStorage storage, ManifestsManager manifestsManager, Identity identity) {
-        this.configuration = configuration;
+    public SOSStorage(IStorage storage, ManifestsManager manifestsManager, Identity identity) {
         this.storage = storage;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
@@ -127,10 +124,10 @@ public class SOSStorage implements Storage {
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
-        return StorageHelper.persistAtomAndUpdateLocationBundles(configuration, storage, location, bundles); // NOTE - this might undo the cache locations!
+        return StorageHelper.persistAtomAndUpdateLocationBundles(storage, location, bundles); // NOTE - this might undo the cache locations!
     }
 
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        return StorageHelper.persistAtomAndUpdateLocationBundles(configuration, storage, inputStream, bundles);
+        return StorageHelper.persistAtomAndUpdateLocationBundles(storage, inputStream, bundles);
     }
 }

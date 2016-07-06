@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.model.datastore;
 
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.storage.interfaces.IStorage;
@@ -13,8 +12,8 @@ import java.io.InputStream;
  */
 public class StreamPersist extends StreamStore {
 
-    public StreamPersist(Configuration configuration, IStorage storage, InputStream inputStream) {
-        super(configuration, storage, inputStream);
+    public StreamPersist(IStorage storage, InputStream inputStream) {
+        super(storage, inputStream);
     }
 
     @Override

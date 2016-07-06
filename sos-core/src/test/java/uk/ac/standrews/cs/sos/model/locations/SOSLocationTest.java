@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class SOSLocationTest extends SetUpTest {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        HelperTest.DeletePath(configuration.getDataDirectory());
+        // HelperTest.DeletePath(configuration.getDataDirectory());
     }
 
     @Test
@@ -49,9 +49,9 @@ public class SOSLocationTest extends SetUpTest {
     @Test
     public void testGetSource() throws Exception {
 
-        HelperTest.createDummyDataFile(Configuration.getInstance().getDataDirectory(), DATA_GUID.toString());
+        HelperTest.createDummyDataFile(DATA_GUID.toString());
 
-        Node node = configuration.getNode();
+        Node node = LocalSOSNode.getInstance();
         SOSLocation location = new SOSLocation(node.getNodeGUID(), DATA_GUID);
         InputStream inputStream = location.getSource();
         String retrieved = IOUtils.toString(inputStream);

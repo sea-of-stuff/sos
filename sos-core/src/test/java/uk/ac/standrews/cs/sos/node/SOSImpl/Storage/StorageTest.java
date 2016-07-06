@@ -1,41 +1,22 @@
 package uk.ac.standrews.cs.sos.node.SOSImpl.Storage;
 
-import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.node.NodeTest;
-import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.utils.HelperTest;
+import org.testng.annotations.BeforeMethod;
+import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.interfaces.node.Storage;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StorageTest extends NodeTest {
+public class StorageTest extends SetUpTest {
+
+    protected Storage storage;
 
     @Override
-    public ROLE nodeRole() {
-        return ROLE.STORAGE;
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+
+        storage = localSOSNode.getStorage();
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
-    public void testFailGetManifest() throws Exception {
-        model.getManifest(GUIDFactory.recreateGUID("123fa11"));
-    }
-
-    @Test(expectedExceptions = UnsupportedOperationException.class)
-    public void testFailAddManifest() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
-
-        model.addManifest(manifest, false);
-    }
-
-    @Test(expectedExceptions = UnsupportedOperationException.class)
-    public void testFailVerifyManifest() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
-
-        model.verifyManifest(model.getIdentity(), manifest);
-    }
 }

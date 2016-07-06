@@ -24,14 +24,14 @@ public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
 
-        Location otherLocation = HelperTest.createDummyDataFile(configuration, "another-file");
+        Location otherLocation = HelperTest.createDummyDataFile("another-file");
         HelperTest.appendToFile(otherLocation, "another random line");
-        Atom manifestOther = model.addAtom(otherLocation);
+        Atom manifestOther = client.addAtom(otherLocation);
 
-        Collection<IGUID> manifests = model.findManifestByType("Atom");
+        Collection<IGUID> manifests = client.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
         assertTrue(manifests.contains(manifest.getContentGUID()));
         assertTrue(manifests.contains(manifestOther.getContentGUID()));
@@ -39,20 +39,20 @@ public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
 
-        Location otherLocation = HelperTest.createDummyDataFile(configuration, "another-file");
+        Location otherLocation = HelperTest.createDummyDataFile("another-file");
         HelperTest.appendToFile(otherLocation, "another random line");
-        Atom manifestOther = model.addAtom(otherLocation);
+        Atom manifestOther = client.addAtom(otherLocation);
 
         Content cat = new Content("cat", manifest.getContentGUID());
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        model.addCompound(CompoundType.DATA, contents);
+        client.addCompound(CompoundType.DATA, contents);
 
-        Collection<IGUID> manifests = model.findManifestByType("Atom");
+        Collection<IGUID> manifests = client.findManifestByType("Atom");
         assertEquals(manifests.size(), 2);
         assertTrue(manifests.contains(manifest.getContentGUID()));
         assertTrue(manifests.contains(manifestOther.getContentGUID()));
@@ -63,18 +63,18 @@ public class SOSFindTest extends ClientTest {
         Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
-        model.addCompound(CompoundType.DATA, contents);
+        client.addCompound(CompoundType.DATA, contents);
 
         Content dog = new Content("dog", GUIDFactory.recreateGUID("343"));
         Collection<Content> otherContents = new ArrayList<>();
         otherContents.add(dog);
-        model.addCompound(CompoundType.DATA, otherContents);
+        client.addCompound(CompoundType.DATA, otherContents);
 
-        Collection<IGUID> cats = model.findManifestByLabel("cat");
+        Collection<IGUID> cats = client.findManifestByLabel("cat");
         assertEquals(cats.size(), 1);
         assertTrue(cats.contains(GUIDFactory.recreateGUID("123")));
 
-        Collection<IGUID> dogs = model.findManifestByLabel("dog");
+        Collection<IGUID> dogs = client.findManifestByLabel("dog");
         assertEquals(dogs.size(), 1);
         assertTrue(dogs.contains(GUIDFactory.recreateGUID("343")));
     }
@@ -85,19 +85,19 @@ public class SOSFindTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = model.addCompound(CompoundType.DATA, contents);
-        Version manifest = model.addVersion(compound.getContentGUID(), null, null, null);
+        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
 
         Content feline = new Content("feline", GUIDFactory.recreateGUID("456"));
         Collection<Content> newContents = new ArrayList<>();
         newContents.add(feline);
 
-        Compound newCompound = model.addCompound(CompoundType.DATA, newContents);
+        Compound newCompound = client.addCompound(CompoundType.DATA, newContents);
         Collection<IGUID> prevs = new ArrayList<>();
         prevs.add(manifest.getVersionGUID());
-        Version newManifest = model.addVersion(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
+        Version newManifest = client.addVersion(newCompound.getContentGUID(), manifest.getInvariantGUID(), prevs, null);
 
-        Collection<IGUID> versions = model.findVersions(manifest.getInvariantGUID());
+        Collection<IGUID> versions = client.findVersions(manifest.getInvariantGUID());
         assertEquals(versions.size(), 2);
         assertTrue(versions.contains(manifest.getVersionGUID()));
         assertTrue(versions.contains(newManifest.getVersionGUID()));

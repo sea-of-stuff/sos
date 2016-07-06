@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.node;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.node.ROLE;
 
 import java.net.InetSocketAddress;
 
@@ -28,24 +27,10 @@ public interface Node {
      */
     InetSocketAddress getHostAddress();
 
-    /**
-     * Set the roles of this node.
-     * This method can be called only once.
-     *
-     * @param roles
-     */
-    void setRoles(byte roles);
+    boolean isClient();
 
-    /**
-     * Return the available roles for this node.
-     * @return
-     */
-    ROLE[] getRoles();
+    boolean isStorage();
 
-    /**
-     * Return the available roles for this node.
-     * @return
-     */
-    byte getRolesInBytes();
+    boolean isCoordinator();
 
 }

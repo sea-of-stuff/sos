@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedDirectory;
@@ -10,6 +12,7 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 /**
  * This class contains all information to configure this SOS node.
@@ -48,13 +51,22 @@ public class Config {
      * DEFAULT CONFIG VALUES - END
      */
 
-    private static Directory INDEX_DIRECTORY;
-    private static Directory KEYS_DIRECTORY;
-
-    public static Directory DB_DIRECTORY;
-    public static File DB_DUMP_FILE;
-
     private static Directory root = ROOT_DIRECTORY_DEFAULT;
+
+    // TODO - do not hard code index directory here (see manifest, test directories)
+    public static Directory INDEX_DIRECTORY;
+    static {
+        try {
+            INDEX_DIRECTORY = new FileBasedDirectory(root, INDEX_DIRECTORY_NAME, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Directory KEYS_DIRECTORY;
+    public static Directory DB_DIRECTORY;
+
+    public static File DB_DUMP_FILE;
 
     // Database
     public final static String DB_TYPE_SQLITE = "sqlite";
@@ -68,14 +80,25 @@ public class Config {
     public static String db_password;
 
     // Node (this)
+    private static final IGUID SOS_NODE_DEFAULT_GUID = GUIDFactory.generateRandomGUID();
+    private static final int SOS_NODE_DEFAULT_PORT = 8080;
+    private static InetSocketAddress SOS_NODE_DEFAULT_HOST_ADDR = new InetSocketAddress(SOS_NODE_DEFAULT_PORT);
+    private static final boolean SOS_NODE_IS_CLIENT_DEFAULT = true;
+    private static final boolean SOS_NODE_IS_STORAGE_DEFAULT = false;
+    private static final boolean SOS_NODE_IS_COORDINATOR_DEFAULT = false;
+
     @DatabaseField(id = true)
-    private String n_id;
+    public String n_id = SOS_NODE_DEFAULT_GUID.toString();
     @DatabaseField(canBeNull = true)
-    private String n_hostname;
+    public String n_hostname = SOS_NODE_DEFAULT_HOST_ADDR.getHostName();
     @DatabaseField(canBeNull = true)
-    private int n_port;
+    public int n_port = SOS_NODE_DEFAULT_PORT;
     @DatabaseField(canBeNull = true)
-    private int n_roles;
+    public boolean n_is_client = SOS_NODE_IS_CLIENT_DEFAULT;
+    @DatabaseField(canBeNull = true)
+    public boolean n_is_storage = SOS_NODE_IS_STORAGE_DEFAULT;
+    @DatabaseField(canBeNull = true)
+    public boolean n_is_coordinator = SOS_NODE_IS_COORDINATOR_DEFAULT;
 
     // IStorage
 
@@ -94,6 +117,21 @@ public class Config {
     public String s_password; // optional
     public String s_access_key; // optional
     public String s_secret_key; // optional
+
+
+    // Identity info
+    public static File[] identityPaths;
+
+    static {
+        try { // TODO - see test/data/manifest dirs or get keys from environment
+            KEYS_DIRECTORY = new FileBasedDirectory(root, KEYS_DIRECTORY_NAME, false);
+            identityPaths = new File[]
+                 {new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE, false),
+                         new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE, false)};
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void initDatabaseInfo() throws PersistenceException, IOException {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path, false); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)

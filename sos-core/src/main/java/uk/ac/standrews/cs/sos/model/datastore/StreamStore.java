@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
@@ -26,8 +25,8 @@ public abstract class StreamStore extends CommonStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(Configuration configuration, IStorage storage, InputStream inputStream) {
-        super(configuration, storage);
+    public StreamStore(IStorage storage, InputStream inputStream) {
+        super(storage);
         this.inputStream = inputStream;
     }
 

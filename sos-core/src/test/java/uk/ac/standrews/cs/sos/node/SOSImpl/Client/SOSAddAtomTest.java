@@ -30,11 +30,11 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAddAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         assertEquals(2, retrievedLocations.size());
@@ -44,14 +44,14 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testRetrieveAtomFromFile() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        // Flush the storage, so to force the manifest to be retrieved from file.
+        // Flush the internalStorage, so to force the manifest to be retrieved from file.
         index.flushDB();
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         assertEquals(retrievedLocations.size(), 2);
@@ -61,12 +61,12 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
-        InputStream inputStream = model.getAtomContent((AtomManifest) retrievedManifest);
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
+        InputStream inputStream = client.getAtomContent((AtomManifest) retrievedManifest);
 
         assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
         inputStream.close();
@@ -74,21 +74,21 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerify() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertTrue(retrievedManifest.verify(null));
     }
 
     @Test
     public void testAtomDataVerifyFails() throws Exception {
-        Location location = HelperTest.createDummyDataFile(configuration);
-        Atom manifest = model.addAtom(location);
+        Location location = HelperTest.createDummyDataFile();
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         LocationBundle cachedLocation = retrievedLocations.iterator().next();
 
@@ -99,10 +99,10 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURL() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        Atom manifest = model.addAtom(location);
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
@@ -111,10 +111,10 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttps() throws Exception {
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
-        Atom manifest = model.addAtom(location);
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
@@ -123,10 +123,10 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
         Location location = new URILocation("https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf");
-        Atom manifest = model.addAtom(location);
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
@@ -135,10 +135,10 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
         Location location = new URILocation("http://www.umich.edu/~umfandsf/other/ebooks/alice30.txt");
-        Atom manifest = model.addAtom(location);
+        Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
 
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
@@ -147,25 +147,25 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomTwiceNoUpdate() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        Atom manifest = model.addAtom(location);
+        Atom manifest = client.addAtom(location);
 
-        Directory dataDir = storage.getDataDirectory();
-        Directory manifestsDir = storage.getManifestDirectory();
+        Directory dataDir = internalStorage.getDataDirectory();
+        Directory manifestsDir = internalStorage.getManifestDirectory();
 
-        File file = storage.createFile(dataDir, manifest.getContentGUID().toString());
-        File manifestFile = storage.createFile(manifestsDir, manifest.getContentGUID() + ".json");
+        File file = internalStorage.createFile(dataDir, manifest.getContentGUID().toString());
+        File manifestFile = internalStorage.createFile(manifestsDir, manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
         Thread.sleep(PAUSE_TIME_MS);
 
         Location newLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        Atom newManifest = model.addAtom(newLocation);
+        Atom newManifest = client.addAtom(newLocation);
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
-        File newFile = storage.createFile(dataDir, newManifest.getContentGUID().toString());
-        File newManifestFile = storage.createFile(manifestsDir, newManifest.getContentGUID() + ".json");
+        File newFile = internalStorage.createFile(dataDir, newManifest.getContentGUID().toString());
+        File newManifestFile = internalStorage.createFile(manifestsDir, newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 
@@ -177,11 +177,11 @@ public class SOSAddAtomTest extends ClientTest {
     public void testAddAtomFromStream() throws Exception {
         String testString = "first line and second line";
         InputStream stream = HelperTest.StringToInputStream(testString);
-        Atom manifest = model.addAtom(stream);
+        Atom manifest = client.addAtom(stream);
         assertNotNull(manifest.getContentGUID());
         assertEquals(manifest.getLocations().size(), 1);
 
-        InputStream inputStream = model.getAtomContent(manifest);
+        InputStream inputStream = client.getAtomContent(manifest);
         String resultString = HelperTest.InputStreamToString(inputStream);
         assertEquals(testString, resultString);
         inputStream.close();

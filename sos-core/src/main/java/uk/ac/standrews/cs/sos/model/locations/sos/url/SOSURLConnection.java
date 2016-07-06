@@ -1,16 +1,8 @@
 package uk.ac.standrews.cs.sos.model.locations.sos.url;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.storage.exceptions.DataException;
-import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,23 +37,24 @@ public class SOSURLConnection extends URLConnection {
 
     @Override
     public InputStream getInputStream() throws IOException {
-
-        try {
-            String[] segments = url.getPath().split("/");
-            Node resourceNode = new SOSNode(GUIDFactory.recreateGUID(url.getHost()));
-            IGUID entityId = GUIDFactory.recreateGUID(segments[segments.length - 1]);
-
-            Node node = Configuration.getInstance().getNode();
-
-            if (resourceNode.equals(node)) {
-                File path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString(), false);
-                return path.getData().getInputStream();
-            } else {
-                return contactNode(resourceNode, entityId);
-            }
-        } catch (ConfigurationException | GUIDGenerationException | DataException e) {
-            throw new IOException(e);
-        }
+        throw new IOException();
+//        try {
+//            String[] segments = url.getPath().split("/");
+//
+//            Node resourceNode = new SOSNode(GUIDFactory.recreateGUID(url.getHost()));
+//            IGUID entityId = GUIDFactory.recreateGUID(segments[segments.length - 1]);
+//
+//            Node node = Configuration.getInstance().getNode();
+//
+//            if (resourceNode.equals(node)) {
+//                File path = new FileBasedFile(Configuration.getInstance().getDataDirectory(), entityId.toString(), false);
+//                return path.getData().getInputStream();
+//            } else {
+//                return contactNode(resourceNode, entityId);
+//            }
+//        } catch (ConfigurationException | GUIDGenerationException | DataException e) {
+//            throw new IOException(e);
+//        }
 
         /*
          * lookup for node id in local map

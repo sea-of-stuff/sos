@@ -29,10 +29,10 @@ public class SOSAddCompoundTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = model.addCompound(CompoundType.DATA, contents);
+        Compound manifest = client.addCompound(CompoundType.DATA, contents);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.COMPOUND);
 
         Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
@@ -48,13 +48,13 @@ public class SOSAddCompoundTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = model.addCompound(CompoundType.DATA, contents);
+        Compound manifest = client.addCompound(CompoundType.DATA, contents);
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
-        // Flush the storage, so to force the manifest to be retrieved from file.
+        // Flush the internalStorage, so to force the manifest to be retrieved from file.
         index.flushDB();
 
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.COMPOUND, retrievedManifest.getManifestType());
 
         Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
@@ -70,10 +70,10 @@ public class SOSAddCompoundTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = model.addCompound(CompoundType.DATA, contents);
-        Manifest retrievedManifest = model.getManifest(manifest.getContentGUID());
+        Compound manifest = client.addCompound(CompoundType.DATA, contents);
+        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
 
-        boolean isVerified = model.verifyManifest(model.getIdentity(), retrievedManifest);
+        boolean isVerified = client.verifyManifest(client.getIdentity(), retrievedManifest);
         assertTrue(isVerified);
     }
 

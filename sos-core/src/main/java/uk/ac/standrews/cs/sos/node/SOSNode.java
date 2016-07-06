@@ -6,8 +6,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 
 /**
@@ -18,8 +16,6 @@ public class SOSNode implements Node {
 
     private static int SOS_NODE_DEFAULT_PORT = 8080;
 
-    private byte roles;
-    private HashSet<ROLE> rolesSet;
     private IGUID nodeGUID;
     private InetSocketAddress hostAddress;
 
@@ -33,29 +29,30 @@ public class SOSNode implements Node {
     @DatabaseField(canBeNull = false)
     private int DB_port;
     @DatabaseField(canBeNull = false)
-    private int DB_roles;
+    protected boolean DB_is_client;
+    @DatabaseField(canBeNull = false)
+    protected boolean DB_is_storage;
+    @DatabaseField(canBeNull = false)
+    protected boolean DB_is_coordinator;
 
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
 
-    public SOSNode(IGUID guid) {
-        this.rolesSet = new LinkedHashSet<>();
+    public SOSNode(IGUID guid, String hostname, int port,
+                   boolean isClient, boolean isStorage, boolean isCoordinator) {
         this.nodeGUID = guid;
-        this.hostAddress = new InetSocketAddress(SOS_NODE_DEFAULT_PORT);
+        this.hostAddress = new InetSocketAddress(hostname, port);
 
-        fillDBFields();
+        this.DB_nodeid = guid.toString();
+        this.DB_hostname = hostname;
+        this.DB_port = port;
+        this.DB_is_client = isClient;
+        this.DB_is_storage = isStorage;
+        this.DB_is_coordinator = isCoordinator;
     }
 
-    public SOSNode(IGUID guid, InetSocketAddress hostAddress) {
-        this(guid);
-        this.hostAddress = hostAddress;
-    }
-
-    /**
-     * Copy constructor
-     */
-    public SOSNode(Node node) {
-        this(node.getNodeGUID(), node.getHostAddress());
+    public SOSNode(IGUID guid) {
+        this.nodeGUID = guid;
     }
 
     @Override
@@ -69,46 +66,23 @@ public class SOSNode implements Node {
     }
 
     @Override
-    public void setRoles(byte roles) {
-
-        if (!rolesSet.isEmpty()) {
-            return; // Cannot change/update the roles of this node if already set once.
-        }
-
-        this.roles = roles;
-        if ((roles & ROLE.COORDINATOR.mask) != 0) {
-            rolesSet.add(ROLE.COORDINATOR);
-        }
-
-        if ((roles & ROLE.CLIENT.mask) != 0) {
-            rolesSet.add(ROLE.CLIENT);
-        }
-
-        if ((roles & ROLE.STORAGE.mask) != 0) {
-            rolesSet.add(ROLE.STORAGE);
-        }
+    public boolean isClient() {
+        return DB_is_client;
     }
 
     @Override
-    public ROLE[] getRoles() {
-        return rolesSet.toArray(new ROLE[rolesSet.size()]);
+    public boolean isStorage() {
+        return DB_is_storage;
     }
 
     @Override
-    public byte getRolesInBytes() {
-        return roles;
+    public boolean isCoordinator() {
+        return DB_is_coordinator;
     }
 
     @Override
     public String toString() {
         return nodeGUID.toString();
-    }
-
-    private void fillDBFields() {
-        this.DB_nodeid = nodeGUID.toString();
-        this.DB_hostname = hostAddress.getHostName();
-        this.DB_port = hostAddress.getPort();
-        this.DB_roles = roles;
     }
 
     @Override

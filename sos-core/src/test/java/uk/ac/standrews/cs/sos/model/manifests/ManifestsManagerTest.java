@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -16,7 +15,6 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
@@ -26,6 +24,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
@@ -46,28 +45,22 @@ import static org.testng.Assert.assertFalse;
  */
 public class ManifestsManagerTest {
 
-    private Configuration configuration;
     private IStorage storage;
     private Index index;
 
     @BeforeMethod
-    public void setUp() throws IndexException, ConfigurationException, NodeManagerException, StorageException {
-        configuration = Configuration.getInstance();
-
-        Config config = new Config(); // create default configuration
+    public void setUp() throws IndexException, NodeManagerException, StorageException {
+        Config config = new Config();
         storage = StorageFactory.createStorage(config.s_type, config.s_location, true);
         index = LuceneIndex.getInstance();
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException {
+    public void tearDown() throws IOException, IndexException, DestroyException {
         index.flushDB();
         index.killInstance();
 
-        HelperTest.DeletePath(configuration.getIndexDirectory());
-        HelperTest.DeletePath(configuration.getManifestsDirectory());
-        HelperTest.DeletePath(configuration.getDataDirectory());
-        HelperTest.DeletePath(configuration.getTestDataDirectory());
+        // storage.destroy();
     }
 
     @Test
@@ -97,7 +90,7 @@ public class ManifestsManagerTest {
     public void testAddCompoundManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
         Collection<Content> contents = new ArrayList<>();
         contents.add(content);
@@ -136,7 +129,7 @@ public class ManifestsManagerTest {
     @Test
     public void testAddAssetManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         VersionManifest assetManifest = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
@@ -156,7 +149,7 @@ public class ManifestsManagerTest {
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testAddAssetManifestNullContent() throws Exception {
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
         ManifestFactory.createVersionManifest(null, null, null, null, identity);
     }
 
@@ -164,8 +157,8 @@ public class ManifestsManagerTest {
     public void testUpdateAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
-        Location firstLocation = HelperTest.createDummyDataFile(configuration, "first.txt");
-        Location secondLocation = HelperTest.createDummyDataFile(configuration, "second.txt");
+        Location firstLocation = HelperTest.createDummyDataFile("first.txt");
+        Location secondLocation = HelperTest.createDummyDataFile("second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),

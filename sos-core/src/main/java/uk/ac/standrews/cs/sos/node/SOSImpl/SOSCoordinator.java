@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Coordinator;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
@@ -21,14 +20,12 @@ public class SOSCoordinator implements Coordinator {
 
     protected Identity identity;
     protected ManifestsManager manifestsManager;
-    final protected Configuration configuration;
 
     private NodeManager nodeManager;
 
     // TODO - pass storage (this is needed to be used by manifest manager or just give it to the manifest manager ????)
-    public SOSCoordinator(Configuration configuration, ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
+    public SOSCoordinator(ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
 
-        this.configuration = configuration;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
 

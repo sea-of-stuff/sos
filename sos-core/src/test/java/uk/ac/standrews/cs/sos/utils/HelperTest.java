@@ -6,11 +6,12 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.node.Config;
+import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SQLDB;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
@@ -37,15 +38,22 @@ public class HelperTest {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile(Configuration configuration) throws IOException, URISyntaxException, PersistenceException {
-        return createDummyDataFile(configuration, "testData.txt");
+    public static Location createDummyDataFile() throws IOException, URISyntaxException, PersistenceException {
+        return createDummyDataFile("testData.txt");
     }
 
-    public static Location createDummyDataFile(Configuration configuration, String filename) throws IOException, URISyntaxException, PersistenceException {
-        return createDummyDataFile(configuration.getTestDataDirectory(), filename);
+    public static Location createDummyDataFile(String filename) throws IOException, URISyntaxException, PersistenceException {
+        try {
+            Directory testDir = LocalSOSNode.getInstance().getInternalStorage().getTestDirectory();
+            return createDummyDataFile(testDir, filename);
+        } catch (SOSException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    public static Location createDummyDataFile(Directory sosParent, String filename) throws IOException, URISyntaxException, PersistenceException {
+    private static Location createDummyDataFile(Directory sosParent, String filename) throws IOException, URISyntaxException, PersistenceException {
 
         Data data = new StringData("The first line\nThe second line");
         File sosFile = new FileBasedFile(sosParent, filename, data, false);

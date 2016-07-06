@@ -1,29 +1,35 @@
 package uk.ac.standrews.cs.sos.node.SOSImpl.Client;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.node.NodeTest;
-import uk.ac.standrews.cs.sos.node.ROLE;
+import uk.ac.standrews.cs.sos.interfaces.node.Client;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ClientTest extends NodeTest {
+public class ClientTest extends SetUpTest {
+
+    protected Client client;
 
     @Override
-    public ROLE nodeRole() {
-        return ROLE.CLIENT;
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+
+        client = localSOSNode.getClient();
     }
 
     @Test(expectedExceptions = ManifestNotFoundException.class)
     public void testFailGetManifest() throws Exception {
-        model.getManifest(GUIDFactory.generateRandomGUID());
+        client.getManifest(GUIDFactory.generateRandomGUID());
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)
     public void testFailGetManifestNull() throws Exception {
-        model.getManifest(null);
+        client.getManifest(null);
     }
 
 }

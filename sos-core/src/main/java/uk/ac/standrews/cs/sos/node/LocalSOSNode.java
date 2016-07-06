@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.support.ConnectionSource;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
@@ -9,9 +11,9 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.SeaOfStuff;
-import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.interfaces.node.Client;
+import uk.ac.standrews.cs.sos.interfaces.node.Coordinator;
+import uk.ac.standrews.cs.sos.interfaces.node.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
@@ -27,7 +29,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -37,32 +38,39 @@ import java.util.HashMap;
  */
 public class LocalSOSNode extends SOSNode {
 
-    private static Configuration configuration;
     private static Config config;
-    private static IStorage storage;
+    private static IStorage internalStorage;
 
     private static Index index;
     private static Identity identity;
     private static ManifestsManager manifestsManager;
     private static NodeManager nodeManager;
-    private static HashMap<ROLE, SeaOfStuff> sosMap;
+
+    private static Client client;
+    private static Storage storage;
+    private static Coordinator coordinator;
 
     private static LocalSOSNode instance;
-    private LocalSOSNode(Node node) {
-        super(node);
+    private LocalSOSNode() throws GUIDGenerationException {
+
+        super(GUIDFactory.recreateGUID(config.n_id),
+                config.n_hostname,
+                config.n_port,
+                config.n_is_client,
+                config.n_is_storage,
+                config.n_is_coordinator);
     }
 
     /**
      * Create the LocalSOSNode.
      * The index must be already set using setIndex();
      *
-     * @param configuration
      * @throws SOSException
      */
-    public static void create(Configuration configuration) throws SOSException, SOSProtocolException {
+    public static void create() throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
         try {
-            storage = StorageFactory.createStorage(config.s_type, config.s_location, true); // FIXME - storage have very different behaviours if mutable or not
+            internalStorage = StorageFactory.createStorage(config.s_type, config.s_location, true); // FIXME - storage have very different behaviours if mutable or not
         } catch (StorageException e) {
             throw new SOSException(e);
         }
@@ -72,8 +80,11 @@ public class LocalSOSNode extends SOSNode {
 
         checkRequisites();
 
-        LocalSOSNode.configuration = configuration;
-        instance = new LocalSOSNode(configuration.getNode());
+        try {
+            instance = new LocalSOSNode();
+        } catch (GUIDGenerationException e) {
+            throw new SOSException(e);
+        }
 
         initManifestManager();
         initNodeManager();
@@ -123,28 +134,17 @@ public class LocalSOSNode extends SOSNode {
         return instance;
     }
 
-    /**
-     * Get a SeaOfStuff implementation.
-     *
-     * @param role
-     * @return
-     * @throws SOSException
-     */
-    public SeaOfStuff getSeaOfStuff(ROLE role) throws SOSException {
-        if (instance != null && sosMap.containsKey(role)) {
-            return sosMap.get(role);
-        } else {
-            throw new SOSException();
-        }
+    public Client getClient() {
+        return client;
     }
 
-    /**
-     * Returns true if the specified role is supported by this node.
-     * @param role
-     * @return
-     */
-    public boolean hasRole(ROLE role) {
-        return sosMap.containsKey(role);
+
+    public Storage getStorage() {
+        return storage;
+    }
+
+    public Coordinator getCoordinator() {
+        return coordinator;
     }
 
     /**
@@ -157,8 +157,8 @@ public class LocalSOSNode extends SOSNode {
         }
     }
 
-    public IStorage getStorage() {
-        return storage;
+    public IStorage getInternalStorage() {
+        return internalStorage;
     }
 
     /**************************************************************************/
@@ -172,7 +172,7 @@ public class LocalSOSNode extends SOSNode {
     }
 
     private static void initManifestManager() {
-        manifestsManager = new ManifestsManager(storage, index);
+        manifestsManager = new ManifestsManager(internalStorage, index);
     }
 
     private static void initNodeManager() throws SOSException {
@@ -186,7 +186,7 @@ public class LocalSOSNode extends SOSNode {
 
     private static void initIdentity() throws SOSException {
         try {
-            identity = new IdentityImpl(configuration);
+            identity = new IdentityImpl();
         } catch (KeyGenerationException | KeyLoadedException e) {
             throw new SOSException(e);
         }
@@ -194,14 +194,11 @@ public class LocalSOSNode extends SOSNode {
     }
 
     private static void initSOSInstances() {
-        sosMap = new HashMap<>();
+        // TODO - create instances based on configs
 
-        // TODO read configuration for roles
-        sosMap.put(ROLE.CLIENT, new SOSClient(configuration, storage, manifestsManager, identity));
-        sosMap.put(ROLE.STORAGE, new SOSStorage(configuration, storage, manifestsManager, identity));
-        sosMap.put(ROLE.COORDINATOR, new SOSCoordinator(configuration, manifestsManager, identity, nodeManager));
-
-        instance.setRoles((byte) (ROLE.CLIENT.mask | ROLE.COORDINATOR.mask | ROLE.STORAGE.mask));
+        client = new SOSClient(internalStorage, manifestsManager, identity);
+        storage = new SOSStorage(internalStorage, manifestsManager, identity);
+        coordinator = new SOSCoordinator(manifestsManager, identity, nodeManager);
     }
 
     private static void registerSOSProtocol() throws SOSProtocolException {

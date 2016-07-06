@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
@@ -26,10 +26,10 @@ public class IdentityImpl implements Identity {
 
     private File[] pathsToKeys;
 
-    public IdentityImpl(Configuration configuration) throws KeyGenerationException, KeyLoadedException {
+    public IdentityImpl() throws KeyGenerationException, KeyLoadedException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        this.pathsToKeys = configuration.getIdentityPaths();
+        this.pathsToKeys = Config.identityPaths;
 
         java.io.File privateKeyFile = new java.io.File(pathsToKeys[0].getPathname());
         java.io.File publicKeyFile = new java.io.File(pathsToKeys[1].getPathname());

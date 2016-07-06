@@ -3,14 +3,11 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.model.Configuration;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -31,18 +28,10 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class AtomManifestTest extends SetUpTest {
 
-    private Configuration configuration;
-
-    @Override
-    @BeforeMethod
-    public void setUp() throws IOException, ConfigurationException {
-        configuration = Configuration.getInstance();
-    }
-
     @AfterMethod
     public void tearDown() throws IOException {
-        HelperTest.DeletePath(configuration.getDataDirectory());
-        HelperTest.DeletePath(configuration.getTestDataDirectory());
+//        HelperTest.DeletePath(configuration.getDataDirectory());
+//        HelperTest.DeletePath(configuration.getTestDataDirectory());
     }
 
     @Test
@@ -57,7 +46,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test
     public void testNullGUID() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = HelperTest.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile();
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
@@ -69,7 +58,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test
     public void testGetLocations() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = HelperTest.createDummyDataFile(configuration);
+        Location location = HelperTest.createDummyDataFile();
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 

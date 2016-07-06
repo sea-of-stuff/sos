@@ -4,13 +4,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.model.Configuration;
+import uk.ac.standrews.cs.sos.node.Config;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,6 @@ import static org.testng.Assert.assertTrue;
  */
 public class IdentityImplKeysTest extends SetUpTest {
 
-    private Configuration configuration;
     private final static String BYTES_3K = "c1 c3 c0 86 da 82 92 ea 9a 59 94 a1 fe a5 30 3a \n"+
             "bb 10 13 ec 8c 0e 6d f6 be bb c3 34 dd f3 de 3b \n"+
             "b9 57 b6 6f d8 f8 7d e6 ab 8e ad 7a ac d9 6b 5c \n"+
@@ -91,36 +89,34 @@ public class IdentityImplKeysTest extends SetUpTest {
 
     @Override
     @BeforeMethod
-    public void setUp() throws IOException, ConfigurationException {
-        configuration = Configuration.getInstance();
-
+    public void setUp() throws IOException {
         // Delete any left over keys from past
-        deleteKeys(configuration);
+        deleteKeys();
     }
 
     @AfterMethod
     public void tearDown() {
-        deleteKeys(configuration);
+        deleteKeys();
     }
 
     @Test
     public void testPublicKeyExists() throws KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
         assertNotNull(identity.getPublicKey());
     }
 
     @Test
     public void testPublicKeyLoadedExists() throws KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
         assertNotNull(identity.getPublicKey());
 
-        identity = new IdentityImpl(configuration);
+        identity = new IdentityImpl();
         assertNotNull(identity.getPublicKey());
     }
 
     @Test
     public void testEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
 
         byte[] signature = identity.sign("hello");
         assertTrue(identity.verify("hello", signature));
@@ -128,7 +124,7 @@ public class IdentityImplKeysTest extends SetUpTest {
 
     @Test
     public void testEncryptDecryptLongData() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
 
         byte[] signature = identity.sign(BYTES_3K);
         assertTrue(identity.verify(BYTES_3K, signature));
@@ -136,16 +132,16 @@ public class IdentityImplKeysTest extends SetUpTest {
 
     @Test
     public void testLoadedKeyEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl(configuration);
-        Identity identityLoaded = new IdentityImpl(configuration);
+        Identity identity = new IdentityImpl();
+        Identity identityLoaded = new IdentityImpl();
 
         byte[] signature = identity.sign("hello");
         assertTrue(identityLoaded.verify("hello", signature));
     }
 
-    private void deleteKeys(Configuration configuration) {
-        File privKey = new File(configuration.getIdentityPaths()[0].getPathname());
-        File pubkey = new File(configuration.getIdentityPaths()[1].getPathname());
+    private void deleteKeys() {
+        File privKey = new File(Config.identityPaths[0].getPathname());
+        File pubkey = new File(Config.identityPaths[1].getPathname());
 
         privKey.delete();
         pubkey.delete();

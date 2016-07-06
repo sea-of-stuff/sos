@@ -6,14 +6,12 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 import static org.testng.Assert.assertEquals;
 
@@ -33,15 +31,14 @@ public class NodeManagerTest {
     }
 
     @AfterClass
-    public void classTearDown() throws ConfigurationException, IOException {
+    public void classTearDown() throws IOException {
         HelperTest.DeletePath(Config.DB_DIRECTORY);
     }
 
     @Test(priority=0)
     public void persistTest() throws GUIDGenerationException, DatabasePersistenceException, NodeManagerException {
         IGUID guid = GUIDFactory.generateGUID("test");
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("example.com", 8080);
-        Node node = new SOSNode(guid, inetSocketAddress);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false); // TODO - more tests of this kind (with different combos of client,internalStorage,coordinator)
 
         assertEquals(nodeManager.getKnownNodes().size(), 0);
 
