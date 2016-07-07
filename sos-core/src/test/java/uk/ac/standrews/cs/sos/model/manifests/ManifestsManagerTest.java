@@ -53,7 +53,7 @@ public class ManifestsManagerTest {
     public void setUp() throws IndexException, NodeManagerException, StorageException, DataStorageException {
         Config config = new Config();
         storage = new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true));
-        index = LuceneIndex.getInstance();
+        index = LuceneIndex.getInstance(storage);
     }
 
     @AfterMethod

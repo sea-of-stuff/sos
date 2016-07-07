@@ -19,6 +19,7 @@ public class InternalStorage {
 
     public static final String DATA_DIRECTORY_NAME = "data";
     public static final String MANIFESTS_DIRECTORY_NAME = "manifests";
+    public static final String INDEX_DIRECTORY_NAME = "index";
 
     private IStorage storage;
 
@@ -38,6 +39,10 @@ public class InternalStorage {
 
     public Directory getManifestDirectory() throws IOException {
         return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
+    }
+
+    public Directory getIndexDirectory() throws IOException {
+        return storage.createDirectory(INDEX_DIRECTORY_NAME);
     }
 
     public Directory createDirectory(Directory parent, String name) throws IOException {
@@ -61,6 +66,8 @@ public class InternalStorage {
         try {
             storage.getRoot().remove(DATA_DIRECTORY_NAME);
             storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
+            storage.getRoot().remove(INDEX_DIRECTORY_NAME);
+
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
         }
@@ -69,5 +76,6 @@ public class InternalStorage {
     protected void createSOSDirectories() throws PersistenceException, IOException {
         storage.createDirectory(DATA_DIRECTORY_NAME).persist();
         storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
+        storage.createDirectory(INDEX_DIRECTORY_NAME).persist();
     }
 }

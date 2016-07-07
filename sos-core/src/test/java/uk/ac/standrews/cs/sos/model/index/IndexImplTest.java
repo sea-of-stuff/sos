@@ -185,7 +185,7 @@ public class IndexImplTest extends IndexBaseTest {
 
         // Kill this instance, so that next instance used the dumped file.
         index.killInstance();
-        index = new IndexFactory().getIndex(indexType);
+        index = new IndexFactory().getIndex(storage, indexType);
 
         Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         assertTrue(guids.contains(GUIDFactory.recreateGUID("123")));

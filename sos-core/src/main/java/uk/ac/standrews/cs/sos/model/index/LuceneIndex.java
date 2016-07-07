@@ -20,11 +20,10 @@ import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
-import uk.ac.standrews.cs.sos.node.Config;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -42,10 +41,10 @@ public class LuceneIndex extends CommonIndex {
     private static SearcherManager searcherManager = null;
     private static IndexSearcher indexSearcher = null;
 
-    public static Index getInstance() throws IndexException {
+    public static Index getInstance(InternalStorage storage) throws IndexException {
         if(instance == null) {
             try {
-                init();
+                init(storage);
             } catch (IOException e) {
                 throw new IndexException(e);
             }
@@ -53,11 +52,11 @@ public class LuceneIndex extends CommonIndex {
         return instance;
     }
 
-    private static void init() throws IOException {
+    private static void init(InternalStorage storage) throws IOException {
 
-        Directory indexPath = Config.INDEX_DIRECTORY;
+        Path indexPath = storage.getIndexDirectory().toFile().toPath();
+        org.apache.lucene.store.Directory dir = FSDirectory.open(indexPath);
 
-        org.apache.lucene.store.Directory dir = FSDirectory.open(new File(indexPath.getPathname()).toPath());
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 

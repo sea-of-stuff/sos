@@ -3,8 +3,13 @@ package uk.ac.standrews.cs.sos.model.index;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.node.Config;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -17,13 +22,18 @@ import static uk.ac.standrews.cs.sos.model.index.IndexBaseTest.INDEX_TYPE.LUCENE
 public abstract class IndexBaseTest {
 
     protected abstract INDEX_TYPE getIndexType();
+
+    protected InternalStorage storage;
     protected Index index;
 
     @BeforeMethod
-    public void setUp(Method method) throws IndexException {
+    public void setUp(Method method) throws IndexException, StorageException, DataStorageException {
         INDEX_TYPE type = getIndexType();
         System.out.println(type.toString() + " :: " + method.getName());
-        index = new IndexFactory().getIndex(type);
+
+        Config config = new Config();
+        storage = new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true));
+        index = new IndexFactory().getIndex(storage, type);
     }
 
     @AfterMethod
@@ -47,10 +57,10 @@ public abstract class IndexBaseTest {
 
     public class IndexFactory {
 
-        public Index getIndex(INDEX_TYPE type) throws IndexException {
+        public Index getIndex(InternalStorage storage, INDEX_TYPE type) throws IndexException {
             switch(type) {
                 case LUCENE:
-                    return LuceneIndex.getInstance();
+                    return LuceneIndex.getInstance(storage);
             }
             return null;
         }

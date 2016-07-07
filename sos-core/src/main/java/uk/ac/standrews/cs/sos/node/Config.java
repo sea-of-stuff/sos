@@ -40,7 +40,6 @@ public class Config {
         }
     }
 
-    private static final String INDEX_DIRECTORY_NAME = "index";
     private static final String KEYS_DIRECTORY_NAME = "keys";
     private static final String DATABASE_DIRECTORY_NAME_DEFAULT = "db";
 
@@ -52,16 +51,6 @@ public class Config {
      */
 
     private static Directory root = ROOT_DIRECTORY_DEFAULT;
-
-    // TODO - do not hard code index directory here (see manifest, test directories)
-    public static Directory INDEX_DIRECTORY;
-    static {
-        try {
-            INDEX_DIRECTORY = new FileBasedDirectory(root, INDEX_DIRECTORY_NAME, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static Directory KEYS_DIRECTORY;
     public static Directory DB_DIRECTORY;

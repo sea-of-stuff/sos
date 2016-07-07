@@ -4,6 +4,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
@@ -16,6 +17,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Client;
 import uk.ac.standrews.cs.sos.interfaces.node.Coordinator;
 import uk.ac.standrews.cs.sos.interfaces.node.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
+import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -77,10 +79,14 @@ public class LocalSOSNode extends SOSNode {
             throw new SOSException(e);
         }
 
-        // TODO : index
-        // TODO : readSystemProperties();
 
-        checkRequisites();
+        try {
+            index = LuceneIndex.getInstance(internalStorage);
+        } catch (IndexException e) {
+            throw  new SOSException(e);
+        }
+
+        // TODO : readSystemProperties();
 
         try {
             instance = new LocalSOSNode();
@@ -149,29 +155,17 @@ public class LocalSOSNode extends SOSNode {
         return coordinator;
     }
 
-    /**
-     * Set the index to be used by this node.
-     * @param index
-     */
-    public static void setIndex(Index index) {
-        if (LocalSOSNode.index == null) {
-            LocalSOSNode.index = index;
-        }
-    }
-
     public InternalStorage getInternalStorage() {
         return internalStorage;
+    }
+
+    public Index getIndex() {
+        return index;
     }
 
     /**************************************************************************/
     /* PRIVATE METHODS */
     /**************************************************************************/
-
-    private static void checkRequisites() throws SOSException {
-        if (index == null) {
-            throw new SOSException("Index not set");
-        }
-    }
 
     private static void initManifestManager() {
         manifestsManager = new ManifestsManager(internalStorage, index);

@@ -49,7 +49,7 @@ public class SOSAddAtomTest extends ClientTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
-        index.flushDB();
+        localSOSNode.getIndex().flushDB();
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
         assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
