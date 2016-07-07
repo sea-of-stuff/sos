@@ -37,13 +37,15 @@ public class IndexImplTest extends IndexBaseTest {
     public void testAddSimpleManifest() throws Exception {
         AtomManifest simpleManifestMocked = mock(AtomManifest.class);
 
-        when(simpleManifestMocked.getContentGUID()).thenReturn(GUIDFactory.recreateGUID("123"));
+        IGUID guidToTest = GUIDFactory.generateRandomGUID();
+
+        when(simpleManifestMocked.getContentGUID()).thenReturn(guidToTest);
         when(simpleManifestMocked.getManifestType()).thenReturn("Atom");
 
         index.addManifest(simpleManifestMocked);
 
         Collection<IGUID> guids = index.getManifestsOfType(ManifestConstants.ATOM, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        assertTrue(guids.contains(GUIDFactory.recreateGUID("123")));
+        assertTrue(guids.contains(guidToTest));
     }
 
     @Test

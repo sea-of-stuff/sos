@@ -37,11 +37,11 @@ public abstract class IndexBaseTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException {
+    public void tearDown() throws IOException, IndexException, DataStorageException {
         index.flushDB();
         index.killInstance();
 
-        // HelperTest.DeletePath(Configuration.getInstance().getIndexDirectory());
+        storage.destroy();
     }
 
     @DataProvider(name = "index-manager-provider")

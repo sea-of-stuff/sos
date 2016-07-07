@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs;
 
-import uk.ac.standrews.cs.sos.configurations.DefaultConfiguration;
 import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;

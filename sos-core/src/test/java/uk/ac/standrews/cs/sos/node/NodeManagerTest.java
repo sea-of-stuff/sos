@@ -37,7 +37,7 @@ public class NodeManagerTest {
 
     @Test(priority=0)
     public void persistTest() throws GUIDGenerationException, DatabasePersistenceException, NodeManagerException {
-        IGUID guid = GUIDFactory.generateGUID("test");
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false); // TODO - more tests of this kind (with different combos of client,storage,coordinator)
 
         assertEquals(nodeManager.getKnownNodes().size(), 0);
