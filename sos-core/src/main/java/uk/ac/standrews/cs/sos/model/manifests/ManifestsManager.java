@@ -35,7 +35,7 @@ public class ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
-    
+
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
@@ -125,6 +125,7 @@ public class ManifestsManager {
 
     /**************************************************************************/
     /* PRIVATE METHODS */
+
     /**************************************************************************/
 
     private Manifest getManifestFromFile(IGUID guid) throws ManifestManagerException {
@@ -192,28 +193,34 @@ public class ManifestsManager {
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestManagerException {
         IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromFile(guid);
-        File backupFile = backupManifest(existingManifest);
 
-        if (!existingManifest.equals(manifest)) {
-            manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
+        try {
+            File manifestFile = getManifestFile(guid);
+            File backupFile = backupManifest(existingManifest);
+
+            if (!existingManifest.equals(manifest)) {
+                manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
+                FileHelper.deleteFile(manifestFile);
+                saveToFile(manifest);
+            }
             FileHelper.deleteFile(backupFile);
-            saveToFile(manifest);
+        } catch (IOException e) {
+            throw new ManifestManagerException(e);
         }
 
-        FileHelper.deleteFile(backupFile);
     }
 
     private File backupManifest(Manifest manifest) throws ManifestManagerException {
 
         try {
             IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
-            File backupManifest = getManifestFile(manifestGUID);
+            File manifestFileToBackup = getManifestFile(manifestGUID);
 
             Directory manifestsDirectory = internalStorage.getManifestDirectory();
-            internalStorage.createFile(manifestsDirectory,
-                    backupManifest.getName() + BACKUP_EXTENSION,
-                    backupManifest.getData())
-                .persist();
+            File backupManifest = internalStorage.createFile(manifestsDirectory,
+                    manifestFileToBackup.getName() + BACKUP_EXTENSION,
+                    manifestFileToBackup.getData());
+            backupManifest.persist();
 
             return backupManifest;
         } catch (IOException | DataException | PersistenceException e) {

@@ -30,7 +30,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAddAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -44,7 +44,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testRetrieveAtomFromFile() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -61,7 +61,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -74,7 +74,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerify() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -84,7 +84,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerifyFails() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 

@@ -24,10 +24,10 @@ public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtoms() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
 
-        Location otherLocation = HelperTest.createDummyDataFile("another-file");
+        Location otherLocation = HelperTest.createDummyDataFile(internalStorage, "another-file");
         HelperTest.appendToFile(otherLocation, "another random line");
         Atom manifestOther = client.addAtom(otherLocation);
 
@@ -39,10 +39,10 @@ public class SOSFindTest extends ClientTest {
 
     @Test
     public void testFindAtomsButNotCompounds() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = client.addAtom(location);
 
-        Location otherLocation = HelperTest.createDummyDataFile("another-file");
+        Location otherLocation = HelperTest.createDummyDataFile(internalStorage, "another-file");
         HelperTest.appendToFile(otherLocation, "another random line");
         Atom manifestOther = client.addAtom(otherLocation);
 

@@ -25,7 +25,7 @@ public class SOSAddAtomTest extends StorageTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = storage.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
@@ -36,7 +36,7 @@ public class SOSAddAtomTest extends StorageTest {
 
     @Test
     public void testAddAtomPersistentLocation() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Atom manifest = storage.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 

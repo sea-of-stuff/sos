@@ -46,7 +46,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test
     public void testNullGUID() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
@@ -58,7 +58,7 @@ public class AtomManifestTest extends SetUpTest {
     @Test
     public void testGetLocations() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 

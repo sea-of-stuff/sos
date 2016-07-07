@@ -6,12 +6,11 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.Config;
-import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.node.SQLDB;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
@@ -38,19 +37,14 @@ public class HelperTest {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile() throws IOException, URISyntaxException, PersistenceException {
-        return createDummyDataFile("testData.txt");
+    public static Location createDummyDataFile(InternalStorage storage) throws IOException, URISyntaxException, PersistenceException {
+        return createDummyDataFile(storage, "testData.txt");
     }
 
-    public static Location createDummyDataFile(String filename) throws IOException, URISyntaxException, PersistenceException {
-        try {
-            Directory testDir = LocalSOSNode.getInstance().getInternalStorage().getDataDirectory();
-            return createDummyDataFile(testDir, filename);
-        } catch (SOSException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public static Location createDummyDataFile(InternalStorage storage, String filename)
+            throws IOException, URISyntaxException, PersistenceException {
+        Directory testDir = storage.getDataDirectory();
+        return createDummyDataFile(testDir, filename);
     }
 
     private static Location createDummyDataFile(Directory sosParent, String filename) throws IOException, URISyntaxException, PersistenceException {
@@ -59,14 +53,14 @@ public class HelperTest {
         File sosFile = new FileBasedFile(sosParent, filename, data, false);
         sosFile.persist();
 
-        return new URILocation("file://"+sosFile.getPathname());
+        return new URILocation("file://" + sosFile.getPathname());
     }
 
     public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {
 
         try (PrintWriter writer = new PrintWriter(
                 new FileOutputStream(
-                new java.io.File(HelperTest.localURItoPath(location)), true))) {
+                        new java.io.File(HelperTest.localURItoPath(location)), true))) {
             writer.append(text);
         }
     }

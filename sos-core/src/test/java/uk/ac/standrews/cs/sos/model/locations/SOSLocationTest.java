@@ -42,7 +42,7 @@ public class SOSLocationTest extends SetUpTest {
     @Test
     public void testGetSource() throws Exception {
 
-        HelperTest.createDummyDataFile(DATA_GUID.toString());
+        HelperTest.createDummyDataFile(internalStorage, DATA_GUID.toString());
 
         Node node = LocalSOSNode.getInstance();
         SOSLocation location = new SOSLocation(node.getNodeGUID(), DATA_GUID);

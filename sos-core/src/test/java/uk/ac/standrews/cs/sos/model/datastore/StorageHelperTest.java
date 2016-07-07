@@ -26,7 +26,7 @@ public class StorageHelperTest extends SetUpTest {
 
     @Test
     public void testStoreAtomNullBundles() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Collection<LocationBundle> bundles = null;
 
         IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(internalStorage, location, bundles);
@@ -46,7 +46,7 @@ public class StorageHelperTest extends SetUpTest {
 
     @Test
     public void testStoreAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = StorageHelper.cacheAtomAndUpdateLocationBundles(internalStorage, location, bundles);
@@ -118,7 +118,7 @@ public class StorageHelperTest extends SetUpTest {
 
     @Test
     public void testStorePersistAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile();
+        Location location = HelperTest.createDummyDataFile(internalStorage);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = StorageHelper.persistAtomAndUpdateLocationBundles(internalStorage, location, bundles);

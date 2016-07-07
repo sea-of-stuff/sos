@@ -27,7 +27,6 @@ import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
@@ -58,9 +57,11 @@ public class ManifestsManagerTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException, DestroyException {
+    public void tearDown() throws IOException, IndexException, DataStorageException {
         index.flushDB();
         index.killInstance();
+
+        storage.destroy();
     }
 
     @Test
@@ -157,8 +158,8 @@ public class ManifestsManagerTest {
     public void testUpdateAtomManifest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
-        Location firstLocation = HelperTest.createDummyDataFile("first.txt");
-        Location secondLocation = HelperTest.createDummyDataFile("second.txt");
+        Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
+        Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
