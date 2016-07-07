@@ -1,45 +1,22 @@
 package uk.ac.standrews.cs.sos.utils;
 
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestManagerException;
+import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class FileHelper {
 
-    public static void deleteFile(final String path) {
-        java.io.File file = new java.io.File(path);
-        file.delete();
-    }
-
-    public static void copyToFile(InputStream inputStream, String destination) throws IOException {
-        Files.copy(inputStream, locationToPath(destination));
-    }
-
-    private static Path locationToPath(String path) {
-        return new java.io.File(path).toPath();
-    }
-
-
-    public static void touchDir(File file) {
-        touchDir(file.getPathname());
-    }
-
-    public static void touchDir(String path) {
-        java.io.File parent = new java.io.File(path).getParentFile();
-        if(!parent.exists() && !parent.mkdirs()){
-            parent.mkdirs();
+    public static void deleteFile(File file) throws ManifestManagerException {
+        Directory parent = file.getParent();
+        try {
+            parent.remove(file.getName());
+        } catch (BindingAbsentException e) {
+            throw new ManifestManagerException("Unable to delete file " + file.getName(), e);
         }
-    }
-
-    public static boolean pathExists(String path) {
-        java.io.File file = new java.io.File(path);
-        return file.exists();
     }
 
     public static void renameFile(String oldPathname, String newPathname) {

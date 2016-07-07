@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -20,7 +21,6 @@ import uk.ac.standrews.cs.storage.exceptions.DataException;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class ManifestsManager {
     private static final int DEFAULT_RESULTS = 10;
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
-    final private IStorage storage;
+    final private InternalStorage internalStorage;
     final private Index index;
 
     /**
@@ -49,8 +49,8 @@ public class ManifestsManager {
      *
      * @param index used to record information for the manifests.
      */
-    public ManifestsManager(IStorage storage, Index index) {
-        this.storage = storage;
+    public ManifestsManager(InternalStorage internalStorage, Index index) {
+        this.internalStorage = internalStorage;
         this.index = index;
     }
 
@@ -192,15 +192,15 @@ public class ManifestsManager {
     private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestManagerException {
         IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromFile(guid);
-        File backupPath = backupManifest(existingManifest);
+        File backupFile = backupManifest(existingManifest);
 
         if (!existingManifest.equals(manifest)) {
             manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
-            FileHelper.deleteFile(backupPath.getPathname());
+            FileHelper.deleteFile(backupFile);
             saveToFile(manifest);
         }
 
-        FileHelper.deleteFile(backupPath + BACKUP_EXTENSION);
+        FileHelper.deleteFile(backupFile);
     }
 
     private File backupManifest(Manifest manifest) throws ManifestManagerException {
@@ -209,8 +209,8 @@ public class ManifestsManager {
             IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
             File backupManifest = getManifestFile(manifestGUID);
 
-            Directory manifestsDirectory = storage.getManifestDirectory();
-            storage.createFile(manifestsDirectory,
+            Directory manifestsDirectory = internalStorage.getManifestDirectory();
+            internalStorage.createFile(manifestsDirectory,
                     backupManifest.getName() + BACKUP_EXTENSION,
                     backupManifest.getData())
                 .persist();
@@ -261,8 +261,8 @@ public class ManifestsManager {
     }
 
     private File getManifestFile(String guid) throws IOException {
-        Directory manifestsDir = storage.getManifestDirectory();
-        return storage.createFile(manifestsDir, normaliseGUID(guid));
+        Directory manifestsDir = internalStorage.getManifestDirectory();
+        return internalStorage.createFile(manifestsDir, normaliseGUID(guid));
     }
 
     private String normaliseGUID(String guid) {
@@ -281,5 +281,6 @@ public class ManifestsManager {
         File manifest = getManifestFile(guid);
         return manifest.exists();
     }
+
 
 }

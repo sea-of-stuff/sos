@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations;
 
 import org.apache.commons.io.IOUtils;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -10,7 +9,6 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import static org.testng.Assert.assertEquals;
@@ -23,11 +21,6 @@ public class SOSLocationTest extends SetUpTest {
 
     private static IGUID NODE_GUID = GUIDFactory.generateRandomGUID();
     private static IGUID DATA_GUID = GUIDFactory.generateRandomGUID();
-
-    @AfterMethod
-    public void tearDown() throws IOException {
-        // HelperTest.DeletePath(configuration.getDataDirectory());
-    }
 
     @Test
     public void testGetURI() throws Exception {

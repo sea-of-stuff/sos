@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.node;
 import com.j256.ormlite.support.ConnectionSource;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
@@ -17,13 +18,13 @@ import uk.ac.standrews.cs.sos.interfaces.node.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.url.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.node.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +40,7 @@ import java.sql.SQLException;
 public class LocalSOSNode extends SOSNode {
 
     private static Config config;
-    private static IStorage internalStorage;
+    private static InternalStorage internalStorage;
 
     private static Index index;
     private static Identity identity;
@@ -70,8 +71,9 @@ public class LocalSOSNode extends SOSNode {
     public static void create() throws SOSException, SOSProtocolException {
         config = hardcodedConfiguration();
         try {
-            internalStorage = StorageFactory.createStorage(config.s_type, config.s_location, true); // FIXME - storage have very different behaviours if mutable or not
-        } catch (StorageException e) {
+            internalStorage =
+                    new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true)); // FIXME - storage have very different behaviours if mutable or not
+        } catch (StorageException  | DataStorageException e) {
             throw new SOSException(e);
         }
 
@@ -157,7 +159,7 @@ public class LocalSOSNode extends SOSNode {
         }
     }
 
-    public IStorage getInternalStorage() {
+    public InternalStorage getInternalStorage() {
         return internalStorage;
     }
 

@@ -5,9 +5,9 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,7 @@ public abstract class LocationStore extends CommonStore {
     private Location origin;
     private LocationBundle locationBundle;
 
-    public LocationStore(IStorage storage, Location location) {
+    public LocationStore(InternalStorage storage, Location location) {
         super(storage);
         this.origin = location;
     }

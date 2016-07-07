@@ -7,9 +7,11 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
@@ -21,12 +23,12 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.exceptions.DestroyException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,13 +47,13 @@ import static org.testng.Assert.assertFalse;
  */
 public class ManifestsManagerTest {
 
-    private IStorage storage;
+    private InternalStorage storage;
     private Index index;
 
     @BeforeMethod
-    public void setUp() throws IndexException, NodeManagerException, StorageException {
+    public void setUp() throws IndexException, NodeManagerException, StorageException, DataStorageException {
         Config config = new Config();
-        storage = StorageFactory.createStorage(config.s_type, config.s_location, true);
+        storage = new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true));
         index = LuceneIndex.getInstance();
     }
 
@@ -59,8 +61,6 @@ public class ManifestsManagerTest {
     public void tearDown() throws IOException, IndexException, DestroyException {
         index.flushDB();
         index.killInstance();
-
-        // storage.destroy();
     }
 
     @Test
@@ -81,8 +81,8 @@ public class ManifestsManagerTest {
             assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
-        } catch (ManifestPersistException e) {
-            throw new Exception();
+        } catch (ManifestPersistException |ManifestNotFoundException e) {
+            throw new Exception(e);
         }
     }
 
@@ -105,8 +105,8 @@ public class ManifestsManagerTest {
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
-        } catch (ManifestPersistException e) {
-            throw new Exception();
+        } catch (ManifestPersistException | ManifestNotFoundException e) {
+            throw new Exception(e);
         }
     }
 
@@ -142,8 +142,8 @@ public class ManifestsManagerTest {
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);
-        } catch (ManifestPersistException e) {
-            throw new Exception();
+        } catch (ManifestPersistException | ManifestNotFoundException e) {
+            throw new Exception(e);
         }
     }
 
@@ -178,8 +178,8 @@ public class ManifestsManagerTest {
             AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
 
             assertEquals(manifest.getLocations().size(), 2);
-        } catch (ManifestPersistException e) {
-            throw new Exception();
+        } catch (ManifestPersistException | ManifestNotFoundException e) {
+            throw new Exception(e);
         }
     }
 

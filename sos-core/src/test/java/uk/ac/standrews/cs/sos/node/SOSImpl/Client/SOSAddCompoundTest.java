@@ -51,7 +51,7 @@ public class SOSAddCompoundTest extends ClientTest {
         Compound manifest = client.addCompound(CompoundType.DATA, contents);
         assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
 
-        // Flush the internalStorage, so to force the manifest to be retrieved from file.
+        // Flush the storage, so to force the manifest to be retrieved from file.
         index.flushDB();
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());

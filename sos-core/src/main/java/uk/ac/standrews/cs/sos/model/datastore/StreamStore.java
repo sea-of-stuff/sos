@@ -7,11 +7,11 @@ import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.interfaces.File;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ public abstract class StreamStore extends CommonStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(IStorage storage, InputStream inputStream) {
+    public StreamStore(InternalStorage storage, InputStream inputStream) {
         super(storage);
         this.inputStream = inputStream;
     }
@@ -45,6 +45,8 @@ public abstract class StreamStore extends CommonStore {
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
 
                 File cachedLocation = getAtomLocation(guid);
+
+                // FIXME - use internal storage!!!!!
                 FileHelper.renameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
 
                 Location location = getLocation(guid);

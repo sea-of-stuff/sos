@@ -19,8 +19,8 @@ import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,12 +35,12 @@ import java.util.Collection;
  */
 public class SOSClient implements Client {
 
-    protected IStorage storage;
+    protected InternalStorage storage;
 
     protected Identity identity;
     protected ManifestsManager manifestsManager;
 
-    public SOSClient(IStorage storage, ManifestsManager manifestsManager,
+    public SOSClient(InternalStorage storage, ManifestsManager manifestsManager,
                      Identity identity) {
 
         this.storage = storage;

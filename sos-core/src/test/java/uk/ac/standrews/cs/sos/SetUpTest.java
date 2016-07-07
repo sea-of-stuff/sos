@@ -2,13 +2,13 @@ package uk.ac.standrews.cs.sos;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.LocalSOSNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
-import uk.ac.standrews.cs.storage.exceptions.DestroyException;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class SetUpTest {
 
     protected LocalSOSNode localSOSNode;
-    protected IStorage internalStorage;
+    protected InternalStorage internalStorage;
     protected Index index;
 
     @BeforeMethod
@@ -34,9 +34,12 @@ public class SetUpTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException, DestroyException, InterruptedException {
+    public void tearDown() throws IOException, IndexException, InterruptedException, DataStorageException {
         index.flushDB();
         index.killInstance();
+
+        internalStorage.destroy();
+
 
 //        HelperTest.DeletePath(configuration.getIndexDirectory());
 //        HelperTest.DeletePath(configuration.getManifestsDirectory());
@@ -45,7 +48,6 @@ public class SetUpTest {
 //
 //        HelperTest.DeletePath(Config.DB_DIRECTORY);
 
-        //internalStorage.destroy();
         //Thread.sleep(1000);
     }
 }

@@ -44,7 +44,7 @@ public class HelperTest {
 
     public static Location createDummyDataFile(String filename) throws IOException, URISyntaxException, PersistenceException {
         try {
-            Directory testDir = LocalSOSNode.getInstance().getInternalStorage().getTestDirectory();
+            Directory testDir = LocalSOSNode.getInstance().getInternalStorage().getDataDirectory();
             return createDummyDataFile(testDir, filename);
         } catch (SOSException e) {
             e.printStackTrace();

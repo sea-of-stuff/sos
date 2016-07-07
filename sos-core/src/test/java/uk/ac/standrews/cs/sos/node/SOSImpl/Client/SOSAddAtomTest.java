@@ -48,7 +48,7 @@ public class SOSAddAtomTest extends ClientTest {
         Atom manifest = client.addAtom(location);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
-        // Flush the internalStorage, so to force the manifest to be retrieved from file.
+        // Flush the storage, so to force the manifest to be retrieved from file.
         index.flushDB();
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());

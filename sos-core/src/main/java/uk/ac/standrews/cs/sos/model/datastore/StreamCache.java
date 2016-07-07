@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.datastore;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 
 import java.io.InputStream;
 
@@ -12,7 +12,7 @@ import java.io.InputStream;
  */
 public class StreamCache extends StreamStore {
 
-    public StreamCache(IStorage storage, InputStream inputStream) {
+    public StreamCache(InternalStorage storage, InputStream inputStream) {
         super(storage, inputStream);
     }
 

@@ -3,14 +3,14 @@ package uk.ac.standrews.cs.sos.model.datastore;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocationCache extends LocationStore {
 
-    public LocationCache(IStorage storage, Location location) {
+    public LocationCache(InternalStorage storage, Location location) {
         super(storage, location);
     }
 
