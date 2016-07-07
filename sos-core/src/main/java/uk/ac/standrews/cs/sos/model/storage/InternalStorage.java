@@ -45,14 +45,6 @@ public class InternalStorage {
         return storage.createDirectory(INDEX_DIRECTORY_NAME);
     }
 
-    public Directory createDirectory(Directory parent, String name) throws IOException {
-        return storage.createDirectory(parent, name);
-    }
-
-    public Directory createDirectory(String name) throws IOException {
-        return storage.createDirectory(name);
-    }
-
     public File createFile(Directory parent, String filename) throws IOException {
         return storage.createFile(parent, filename);
     }
@@ -64,12 +56,18 @@ public class InternalStorage {
     public void destroy() throws DataStorageException {
 
         try {
+            System.out.println(">> DESTROYING STORAGE");
+
             storage.getRoot().remove(DATA_DIRECTORY_NAME);
             storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
             storage.getRoot().remove(INDEX_DIRECTORY_NAME);
 
+            Thread.sleep(500);
+            System.out.println("<< STORAGE DESTROYED");
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

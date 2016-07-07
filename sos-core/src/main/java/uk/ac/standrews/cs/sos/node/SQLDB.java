@@ -6,8 +6,10 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -20,7 +22,7 @@ import java.util.Iterator;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SQLDB {
+public class SQLDB implements NodeDatabase {
 
     public static ConnectionSource getSQLConnection() throws DatabasePersistenceException {
 

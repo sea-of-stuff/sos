@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -15,7 +14,6 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -27,12 +25,6 @@ import static org.testng.AssertJUnit.assertTrue;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AtomManifestTest extends SetUpTest {
-
-    @AfterMethod
-    public void tearDown() throws IOException {
-//        HelperTest.DeletePath(configuration.getDataDirectory());
-//        HelperTest.DeletePath(configuration.getTestDataDirectory());
-    }
 
     @Test
     public void testNoLocations() throws Exception {

@@ -173,11 +173,21 @@ public class ManifestsManager {
     private void saveManifest(Manifest manifest) throws ManifestManagerException {
 
         try {
+            IGUID manifestFileGUID = getGUIDUsedToStoreManifest(manifest);
+
             boolean isAtomManifest = manifest.getManifestType().equals(ManifestConstants.ATOM);
-            boolean manifestExists = manifestExistsInStorage(manifest.getContentGUID());
+            boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
 
             if (isAtomManifest && manifestExists) {
                 mergeAtomManifestAndSave(manifest);
+            } else if (manifestExists) { // TODO - move this code below to separate method
+                File manifestFile = getManifestFile(manifestFileGUID);
+                File backupFile = backupManifest(manifest);
+                FileHelper.deleteFile(manifestFile);
+
+                saveToFile(manifest);
+
+                FileHelper.deleteFile(backupFile);
             } else {
                 saveToFile(manifest);
             }

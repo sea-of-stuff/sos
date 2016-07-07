@@ -5,7 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.node.LocalSOSNode;
+import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
@@ -15,15 +15,15 @@ import java.io.IOException;
  */
 public class SetUpTest {
 
-    protected LocalSOSNode localSOSNode;
+    protected SOSLocalNode localSOSNode;
     protected InternalStorage internalStorage;
 
     @BeforeMethod
     public void setUp() throws Exception {
         HelperTest.CreateDBTestDump();
 
-        LocalSOSNode.create();
-        localSOSNode = LocalSOSNode.getInstance();
+        SOSLocalNode.create();
+        localSOSNode = SOSLocalNode.getInstance();
         internalStorage = localSOSNode.getInternalStorage();
     }
 
@@ -33,8 +33,6 @@ public class SetUpTest {
         localSOSNode.getIndex().killInstance();
 
         internalStorage.destroy();
-
-//        HelperTest.DeletePath(Config.DB_DIRECTORY);
 
         //Thread.sleep(1000);
     }

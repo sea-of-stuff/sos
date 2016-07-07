@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.node.LocalSOSNode;
+import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -44,7 +44,7 @@ public class SOSLocationTest extends SetUpTest {
 
         HelperTest.createDummyDataFile(internalStorage, DATA_GUID.toString());
 
-        Node node = LocalSOSNode.getInstance();
+        Node node = SOSLocalNode.getInstance();
         SOSLocation location = new SOSLocation(node.getNodeGUID(), DATA_GUID);
         InputStream inputStream = location.getSource();
         String retrieved = IOUtils.toString(inputStream);

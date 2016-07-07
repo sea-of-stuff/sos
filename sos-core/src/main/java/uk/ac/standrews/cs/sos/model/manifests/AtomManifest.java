@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.AtomManifestSerializer;
-import uk.ac.standrews.cs.sos.model.datastore.StorageHelper;
+import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
         for(LocationBundle location:locations) {
             try (InputStream dataStream =
-                         StorageHelper.getInputStreamFromLocation(location.getLocation())) {
+                         LocationUtility.getInputStreamFromLocation(location.getLocation())) {
                 if (!verifyStream(dataStream)) {
                     return false;
                 }

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.node;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.File;
 

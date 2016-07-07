@@ -1,13 +1,14 @@
 package uk.ac.standrews.cs.sos.model.index;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.node.Config;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -41,6 +42,11 @@ public abstract class IndexBaseTest {
         index.flushDB();
         index.killInstance();
 
+        storage.destroy();
+    }
+
+    @AfterClass
+    public void tearAllDown() throws IOException, IndexException, DataStorageException {
         storage.destroy();
     }
 
