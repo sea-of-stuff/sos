@@ -30,7 +30,6 @@ import java.net.URLStreamHandlerFactory;
 
 /**
  * This class represents the SOSNode of this machine.
- * REMOVEME : This node is a singleton.
  * Using a BuilderPattern to construct this node
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -43,15 +42,13 @@ public class SOSLocalNode extends SOSNode {
 
     private NodeDatabase nodeDatabase;
 
-    private static Identity identity;
-    private static ManifestsManager manifestsManager;
-    private static NodeManager nodeManager;
+    private Identity identity;
+    private ManifestsManager manifestsManager;
+    private NodeManager nodeManager;
 
-    private static Client client;
-    private static Storage storage;
-    private static Coordinator coordinator;
-
-    private static SOSLocalNode instance;
+    private Client client;
+    private Storage storage;
+    private Coordinator coordinator;
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
         super(GUIDFactory.recreateGUID(builder.config.n_id),
@@ -149,6 +146,12 @@ public class SOSLocalNode extends SOSNode {
         // - make this node available to the rest of the sea of stuff
     }
 
+    /**
+     * This is the builder for the SOSLocalNode.
+     *
+     *
+     * TODO - defaults
+     */
     public static class Builder {
         private static Config config;
         private static InternalStorage internalStorage;

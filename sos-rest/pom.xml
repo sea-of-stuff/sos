@@ -12,13 +12,12 @@
 
     <groupId>uk.ac.standrews.cs.sos</groupId>
     <artifactId>rest</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <url>http://maven.apache.org</url>
 
     <properties>
         <jersey.version>2.23</jersey.version>
         <javax.version>3.1.0</javax.version>
-        <maven.war.plugin.version>2.6</maven.war.plugin.version>
     </properties>
 
     <dependencies>
@@ -53,28 +52,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <defaultGoal>package</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven.war.plugin.version}</version>
-                <configuration>
-                    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
-                </configuration>
-            </plugin>
-
-            <!-- Check info on how to run it on jetty - http://www.nikgrozev.org/2014/10/16/rest-with-embedded-jetty-and-jersey-in-a-single-jar-step-by-step/ -->
-
-        </plugins>
-    </build>
 </project>

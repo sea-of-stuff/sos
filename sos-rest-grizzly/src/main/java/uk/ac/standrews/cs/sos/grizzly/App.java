@@ -1,9 +1,10 @@
-package uk.ac.standrews.cs.sos;
+package uk.ac.standrews.cs.sos.grizzly;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import uk.ac.standrews.cs.sos.ServerState;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.net.URI;
 
 public class App {
 
-    public static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/sos/");
+    public static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
 
     private static final int DEFAULT_SERVER_PORT = 8080;
     private static int serverPort;
