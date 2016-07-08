@@ -16,6 +16,8 @@ import java.net.InetSocketAddress;
 
 /**
  * This class contains all information to configure this SOS node.
+ * FIXME - this should be in a separate DB. This way logic is better separated.
+ * NOTE: maybe do not even use a DB
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.index;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -42,11 +41,6 @@ public abstract class IndexBaseTest {
         index.flushDB();
         index.killInstance();
 
-        storage.destroy();
-    }
-
-    @AfterClass
-    public void tearAllDown() throws IOException, IndexException, DataStorageException {
         storage.destroy();
     }
 
