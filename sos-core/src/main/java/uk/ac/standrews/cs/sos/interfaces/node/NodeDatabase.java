@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.node;
 
-import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.util.Collection;
 
@@ -9,9 +10,7 @@ import java.util.Collection;
  */
 public interface NodeDatabase {
 
-    DBConnection getDBConnection() throws DatabaseException;
+    void addNode(Node node) throws DatabaseConnectionException;
 
-    void addNode(Node node);
-
-    Collection<Node> getNodes();
+    Collection<SOSNode> getNodes() throws DatabaseConnectionException;
 }

@@ -1,23 +1,19 @@
 package uk.ac.standrews.cs.sos;
 
-import com.j256.ormlite.support.ConnectionSource;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -54,28 +50,17 @@ public class ServerState {
                     .internalStorage(internalStorage)
                     .build();
 
-        } catch (IndexException | StorageException | DataStorageException | SOSException | GUIDGenerationException e) {
+        } catch (IndexException | StorageException | DataStorageException
+                 | IOException | PersistenceException
+                | SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
     }
 
-    private static Config hardcodedConfiguration() {
-        Config retval = null;
-
+    private static Config hardcodedConfiguration() throws IOException, PersistenceException {
         Config.db_type = Config.DB_TYPE_SQLITE;
-        try {
-            Config.initDatabaseInfo();
-        } catch (PersistenceException | IOException e) {
-            e.printStackTrace();
-        }
+        Config.initDatabaseInfo();
 
-        try {
-            ConnectionSource connection = SQLDatabase.getSQLConnection();
-            retval = SQLDatabase.getConfiguration(connection);
-        } catch (DatabasePersistenceException | SQLException e) {
-            e.printStackTrace();
-        }
-
-        return retval;
+        return new Config();
     }
 }

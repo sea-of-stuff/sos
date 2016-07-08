@@ -1,25 +1,20 @@
 package uk.ac.standrews.cs.sos;
 
-import com.j256.ormlite.support.ConnectionSource;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
-import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -32,7 +27,6 @@ public class SetUpTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        HelperTest.CreateDBTestDump();
 
         Config config = hardcodedConfiguration();
         try {
@@ -41,7 +35,6 @@ public class SetUpTest {
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
-
 
         try {
             index = LuceneIndex.getInstance(internalStorage);
@@ -55,8 +48,6 @@ public class SetUpTest {
                                 .internalStorage(internalStorage)
                                 .build();
 
-        // SOSLocalNode.create(config, internalStorage, index);
-        // localSOSNode = SOSLocalNode.getInstance();
     }
 
     @AfterMethod
@@ -69,23 +60,10 @@ public class SetUpTest {
         //Thread.sleep(1000);
     }
 
-    private Config hardcodedConfiguration() {
-        Config retval = null;
-
+    private Config hardcodedConfiguration() throws IOException, PersistenceException {
         Config.db_type = Config.DB_TYPE_SQLITE;
-        try {
-            Config.initDatabaseInfo();
-        } catch (PersistenceException | IOException e) {
-            e.printStackTrace();
-        }
+        Config.initDatabaseInfo();
 
-        try {
-            ConnectionSource connection = SQLDatabase.getSQLConnection();
-            retval = SQLDatabase.getConfiguration(connection);
-        } catch (DatabasePersistenceException | SQLException e) {
-            e.printStackTrace();
-        }
-
-        return retval;
+        return new Config();
     }
 }

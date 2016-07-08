@@ -6,4 +6,5 @@ package uk.ac.standrews.cs.sos.node.database;
 public class DatabaseTypes {
 
     public static final DatabaseType SQLITE_DB = new DatabaseType("sqlite");
+    public static final DatabaseType MYSQL_DB = new DatabaseType("mysql");
 }

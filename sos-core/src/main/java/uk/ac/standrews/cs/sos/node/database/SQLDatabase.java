@@ -5,18 +5,17 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.configuration.Config;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
-import uk.ac.standrews.cs.sos.interfaces.node.DBConnection;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Iterator;
+
+import static uk.ac.standrews.cs.sos.node.database.DatabaseTypes.MYSQL_DB;
+import static uk.ac.standrews.cs.sos.node.database.DatabaseTypes.SQLITE_DB;
 
 /**
  * SQLite database used to store information about:
@@ -27,96 +26,91 @@ import java.util.Iterator;
  */
 public class SQLDatabase implements NodeDatabase {
 
-    DatabaseType databaseType;
+    private DatabaseType databaseType;
+    private String pathname;
 
-    public SQLDatabase(DatabaseType databaseType) {
+    public SQLDatabase(DatabaseType databaseType, String pathname) throws DatabaseException {
         this.databaseType = databaseType;
+        this.pathname = pathname;
     }
 
     @Override
-    public DBConnection getDBConnection() throws DatabaseException {
-        SQLConnection connection;
-        switch(Config.db_type) {
-            case Config.DB_TYPE_SQLITE:
-                connection = getSQLiteConnection();
-                break;
-            case Config.DB_TYPE_MYSQL:
-                connection = getMySQLConnection();
-                break;
-            default:
-                throw new DatabaseException("Unable to recognise the type of database in the configuration properties");
-        }
-
-        return connection;
-    }
-
-    @Override
-    public void addNode(Node node) {
-
-    }
-
-    @Override
-    public Collection<Node> getNodes() {
-        return null;
-    }
-
-// REMOVEME
-    public static ConnectionSource getSQLConnection() throws DatabasePersistenceException {
+    public void addNode(Node node) throws DatabaseConnectionException {
 
         ConnectionSource connection = null;
-        switch(Config.db_type) {
-            case Config.DB_TYPE_SQLITE:
-                //connection = getSQLiteConnection();
-                break;
-            case Config.DB_TYPE_MYSQL:
-                //connection = getMySQLConnection();
-                break;
-            default:
-                throw new DatabasePersistenceException("Unable to recognise the type of database in the configuration properties");
-        }
+        try {
+            connection = getDBConnection();
+            createNodesTable(connection);
 
-        return connection;
-    }
-
-    public static Config getConfiguration(ConnectionSource connection) throws SQLException {
-        Dao<Config, String> confiDAO = DaoManager.createDao(connection, Config.class);
-        Iterator<Config> iterator = confiDAO.queryForAll().iterator();
-
-        if (iterator.hasNext()) {
-            return iterator.next();
-        } else {
-          throw new SQLException("No configuration row in DB");
+            Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
+            nodesDAO.create((SOSNode) node);
+        } catch (SQLException | DatabaseException e) {
+            throw new DatabaseConnectionException(e);
+        } finally {
+            closeConnection(connection);
         }
     }
 
-    public static void createNodesTable(ConnectionSource connection) throws SQLException {
+    @Override
+    public Collection<SOSNode> getNodes() throws DatabaseConnectionException {
+
+        ConnectionSource connection = null;
+        Collection<SOSNode> nodes;
+        try {
+            connection = getDBConnection();
+            createNodesTable(connection);
+
+            Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
+            nodes = nodesDAO.queryForAll();
+        } catch (SQLException | DatabaseException e) {
+            throw new DatabaseConnectionException(e);
+        } finally {
+            closeConnection(connection);
+        }
+
+        return nodes;
+    }
+
+    private void createNodesTable(ConnectionSource connection) throws SQLException {
         TableUtils.createTableIfNotExists(connection, SOSNode.class);
     }
 
-    public static void addNodeToTable(ConnectionSource connection, Node node) throws SQLException {
-        Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
-        nodesDAO.create((SOSNode) node);
+    private ConnectionSource getDBConnection() throws DatabaseException {
+
+        if (databaseType.equals(SQLITE_DB)) {
+            return getSQLiteConnection();
+        } else if (databaseType.equals(MYSQL_DB)) {
+            return getMySQLConnection();
+        }
+
+        throw new DatabaseException("Unable to recognise the type of database in the configuration properties");
     }
 
-    public static Collection<SOSNode> getNodes(ConnectionSource connection) throws SQLException, GUIDGenerationException {
-        Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
-        return nodesDAO.queryForAll();
-    }
-
-    private SQLConnection getSQLiteConnection() throws DatabaseException {
+    private ConnectionSource getSQLiteConnection() throws DatabaseException {
         ConnectionSource connection;
         try {
-            String databaseUrl = "jdbc:sqlite:" + Config.DB_DUMP_FILE.getPathname();
+            String databaseUrl = "jdbc:sqlite:" + pathname;
             connection = new JdbcConnectionSource(databaseUrl);
         } catch (SQLException e) {
             throw new DatabaseException(e.getClass().getName() + ": " + e.getMessage());
         }
 
-        return new SQLConnection(connection);
+        return connection;
     }
 
-    private SQLConnection getMySQLConnection() {
+    private ConnectionSource getMySQLConnection() {
         throw new UnsupportedOperationException();
+    }
+
+    private void closeConnection(ConnectionSource connection) throws DatabaseConnectionException {
+
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (SQLException e) {
+            throw new DatabaseConnectionException(e);
+        }
+
     }
 
 

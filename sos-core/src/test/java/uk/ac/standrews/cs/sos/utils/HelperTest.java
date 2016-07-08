@@ -1,17 +1,10 @@
 package uk.ac.standrews.cs.sos.utils;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import uk.ac.standrews.cs.sos.configuration.Config;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
@@ -22,7 +15,6 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -74,22 +66,6 @@ public class HelperTest {
 
         if (dir.exists()) {
             FileUtils.cleanDirectory(dir);
-        }
-    }
-
-    public static void CreateDBTestDump() throws DatabasePersistenceException, SQLException, PersistenceException, IOException {
-        Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabaseInfo();
-
-        ConnectionSource connection = SQLDatabase.getSQLConnection();
-        TableUtils.createTableIfNotExists(connection, Config.class);
-
-        try {
-            SQLDatabase.getConfiguration(connection);
-        } catch (SQLException e) {
-            Config config = new Config();
-            Dao<Config, String> nodesDAO = DaoManager.createDao(connection, Config.class);
-            nodesDAO.create(config);
         }
     }
 

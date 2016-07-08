@@ -8,8 +8,13 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.node.database.DatabaseType;
+import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
@@ -29,9 +34,16 @@ public class NodeManagerTest {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 
+        NodeDatabase nodeDatabase;
+        try {
+            nodeDatabase = new SQLDatabase(new DatabaseType(Config.db_type),
+                    Config.DB_DUMP_FILE.getPathname());
+        } catch (DatabaseException e) {
+            throw new SOSException(e);
+        }
 
         Node node = mock(SOSLocalNode.class);
-        nodeManager = new NodeManager(node);
+        nodeManager = new NodeManager(node, nodeDatabase);
     }
 
     @AfterClass

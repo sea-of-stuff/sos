@@ -56,18 +56,11 @@ public class InternalStorage {
     public void destroy() throws DataStorageException {
 
         try {
-            System.out.println(">> DESTROYING STORAGE");
-
             storage.getRoot().remove(DATA_DIRECTORY_NAME);
             storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
             storage.getRoot().remove(INDEX_DIRECTORY_NAME);
-
-            Thread.sleep(500);
-            System.out.println("<< STORAGE DESTROYED");
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 

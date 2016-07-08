@@ -1,15 +1,13 @@
 package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.logger.LocalLog;
-import com.j256.ormlite.support.ConnectionSource;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -22,10 +20,14 @@ import java.util.Optional;
 public class NodeManager {
 
     private Node localNode;
+    private NodeDatabase nodeDatabase;
+
     private Collection<Node> knownNodes;
 
-    public NodeManager(Node localNode) throws NodeManagerException {
+    public NodeManager(Node localNode, NodeDatabase nodeDatabase) throws NodeManagerException {
         this.localNode = localNode;
+        this.nodeDatabase = nodeDatabase;
+
         this.knownNodes = new HashSet<>();
 
         // Setting log-level for ORMLite to ERROR
@@ -75,32 +77,25 @@ public class NodeManager {
      *
      * @throws DatabasePersistenceException
      */
-    public void persistNodesTable() throws DatabasePersistenceException {
+    public void persistNodesTable() throws NodeManagerException {
         try {
-            ConnectionSource connection = SQLDatabase.getSQLConnection();
-            try {
-                SQLDatabase.createNodesTable(connection);
-                for (Node knownNode : knownNodes) {
-                    SQLDatabase.addNodeToTable(connection, knownNode);
-                }
-            } finally {
-                connection.close();
+            for (Node knownNode : knownNodes) {
+                nodeDatabase.addNode(knownNode);
             }
-        } catch (SQLException e) {
-            throw new DatabasePersistenceException(e);
+        } catch (DatabaseConnectionException e) {
+            throw new NodeManagerException(e);
         }
     }
 
+    /**
+     * Load nodes from the DB to the node manager (in memory)
+     * @throws NodeManagerException
+     */
     private void loadNodesFromDB() throws NodeManagerException {
         try {
-            ConnectionSource connection = SQLDatabase.getSQLConnection();
-            try {
-                SQLDatabase.createNodesTable(connection);
-                knownNodes.addAll(SQLDatabase.getNodes(connection));
-            } finally {
-                connection.close();
-            }
-        } catch (SQLException | GUIDGenerationException | DatabasePersistenceException e) {
+            Collection<SOSNode> nodes = nodeDatabase.getNodes();
+            knownNodes.addAll(nodes);
+        } catch (DatabaseConnectionException e) {
             throw new NodeManagerException(e);
         }
     }
