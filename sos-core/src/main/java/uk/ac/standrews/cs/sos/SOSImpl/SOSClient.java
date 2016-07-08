@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -37,16 +38,19 @@ import java.util.Collection;
 public class SOSClient implements Client {
 
     protected InternalStorage storage;
-
     protected Identity identity;
     protected ManifestsManager manifestsManager;
 
-    public SOSClient(InternalStorage storage, ManifestsManager manifestsManager,
+    private AtomStorage atomStorage;
+
+    public SOSClient(Node node, InternalStorage storage, ManifestsManager manifestsManager,
                      Identity identity) {
 
         this.storage = storage;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
+
+        atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
 
     @Override
@@ -178,10 +182,10 @@ public class SOSClient implements Client {
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
-        return AtomStorage.cacheAtomAndUpdateLocationBundles(storage, location, bundles);
+        return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
     }
 
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        return AtomStorage.cacheAtomAndUpdateLocationBundles(storage, inputStream, bundles);
+        return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
     }
 }

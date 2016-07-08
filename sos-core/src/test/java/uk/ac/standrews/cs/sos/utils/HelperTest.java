@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.node.SQLDB;
+import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
@@ -81,11 +81,11 @@ public class HelperTest {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 
-        ConnectionSource connection = SQLDB.getSQLConnection();
+        ConnectionSource connection = SQLDatabase.getSQLConnection();
         TableUtils.createTableIfNotExists(connection, Config.class);
 
         try {
-            SQLDB.getConfiguration(connection);
+            SQLDatabase.getConfiguration(connection);
         } catch (SQLException e) {
             Config config = new Config();
             Dao<Config, String> nodesDAO = DaoManager.createDao(connection, Config.class);

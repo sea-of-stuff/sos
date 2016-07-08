@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -20,9 +21,11 @@ import java.util.Optional;
  */
 public class NodeManager {
 
+    private Node localNode;
     private Collection<Node> knownNodes;
 
-    public NodeManager() throws NodeManagerException {
+    public NodeManager(Node localNode) throws NodeManagerException {
+        this.localNode = localNode;
         this.knownNodes = new HashSet<>();
 
         // Setting log-level for ORMLite to ERROR
@@ -63,6 +66,10 @@ public class NodeManager {
         return node.isPresent() ? node.get() : null;
     }
 
+    public Node getLocalNode() {
+        return this.localNode;
+    }
+
     /**
      * Persist the collection of known nodes.
      *
@@ -70,11 +77,11 @@ public class NodeManager {
      */
     public void persistNodesTable() throws DatabasePersistenceException {
         try {
-            ConnectionSource connection = SQLDB.getSQLConnection();
+            ConnectionSource connection = SQLDatabase.getSQLConnection();
             try {
-                SQLDB.createNodesTable(connection);
+                SQLDatabase.createNodesTable(connection);
                 for (Node knownNode : knownNodes) {
-                    SQLDB.addNodeToTable(connection, knownNode);
+                    SQLDatabase.addNodeToTable(connection, knownNode);
                 }
             } finally {
                 connection.close();
@@ -86,10 +93,10 @@ public class NodeManager {
 
     private void loadNodesFromDB() throws NodeManagerException {
         try {
-            ConnectionSource connection = SQLDB.getSQLConnection();
+            ConnectionSource connection = SQLDatabase.getSQLConnection();
             try {
-                SQLDB.createNodesTable(connection);
-                knownNodes.addAll(SQLDB.getNodes(connection));
+                SQLDatabase.createNodesTable(connection);
+                knownNodes.addAll(SQLDatabase.getNodes(connection));
             } finally {
                 connection.close();
             }

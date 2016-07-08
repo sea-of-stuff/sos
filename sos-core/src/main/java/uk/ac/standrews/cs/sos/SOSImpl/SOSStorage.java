@@ -29,14 +29,17 @@ import java.util.Collection;
 public class SOSStorage implements Storage {
 
     protected InternalStorage storage;
-
     protected Identity identity;
     protected ManifestsManager manifestsManager;
 
-    public SOSStorage(InternalStorage storage, ManifestsManager manifestsManager, Identity identity) {
+    private AtomStorage atomStorage;
+
+    public SOSStorage(Node node, InternalStorage storage, ManifestsManager manifestsManager, Identity identity) {
         this.storage = storage;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
+
+        atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
 
     @Override
@@ -125,10 +128,10 @@ public class SOSStorage implements Storage {
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
-        return AtomStorage.persistAtomAndUpdateLocationBundles(storage, location, bundles); // NOTE - this might undo the cache locations!
+        return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // NOTE - this might undo the cache locations!
     }
 
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        return AtomStorage.persistAtomAndUpdateLocationBundles(storage, inputStream, bundles);
+        return atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
     }
 }

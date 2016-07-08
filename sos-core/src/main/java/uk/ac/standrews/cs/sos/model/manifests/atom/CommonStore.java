@@ -3,14 +3,12 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
@@ -26,8 +24,10 @@ import java.net.MalformedURLException;
 public abstract class CommonStore implements Store {
 
     protected InternalStorage storage;
+    protected IGUID nodeGUID;
 
-    public CommonStore(InternalStorage storage) {
+    public CommonStore(IGUID nodeGUID, InternalStorage storage) {
+        this.nodeGUID = nodeGUID;
         this.storage = storage;
     }
 
@@ -55,9 +55,8 @@ public abstract class CommonStore implements Store {
     protected Location getLocation(IGUID guid) throws SourceLocationException {
 
         try {
-            IGUID nodeGUID = SOSLocalNode.getInstance().getNodeGUID();
             return new SOSLocation(nodeGUID, guid);
-        } catch (MalformedURLException | SOSException e) {
+        } catch (MalformedURLException e) {
             throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toString());
         }
 

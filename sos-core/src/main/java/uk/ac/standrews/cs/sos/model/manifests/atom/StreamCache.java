@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -12,8 +13,8 @@ import java.io.InputStream;
  */
 public class StreamCache extends StreamStore {
 
-    public StreamCache(InternalStorage storage, InputStream inputStream) {
-        super(storage, inputStream);
+    public StreamCache(IGUID nodeGUID, InternalStorage storage, InputStream inputStream) {
+        super(nodeGUID, storage, inputStream);
     }
 
     @Override

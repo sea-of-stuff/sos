@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
@@ -12,8 +13,8 @@ import java.io.InputStream;
  */
 public class StreamPersist extends StreamStore {
 
-    public StreamPersist(InternalStorage storage, InputStream inputStream) {
-        super(storage, inputStream);
+    public StreamPersist(IGUID nodeGUID, InternalStorage storage, InputStream inputStream) {
+        super(nodeGUID, storage, inputStream);
     }
 
     @Override

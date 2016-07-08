@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.datastore;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -25,12 +26,21 @@ import static org.testng.AssertJUnit.assertNull;
  */
 public class AtomStorageTest extends SetUpTest {
 
+    AtomStorage atomStorage;
+    
+    @BeforeMethod
+    public void setUp() throws Exception {
+        super.setUp();
+        
+        atomStorage = new AtomStorage(localSOSNode.getNodeGUID(), internalStorage);
+    }
+    
     @Test
     public void testStoreAtomNullBundles() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
         Collection<LocationBundle> bundles = null;
 
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, location, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
         assertNotNull(guid);
         assertNull(bundles);
     }
@@ -40,7 +50,7 @@ public class AtomStorageTest extends SetUpTest {
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
         Collection<LocationBundle> bundles = null;
 
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, inputStream, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
         assertNotNull(guid);
         assertNull(bundles);
     }
@@ -50,7 +60,7 @@ public class AtomStorageTest extends SetUpTest {
         Location location = HelperTest.createDummyDataFile(internalStorage);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, location, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -60,7 +70,7 @@ public class AtomStorageTest extends SetUpTest {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, location, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -70,7 +80,7 @@ public class AtomStorageTest extends SetUpTest {
         Location location = null;
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, location, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -80,7 +90,7 @@ public class AtomStorageTest extends SetUpTest {
     public void testStoreAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, inputStream, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -89,14 +99,14 @@ public class AtomStorageTest extends SetUpTest {
     public void testStoreAtomFromNullStream() throws Exception {
         Collection<LocationBundle> locations = new ArrayList<>();
         InputStream inputStream = null;
-        AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, inputStream, locations);
+        atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, locations);
     }
 
     @Test
     public void testStoreAtomFromEmptyStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("");
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, inputStream, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
     }
@@ -105,13 +115,13 @@ public class AtomStorageTest extends SetUpTest {
     public void testStoreAtomFromTwoEqualStreams() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID guid = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, inputStream, bundles);
+        IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 
         Collection<LocationBundle> newBundles = new ArrayList<>();
         InputStream twinInputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID newGUID = AtomStorage.cacheAtomAndUpdateLocationBundles(internalStorage, twinInputStream, newBundles);
+        IGUID newGUID = atomStorage.cacheAtomAndUpdateLocationBundles(twinInputStream, newBundles);
         assertNotNull(guid);
         assertEquals(newGUID, guid);
         assertEquals(newBundles.size(), 1);
@@ -122,7 +132,7 @@ public class AtomStorageTest extends SetUpTest {
         Location location = HelperTest.createDummyDataFile(internalStorage);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = AtomStorage.persistAtomAndUpdateLocationBundles(internalStorage, location, bundles);
+        IGUID guid = atomStorage.persistAtomAndUpdateLocationBundles(location, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 
@@ -134,7 +144,7 @@ public class AtomStorageTest extends SetUpTest {
     public void testStorePersistAtomFromStream() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
         InputStream inputStream = HelperTest.StringToInputStream("Test-String");
-        IGUID guid = AtomStorage.persistAtomAndUpdateLocationBundles(internalStorage, inputStream, bundles);
+        IGUID guid = atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
         assertNotNull(guid);
         assertEquals(bundles.size(), 1);
 

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.node;
+package uk.ac.standrews.cs.sos.node.database;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -7,9 +7,12 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.Config;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
+import uk.ac.standrews.cs.sos.interfaces.node.DBConnection;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -22,17 +25,51 @@ import java.util.Iterator;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SQLDB implements NodeDatabase {
+public class SQLDatabase implements NodeDatabase {
 
-    public static ConnectionSource getSQLConnection() throws DatabasePersistenceException {
+    DatabaseType databaseType;
 
-        ConnectionSource connection;
+    public SQLDatabase(DatabaseType databaseType) {
+        this.databaseType = databaseType;
+    }
+
+    @Override
+    public DBConnection getDBConnection() throws DatabaseException {
+        SQLConnection connection;
         switch(Config.db_type) {
             case Config.DB_TYPE_SQLITE:
                 connection = getSQLiteConnection();
                 break;
             case Config.DB_TYPE_MYSQL:
                 connection = getMySQLConnection();
+                break;
+            default:
+                throw new DatabaseException("Unable to recognise the type of database in the configuration properties");
+        }
+
+        return connection;
+    }
+
+    @Override
+    public void addNode(Node node) {
+
+    }
+
+    @Override
+    public Collection<Node> getNodes() {
+        return null;
+    }
+
+// REMOVEME
+    public static ConnectionSource getSQLConnection() throws DatabasePersistenceException {
+
+        ConnectionSource connection = null;
+        switch(Config.db_type) {
+            case Config.DB_TYPE_SQLITE:
+                //connection = getSQLiteConnection();
+                break;
+            case Config.DB_TYPE_MYSQL:
+                //connection = getMySQLConnection();
                 break;
             default:
                 throw new DatabasePersistenceException("Unable to recognise the type of database in the configuration properties");
@@ -66,20 +103,21 @@ public class SQLDB implements NodeDatabase {
         return nodesDAO.queryForAll();
     }
 
-    private static ConnectionSource getSQLiteConnection() throws DatabasePersistenceException {
+    private SQLConnection getSQLiteConnection() throws DatabaseException {
         ConnectionSource connection;
         try {
             String databaseUrl = "jdbc:sqlite:" + Config.DB_DUMP_FILE.getPathname();
             connection = new JdbcConnectionSource(databaseUrl);
         } catch (SQLException e) {
-            throw new DatabasePersistenceException(e.getClass().getName() + ": " + e.getMessage());
+            throw new DatabaseException(e.getClass().getName() + ": " + e.getMessage());
         }
 
-        return connection;
+        return new SQLConnection(connection);
     }
 
-    private static ConnectionSource getMySQLConnection() {
+    private SQLConnection getMySQLConnection() {
         throw new UnsupportedOperationException();
     }
+
 
 }

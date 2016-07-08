@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.node.ROLE;
-import uk.ac.standrews.cs.sos.node.SOSImpl.SOSClient;
+import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

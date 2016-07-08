@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
@@ -10,8 +11,8 @@ import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
  */
 public class LocationPersist extends LocationStore {
 
-    public LocationPersist(InternalStorage storage, Location location) {
-        super(storage, location);
+    public LocationPersist(IGUID nodeGUID, InternalStorage storage, Location location) {
+        super(nodeGUID, storage, location);
     }
 
     @Override

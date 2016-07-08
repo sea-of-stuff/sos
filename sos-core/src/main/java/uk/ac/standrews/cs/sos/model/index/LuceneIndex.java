@@ -44,7 +44,9 @@ public class LuceneIndex extends CommonIndex {
     public static Index getInstance(InternalStorage storage) throws IndexException {
         if(instance == null) {
             try {
+                System.out.println("CREATE INDEX");
                 init(storage);
+                System.out.println("INDEX CREATED");
             } catch (IOException e) {
                 throw new IndexException(e);
             }

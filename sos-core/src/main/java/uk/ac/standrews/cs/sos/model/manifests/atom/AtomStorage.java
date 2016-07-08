@@ -14,31 +14,44 @@ import java.util.Collection;
  */
 public class AtomStorage {
 
-    public static IGUID cacheAtomAndUpdateLocationBundles(InternalStorage storage, Location location, Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new LocationCache(storage, location);
+    private IGUID nodeGUID;
+    private InternalStorage storage;
+
+
+    public AtomStorage(IGUID nodeGUID, InternalStorage storage) {
+        this.nodeGUID = nodeGUID;
+        this.storage = storage;
+    }
+
+    public IGUID cacheAtomAndUpdateLocationBundles(Location location,
+                                                   Collection<LocationBundle> bundles) throws StorageException {
+        Store cache = new LocationCache(nodeGUID, storage, location);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID cacheAtomAndUpdateLocationBundles(InternalStorage storage, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new StreamCache(storage, inputStream);
+    public IGUID cacheAtomAndUpdateLocationBundles(InputStream inputStream,
+                                                   Collection<LocationBundle> bundles) throws StorageException {
+        Store cache = new StreamCache(nodeGUID, storage, inputStream);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID persistAtomAndUpdateLocationBundles(InternalStorage storage, Location location, Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new LocationPersist(storage, location);
+    public IGUID persistAtomAndUpdateLocationBundles(Location location,
+                                                     Collection<LocationBundle> bundles) throws StorageException {
+        Store cache = new LocationPersist(nodeGUID, storage, location);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public static IGUID persistAtomAndUpdateLocationBundles(InternalStorage storage, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new StreamPersist(storage, inputStream);
+    public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream,
+                                                     Collection<LocationBundle> bundles) throws StorageException {
+        Store cache = new StreamPersist(nodeGUID, storage, inputStream);
 
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    private static IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {
+    private IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {
         AtomStorageManager atomStorageManager = new AtomStorageManager(store);
         IGUID guid = atomStorageManager.storeAtom();
         if (bundles!= null && guid != null) {

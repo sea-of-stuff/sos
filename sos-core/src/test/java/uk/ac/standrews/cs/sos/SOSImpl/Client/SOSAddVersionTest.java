@@ -51,7 +51,7 @@ public class SOSAddVersionTest extends ClientTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
-        localSOSNode.getIndex().flushDB();
+        index.flushDB();
 
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
@@ -81,7 +81,7 @@ public class SOSAddVersionTest extends ClientTest {
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
-        localSOSNode.getIndex().flushDB();
+        index.flushDB();
 
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);

@@ -1,15 +1,33 @@
 package uk.ac.standrews.cs.sos;
 
+import com.j256.ormlite.support.ConnectionSource;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.configuration.Config;
+import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.node.LocalSOSNode;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
+import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ServerState {
 
-    public static LocalSOSNode sos;
+    public static SOSLocalNode sos;
+
+    private static InternalStorage internalStorage;
+    private static Index index;
 
     public static void init() {
         System.out.println("Starting SOS");
@@ -23,15 +41,41 @@ public class ServerState {
 
     private static void startSOS() {
         try {
-            try {
-                LocalSOSNode.create();
-            } catch (SOSProtocolException e) {
-                e.printStackTrace();
-            }
+            Config config = hardcodedConfiguration();
 
-            ServerState.sos = LocalSOSNode.getInstance();
-        } catch (SOSException e) {
+            internalStorage =
+                    new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true)); // FIXME - storage have very different behaviours if mutable or not
+
+            index = LuceneIndex.getInstance(internalStorage);
+
+            SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+            ServerState.sos = builder.config(config)
+                    .index(index)
+                    .internalStorage(internalStorage)
+                    .build();
+
+        } catch (IndexException | StorageException | DataStorageException | SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
+    }
+
+    private static Config hardcodedConfiguration() {
+        Config retval = null;
+
+        Config.db_type = Config.DB_TYPE_SQLITE;
+        try {
+            Config.initDatabaseInfo();
+        } catch (PersistenceException | IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ConnectionSource connection = SQLDatabase.getSQLConnection();
+            retval = SQLDatabase.getConfiguration(connection);
+        } catch (DatabasePersistenceException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return retval;
     }
 }

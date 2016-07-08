@@ -21,8 +21,8 @@ public abstract class LocationStore extends CommonStore {
     private Location origin;
     private LocationBundle locationBundle;
 
-    public LocationStore(InternalStorage storage, Location location) {
-        super(storage);
+    public LocationStore(IGUID nodeGUID, InternalStorage storage, Location location) {
+        super(nodeGUID, storage);
         this.origin = location;
     }
 

@@ -25,8 +25,8 @@ public abstract class StreamStore extends CommonStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(InternalStorage storage, InputStream inputStream) {
-        super(storage);
+    public StreamStore(IGUID nodeGUID, InternalStorage storage, InputStream inputStream) {
+        super(nodeGUID, storage);
         this.inputStream = inputStream;
     }
 

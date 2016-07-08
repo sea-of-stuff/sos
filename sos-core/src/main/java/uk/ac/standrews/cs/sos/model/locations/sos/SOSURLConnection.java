@@ -3,10 +3,9 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
@@ -25,6 +24,7 @@ import java.net.URLConnection;
  */
 public class SOSURLConnection extends URLConnection {
 
+    private InternalStorage internalStorage;
     private NodeManager nodeManager;
 
     /**
@@ -33,8 +33,11 @@ public class SOSURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(NodeManager nodeManager, URL url) {
+    protected SOSURLConnection(InternalStorage internalStorage,
+                               NodeManager nodeManager, URL url) {
         super(url);
+
+        this.internalStorage = internalStorage;
         this.nodeManager = nodeManager;
     }
 
@@ -48,21 +51,21 @@ public class SOSURLConnection extends URLConnection {
 
         try {
 
-            IGUID thisGUID = SOSLocalNode.getInstance().getNodeGUID();
+            IGUID thisGUID = nodeManager.getLocalNode().getNodeGUID();
             IGUID nodeGuid = GUIDFactory.recreateGUID(url.getHost());
             IGUID entityId = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial / sign
 
             if (thisGUID.equals(nodeGuid)) {
 
-                Directory dataDir = SOSLocalNode.getInstance().getInternalStorage().getDataDirectory();
+                Directory dataDir = internalStorage.getDataDirectory();
 
                 File path = (File) dataDir.get(entityId.toString());
                 return path.getData().getInputStream();
             } else {
                 return null; // contactNode(resourceNode, entityId);
             }
-        } catch ( GUIDGenerationException | DataException |
-                SOSException | BindingAbsentException e) {
+        } catch ( GUIDGenerationException | DataException
+                | BindingAbsentException e) {
             throw new IOException(e);
         }
 

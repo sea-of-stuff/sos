@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 
+import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -28,7 +29,9 @@ public class NodeManagerTest {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 
-        nodeManager = new NodeManager();
+
+        Node node = mock(SOSLocalNode.class);
+        nodeManager = new NodeManager(node);
     }
 
     @AfterClass
