@@ -3,5 +3,9 @@ package uk.ac.standrews.cs.sos.exceptions.identity;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DecryptionException extends Exception {
+public class DecryptionException extends IdentityException {
+
+    public DecryptionException(Throwable throwable) {
+        super(throwable);
+    }
 }

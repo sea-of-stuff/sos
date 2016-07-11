@@ -62,7 +62,7 @@ public class IdentityImpl implements Identity {
                 NoSuchProviderException |
                 SignatureException |
                 InvalidKeyException e) {
-            throw new EncryptionException();
+            throw new EncryptionException(e);
         }
         return retval;
     }
@@ -83,7 +83,7 @@ public class IdentityImpl implements Identity {
                 NoSuchProviderException |
                 SignatureException |
                 InvalidKeyException e) {
-            throw new DecryptionException();
+            throw new DecryptionException(e);
         }
 
         return isValid;
@@ -104,11 +104,11 @@ public class IdentityImpl implements Identity {
             KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.KEYS_ALGORITHM);
             privateKey = kf.generatePrivate(keySpec);
         } catch (IOException e) {
-            throw new KeyLoadedException("Private Key - IO Exception");
+            throw new KeyLoadedException("Private Key - IO Exception", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new KeyLoadedException("Private Key - Algorithm Exception");
+            throw new KeyLoadedException("Private Key - Algorithm Exception", e);
         } catch (InvalidKeySpecException e) {
-            throw new KeyLoadedException("Private Key - Key spec Exception");
+            throw new KeyLoadedException("Private Key - Key spec Exception", e);
         }
     }
 
@@ -123,11 +123,11 @@ public class IdentityImpl implements Identity {
             KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.KEYS_ALGORITHM);
             publicKey = kf.generatePublic(keySpec);
         } catch (IOException e) {
-            throw new KeyLoadedException("Private Key - IO Exception");
+            throw new KeyLoadedException("Private Key - IO Exception", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new KeyLoadedException("Private Key - Algorithm Exception");
+            throw new KeyLoadedException("Private Key - Algorithm Exception", e);
         } catch (InvalidKeySpecException e) {
-            throw new KeyLoadedException("Private Key - Key spec Exception");
+            throw new KeyLoadedException("Private Key - Key spec Exception", e);
         }
     }
 
@@ -156,9 +156,9 @@ public class IdentityImpl implements Identity {
             publicKey = pair.getPublic();
             privateKey = pair.getPrivate();
         } catch (NoSuchAlgorithmException e) {
-            throw new KeyGenerationException("Could not generate key pair - algorithm exception");
+            throw new KeyGenerationException("Could not generate key pair - algorithm exception", e);
         } catch (NoSuchProviderException e) {
-            throw new KeyGenerationException("Could not generate key pair - provided exception");
+            throw new KeyGenerationException("Could not generate key pair - provided exception", e);
         }
 
         return pair;
@@ -174,7 +174,7 @@ public class IdentityImpl implements Identity {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new KeyGenerationException("Could not save key to file");
+            throw new KeyGenerationException("Could not save key to file", e);
         }
 
         return file;

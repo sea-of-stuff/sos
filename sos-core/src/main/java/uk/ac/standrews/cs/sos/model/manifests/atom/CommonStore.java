@@ -3,7 +3,8 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
@@ -46,7 +47,7 @@ public abstract class CommonStore implements Store {
                 retval = generateGUID(dataStream);
             }
         } catch (IOException e) {
-            throw new SourceLocationException(e);
+            throw new SourceLocationException("IO Exception thrown while getting data for location " + location.toString(), e);
         }
 
         return retval;
@@ -57,18 +58,18 @@ public abstract class CommonStore implements Store {
         try {
             return new SOSLocation(nodeGUID, guid);
         } catch (MalformedURLException e) {
-            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toString());
+            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toString(), e);
         }
 
     }
 
     protected abstract LocationBundle getBundle(Location location);
 
-    protected File getAtomLocation(IGUID guid) throws IOException {
+    protected File getAtomLocation(IGUID guid) throws DataStorageException {
         return storage.createFile(storage.getDataDirectory(), guid.toString()); // FIXME - do not use config
     }
 
-    protected void storeData(IGUID guid, Data data) throws IOException {
+    protected void storeData(IGUID guid, Data data) throws DataStorageException {
         Directory dataDirectory = storage.getDataDirectory();
         File file = storage.createFile(dataDirectory, guid.toString(), data);
 

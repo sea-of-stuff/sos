@@ -78,7 +78,7 @@ public class VersionManifest extends SignedManifest implements Version {
         try {
             this.version = makeVersionGUID();
         } catch (GUIDGenerationException e) {
-            throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException("Failed to generate version GUID");
         }
 
         if (identity != null) {

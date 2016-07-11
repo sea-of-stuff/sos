@@ -2,7 +2,8 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -60,7 +61,7 @@ public abstract class LocationStore extends CommonStore {
                      LocationUtility.getInputStreamFromLocation(location)) {
 
             storeData(guid, new InputStreamData((dataStream)));
-        } catch (SourceLocationException | IOException e) {
+        } catch (SourceLocationException | DataStorageException | IOException e) {
             throw new StorageException();
         }
     }

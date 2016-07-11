@@ -2,12 +2,13 @@ package uk.ac.standrews.cs.sos.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -29,17 +30,17 @@ public class HelperTest {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile(InternalStorage storage) throws IOException, URISyntaxException, PersistenceException {
+    public static Location createDummyDataFile(InternalStorage storage) throws URISyntaxException, StorageException, DataStorageException {
         return createDummyDataFile(storage, "testData.txt");
     }
 
     public static Location createDummyDataFile(InternalStorage storage, String filename)
-            throws IOException, URISyntaxException, PersistenceException {
+            throws URISyntaxException, StorageException, DataStorageException {
         Directory testDir = storage.getDataDirectory();
         return createDummyDataFile(testDir, filename);
     }
 
-    private static Location createDummyDataFile(Directory sosParent, String filename) throws IOException, URISyntaxException, PersistenceException {
+    private static Location createDummyDataFile(Directory sosParent, String filename) throws URISyntaxException, StorageException {
 
         Data data = new StringData("The first line\nThe second line");
         File sosFile = new FileBasedFile(sosParent, filename, data, false);

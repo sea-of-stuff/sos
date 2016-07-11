@@ -3,15 +3,14 @@ package uk.ac.standrews.cs.sos;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.configuration.Config;
-import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
@@ -60,7 +59,7 @@ public class SetUpTest {
         //Thread.sleep(1000);
     }
 
-    private Config hardcodedConfiguration() throws IOException, PersistenceException {
+    private Config hardcodedConfiguration() throws IOException, StorageException {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 

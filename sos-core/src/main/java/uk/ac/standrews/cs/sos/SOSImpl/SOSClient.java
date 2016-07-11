@@ -2,12 +2,12 @@ package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -145,13 +145,7 @@ public class SOSClient implements Client {
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        Manifest manifest;
-        try {
-            manifest = manifestsManager.findManifest(guid);
-        } catch (ManifestNotFoundException e) {
-            throw new ManifestNotFoundException();
-        }
-        return manifest;
+        return manifestsManager.findManifest(guid);
     }
 
     @Override
@@ -160,7 +154,7 @@ public class SOSClient implements Client {
         try {
             ret = manifest.verify(identity);
         } catch (GUIDGenerationException | DecryptionException e) {
-            throw new ManifestVerificationFailedException();
+            throw new ManifestVerificationFailedException("Manifest verification failed", e);
         }
 
         return ret;

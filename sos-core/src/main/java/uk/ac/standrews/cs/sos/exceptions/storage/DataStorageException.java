@@ -1,0 +1,13 @@
+package uk.ac.standrews.cs.sos.exceptions.storage;
+
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+
+/**
+ * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ */
+public class DataStorageException extends SOSException {
+
+    public DataStorageException(Throwable throwable) {
+        super(throwable);
+    }
+}

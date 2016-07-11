@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabasePersistenceException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
@@ -52,7 +51,7 @@ public class NodeManagerTest {
     }
 
     @Test(priority=0)
-    public void persistTest() throws GUIDGenerationException, DatabasePersistenceException, NodeManagerException {
+    public void persistTest() throws GUIDGenerationException, NodeManagerException {
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false); // TODO - more tests of this kind (with different combos of client,storage,coordinator)
 
@@ -66,7 +65,7 @@ public class NodeManagerTest {
     }
 
     @Test(priority=1, dependsOnMethods = { "persistTest" })
-    public void getKnownNodesTest() throws DatabasePersistenceException, NodeManagerException {
+    public void getKnownNodesTest() throws NodeManagerException {
         assertEquals(nodeManager.getKnownNodes().size(), 1);
     }
 

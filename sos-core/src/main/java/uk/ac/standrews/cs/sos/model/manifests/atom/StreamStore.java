@@ -3,7 +3,8 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -13,7 +14,6 @@ import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
@@ -52,7 +52,8 @@ public abstract class StreamStore extends CommonStore {
                 Location location = getLocation(guid);
                 locationBundle = getBundle(location);
 
-            } catch (GUIDGenerationException | SourceLocationException | URISyntaxException | IOException e) {
+            } catch (GUIDGenerationException | SourceLocationException |
+                    URISyntaxException | DataStorageException e) {
                 throw new StorageException();
             }
 

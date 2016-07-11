@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.index;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 
 import java.util.Collection;

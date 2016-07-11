@@ -2,12 +2,9 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestManagerException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -80,17 +77,10 @@ public class ManifestsManager {
      */
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
         if (guid == null) {
-            throw new ManifestNotFoundException();
+            throw new ManifestNotFoundException("Cannot find manifest for null guid");
         }
 
-        Manifest manifest;
-        try {
-            manifest = getManifestFromFile(guid);
-        } catch (ManifestManagerException ex) {
-            throw new ManifestNotFoundException();
-        }
-
-        return manifest;
+        return getManifestFromFile(guid);
     }
 
     public Collection<IGUID> findManifestsByType(String type) throws ManifestNotFoundException {
@@ -98,7 +88,7 @@ public class ManifestsManager {
         try {
             retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IndexException e) {
-            throw new ManifestNotFoundException();
+            throw new ManifestNotFoundException("Manifest type " + type + " not found", e);
         }
         return retval;
     }
@@ -108,7 +98,7 @@ public class ManifestsManager {
         try {
             retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IndexException e) {
-            throw new ManifestNotFoundException();
+            throw new ManifestNotFoundException("Manifest version " + guid.toString() + " not found", e);
         }
         return retval;
     }
@@ -118,7 +108,7 @@ public class ManifestsManager {
         try {
             retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
         } catch (IndexException e) {
-            throw new ManifestNotFoundException();
+            throw new ManifestNotFoundException("Manifest label " + label+ " not found", e);
         }
         return retval;
     }
@@ -128,7 +118,7 @@ public class ManifestsManager {
 
     /**************************************************************************/
 
-    private Manifest getManifestFromFile(IGUID guid) throws ManifestManagerException {
+    private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {
 
         try {
             Manifest manifest = null;
@@ -141,8 +131,8 @@ public class ManifestsManager {
 
             return manifest;
         } catch (UnknownManifestTypeException | ManifestNotMadeException
-                | IOException e) {
-            throw new ManifestManagerException(e);
+                | IOException | DataStorageException e) {
+            throw new ManifestNotFoundException("Unable to find manifest for GUID " + guid.toString(), e);
         }
 
     }
@@ -161,10 +151,10 @@ public class ManifestsManager {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
                     break;
                 default:
-                    throw new UnknownManifestTypeException();
+                    throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
             }
         } catch (IOException e) {
-            throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException("Unable to create a manifest from file at " + manifestData.getPathname());
         }
 
         return manifest;
@@ -179,8 +169,12 @@ public class ManifestsManager {
             boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
 
             if (isAtomManifest && manifestExists) {
-                mergeAtomManifestAndSave(manifest);
+
+                IGUID guid = manifest.getContentGUID();
+                Manifest existingManifest = getManifestFromFile(guid);
+                mergeAtomManifestAndSave(existingManifest, manifest);
             } else if (manifestExists) { // TODO - move this code below to separate method
+
                 File manifestFile = getManifestFile(manifestFileGUID);
                 File backupFile = backupManifest(manifest);
                 FileHelper.deleteFile(manifestFile);
@@ -194,15 +188,16 @@ public class ManifestsManager {
 
             cacheManifest(manifest);
 
-        } catch (IOException e) {
+        } catch (DataStorageException e) {
+            throw new ManifestManagerException(e);
+        } catch (ManifestNotFoundException e) {
             throw new ManifestManagerException(e);
         }
 
     }
 
-    private void mergeAtomManifestAndSave(Manifest manifest) throws ManifestManagerException {
+    private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestManagerException {
         IGUID guid = manifest.getContentGUID();
-        Manifest existingManifest = getManifestFromFile(guid);
 
         try {
             File manifestFile = getManifestFile(guid);
@@ -214,8 +209,9 @@ public class ManifestsManager {
                 saveToFile(manifest);
             }
             FileHelper.deleteFile(backupFile);
-        } catch (IOException e) {
-            throw new ManifestManagerException(e);
+        } catch (DataStorageException e) {
+            throw new ManifestManagerException("Manifests " + existingManifest.getContentGUID().toString()
+                    + " and " + manifest.getContentGUID().toString() + "could not be merged", e);
         }
 
     }
@@ -233,7 +229,7 @@ public class ManifestsManager {
             backupManifest.persist();
 
             return backupManifest;
-        } catch (IOException | DataException | PersistenceException e) {
+        } catch (DataStorageException | DataException | PersistenceException e) {
             throw new ManifestManagerException("Manifest could not be backed up ", e);
         }
 
@@ -260,7 +256,7 @@ public class ManifestsManager {
             Data manifestData = new StringData(manifest.toString());
             manifestFile.setData(manifestData);
             manifestFile.persist();
-        } catch (PersistenceException | DataException | IOException e) {
+        } catch (PersistenceException | DataException | DataStorageException e) {
             throw new ManifestManagerException(e);
         }
     }
@@ -273,11 +269,11 @@ public class ManifestsManager {
         }
     }
 
-    private File getManifestFile(IGUID guid) throws IOException {
+    private File getManifestFile(IGUID guid) throws DataStorageException {
         return getManifestFile(guid.toString());
     }
 
-    private File getManifestFile(String guid) throws IOException {
+    private File getManifestFile(String guid) throws DataStorageException {
         Directory manifestsDir = internalStorage.getManifestDirectory();
         return internalStorage.createFile(manifestsDir, normaliseGUID(guid));
     }
@@ -294,7 +290,7 @@ public class ManifestsManager {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    private boolean manifestExistsInStorage(IGUID guid) throws IOException {
+    private boolean manifestExistsInStorage(IGUID guid) throws DataStorageException {
         File manifest = getManifestFile(guid);
         return manifest.exists();
     }

@@ -14,7 +14,8 @@ import org.apache.lucene.store.FSDirectory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
@@ -47,14 +48,14 @@ public class LuceneIndex extends CommonIndex {
                 System.out.println("CREATE INDEX");
                 init(storage);
                 System.out.println("INDEX CREATED");
-            } catch (IOException e) {
+            } catch (DataStorageException | IOException e) {
                 throw new IndexException(e);
             }
         }
         return instance;
     }
 
-    private static void init(InternalStorage storage) throws IOException {
+    private static void init(InternalStorage storage) throws IOException, DataStorageException {
 
         Path indexPath = storage.getIndexDirectory().toFile().toPath();
         org.apache.lucene.store.Directory dir = FSDirectory.open(indexPath);
@@ -137,9 +138,7 @@ public class LuceneIndex extends CommonIndex {
 
     @Override
     public Collection<IGUID> getVersions(IGUID invariant, int results, int skip) throws IndexException {
-        if (skip > results) {
-            throw new IndexException();
-        }
+        assert(skip <= results);
 
         updateIndexSearcher();
 
@@ -154,8 +153,6 @@ public class LuceneIndex extends CommonIndex {
         releaseIndexSearcher();
         return retval;
     }
-
-
 
     @Override
     public Collection<IGUID> getMetaLabelMatches(String value, int results, int skip) throws IndexException {
@@ -188,9 +185,7 @@ public class LuceneIndex extends CommonIndex {
     }
 
     private Collection<IGUID> getGUIDsFromSearch(Term term, int results, int skip) throws IndexException {
-        if (skip > results) {
-            throw new IndexException();
-        }
+        assert(skip <= results);
 
         Collection<IGUID> retval = new HashSet<>();
         try {

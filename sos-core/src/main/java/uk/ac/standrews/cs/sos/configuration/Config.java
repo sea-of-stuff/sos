@@ -5,13 +5,12 @@ import com.j256.ormlite.table.DatabaseTable;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedDirectory;
 import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
@@ -37,7 +36,7 @@ public class Config {
     static {
         try {
             ROOT_DIRECTORY_DEFAULT = new FileBasedDirectory(HOME_DIR, "sos", false);
-        } catch (IOException e) {
+        } catch (StorageException e) {
             e.printStackTrace();
         }
     }
@@ -119,12 +118,12 @@ public class Config {
             identityPaths = new File[]
                  {new FileBasedFile(KEYS_DIRECTORY, PRIVATE_KEY_FILE, false),
                          new FileBasedFile(KEYS_DIRECTORY, PUBLIC_KEY_FILE, false)};
-        } catch (IOException e) {
+        } catch (StorageException e) {
             e.printStackTrace();
         }
     }
 
-    public static void initDatabaseInfo() throws PersistenceException, IOException {
+    public static void initDatabaseInfo() throws StorageException {
         DB_DIRECTORY = new FileBasedDirectory(root, db_path, false); // FIXME - do not use FileBasedDirectory! (move this to SQLConnection?)
         if (!DB_DIRECTORY.exists()) {
             DB_DIRECTORY.persist();

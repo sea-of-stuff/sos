@@ -23,8 +23,6 @@ public class ManifestFactory {
      * @param guid
      * @param locations where the atom resides.
      * @return the manifest for the atom
-     * @throws ManifestNotMadeException
-     * @throws StorageException
      */
     public static AtomManifest createAtomManifest(IGUID guid,
                                                   Collection<LocationBundle> locations) {
@@ -46,7 +44,7 @@ public class ManifestFactory {
             throws ManifestNotMadeException {
 
         if (type == null) {
-            throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException("No compound type specified");
         }
 
         return new CompoundManifest(type, contents, identity);

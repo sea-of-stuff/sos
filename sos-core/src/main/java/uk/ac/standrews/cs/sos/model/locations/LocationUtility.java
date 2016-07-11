@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations;
 
-import uk.ac.standrews.cs.sos.exceptions.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class LocationUtility {
         try {
             stream = location.getSource();
         } catch (IOException e) {
-            throw new SourceLocationException(location.toString() + " " + e);
+            throw new SourceLocationException("Unable to get data for location: " + location.toString(), e);
         }
 
         return stream;

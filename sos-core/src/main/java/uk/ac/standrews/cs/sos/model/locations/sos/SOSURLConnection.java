@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
@@ -64,8 +65,8 @@ public class SOSURLConnection extends URLConnection {
             } else {
                 return null; // contactNode(resourceNode, entityId);
             }
-        } catch ( GUIDGenerationException | DataException
-                | BindingAbsentException e) {
+        } catch (GUIDGenerationException | DataException
+                | BindingAbsentException | DataStorageException e) {
             throw new IOException(e);
         }
 

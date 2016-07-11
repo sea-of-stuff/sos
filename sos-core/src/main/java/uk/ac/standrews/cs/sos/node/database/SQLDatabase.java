@@ -83,7 +83,8 @@ public class SQLDatabase implements NodeDatabase {
             return getMySQLConnection();
         }
 
-        throw new DatabaseException("Unable to recognise the type of database in the configuration properties");
+        throw new DatabaseException("Unable to recognise the type of database "
+                + databaseType.toString() + " in the configuration properties");
     }
 
     private ConnectionSource getSQLiteConnection() throws DatabaseException {
@@ -92,7 +93,7 @@ public class SQLDatabase implements NodeDatabase {
             String databaseUrl = "jdbc:sqlite:" + pathname;
             connection = new JdbcConnectionSource(databaseUrl);
         } catch (SQLException e) {
-            throw new DatabaseException(e.getClass().getName() + ": " + e.getMessage());
+            throw new DatabaseException("Unable to get DB connection", e);
         }
 
         return connection;

@@ -80,9 +80,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
     public CompoundManifest(CompoundType type, IGUID contentGUID, Collection<Content> contents, String signature) throws ManifestNotMadeException {
         super(null, ManifestConstants.COMPOUND);
 
-        if (type == null) {
-            throw new ManifestNotMadeException();
-        }
+        assert(type != null);
 
         this.type = type;
         this.contentGUID = contentGUID;
@@ -125,7 +123,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
         try {
             guid = generateContentGUID();
         } catch (GUIDGenerationException e) {
-            throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException("Failed to generate content GUID");
         }
         return guid;
     }

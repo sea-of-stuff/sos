@@ -61,7 +61,7 @@ public abstract class SignedManifest extends BasicManifest {
             String manifestToSign = getManifestToSign();
             signature = generateSignature(manifestToSign);
         } catch (Exception e) {
-            throw new ManifestNotMadeException();
+            throw new ManifestNotMadeException("Manifest could not be signed", e);
         }
         return signature;
     }

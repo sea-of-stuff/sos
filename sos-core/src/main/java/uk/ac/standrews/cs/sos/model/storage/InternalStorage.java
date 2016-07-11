@@ -1,14 +1,12 @@
 package uk.ac.standrews.cs.sos.model.storage;
 
-import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 import uk.ac.standrews.cs.storage.interfaces.IStorage;
-
-import java.io.IOException;
 
 /**
  * This is a SOS specific wrapper on the IStorage module.
@@ -26,31 +24,47 @@ public class InternalStorage {
     public InternalStorage(IStorage storage) throws DataStorageException {
         this.storage = storage;
 
+        createSOSDirectories();
+    }
+
+    public Directory getDataDirectory() throws DataStorageException {
         try {
-            createSOSDirectories();
-        } catch (PersistenceException | IOException e) {
+            return storage.createDirectory(DATA_DIRECTORY_NAME);
+        } catch (StorageException e) {
             throw new DataStorageException(e);
         }
     }
 
-    public Directory getDataDirectory() throws IOException {
-        return storage.createDirectory(DATA_DIRECTORY_NAME);
+    public Directory getManifestDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
     }
 
-    public Directory getManifestDirectory() throws IOException {
-        return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
+    public Directory getIndexDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(INDEX_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
     }
 
-    public Directory getIndexDirectory() throws IOException {
-        return storage.createDirectory(INDEX_DIRECTORY_NAME);
+    public File createFile(Directory parent, String filename) throws DataStorageException {
+        try {
+            return storage.createFile(parent, filename);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
     }
 
-    public File createFile(Directory parent, String filename) throws IOException {
-        return storage.createFile(parent, filename);
-    }
-
-    public File createFile(Directory parent, String filename, Data data) throws IOException {
-        return storage.createFile(parent, filename, data);
+    public File createFile(Directory parent, String filename, Data data) throws DataStorageException {
+        try {
+            return storage.createFile(parent, filename, data);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
     }
 
     public void destroy() throws DataStorageException {
@@ -64,9 +78,13 @@ public class InternalStorage {
         }
     }
 
-    protected void createSOSDirectories() throws PersistenceException, IOException {
-        storage.createDirectory(DATA_DIRECTORY_NAME).persist();
-        storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
-        storage.createDirectory(INDEX_DIRECTORY_NAME).persist();
+    protected void createSOSDirectories() throws DataStorageException {
+        try {
+            storage.createDirectory(DATA_DIRECTORY_NAME).persist();
+            storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
+            storage.createDirectory(INDEX_DIRECTORY_NAME).persist();
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
     }
 }
