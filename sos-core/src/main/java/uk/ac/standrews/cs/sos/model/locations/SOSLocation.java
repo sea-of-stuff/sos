@@ -38,6 +38,11 @@ public class SOSLocation implements Location {
 
     public SOSLocation(String location) throws MalformedURLException {
         String[] segments = location.split(SCHEME_DIVIDER)[1].split("/");
+
+        if (segments.length != 2) {
+            throw new MalformedURLException();
+        }
+
         try {
             this.machineID = GUIDFactory.recreateGUID(segments[MACHINE_ID_SEGMENT]);
             this.entity = GUIDFactory.recreateGUID(segments[ENTIY_ID_SEGMENT]);

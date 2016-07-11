@@ -4,6 +4,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
@@ -95,5 +96,13 @@ public class AtomManifestTest extends SetUpTest {
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertEquals(atomManifest.verify(null), true);
+    }
+
+    @Test
+    public void verifyAtomWithNullGUIDTest() throws GUIDGenerationException {
+        Collection<LocationBundle> bundles = new ArrayList<>();
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
+
+        assertFalse(atomManifest.verify(null));
     }
 }

@@ -27,7 +27,7 @@ public class SetUpTest {
     @BeforeMethod
     public void setUp() throws Exception {
 
-        Config config = hardcodedConfiguration();
+        Config config = Utilities.createdDummyConfig();
         try {
             internalStorage =
                     new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true)); // FIXME - storage have very different behaviours if mutable or not
@@ -46,7 +46,6 @@ public class SetUpTest {
                                 .index(index)
                                 .internalStorage(internalStorage)
                                 .build();
-
     }
 
     @AfterMethod
@@ -55,14 +54,5 @@ public class SetUpTest {
         index.killInstance();
 
         internalStorage.destroy();
-
-        //Thread.sleep(1000);
-    }
-
-    private Config hardcodedConfiguration() throws IOException, StorageException {
-        Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabaseInfo();
-
-        return new Config();
     }
 }

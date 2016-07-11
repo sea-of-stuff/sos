@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -47,6 +48,26 @@ public class SOSLocationTest extends SetUpTest {
 
         assertTrue(retrieved.contains("The first line"));
         assertTrue(retrieved.contains("The second line"));
+    }
+
+    @Test (expectedExceptions = MalformedURLException.class)
+    public void wrongURINoNodeGUIDTest() throws Exception {
+        new SOSLocation("sos://" +
+                "/" +
+                DATA_GUID.toString());
+    }
+
+    @Test (expectedExceptions = MalformedURLException.class)
+    public void wrongURINoDataGUIDTest() throws Exception {
+        new SOSLocation("sos://" +
+                NODE_GUID.toString() + "/");
+    }
+
+    @Test (expectedExceptions = MalformedURLException.class)
+    public void wrongURINoSlashTest() throws Exception {
+        new SOSLocation("sos://" +
+                NODE_GUID.toString() +
+                DATA_GUID.toString());
     }
 
 }

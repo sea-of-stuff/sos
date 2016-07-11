@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.node;
 
-import com.j256.ormlite.logger.LocalLog;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
@@ -28,9 +27,6 @@ public class NodeManager {
         this.nodeDatabase = nodeDatabase;
 
         this.knownNodes = new HashSet<>();
-
-        // Setting log-level for ORMLite to ERROR
-        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         loadNodesFromDB();
     }
 
@@ -74,7 +70,7 @@ public class NodeManager {
     /**
      * Persist the collection of known nodes.
      *
-     * @throws DatabasePersistenceException
+     * @throws NodeManagerException
      */
     public void persistNodesTable() throws NodeManagerException {
         try {

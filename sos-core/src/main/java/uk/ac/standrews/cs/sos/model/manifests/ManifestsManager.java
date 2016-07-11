@@ -113,11 +113,6 @@ public class ManifestsManager {
         return retval;
     }
 
-    /**************************************************************************/
-    /* PRIVATE METHODS */
-
-    /**************************************************************************/
-
     private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {
 
         try {
@@ -208,6 +203,7 @@ public class ManifestsManager {
                 FileHelper.deleteFile(manifestFile);
                 saveToFile(manifest);
             }
+            
             FileHelper.deleteFile(backupFile);
         } catch (DataStorageException e) {
             throw new ManifestManagerException("Manifests " + existingManifest.getContentGUID().toString()
@@ -294,6 +290,5 @@ public class ManifestsManager {
         File manifest = getManifestFile(guid);
         return manifest.exists();
     }
-
 
 }

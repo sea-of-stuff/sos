@@ -65,7 +65,7 @@ public class ManifestsManagerTest {
     }
 
     @Test
-    public void testAddAtomManifest() throws Exception {
+    public void addAtomManifestTest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
@@ -88,7 +88,7 @@ public class ManifestsManagerTest {
     }
 
     @Test
-    public void testAddCompoundManifest() throws Exception {
+    public void addCompoundManifestTest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         Identity identity = new IdentityImpl();
@@ -112,7 +112,7 @@ public class ManifestsManagerTest {
     }
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
-    public void testNoCompoundTypeYieldsNotValidManifest() throws Exception {
+    public void noCompoundTypeYieldsNotValidManifestTest() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
@@ -128,7 +128,7 @@ public class ManifestsManagerTest {
     }
 
     @Test
-    public void testAddAssetManifest() throws Exception {
+    public void addAssetManifestTest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
         Identity identity = new IdentityImpl();
 
@@ -155,7 +155,7 @@ public class ManifestsManagerTest {
     }
 
     @Test
-    public void testUpdateAtomManifest() throws Exception {
+    public void updateAtomManifestTest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
@@ -184,8 +184,40 @@ public class ManifestsManagerTest {
         }
     }
 
+    @Test
+    public void deletePrevAtomWhileNewIsAddedTest() throws Exception {
+        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+
+        Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
+        Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
+
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(
+                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
+        IGUID guid = atomManifest.getContentGUID();
+
+        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
+                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
+        IGUID anotherGUID = anotherManifest.getContentGUID();
+
+        assertEquals(guid, anotherGUID);
+
+        try {
+            manifestsManager.addManifest(atomManifest);
+            storage.getManifestDirectory().remove(guid.toString() + ".json");
+
+            manifestsManager.addManifest(anotherManifest);
+            AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
+
+            assertEquals(manifest.getLocations().size(), 1);
+        } catch (ManifestPersistException | ManifestNotFoundException e) {
+            throw new Exception(e);
+        }
+    }
+
     @Test (expectedExceptions = ManifestPersistException.class)
-    public void testAddNullManifest() throws Exception {
+    public void addNullManifestTest() throws Exception {
         ManifestsManager manifestsManager = new ManifestsManager(storage, index);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);

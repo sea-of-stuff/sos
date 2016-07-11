@@ -69,7 +69,7 @@ public class Content {
             e.printStackTrace();
         }
 
-        return null;
+        return "";
     }
 
     @Override

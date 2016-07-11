@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.datastore;
+package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 

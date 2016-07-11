@@ -78,7 +78,7 @@ public class InternalStorage {
         }
     }
 
-    protected void createSOSDirectories() throws DataStorageException {
+    private void createSOSDirectories() throws DataStorageException {
         try {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
