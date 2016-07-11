@@ -2,18 +2,13 @@ package uk.ac.standrews.cs.sos;
 
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.Config;
-import uk.ac.standrews.cs.sos.exceptions.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
-
-import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -50,14 +45,12 @@ public class ServerState {
                     .internalStorage(internalStorage)
                     .build();
 
-        } catch (IndexException | StorageException | DataStorageException
-                 | IOException | PersistenceException
-                | SOSException | GUIDGenerationException e) {
+        } catch (StorageException | SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
     }
 
-    private static Config hardcodedConfiguration() throws IOException, PersistenceException {
+    private static Config hardcodedConfiguration() throws StorageException {
         Config.db_type = Config.DB_TYPE_SQLITE;
         Config.initDatabaseInfo();
 
