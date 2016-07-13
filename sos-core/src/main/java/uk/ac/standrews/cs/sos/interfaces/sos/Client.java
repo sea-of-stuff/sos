@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -19,19 +19,25 @@ import java.io.InputStream;
 import java.util.Collection;
 
 /**
+ * The Client is one of the three node roles within the Sea of Stuff.
+ * <br>
+ * The Client supports the following operations:
+ * - pushing data/manifests to the SOS
+ * - get data/manifests from the SOS
+ * - find data in the SOS
+ *
+ * The behaviour of these operations depends on the policy used by this SOS instance.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Client {
+public interface Client extends SeaOfStuff {
 
     /**
      * Adds an atom to the Sea of Stuff.
-     *
-     * The locations of the atom are used to generate a manifest.
-     *
-     * TODO - mention caching, fact that atom comes from the location
+     * The atom is cached locally and replicated according to the policy used by this instance.
      *
      * @param location of the data for the atom.
-     * @return Atom for the added atom.
+     * @return the added atom.
      * @throws StorageException
      * @throws ManifestPersistException
      *
@@ -41,9 +47,11 @@ public interface Client {
             throws StorageException, ManifestPersistException;
 
     /**
+     * Adds a stream of data to the Sea of Stuff as an atom.
+     * The atom is cached locally and replicated according to the policy used by this instance.
      *
      * @param inputStream for this atom
-     * @return Atom for the added atom
+     * @return the added atom
      * @throws StorageException
      * @throws ManifestPersistException
      */
@@ -51,10 +59,10 @@ public interface Client {
             throws StorageException, ManifestPersistException;
 
     /**
-     * Adds a CompoundManifest to the Sea of Stuff.
+     * Adds a Compound to the Sea of Stuff.
      *
      * @param contents of this compound.
-     * @return Compound for the added compound.
+     * @return the added compound.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
@@ -70,7 +78,7 @@ public interface Client {
      * @param invariant guid of this asset
      * @param prevs version of this asset.
      * @param metadata of this version.
-     * @return Version for the added asset.
+     * @return the added version.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
@@ -81,19 +89,17 @@ public interface Client {
 
     /**
      * Add a manifest to the sea of stuff.
-     * If {@code recursive} is true, then manifests referenced from the specified one will also be added,
+     * If {@code recursive} is true, then manifests referenced from the one specified will also be added,
      * assuming that such manifests are available and reachable.
-     * This operation will be performed recursively.
      *
      * @param manifest to add to the NodeManager
      * @param recursive if true adds the references manifests and data recursively.
-     * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
      * @throws ManifestPersistException
      */
     void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
 
     /**
-     * Get an atom's data given an AtomManifest.
+     * Get the data of an Atom.
      *
      * @param atom describing the atom to retrieve.
      * @return InputStream
@@ -101,7 +107,7 @@ public interface Client {
     InputStream getAtomContent(Atom atom);
 
     /**
-     * Get the manifest that matches a given GUID.
+     * Get the manifest matching the given GUID.
      *
      * @param guid                  of the manifest.
      * @return Manifest             the manifest associated with the GUID.
@@ -110,12 +116,6 @@ public interface Client {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
-
-    /**
-     *
-     * @return Identify for this instance of the sea of stuff.
-     */
-    Identity getIdentity();
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by
@@ -134,9 +134,9 @@ public interface Client {
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
-     * @throws ManifestVerificationFailedException
+     * @throws ManifestVerificationException
      */
-    boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException;
+    boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
 
     /**
      *

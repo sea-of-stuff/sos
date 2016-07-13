@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -28,9 +29,10 @@ import java.util.Collection;
  */
 public class SOSStorage implements Storage {
 
-    protected InternalStorage storage;
-    protected Identity identity;
-    protected ManifestsManager manifestsManager;
+    private PolicyManager policyManager;
+    private InternalStorage storage;
+    private Identity identity;
+    private ManifestsManager manifestsManager;
 
     private AtomStorage atomStorage;
 
@@ -43,8 +45,8 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Identity getIdentity() {
-        return this.identity;
+    public PolicyManager getPolicyManager() {
+        return policyManager;
     }
 
     @Override
@@ -122,13 +124,8 @@ public class SOSStorage implements Storage {
         return dataStream;
     }
 
-    @Override
-    public Node getNode(IGUID guid) {
-        throw new UnsupportedOperationException();
-    }
-
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
-        return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // NOTE - this might undo the cache locations!
+        return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations!
     }
 
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {

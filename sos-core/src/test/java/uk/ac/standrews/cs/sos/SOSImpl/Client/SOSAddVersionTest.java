@@ -108,7 +108,7 @@ public class SOSAddVersionTest extends ClientTest {
         Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
 
-        assertTrue(client.verifyManifest(client.getIdentity(), retrievedManifest));
+        assertTrue(client.verifyManifest(localSOSNode.getIdentity(), retrievedManifest));
     }
 
 

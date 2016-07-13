@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.interfaces.sos.Coordinator;
@@ -30,11 +31,13 @@ import java.net.URLStreamHandlerFactory;
 
 /**
  * This class represents the SOSNode of this machine.
- * Using a BuilderPattern to construct this node
+ * Using a BuilderPattern to construct this node.
+ *
+ * A SOSLocalNode may expose multiple SOS interfaces to the caller: Client, Storage and Coordinator.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSLocalNode extends SOSNode {
+public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private Config config;
     private InternalStorage internalStorage;
@@ -83,16 +86,24 @@ public class SOSLocalNode extends SOSNode {
         }
     }
 
+    @Override
     public Client getClient() {
         return client;
     }
 
+    @Override
     public Storage getStorage() {
         return storage;
     }
 
+    @Override
     public Coordinator getCoordinator() {
         return coordinator;
+    }
+
+    @Override
+    public Identity getIdentity() {
+        return identity;
     }
 
     /**************************************************************************/

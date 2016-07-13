@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -37,9 +38,10 @@ import java.util.Collection;
  */
 public class SOSClient implements Client {
 
-    protected InternalStorage storage;
-    protected Identity identity;
-    protected ManifestsManager manifestsManager;
+    private PolicyManager policyManager;
+    private InternalStorage storage;
+    private Identity identity;
+    private ManifestsManager manifestsManager;
 
     private AtomStorage atomStorage;
 
@@ -54,8 +56,8 @@ public class SOSClient implements Client {
     }
 
     @Override
-    public Identity getIdentity() {
-        return this.identity;
+    public PolicyManager getPolicyManager() {
+        return policyManager;
     }
 
     @Override
@@ -149,12 +151,12 @@ public class SOSClient implements Client {
     }
 
     @Override
-    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
+    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
         boolean ret;
         try {
             ret = manifest.verify(identity);
         } catch (GUIDGenerationException | DecryptionException e) {
-            throw new ManifestVerificationFailedException("Manifest verification failed", e);
+            throw new ManifestVerificationException("Manifest verification failed", e);
         }
 
         return ret;

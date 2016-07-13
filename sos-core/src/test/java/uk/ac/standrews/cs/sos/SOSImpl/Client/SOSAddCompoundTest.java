@@ -73,7 +73,7 @@ public class SOSAddCompoundTest extends ClientTest {
         Compound manifest = client.addCompound(CompoundType.DATA, contents);
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
 
-        boolean isVerified = client.verifyManifest(client.getIdentity(), retrievedManifest);
+        boolean isVerified = client.verifyManifest(localSOSNode.getIdentity(), retrievedManifest);
         assertTrue(isVerified);
     }
 

@@ -3,10 +3,11 @@ package uk.ac.standrews.cs.sos.SOSImpl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationFailedException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Coordinator;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
@@ -33,8 +34,8 @@ public class SOSCoordinator implements Coordinator {
     }
 
     @Override
-    public Identity getIdentity() {
-        return this.identity;
+    public PolicyManager getPolicyManager() {
+        return null;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SOSCoordinator implements Coordinator {
     }
 
     @Override
-    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationFailedException {
+    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
         // TODO - how is this verified if identity is unknown?
         return false;
     }
