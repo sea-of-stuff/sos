@@ -9,7 +9,11 @@ public interface PolicyManager {
 
     void setComputationPolicy(ComputationPolicy policy);
 
+    void setManifestPolicy(ManifestPolicy policy);
+
     ReplicationPolicy getReplicationPolicy();
 
     ComputationPolicy getComputationPolicy();
+
+    ManifestPolicy getManifestPolicy();
 }
