@@ -7,8 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -56,6 +55,48 @@ public class ConfigurationTest {
 
         Configuration configuration = new Configuration(TEST_RESOURCES_PATH + "config.properties");
         assertTrue(configuration.getPropertyFromConfig(PropertyKeys.NODE_HOSTNAME).isEmpty());
+    }
+
+    @Test
+    public void testExistingKey() throws IOException {
+        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
+
+        Configuration configuration = new Configuration(TEST_RESOURCES_PATH + "config.properties");
+        assertEquals(configuration.getPropertyFromConfig(PropertyKeys.NODE_GUID),
+                "6b67f67f31908dd0e574699f163eda2cc117f7f4");
+    }
+
+    @Test
+    public void testResetKey() throws IOException {
+        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
+
+        Configuration configuration = new Configuration(TEST_RESOURCES_PATH + "config.properties");
+        assertEquals(configuration.getPropertyFromConfig(PropertyKeys.NODE_GUID),
+                "6b67f67f31908dd0e574699f163eda2cc117f7f4");
+
+        configuration.setProperty(PropertyKeys.NODE_GUID, "abc");
+        assertEquals(configuration.getPropertyFromConfig(PropertyKeys.NODE_GUID),
+                "abc");
+    }
+
+    @Test
+    public void testResetKeyPersist() throws IOException {
+        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
+
+        Configuration configuration = new Configuration(TEST_RESOURCES_PATH + "config.properties");
+        assertEquals(configuration.getPropertyFromConfig(PropertyKeys.NODE_GUID),
+                "6b67f67f31908dd0e574699f163eda2cc117f7f4");
+
+        configuration.setProperty(PropertyKeys.NODE_GUID, "abc");
+        assertEquals(configuration.getPropertyFromConfig(PropertyKeys.NODE_GUID),
+                "abc");
+
+        Configuration newConfiguration = new Configuration(TEST_RESOURCES_PATH + "config.properties");
+        assertEquals(newConfiguration.getPropertyFromConfig(PropertyKeys.NODE_GUID),
+                "abc");
     }
 
 }
