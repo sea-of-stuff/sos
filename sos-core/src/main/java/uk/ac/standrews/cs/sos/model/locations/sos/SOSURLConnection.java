@@ -43,51 +43,57 @@ public class SOSURLConnection extends URLConnection {
     }
 
     @Override
-    public void connect() throws IOException {
-        System.out.println("Connected!");
-    }
+    public void connect() throws IOException {}
 
+    /**
+     * Return the input stream given a sos location.
+     * There are two cases:
+     * 1 - the location is this one, thus we get the data from the internal storage
+     * 2 - the location is not this one:
+     *  a - if the location is known, we contact that node.
+     *  b - if the location is not known, we contact a coordinator first
+     *
+     * @return
+     * @throws IOException
+     */
     @Override
     public InputStream getInputStream() throws IOException {
 
         try {
-
             IGUID thisGUID = nodeManager.getLocalNode().getNodeGUID();
-            IGUID nodeGuid = GUIDFactory.recreateGUID(url.getHost());
-            IGUID entityId = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial / sign
+            IGUID nodeGUID = GUIDFactory.recreateGUID(url.getHost());
+            IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial / sign
 
-            if (thisGUID.equals(nodeGuid)) {
-
-                Directory dataDir = internalStorage.getDataDirectory();
-
-                File path = (File) dataDir.get(entityId.toString());
-                return path.getData().getInputStream();
+            if (thisGUID.equals(nodeGUID)) {
+                return getDataLocally(entityGUID);
             } else {
-                return null; // contactNode(resourceNode, entityId);
+                Node nodeToContact = nodeManager.getNode(nodeGUID);
+                if (nodeToContact != null) {
+                    return contactNode(nodeToContact, entityGUID);
+                } else {
+                    // TODO - contact coordinator, get info about node and then contact node
+                    return null;
+                }
             }
         } catch (GUIDGenerationException | DataException
                 | BindingAbsentException | DataStorageException e) {
             throw new IOException(e);
         }
-
-        /*
-         * lookup for node id in local map
-         * otherwise contact registry/coordinator
-         * talk to coordinator via http
-         */
     }
 
-    private InputStream contactNode(Node resourceNode, IGUID entityId) throws IOException {
-        /*
-         * TODO - get data from other nodes
-         * check NodeManager to see if node is known
-         *
-         */
-        Node nodeToContact = nodeManager.getNode(resourceNode.getNodeGUID()); // TODO - check if node exists!
-        InetSocketAddress inetSocketAddress = nodeToContact.getHostAddress();
+    private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException, BindingAbsentException, DataException, IOException {
+        Directory dataDir = internalStorage.getDataDirectory();
+
+        File path = (File) dataDir.get(entityGUID.toString());
+        return path.getData().getInputStream();
+    }
+
+    private InputStream contactNode(Node node, IGUID entityId) throws IOException {
+
+        InetSocketAddress inetSocketAddress = node.getHostAddress();
         String urlString = "http://" + inetSocketAddress.getHostName() +
                 ":" + inetSocketAddress.getPort() +
-                "/sos/find/manifest?guid=" + entityId.toString(); // TODO - this is hardcoded, plus this api end-point returns a manifest not data
+                "/storage/data?guid=" + entityId.toString(); // TODO - this is hardcoded
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
 

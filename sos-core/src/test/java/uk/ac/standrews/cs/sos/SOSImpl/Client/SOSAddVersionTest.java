@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,9 @@ public class SOSAddVersionTest extends ClientTest {
         contents.add(cat);
 
         Compound compound = client.addCompound(CompoundType.DATA, contents);
-        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
+
+        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
+        Version manifest = client.addVersion(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
@@ -47,7 +50,9 @@ public class SOSAddVersionTest extends ClientTest {
         contents.add(cat);
 
         Compound compound = client.addCompound(CompoundType.DATA, contents);
-        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
+
+        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
+        Version manifest = client.addVersion(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -77,7 +82,11 @@ public class SOSAddVersionTest extends ClientTest {
         metadata.add(GUIDFactory.recreateGUID("897"));
         metadata.add(GUIDFactory.recreateGUID("456"));
 
-        Version manifest = client.addVersion(compound.getContentGUID(), invariant, prevs, metadata);
+        VersionBuilder builder = new VersionBuilder(compound.getContentGUID())
+                .setInvariant(invariant)
+                .setPrevious(prevs)
+                .setMetadataCollection(metadata);
+        Version manifest = client.addVersion(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -92,7 +101,7 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<IGUID> retrievedMetadata = ((VersionManifest) retrievedManifest).getMetadata();
         assertTrue(retrievedMetadata.containsAll(metadata));
 
-        Collection<IGUID> retrievedPrevs = ((VersionManifest) retrievedManifest).getPreviousManifests();
+        Collection<IGUID> retrievedPrevs = ((VersionManifest) retrievedManifest).getPreviousVersions();
         assertTrue(retrievedPrevs.containsAll(prevs));
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -105,11 +114,12 @@ public class SOSAddVersionTest extends ClientTest {
         contents.add(cat);
 
         Compound compound = client.addCompound(CompoundType.DATA, contents);
-        Version manifest = client.addVersion(compound.getContentGUID(), null, null, null);
+
+        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
+        Version manifest = client.addVersion(builder);
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
 
         assertTrue(client.verifyManifest(localSOSNode.getIdentity(), retrievedManifest));
     }
-
 
 }

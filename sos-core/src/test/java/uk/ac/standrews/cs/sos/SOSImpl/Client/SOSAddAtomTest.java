@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -31,7 +32,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test
     public void testAddAtom() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -45,7 +47,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test
     public void testRetrieveAtomFromFile() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         // Flush the storage, so to force the manifest to be retrieved from file.
@@ -62,7 +65,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test
     public void testRetrieveAtomData() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -75,7 +79,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test
     public void testAtomDataVerify() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -85,7 +90,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test
     public void testAtomDataVerifyFails() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -99,7 +105,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURL() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -111,7 +118,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttps() throws Exception {
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -123,7 +131,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
         Location location = new URILocation("https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf");
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -135,7 +144,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsTextFile() throws Exception {
         Location location = new URILocation("http://www.umich.edu/~umfandsf/other/ebooks/alice30.txt");
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
@@ -147,7 +157,8 @@ public class SOSAddAtomTest extends ClientTest {
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomTwiceNoUpdate() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        Atom manifest = client.addAtom(location);
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = client.addAtom(builder);
 
         Directory dataDir = internalStorage.getDataDirectory();
         Directory manifestsDir = internalStorage.getManifestDirectory();
@@ -160,7 +171,8 @@ public class SOSAddAtomTest extends ClientTest {
         Thread.sleep(PAUSE_TIME_MS);
 
         Location newLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        Atom newManifest = client.addAtom(newLocation);
+        AtomBuilder secondBuilder = new AtomBuilder().setLocation(newLocation);
+        Atom newManifest = client.addAtom(secondBuilder);
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
@@ -177,7 +189,8 @@ public class SOSAddAtomTest extends ClientTest {
     public void testAddAtomFromStream() throws Exception {
         String testString = "first line and second line";
         InputStream stream = HelperTest.StringToInputStream(testString);
-        Atom manifest = client.addAtom(stream);
+        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+        Atom manifest = client.addAtom(builder);
         assertNotNull(manifest.getContentGUID());
         assertEquals(manifest.getLocations().size(), 1);
 

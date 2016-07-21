@@ -10,10 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
@@ -22,6 +19,8 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -60,25 +59,24 @@ public class SOSClient implements Client {
         return policyManager;
     }
 
+    // TODO - refactor in multiple methods
     @Override
-    public Atom addAtom(Location location) throws StorageException, ManifestPersistException {
+    public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
 
         Collection<LocationBundle> bundles = new ArrayList<>();
-        bundles.add(new ProvenanceLocationBundle(location));
 
-        IGUID guid = store(location, bundles);
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsManager.addManifest(manifest);
+        IGUID guid = null;
+        if (atomBuilder.isLocation()) {
+            Location location = atomBuilder.getLocation();
+            bundles.add(new ProvenanceLocationBundle(location));
+            guid = store(location, bundles);
+        } else if (atomBuilder.isInputStream()) {
+            InputStream inputStream = atomBuilder.getInputStream();
+            guid = store(inputStream, bundles);
+        } else {
+            throw new StorageException("AtomBuilder has not been set correctly");
+        }
 
-        return manifest;
-    }
-
-    @Override
-    public Atom addAtom(InputStream inputStream)
-            throws ManifestPersistException, StorageException {
-
-        Collection<LocationBundle> bundles = new ArrayList<>();
-        IGUID guid = store(inputStream, bundles);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsManager.addManifest(manifest);
 
@@ -96,11 +94,13 @@ public class SOSClient implements Client {
     }
 
     @Override
-    public Version addVersion(IGUID content,
-                              IGUID invariant,
-                              Collection<IGUID> prevs,
-                              Collection<IGUID> metadata)
+    public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
+
+        IGUID content = versionBuilder.getContent();
+        IGUID invariant = versionBuilder.getInvariant();
+        Collection<IGUID> prevs = versionBuilder.getPreviousCollection();
+        Collection<IGUID> metadata = versionBuilder.getMetadataCollection();
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
@@ -119,7 +119,7 @@ public class SOSClient implements Client {
     public InputStream getAtomContent(Atom atom) {
         InputStream dataStream = null;
         Collection<LocationBundle> locations = atom.getLocations();
-        for(LocationBundle location:locations) {
+        for (LocationBundle location : locations) {
 
             try {
                 dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());

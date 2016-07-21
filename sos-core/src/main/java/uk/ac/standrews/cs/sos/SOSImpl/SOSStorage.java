@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;

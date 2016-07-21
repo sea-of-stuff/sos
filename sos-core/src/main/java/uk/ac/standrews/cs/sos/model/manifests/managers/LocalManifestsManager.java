@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests;
+package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -24,11 +25,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Manage the manifests of the sea of stuff.
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestsManager {
+public class LocalManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
@@ -46,7 +45,7 @@ public class ManifestsManager {
      *
      * @param index used to record information for the manifests.
      */
-    public ManifestsManager(InternalStorage internalStorage, Index index) {
+    public LocalManifestsManager(InternalStorage internalStorage, Index index) {
         this.internalStorage = internalStorage;
         this.index = index;
     }
@@ -203,7 +202,7 @@ public class ManifestsManager {
                 FileHelper.deleteFile(manifestFile);
                 saveToFile(manifest);
             }
-            
+
             FileHelper.deleteFile(backupFile);
         } catch (DataStorageException e) {
             throw new ManifestManagerException("Manifests " + existingManifest.getContentGUID().toString()
@@ -290,5 +289,4 @@ public class ManifestsManager {
         File manifest = getManifestFile(guid);
         return manifest.exists();
     }
-
 }

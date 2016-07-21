@@ -13,11 +13,6 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
  * <br>
  * Manifests are publishable within the sea of stuff and allow discoverability
  * of assets, compounds and atoms.
- * <br>
- * Manifests are represented as a set of labels and values.
- * </p>
- * This interface defines the common schema to be used by the manifests that
- * live in the manifest space of the Sea of Stuff.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

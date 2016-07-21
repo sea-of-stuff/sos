@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Coordinator;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.util.Collection;

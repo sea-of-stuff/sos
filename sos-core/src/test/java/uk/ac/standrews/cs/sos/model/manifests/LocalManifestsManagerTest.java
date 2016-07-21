@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.manifests.managers.LocalManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -44,7 +45,7 @@ import static org.testng.Assert.assertFalse;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestsManagerTest {
+public class LocalManifestsManagerTest {
 
     private InternalStorage storage;
     private Index index;
@@ -66,7 +67,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void addAtomManifestTest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -89,7 +90,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void addCompoundManifestTest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
 
         Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -129,7 +130,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void addAssetManifestTest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
         Identity identity = new IdentityImpl();
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
@@ -156,7 +157,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void updateAtomManifestTest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -186,7 +187,7 @@ public class ManifestsManagerTest {
 
     @Test
     public void deletePrevAtomWhileNewIsAddedTest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -218,7 +219,7 @@ public class ManifestsManagerTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void addNullManifestTest() throws Exception {
-        ManifestsManager manifestsManager = new ManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);

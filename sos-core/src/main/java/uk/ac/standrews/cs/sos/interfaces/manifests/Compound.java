@@ -6,11 +6,23 @@ import uk.ac.standrews.cs.sos.model.manifests.Content;
 import java.util.Collection;
 
 /**
+ * A compound serves as an aggregator of atoms, compounds and versions.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Compound extends Manifest {
 
+    /**
+     * Get the contents of this compound.
+     *
+     * @return the contents of this compound
+     */
     Collection<Content> getContents();
 
+    /**
+     * Get the type of compound.
+     *
+     * @return the compound type
+     */
     CompoundType getType();
 }

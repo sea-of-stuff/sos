@@ -6,13 +6,14 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -32,30 +33,20 @@ import java.util.Collection;
  */
 public interface Client extends SeaOfStuff {
 
-    /**
-     * Adds an atom to the Sea of Stuff.
-     * The atom is cached locally and replicated according to the policy used by this instance.
-     *
-     * @param location of the data for the atom.
-     * @return the added atom.
-     * @throws StorageException
-     * @throws ManifestPersistException
-     *
-     * @see Manifest
-     */
-    Atom addAtom(Location location)
-            throws StorageException, ManifestPersistException;
+    ///////////////////////////
+    // PUT OPERATIONS
+    ///////////////////////////
 
     /**
-     * Adds a stream of data to the Sea of Stuff as an atom.
+     * Adds data to the Sea of Stuff as an atom.
      * The atom is cached locally and replicated according to the policy used by this instance.
      *
-     * @param inputStream for this atom
+     * @param atomBuilder for this atom
      * @return the added atom
      * @throws StorageException
      * @throws ManifestPersistException
      */
-    Atom addAtom(InputStream inputStream)
+    Atom addAtom(AtomBuilder atomBuilder)
             throws StorageException, ManifestPersistException;
 
     /**
@@ -67,25 +58,14 @@ public interface Client extends SeaOfStuff {
      * @throws ManifestPersistException
      *
      * @see Manifest
+     *
+     * TODO - use CompoundBuilder too!
      */
     Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException;
 
-    /**
-     * Adds a version of an asset to the Sea of Stuff.
-     *
-     * @param content of this version.
-     * @param invariant guid of this asset
-     * @param prevs version of this asset.
-     * @param metadata of this version.
-     * @return the added version.
-     * @throws ManifestNotMadeException
-     * @throws ManifestPersistException
-     *
-     */
-    Version addVersion(IGUID content, IGUID invariant,
-                       Collection<IGUID> prevs, Collection<IGUID> metadata)
-            throws ManifestNotMadeException, ManifestPersistException;
+    Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
+
 
     /**
      * Add a manifest to the sea of stuff.
@@ -97,6 +77,10 @@ public interface Client extends SeaOfStuff {
      * @throws ManifestPersistException
      */
     void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
+
+    ///////////////////////////
+    // GET OPERATIONS
+    ///////////////////////////
 
     /**
      * Get the data of an Atom.
@@ -116,6 +100,10 @@ public interface Client extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+
+    ///////////////////////////
+    // OTHER
+    ///////////////////////////
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by
@@ -137,6 +125,11 @@ public interface Client extends SeaOfStuff {
      * @throws ManifestVerificationException
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
+
+
+    ///////////////////////////
+    // SEARCH
+    ///////////////////////////
 
     /**
      *

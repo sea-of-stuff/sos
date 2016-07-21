@@ -27,7 +27,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
         jsonGenerator.writeStringField(ManifestConstants.KEY_INVARIANT, versionManifest.getInvariantGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_VERSION, versionManifest.getVersionGUID().toString());
 
-        if (versionManifest.getPreviousManifests() != null) {
+        if (versionManifest.getPreviousVersions() != null) {
             jsonGenerator.writeFieldName(ManifestConstants.KEY_PREVIOUS_GUID);
             jsonGenerator.writeStartArray();
             serializePrevious(versionManifest, jsonGenerator);
@@ -50,7 +50,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
     }
 
     private void serializePrevious(VersionManifest versionManifest, JsonGenerator jsonGenerator) throws IOException {
-        Collection<IGUID> previous = versionManifest.getPreviousManifests();
+        Collection<IGUID> previous = versionManifest.getPreviousVersions();
         for(IGUID prev:previous) {
             jsonGenerator.writeString(prev.toString());
         }

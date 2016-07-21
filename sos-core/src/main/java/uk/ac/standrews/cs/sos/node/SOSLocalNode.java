@@ -14,14 +14,16 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.interfaces.sos.Coordinator;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestsManagerImpl;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
@@ -42,6 +44,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Config config;
     private InternalStorage internalStorage;
     private Index index;
+    private PolicyManager policyManager;
 
     private NodeDatabase nodeDatabase;
 
@@ -64,6 +67,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         config = builder.config;
         internalStorage = builder.internalStorage;
         index = builder.index;
+        policyManager = builder.policyManager; //FIXME - could have different policies for client, storage, coordinator!
 
         try {
             nodeDatabase = new SQLDatabase(new DatabaseType(Config.db_type),
@@ -111,7 +115,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**************************************************************************/
 
     private void initManifestManager() {
-        manifestsManager = new ManifestsManager(internalStorage, index);
+        manifestsManager = new ManifestsManagerImpl(internalStorage, index, nodeManager);
     }
 
     private void initNodeManager() throws SOSException {
@@ -167,6 +171,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         private static Config config;
         private static InternalStorage internalStorage;
         private static Index index;
+        private static PolicyManager policyManager;
 
         public Builder config(Config config) {
             this.config = config;
@@ -180,6 +185,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         public Builder index(Index index) {
             this.index = index;
+            return this;
+        }
+
+        public Builder policies(PolicyManager policyManager) {
+            this.policyManager = policyManager;
             return this;
         }
 

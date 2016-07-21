@@ -12,9 +12,30 @@ import java.security.Key;
  */
 public interface Identity {
 
+    /**
+     * Sign the given text and return a byte array representing the signature
+     *
+     * @param text
+     * @return
+     * @throws EncryptionException
+     */
     byte[] sign(String text) throws EncryptionException ;
+
+    /**
+     * Verify that the given text and signature match
+     *
+     * @param text
+     * @param signature
+     * @return
+     * @throws DecryptionException
+     */
     boolean verify(String text, byte[] signature) throws DecryptionException ;
 
+    /**
+     * Get the public key for this identity
+     *
+     * @return public key of this identity
+     */
     Key getPublicKey();
 
 }

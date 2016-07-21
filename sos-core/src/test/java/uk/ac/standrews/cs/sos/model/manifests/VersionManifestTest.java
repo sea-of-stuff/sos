@@ -181,6 +181,6 @@ public class VersionManifestTest extends SetUpTest {
         assertEquals(assetManifest.getContentGUID(), guid);
         assertEquals(assetManifest.getInvariantGUID(), invariantGUID);
         assertEquals(assetManifest.getMetadata(), metadata);
-        assertEquals(assetManifest.getPreviousManifests(), previous);
+        assertEquals(assetManifest.getPreviousVersions(), previous);
     }
 }

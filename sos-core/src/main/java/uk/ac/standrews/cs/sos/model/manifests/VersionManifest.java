@@ -134,7 +134,7 @@ public class VersionManifest extends SignedManifest implements Version {
      *         Null if the asset does not have a previous version.
      */
     @Override
-    public Collection<IGUID> getPreviousManifests() {
+    public Collection<IGUID> getPreviousVersions() {
         return prevs;
     }
 
