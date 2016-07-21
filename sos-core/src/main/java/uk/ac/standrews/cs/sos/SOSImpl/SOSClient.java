@@ -60,6 +60,7 @@ public class SOSClient implements Client {
     }
 
     // TODO - refactor in multiple methods
+    // pass builder to factory?
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
 
@@ -93,6 +94,8 @@ public class SOSClient implements Client {
         return manifest;
     }
 
+    // TODO - version builder might return different stuff!
+    // pass builder to factory
     @Override
     public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {

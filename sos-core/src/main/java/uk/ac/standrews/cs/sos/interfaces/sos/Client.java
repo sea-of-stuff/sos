@@ -33,10 +33,6 @@ import java.util.Collection;
  */
 public interface Client extends SeaOfStuff {
 
-    ///////////////////////////
-    // PUT OPERATIONS
-    ///////////////////////////
-
     /**
      * Adds data to the Sea of Stuff as an atom.
      * The atom is cached locally and replicated according to the policy used by this instance.
@@ -64,6 +60,15 @@ public interface Client extends SeaOfStuff {
     Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException;
 
+    /**
+     * Adds a version of an asset to the Sea of Stuff.
+     *
+     * @param versionBuilder for this version
+     * @return Version for the added asset.
+     * @throws ManifestNotMadeException
+     * @throws ManifestPersistException
+     *
+     */
     Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
 
@@ -77,10 +82,6 @@ public interface Client extends SeaOfStuff {
      * @throws ManifestPersistException
      */
     void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
-
-    ///////////////////////////
-    // GET OPERATIONS
-    ///////////////////////////
 
     /**
      * Get the data of an Atom.
@@ -100,10 +101,6 @@ public interface Client extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
-
-    ///////////////////////////
-    // OTHER
-    ///////////////////////////
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by
@@ -125,11 +122,6 @@ public interface Client extends SeaOfStuff {
      * @throws ManifestVerificationException
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
-
-
-    ///////////////////////////
-    // SEARCH
-    ///////////////////////////
 
     /**
      *

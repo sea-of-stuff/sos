@@ -115,7 +115,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**************************************************************************/
 
     private void initManifestManager() {
-        manifestsManager = new ManifestsManagerImpl(internalStorage, index, nodeManager);
+        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, index, nodeManager);
     }
 
     private void initNodeManager() throws SOSException {

@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.manifests.managers.LocalManifestsManager;
 import uk.ac.standrews.cs.sos.model.manifests.managers.RemoteManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -18,10 +19,14 @@ import java.util.Collection;
  */
 public class ManifestsManagerImpl implements ManifestsManager {
 
+    private PolicyManager policyManager;
+
     private LocalManifestsManager local;
     private RemoteManifestsManager remote;
 
-    public ManifestsManagerImpl(InternalStorage internalStorage, Index index, NodeManager nodeManager) {
+    public ManifestsManagerImpl(PolicyManager policyManager, InternalStorage internalStorage, Index index, NodeManager nodeManager) {
+        this.policyManager = policyManager;
+
         local = new LocalManifestsManager(internalStorage, index);
         remote = new RemoteManifestsManager(nodeManager);
     }
