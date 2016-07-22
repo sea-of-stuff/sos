@@ -3,11 +3,10 @@ package uk.ac.standrews.cs.sos.model.storage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.Utilities;
-import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -29,10 +28,9 @@ public class InternalStorageTest {
 
     @BeforeMethod
     public void setUp() throws SOSException, IOException, StorageException {
-        Config config = Utilities.createdDummyConfig();
 
         internalStorage =
-                new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true));
+                new InternalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
     }
 
     @AfterMethod

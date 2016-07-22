@@ -4,13 +4,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.sos.configuration.Config;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
@@ -29,8 +30,14 @@ public class CommonIndexTest {
 
     @BeforeMethod
     public void setUp(Method method) throws IndexException, StorageException, DataStorageException {
-        Config config = new Config();
-        storage = new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true));
+        SOSConfiguration configurationMock = mock(SOSConfiguration.class);
+        when(configurationMock.getStorageType()).thenReturn(StorageType.LOCAL);
+        when(configurationMock.getStorageLocation()).thenReturn("~/sos/");
+
+        storage = new InternalStorage(StorageFactory
+                .createStorage(configurationMock.getStorageType(),
+                        configurationMock.getStorageLocation(), true));
+
         index = LuceneIndex.getInstance(storage);
     }
 

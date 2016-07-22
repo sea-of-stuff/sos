@@ -1,21 +1,33 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.assertNull;
@@ -23,15 +35,46 @@ import static org.testng.AssertJUnit.assertNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomStorageTest extends SetUpTest {
+public class AtomStorageTest {
 
     AtomStorage atomStorage;
-    
+
+    private InternalStorage internalStorage;
+
     @BeforeMethod
     public void setUp() throws Exception {
-        super.setUp();
-        
-        atomStorage = new AtomStorage(localSOSNode.getNodeGUID(), internalStorage);
+
+        try {
+            String location = System.getProperty("user.home") + "/sos";
+            internalStorage =
+                    new InternalStorage(StorageFactory
+                            .createStorage(StorageType.LOCAL, location, true));
+        } catch (StorageException | DataStorageException e) {
+            throw new SOSException(e);
+        }
+
+        atomStorage = new AtomStorage(GUIDFactory.generateRandomGUID(), internalStorage);
+
+        registerSOSProtocol();
+    }
+
+    private void registerSOSProtocol() throws SOSProtocolException {
+        NodeManager nodeManagerMock = mock(NodeManager.class);
+
+        try {
+            if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
+                URLStreamHandlerFactory urlStreamHandlerFactory =
+                        new SOSURLStreamHandlerFactory(internalStorage, nodeManagerMock);
+                URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
+            }
+        } catch (Error e) {
+            throw new SOSProtocolException(e);
+        }
+    }
+
+    @AfterMethod
+    public void tearDown() throws DataStorageException {
+        internalStorage.destroy();
     }
     
     @Test

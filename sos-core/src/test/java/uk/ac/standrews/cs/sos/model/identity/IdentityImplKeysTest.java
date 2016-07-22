@@ -3,8 +3,6 @@ package uk.ac.standrews.cs.sos.model.identity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.configuration.Config;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -12,7 +10,6 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -20,7 +17,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class IdentityImplKeysTest extends SetUpTest {
+public class IdentityImplKeysTest {
 
     private final static String BYTES_3K = "c1 c3 c0 86 da 82 92 ea 9a 59 94 a1 fe a5 30 3a \n"+
             "bb 10 13 ec 8c 0e 6d f6 be bb c3 34 dd f3 de 3b \n"+
@@ -87,9 +84,8 @@ public class IdentityImplKeysTest extends SetUpTest {
             "1a 48 7f ab 37 87 56 e9 c5 c0 1d c7 d6 72 ff bb \n"+
             "03 31 41 d0 4f 6a fa 26 07 01 88 6e 23 52 77 60 \n";
 
-    @Override
     @BeforeMethod
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         // Delete any left over keys from past
         deleteKeys();
     }
@@ -140,8 +136,10 @@ public class IdentityImplKeysTest extends SetUpTest {
     }
 
     private void deleteKeys() {
-        File privKey = new File(Config.identityPaths[0].getPathname());
-        File pubkey = new File(Config.identityPaths[1].getPathname());
+        String keysFolderPath = System.getProperty("user.home") + "/sos/keys";
+
+        File privKey = new File(keysFolderPath + "/" + IdentityImpl.PRIVATE_KEY_FILE);
+        File pubkey = new File(keysFolderPath + "/"  + IdentityImpl.PUBLIC_KEY_FILE);
 
         privKey.delete();
         pubkey.delete();

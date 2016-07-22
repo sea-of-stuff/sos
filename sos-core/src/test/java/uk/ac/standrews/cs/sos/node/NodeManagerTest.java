@@ -6,19 +6,20 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.configuration.Config;
-import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
-import uk.ac.standrews.cs.sos.node.database.DatabaseType;
+import uk.ac.standrews.cs.sos.node.database.DatabaseTypes;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -28,15 +29,17 @@ public class NodeManagerTest {
 
     NodeManager nodeManager;
 
+    SOSConfiguration configurationMock = mock(SOSConfiguration.class);
+
     @BeforeMethod
     public void setUp() throws Exception {
-        Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabaseInfo();
+        when(configurationMock.getDBType()).thenReturn(DatabaseTypes.SQLITE_DB);
+        when(configurationMock.getDBPath()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
 
         NodeDatabase nodeDatabase;
         try {
-            nodeDatabase = new SQLDatabase(new DatabaseType(Config.db_type),
-                    Config.DB_DUMP_FILE.getPathname());
+            nodeDatabase = new SQLDatabase(configurationMock.getDBType(),
+                    configurationMock.getDBPath());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
@@ -47,7 +50,7 @@ public class NodeManagerTest {
 
     @AfterClass
     public void classTearDown() throws IOException {
-        HelperTest.DeletePath(Config.DB_DIRECTORY);
+        HelperTest.DeletePath(configurationMock.getDBPath());
     }
 
     @Test(priority=0)

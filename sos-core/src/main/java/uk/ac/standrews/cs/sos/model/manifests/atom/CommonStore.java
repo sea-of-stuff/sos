@@ -66,7 +66,7 @@ public abstract class CommonStore implements Store {
     protected abstract LocationBundle getBundle(Location location);
 
     protected File getAtomLocation(IGUID guid) throws DataStorageException {
-        return storage.createFile(storage.getDataDirectory(), guid.toString()); // FIXME - do not use config
+        return storage.createFile(storage.getDataDirectory(), guid.toString()); // FIXME - do not use configuration
     }
 
     protected void storeData(IGUID guid, Data data) throws DataStorageException {

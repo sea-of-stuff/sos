@@ -1,16 +1,15 @@
 package uk.ac.standrews.cs.sos.node;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSCoordinator;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSStorage;
-import uk.ac.standrews.cs.sos.configuration.Config;
-import uk.ac.standrews.cs.sos.exceptions.NodeManagerException;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
@@ -41,7 +40,7 @@ import java.net.URLStreamHandlerFactory;
  */
 public class SOSLocalNode extends SOSNode implements LocalNode {
 
-    private Config config;
+    private SOSConfiguration configuration;
     private InternalStorage internalStorage;
     private Index index;
     private PolicyManager policyManager;
@@ -57,21 +56,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Coordinator coordinator;
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
-        super(GUIDFactory.recreateGUID(builder.config.n_id),
-                builder.config.n_hostname,
-                builder.config.n_port,
-                builder.config.n_is_client,
-                builder.config.n_is_storage,
-                builder.config.n_is_coordinator);
+        super(builder.configuration);
 
-        config = builder.config;
+        configuration = builder.configuration;
         internalStorage = builder.internalStorage;
         index = builder.index;
         policyManager = builder.policyManager; //FIXME - could have different policies for client, storage, coordinator!
 
         try {
-            nodeDatabase = new SQLDatabase(new DatabaseType(Config.db_type),
-                                Config.DB_DUMP_FILE.getPathname());
+            DatabaseType databaseType = configuration.getDBType();
+            String databasePath = configuration.getDBPath();
+            nodeDatabase = new SQLDatabase(databaseType, databasePath);
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
@@ -168,13 +163,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * TODO - defaults
      */
     public static class Builder {
-        private static Config config;
+        private static SOSConfiguration configuration;
         private static InternalStorage internalStorage;
         private static Index index;
         private static PolicyManager policyManager;
 
-        public Builder config(Config config) {
-            this.config = config;
+        public Builder configuration(SOSConfiguration configuration) {
+            this.configuration = configuration;
             return this;
         }
 

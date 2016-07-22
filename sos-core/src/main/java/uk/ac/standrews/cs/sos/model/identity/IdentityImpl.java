@@ -1,15 +1,18 @@
 package uk.ac.standrews.cs.sos.model.identity;
 
-import uk.ac.standrews.cs.sos.configuration.Config;
+
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.*;
+import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -21,23 +24,39 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class IdentityImpl implements Identity {
 
+    public static final String PRIVATE_KEY_FILE = "private.pem";
+    public static final String PUBLIC_KEY_FILE = "public.pem";
+
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    private File[] pathsToKeys;
+    private File privateKeyFile;
+    private File publicKeyFile;
 
-    public IdentityImpl() throws KeyGenerationException, KeyLoadedException {
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+    /**
+     *
+     * @param keysFolderName this is the path to the folder containing the keys
+     * @throws KeyGenerationException
+     * @throws KeyLoadedException
+     */
+    public IdentityImpl(String keysFolderName) throws KeyGenerationException, KeyLoadedException {
 
-        this.pathsToKeys = Config.identityPaths;
-
-        java.io.File privateKeyFile = new java.io.File(pathsToKeys[0].getPathname());
-        java.io.File publicKeyFile = new java.io.File(pathsToKeys[1].getPathname());
+        privateKeyFile = new File(keysFolderName + "/" + PRIVATE_KEY_FILE);
+        publicKeyFile = new File(keysFolderName + "/" + PUBLIC_KEY_FILE);
         if (!privateKeyFile.exists() || !publicKeyFile.exists()) {
             generateKeys();
         } else {
             loadKeys();
         }
+    }
+
+    /**
+     * Construct the Identity keys in the directory ~/sos/keys/
+     * @throws KeyGenerationException
+     * @throws KeyLoadedException
+     */
+    public IdentityImpl() throws KeyGenerationException, KeyLoadedException {
+        this(System.getProperty("user.home") + "/sos/keys");
     }
 
     @Override
@@ -54,8 +73,11 @@ public class IdentityImpl implements Identity {
     public byte[] sign(String text) throws EncryptionException {
         byte[] retval;
         try {
-            Signature signature = Signature.getInstance(IdentityConfiguration.SIGNATURE_ALGORITHM, IdentityConfiguration.PROVIDER);
-            signature.initSign(privateKey, new SecureRandom());
+            Signature signature = Signature
+                    .getInstance(CryptConstants.SIGNATURE_ALGORITHM,
+                            CryptConstants.PROVIDER);
+
+            signature.initSign(privateKey);
             signature.update(text.getBytes());
             retval = signature.sign();
         } catch (NoSuchAlgorithmException |
@@ -75,7 +97,9 @@ public class IdentityImpl implements Identity {
     public boolean verify(String text, byte[] signatureToVerify) throws DecryptionException {
         boolean isValid;
         try {
-            Signature signature = Signature.getInstance(IdentityConfiguration.SIGNATURE_ALGORITHM, IdentityConfiguration.PROVIDER);
+            Signature signature = Signature
+                    .getInstance(CryptConstants.SIGNATURE_ALGORITHM,
+                            CryptConstants.PROVIDER);
             signature.initVerify(publicKey);
             signature.update(text.getBytes());
             isValid = signature.verify(signatureToVerify);
@@ -89,20 +113,65 @@ public class IdentityImpl implements Identity {
         return isValid;
     }
 
+    /**
+     * Generate key which contains a pair of private and public key.
+     * Store the set of keys in appropriate files based on the specified configuration.
+     */
+    private void generateKeys() throws KeyGenerationException {
+        final KeyPair key = generateKeyPair();
+
+        File privateKFile = createKeyFile(privateKeyFile);
+        File publicKFile = createKeyFile(publicKeyFile);
+
+        saveKeyToFile(privateKFile,
+                new PKCS8EncodedKeySpec(
+                key.getPrivate().getEncoded()));
+
+        saveKeyToFile(publicKFile,
+                new X509EncodedKeySpec(
+                key.getPublic().getEncoded()));
+    }
+
+    private KeyPair generateKeyPair() throws KeyGenerationException {
+        KeyPair pair;
+        try {
+            KeyPairGenerator keyGen = KeyPairGenerator
+                    .getInstance(CryptConstants.KEYS_ALGORITHM,
+                            CryptConstants.PROVIDER);
+            SecureRandom random = SecureRandom
+                    .getInstance(CryptConstants.SECURE_RANDOM_ALGORITHM,
+                            CryptConstants.SECURE_RANDOM_PROVIDER);
+
+            keyGen.initialize(CryptConstants.KEY_SIZE, random);
+            pair = keyGen.generateKeyPair();
+
+            privateKey = pair.getPrivate();
+            publicKey = pair.getPublic();
+        } catch (NoSuchAlgorithmException e) {
+            throw new KeyGenerationException("Could not generate key pair - algorithm exception", e);
+        } catch (NoSuchProviderException e) {
+            throw new KeyGenerationException("Could not generate key pair - provided exception", e);
+        }
+
+        return pair;
+    }
+
     private void loadKeys() throws KeyLoadedException {
         loadPrivateKey();
         loadPublicKey();
     }
 
     private void loadPrivateKey() throws KeyLoadedException {
-        try {
-            DataInputStream in=new DataInputStream(new FileInputStream(pathsToKeys[0].getPathname()));
-            byte[] data = new byte[in.available()];
-            in.readFully(data);
+        try (FileInputStream keyfis =
+                     new FileInputStream(privateKeyFile.getAbsoluteFile())){
+
+            byte[] data = new byte[keyfis.available()];
+            keyfis.read(data);
 
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.KEYS_ALGORITHM);
+            KeyFactory kf = KeyFactory.getInstance(CryptConstants.KEYS_ALGORITHM);
             privateKey = kf.generatePrivate(keySpec);
+
         } catch (IOException e) {
             throw new KeyLoadedException("Private Key - IO Exception", e);
         } catch (NoSuchAlgorithmException e) {
@@ -113,60 +182,31 @@ public class IdentityImpl implements Identity {
     }
 
     private void loadPublicKey() throws KeyLoadedException {
-        try {
-            DataInputStream in=new DataInputStream(new FileInputStream(pathsToKeys[1].getPathname()));
-            byte[] data = new byte[in.available()];
-            in.readFully(data);
+        try (FileInputStream keyfis =
+                     new FileInputStream(publicKeyFile.getAbsoluteFile())){
 
-            // http://stackoverflow.com/questions/19640735/load-public-key-data-from-file
+            byte[] data = new byte[keyfis.available()];
+            keyfis.read(data);
+
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(IdentityConfiguration.KEYS_ALGORITHM);
+            KeyFactory kf = KeyFactory
+                    .getInstance(CryptConstants.KEYS_ALGORITHM,
+                            CryptConstants.PROVIDER);
             publicKey = kf.generatePublic(keySpec);
+
         } catch (IOException e) {
-            throw new KeyLoadedException("Private Key - IO Exception", e);
+            throw new KeyLoadedException("Public Key - IO Exception", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new KeyLoadedException("Private Key - Algorithm Exception", e);
+            throw new KeyLoadedException("Public Key - Algorithm Exception", e);
         } catch (InvalidKeySpecException e) {
-            throw new KeyLoadedException("Private Key - Key spec Exception", e);
-        }
-    }
-
-    /**
-     * Generate key which contains a pair of private and public key.
-     * Store the set of keys in appropriate files based on the specified configuration.
-     */
-    private void generateKeys() throws KeyGenerationException {
-        final KeyPair key = generateKeyPair();
-
-        java.io.File privateKeyFile = createKeyFile(pathsToKeys[0].getPathname());
-        java.io.File publicKeyFile = createKeyFile(pathsToKeys[1].getPathname());
-
-        // Saving the keys
-        saveKeyToFile(publicKeyFile, key.getPublic());
-        saveKeyToFile(privateKeyFile, key.getPrivate());
-    }
-
-    private KeyPair generateKeyPair() throws KeyGenerationException {
-        KeyPair pair;
-        try {
-            final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(IdentityConfiguration.KEYS_ALGORITHM, IdentityConfiguration.PROVIDER);
-            keyGen.initialize(IdentityConfiguration.KEY_SIZE, new SecureRandom());
-            pair = keyGen.generateKeyPair();
-
-            publicKey = pair.getPublic();
-            privateKey = pair.getPrivate();
-        } catch (NoSuchAlgorithmException e) {
-            throw new KeyGenerationException("Could not generate key pair - algorithm exception", e);
+            throw new KeyLoadedException("Public Key - Key spec Exception", e);
         } catch (NoSuchProviderException e) {
-            throw new KeyGenerationException("Could not generate key pair - provided exception", e);
+            throw new KeyLoadedException("Public Key - No such provider Exception", e);
         }
-
-        return pair;
     }
 
     // Create files to storeLocation public and private key
-    private java.io.File createKeyFile(String path) throws KeyGenerationException {
-        java.io.File file = new java.io.File(path);
+    private File createKeyFile(File file) throws KeyGenerationException {
 
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
@@ -180,12 +220,17 @@ public class IdentityImpl implements Identity {
         return file;
     }
 
-    private static void saveKeyToFile(java.io.File file, Key key) {
-        try (DataOutputStream publicKeyOS =
-                     new DataOutputStream(new FileOutputStream(file))) {
-            publicKeyOS.write(key.getEncoded());
+    private static void saveKeyToFile(File file, EncodedKeySpec key) {
+
+        byte[] byteKey = key.getEncoded();
+
+        try (FileOutputStream fileOutputStream =
+                     new FileOutputStream(file)) {
+
+            fileOutputStream.write(byteKey);
+
         } catch (IOException e) {
-            System.err.print(e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -2,18 +2,25 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.StorageType;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +32,28 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifestTest extends SetUpTest {
+public class AtomManifestTest {
+
+    private InternalStorage internalStorage;
+
+    @BeforeMethod
+    public void setUp() throws Exception {
+
+        try {
+            String location = System.getProperty("user.home") + "/sos";
+            internalStorage =
+                    new InternalStorage(StorageFactory
+                            .createStorage(StorageType.LOCAL, location, true));
+        } catch (StorageException | DataStorageException e) {
+            throw new SOSException(e);
+        }
+
+    }
+
+    @AfterMethod
+    public void tearDown() throws DataStorageException {
+        internalStorage.destroy();
+    }
 
     @Test
     public void testNoLocations() throws Exception {

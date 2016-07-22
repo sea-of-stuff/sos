@@ -3,8 +3,12 @@ package uk.ac.standrews.cs.sos.node;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 
@@ -51,8 +55,25 @@ public class SOSNode implements Node {
         this.DB_is_coordinator = isCoordinator;
     }
 
-    public SOSNode(IGUID guid) {
-        this.nodeGUID = guid;
+    public SOSNode(SOSConfiguration configuration) throws NodeException {
+        try {
+            this.nodeGUID = configuration.getNodeGUID();
+
+            String hostname = configuration.getNodeHostname();
+            int port = configuration.getNodePort();
+            this.hostAddress = new InetSocketAddress(hostname, port);
+
+            // TODO: Have other variables, not the DB ones?
+            this.DB_nodeid = nodeGUID.toString();
+            this.DB_hostname = hostname;
+            this.DB_port = port;
+            this.DB_is_client = configuration.nodeIsClient();
+            this.DB_is_storage = configuration.nodeIsStorage();
+            this.DB_is_coordinator = configuration.nodeIsCoordinator();
+        } catch (GUIDGenerationException | IOException e) {
+            throw new NodeException(e);
+        }
+
     }
 
     @Override

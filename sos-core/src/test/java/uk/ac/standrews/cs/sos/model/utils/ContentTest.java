@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.impl.KeyImpl;
-import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.mock;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContentTest extends SetUpTest {
+public class ContentTest {
 
     private static final String EXPECTED_JSON_CONTENT_GUID = "{\"GUID\":\""+
             Hashes.TEST_STRING_HASHED+"\"}";
