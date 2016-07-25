@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.sos.SOSImpl;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
@@ -104,7 +105,19 @@ public class SOSStorage implements Storage {
     @Override
     public InputStream getAtomContent(IGUID guid) {
         // TODO
-        throw new NotImplementedException();
+
+        try {
+            Manifest manifest = manifestsManager.findManifest(guid);
+
+            if (manifest instanceof Atom) {
+                Atom atom = (Atom) manifest;
+                return getAtomContent(atom);
+            }
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {

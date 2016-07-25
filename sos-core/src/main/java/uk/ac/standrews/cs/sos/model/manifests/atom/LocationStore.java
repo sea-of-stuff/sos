@@ -60,7 +60,8 @@ public abstract class LocationStore extends CommonStore {
         try (InputStream dataStream =
                      LocationUtility.getInputStreamFromLocation(location)) {
 
-            storeData(guid, new InputStreamData((dataStream)));
+            InputStreamData data = new InputStreamData(dataStream);
+            storeData(guid, data);
         } catch (SourceLocationException | DataStorageException | IOException e) {
             throw new StorageException();
         }

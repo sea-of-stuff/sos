@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@Path("/")
 public class RESTGeneral {
 
     @GET

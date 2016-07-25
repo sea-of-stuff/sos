@@ -46,7 +46,8 @@ public class SOSConfigurationTest {
 
     @Test
     public void testFail() throws Exception {
-        SOSConfiguration configuration = new SOSConfiguration(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        SOSConfiguration configuration = new SOSConfiguration(file);
         assertNotNull(configuration.getNodeGUID());
     }
 
@@ -55,7 +56,7 @@ public class SOSConfigurationTest {
         File file = new File(TEST_RESOURCES_PATH + "config.properties");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        SOSConfiguration configuration = new SOSConfiguration(TEST_RESOURCES_PATH + "config.properties");
+        SOSConfiguration configuration = new SOSConfiguration(file);
         assertTrue(configuration.getNodeHostname().isEmpty());
     }
 
@@ -64,7 +65,7 @@ public class SOSConfigurationTest {
         File file = new File(TEST_RESOURCES_PATH + "config.properties");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        SOSConfiguration configuration = new SOSConfiguration(TEST_RESOURCES_PATH + "config.properties");
+        SOSConfiguration configuration = new SOSConfiguration(file);
         assertEquals(configuration.getNodeGUID().toString(),
                 "6b67f67f31908dd0e574699f163eda2cc117f7f4");
     }
@@ -74,7 +75,7 @@ public class SOSConfigurationTest {
         File file = new File(TEST_RESOURCES_PATH + "config.properties");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        SOSConfiguration configuration = new SOSConfiguration(TEST_RESOURCES_PATH + "config.properties");
+        SOSConfiguration configuration = new SOSConfiguration(file);
         assertTrue(configuration.nodeIsClient());
     }
 
@@ -83,7 +84,7 @@ public class SOSConfigurationTest {
         File file = new File(TEST_RESOURCES_PATH + "config.properties");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        SOSConfiguration configuration = new SOSConfiguration(TEST_RESOURCES_PATH + "config.properties");
+        SOSConfiguration configuration = new SOSConfiguration(file);
         assertEquals(configuration.getNodePort(), 8080);
     }
 

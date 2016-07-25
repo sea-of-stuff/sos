@@ -18,20 +18,17 @@ import java.io.IOException;
  */
 public class SOSConfiguration {
 
-    String filename;
     Configuration configuration;
 
     /**
      * Create a configuration using the specified file (must be accessibly locally)
-     * @param filename
+     * @param file
      */
-    public SOSConfiguration(String filename) throws SOSConfigurationException {
-        this.filename = filename;
-
+    public SOSConfiguration(File file) throws SOSConfigurationException {
         Configurations configs = new Configurations();
 
         try {
-            configuration = configs.properties(new File(filename));
+            configuration = configs.properties(file);
         } catch (ConfigurationException e) {
             throw new SOSConfigurationException(e);
         }

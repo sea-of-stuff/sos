@@ -56,7 +56,7 @@ public class SetUpTest {
         File file = new File(TEST_RESOURCES_PATH + "config.properties");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        configuration = new SOSConfiguration(TEST_RESOURCES_PATH + "config.properties");
+        configuration = new SOSConfiguration(file);
 
         try {
 

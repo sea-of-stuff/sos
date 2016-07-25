@@ -13,6 +13,8 @@ import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
+import java.io.File;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -38,7 +40,9 @@ public class ServerState {
 
 
     private static void startSOS() throws SOSException, GUIDGenerationException {
-        SOSConfiguration configuration = new SOSConfiguration("config.properties");
+
+        File configFile = new File("config.properties");
+        SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         InternalStorage internalStorage;
         Index index;

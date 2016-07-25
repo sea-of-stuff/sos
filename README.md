@@ -4,13 +4,15 @@
 
 Describe functionalities and main architecture
 
-### Settings
+### Configuration File
 
-From DB
+Paths starting with the tilde `~` are parsed as local paths. TODO - give example
 
-Explicitly
+## sos-rest
 
-
+The sos-rest project defines the REST API. This is server-agnostic.
+We provide two server implementation on top of the jersey REST API.
+See the sos-rest-jetty module and the sos-rest-grizzly module.
 
 ## sos-storage
 
