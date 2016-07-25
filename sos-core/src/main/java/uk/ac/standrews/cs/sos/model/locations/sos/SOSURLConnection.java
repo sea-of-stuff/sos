@@ -65,14 +65,14 @@ public class SOSURLConnection extends URLConnection {
             IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial / sign
 
             if (thisGUID.equals(nodeGUID)) {
-                return getDataLocally(entityGUID);
+                return getDataLocally(entityGUID); // CASE 1
             } else {
                 Node nodeToContact = nodeManager.getNode(nodeGUID);
                 if (nodeToContact != null) {
-                    return contactNode(nodeToContact, entityGUID);
+                    return contactNode(nodeToContact, entityGUID); // CASE 2.A
                 } else {
                     // TODO - contact coordinator, get info about node and then contact node
-                    return null;
+                    return null; // CASE 2.B
                 }
             }
         } catch (GUIDGenerationException | DataException
@@ -91,9 +91,13 @@ public class SOSURLConnection extends URLConnection {
     private InputStream contactNode(Node node, IGUID entityId) throws IOException {
 
         InetSocketAddress inetSocketAddress = node.getHostAddress();
-        String urlString = "http://" + inetSocketAddress.getHostName() +
-                ":" + inetSocketAddress.getPort() +
-                "/storage/data?guid=" + entityId.toString(); // TODO - this is hardcoded
+
+        String urlString = "http://" +
+                            inetSocketAddress.getHostName() +
+                            ":" + inetSocketAddress.getPort() +
+                            "/storage/data?guid=" +
+                            entityId.toString();
+
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
 

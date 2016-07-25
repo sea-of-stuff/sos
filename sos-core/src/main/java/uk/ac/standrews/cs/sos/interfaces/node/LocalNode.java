@@ -17,4 +17,6 @@ public interface LocalNode extends Node {
     Coordinator getCoordinator();
 
     Identity getIdentity();
+
+    void kill();
 }

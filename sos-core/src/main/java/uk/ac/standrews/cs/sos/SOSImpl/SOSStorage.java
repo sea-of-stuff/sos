@@ -1,22 +1,21 @@
 package uk.ac.standrews.cs.sos.SOSImpl;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -75,29 +74,6 @@ public class SOSStorage implements Storage {
         return manifest;
     }
 
-    @Override
-    public Compound addCompound(CompoundType type, Collection<Content> contents)
-            throws ManifestNotMadeException, ManifestPersistException {
-
-        CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
-    }
-
-    @Override
-    public Version addVersion(IGUID content,
-                              IGUID invariant,
-                              Collection<IGUID> prevs,
-                              Collection<IGUID> metadata)
-            throws ManifestNotMadeException, ManifestPersistException {
-
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
-        manifestsManager.addManifest(manifest);
-
-        return manifest;
-    }
-
     /**
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.
@@ -123,6 +99,12 @@ public class SOSStorage implements Storage {
         }
 
         return dataStream;
+    }
+
+    @Override
+    public InputStream getAtomContent(IGUID guid) {
+        // TODO
+        throw new NotImplementedException();
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {

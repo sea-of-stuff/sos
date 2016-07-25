@@ -105,6 +105,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         return identity;
     }
 
+    @Override
+    public void kill() {
+        // TODO - destroy resources
+    }
+
     /**************************************************************************/
     /* PRIVATE METHODS */
     /**************************************************************************/

@@ -14,10 +14,10 @@
     <modules>
         <module>sos-core</module>
         <module>sos-rest</module>
-
         <module>sos-rest-jetty</module>
         <module>sos-rest-grizzly</module>
         <module>web-ui</module>
+        <module>sos-configuration</module>
 
         <!-- <module>sos-cli</module> -->
     </modules>

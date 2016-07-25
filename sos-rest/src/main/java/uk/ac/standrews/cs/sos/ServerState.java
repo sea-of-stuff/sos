@@ -1,13 +1,16 @@
 package uk.ac.standrews.cs.sos;
 
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.configuration.Config;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 /**
@@ -17,43 +20,51 @@ public class ServerState {
 
     public static SOSLocalNode sos;
 
-    private static InternalStorage internalStorage;
-    private static Index index;
-
     public static void init() {
         System.out.println("Starting SOS");
-        ServerState.startSOS();
+
+        try {
+            ServerState.startSOS();
+        } catch (SOSException | GUIDGenerationException e) {
+            e.printStackTrace();
+        }
+
         System.out.println("SOS started");
     }
 
     public static void kill() {
-        // TODO
+        sos.kill();
     }
 
-    private static void startSOS() {
+
+    private static void startSOS() throws SOSException, GUIDGenerationException {
+        SOSConfiguration configuration = new SOSConfiguration("config.properties");
+
+        InternalStorage internalStorage;
+        Index index;
         try {
-            Config config = hardcodedConfiguration();
+
+            StorageType storageType = configuration.getStorageType();
+            String root = configuration.getStorageLocation();
 
             internalStorage =
-                    new InternalStorage(StorageFactory.createStorage(config.s_type, config.s_location, true)); // FIXME - storage have very different behaviours if mutable or not
-
-            index = LuceneIndex.getInstance(internalStorage);
-
-            SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
-            ServerState.sos = builder.config(config)
-                    .index(index)
-                    .internalStorage(internalStorage)
-                    .build();
-
-        } catch (StorageException | SOSException | GUIDGenerationException e) {
-            e.printStackTrace();
+                    new InternalStorage(StorageFactory
+                            .createStorage(storageType, root, true)); // FIXME - storage have very different behaviours if mutable or not
+        } catch (StorageException | DataStorageException e) {
+            throw new SOSException(e);
         }
+
+        try {
+            index = LuceneIndex.getInstance(internalStorage);
+        } catch (IndexException e) {
+            throw  new SOSException(e);
+        }
+
+        SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+        sos = builder.configuration(configuration)
+                .index(index)
+                .internalStorage(internalStorage)
+                .build();
     }
 
-    private static Config hardcodedConfiguration() throws StorageException {
-        Config.db_type = Config.DB_TYPE_SQLITE;
-        Config.initDatabaseInfo();
-
-        return new Config();
-    }
 }

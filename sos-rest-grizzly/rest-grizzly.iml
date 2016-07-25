@@ -44,7 +44,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: javax.servlet:javax.servlet-api:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.servlet:3.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.23" level="project" />
-    <orderEntry type="module" module-name="sos-rest" />
+    <orderEntry type="module" module-name="rest" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.bundles:jaxrs-ri:2.23" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk:1.11.8" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-support:1.11.8" level="project" />
@@ -121,9 +121,11 @@
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.8.1" level="project" />
     <orderEntry type="module" module-name="sos-core" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-configuration2:2.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="module" module-name="storage-sta" />
     <orderEntry type="library" name="Maven: com.dropbox.core:dropbox-core-sdk:2.0.6" level="project" />
-    <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.54" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:5.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers-common:5.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queryparser:5.2.1" level="project" />

@@ -15,7 +15,7 @@ public class Hello {
     @Path("/{param}")
     public Response getMsg(@PathParam("param") String msg) {
         if (msg == null || msg.isEmpty()) {
-            msg = "What?";
+            msg = "What? Please give me a message.";
         }
         String output = "Jersey say : " + msg;
         return Response.status(200).entity(output).build();
