@@ -5,6 +5,9 @@ package uk.ac.standrews.cs.sos.rest;
  */
 public class HTTPState {
 
-    public static final int SUCCESS = 200;
+    public static final int OK = 200;
     public static final int CREATED = 201;
+
+    public static final int BAD_REQUEST = 400;
+    public static final int NOT_FOUND = 404;
 }

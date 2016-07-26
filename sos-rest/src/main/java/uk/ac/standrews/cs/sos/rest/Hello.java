@@ -6,9 +6,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
- * This is a test end-point
+ * This is a test end-point.
  */
-@Path("/hello")
+@Path("/ping")
 public class Hello {
 
     @GET
@@ -17,7 +17,8 @@ public class Hello {
         if (msg == null || msg.isEmpty()) {
             msg = "What? Please give me a message.";
         }
-        String output = "Jersey say : " + msg;
+
+        String output = "Pong : " + msg;
         return Response.status(200).entity(output).build();
     }
 

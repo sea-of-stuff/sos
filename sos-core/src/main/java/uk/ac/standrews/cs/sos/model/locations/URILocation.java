@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
@@ -29,7 +30,12 @@ public class URILocation implements Location {
     }
 
     public InputStream getSource() throws IOException {
-        return uri.toURL().openStream();
+        HttpURLConnection httpcon = (HttpURLConnection) uri.toURL().openConnection();
+        httpcon.addRequestProperty("User-Agent", "sos-core/0.1");
+
+        return httpcon.getInputStream();
+
+        // return uri.toURL().openStream();
     }
 
     @Override

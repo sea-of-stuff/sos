@@ -40,6 +40,8 @@ public abstract class LocationStore extends CommonStore {
                 return null;
             }
 
+            // TODO - do not store if data is already in disk
+
             storeData(origin, guid);
             Location location = getLocation(guid);
             locationBundle = getBundle(location);

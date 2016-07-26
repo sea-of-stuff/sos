@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.jetty;
 
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.ServerState;
 
 import javax.ws.rs.core.UriBuilder;
@@ -21,16 +21,25 @@ public class JettyApp {
     private static URI baseUri;
 
     public static Server startServer() throws Exception {
-        final ResourceConfig rc = new ResourceConfig()
-                .packages("uk.ac.standrews.cs.sos.rest")
-                .register(LoggingFilter.class);
+        final ResourceConfig rc = new RESTConfig().build();
 
         ServerState.init();
-
         baseUri = uriBuilder.port(serverPort).build();
         return JettyHttpContainerFactory.createServer(baseUri, rc);
     }
 
+    /**
+     * Start a SOS instance and expose it via a Jetty Server.
+     *
+     * The following parameters are allowed:
+     * - port (default port is 9998)
+     * - configuration file
+     * Example:
+     *
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         if (args.length > 0) {
             serverPort = Integer.parseInt(args[0]);
