@@ -27,33 +27,24 @@ public class RESTStorage {
     @Path("/data/guid/{guid}")
     public Response getData(@PathParam("guid") String guid) {
         if (!ServerState.sos.isStorage()) {
-            return Response.status(HTTPState.BAD_REQUEST)
-                    .entity("Sorry, but I am not a storage node")
-                    .build();
+            return HTTPResponses.BAD_REQUEST("I am not a storage node");
         }
 
         if (guid == null || guid.isEmpty()) {
-            return Response.status(HTTPState.BAD_REQUEST)
-                    .entity("Wrong input, sorry")
-                    .build();
+            return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
         IGUID atomGUID;
         try {
             atomGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return Response.status(HTTPState.BAD_REQUEST)
-                    .entity("Wrong input, sorry")
-                    .build();
+            return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
         Storage storage = ServerState.sos.getStorage();
         InputStream inputStream = storage.getAtomContent(atomGUID);
 
-        return Response.status(HTTPState.OK)
-                .entity(inputStream)
-                .type(MediaType.MULTIPART_FORM_DATA) // Note - this is a general media-type. will not render on browser.
-                .build();
+        return HTTPResponses.OK(inputStream);
     }
 
     @POST
@@ -62,9 +53,7 @@ public class RESTStorage {
     @Produces(MediaType.APPLICATION_JSON)
     public Response postDataByLocation(LocationModel locationModel) {
         if (!ServerState.sos.isStorage()) {
-            return Response.status(HTTPState.BAD_REQUEST)
-                    .entity("Sorry, but I am not a storage node")
-                    .build();
+            return HTTPResponses.BAD_REQUEST("I am not a storage node");
         }
 
         Storage storage = ServerState.sos.getStorage();
@@ -73,19 +62,15 @@ public class RESTStorage {
         try {
             location = locationModel.getLocation();
         } catch (IOException e) {
-            return Response.status(HTTPState.BAD_REQUEST)
-                    .entity("Wrong input, sorry")
-                    .build();
+            return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
         try {
             Atom atom = storage.addAtom(location);
 
-            return Response.status(HTTPState.CREATED)
-                    .entity(atom.toString())
-                    .build();
+            return HTTPResponses.CREATED(atom.toString());
         } catch (StorageException | ManifestPersistException e) {
-            return Response.status(500).entity("Something went wrong on our side. Sorry").build();
+            return HTTPResponses.INTERNAL_SERVER();
         }
 
     }
