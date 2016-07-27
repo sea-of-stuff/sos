@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest;
+package uk.ac.standrews.cs.sos.HTTP;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

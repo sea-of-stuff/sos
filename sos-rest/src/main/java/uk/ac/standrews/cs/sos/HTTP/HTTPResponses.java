@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest;
+package uk.ac.standrews.cs.sos.HTTP;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,6 +17,7 @@ public class HTTPResponses {
 
     public static Response BAD_REQUEST(String message) {
         return Response.status(HTTPState.BAD_REQUEST)
+                .type(MediaType.TEXT_PLAIN)
                 .entity(message)
                 .build();
     }

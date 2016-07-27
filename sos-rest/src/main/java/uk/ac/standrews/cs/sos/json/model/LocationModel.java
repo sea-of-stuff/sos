@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model;
+package uk.ac.standrews.cs.sos.json.model;
 
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.LocationFactory;

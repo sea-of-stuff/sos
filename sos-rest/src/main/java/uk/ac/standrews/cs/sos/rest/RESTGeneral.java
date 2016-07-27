@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.sos.HTTP.HTTPState;
 import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
@@ -23,9 +24,22 @@ public class RESTGeneral {
         boolean isStorage = sos.isStorage();
         boolean isCoordinator = sos.isCoordinator();
 
-        // TODO - return JSON
-        return Response.status(200)
-                .entity(isClient + ", " + isStorage + ", " + isCoordinator)
+        String rolesJSON = makeJSONForRoles(isClient, isStorage, isCoordinator);
+        return Response.status(HTTPState.OK)
+                .entity(rolesJSON)
                 .build();
+    }
+
+    private String makeJSONForRoles(boolean isClient, boolean isStorage, boolean isCoordinator) {
+
+        String json = "{ ";
+
+        json += "\"client\" : " + isClient + ", ";
+        json += "\"storage\" : " + isStorage + ", ";
+        json += "\"coordinator\" : " + isCoordinator;
+
+        json += " }";
+
+        return json;
     }
 }
