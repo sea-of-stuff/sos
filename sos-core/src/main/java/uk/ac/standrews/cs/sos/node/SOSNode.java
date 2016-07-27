@@ -37,7 +37,9 @@ public class SOSNode implements Node {
     @DatabaseField(canBeNull = false)
     protected boolean DB_is_storage;
     @DatabaseField(canBeNull = false)
-    protected boolean DB_is_coordinator;
+    protected boolean DB_is_discovery_data;
+    @DatabaseField(canBeNull = false)
+    protected boolean DB_is_discovery_node;
 
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
@@ -52,7 +54,7 @@ public class SOSNode implements Node {
         this.DB_port = port;
         this.DB_is_client = isClient;
         this.DB_is_storage = isStorage;
-        this.DB_is_coordinator = isCoordinator;
+        this.DB_is_discovery_data = isCoordinator;
     }
 
     public SOSNode(SOSConfiguration configuration) throws NodeException {
@@ -69,7 +71,7 @@ public class SOSNode implements Node {
             this.DB_port = port;
             this.DB_is_client = configuration.nodeIsClient();
             this.DB_is_storage = configuration.nodeIsStorage();
-            this.DB_is_coordinator = configuration.nodeIsCoordinator();
+            this.DB_is_discovery_data = configuration.nodeIsCoordinator();
         } catch (GUIDGenerationException | IOException e) {
             throw new NodeException(e);
         }
@@ -97,8 +99,13 @@ public class SOSNode implements Node {
     }
 
     @Override
-    public boolean isCoordinator() {
-        return DB_is_coordinator;
+    public boolean isDiscoveryData() {
+        return DB_is_discovery_data;
+    }
+
+    @Override
+    public boolean isDiscoveryNode() {
+        return DB_is_discovery_node;
     }
 
     @Override

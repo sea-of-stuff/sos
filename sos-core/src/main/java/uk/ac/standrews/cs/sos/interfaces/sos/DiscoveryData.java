@@ -6,14 +6,13 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.util.Collection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Coordinator extends SeaOfStuff {
+public interface DiscoveryData extends SeaOfStuff {
 
     /**
      * Add a manifest to the sea of stuff.
@@ -84,12 +83,4 @@ public interface Coordinator extends SeaOfStuff {
      */
     Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
 
-    /**
-     * Get a known node to this Sea Of Stuff.
-     * Client and IStorage will not support this call.
-     *
-     * @param guid
-     * @return
-     */
-    Node getNode(IGUID guid);
 }

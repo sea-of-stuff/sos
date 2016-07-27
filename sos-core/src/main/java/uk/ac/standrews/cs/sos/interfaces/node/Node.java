@@ -31,6 +31,8 @@ public interface Node {
 
     boolean isStorage();
 
-    boolean isCoordinator();
+    boolean isDiscoveryData();
+
+    boolean isDiscoveryNode();
 
 }

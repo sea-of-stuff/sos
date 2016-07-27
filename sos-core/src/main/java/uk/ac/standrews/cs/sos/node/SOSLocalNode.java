@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSCoordinator;
+import uk.ac.standrews.cs.sos.SOSImpl.SOSDiscoveryData;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -18,7 +18,8 @@ import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.interfaces.sos.Coordinator;
+import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryData;
+import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryNode;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
@@ -34,7 +35,7 @@ import java.net.URLStreamHandlerFactory;
  * This class represents the SOSNode of this machine.
  * Using a BuilderPattern to construct this node.
  *
- * A SOSLocalNode may expose multiple SOS interfaces to the caller: Client, Storage and Coordinator.
+ * A SOSLocalNode may expose multiple SOS interfaces to the caller: Client, Storage and Discovery (node, data).
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -53,7 +54,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private Client client;
     private Storage storage;
-    private Coordinator coordinator;
+    private DiscoveryData discoveryData;
+    private DiscoveryNode discoveryNode;
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
         super(builder.configuration);
@@ -96,8 +98,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public Coordinator getCoordinator() {
-        return coordinator;
+    public DiscoveryData getDiscoveryData() {
+        return discoveryData;
+    }
+
+    @Override
+    public DiscoveryNode getDiscoveryNode() {
+        return discoveryNode;
     }
 
     @Override
@@ -136,11 +143,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initSOSInstances() {
-        // TODO - create instances based on configs
+        if (isClient()) {
+            client = new SOSClient(this, internalStorage, manifestsManager, identity);
+        }
 
-        client = new SOSClient(this, internalStorage, manifestsManager, identity);
-        storage = new SOSStorage(this, internalStorage, manifestsManager, identity);
-        coordinator = new SOSCoordinator(manifestsManager, identity, nodeManager);
+        if (isStorage()) {
+            storage = new SOSStorage(this, internalStorage, manifestsManager, identity);
+        }
+
+        if (isDiscoveryData()) {
+            discoveryData = new SOSDiscoveryData(manifestsManager, identity, nodeManager);
+        }
     }
 
     private void registerSOSProtocol() throws SOSProtocolException {
@@ -161,11 +174,16 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // - make this node available to the rest of the sea of stuff
     }
 
+    @Override
+    public boolean isDiscoveryNode() {
+        return false;
+    }
+
     /**
      * This is the builder for the SOSLocalNode.
      *
      *
-     * TODO - defaults
+     * TODO - defaults?
      */
     public static class Builder {
         private static SOSConfiguration configuration;
