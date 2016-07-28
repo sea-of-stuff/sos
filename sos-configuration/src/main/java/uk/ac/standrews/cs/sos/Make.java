@@ -12,27 +12,32 @@ public class Make {
 
     private static final String CURRENT_DIRECTORY = Paths.get(".").toAbsolutePath().normalize().toString();
 
+    // TODO - add comments for each property
     private static final String CONFIG_TEMPLATE = "# Fill the following properties \n" +
             "# You can use the tilde ~ for the home directory\n" +
-            "db.path=~/sos/db/dump.db\n" +
+            "node.guid=\n" +
             "node.port=8080\n" +
-            "storage.access.key=\n" +
+            "node.hostname=\n" +
+            "node.is.client=\n" +
+            "node.is.storage=\n" +
+            "node.is.coordinator=\n" +
+            "\n" +
+            "db.path=~/sos/db/dump.db\n" +
             "db.password=\n" +
             "db.username=\n" +
-            "node.hostname=\n" +
-            "node.guid=6b67f67f31908dd0e574699f163eda2cc117f7f4\n" +
-            "keys.folder=~/sos/keys/\n" +
+            "db.hostname=\n" +
+            "db.type=sqlite\n" +
+            "\n" +
+            "storage.access.key=\n" +
             "storage.secret.key=\n" +
             "storage.type=local\n" +
-            "storage.location=/sos/\n" +
+            "storage.location=~/sos/\n" +
             "storage.password=\n" +
-            "db.hostname=\n" +
-            "node.is.client=true\n" +
-            "db.type=sqlite\n" +
             "storage.username=\n" +
-            "node.is.storage=false\n" +
             "storage.hostname=\n" +
-            "node.is.coordinator=false\n";
+            "\n" +
+            "keys.folder=~/sos/keys/\n" +
+            "\n";
 
     public static void main(String[] args) throws IOException {
         if (args.length >= 1 && args.length <=2 && args[0].equals("default")) {
@@ -41,11 +46,6 @@ public class Make {
         }
 
         System.out.println("Wrong parameters");
-
-
-
-
-
     }
 
     private static void makeDefault(String[] args) throws IOException {
