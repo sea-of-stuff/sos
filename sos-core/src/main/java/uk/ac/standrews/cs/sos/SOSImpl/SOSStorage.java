@@ -104,12 +104,10 @@ public class SOSStorage implements Storage {
 
     @Override
     public InputStream getAtomContent(IGUID guid) {
-        // TODO
-
         try {
             Manifest manifest = manifestsManager.findManifest(guid);
 
-            if (manifest instanceof Atom) {
+            if (manifest instanceof Atom) { // TODO - this comparison could be improved, with the manifest returning the type
                 Atom atom = (Atom) manifest;
                 return getAtomContent(atom);
             }
@@ -122,11 +120,12 @@ public class SOSStorage implements Storage {
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
-
+        // TODO - implement
     }
 
     @Override
     public Manifest getManifest(IGUID guid) {
+        // TODO - implement
         return null;
     }
 

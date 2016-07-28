@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.sos;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -26,8 +27,6 @@ public interface Storage extends SeaOfStuff {
      * @return the added atom.
      * @throws StorageException
      * @throws ManifestPersistException
-     *
-     * @see Manifest
      */
     Atom addAtom(Location location)
             throws StorageException, ManifestPersistException;
@@ -53,6 +52,7 @@ public interface Storage extends SeaOfStuff {
     InputStream getAtomContent(Atom atom);
 
     /**
+     * Get the data for the atom with the specified GUID
      *
      * @param guid
      * @return
@@ -61,10 +61,18 @@ public interface Storage extends SeaOfStuff {
 
     /**
      * Adds the manifest to the SOS
+     *
      * @param manifest
      * @throws ManifestPersistException
      */
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
-    Manifest getManifest(IGUID guid);
+    /**
+     * Get a manifest from this node
+     *
+     * @param guid
+     * @return
+     * @throws ManifestNotFoundException
+     */
+    Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 }
