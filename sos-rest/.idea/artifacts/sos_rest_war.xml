@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="sos_rest:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="sos_rest-1.0-SNAPSHOT.war">
-      <element id="artifact" artifact-name="sos_rest:war exploded" />
-    </root>
-  </artifact>
-</component>

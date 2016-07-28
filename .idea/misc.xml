@@ -42,14 +42,19 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/rest-app" />
     <file type="web" url="file://$PROJECT_DIR$/sos-rest" />
+    <file type="web" url="file://$PROJECT_DIR$/sos-rest-grizzly" />
+    <file type="web" url="file://$PROJECT_DIR$/sos-rest-old" />
     <file type="web" url="file://$PROJECT_DIR$/web-ui" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../storage/pom.xml" />
+        <option value="$PROJECT_DIR$/../storage-sta/pom.xml" />
+        <option value="$PROJECT_DIR$/../webdav-server-standalone/pom.xml" />
+        <option value="$PROJECT_DIR$/../guid-sta-git/pom.xml" />
       </list>
     </option>
   </component>
@@ -65,8 +70,5 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.8 (1)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
-  </component>
-  <component name="SvnConfiguration">
-    <configuration>$USER_HOME$/.subversion</configuration>
   </component>
 </project>

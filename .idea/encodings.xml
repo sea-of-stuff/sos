@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/../guid-sta" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../guid-sta-git" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rest-app" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-cli" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sos-configuration" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-rest" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sos-rest-grizzly" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sos-rest-jetty" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/web-ui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../storage-sta" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../webdav-server-standalone" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

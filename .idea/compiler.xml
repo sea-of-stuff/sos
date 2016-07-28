@@ -22,20 +22,45 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="data-storage" />
+        <module name="guid-sta" />
         <module name="rest" />
         <module name="rest-app" />
+        <module name="rest-grizzly" />
+        <module name="sos-configuration" />
         <module name="sos-core" />
+        <module name="sos-data-storage" />
+        <module name="sos-rest" />
+        <module name="sos-rest-grizzly" />
+        <module name="sos-rest-jetty" />
+        <module name="sos-rest-standalone" />
+        <module name="sos-storage" />
+        <module name="storage" />
+        <module name="storage-sta" />
         <module name="web-ui" />
+        <module name="webdav-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cli" target="1.7" />
+      <module name="data-storage" target="1.8" />
+      <module name="guid-sta" target="1.8" />
       <module name="rest" target="1.8" />
       <module name="rest-app" target="1.8" />
+      <module name="rest-grizzly" target="1.8" />
       <module name="sos" target="1.8" />
+      <module name="sos-configuration" target="1.8" />
       <module name="sos-core" target="1.8" />
+      <module name="sos-data-storage" target="1.5" />
       <module name="sos-rest" target="1.8" />
+      <module name="sos-rest-grizzly" target="1.8" />
+      <module name="sos-rest-jetty" target="1.8" />
+      <module name="sos-rest-standalone" target="1.8" />
+      <module name="sos-storage" target="1.8" />
+      <module name="storage" target="1.8" />
+      <module name="storage-sta" target="1.8" />
       <module name="web-ui" target="1.8" />
+      <module name="webdav-server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

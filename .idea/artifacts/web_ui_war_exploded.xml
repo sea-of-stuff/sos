@@ -10,8 +10,11 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.4" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.4" />
-          <element id="library" level="project" name="Maven: uk.ac.standrews.cs:guid-sta:1.0-SNAPSHOT" />
+          <element id="archive" name="guid-sta-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="guid-sta" />
+          </element>
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.5" />
         </element>
       </element>
       <element id="directory" name="META-INF">
