@@ -4,6 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
@@ -47,16 +48,14 @@ public class SetUpTest {
             "storage.username=\n" +
             "node.is.storage=false\n" +
             "storage.hostname=\n" +
-            "node.is.coordinator=false\n";
+            "node.is.discovery.data=false\n" +
+            "node.is.discovery.node=false\n";
 
     protected SOSConfiguration configuration;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
-        Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
-
-        configuration = new SOSConfiguration(file);
+        createConfiguration();
 
         try {
 
@@ -89,5 +88,12 @@ public class SetUpTest {
         index.killInstance();
 
         internalStorage.destroy();
+    }
+
+    protected void createConfiguration() throws SOSConfigurationException, IOException {
+        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
+
+        configuration = new SOSConfiguration(file);
     }
 }

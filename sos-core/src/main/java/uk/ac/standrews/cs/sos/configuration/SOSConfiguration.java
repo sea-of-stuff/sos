@@ -62,8 +62,12 @@ public class SOSConfiguration {
         return configuration.getBoolean(PropertyKeys.NODE_IS_STORAGE);
     }
 
-    public boolean nodeIsCoordinator() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_COORDINATOR);
+    public boolean nodeIsDiscoveryData() {
+        return configuration.getBoolean(PropertyKeys.NODE_IS_DISCOVERY_DATA);
+    }
+
+    public boolean nodeIsDiscoveryNode() {
+        return configuration.getBoolean(PropertyKeys.NODE_IS_DISCOVERY_NODE);
     }
 
     public DatabaseType getDBType() {
@@ -117,7 +121,8 @@ public class SOSConfiguration {
         public static final String NODE_PORT = "node.port";
         public static final String NODE_IS_CLIENT = "node.is.client";
         public static final String NODE_IS_STORAGE = "node.is.storage";
-        public static final String NODE_IS_COORDINATOR = "node.is.coordinator";
+        public static final String NODE_IS_DISCOVERY_DATA = "node.is.discovery.data";
+        public static final String NODE_IS_DISCOVERY_NODE = "node.is.discovery.node";
 
 
         public static final String DB_TYPE = "db.type";

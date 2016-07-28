@@ -55,6 +55,8 @@ public class SOSNode implements Node {
         this.DB_is_client = isClient;
         this.DB_is_storage = isStorage;
         this.DB_is_discovery_data = isCoordinator;
+
+        // TODO - discovery_node
     }
 
     public SOSNode(SOSConfiguration configuration) throws NodeException {
@@ -71,7 +73,8 @@ public class SOSNode implements Node {
             this.DB_port = port;
             this.DB_is_client = configuration.nodeIsClient();
             this.DB_is_storage = configuration.nodeIsStorage();
-            this.DB_is_discovery_data = configuration.nodeIsCoordinator();
+            this.DB_is_discovery_data = configuration.nodeIsDiscoveryData();
+            this.DB_is_discovery_node = configuration.nodeIsDiscoveryNode();
         } catch (GUIDGenerationException | IOException e) {
             throw new NodeException(e);
         }

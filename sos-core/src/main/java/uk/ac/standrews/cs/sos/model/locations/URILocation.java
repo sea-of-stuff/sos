@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.locations;
 
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -30,12 +31,37 @@ public class URILocation implements Location {
     }
 
     public InputStream getSource() throws IOException {
+        String scheme = uri.getScheme();
+
+        switch(scheme) {
+            case "file":
+                return getFileSource();
+            case "http":
+                return getHTTPSource();
+            case "https":
+                return getHTTPSSource();
+            default:
+                throw new IOException("Scheme " + scheme + " not supported");
+        }
+
+    }
+
+    private InputStream getHTTPSource() throws IOException {
         HttpURLConnection httpcon = (HttpURLConnection) uri.toURL().openConnection();
         httpcon.addRequestProperty("User-Agent", "sos-core/0.1");
 
         return httpcon.getInputStream();
+    }
 
-        // return uri.toURL().openStream();
+    private InputStream getHTTPSSource() throws IOException {
+        HttpsURLConnection httpcon = (HttpsURLConnection) uri.toURL().openConnection();
+        httpcon.addRequestProperty("User-Agent", "sos-core/0.1");
+
+        return httpcon.getInputStream();
+    }
+
+    private InputStream getFileSource() throws IOException {
+        return uri.toURL().openStream();
     }
 
     @Override

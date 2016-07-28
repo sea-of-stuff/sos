@@ -13,6 +13,10 @@ public class SOSDiscoveryNode implements DiscoveryNode {
 
     private NodeManager nodeManager;
 
+    public SOSDiscoveryNode(NodeManager nodeManager) {
+        this.nodeManager = nodeManager;
+    }
+
     @Override
     public Node getNode(IGUID guid) {
         return nodeManager.getNode(guid);

@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.node;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSDiscoveryData;
+import uk.ac.standrews.cs.sos.SOSImpl.SOSDiscoveryNode;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -153,6 +154,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         if (isDiscoveryData()) {
             discoveryData = new SOSDiscoveryData(manifestsManager, identity, nodeManager);
+        }
+
+        if (isDiscoveryNode()) {
+            discoveryNode = new SOSDiscoveryNode(nodeManager);
         }
     }
 

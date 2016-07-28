@@ -36,7 +36,8 @@ public class SOSConfigurationTest {
             "storage.username=\n" +
             "node.is.storage=\n" +
             "storage.hostname=\n" +
-            "node.is.coordinator=\n";
+            "node.is.discovery.data=\n" +
+            "node.is.discovery.node=\n";
 
     @BeforeMethod
     public void setUp() {
