@@ -66,7 +66,7 @@ public class SOSConfiguration {
         return configuration.getBoolean(PropertyKeys.NODE_IS_DISCOVERY_DATA);
     }
 
-    public boolean nodeIsDiscoveryNode() {
+    public boolean nodeIsDNS() {
         return configuration.getBoolean(PropertyKeys.NODE_IS_DISCOVERY_NODE);
     }
 
@@ -122,7 +122,7 @@ public class SOSConfiguration {
         public static final String NODE_IS_CLIENT = "node.is.client";
         public static final String NODE_IS_STORAGE = "node.is.storage";
         public static final String NODE_IS_DISCOVERY_DATA = "node.is.discovery.data";
-        public static final String NODE_IS_DISCOVERY_NODE = "node.is.discovery.node";
+        public static final String NODE_IS_DISCOVERY_NODE = "node.is.dns";
 
 
         public static final String DB_TYPE = "db.type";

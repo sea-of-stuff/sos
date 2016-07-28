@@ -38,7 +38,7 @@ public class StorageTest extends SetUpTest {
             "node.is.storage=true\n" +
             "storage.hostname=\n" +
             "node.is.discovery.data=false\n" +
-            "node.is.discovery.node=false\n";
+            "node.is.dns=false\n";
 
     @Override
     @BeforeMethod

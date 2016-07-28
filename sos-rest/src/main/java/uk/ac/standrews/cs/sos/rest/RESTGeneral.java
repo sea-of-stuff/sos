@@ -22,7 +22,7 @@ public class RESTGeneral {
 
         boolean isClient = sos.isClient();
         boolean isStorage = sos.isStorage();
-        boolean isCoordinator = sos.isCoordinator();
+        boolean isCoordinator = sos.isDiscoveryData();
 
         String rolesJSON = makeJSONForRoles(isClient, isStorage, isCoordinator);
         return Response.status(HTTPState.OK)

@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.Collection;
 
 /**
- * The Client is one of the three node roles within the Sea of Stuff.
+ * The Client is one of the node roles within the Sea of Stuff.
  * <br>
  * The Client supports the following operations:
  * - pushing data/manifests to the SOS

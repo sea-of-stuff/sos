@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface DiscoveryNode extends SeaOfStuff {
+public interface DNS extends SeaOfStuff {
 
     /**
      * Get a known node to this Sea Of Stuff.

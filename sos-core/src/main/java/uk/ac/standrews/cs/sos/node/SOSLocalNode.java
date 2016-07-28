@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
+import uk.ac.standrews.cs.sos.SOSImpl.SOSDNS;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSDiscoveryData;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSDiscoveryNode;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -19,8 +19,8 @@ import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.DNS;
 import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryData;
-import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryNode;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
@@ -56,7 +56,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Client client;
     private Storage storage;
     private DiscoveryData discoveryData;
-    private DiscoveryNode discoveryNode;
+    private DNS DNS;
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
         super(builder.configuration);
@@ -104,8 +104,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public DiscoveryNode getDiscoveryNode() {
-        return discoveryNode;
+    public DNS getDNS() {
+        return DNS;
     }
 
     @Override
@@ -156,8 +156,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             discoveryData = new SOSDiscoveryData(manifestsManager, identity, nodeManager);
         }
 
-        if (isDiscoveryNode()) {
-            discoveryNode = new SOSDiscoveryNode(nodeManager);
+        if (isDNS()) {
+            DNS = new SOSDNS(nodeManager);
         }
     }
 
@@ -177,11 +177,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // - start background processes
         // - listen to incoming requests from other nodes / crawlers?
         // - make this node available to the rest of the sea of stuff
-    }
-
-    @Override
-    public boolean isDiscoveryNode() {
-        return false;
     }
 
     /**

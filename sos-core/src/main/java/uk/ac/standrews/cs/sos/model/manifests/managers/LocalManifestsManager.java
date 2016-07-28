@@ -68,7 +68,7 @@ public class LocalManifestsManager {
     }
 
     /**
-     * Find a manifest in the sea of stuff given a GUID.
+     * Find a manifest in the SOS given a GUID.
      *
      * @param guid of the manifest to be found
      * @return Manifest
@@ -163,19 +163,9 @@ public class LocalManifestsManager {
             boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
 
             if (isAtomManifest && manifestExists) {
-
-                IGUID guid = manifest.getContentGUID();
-                Manifest existingManifest = getManifestFromFile(guid);
-                mergeAtomManifestAndSave(existingManifest, manifest);
-            } else if (manifestExists) { // TODO - move this code below to separate method
-
-                File manifestFile = getManifestFile(manifestFileGUID);
-                File backupFile = backupManifest(manifest);
-                FileHelper.deleteFile(manifestFile);
-
-                saveToFile(manifest);
-
-                FileHelper.deleteFile(backupFile);
+                saveExistingAtomManifest(manifest);
+            } else if (manifestExists) {
+                saveExistingManifest(manifestFileGUID, manifest);
             } else {
                 saveToFile(manifest);
             }
@@ -188,6 +178,22 @@ public class LocalManifestsManager {
             throw new ManifestManagerException(e);
         }
 
+    }
+
+    private void saveExistingAtomManifest(Manifest manifest) throws ManifestNotFoundException, ManifestManagerException {
+        IGUID guid = manifest.getContentGUID();
+        Manifest existingManifest = getManifestFromFile(guid);
+        mergeAtomManifestAndSave(existingManifest, manifest);
+    }
+
+    private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws DataStorageException, ManifestManagerException {
+        File manifestFile = getManifestFile(manifestFileGUID);
+        File backupFile = backupManifest(manifest);
+        FileHelper.deleteFile(manifestFile);
+
+        saveToFile(manifest);
+
+        FileHelper.deleteFile(backupFile);
     }
 
     private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestManagerException {

@@ -10,6 +10,10 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import java.io.InputStream;
 
 /**
+ * The Storage roles defines an entry point in the SOS to store data.
+ *
+ * Data stored via a storage node is available to other nodes in the SOS.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Storage extends SeaOfStuff {
@@ -55,4 +59,12 @@ public interface Storage extends SeaOfStuff {
      */
     InputStream getAtomContent(IGUID guid);
 
+    /**
+     * Adds the manifest to the SOS
+     * @param manifest
+     * @throws ManifestPersistException
+     */
+    void addManifest(Manifest manifest) throws ManifestPersistException;
+
+    Manifest getManifest(IGUID guid);
 }

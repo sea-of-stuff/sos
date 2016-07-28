@@ -22,6 +22,8 @@ such as the file system, AWS S3, a network drive, Dropbox, etc.
 
 Check the README in the storage-sta for more information about it.
 
+This module is available at the following link: LINK
+
 ## TODO
 
 This is a list of the main things to do (in no particular order):

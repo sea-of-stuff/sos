@@ -120,6 +120,16 @@ public class SOSStorage implements Storage {
         return null;
     }
 
+    @Override
+    public void addManifest(Manifest manifest) throws ManifestPersistException {
+
+    }
+
+    @Override
+    public Manifest getManifest(IGUID guid) {
+        return null;
+    }
+
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
         return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations!
     }

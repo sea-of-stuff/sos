@@ -49,7 +49,7 @@ public class SetUpTest {
             "node.is.storage=false\n" +
             "storage.hostname=\n" +
             "node.is.discovery.data=false\n" +
-            "node.is.discovery.node=false\n";
+            "node.is.dns=false\n";
 
     protected SOSConfiguration configuration;
 
