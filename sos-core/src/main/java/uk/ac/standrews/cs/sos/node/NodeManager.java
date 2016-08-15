@@ -8,7 +8,11 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * This is the node manager for this node. That is, it keeps track of the known nodes.
@@ -61,6 +65,31 @@ public class NodeManager {
                 .findFirst();
 
         return node.isPresent() ? node.get() : null;
+    }
+
+    public Collection<Node> getNDSNodes() {
+        return getNodes((Node n) -> n.isNDS());
+    }
+
+    public Collection<Node> getDDSNodes() {
+        return getNodes((Node n) -> n.isDDS());
+    }
+
+    public Collection<Node> getMCSNodes() {
+        return getNodes((Node n) -> n.isMCS());
+    }
+
+    public Collection<Node> getStorageNodes() {
+        return getNodes((Node n) -> n.isStorage());
+    }
+
+    private Collection<Node> getNodes(Predicate<Node> predicate) {
+
+        List<Node> retval = knownNodes.parallelStream()
+                .filter(predicate)
+                .collect(toList());
+
+        return retval;
     }
 
     public Node getLocalNode() {

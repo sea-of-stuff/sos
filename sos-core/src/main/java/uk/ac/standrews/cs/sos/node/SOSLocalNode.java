@@ -159,7 +159,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             storage = new SOSStorage(this, internalStorage, manifestsManager, identity);
         }
 
-        if (isDiscoveryData()) {
+        if (isDDS()) {
             dds = new SOSDDS(manifestsManager, identity, nodeManager);
         }
 

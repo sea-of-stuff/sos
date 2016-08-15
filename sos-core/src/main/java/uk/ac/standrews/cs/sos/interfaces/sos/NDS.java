@@ -31,9 +31,15 @@ public interface NDS extends SeaOfStuff {
     Node getNode(IGUID guid);
 
     /**
-     * Return all matching nodes for the given node role.
+     * Return all matching NDS nodes
      *
      * @return an empty collection if there are not matching nodes
      */
-    Collection<Node> getNodes(String role /** node type **/);
+    Collection<Node> getNDSNodes();
+
+    Collection<Node> getDDSNodes();
+
+    Collection<Node> getMCSNodes();
+
+    Collection<Node> getStorageNodes();
 }

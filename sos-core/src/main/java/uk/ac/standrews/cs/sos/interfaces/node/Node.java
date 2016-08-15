@@ -31,8 +31,10 @@ public interface Node {
 
     boolean isStorage();
 
-    boolean isDiscoveryData();
+    boolean isDDS();
 
     boolean isNDS();
+
+    boolean isMCS();
 
 }

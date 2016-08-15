@@ -25,15 +25,30 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public Collection<Node> getNodes(String role) {
-        return null;
+    public Collection<Node> getNDSNodes() {
+        return nodeManager.getNDSNodes();
+    }
+
+    @Override
+    public Collection<Node> getDDSNodes() {
+        return nodeManager.getDDSNodes();
+    }
+
+    @Override
+    public Collection<Node> getMCSNodes() {
+        return nodeManager.getMCSNodes();
+    }
+
+    @Override
+    public Collection<Node> getStorageNodes() {
+        return nodeManager.getStorageNodes();
     }
 
     @Override
     public void registerNode(Node node) {
         nodeManager.addNode(node);
 
-        // TODO - replicate such knowledge?
+        // TODO - perform replication across other NDS nodes
     }
 
     @Override
