@@ -10,10 +10,16 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.4" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.4" />
-          <element id="archive" name="guid-sta-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="guid-sta" />
-          </element>
+          <element id="library" level="project" name="Maven: uk.ac.standrews.cs:guid-sta:1.0-SNAPSHOT" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
+          <element id="library" level="project" name="Maven: logger:uk.ac.standrews.cs:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.21" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.21" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+          <element id="library" level="project" name="Maven: org.fluentd:fluent-logger:0.3.2" />
+          <element id="library" level="project" name="Maven: org.msgpack:msgpack:0.6.8" />
+          <element id="library" level="project" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.5" />
         </element>
       </element>

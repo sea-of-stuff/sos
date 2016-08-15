@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
@@ -22,6 +23,7 @@ import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -38,7 +40,6 @@ import java.util.Collection;
 public class SOSClient implements Client {
 
     private PolicyManager policyManager;
-    private InternalStorage storage;
     private Identity identity;
     private ManifestsManager manifestsManager;
 
@@ -47,7 +48,6 @@ public class SOSClient implements Client {
     public SOSClient(Node node, InternalStorage storage, ManifestsManager manifestsManager,
                      Identity identity) {
 
-        this.storage = storage;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
 
@@ -63,10 +63,12 @@ public class SOSClient implements Client {
     // pass builder to factory?
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
+        LOG.log(LEVEL.INFO, "Adding atom: " + atomBuilder.toString());
+        long start = System.nanoTime();
 
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid = null;
+        IGUID guid;
         if (atomBuilder.isLocation()) {
             Location location = atomBuilder.getLocation();
             bundles.add(new ProvenanceLocationBundle(location));
@@ -81,15 +83,20 @@ public class SOSClient implements Client {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsManager.addManifest(manifest);
 
+        LOG.log(LEVEL.INFO, "Atom added in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+
         return manifest;
     }
 
     @Override
     public Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
+        LOG.log(LEVEL.INFO, "Adding compound");
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
         manifestsManager.addManifest(manifest);
+
+        LOG.log(LEVEL.INFO, "Compound added");
 
         return manifest;
     }
@@ -99,6 +106,7 @@ public class SOSClient implements Client {
     @Override
     public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
+        LOG.log(LEVEL.INFO, "Adding version");
 
         IGUID content = versionBuilder.getContent();
         IGUID invariant = versionBuilder.getInvariant();
@@ -107,6 +115,8 @@ public class SOSClient implements Client {
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
+
+        LOG.log(LEVEL.INFO, "Version added");
 
         return manifest;
     }

@@ -44,7 +44,6 @@
             <version>2.23.1</version>
         </dependency>
 
-
         <dependency>
             <groupId>uk.ac.standrews.cs.sos</groupId>
             <artifactId>core</artifactId>

@@ -1,11 +1,9 @@
 package uk.ac.standrews.cs.sos.interfaces.sos;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -59,20 +57,4 @@ public interface Storage extends SeaOfStuff {
      */
     InputStream getAtomContent(IGUID guid);
 
-    /**
-     * Adds the manifest to the SOS
-     *
-     * @param manifest
-     * @throws ManifestPersistException
-     */
-    void addManifest(Manifest manifest) throws ManifestPersistException;
-
-    /**
-     * Get a manifest from this node
-     *
-     * @param guid
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 }

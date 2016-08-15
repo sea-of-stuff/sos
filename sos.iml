@@ -4,10 +4,6 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/sos-cli/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/sos-core/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/sos-rest-old/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -15,8 +11,15 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.4" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.4" level="project" />
-    <orderEntry type="module" module-name="guid-sta" />
+    <orderEntry type="library" name="Maven: uk.ac.standrews.cs:guid-sta:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Maven: logger:uk.ac.standrews.cs:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.21" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: org.fluentd:fluent-logger:0.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.msgpack:msgpack:0.6.8" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.testng:testng:6.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
@@ -28,7 +31,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-module-testng:1.6.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-core:1.6.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-reflect:1.6.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.javassist:javassist:3.20.0-GA" level="project" />
+    <orderEntry type="library" name="Maven: org.javassist:javassist:3.20.0-GA" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-module-testng-common:1.6.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-mockito:1.6.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.10.19" level="project" />

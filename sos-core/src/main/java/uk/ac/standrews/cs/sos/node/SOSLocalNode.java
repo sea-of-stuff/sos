@@ -1,9 +1,10 @@
 package uk.ac.standrews.cs.sos.node;
 
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSDNS;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSDiscoveryData;
+import uk.ac.standrews.cs.sos.SOSImpl.SOSDDS;
+import uk.ac.standrews.cs.sos.SOSImpl.SOSNDS;
 import uk.ac.standrews.cs.sos.SOSImpl.SOSStorage;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -19,8 +20,8 @@ import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.interfaces.sos.DNS;
-import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryData;
+import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
+import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
@@ -28,6 +29,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestsManagerImpl;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
+import uk.ac.standrews.cs.sos.utils.LOG;
 
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
@@ -55,11 +57,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private Client client;
     private Storage storage;
-    private DiscoveryData discoveryData;
-    private DNS DNS;
+    private DDS dds;
+    private NDS nds;
+
+    private LOG LOG = new LOG(getNodeGUID());
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
         super(builder.configuration);
+
+        LOG.log(LEVEL.INFO, "Starting up");
 
         configuration = builder.configuration;
         internalStorage = builder.internalStorage;
@@ -86,6 +92,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
         }
+
+        LOG.log(LEVEL.INFO, "Node initialised");
     }
 
     @Override
@@ -98,14 +106,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         return storage;
     }
 
-    @Override
-    public DiscoveryData getDiscoveryData() {
-        return discoveryData;
+    public DDS getDDS() {
+        return dds;
     }
 
     @Override
-    public DNS getDNS() {
-        return DNS;
+    public NDS getNDS() {
+        return nds;
     }
 
     @Override
@@ -153,11 +160,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
 
         if (isDiscoveryData()) {
-            discoveryData = new SOSDiscoveryData(manifestsManager, identity, nodeManager);
+            dds = new SOSDDS(manifestsManager, identity, nodeManager);
         }
 
-        if (isDNS()) {
-            DNS = new SOSDNS(nodeManager);
+        if (isNDS()) {
+            nds = new SOSNDS(nodeManager);
         }
     }
 

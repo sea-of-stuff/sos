@@ -21,7 +21,7 @@ public class Make {
             "node.is.client=\n" +
             "node.is.storage=\n" +
             "node.is.discovery.data=\n" +
-            "node.is.dns=\n" +
+            "node.is.nds=\n" +
             "\n" +
             "db.path=~/sos/db/dump.db\n" +
             "db.password=\n" +

@@ -37,9 +37,10 @@ public abstract class StreamStore extends CommonStore {
                 throw new StorageException();
             }
 
+            // TODO - this code could be improved a lot, by not opening stream twice!
             try {
                 IGUID tmpGUID = GUIDFactory.generateRandomGUID();
-                storeData(tmpGUID, new InputStreamData((inputStream)));
+                storeData(tmpGUID, new InputStreamData(inputStream));
 
                 File tmpCachedLocation = getAtomLocation(tmpGUID);
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
@@ -54,7 +55,7 @@ public abstract class StreamStore extends CommonStore {
 
             } catch (GUIDGenerationException | SourceLocationException |
                     URISyntaxException | DataStorageException e) {
-                throw new StorageException();
+                throw new StorageException(e);
             }
 
         return guid;

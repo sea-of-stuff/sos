@@ -51,4 +51,10 @@ public class AtomBuilder {
     public boolean isInputStream() {
         return isInputStream;
     }
+
+    @Override
+    public String toString() {
+        return "{ 'isLocation' : '" + isLocation() + "', " +
+                "'isInputStream' : " + isInputStream() + "'}";
+    }
 }

@@ -33,6 +33,6 @@ public interface Node {
 
     boolean isDiscoveryData();
 
-    boolean isDNS();
+    boolean isNDS();
 
 }

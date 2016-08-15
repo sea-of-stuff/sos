@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.interfaces.node;
 
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.interfaces.sos.DNS;
-import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryData;
+import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
+import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 
 /**
@@ -15,9 +15,9 @@ public interface LocalNode extends Node {
 
     Storage getStorage();
 
-    DiscoveryData getDiscoveryData();
+    DDS getDDS();
 
-    DNS getDNS();
+    NDS getNDS();
 
     Identity getIdentity();
 

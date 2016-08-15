@@ -1,0 +1,26 @@
+package uk.ac.standrews.cs.sos.utils;
+
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.Logger;
+
+/**
+ * This is a SOS LOG wrapper.
+ * This wrapper makes sure that the nodeGUID is included in all log messages.
+ *
+ * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ */
+public class LOG {
+
+    private static uk.ac.standrews.cs.LOG log;
+    private static IGUID nodeGUID;
+
+    public LOG(IGUID guid) {
+        nodeGUID = guid;
+        log = Logger.LOG();
+    }
+
+    public static void log(LEVEL level, String message) {
+        log.log("sos", level, nodeGUID.toString(), message);
+    }
+}

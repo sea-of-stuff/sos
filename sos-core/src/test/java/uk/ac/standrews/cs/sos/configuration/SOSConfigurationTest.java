@@ -37,7 +37,7 @@ public class SOSConfigurationTest {
             "node.is.storage=\n" +
             "storage.hostname=\n" +
             "node.is.discovery.data=\n" +
-            "node.is.dns=\n";
+            "node.is.nds=\n";
 
     @BeforeMethod
     public void setUp() {

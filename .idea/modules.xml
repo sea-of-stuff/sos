@@ -2,16 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../guid-sta-git/guid-sta.iml" filepath="$PROJECT_DIR$/../guid-sta-git/guid-sta.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-core/core.iml" filepath="$PROJECT_DIR$/sos-core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-rest/rest.iml" filepath="$PROJECT_DIR$/sos-rest/rest.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-rest-grizzly/rest-grizzly.iml" filepath="$PROJECT_DIR$/sos-rest-grizzly/rest-grizzly.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" filepath="$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-configuration/sos-configuration.iml" filepath="$PROJECT_DIR$/sos-configuration/sos-configuration.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-core/sos-core.iml" filepath="$PROJECT_DIR$/sos-core/sos-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-rest-jetty/sos-rest-jetty.iml" filepath="$PROJECT_DIR$/sos-rest-jetty/sos-rest-jetty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../storage-sta/storage-sta.iml" filepath="$PROJECT_DIR$/../storage-sta/storage-sta.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-ui/web-ui.iml" filepath="$PROJECT_DIR$/web-ui/web-ui.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../webdav-server-standalone/webdav-server.iml" filepath="$PROJECT_DIR$/../webdav-server-standalone/webdav-server.iml" />
     </modules>
   </component>
 </project>

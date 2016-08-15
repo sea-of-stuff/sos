@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
-import uk.ac.standrews.cs.sos.interfaces.sos.DiscoveryData;
+import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSDiscoveryData implements DiscoveryData {
+public class SOSDDS implements DDS {
 
     protected Identity identity;
     protected ManifestsManager manifestsManager;
@@ -24,7 +24,7 @@ public class SOSDiscoveryData implements DiscoveryData {
     private NodeManager nodeManager; // REMOVEME - now used by discovery node role
 
     // TODO - pass storage (this is needed to be used by manifest manager or just give it to the manifest manager ????)
-    public SOSDiscoveryData(ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
+    public SOSDDS(ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
 
         this.manifestsManager = manifestsManager;
         this.identity = identity;

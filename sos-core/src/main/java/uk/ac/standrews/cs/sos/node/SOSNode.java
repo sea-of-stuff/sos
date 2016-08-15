@@ -39,7 +39,7 @@ public class SOSNode implements Node {
     @DatabaseField(canBeNull = false)
     protected boolean DB_is_discovery_data;
     @DatabaseField(canBeNull = false)
-    protected boolean DB_is_dns;
+    protected boolean DB_is_nds;
 
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
@@ -74,7 +74,7 @@ public class SOSNode implements Node {
             this.DB_is_client = configuration.nodeIsClient();
             this.DB_is_storage = configuration.nodeIsStorage();
             this.DB_is_discovery_data = configuration.nodeIsDiscoveryData();
-            this.DB_is_dns = configuration.nodeIsDNS();
+            this.DB_is_nds = configuration.nodeIsNDS();
         } catch (GUIDGenerationException | IOException e) {
             throw new NodeException(e);
         }
@@ -107,8 +107,8 @@ public class SOSNode implements Node {
     }
 
     @Override
-    public boolean isDNS() {
-        return DB_is_dns;
+    public boolean isNDS() {
+        return DB_is_nds;
     }
 
     @Override

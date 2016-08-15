@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface DiscoveryData extends SeaOfStuff {
+public interface DDS extends SeaOfStuff {
 
     /**
      * Add a manifest to the sea of stuff.
