@@ -27,14 +27,34 @@ public interface Node {
      */
     InetSocketAddress getHostAddress();
 
+    /**
+     * Returns true if this is a client node
+     * @return
+     */
     boolean isClient();
 
+    /**
+     * Returns true if this is a storage node
+     * @return
+     */
     boolean isStorage();
 
+    /**
+     * Returns true if this is a DDS node
+     * @return
+     */
     boolean isDDS();
 
+    /**
+     * Returns true if this is a NDS node
+     * @return
+     */
     boolean isNDS();
 
+    /**
+     * Returns true if this is a MCS node
+     * @return
+     */
     boolean isMCS();
 
 }

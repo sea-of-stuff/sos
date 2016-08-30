@@ -10,7 +10,19 @@ import java.util.Collection;
  */
 public interface NodeDatabase {
 
+    /**
+     * Add a given node to the database
+     *
+     * @param node
+     * @throws DatabaseConnectionException
+     */
     void addNode(Node node) throws DatabaseConnectionException;
 
+    /**
+     * Get all nodes from the database
+     *
+     * @return
+     * @throws DatabaseConnectionException
+     */
     Collection<SOSNode> getNodes() throws DatabaseConnectionException;
 }

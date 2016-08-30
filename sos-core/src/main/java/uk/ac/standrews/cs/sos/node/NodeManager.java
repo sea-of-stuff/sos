@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toList;
  * This is the node manager for this node, which keeps track of the known nodes.
  *
  * TODO - apply policy to enforce what to return and how much
+ * TODO - queries are not performed at the DB level, this might be a bit inefficient
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
