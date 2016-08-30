@@ -37,7 +37,8 @@ public class StorageTest extends SetUpTest {
             "storage.username=\n" +
             "node.is.storage=true\n" +
             "storage.hostname=\n" +
-            "node.is.discovery.data=false\n" +
+            "node.is.dds=false\n" +
+            "node.is.mcs=false\n" +
             "node.is.nds=false\n";
 
     @Override

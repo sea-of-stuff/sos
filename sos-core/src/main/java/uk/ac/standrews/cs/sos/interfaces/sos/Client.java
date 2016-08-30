@@ -103,6 +103,15 @@ public interface Client extends SeaOfStuff {
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
     /**
+     * Return the latest version of a given asset
+     *
+     * @param guid asset's invariant
+     * @return latest known version of the asset
+     * @throws ManifestNotFoundException
+     */
+    Version getLatest(IGUID guid) throws ManifestNotFoundException;;
+
+    /**
      * Hash-based verification ensures that a file has not been corrupted by
      * comparing the data's hash value to a previously calculated value.
      * If these values match, the data is presumed to be unmodified.

@@ -53,10 +53,10 @@ public class NodeManagerTest {
         HelperTest.DeletePath(configurationMock.getDBPath());
     }
 
-    @Test(priority=0)
+    @Test(priority=1)
     public void persistTest() throws GUIDGenerationException, NodeManagerException {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false); // TODO - more tests of this kind (with different combos of client,storage,coordinator)
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
 
         assertEquals(nodeManager.getKnownNodes().size(), 0);
 
@@ -72,4 +72,37 @@ public class NodeManagerTest {
         assertEquals(nodeManager.getKnownNodes().size(), 1);
     }
 
+    @Test(priority=0)
+    public void persistMultipleNodesTest() throws GUIDGenerationException, NodeManagerException {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        nodeManager.addNode(node);
+
+        addNode(true, false, false, false, false);
+        addNode(false, true, false, false, false);
+        addNode(false, false, true, false, false);
+        addNode(false, false, false, true, false);
+        addNode(false, false, false, false, true);
+
+        addNode(true, true, false, false, false);
+        addNode(true, true, true, true, true);
+
+        assertEquals(nodeManager.getKnownNodes().size(), 8);
+        assertEquals(nodeManager.getNode(guid), node);
+        assertEquals(nodeManager.getStorageNodes().size(), 3);
+        assertEquals(nodeManager.getDDSNodes().size(), 2);
+        assertEquals(nodeManager.getNDSNodes().size(), 2);
+        assertEquals(nodeManager.getMCSNodes().size(), 2);
+    }
+
+    private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
+        nodeManager.addNode(new SOSNode(guid, "example.com", 8080,
+                isClient, isStorage, isDDS,
+                isNDS, isMCS));
+    }
+
+    private void addNode(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        addNode(guid, isClient, isStorage, isDDS, isNDS, isMCS);
+    }
 }

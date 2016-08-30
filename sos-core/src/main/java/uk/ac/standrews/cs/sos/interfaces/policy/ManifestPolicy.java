@@ -7,9 +7,27 @@ package uk.ac.standrews.cs.sos.interfaces.policy;
  */
 public interface ManifestPolicy extends Policy {
 
+    /**
+     * Defines whether the node applying this policy has to store the manifests
+     * inside its storage
+     *
+     * @return
+     */
     boolean storeManifestsLocally();
 
+    /**
+     * Defines whether the node applying this policy has to store the manifests
+     * in other nodes of the SOS
+     *
+     * @return
+     */
     boolean storeManifestsRemotely();
 
+    /**
+     * Defines what the replication factor for manifests is
+     *
+     * @return
+     */
     int getReplicationFactor();
+
 }

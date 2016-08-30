@@ -3,13 +3,10 @@ package uk.ac.standrews.cs.sos.SOSImpl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
-import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.util.Collection;
 
@@ -18,18 +15,11 @@ import java.util.Collection;
  */
 public class SOSDDS implements DDS {
 
-    protected Identity identity;
     protected ManifestsManager manifestsManager;
 
-    private NodeManager nodeManager; // REMOVEME - now used by discovery node role
-
-    // TODO - pass storage (this is needed to be used by manifest manager or just give it to the manifest manager ????)
-    public SOSDDS(ManifestsManager manifestsManager, Identity identity, NodeManager nodeManager) {
+    public SOSDDS(ManifestsManager manifestsManager) {
 
         this.manifestsManager = manifestsManager;
-        this.identity = identity;
-
-        this.nodeManager = nodeManager;
     }
 
     @Override
@@ -46,14 +36,9 @@ public class SOSDDS implements DDS {
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
         Manifest manifest = manifestsManager.findManifest(guid);
-        // NOTE - might have to contact other coordinators!
-        return manifest;
-    }
+        // TODO - contact other DDS nodes!
 
-    @Override
-    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
-        // TODO - how is this verified if identity is unknown?
-        return false;
+        return manifest;
     }
 
     @Override
@@ -70,7 +55,5 @@ public class SOSDDS implements DDS {
     public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
         return manifestsManager.findVersions(invariant);
     }
-
-
 
 }

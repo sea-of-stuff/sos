@@ -1,8 +1,31 @@
 # sos
 
+**Index**
+
+- [core](#sos-core)
+- [rest](#sos-rest)
+- [configuration](#sos-configuration)
+- [web-ui](#web-ui)
+- [TODO](#todo)
+
 ## sos-core
 
 Describe functionalities and main architecture
+
+### Project structure
+
+- **configuration**
+    - see [configuration file](#configuration-file)
+- **exceptions**
+- **interfaces**
+- **json**
+- **metadata**
+- **model**
+- **network**
+- **node**
+- **policy**
+- **SOSImpl**
+- **utils**
 
 ### Configuration File
 
@@ -14,15 +37,11 @@ The sos-rest project defines the REST API. This is server-agnostic.
 We provide two server implementation on top of the jersey REST API.
 See the sos-rest-jetty module and the sos-rest-grizzly module.
 
-## storage-sta
+## sos-configuration
 
-The sos-storage module defines a common storage interface of files and directories.
-This allows us to run the sos-core module over different storage implementations,
-such as the file system, AWS S3, a network drive, Dropbox, etc.
+This is a simple command line tool that helps in making sos configuration files.
 
-Check the README in the storage-sta for more information about it.
-
-This module is available at the following link: LINK
+## web-ui
 
 ## TODO
 

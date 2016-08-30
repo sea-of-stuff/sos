@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -31,16 +30,13 @@ import java.util.Collection;
 public class SOSStorage implements Storage {
 
     private PolicyManager policyManager;
-    private InternalStorage storage;
-    private Identity identity;
     private ManifestsManager manifestsManager;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, InternalStorage storage, ManifestsManager manifestsManager, Identity identity) {
-        this.storage = storage;
+    public SOSStorage(Node node, InternalStorage storage, ManifestsManager manifestsManager) {
+
         this.manifestsManager = manifestsManager;
-        this.identity = identity;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }

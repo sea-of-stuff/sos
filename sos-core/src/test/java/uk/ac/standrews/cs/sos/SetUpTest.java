@@ -48,7 +48,8 @@ public class SetUpTest {
             "storage.username=\n" +
             "node.is.storage=false\n" +
             "storage.hostname=\n" +
-            "node.is.discovery.data=false\n" +
+            "node.is.dds=false\n" +
+            "node.is.mcs=false\n" +
             "node.is.nds=false\n";
 
     protected SOSConfiguration configuration;

@@ -20,7 +20,8 @@ public class Make {
             "node.hostname=\n" +
             "node.is.client=\n" +
             "node.is.storage=\n" +
-            "node.is.discovery.data=\n" +
+            "node.is.dds=\n" +
+            "node.is.mcs=\n" +
             "node.is.nds=\n" +
             "\n" +
             "db.path=~/sos/db/dump.db\n" +

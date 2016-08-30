@@ -15,7 +15,9 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 
 /**
- * This is the node manager for this node. That is, it keeps track of the known nodes.
+ * This is the node manager for this node, which keeps track of the known nodes.
+ *
+ * TODO - apply policy to enforce what to return and how much
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -67,20 +69,39 @@ public class NodeManager {
         return node.isPresent() ? node.get() : null;
     }
 
+    /**
+     * Get all NDS Nodes
+     *
+     * @return
+     */
     public Collection<Node> getNDSNodes() {
-        return getNodes((Node n) -> n.isNDS());
+        return getNodes(Node::isNDS);
     }
 
+    /**
+     * Get all DDS Nodes
+     *
+     * @return
+     */
     public Collection<Node> getDDSNodes() {
-        return getNodes((Node n) -> n.isDDS());
+        return getNodes(Node::isDDS);
     }
 
+    /**
+     * Get all MCS Nodes
+     *
+     * @return
+     */
     public Collection<Node> getMCSNodes() {
-        return getNodes((Node n) -> n.isMCS());
+        return getNodes(Node::isMCS);
     }
 
+    /**
+     * Get all Storage Nodes
+     * @return
+     */
     public Collection<Node> getStorageNodes() {
-        return getNodes((Node n) -> n.isStorage());
+        return getNodes(Node::isStorage);
     }
 
     private Collection<Node> getNodes(Predicate<Node> predicate) {
@@ -92,6 +113,10 @@ public class NodeManager {
         return retval;
     }
 
+    /**
+     * Get the local node running
+     * @return
+     */
     public Node getLocalNode() {
         return this.localNode;
     }
@@ -101,7 +126,7 @@ public class NodeManager {
      *
      * @throws NodeManagerException
      */
-    public void persistNodesTable() throws NodeManagerException {
+    protected void persistNodesTable() throws NodeManagerException {
         try {
             for (Node knownNode : knownNodes) {
                 nodeDatabase.addNode(knownNode);

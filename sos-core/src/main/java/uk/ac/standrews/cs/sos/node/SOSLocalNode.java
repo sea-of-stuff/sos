@@ -19,26 +19,28 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
-import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
-import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
+import uk.ac.standrews.cs.sos.interfaces.sos.*;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
-import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
+import uk.ac.standrews.cs.sos.model.locations.sos.SOSProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestsManagerImpl;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.LOG;
 
-import java.net.URL;
-import java.net.URLStreamHandlerFactory;
-
 /**
  * This class represents the SOSNode of this machine.
- * Using a BuilderPattern to construct this node.
  *
- * A SOSLocalNode may expose multiple SOS interfaces to the caller: Client, Storage and Discovery (node, data).
+ * A SOSLocalNode may expose multiple SOS interfaces to the caller: Client, Storage
+ *  NDS, DDS, and MCS
+ *
+ * A SOSLocalNode is created via a builder.
+ * Example:
+ * SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+ * SOSLocalNode localSOSNode = builder.configuration(configuration)
+ *                                      .index(index)
+ *                                      .internalStorage(internalStorage)
+ *                                      .build();
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -48,29 +50,32 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private InternalStorage internalStorage;
     private Index index;
     private PolicyManager policyManager;
-
     private NodeDatabase nodeDatabase;
-
     private Identity identity;
     private ManifestsManager manifestsManager;
     private NodeManager nodeManager;
 
+    // Node roles
+    // All roles will share storage, node manager, manifests manager, etc.
     private Client client;
     private Storage storage;
     private DDS dds;
     private NDS nds;
+    private MCS mcs; // TODO - provide access to the MCS role
 
+    // Each node will have its own log and it will be used to log errors as well
+    // as useful information about the node itself.
     private LOG LOG = new LOG(getNodeGUID());
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
         super(builder.configuration);
 
-        LOG.log(LEVEL.INFO, "Starting up");
+        LOG.log(LEVEL.INFO, "Starting up node ");
 
         configuration = builder.configuration;
         internalStorage = builder.internalStorage;
         index = builder.index;
-        policyManager = builder.policyManager; //FIXME - could have different policies for client, storage, coordinator!
+        policyManager = builder.policyManager; //FIXME - could have different policies for client, storage, dds, nds, mcs!
 
         try {
             DatabaseType databaseType = configuration.getDBType();
@@ -85,14 +90,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initIdentity();
         initSOSInstances();
 
-        backgroundProcesses();
-
         try {
-            registerSOSProtocol();
+            LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
+            SOSProtocol.Register(internalStorage, nodeManager);
         } catch (SOSProtocolException e) {
+            LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSException(e);
         }
 
+        // TODO: backgroundProcesses();
         LOG.log(LEVEL.INFO, "Node initialised");
     }
 
@@ -156,41 +162,24 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
 
         if (isStorage()) {
-            storage = new SOSStorage(this, internalStorage, manifestsManager, identity);
+            storage = new SOSStorage(this, internalStorage, manifestsManager);
         }
 
         if (isDDS()) {
-            dds = new SOSDDS(manifestsManager, identity, nodeManager);
+            dds = new SOSDDS(manifestsManager);
         }
 
         if (isNDS()) {
             nds = new SOSNDS(nodeManager);
         }
-    }
 
-    private void registerSOSProtocol() throws SOSProtocolException {
-        try {
-            if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
-                URLStreamHandlerFactory urlStreamHandlerFactory =
-                        new SOSURLStreamHandlerFactory(internalStorage, nodeManager);
-                URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
-            }
-        } catch (Error e) {
-            throw new SOSProtocolException(e);
-        }
-    }
-
-    private void backgroundProcesses() {
-        // - start background processes
-        // - listen to incoming requests from other nodes / crawlers?
-        // - make this node available to the rest of the sea of stuff
+//        if (isMCS()) {
+//            mcs = new SOSMCS();
+//        }
     }
 
     /**
      * This is the builder for the SOSLocalNode.
-     *
-     *
-     * TODO - defaults?
      */
     public static class Builder {
         private static SOSConfiguration configuration;

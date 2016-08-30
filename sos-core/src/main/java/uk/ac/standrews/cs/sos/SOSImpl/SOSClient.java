@@ -83,7 +83,8 @@ public class SOSClient implements Client {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsManager.addManifest(manifest);
 
-        LOG.log(LEVEL.INFO, "Atom added in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
+                +" added in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
 
         return manifest;
     }
@@ -96,7 +97,7 @@ public class SOSClient implements Client {
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
         manifestsManager.addManifest(manifest);
 
-        LOG.log(LEVEL.INFO, "Compound added");
+        LOG.log(LEVEL.INFO, "Compound added: " + manifest.getContentGUID());
 
         return manifest;
     }
@@ -116,7 +117,7 @@ public class SOSClient implements Client {
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
 
-        LOG.log(LEVEL.INFO, "Version added");
+        LOG.log(LEVEL.INFO, "Version added: " + manifest.getContentGUID());
 
         return manifest;
     }
@@ -130,6 +131,8 @@ public class SOSClient implements Client {
      */
     @Override
     public InputStream getAtomContent(Atom atom) {
+        LOG.log(LEVEL.INFO, "Getting content for atom: " + atom.getContentGUID());
+
         InputStream dataStream = null;
         Collection<LocationBundle> locations = atom.getLocations();
         for (LocationBundle location : locations) {
@@ -145,26 +148,42 @@ public class SOSClient implements Client {
             }
         }
 
+        LOG.log(LEVEL.INFO, "Returning atom " + atom.getContentGUID() + "data stream");
+
         return dataStream;
     }
 
     @Override
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
+        LOG.log(LEVEL.INFO, "Adding manifest " + manifest.getContentGUID());
+
         manifestsManager.addManifest(manifest);
 
         // TODO - recursively look for other manifests to add to the NodeManager
         if (recursive) {
             throw new UnsupportedOperationException();
         }
+
+        LOG.log(LEVEL.INFO, "Added manifest " + manifest.getContentGUID());
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
+        LOG.log(LEVEL.INFO, "Getting manifest " + guid);
+
         return manifestsManager.findManifest(guid);
     }
 
     @Override
+    public Version getLatest(IGUID guid) throws ManifestNotFoundException {
+        // TODO - manifests manager should keep track of the latest
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
+        LOG.log(LEVEL.INFO, "Verifying manifest " + manifest.getContentGUID());
+
         boolean ret;
         try {
             ret = manifest.verify(identity);

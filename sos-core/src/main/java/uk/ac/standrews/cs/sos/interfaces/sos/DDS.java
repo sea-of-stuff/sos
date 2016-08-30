@@ -3,8 +3,6 @@ package uk.ac.standrews.cs.sos.interfaces.sos;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 
 import java.util.Collection;
@@ -37,27 +35,6 @@ public interface DDS extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
-
-    /**
-     * Hash-based verification ensures that a file has not been corrupted by
-     * comparing the data's hash value to a previously calculated value.
-     * If these values match, the data is presumed to be unmodified.
-     * Due to the nature of hash functions, hash collisions may result
-     * in false positives, but the likelihood of collisions is
-     * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
-     *
-     * <p>
-     * verifyManifest checks the integrity of the manifest's GUID against the
-     * content of the manifest.
-     * </p>
-     *
-     * @param identity                      used to verify the manifest
-     * @param manifest                      to be verified
-     * @return <code>true</code>            if the GUID of the manifest matches
-     *                                      the content referred by the manifest.
-     * @throws ManifestVerificationException
-     */
-    boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
 
     /**
      *

@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -27,7 +29,7 @@ import java.util.HashSet;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalManifestsManager {
+public class LocalManifestsManager implements ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
@@ -55,6 +57,7 @@ public class LocalManifestsManager {
      *
      * @param manifest to be added to the sea of stuff
      */
+    @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         if (manifest.isValid()) {
             try {
@@ -74,6 +77,7 @@ public class LocalManifestsManager {
      * @return Manifest
      * @throws ManifestNotFoundException
      */
+    @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
         if (guid == null) {
             throw new ManifestNotFoundException("Cannot find manifest for null guid");
@@ -82,6 +86,12 @@ public class LocalManifestsManager {
         return getManifestFromFile(guid);
     }
 
+    @Override
+    public Version getLatest(IGUID guid) throws ManifestNotFoundException {
+        return null;
+    }
+
+    @Override
     public Collection<IGUID> findManifestsByType(String type) throws ManifestNotFoundException {
         Collection<IGUID> retval;
         try {
@@ -92,6 +102,7 @@ public class LocalManifestsManager {
         return retval;
     }
 
+    @Override
     public Collection<IGUID> findVersions(IGUID guid) throws ManifestNotFoundException {
         Collection<IGUID> retval;
         try {
@@ -102,6 +113,7 @@ public class LocalManifestsManager {
         return retval;
     }
 
+    @Override
     public Collection<IGUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
         Collection<IGUID> retval;
         try {

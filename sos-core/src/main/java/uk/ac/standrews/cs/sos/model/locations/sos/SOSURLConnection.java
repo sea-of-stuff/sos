@@ -51,7 +51,7 @@ public class SOSURLConnection extends URLConnection {
      * 1 - the location is this one, thus we get the data from the internal storage
      * 2 - the location is not this one:
      *  a - if the location is known, we contact that node.
-     *  b - if the location is not known, we contact a coordinator first
+     *  b - if the location is not known, we contact a nds first
      *
      * @return
      * @throws IOException
@@ -71,7 +71,7 @@ public class SOSURLConnection extends URLConnection {
                 if (nodeToContact != null) {
                     return contactNode(nodeToContact, entityGUID); // CASE 2.A
                 } else {
-                    // TODO - contact coordinator, get info about node and then contact node
+                    // TODO - contact nds, get info about node and then contact node
                     return null; // CASE 2.B
                 }
             }

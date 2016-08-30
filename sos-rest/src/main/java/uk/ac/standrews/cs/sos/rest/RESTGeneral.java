@@ -22,21 +22,25 @@ public class RESTGeneral {
 
         boolean isClient = sos.isClient();
         boolean isStorage = sos.isStorage();
-        boolean isCoordinator = sos.isDDS();
+        boolean isDDS = sos.isDDS();
+        boolean isNDS = sos.isNDS();
+        boolean isMCS = sos.isMCS();
 
-        String rolesJSON = makeJSONForRoles(isClient, isStorage, isCoordinator);
+        String rolesJSON = makeJSONForRoles(isClient, isStorage, isDDS, isNDS, isMCS);
         return Response.status(HTTPState.OK)
                 .entity(rolesJSON)
                 .build();
     }
 
-    private String makeJSONForRoles(boolean isClient, boolean isStorage, boolean isCoordinator) {
+    private String makeJSONForRoles(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
 
         String json = "{ ";
 
         json += "\"client\" : " + isClient + ", ";
         json += "\"storage\" : " + isStorage + ", ";
-        json += "\"coordinator\" : " + isCoordinator;
+        json += "\"dds\" : " + isDDS + ", ";
+        json += "\"nds\" : " + isNDS + ", ";
+        json += "\"mcs\" : " + isMCS + ", ";
 
         json += " }";
 

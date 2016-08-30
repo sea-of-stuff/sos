@@ -16,4 +16,5 @@ public interface PolicyManager {
     ComputationPolicy getComputationPolicy();
 
     ManifestPolicy getManifestPolicy();
+
 }

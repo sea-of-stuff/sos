@@ -1,0 +1,16 @@
+syntax: glob
+./idea/**
+
+syntax: regexp
+^test-output
+/test-output/
+^target$
+/target$
+/target/
+^dist
+/dist
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$

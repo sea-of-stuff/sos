@@ -18,8 +18,6 @@ import java.util.Objects;
 @DatabaseTable(tableName = "nodes")
 public class SOSNode implements Node {
 
-    private static int SOS_NODE_DEFAULT_PORT = 8080;
-
     private IGUID nodeGUID;
     private InetSocketAddress hostAddress;
 
@@ -47,7 +45,8 @@ public class SOSNode implements Node {
     protected SOSNode() {}
 
     public SOSNode(IGUID guid, String hostname, int port,
-                   boolean isClient, boolean isStorage, boolean isDDS) {
+                   boolean isClient, boolean isStorage, boolean isDDS,
+                   boolean isNDS, boolean isMCS) {
         this.nodeGUID = guid;
         this.hostAddress = new InetSocketAddress(hostname, port);
 
@@ -57,10 +56,8 @@ public class SOSNode implements Node {
         this.DB_is_client = isClient;
         this.DB_is_storage = isStorage;
         this.DB_is_dds = isDDS;
-        this.DB_is_nds = false; // FIXME
-        this.DB_is_mcs = false; // FIXME
-
-        // TODO - discovery_node
+        this.DB_is_nds = isNDS;
+        this.DB_is_mcs = isMCS;
     }
 
     public SOSNode(SOSConfiguration configuration) throws NodeException {
@@ -72,10 +69,10 @@ public class SOSNode implements Node {
             int port = configuration.getNodePort();
             this.hostAddress = new InetSocketAddress(hostname, port);
 
-            // TODO: Have other variables, not the DB ones?
             this.DB_nodeid = nodeGUID.toString();
             this.DB_hostname = hostname;
             this.DB_port = port;
+
             this.DB_is_client = configuration.nodeIsClient();
             this.DB_is_storage = configuration.nodeIsStorage();
             this.DB_is_dds = configuration.nodeIsDDS();
