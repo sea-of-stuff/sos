@@ -8,7 +8,6 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-
 public class LocationModel {
 
     private String uri;
@@ -17,7 +16,6 @@ public class LocationModel {
 
     public void setUri(String uri) {
         this.uri = uri;
-
     }
 
     public String getUri() {

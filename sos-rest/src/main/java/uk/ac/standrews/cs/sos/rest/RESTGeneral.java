@@ -35,13 +35,13 @@ public class RESTGeneral {
     private String makeJSONForRoles(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
 
         String json = "{ ";
-
-        json += "\"client\" : " + isClient + ", ";
-        json += "\"storage\" : " + isStorage + ", ";
-        json += "\"dds\" : " + isDDS + ", ";
-        json += "\"nds\" : " + isNDS + ", ";
-        json += "\"mcs\" : " + isMCS + ", ";
-
+        {
+            json += "\"client\" : " + isClient + ", ";
+            json += "\"storage\" : " + isStorage + ", ";
+            json += "\"dds\" : " + isDDS + ", ";
+            json += "\"nds\" : " + isNDS + ", ";
+            json += "\"mcs\" : " + isMCS + ", ";
+        }
         json += " }";
 
         return json;

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos;
 
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.ResourceConfig;
 import uk.ac.standrews.cs.sos.filters.StorageFilter;
 import uk.ac.standrews.cs.sos.json.JacksonProvider;
@@ -10,11 +9,12 @@ import uk.ac.standrews.cs.sos.json.JacksonProvider;
  */
 public class RESTConfig {
 
+    private final static String REST_PACKAGE = "uk.ac.standrews.cs.sos.rest";
+
     public ResourceConfig build() {
         return new ResourceConfig()
-                .packages("uk.ac.standrews.cs.sos.rest")
+                .packages(REST_PACKAGE)
                 .register(JacksonProvider.class)
-                .register(StorageFilter.class)
-                .register(LoggingFilter.class);
+                .register(StorageFilter.class);
     }
 }

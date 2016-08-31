@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
@@ -49,7 +50,7 @@ public class SOSURLConnection extends URLConnection {
      * Return the input stream given a sos location.
      * There are two cases:
      * 1 - the location is this one, thus we get the data from the internal storage
-     * 2 - the location is not this one:
+     * 2 - the location is not this node:
      *  a - if the location is known, we contact that node.
      *  b - if the location is not known, we contact a nds first
      *
@@ -59,49 +60,71 @@ public class SOSURLConnection extends URLConnection {
     @Override
     public InputStream getInputStream() throws IOException {
 
-        try {
-            IGUID thisGUID = nodeManager.getLocalNode().getNodeGUID();
-            IGUID nodeGUID = GUIDFactory.recreateGUID(url.getHost());
-            IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial / sign
+        InputStream inputStream;
 
-            if (thisGUID.equals(nodeGUID)) {
-                return getDataLocally(entityGUID); // CASE 1
+        try {
+            IGUID nodeGUID = GUIDFactory.recreateGUID(url.getHost());
+            IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial slash
+
+            boolean dataIsStoredLocally = dataIsStoredLocally(nodeGUID);
+            if (dataIsStoredLocally) { // CASE 1
+                inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nodeManager.getNode(nodeGUID);
-                if (nodeToContact != null) {
-                    return contactNode(nodeToContact, entityGUID); // CASE 2.A
-                } else {
+
+                if (nodeToContact != null) { // CASE 2.A
+                    inputStream = contactNode(nodeToContact, entityGUID);
+                } else { // CASE 2.B
                     // TODO - contact nds, get info about node and then contact node
-                    return null; // CASE 2.B
+
+                    // Contact known NDS
+
+                    inputStream = null;
                 }
             }
         } catch (GUIDGenerationException | DataException
                 | BindingAbsentException | DataStorageException e) {
             throw new IOException(e);
         }
+
+        return inputStream;
     }
 
-    private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException, BindingAbsentException, DataException, IOException {
-        Directory dataDir = internalStorage.getDataDirectory();
+    private boolean dataIsStoredLocally(IGUID nodeGUID) {
+        IGUID localNodeGUID = nodeManager.getLocalNode().getNodeGUID();
+        return localNodeGUID.equals(nodeGUID);
+    }
 
-        File path = (File) dataDir.get(entityGUID.toString());
-        return path.getData().getInputStream();
+    private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
+            BindingAbsentException, DataException, IOException {
+
+        Directory directory = internalStorage.getDataDirectory();
+        String filename = entityGUID.toString();
+        File file = (File) directory.get(filename);
+        Data data = file.getData();
+
+        return data.getInputStream();
     }
 
     private InputStream contactNode(Node node, IGUID entityId) throws IOException {
 
         InetSocketAddress inetSocketAddress = node.getHostAddress();
-
-        String urlString = "http://" +
-                            inetSocketAddress.getHostName() +
-                            ":" + inetSocketAddress.getPort() +
-                            "/storage/data?guid=" +
-                            entityId.toString();
+        String urlString = storageHTTPEndPoint(inetSocketAddress, entityId);
 
         URL url = new URL(urlString);
-        URLConnection conn = url.openConnection();
+        URLConnection connection = url.openConnection();
 
-        return conn.getInputStream();
+        return connection.getInputStream();
+    }
+
+    private String storageHTTPEndPoint(InetSocketAddress address, IGUID guid) {
+        String url = "http://" +
+                address.getHostName() +
+                ":" + address.getPort() +
+                "/storage/data?guid=" +
+                guid.toString();
+
+        return url;
     }
 
 }
