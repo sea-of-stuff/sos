@@ -26,15 +26,12 @@ public class ServerState {
     public static SOSLocalNode sos;
 
     public static void init() {
-        System.out.println("Starting SOS");
 
         try {
             ServerState.startSOS();
         } catch (SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
-
-        System.out.println("SOS started");
     }
 
     public static void kill() {
@@ -42,8 +39,12 @@ public class ServerState {
     }
 
     private static void startSOS() throws SOSException, GUIDGenerationException {
+        startSOS("config.properties");
+    }
 
-        File configFile = new File("config.properties"); // TODO - properties should be passed as a param
+    private static void startSOS(String properties) throws SOSException, GUIDGenerationException {
+
+        File configFile = new File(properties);
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         InternalStorage internalStorage;

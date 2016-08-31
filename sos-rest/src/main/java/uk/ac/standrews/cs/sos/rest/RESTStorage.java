@@ -71,4 +71,21 @@ public class RESTStorage {
 
     }
 
+    @POST
+    @Path("/stream")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addAtomStream(final InputStream inputStream) {
+        Storage storage = ServerState.sos.getStorage();
+
+        Atom manifest;
+        try {
+            manifest = storage.addAtom(inputStream);
+        } catch (StorageException | ManifestPersistException e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+
+        return HTTPResponses.CREATED(manifest.toString());
+    }
+
 }
