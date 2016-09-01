@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import uk.ac.standrews.cs.sos.filters.DDSFilter;
+import uk.ac.standrews.cs.sos.filters.NDSFilter;
 import uk.ac.standrews.cs.sos.filters.StorageFilter;
 import uk.ac.standrews.cs.sos.json.JacksonProvider;
 
@@ -15,6 +17,8 @@ public class RESTConfig {
         return new ResourceConfig()
                 .packages(REST_PACKAGE)
                 .register(JacksonProvider.class)
-                .register(StorageFilter.class);
+                .register(StorageFilter.class)
+                .register(NDSFilter.class)
+                .register(DDSFilter.class);
     }
 }
