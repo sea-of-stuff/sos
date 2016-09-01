@@ -11,12 +11,20 @@ public class HTTPResponses {
 
     public static Response INTERNAL_SERVER() {
         return Response.status(HTTPState.INTERNAL_SERVER)
+                .type(MediaType.TEXT_PLAIN)
                 .entity("Something went wrong on our side. Sorry")
                 .build();
     }
 
     public static Response BAD_REQUEST(String message) {
         return Response.status(HTTPState.BAD_REQUEST)
+                .type(MediaType.TEXT_PLAIN)
+                .entity(message)
+                .build();
+    }
+
+    public static Response NOT_FOUND(String message) {
+        return Response.status(HTTPState.NOT_FOUND)
                 .type(MediaType.TEXT_PLAIN)
                 .entity(message)
                 .build();
@@ -38,7 +46,7 @@ public class HTTPResponses {
     public static Response OK(String message) {
         return Response.status(HTTPState.OK)
                 .entity(message)
-                .type(MediaType.TEXT_PLAIN)
                 .build();
     }
+
 }
