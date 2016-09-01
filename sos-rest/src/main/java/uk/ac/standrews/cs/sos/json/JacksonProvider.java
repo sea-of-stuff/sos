@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * The JacksonProvider is used to manage JSON inputs and outputs
+ */
 @Provider
 public class JacksonProvider implements ContextResolver<ObjectMapper> {
 

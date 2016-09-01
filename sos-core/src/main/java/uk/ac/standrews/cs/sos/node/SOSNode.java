@@ -83,6 +83,13 @@ public class SOSNode implements Node {
         }
     }
 
+    // Cloning constructor
+    public SOSNode(Node node) {
+        this(node.getNodeGUID(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
+                node.isClient(), node.isStorage(), node.isDDS(),
+                node.isNDS(), node.isMCS());
+    }
+
     @Override
     public IGUID getNodeGUID() {
         return nodeGUID;

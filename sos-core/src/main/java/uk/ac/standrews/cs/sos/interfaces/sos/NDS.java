@@ -19,7 +19,7 @@ public interface NDS extends SeaOfStuff {
      * @param node
      * @return
      */
-    void registerNode(Node node);
+    boolean registerNode(Node node);
 
     /**
      * Get a known node to this Sea Of Stuff.

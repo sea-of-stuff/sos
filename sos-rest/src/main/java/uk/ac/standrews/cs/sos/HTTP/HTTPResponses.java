@@ -34,4 +34,11 @@ public class HTTPResponses {
                 .type(MediaType.MULTIPART_FORM_DATA) // Note - this is a general media-type. will not render on browser.
                 .build();
     }
+
+    public static Response OK(String message) {
+        return Response.status(HTTPState.OK)
+                .entity(message)
+                .type(MediaType.TEXT_PLAIN)
+                .build();
+    }
 }

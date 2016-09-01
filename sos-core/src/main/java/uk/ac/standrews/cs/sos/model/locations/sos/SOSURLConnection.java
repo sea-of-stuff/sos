@@ -72,15 +72,11 @@ public class SOSURLConnection extends URLConnection {
             } else {
                 Node nodeToContact = nodeManager.getNode(nodeGUID);
 
-                if (nodeToContact != null) { // CASE 2.A
-                    inputStream = contactNode(nodeToContact, entityGUID);
-                } else { // CASE 2.B
-                    // TODO - contact nds, get info about node and then contact node
-
-                    // Contact known NDS
-
-                    inputStream = null;
+                if (nodeToContact == null) { // CASE 2.B
+                    nodeToContact = findNodeViaNDS(nodeGUID);
                 }
+
+                inputStream = contactNode(nodeToContact, entityGUID);
             }
         } catch (GUIDGenerationException | DataException
                 | BindingAbsentException | DataStorageException e) {
@@ -121,10 +117,18 @@ public class SOSURLConnection extends URLConnection {
         String url = "http://" +
                 address.getHostName() +
                 ":" + address.getPort() +
-                "/storage/data?guid=" +
+                "/storage/data/guid/" +
                 guid.toString();
 
         return url;
+    }
+
+    private Node findNodeViaNDS(IGUID nodeGUID) {
+        return null;
+    }
+
+    private String ndsHTTPEndPoint() {
+        return "";
     }
 
 }

@@ -127,10 +127,10 @@ public class NodeManager {
      *
      * @throws NodeManagerException
      */
-    protected void persistNodesTable() throws NodeManagerException {
+    public void persistNodesTable() throws NodeManagerException {
         try {
             for (Node knownNode : knownNodes) {
-                nodeDatabase.addNode(knownNode);
+                nodeDatabase.addNode(knownNode); // FIXME - do not persist nodes that have not changed
             }
         } catch (DatabaseConnectionException e) {
             throw new NodeManagerException(e);

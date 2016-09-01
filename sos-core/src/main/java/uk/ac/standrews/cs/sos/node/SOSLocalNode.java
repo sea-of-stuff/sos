@@ -158,18 +158,22 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void initSOSInstances() {
         if (isClient()) {
+            LOG.log(LEVEL.INFO, "Creating a Client role");
             client = new SOSClient(this, internalStorage, manifestsManager, identity);
         }
 
         if (isStorage()) {
+            LOG.log(LEVEL.INFO, "Creating a Storage role");
             storage = new SOSStorage(this, internalStorage, manifestsManager);
         }
 
         if (isDDS()) {
+            LOG.log(LEVEL.INFO, "Creating a DDS role");
             dds = new SOSDDS(manifestsManager);
         }
 
         if (isNDS()) {
+            LOG.log(LEVEL.INFO, "Creating a NDS role");
             nds = new SOSNDS(nodeManager);
         }
 
