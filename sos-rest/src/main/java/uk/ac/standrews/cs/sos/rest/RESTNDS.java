@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.json.model.NodeModel;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 
 /**
  * https://quicksilver.host.cs.st-andrews.ac.uk/sos/api.html#node-discovery-service
@@ -29,10 +30,10 @@ public class RESTNDS {
     public Response register(NodeModel node) {
         NDS nds = ServerState.sos.getNDS();
 
-        boolean nodeIsRegistered = nds.registerNode(node);
+        Node registerNode = nds.registerNode(node);
 
-        if (nodeIsRegistered) {
-            return HTTPResponses.OK("Node is registered"); // TODO - return json
+        if (registerNode != null) {
+            return HTTPResponses.OK(registerNode.toString());
         } else {
             return HTTPResponses.INTERNAL_SERVER();
         }
@@ -57,17 +58,53 @@ public class RESTNDS {
         Node node = nds.getNode(nodeGUID);
 
         if (node != null) {
-            return HTTPResponses.OK("Found " + node.toString()); // TODO - return json
+            return HTTPResponses.OK(node.toString());
         } else {
             return HTTPResponses.NOT_FOUND("Node with GUID: " + nodeGUID.toString() + " could not be found");
         }
     }
 
     @GET
-    @Path("/guid/{guid}/roles")
-    public void getRoles() {}
-
-    @GET
     @Path("/role/{role}")
-    public void findByRole() {}
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response findByRole(@PathParam("role") String role) {
+        role = role.toLowerCase();
+
+        NDS nds = ServerState.sos.getNDS();
+
+        Collection<Node> nodes;
+
+        switch(role) {
+            case "storage":
+                nodes = nds.getStorageNodes();
+                break;
+            case "nds":
+                nodes = nds.getNDSNodes();
+                break;
+            case "dds":
+                nodes = nds.getDDSNodes();
+                break;
+            case "mcs":
+                nodes = nds.getMCSNodes();
+                break;
+            case "client":
+            default:
+                return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        String json = collectionToJson(nodes);
+        return HTTPResponses.OK(json);
+    }
+
+    private String collectionToJson(Collection<Node> nodes) {
+
+        String json = "[";
+        for(Node node:nodes) {
+            json += node.toString() + ", ";
+        }
+        json = json.substring(0, json.length()-2);
+
+        json += "]";
+        return json;
+    }
 }

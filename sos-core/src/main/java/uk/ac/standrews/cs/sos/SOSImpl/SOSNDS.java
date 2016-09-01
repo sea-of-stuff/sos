@@ -49,7 +49,7 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public boolean registerNode(Node node) {
+    public Node registerNode(Node node) {
         nodeManager.addNode(node);
 
         try {
@@ -57,11 +57,11 @@ public class SOSNDS implements NDS {
         } catch (NodeManagerException e) {
             e.printStackTrace();
             // TODO - throw appropriate exception
-            return false;
+            return null;
         }
 
         // TODO - perform replication across other NDS nodes
-        return true;
+        return node;
     }
 
     @Override

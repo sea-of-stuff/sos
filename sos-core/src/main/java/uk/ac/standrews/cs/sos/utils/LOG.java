@@ -21,6 +21,7 @@ public class LOG {
     }
 
     public static void log(LEVEL level, String message) {
+        System.out.println(message); // DEBUG ONLY
         log.log("sos", level, nodeGUID.toString(), message);
     }
 }

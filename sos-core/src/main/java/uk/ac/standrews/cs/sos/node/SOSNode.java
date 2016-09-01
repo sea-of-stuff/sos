@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.node;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
@@ -92,11 +93,28 @@ public class SOSNode implements Node {
 
     @Override
     public IGUID getNodeGUID() {
+
+        if (nodeGUID == null) {
+            try {
+                // TODO - assuming that DB_nodeid exists
+                nodeGUID = GUIDFactory.recreateGUID(DB_nodeid);
+            } catch (GUIDGenerationException e) {
+                e.printStackTrace();
+                // TODO - throw appropriate exception
+            }
+        }
+
         return nodeGUID;
     }
 
     @Override
     public InetSocketAddress getHostAddress() {
+
+        if (hostAddress == null) {
+            // TODO - assuming that DB_hostname, DB_port exist
+            hostAddress = new InetSocketAddress(DB_hostname, DB_port);
+        }
+
         return hostAddress;
     }
 
@@ -127,7 +145,26 @@ public class SOSNode implements Node {
 
     @Override
     public String toString() {
-        return nodeGUID.toString();
+        String json = "{ ";
+        {
+            json += "\"guid\" : \"" + getNodeGUID() + "\", ";
+            json += "\"hostname\" : \"" + getHostAddress().getHostName() + "\", ";
+            json += "\"port\" : " + getHostAddress().getPort() + ", ";
+
+            json += "\"roles\" : ";
+            json += "{";
+            {
+                json += "\"client\" : " + isClient() + ", ";
+                json += "\"storage\" : " + isStorage() + ", ";
+                json += "\"dds\" : " + isDDS() + ", ";
+                json += "\"nds\" : " + isNDS() + ", ";
+                json += "\"mcs\" : " + isMCS();
+            }
+            json += "}";
+        }
+        json += " }";
+
+        return json;
     }
 
     @Override
@@ -135,12 +172,12 @@ public class SOSNode implements Node {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SOSNode sosNode = (SOSNode) o;
-        return Objects.equals(nodeGUID, sosNode.nodeGUID);
+        return Objects.equals(getNodeGUID(), sosNode.getNodeGUID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nodeGUID);
+        return Objects.hash(getNodeGUID());
     }
 
 }

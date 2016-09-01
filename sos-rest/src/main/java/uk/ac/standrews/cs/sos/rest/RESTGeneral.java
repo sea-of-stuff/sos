@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -15,35 +17,14 @@ import javax.ws.rs.core.Response;
 public class RESTGeneral {
 
     @GET
-    @Path("/roles")
-    public Response getRoles() {
+    @Path("/info")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getNode() {
 
         SOSLocalNode sos = ServerState.sos;
-
-        boolean isClient = sos.isClient();
-        boolean isStorage = sos.isStorage();
-        boolean isDDS = sos.isDDS();
-        boolean isNDS = sos.isNDS();
-        boolean isMCS = sos.isMCS();
-
-        String rolesJSON = makeJSONForRoles(isClient, isStorage, isDDS, isNDS, isMCS);
         return Response.status(HTTPState.OK)
-                .entity(rolesJSON)
+                .entity(sos.toString())
                 .build();
     }
 
-    private String makeJSONForRoles(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
-
-        String json = "{ ";
-        {
-            json += "\"client\" : " + isClient + ", ";
-            json += "\"storage\" : " + isStorage + ", ";
-            json += "\"dds\" : " + isDDS + ", ";
-            json += "\"nds\" : " + isNDS + ", ";
-            json += "\"mcs\" : " + isMCS + ", ";
-        }
-        json += " }";
-
-        return json;
-    }
 }
