@@ -11,8 +11,8 @@ import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
 
-import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

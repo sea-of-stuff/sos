@@ -24,8 +24,8 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <testng.version>6.1.1</testng.version>
-        <powermock.version>1.6.3</powermock.version>
+        <testng.version>6.9.10</testng.version>
+        <powermock.version>1.6.5</powermock.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <commons.io.version>2.5</commons.io.version>
 

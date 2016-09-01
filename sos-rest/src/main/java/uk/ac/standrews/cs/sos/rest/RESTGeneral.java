@@ -19,7 +19,7 @@ public class RESTGeneral {
     @GET
     @Path("/info")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getNode() {
+    public Response getInfo() {
 
         SOSLocalNode sos = ServerState.sos;
         return Response.status(HTTPState.OK)
