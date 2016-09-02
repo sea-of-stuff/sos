@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 
 /**
@@ -34,7 +35,7 @@ public interface Manifest {
      *                                  due to uk.ac.standrews.cs.IO, network or other issues.
      * @throws DecryptionException
      */
-    boolean verify(Identity identity) throws GUIDGenerationException, DecryptionException;
+    boolean verify(Identity identity) throws ManifestVerificationException;
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

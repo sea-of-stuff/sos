@@ -6,9 +6,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
@@ -127,7 +127,7 @@ public class AtomManifestTest {
     }
 
     @Test
-    public void verifyAtomWithNullGUIDTest() throws GUIDGenerationException {
+    public void verifyAtomWithNullGUIDTest() throws ManifestVerificationException {
         Collection<LocationBundle> bundles = new ArrayList<>();
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 

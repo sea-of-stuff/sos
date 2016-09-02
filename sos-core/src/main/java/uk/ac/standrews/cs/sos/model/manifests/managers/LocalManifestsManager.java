@@ -127,13 +127,12 @@ public class LocalManifestsManager implements ManifestsManager {
     private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {
 
         try {
-            Manifest manifest = null;
             File manifestFile = getManifestFile(guid);
 
             JsonNode node = JSONHelper.JsonObjMapper().readTree(manifestFile.toFile());
             String type = node.get(ManifestConstants.KEY_TYPE).textValue();
 
-            manifest = constructManifestFromJson(type, manifestFile);
+            Manifest manifest = constructManifestFromJson(type, manifestFile);
 
             return manifest;
         } catch (UnknownManifestTypeException | ManifestNotMadeException
@@ -144,7 +143,7 @@ public class LocalManifestsManager implements ManifestsManager {
     }
 
     private Manifest constructManifestFromJson(String type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
-        Manifest manifest = null;
+        Manifest manifest;
         try {
             switch (type) {
                 case ManifestConstants.ATOM:
@@ -184,9 +183,7 @@ public class LocalManifestsManager implements ManifestsManager {
 
             cacheManifest(manifest);
 
-        } catch (DataStorageException e) {
-            throw new ManifestManagerException(e);
-        } catch (ManifestNotFoundException e) {
+        } catch (DataStorageException | ManifestNotFoundException e) {
             throw new ManifestManagerException(e);
         }
 

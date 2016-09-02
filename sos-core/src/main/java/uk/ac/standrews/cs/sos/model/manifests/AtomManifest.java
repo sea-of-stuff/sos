@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
@@ -66,7 +67,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public boolean verify(Identity identity) throws GUIDGenerationException {
+    public boolean verify(Identity identity) throws ManifestVerificationException {
         if (contentGUID == null)
             return false;
 
@@ -76,7 +77,9 @@ public class AtomManifest extends BasicManifest implements Atom {
                 if (!verifyStream(dataStream)) {
                     return false;
                 }
-            } catch (SourceLocationException | IOException e) {}
+            } catch (SourceLocationException | GUIDGenerationException| IOException e) {
+                throw new ManifestVerificationException("Unable to verify Atom Manifest", e);
+            }
         }
 
         return true;

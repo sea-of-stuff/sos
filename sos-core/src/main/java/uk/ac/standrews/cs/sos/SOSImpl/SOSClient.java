@@ -2,8 +2,6 @@ package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -184,14 +182,8 @@ public class SOSClient implements Client {
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
         LOG.log(LEVEL.INFO, "Verifying manifest " + manifest.getContentGUID());
 
-        boolean ret;
-        try {
-            ret = manifest.verify(identity);
-        } catch (GUIDGenerationException | DecryptionException e) {
-            throw new ManifestVerificationException("Manifest verification failed", e);
-        }
-
-        return ret;
+        boolean success = manifest.verify(identity);
+        return success;
     }
 
     @Override

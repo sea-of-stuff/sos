@@ -68,14 +68,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private LOG LOG = new LOG(getNodeGUID());
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
-        super(builder.configuration);
+        super(Builder.configuration);
 
         LOG.log(LEVEL.INFO, "Starting up node ");
 
-        configuration = builder.configuration;
-        internalStorage = builder.internalStorage;
-        index = builder.index;
-        policyManager = builder.policyManager; //FIXME - could have different policies for client, storage, dds, nds, mcs!
+        configuration = Builder.configuration;
+        internalStorage = Builder.internalStorage;
+        index = Builder.index;
+        policyManager = Builder.policyManager; //FIXME - could have different policies for client, storage, dds, nds, mcs!
 
         try {
             DatabaseType databaseType = configuration.getDBType();
@@ -192,22 +192,22 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         private static PolicyManager policyManager;
 
         public Builder configuration(SOSConfiguration configuration) {
-            this.configuration = configuration;
+            Builder.configuration = configuration;
             return this;
         }
 
         public Builder internalStorage(InternalStorage internalStorage) {
-            this.internalStorage = internalStorage;
+            Builder.internalStorage = internalStorage;
             return this;
         }
 
         public Builder index(Index index) {
-            this.index = index;
+            Builder.index = index;
             return this;
         }
 
         public Builder policies(PolicyManager policyManager) {
-            this.policyManager = policyManager;
+            Builder.policyManager = policyManager;
             return this;
         }
 

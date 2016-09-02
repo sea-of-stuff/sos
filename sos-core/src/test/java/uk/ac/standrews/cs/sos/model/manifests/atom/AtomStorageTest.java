@@ -37,8 +37,7 @@ import static org.testng.AssertJUnit.assertNull;
  */
 public class AtomStorageTest {
 
-    AtomStorage atomStorage;
-
+    private AtomStorage atomStorage;
     private InternalStorage internalStorage;
 
     @BeforeMethod

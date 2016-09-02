@@ -109,7 +109,7 @@ public interface Client extends SeaOfStuff {
      * @return latest known version of the asset
      * @throws ManifestNotFoundException
      */
-    Version getLatest(IGUID guid) throws ManifestNotFoundException;;
+    Version getLatest(IGUID guid) throws ManifestNotFoundException;
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by

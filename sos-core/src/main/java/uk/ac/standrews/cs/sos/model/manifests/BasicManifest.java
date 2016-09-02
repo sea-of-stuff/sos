@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +26,6 @@ public abstract class BasicManifest implements Manifest {
 
     protected IGUID contentGUID;
     private final String manifestType;
-    private Timestamp timestamp;
 
     /**
      * Constructor for a BasicManifest.
@@ -36,7 +35,6 @@ public abstract class BasicManifest implements Manifest {
      */
     protected BasicManifest(String manifestType) {
         this.manifestType = manifestType;
-        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -67,7 +65,7 @@ public abstract class BasicManifest implements Manifest {
      * @throws DecryptionException
      */
     @Override
-    public abstract boolean verify(Identity identity) throws GUIDGenerationException, DecryptionException;
+    public abstract boolean verify(Identity identity) throws ManifestVerificationException;
 
     /**
      * Checks whether this manifest contains valid key-value entries.

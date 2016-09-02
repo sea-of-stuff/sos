@@ -15,7 +15,7 @@ public interface ManifestsManager {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
-    Version getLatest(IGUID guid) throws ManifestNotFoundException;;
+    Version getLatest(IGUID guid) throws ManifestNotFoundException;
 
     // TODO - not 100% sure on the method below. I would prefer something more abstract on the metadata
 

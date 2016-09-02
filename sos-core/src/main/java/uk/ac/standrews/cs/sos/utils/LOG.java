@@ -22,6 +22,11 @@ public class LOG {
 
     public static void log(LEVEL level, String message) {
         System.out.println(message); // DEBUG ONLY
-        log.log("sos", level, nodeGUID.toString(), message);
+
+        if (log != null) {
+            log.log("sos", level, nodeGUID.toString(), message);
+        } else {
+            System.err.println("LOG has not been initialised");
+        }
     }
 }
