@@ -20,6 +20,7 @@ public class JacksonProvider implements ContextResolver<ObjectMapper> {
         MAPPER.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
         MAPPER.disable(MapperFeature.USE_GETTERS_AS_SETTERS);
+        MAPPER.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
     }
 
     public JacksonProvider() {

@@ -21,7 +21,7 @@ public class LocationBundleTest extends SetUpTest {
                     "\"Location\":\"http://abc.com/123\"}";
 
     private static final String EXPECTED_PROV_LOCATION =
-            "{\"Type\":\"prov\"," +
+            "{\"Type\":\"provenance\"," +
                     "\"Location\":\"http://abc.com/123/1\"}";
 
     @Test
