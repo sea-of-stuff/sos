@@ -23,4 +23,5 @@ public class SOSProtocol {
             throw new SOSProtocolException(e);
         }
     }
+
 }

@@ -22,6 +22,9 @@ import java.net.URLConnection;
 /**
  * This class handles all requests on the URLs under the sos:// scheme.
  *
+ * TODO: need to make sure that this code can work asynchrnously
+ * NOTE: what happens if two requests about the same data are made, but there are order issues?
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSURLConnection extends URLConnection {
@@ -112,6 +115,7 @@ public class SOSURLConnection extends URLConnection {
 
         return connection.getInputStream();
     }
+
 
     private String storageHTTPEndPoint(InetSocketAddress address, IGUID guid) {
         String url = "http://" +
