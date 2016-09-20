@@ -17,16 +17,28 @@ public class InternalStorage {
 
     public static final String DATA_DIRECTORY_NAME = "data";
     public static final String MANIFESTS_DIRECTORY_NAME = "manifests";
+    public static final String HEADS_DIRECTORY_NAME = "heads";
     public static final String INDEX_DIRECTORY_NAME = "index";
 
     private IStorage storage;
 
+    /**
+     * Construct the storage space used by this node.
+     *
+     * @param storage
+     * @throws DataStorageException
+     */
     public InternalStorage(IStorage storage) throws DataStorageException {
         this.storage = storage;
 
         createSOSDirectories();
     }
 
+    /**
+     * Return the directory used to store data
+     * @return
+     * @throws DataStorageException
+     */
     public Directory getDataDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(DATA_DIRECTORY_NAME);
@@ -35,6 +47,11 @@ public class InternalStorage {
         }
     }
 
+    /**
+     * Return the directory used to store the manifests
+     * @return
+     * @throws DataStorageException
+     */
     public Directory getManifestDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
@@ -43,6 +60,24 @@ public class InternalStorage {
         }
     }
 
+    /**
+     * Return the directory used to store the HEAD versions for all assets
+     * @return
+     * @throws DataStorageException
+     */
+    public Directory getHeadsDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(HEADS_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
+    }
+
+    /**
+     * Return the directory used to store the index for this node
+     * @return
+     * @throws DataStorageException
+     */
     public Directory getIndexDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(INDEX_DIRECTORY_NAME);
@@ -51,6 +86,13 @@ public class InternalStorage {
         }
     }
 
+    /**
+     * Create an arbitrary file in a given directory
+     * @param parent
+     * @param filename
+     * @return
+     * @throws DataStorageException
+     */
     public File createFile(Directory parent, String filename) throws DataStorageException {
         try {
             return storage.createFile(parent, filename);
@@ -59,6 +101,14 @@ public class InternalStorage {
         }
     }
 
+    /**
+     * Create an arbitrary file in a given directory and some data
+     * @param parent
+     * @param filename
+     * @param data
+     * @return
+     * @throws DataStorageException
+     */
     public File createFile(Directory parent, String filename, Data data) throws DataStorageException {
         try {
             return storage.createFile(parent, filename, data);
@@ -67,12 +117,21 @@ public class InternalStorage {
         }
     }
 
+    /**
+     * Destroy the internal storage and its content.
+     * This method should be used for test purposes only.
+     *
+     * @throws DataStorageException
+     */
     public void destroy() throws DataStorageException {
 
         try {
             storage.getRoot().remove(DATA_DIRECTORY_NAME);
             storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
+            storage.getRoot().remove(HEADS_DIRECTORY_NAME);
             storage.getRoot().remove(INDEX_DIRECTORY_NAME);
+
+            // TODO - remove content in the root directory?
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
         }
@@ -82,6 +141,7 @@ public class InternalStorage {
         try {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
+            storage.createDirectory(HEADS_DIRECTORY_NAME).persist();
             storage.createDirectory(INDEX_DIRECTORY_NAME).persist();
         } catch (StorageException e) {
             throw new DataStorageException(e);

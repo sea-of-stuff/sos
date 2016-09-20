@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -87,8 +87,32 @@ public class LocalManifestsManager implements ManifestsManager {
     }
 
     @Override
-    public Version getLatest(IGUID guid) throws ManifestNotFoundException {
+    public Version getLatest(IGUID invariant) throws ManifestNotFoundException {
+        if (invariant == null) {
+            throw new ManifestNotFoundException("Cannot find manifest for null guid");
+        }
+
+        // TODO - see what git/hg do
         return null;
+    }
+
+    /**
+     * Return the local HEAD for a given version
+     * @param invariant
+     * @return
+     */
+    public Version getHEAD(IGUID invariant) {
+
+        // TODO - see what git/hg do
+        return null;
+    }
+
+    /**
+     * Set the specified invariant as the local HEAD
+     * @param invariant
+     */
+    public void setHEAD(IGUID invariant) {
+        // reset current head
     }
 
     @Override

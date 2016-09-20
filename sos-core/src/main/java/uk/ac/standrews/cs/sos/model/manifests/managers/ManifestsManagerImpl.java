@@ -1,15 +1,13 @@
-package uk.ac.standrews.cs.sos.model.manifests;
+package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
-import uk.ac.standrews.cs.sos.model.manifests.managers.LocalManifestsManager;
-import uk.ac.standrews.cs.sos.model.manifests.managers.RemoteManifestsManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
