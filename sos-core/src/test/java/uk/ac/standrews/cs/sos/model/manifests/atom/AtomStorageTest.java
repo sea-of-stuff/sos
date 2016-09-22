@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLStreamHandlerFactory;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -59,11 +60,12 @@ public class AtomStorageTest {
 
     private void registerSOSProtocol() throws SOSProtocolException {
         NodeManager nodeManagerMock = mock(NodeManager.class);
+        RequestsManager requestsManagerMock = mock(RequestsManager.class);
 
         try {
             if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
                 URLStreamHandlerFactory urlStreamHandlerFactory =
-                        new SOSURLStreamHandlerFactory(internalStorage, nodeManagerMock);
+                        new SOSURLStreamHandlerFactory(internalStorage, nodeManagerMock, requestsManagerMock);
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
             }
         } catch (Error e) {

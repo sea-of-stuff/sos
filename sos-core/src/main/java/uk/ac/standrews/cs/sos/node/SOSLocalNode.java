@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSClient;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSDDS;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSNDS;
-import uk.ac.standrews.cs.sos.SOSImpl.SOSStorage;
+import uk.ac.standrews.cs.sos.SOSImpl.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
@@ -92,7 +89,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try {
             LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
-            SOSProtocol.Register(internalStorage, nodeManager);
+            SOSProtocol.Register(internalStorage, nodeManager, null); // FIXME
         } catch (SOSProtocolException e) {
             LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSException(e);
@@ -177,9 +174,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             nds = new SOSNDS(nodeManager);
         }
 
-//        if (isMCS()) {
-//            mcs = new SOSMCS();
-//        }
+        if (isMCS()) {
+            mcs = new SOSMCS();
+        }
     }
 
     /**

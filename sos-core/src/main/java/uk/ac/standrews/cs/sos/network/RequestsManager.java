@@ -14,7 +14,7 @@ public class RequestsManager {
     // Singleton client instance
     private final OkHttpClient client = new OkHttpClient();
 
-    public void addRequest(Request request) throws IOException {
+    public void playRequest(Request request) throws IOException {
         request.play(client);
     }
 

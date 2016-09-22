@@ -5,6 +5,4 @@ package uk.ac.standrews.cs.sos.interfaces.policy;
  */
 public interface ComputationPolicy {
 
-
-    boolean canComputeMetadataOnBehalfOfOthers();
 }

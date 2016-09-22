@@ -26,6 +26,10 @@ public class HelperTest {
         return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
     }
 
+    public static String InputStreamToString(InputStream string) throws IOException {
+        return IOUtils.toString(string, StandardCharsets.UTF_8);
+    }
+
     private static String localURItoPath(Location location) throws URISyntaxException {
         return location.getURI().getPath();
     }
@@ -56,10 +60,6 @@ public class HelperTest {
                         new java.io.File(HelperTest.localURItoPath(location)), true))) {
             writer.append(text);
         }
-    }
-
-    public static String InputStreamToString(InputStream stream) throws IOException {
-        return IOUtils.toString(stream);
     }
 
     public static void DeletePath(Directory directory) throws IOException {

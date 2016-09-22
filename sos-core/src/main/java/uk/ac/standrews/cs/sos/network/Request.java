@@ -2,77 +2,64 @@ package uk.ac.standrews.cs.sos.network;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.utils.LOG;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
+ * This is a wrapper class around okhttp.Request
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Request {
+public abstract class Request {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    protected okhttp3.Request request;
+    protected URL url;
+    protected String json_body;
+
     private Method method;
-    private String json_body;
 
-    private Response response;
-
-    public Request(Method method) {
+    public Request(Method method, URL url) {
         this.method = method;
+        this.url = url;
+    }
+
+    public Request setJSONBody(String json_body) {
+        this.json_body = json_body;
+        return this;
     }
 
     public void play(OkHttpClient client) throws IOException {
-        // TODO
+        LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
 
         switch(method) {
             case GET:
-                playGET(client);
+                get(client);
                 break;
             case POST:
-                playPOST(client);
+                postJSON(client);
+                break;
+            case PUT:
+                putJSON(client);
                 break;
             default:
                 LOG.log(LEVEL.WARN, "Unknown Request method while playing a request");
         }
     }
 
-    private void playGET(OkHttpClient client) throws IOException {
-        this.response = get(client, "");
-    }
+    protected abstract void get(OkHttpClient client) throws IOException;
 
-    private void playPOST(OkHttpClient client) {
+    protected abstract void postJSON(OkHttpClient client) throws IOException;
 
-    }
+    protected abstract void putJSON(OkHttpClient client) throws IOException;
 
-    Response get(OkHttpClient client, String url) throws IOException {
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .build();
-
-        return client.newCall(request).execute();
-    }
-
-    String postJSON(OkHttpClient client, String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json);
-
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-    }
-
-    public int getRespondeCode() {
-        return response.code();
-    }
-
-    public Response getResponse() {
-        return response;
+    @Override
+    public String toString() {
+        return request.toString();
     }
 
 }

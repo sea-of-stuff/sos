@@ -1,0 +1,54 @@
+package uk.ac.standrews.cs.sos.network;
+
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+
+import java.io.IOException;
+import java.net.URL;
+
+/**
+ * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ */
+public class AsyncRequest extends Request {
+
+    private ResponseCallback callback;
+
+    public AsyncRequest(Method method, URL url, ResponseCallback callback) {
+        super(method, url);
+        this.callback = callback;
+    }
+
+    @Override
+    protected void get(OkHttpClient client) throws IOException {
+        request = new okhttp3.Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    @Override
+    protected void postJSON(OkHttpClient client) throws IOException {
+        RequestBody body = RequestBody.create(JSON, json_body);
+
+        request = new okhttp3.Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    @Override
+    protected void putJSON(OkHttpClient client) throws IOException {
+        RequestBody body = RequestBody.create(JSON, json_body);
+
+        new okhttp3.Request.Builder()
+                .url(url)
+                .put(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+}

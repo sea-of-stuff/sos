@@ -1,3 +1,0 @@
-Currently, this SOS project is designed so that requests are made on the go.
-A better design is to have a queue of requests instead which are processed by
-a RequestManager.

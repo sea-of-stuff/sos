@@ -2,11 +2,16 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.network.Method;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
+import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -31,6 +36,7 @@ public class SOSURLConnection extends URLConnection {
 
     private InternalStorage internalStorage;
     private NodeManager nodeManager;
+    private RequestsManager requestsManager;
 
     /**
      * Constructs a URL connection to the specified URL. A connection to
@@ -39,11 +45,14 @@ public class SOSURLConnection extends URLConnection {
      * @param url the specified URL.
      */
     protected SOSURLConnection(InternalStorage internalStorage,
-                               NodeManager nodeManager, URL url) {
+                               NodeManager nodeManager,
+                               RequestsManager requestsManager,
+                               URL url) {
         super(url);
 
         this.internalStorage = internalStorage;
         this.nodeManager = nodeManager;
+        this.requestsManager = requestsManager;
     }
 
     @Override
@@ -71,14 +80,17 @@ public class SOSURLConnection extends URLConnection {
 
             boolean dataIsStoredLocally = dataIsStoredLocally(nodeGUID);
             if (dataIsStoredLocally) { // CASE 1
+                LOG.log(LEVEL.INFO, "Data will be fetched from this node");
                 inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nodeManager.getNode(nodeGUID);
 
                 if (nodeToContact == null) { // CASE 2.B
+                    LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
                     nodeToContact = findNodeViaNDS(nodeGUID);
                 }
 
+                LOG.log(LEVEL.INFO, "Data will be fetched from node " + nodeGUID);
                 inputStream = contactNode(nodeToContact, entityGUID);
             }
         } catch (GUIDGenerationException | DataException
@@ -111,9 +123,14 @@ public class SOSURLConnection extends URLConnection {
         String urlString = storageHTTPEndPoint(inetSocketAddress, entityId);
 
         URL url = new URL(urlString);
-        URLConnection connection = url.openConnection();
+        // URLConnection connection = url.openConnection();
 
-        return connection.getInputStream();
+        SyncRequest request = new SyncRequest(Method.GET, url);
+        requestsManager.playRequest(request);
+
+        return request.getResponse().body().byteStream();
+
+        // return connection.getInputStream();
     }
 
 
