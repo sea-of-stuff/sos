@@ -37,8 +37,6 @@ public class SQLDatabase implements NodeDatabase {
     @Override
     public void addNode(Node node) throws DatabaseConnectionException {
 
-        // FIXME - check if node exists, then either insert or update
-
         ConnectionSource connection = null;
         try {
             connection = getDBConnection();
@@ -47,7 +45,7 @@ public class SQLDatabase implements NodeDatabase {
             Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
 
             SOSNode clone = new SOSNode(node);
-            nodesDAO.create(clone);
+            nodesDAO.createOrUpdate(clone);
         } catch (SQLException | DatabaseException e) {
             throw new DatabaseConnectionException(e);
         } finally {

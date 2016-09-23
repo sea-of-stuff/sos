@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 
 /**
@@ -43,8 +44,8 @@ public class StorageTest extends SetUpTest {
 
     @Override
     @BeforeMethod
-    public void setUp() throws Exception {
-        super.setUp();
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
 
         storage = localSOSNode.getStorage();
     }

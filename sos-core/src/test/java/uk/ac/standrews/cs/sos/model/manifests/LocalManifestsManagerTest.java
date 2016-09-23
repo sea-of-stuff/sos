@@ -6,14 +6,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
@@ -29,10 +27,9 @@ import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,13 +43,15 @@ import static org.testng.Assert.assertFalse;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalManifestsManagerTest {
+public class LocalManifestsManagerTest extends CommonTest {
 
     private InternalStorage storage;
     private Index index;
 
     @BeforeMethod
-    public void setUp() throws IndexException, NodeManagerException, StorageException, DataStorageException {
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
+
         SOSConfiguration configurationMock = mock(SOSConfiguration.class);
         when(configurationMock.getStorageType()).thenReturn(StorageType.LOCAL);
         when(configurationMock.getStorageLocation()).thenReturn("~/sos/");
@@ -64,7 +63,7 @@ public class LocalManifestsManagerTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException, DataStorageException {
+    public void tearDown() throws Exception {
         index.flushDB();
         index.killInstance();
 

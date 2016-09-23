@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.json.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -24,6 +25,7 @@ public class NodeModel implements Node {
 
     public NodeModel() {}
 
+    @JsonIgnore
     @Override
     public IGUID getNodeGUID() {
 
@@ -36,6 +38,7 @@ public class NodeModel implements Node {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public InetSocketAddress getHostAddress() {
         return new InetSocketAddress(ip, port);

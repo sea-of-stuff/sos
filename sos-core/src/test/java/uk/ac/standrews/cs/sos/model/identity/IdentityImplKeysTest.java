@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.identity;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -17,7 +19,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class IdentityImplKeysTest {
+public class IdentityImplKeysTest extends CommonTest {
 
     private final static String BYTES_3K = "c1 c3 c0 86 da 82 92 ea 9a 59 94 a1 fe a5 30 3a \n"+
             "bb 10 13 ec 8c 0e 6d f6 be bb c3 34 dd f3 de 3b \n"+
@@ -85,9 +87,10 @@ public class IdentityImplKeysTest {
             "03 31 41 d0 4f 6a fa 26 07 01 88 6e 23 52 77 60 \n";
 
     @BeforeMethod
-    public void setUp() throws Exception {
-        // Delete any left over keys from past
-        deleteKeys();
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
+
+        deleteKeys(); // Delete any left over keys from past
     }
 
     @AfterMethod

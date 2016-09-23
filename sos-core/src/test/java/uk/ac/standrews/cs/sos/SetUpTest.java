@@ -17,12 +17,13 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SetUpTest {
+public class SetUpTest extends CommonTest {
 
     protected SOSLocalNode localSOSNode;
     protected InternalStorage internalStorage;
@@ -54,8 +55,11 @@ public class SetUpTest {
 
     protected SOSConfiguration configuration;
 
+    @Override
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
+
         createConfiguration();
 
         try {
@@ -89,6 +93,11 @@ public class SetUpTest {
         index.killInstance();
 
         internalStorage.destroy();
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+
     }
 
     protected void createConfiguration() throws SOSConfigurationException, IOException {

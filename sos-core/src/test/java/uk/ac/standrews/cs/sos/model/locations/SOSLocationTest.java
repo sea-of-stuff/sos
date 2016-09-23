@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.locations;
 
-import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -44,7 +43,7 @@ public class SOSLocationTest extends SetUpTest {
 
         SOSLocation location = new SOSLocation(localSOSNode.getNodeGUID(), DATA_GUID);
         InputStream inputStream = location.getSource();
-        String retrieved = IOUtils.toString(inputStream);
+        String retrieved = HelperTest.InputStreamToString(inputStream);
 
         assertTrue(retrieved.contains("The first line"));
         assertTrue(retrieved.contains("The second line"));

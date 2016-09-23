@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.policy;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 
 import static org.testng.Assert.*;
@@ -8,7 +9,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class BasicManifestPolicyTest {
+public class BasicManifestPolicyTest extends CommonTest {
 
     @Test
     public void testDumpConstructor() {

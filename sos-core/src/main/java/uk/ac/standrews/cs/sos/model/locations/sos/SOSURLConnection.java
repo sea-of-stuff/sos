@@ -123,14 +123,11 @@ public class SOSURLConnection extends URLConnection {
         String urlString = storageHTTPEndPoint(inetSocketAddress, entityId);
 
         URL url = new URL(urlString);
-        // URLConnection connection = url.openConnection();
 
         SyncRequest request = new SyncRequest(Method.GET, url);
         requestsManager.playRequest(request);
 
         return request.getResponse().body().byteStream();
-
-        // return connection.getInputStream();
     }
 
 

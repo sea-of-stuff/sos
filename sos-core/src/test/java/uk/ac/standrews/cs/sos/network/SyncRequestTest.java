@@ -6,6 +6,7 @@ import okhttp3.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.LOG;
 
@@ -20,10 +21,12 @@ import static org.testng.Assert.assertNotNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SyncRequestTest {
+public class SyncRequestTest extends CommonTest {
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp(java.lang.reflect.Method testMethod) throws Exception {
+        super.setUp(testMethod);
+
         LOG log = new LOG(GUIDFactory.generateRandomGUID());
     }
 
