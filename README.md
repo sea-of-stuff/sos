@@ -50,3 +50,8 @@ This is a list of the main things to do (in no particular order):
 - metadata engine
 - webdav integration
 - rest api
+
+## How to run fluentd
+
+
+``$ docker run -d -p 24224:24224 -v /tmp/data:/fluentd/log fluent/fluentd`

@@ -26,7 +26,7 @@ public class RESTGeneralTest extends JerseyTestNg.ContainerPerMethodTest {
             "  \"roles\": {\n" +
             "    \"client\": true,\n" +
             "    \"storage\": true,\n" +
-            "    \"dds\": false,\n" +
+            "    \"dds\": true,\n" +
             "    \"nds\": true,\n" +
             "    \"mcs\": false\n" +
             "  }\n" +
@@ -58,6 +58,7 @@ public class RESTGeneralTest extends JerseyTestNg.ContainerPerMethodTest {
 
         Response response = target("/info").request().get();
         assertEquals(response.getStatus(), HTTPState.OK);
+
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
     }
 
