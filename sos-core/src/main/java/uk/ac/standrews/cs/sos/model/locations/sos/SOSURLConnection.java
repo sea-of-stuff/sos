@@ -7,9 +7,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -20,7 +18,6 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -88,6 +85,8 @@ public class SOSURLConnection extends URLConnection {
                 if (nodeToContact == null) { // CASE 2.B
                     LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
                     nodeToContact = findNodeViaNDS(nodeGUID);
+
+                    // TODO: what to do if node cannot be found?
                 }
 
                 LOG.log(LEVEL.INFO, "Data will be fetched from node " + nodeGUID);
@@ -119,34 +118,17 @@ public class SOSURLConnection extends URLConnection {
 
     private InputStream contactNode(Node node, IGUID entityId) throws IOException {
 
-        InetSocketAddress inetSocketAddress = node.getHostAddress();
-        String urlString = storageHTTPEndPoint(inetSocketAddress, entityId);
-
-        URL url = new URL(urlString);
+        URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
 
         SyncRequest request = new SyncRequest(Method.GET, url);
-        requestsManager.playRequest(request);
+        Response response = requestsManager.playSyncRequest(request);
 
-        return request.getResponse().body().byteStream();
+        return response.getBody();
     }
 
-
-    private String storageHTTPEndPoint(InetSocketAddress address, IGUID guid) {
-        String url = "http://" +
-                address.getHostName() +
-                ":" + address.getPort() +
-                "/storage/data/guid/" +
-                guid.toString();
-
-        return url;
-    }
 
     private Node findNodeViaNDS(IGUID nodeGUID) {
         return null;
-    }
-
-    private String ndsHTTPEndPoint() {
-        return "";
     }
 
 }

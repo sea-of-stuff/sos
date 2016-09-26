@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.managers.ManifestsManagerImpl;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.LOG;
@@ -51,6 +52,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Identity identity;
     private ManifestsManager manifestsManager;
     private NodeManager nodeManager;
+    private RequestsManager requestsManager;
 
     // Node roles
     // All roles will share storage, node manager, manifests manager, etc.
@@ -58,7 +60,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Storage storage;
     private DDS dds;
     private NDS nds;
-    private MCS mcs; // TODO - provide access to the MCS role
+    private MCS mcs;
 
     // Each node will have its own log and it will be used to log errors as well
     // as useful information about the node itself.
@@ -82,14 +84,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throw new SOSException(e);
         }
 
-        initManifestManager();
         initNodeManager();
+        initRequestsManager();
+        initManifestManager();
         initIdentity();
         initSOSInstances();
 
         try {
             LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
-            SOSProtocol.Register(internalStorage, nodeManager, null); // FIXME
+            SOSProtocol.Register(internalStorage, nodeManager, requestsManager);
         } catch (SOSProtocolException e) {
             LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSException(e);
@@ -109,6 +112,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         return storage;
     }
 
+    @Override
     public DDS getDDS() {
         return dds;
     }
@@ -116,6 +120,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     @Override
     public NDS getNDS() {
         return nds;
+    }
+
+    @Override
+    public MCS getMCS() {
+        return mcs;
     }
 
     @Override
@@ -132,8 +141,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /* PRIVATE METHODS */
     /**************************************************************************/
 
-    private void initManifestManager() {
-        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, index, nodeManager);
+
+    private void initRequestsManager() {
+        requestsManager = new RequestsManager();
     }
 
     private void initNodeManager() throws SOSException {
@@ -142,6 +152,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         } catch (NodeManagerException e) {
             throw new SOSException(e);
         }
+    }
+
+    private void initManifestManager() {
+        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, index, nodeManager, requestsManager);
     }
 
     private void initIdentity() throws SOSException {

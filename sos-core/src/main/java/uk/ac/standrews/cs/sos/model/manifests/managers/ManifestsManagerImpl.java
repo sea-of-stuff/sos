@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.util.Collection;
@@ -23,16 +24,18 @@ public class ManifestsManagerImpl implements ManifestsManager {
     private LocalManifestsManager local;
     private RemoteManifestsManager remote;
 
-    public ManifestsManagerImpl(PolicyManager policyManager, InternalStorage internalStorage, Index index, NodeManager nodeManager) {
+    public ManifestsManagerImpl(PolicyManager policyManager, InternalStorage internalStorage, Index index,
+                                NodeManager nodeManager, RequestsManager requestsManager) {
         this.policyManager = policyManager;
 
         local = new LocalManifestsManager(internalStorage, index);
-        remote = new RemoteManifestsManager(nodeManager);
+        remote = new RemoteManifestsManager(policyManager, nodeManager, requestsManager);
     }
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         local.addManifest(manifest);
+        remote.addManifest(manifest);
     }
 
     @Override

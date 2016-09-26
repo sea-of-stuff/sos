@@ -235,19 +235,13 @@ public class SOSAddAtomTest extends ClientTest {
 
         long start = System.nanoTime();
         for(int i = 0; i < 100; i++) {
-
-            InputStream stream = HelperTest.StringToInputStream(testStrings.poll());
-            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-            Atom manifest = client.addAtom(builder);
-            assertNotNull(manifest.getContentGUID());
-
-            stream.close();
+            addAtom(testStrings);
         }
 
         System.out.println("100 atoms of 1mb uploaded in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
 
-    @Test (enabled = true)
+    @Test
     public void testAddAtomsInParallel() throws Exception {
 
         final int ATOMS_TO_ADD = 100;
@@ -258,34 +252,35 @@ public class SOSAddAtomTest extends ClientTest {
             testStrings.add(RandomStringUtils.randomAlphabetic(ONE_MB) + i); // 1 ascii is 1 byte (in most computers)
         }
 
-        System.out.println("strings left  " + testStrings.size());
+        System.out.println("Strings left  " + testStrings.size());
 
-        Runnable r = () -> {
-            InputStream stream = null;
-            try {
-                stream = HelperTest.StringToInputStream(testStrings.poll());
-                AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-                Atom manifest = client.addAtom(builder);
-                assertNotNull(manifest.getContentGUID());
-
-                stream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        Runnable runnable = () -> {
+            addAtom(testStrings);
         };
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
         long start = System.nanoTime();
         for(int i = 0; i < ATOMS_TO_ADD; i++) {
-            executor.submit(r);
+            executor.submit(runnable);
         }
 
         executor.shutdown();
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
-        System.out.println("strings left  " + testStrings.size());
+        System.out.println("Strings left  " + testStrings.size());
+        System.out.println("Parallel - " + ATOMS_TO_ADD + " atoms of 1mb uploaded in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+    }
 
-        System.out.println("parallel - " + ATOMS_TO_ADD + " atoms of 1mb uploaded in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+    private void addAtom(ConcurrentLinkedQueue<String> testStrings) {
+        try (InputStream stream = HelperTest.StringToInputStream(testStrings.poll());){
+
+            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            Atom manifest = client.addAtom(builder);
+            assertNotNull(manifest.getContentGUID());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

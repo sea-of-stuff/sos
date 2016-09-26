@@ -2,7 +2,8 @@ package uk.ac.standrews.cs.sos.network;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.Response;
+import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.utils.LOG;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,18 +19,39 @@ public class SyncRequest extends Request {
         super(method, url);
     }
 
-    @Override
-    protected void get(OkHttpClient client) throws IOException {
+    public Response play(OkHttpClient client) throws IOException {
+        LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
+
+        Response response;
+        switch(method) {
+            case GET:
+                response = get(client);
+                break;
+            case POST:
+                response = postJSON(client);
+                break;
+            case PUT:
+                response = putJSON(client);
+                break;
+            default:
+                LOG.log(LEVEL.WARN, "Unknown Request method while playing a request");
+                throw new IOException("Unknown Request method");
+        }
+
+        return response;
+    }
+
+    protected Response get(OkHttpClient client) throws IOException {
 
         request = new okhttp3.Request.Builder()
                 .url(url)
                 .build();
 
-        response = client.newCall(request).execute();
+        response = new Response(client.newCall(request).execute());
+        return response;
     }
 
-    @Override
-    protected void postJSON(OkHttpClient client) throws IOException {
+    protected Response postJSON(OkHttpClient client) throws IOException {
         RequestBody body = RequestBody.create(JSON, json_body);
 
         request = new okhttp3.Request.Builder()
@@ -37,11 +59,11 @@ public class SyncRequest extends Request {
                 .post(body)
                 .build();
 
-        response = client.newCall(request).execute();
+        response = new Response(client.newCall(request).execute());
+        return response;
     }
 
-    @Override
-    protected void putJSON(OkHttpClient client) throws IOException {
+    protected Response putJSON(OkHttpClient client) throws IOException {
         RequestBody body = RequestBody.create(JSON, json_body);
 
         request = new okhttp3.Request.Builder()
@@ -49,11 +71,12 @@ public class SyncRequest extends Request {
                 .put(body)
                 .build();
 
-        response = client.newCall(request).execute();
+        response = new Response(client.newCall(request).execute());
+        return response;
     }
 
     public int getRespondeCode() {
-        return response.code();
+        return response.getCode();
     }
 
     public Response getResponse() {

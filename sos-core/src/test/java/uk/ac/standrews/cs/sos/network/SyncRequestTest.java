@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.network;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -27,19 +26,19 @@ public class SyncRequestTest extends CommonTest {
     public void setUp(java.lang.reflect.Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        LOG log = new LOG(GUIDFactory.generateRandomGUID());
+        new LOG(GUIDFactory.generateRandomGUID());
     }
 
     @Test
     public void testGet() throws Exception {
         RequestsManager requestsManager = new RequestsManager();
         SyncRequest request = new SyncRequest(Method.GET, new URL("https://httpbin.org/range/10"));
-        requestsManager.playRequest(request);
+        requestsManager.playSyncRequest(request);
 
         Response response = request.getResponse();
         assertNotNull(response);
 
-        String responseBody = HelperTest.InputStreamToString(response.body().byteStream());
+        String responseBody = HelperTest.InputStreamToString(response.getBody());
         assertEquals(responseBody, "abcdefghij");
     }
 
@@ -49,7 +48,7 @@ public class SyncRequestTest extends CommonTest {
 
         RequestsManager requestsManager = new RequestsManager();
         SyncRequest request = new SyncRequest(Method.GET, new URL("https://httpbin.org/status/" + testCode));
-        requestsManager.playRequest(request);
+        requestsManager.playSyncRequest(request);
 
         int code = request.getRespondeCode();
         assertEquals(code, testCode);
@@ -63,7 +62,7 @@ public class SyncRequestTest extends CommonTest {
         RequestsManager requestsManager = new RequestsManager();
         SyncRequest request = new SyncRequest(Method.POST, new URL("http://httpbin.org/post"));
         request.setJSONBody(dataToPost);
-        requestsManager.playRequest(request);
+        requestsManager.playSyncRequest(request);
 
         int code = request.getRespondeCode();
         assertEquals(code, testCode);
@@ -71,7 +70,7 @@ public class SyncRequestTest extends CommonTest {
         Response response = request.getResponse();
         assertNotNull(response);
 
-        String responseBody = HelperTest.InputStreamToString(response.body().byteStream());
+        String responseBody = HelperTest.InputStreamToString(response.getBody());
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode responseJSON = mapper.readTree(responseBody);
@@ -88,7 +87,7 @@ public class SyncRequestTest extends CommonTest {
         RequestsManager requestsManager = new RequestsManager();
         SyncRequest request = new SyncRequest(Method.PUT, new URL("http://httpbin.org/put"));
         request.setJSONBody(dataToPut);
-        requestsManager.playRequest(request);
+        requestsManager.playSyncRequest(request);
 
         int code = request.getRespondeCode();
         assertEquals(code, testCode);
@@ -96,7 +95,7 @@ public class SyncRequestTest extends CommonTest {
         Response response = request.getResponse();
         assertNotNull(response);
 
-        String responseBody = HelperTest.InputStreamToString(response.body().byteStream());
+        String responseBody = HelperTest.InputStreamToString(response.getBody());
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode responseJSON = mapper.readTree(responseBody);
@@ -115,7 +114,7 @@ public class SyncRequestTest extends CommonTest {
         Runnable r = () -> {
             try {
                 SyncRequest request = new SyncRequest(Method.GET, new URL("https://httpbin.org/status/" + testCode));
-                requestsManager.playRequest(request);
+                requestsManager.playSyncRequest(request);
 
                 int code = request.getRespondeCode();
                 assertEquals(code, testCode);

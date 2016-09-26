@@ -6,8 +6,13 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
+import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 
 /**
@@ -17,15 +22,33 @@ import java.util.Collection;
  */
 public class RemoteManifestsManager implements ManifestsManager {
 
+    private PolicyManager policyManager;
     private NodeManager nodeManager;
+    private RequestsManager requestsManager;
 
-    public RemoteManifestsManager(NodeManager nodeManager) {
+    public RemoteManifestsManager(PolicyManager policyManager, NodeManager nodeManager, RequestsManager requestsManager) {
+        this.policyManager = policyManager;
         this.nodeManager = nodeManager;
+        this.requestsManager = requestsManager;
     }
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
+        int replicationFactor = policyManager.getReplicationPolicy().getReplicationFactor();
+        if (replicationFactor > 0) {
+
+            Collection<Node> ddsNodes = nodeManager.getDDSNodes();
+
+            for(Node ddsNode:ddsNodes) {
+                addManifest(ddsNode, manifest);
+            }
+
+        }
+
+        // check replication factor
+        // find nodes
+        // make requests
     }
 
     @Override
@@ -51,5 +74,20 @@ public class RemoteManifestsManager implements ManifestsManager {
     @Override
     public Collection<IGUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
         return null;
+    }
+
+    private void addManifest(Node node, Manifest manifest) {
+
+        try {
+            URL url = SOSEP.DDS_MANIFEST(node);
+
+            SyncRequest request = new SyncRequest(Method.POST, url);
+            request.setJSONBody(manifest.toString());
+
+            Response response = requestsManager.playSyncRequest(request);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

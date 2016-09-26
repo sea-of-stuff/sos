@@ -14,8 +14,12 @@ public class RequestsManager {
     // Singleton client instance
     private final OkHttpClient client = new OkHttpClient();
 
-    public void playRequest(Request request) throws IOException {
+    public void playAsyncRequest(AsyncRequest request) throws IOException {
         request.play(client);
+    }
+
+    public Response playSyncRequest(SyncRequest request) throws IOException {
+        return request.play(client);
     }
 
     public void shutdown() {
