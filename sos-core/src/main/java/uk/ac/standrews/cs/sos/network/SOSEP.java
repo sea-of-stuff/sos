@@ -18,24 +18,34 @@ public class SOSEP {
 
     private static final String HTTP_SCHEME = "http://";
 
-    public static URL DDS_MANIFEST(Node node) throws MalformedURLException {
-        InetSocketAddress address = node.getHostAddress();
-        String url = HTTP_SCHEME +
-                address.getHostName() +
-                ":" + address.getPort() +
+    public static URL DDS_POST_MANIFEST(Node node) throws MalformedURLException {
+        String url = buildURLBase(node) +
                 "/dds/manifest";
 
         return new URL(url);
     }
 
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws MalformedURLException {
-        InetSocketAddress address = node.getHostAddress();
-        String url = HTTP_SCHEME +
-                address.getHostName() +
-                ":" + address.getPort() +
+        String url = buildURLBase(node) +
                 "/storage/data/guid/" +
                 guid.toString();
 
         return new URL(url);
+    }
+
+    public static URL NDS_GET_NODE(Node node, IGUID guid) throws MalformedURLException {
+        String url = buildURLBase(node) +
+                "/nds/guid/" +
+                guid.toString();
+
+        return new URL(url);
+    }
+
+    private static String buildURLBase(Node node) {
+        InetSocketAddress address = node.getHostAddress();
+        String url = HTTP_SCHEME +
+                address.getHostName() +
+                ":" + address.getPort();
+        return url;
     }
 }

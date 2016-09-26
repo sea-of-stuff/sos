@@ -3,10 +3,7 @@ package uk.ac.standrews.cs.sos;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -57,7 +54,6 @@ public class ServerState {
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         InternalStorage internalStorage;
-        Index index;
         try {
 
             StorageType storageType = configuration.getStorageType();
@@ -70,15 +66,10 @@ public class ServerState {
             throw new SOSException(e);
         }
 
-        try {
-            index = LuceneIndex.getInstance(internalStorage);
-        } catch (IndexException e) {
-            throw  new SOSException(e);
-        }
+
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         sos = builder.configuration(configuration)
-                .index(index)
                 .internalStorage(internalStorage)
                 .build();
     }

@@ -6,8 +6,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 
-import java.util.Collection;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -18,12 +16,4 @@ public interface ManifestsManager {
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
     Version getLatest(IGUID guid) throws ManifestNotFoundException;
-
-    // TODO - not 100% sure on the method below. I would prefer something more abstract on the metadata
-
-    Collection<IGUID> findManifestsByType(String type) throws ManifestNotFoundException;
-
-    Collection<IGUID> findVersions(IGUID guid) throws ManifestNotFoundException;
-
-    Collection<IGUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException;
 }

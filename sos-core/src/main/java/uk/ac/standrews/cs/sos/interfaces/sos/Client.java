@@ -132,28 +132,4 @@ public interface Client extends SeaOfStuff {
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
 
-    /**
-     *
-     * @param type
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException;
-
-    /**
-     *
-     * @param label
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException;
-
-    /**
-     *
-     * @param invariant
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
-
 }

@@ -50,24 +50,6 @@ public class SOSAddAtomTest extends ClientTest {
     }
 
     @Test
-    public void testRetrieveAtomFromFile() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
-        AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = client.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
-
-        // Flush the storage, so to force the manifest to be retrieved from file.
-        index.flushDB();
-
-        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestConstants.ATOM, retrievedManifest.getManifestType());
-        Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
-        assertEquals(retrievedLocations.size(), 2);
-
-        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
-    }
-
-    @Test
     public void testRetrieveAtomData() throws Exception {
         Location location = HelperTest.createDummyDataFile(internalStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);

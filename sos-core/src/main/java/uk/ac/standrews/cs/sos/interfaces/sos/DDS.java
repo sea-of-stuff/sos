@@ -5,8 +5,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 
-import java.util.Collection;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -35,29 +33,5 @@ public interface DDS extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
-
-    /**
-     *
-     * @param type
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException;
-
-    /**
-     *
-     * @param label
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException;
-
-    /**
-     *
-     * @param invariant
-     * @return
-     * @throws ManifestNotFoundException
-     */
-    Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException;
 
 }

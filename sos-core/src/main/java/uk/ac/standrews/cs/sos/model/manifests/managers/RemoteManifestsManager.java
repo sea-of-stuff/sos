@@ -61,25 +61,10 @@ public class RemoteManifestsManager implements ManifestsManager {
         return null;
     }
 
-    @Override
-    public Collection<IGUID> findManifestsByType(String type) throws ManifestNotFoundException {
-        return null;
-    }
-
-    @Override
-    public Collection<IGUID> findVersions(IGUID guid) throws ManifestNotFoundException {
-        return null;
-    }
-
-    @Override
-    public Collection<IGUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
-        return null;
-    }
-
     private void addManifest(Node node, Manifest manifest) {
 
         try {
-            URL url = SOSEP.DDS_MANIFEST(node);
+            URL url = SOSEP.DDS_POST_MANIFEST(node);
 
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setJSONBody(manifest.toString());

@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
@@ -46,7 +45,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private SOSConfiguration configuration;
     private InternalStorage internalStorage;
-    private Index index;
     private PolicyManager policyManager;
     private NodeDatabase nodeDatabase;
     private Identity identity;
@@ -73,7 +71,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         configuration = Builder.configuration;
         internalStorage = Builder.internalStorage;
-        index = Builder.index;
         policyManager = Builder.policyManager; //FIXME - could have different policies for client, storage, dds, nds, mcs!
 
         try {
@@ -155,7 +152,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initManifestManager() {
-        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, index, nodeManager, requestsManager);
+        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, nodeManager, requestsManager);
     }
 
     private void initIdentity() throws SOSException {
@@ -199,7 +196,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public static class Builder {
         private static SOSConfiguration configuration;
         private static InternalStorage internalStorage;
-        private static Index index;
         private static PolicyManager policyManager;
 
         public Builder configuration(SOSConfiguration configuration) {
@@ -209,11 +205,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         public Builder internalStorage(InternalStorage internalStorage) {
             Builder.internalStorage = internalStorage;
-            return this;
-        }
-
-        public Builder index(Index index) {
-            Builder.index = index;
             return this;
         }
 

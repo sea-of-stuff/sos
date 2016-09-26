@@ -7,8 +7,6 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -27,7 +25,6 @@ public class SetUpTest extends CommonTest {
 
     protected SOSLocalNode localSOSNode;
     protected InternalStorage internalStorage;
-    protected Index index;
 
     private static final String TEST_RESOURCES_PATH = "src/test/resources/";
     private static final String MOCK_PROPERTIES = "#Mock Properties\n" +
@@ -74,30 +71,15 @@ public class SetUpTest extends CommonTest {
             throw new SOSException(e);
         }
 
-        try {
-            index = LuceneIndex.getInstance(internalStorage);
-        } catch (IndexException e) {
-            throw  new SOSException(e);
-        }
-
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         localSOSNode = builder.configuration(configuration)
-                                .index(index)
                                 .internalStorage(internalStorage)
                                 .build();
     }
 
     @AfterMethod
     public void tearDown() throws IOException, IndexException, InterruptedException, DataStorageException {
-        index.flushDB();
-        index.killInstance();
-
         internalStorage.destroy();
-    }
-
-    @AfterMethod
-    public void afterMethod() {
-
     }
 
     protected void createConfiguration() throws SOSConfigurationException, IOException {

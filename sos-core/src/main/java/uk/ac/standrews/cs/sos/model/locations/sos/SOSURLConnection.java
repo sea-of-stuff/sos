@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 
 /**
  * This class handles all requests on the URLs under the sos:// scheme.
@@ -127,8 +128,19 @@ public class SOSURLConnection extends URLConnection {
     }
 
 
-    private Node findNodeViaNDS(IGUID nodeGUID) {
-        return null;
+    private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
+
+        Collection<Node> ndsNodes = nodeManager.getNDSNodes();
+        for(Node ndsNode:ndsNodes) {
+            URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
+
+            SyncRequest request = new SyncRequest(Method.GET, url);
+            Response response = requestsManager.playSyncRequest(request);
+
+            // TODO - check response
+        }
+
+        return null; // TODO - return node
     }
 
 }

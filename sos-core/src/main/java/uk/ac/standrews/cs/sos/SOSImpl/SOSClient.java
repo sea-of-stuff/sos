@@ -190,21 +190,6 @@ public class SOSClient implements Client {
         return success;
     }
 
-    @Override
-    public Collection<IGUID> findManifestByType(String type) throws ManifestNotFoundException {
-        return manifestsManager.findManifestsByType(type);
-    }
-
-    @Override
-    public Collection<IGUID> findManifestByLabel(String label) throws ManifestNotFoundException {
-        return manifestsManager.findManifestsThatMatchLabel(label);
-    }
-
-    @Override
-    public Collection<IGUID> findVersions(IGUID invariant) throws ManifestNotFoundException {
-        return manifestsManager.findVersions(invariant);
-    }
-
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
         return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
     }

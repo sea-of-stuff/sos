@@ -13,11 +13,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
-import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -46,7 +44,6 @@ import static org.testng.Assert.assertFalse;
 public class LocalManifestsManagerTest extends CommonTest {
 
     private InternalStorage storage;
-    private Index index;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
@@ -59,20 +56,16 @@ public class LocalManifestsManagerTest extends CommonTest {
         storage = new InternalStorage(StorageFactory
                 .createStorage(configurationMock.getStorageType(),
                         configurationMock.getStorageLocation(), true));
-        index = LuceneIndex.getInstance(storage);
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
-        index.flushDB();
-        index.killInstance();
-
         storage.destroy();
     }
 
     @Test
     public void addAtomManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -95,7 +88,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void addCompoundManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
 
         Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -135,7 +128,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void addAssetManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
         Identity identity = new IdentityImpl();
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
@@ -162,7 +155,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void updateAtomManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -192,7 +185,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void deletePrevAtomWhileNewIsAddedTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -224,7 +217,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void addNullManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage, index);
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);

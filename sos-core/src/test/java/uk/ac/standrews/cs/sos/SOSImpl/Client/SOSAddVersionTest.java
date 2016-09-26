@@ -44,27 +44,6 @@ public class SOSAddVersionTest extends ClientTest {
     }
 
     @Test
-    public void testRetrieveAssetFromFile() throws Exception {
-        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
-        contents.add(cat);
-
-        Compound compound = client.addCompound(CompoundType.DATA, contents);
-
-        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
-        Version manifest = client.addVersion(builder);
-        assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
-
-        // Flush the storage, so to force the manifest to be retrieved from file.
-        index.flushDB();
-
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
-        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
-
-        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
-    }
-
-    @Test
     public void testRetrieveAssetFromFileWithPrevsAndMeta() throws Exception {
         IGUID invariant = GUIDFactory.recreateGUID("1a2b3c");
 
@@ -88,9 +67,6 @@ public class SOSAddVersionTest extends ClientTest {
                 .setMetadataCollection(metadata);
         Version manifest = client.addVersion(builder);
         assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
-
-        // Flush the storage, so to force the manifest to be retrieved from file.
-        index.flushDB();
 
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);

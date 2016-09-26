@@ -42,7 +42,8 @@ public class InternalStorageTest extends CommonTest {
     public void defaultDirectoriesExistTest() throws DataStorageException {
         assertNotNull(internalStorage.getDataDirectory());
         assertNotNull(internalStorage.getManifestDirectory());
-        assertNotNull(internalStorage.getIndexDirectory());
+        assertNotNull(internalStorage.getHeadsDirectory());
+        assertNotNull(internalStorage.getMetadataDirectory());
     }
 
     @Test

@@ -2,10 +2,8 @@ package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
@@ -23,7 +21,6 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -38,18 +35,16 @@ public class LocalManifestsManager implements ManifestsManager {
     private static final int DEFAULT_SKIP_RESULTS = 0;
 
     final private InternalStorage internalStorage;
-    final private Index index;
 
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
      * a policy for the sea of stuff. The configuration object is need to know the
      * locations for the manifests.
      *
-     * @param index used to record information for the manifests.
+     * @param internalStorage
      */
-    public LocalManifestsManager(InternalStorage internalStorage, Index index) {
+    public LocalManifestsManager(InternalStorage internalStorage) {
         this.internalStorage = internalStorage;
-        this.index = index;
     }
 
     /**
@@ -115,39 +110,6 @@ public class LocalManifestsManager implements ManifestsManager {
         // reset current head
     }
 
-    @Override
-    public Collection<IGUID> findManifestsByType(String type) throws ManifestNotFoundException {
-        Collection<IGUID> retval;
-        try {
-            retval = index.getManifestsOfType(type, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IndexException e) {
-            throw new ManifestNotFoundException("Manifest type " + type + " not found", e);
-        }
-        return retval;
-    }
-
-    @Override
-    public Collection<IGUID> findVersions(IGUID guid) throws ManifestNotFoundException {
-        Collection<IGUID> retval;
-        try {
-            retval = index.getVersions(guid, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IndexException e) {
-            throw new ManifestNotFoundException("Manifest version " + guid.toString() + " not found", e);
-        }
-        return retval;
-    }
-
-    @Override
-    public Collection<IGUID> findManifestsThatMatchLabel(String label) throws ManifestNotFoundException {
-        Collection<IGUID> retval;
-        try {
-            retval = index.getMetaLabelMatches(label, DEFAULT_RESULTS, DEFAULT_SKIP_RESULTS);
-        } catch (IndexException e) {
-            throw new ManifestNotFoundException("Manifest label " + label+ " not found", e);
-        }
-        return retval;
-    }
-
     private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {
 
         try {
@@ -204,8 +166,6 @@ public class LocalManifestsManager implements ManifestsManager {
             } else {
                 saveToFile(manifest);
             }
-
-            cacheManifest(manifest);
 
         } catch (DataStorageException | ManifestNotFoundException e) {
             throw new ManifestManagerException(e);
@@ -291,14 +251,6 @@ public class LocalManifestsManager implements ManifestsManager {
             manifestFile.setData(manifestData);
             manifestFile.persist();
         } catch (PersistenceException | DataException | DataStorageException e) {
-            throw new ManifestManagerException(e);
-        }
-    }
-
-    private void cacheManifest(Manifest manifest) throws ManifestManagerException {
-        try {
-            index.addManifest(manifest);
-        } catch (IndexException e) {
             throw new ManifestManagerException(e);
         }
     }

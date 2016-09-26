@@ -18,7 +18,7 @@ public class InternalStorage {
     public static final String DATA_DIRECTORY_NAME = "data";
     public static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     public static final String HEADS_DIRECTORY_NAME = "heads";
-    public static final String INDEX_DIRECTORY_NAME = "index";
+    public static final String META_DIRECTORY_NAME = "metadata";
 
     private IStorage storage;
 
@@ -74,13 +74,13 @@ public class InternalStorage {
     }
 
     /**
-     * Return the directory used to store the index for this node
+     * Return the directory used to store the metadata relevant to the data in this node
      * @return
      * @throws DataStorageException
      */
-    public Directory getIndexDirectory() throws DataStorageException {
+    public Directory getMetadataDirectory() throws DataStorageException {
         try {
-            return storage.createDirectory(INDEX_DIRECTORY_NAME);
+            return storage.createDirectory(META_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
@@ -129,7 +129,7 @@ public class InternalStorage {
             storage.getRoot().remove(DATA_DIRECTORY_NAME);
             storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
             storage.getRoot().remove(HEADS_DIRECTORY_NAME);
-            storage.getRoot().remove(INDEX_DIRECTORY_NAME);
+            storage.getRoot().remove(META_DIRECTORY_NAME);
 
             // TODO - remove content in the root directory?
         } catch (BindingAbsentException e) {
@@ -142,7 +142,7 @@ public class InternalStorage {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
             storage.createDirectory(HEADS_DIRECTORY_NAME).persist();
-            storage.createDirectory(INDEX_DIRECTORY_NAME).persist();
+            storage.createDirectory(META_DIRECTORY_NAME).persist();
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
