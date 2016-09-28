@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * The Client is one of the node roles within the Sea of Stuff.
@@ -132,4 +133,5 @@ public interface Client extends SeaOfStuff {
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
 
+    Stream<Manifest> getAllManifests();
 }

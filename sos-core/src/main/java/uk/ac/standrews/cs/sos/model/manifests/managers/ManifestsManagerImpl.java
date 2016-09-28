@@ -11,6 +11,8 @@ import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
+import java.util.stream.Stream;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -45,5 +47,10 @@ public class ManifestsManagerImpl implements ManifestsManager {
         // local.findLatestVersion();
         // not sure when to look for remote too
         return null;
+    }
+
+    @Override
+    public Stream<Manifest> getAllManifests() {
+        return local.getAllManifests();
     }
 }

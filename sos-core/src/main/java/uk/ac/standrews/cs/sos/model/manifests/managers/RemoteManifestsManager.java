@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.node.NodeManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * The remote manifest manager allows the node to replicate manifests to other nodes in the SOS
@@ -58,6 +59,11 @@ public class RemoteManifestsManager implements ManifestsManager {
 
     @Override
     public Version getLatest(IGUID guid) throws ManifestNotFoundException {
+        return null;
+    }
+
+    @Override
+    public Stream<Manifest> getAllManifests() {
         return null;
     }
 

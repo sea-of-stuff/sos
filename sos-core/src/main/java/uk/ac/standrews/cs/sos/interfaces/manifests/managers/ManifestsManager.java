@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 
+import java.util.stream.Stream;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -16,4 +18,6 @@ public interface ManifestsManager {
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
     Version getLatest(IGUID guid) throws ManifestNotFoundException;
+
+    Stream<Manifest> getAllManifests();
 }

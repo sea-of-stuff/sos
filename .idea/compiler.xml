@@ -37,6 +37,7 @@
       <module name="rest-jetty" target="1.8" />
       <module name="sos" target="1.8" />
       <module name="sos-configuration" target="1.8" />
+      <module name="sos-web" target="1.7" />
       <module name="web-ui" target="1.8" />
     </bytecodeTargetLevel>
   </component>

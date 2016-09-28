@@ -31,6 +31,7 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * Implementation class for the SeaOfStuff interface.
@@ -188,6 +189,11 @@ public class SOSClient implements Client {
 
         boolean success = manifest.verify(identity);
         return success;
+    }
+
+    @Override
+    public Stream<Manifest> getAllManifests() {
+        return manifestsManager.getAllManifests();
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {

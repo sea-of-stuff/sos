@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -21,7 +23,14 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -89,6 +98,39 @@ public class LocalManifestsManager implements ManifestsManager {
 
         // TODO - see what git/hg do
         return null;
+    }
+
+    @Override
+    public Stream<Manifest> getAllManifests() {
+
+        Path dir = null;
+        try {
+            dir = internalStorage.getManifestDirectory().toFile().toPath();
+        } catch (IOException | DataStorageException e) {
+            e.printStackTrace();
+        }
+
+        List<Manifest> result = new ArrayList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.json")) {
+            for (Path entry: stream) {
+
+                String filename = entry.getFileName().toString();
+                filename = filename.substring(0, filename.length() - 5);
+                System.out.println("manifest-file: " + filename);
+                Manifest manifest = getManifestFromFile(GUIDFactory.recreateGUID(filename));
+
+                result.add(manifest);
+            }
+        } catch (DirectoryIteratorException | IOException ex) {
+            // I/O error encounted during the iteration, the cause is an IOException
+            ex.printStackTrace();
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result.stream();
     }
 
     /**

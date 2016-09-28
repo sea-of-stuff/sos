@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SOS WEB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container-fluid">
+    <br>
+    <h2>All Manifests </h2>
+
+    <ul class="list-group">
+    #foreach($m in $manifest)
+    <li class="list-group-item">$m.ManifestType - $m.ContentGUID</li>
+    #end
+    </ul>
+
+    <br>
+    Add data
+    <br>
+    Create compounds/assets
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+
+</body>
+</html>
