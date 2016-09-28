@@ -53,5 +53,6 @@ This is a list of the main things to do (in no particular order):
 
 ## How to run fluentd
 
+We use fluentd to aggregate the logs:
 
 ``$ docker run -d -p 24224:24224 -v /tmp/data:/fluentd/log fluent/fluentd`

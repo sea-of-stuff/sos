@@ -12,17 +12,16 @@ public class Make {
 
     private static final String CURRENT_DIRECTORY = Paths.get(".").toAbsolutePath().normalize().toString();
 
-    // TODO - add comments for each property
     private static final String CONFIG_TEMPLATE = "# Fill the following properties \n" +
             "# You can use the tilde ~ for the home directory\n" +
-            "node.guid=\n" +
+            "node.guid= # SHA-1 (160bits) - optional\n" +
             "node.port=8080\n" +
-            "node.hostname=\n" +
-            "node.is.client=\n" +
-            "node.is.storage=\n" +
-            "node.is.dds=\n" +
-            "node.is.mcs=\n" +
-            "node.is.nds=\n" +
+            "node.hostname= \t # true/false\n" +
+            "node.is.client= \t # true/false\n" +
+            "node.is.storage= \t # true/false\n" +
+            "node.is.dds= \t # true/false\n" +
+            "node.is.mcs= \t # true/false\n" +
+            "node.is.nds= \t # true/false\n" +
             "\n" +
             "db.path=~/sos/db/dump.db\n" +
             "db.password=\n" +
@@ -41,6 +40,11 @@ public class Make {
             "keys.folder=~/sos/keys/\n" +
             "\n";
 
+    /**
+     *
+     * @param args first argument must be 'default', second one should be the path for the configuration file
+     * @throws IOException if the configuration file could not be generated
+     */
     public static void main(String[] args) throws IOException {
         if (args.length >= 1 && args.length <=2 && args[0].equals("default")) {
             makeDefault(args);

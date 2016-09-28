@@ -20,7 +20,7 @@
           <element id="library" level="project" name="Maven: org.fluentd:fluent-logger:0.3.2" />
           <element id="library" level="project" name="Maven: org.msgpack:msgpack:0.6.8" />
           <element id="library" level="project" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" />
-          <element id="library" level="project" name="Maven: org.javassist:javassist:3.20.0-GA" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.16.1-GA" />
         </element>
       </element>
       <element id="directory" name="META-INF">

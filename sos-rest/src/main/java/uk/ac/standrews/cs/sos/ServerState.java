@@ -32,7 +32,6 @@ public class ServerState {
     }
 
     public static void init(String propertyFilePath) {
-
         try {
             ServerState.startSOS(propertyFilePath);
         } catch (SOSException | GUIDGenerationException e) {

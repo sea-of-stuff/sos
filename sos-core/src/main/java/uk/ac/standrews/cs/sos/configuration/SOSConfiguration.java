@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * This utility class allows the SOS-Core instance to read a configuration file.
+ * The read configuration will be used to create a custom sos instance.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSConfiguration {
@@ -128,7 +131,6 @@ public class SOSConfiguration {
         public static final String NODE_IS_DDS = "node.is.dds";
         public static final String NODE_IS_NDS = "node.is.nds";
         public static final String NODE_IS_MCS = "node.is.mcs";
-
 
         public static final String DB_TYPE = "db.type";
         public static final String DB_PATH = "db.path";

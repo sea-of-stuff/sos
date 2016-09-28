@@ -20,10 +20,10 @@ public class JettyApp {
     private static int serverPort;
     private static URI baseUri;
 
-    public static Server startServer() throws Exception {
+    public static Server startServer(String configFilePath) throws Exception {
         final ResourceConfig rc = new RESTConfig().build();
 
-        ServerState.init();
+        ServerState.init(configFilePath);
         baseUri = uriBuilder.port(serverPort).build();
         return JettyHttpContainerFactory.createServer(baseUri, rc);
     }
@@ -41,13 +41,12 @@ public class JettyApp {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        if (args.length > 0) {
-            serverPort = Integer.parseInt(args[0]);
-        } else {
-            serverPort = DEFAULT_SERVER_PORT;
+        String configFilePath = "config.properties";
+        if (args.length == 1) {
+            configFilePath = args[0];
         }
 
-        final Server server = startServer();
+        final Server server = startServer(configFilePath);
 
         try {
             server.start();
