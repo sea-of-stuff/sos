@@ -20,7 +20,16 @@ public class MAISOS {
     public static void main(String[] args) throws Exception {
         CommandLineParser parser = new DefaultParser();
         Options options = createOptions();
-        CommandLine line = parser.parse(options, args);
+
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("posix", options );
+
+        CommandLine line;
+        try {
+            line = parser.parse(options, args);
+        } catch (ParseException e) {
+            throw new MAISOSException(e);
+        }
 
         String configFilePath = line.getOptionValue(CONFIG_OPT);
         SOSLocalNode sos = ServerState.init(configFilePath);

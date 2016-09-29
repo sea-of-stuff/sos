@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -44,5 +45,10 @@ public class ManifestsManagerImpl implements ManifestsManager {
     @Override
     public Stream<Manifest> getAllManifests() {
         return local.getAllManifests();
+    }
+
+    @Override
+    public Version getHEAD(IGUID invariant) {
+        return local.getHEAD(invariant);
     }
 }

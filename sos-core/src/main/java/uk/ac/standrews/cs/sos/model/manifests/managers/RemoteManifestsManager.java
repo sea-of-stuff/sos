@@ -1,9 +1,11 @@
 package uk.ac.standrews.cs.sos.model.manifests.managers;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
@@ -59,6 +61,11 @@ public class RemoteManifestsManager implements ManifestsManager {
     @Override
     public Stream<Manifest> getAllManifests() {
         return null;
+    }
+
+    @Override
+    public Version getHEAD(IGUID invariant) {
+        throw new NotImplementedException();
     }
 
     private void addManifest(Node node, Manifest manifest) {

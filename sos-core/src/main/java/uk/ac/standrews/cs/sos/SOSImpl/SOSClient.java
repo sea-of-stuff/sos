@@ -62,8 +62,6 @@ public class SOSClient implements Client {
         return policyManager;
     }
 
-    // TODO - refactor in multiple methods
-    // pass builder to factory?
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
         LOG.log(LEVEL.INFO, "Adding atom: " + atomBuilder.toString());
@@ -86,8 +84,9 @@ public class SOSClient implements Client {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsManager.addManifest(manifest);
 
+        long end = System.nanoTime();
         LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
-                +" added in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+                +" added in " + (end - start) / 1000000000.0 + " seconds");
 
         return manifest;
     }
@@ -105,8 +104,7 @@ public class SOSClient implements Client {
         return manifest;
     }
 
-    // TODO - version builder might return different stuff!
-    // pass builder to factory
+    // TODO - process metadata given the content, see policy
     @Override
     public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
@@ -178,9 +176,8 @@ public class SOSClient implements Client {
     }
 
     @Override
-    public Version getHEAD(IGUID guid) throws ManifestNotFoundException {
-        // TODO - manifests manager should keep track of the latest
-        throw new UnsupportedOperationException();
+    public Version getHEAD(IGUID invariant) throws ManifestNotFoundException {
+        return manifestsManager.getHEAD(invariant);
     }
 
     @Override
@@ -188,11 +185,16 @@ public class SOSClient implements Client {
         LOG.log(LEVEL.INFO, "Verifying manifest " + manifest.getContentGUID());
 
         boolean success = manifest.verify(identity);
+
+        LOG.log(LEVEL.INFO, "Manifest " + manifest.getContentGUID() + " verified. Result: " + success);
+
         return success;
     }
 
     @Override
     public Stream<Manifest> getAllManifests() {
+        LOG.log(LEVEL.INFO, "Retrieving all manifests");
+
         return manifestsManager.getAllManifests();
     }
 

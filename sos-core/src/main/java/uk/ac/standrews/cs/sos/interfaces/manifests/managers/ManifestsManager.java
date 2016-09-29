@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 
 import java.util.stream.Stream;
 
@@ -17,4 +18,6 @@ public interface ManifestsManager {
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
     Stream<Manifest> getAllManifests();
+
+    Version getHEAD(IGUID invariant);
 }

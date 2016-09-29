@@ -7,13 +7,13 @@ public interface PolicyManager {
 
     void setReplicationPolicy(ReplicationPolicy policy);
 
-    void setComputationPolicy(ComputationPolicy policy);
+    void setComputationPolicy(MetadataPolicy policy);
 
     void setManifestPolicy(ManifestPolicy policy);
 
     ReplicationPolicy getReplicationPolicy();
 
-    ComputationPolicy getComputationPolicy();
+    MetadataPolicy getComputationPolicy();
 
     ManifestPolicy getManifestPolicy();
 

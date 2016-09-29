@@ -126,6 +126,7 @@ public class LocalManifestsManager implements ManifestsManager {
      */
     public Version getHEAD(IGUID invariant) {
         // TODO - see what git/hg do
+        // see notes in the setHEAD method
         return null;
     }
 
@@ -135,6 +136,10 @@ public class LocalManifestsManager implements ManifestsManager {
      */
     public void setHEAD(IGUID version) {
         // reset current head
+        // File name: invariant
+        // Content file: version id
+
+        // Optionally, use a db
     }
 
     private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {
