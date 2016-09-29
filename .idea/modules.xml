@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/sos-rest/rest.iml" filepath="$PROJECT_DIR$/sos-rest/rest.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" filepath="$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-app/sos-app.iml" filepath="$PROJECT_DIR$/sos-app/sos-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-configuration/sos-configuration.iml" filepath="$PROJECT_DIR$/sos-configuration/sos-configuration.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-ui/web-ui.iml" filepath="$PROJECT_DIR$/web-ui/web-ui.iml" />
     </modules>

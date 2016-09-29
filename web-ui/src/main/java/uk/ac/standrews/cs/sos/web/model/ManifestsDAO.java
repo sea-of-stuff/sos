@@ -1,4 +1,4 @@
-package model;
+package uk.ac.standrews.cs.sos.web.model;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;

@@ -16,7 +16,6 @@ public class SOSDDS implements DDS {
     protected ManifestsManager manifestsManager;
 
     public SOSDDS(ManifestsManager manifestsManager) {
-
         this.manifestsManager = manifestsManager;
     }
 

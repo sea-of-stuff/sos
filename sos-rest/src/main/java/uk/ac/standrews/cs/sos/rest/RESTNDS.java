@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
-import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
@@ -28,7 +28,7 @@ public class RESTNDS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response register(NodeModel node) {
-        NDS nds = ServerState.sos.getNDS();
+        NDS nds = RESTConfig.sos.getNDS();
 
         Node registerNode = nds.registerNode(node);
 
@@ -54,7 +54,7 @@ public class RESTNDS {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
-        NDS nds = ServerState.sos.getNDS();
+        NDS nds = RESTConfig.sos.getNDS();
         Node node = nds.getNode(nodeGUID);
 
         if (node != null) {
@@ -70,7 +70,7 @@ public class RESTNDS {
     public Response findByRole(@PathParam("role") String role) {
         role = role.toLowerCase();
 
-        NDS nds = ServerState.sos.getNDS();
+        NDS nds = RESTConfig.sos.getNDS();
 
         Collection<Node> nodes;
 

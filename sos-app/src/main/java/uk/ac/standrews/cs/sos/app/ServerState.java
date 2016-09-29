@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos;
+package uk.ac.standrews.cs.sos.app;
 
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
@@ -68,8 +68,6 @@ public class ServerState {
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
-
-
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         sos = builder.configuration(configuration)

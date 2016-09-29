@@ -90,16 +90,8 @@ public class LocalManifestsManager implements ManifestsManager {
         return getManifestFromFile(guid);
     }
 
-    @Override
-    public Version getLatest(IGUID invariant) throws ManifestNotFoundException {
-        if (invariant == null) {
-            throw new ManifestNotFoundException("Cannot find manifest for null guid");
-        }
-
-        // TODO - see what git/hg do
-        return null;
-    }
-
+    // FIXME - this must be improved
+    // Making a list and converting it to a stream is not really optimal.
     @Override
     public Stream<Manifest> getAllManifests() {
 
@@ -115,19 +107,13 @@ public class LocalManifestsManager implements ManifestsManager {
             for (Path entry: stream) {
 
                 String filename = entry.getFileName().toString();
-                filename = filename.substring(0, filename.length() - 5);
-                System.out.println("manifest-file: " + filename);
+                filename = filename.substring(0, filename.length() - 5); // removing extension
                 Manifest manifest = getManifestFromFile(GUIDFactory.recreateGUID(filename));
 
                 result.add(manifest);
             }
-        } catch (DirectoryIteratorException | IOException ex) {
-            // I/O error encounted during the iteration, the cause is an IOException
+        } catch (DirectoryIteratorException | IOException | GUIDGenerationException | ManifestNotFoundException ex) {
             ex.printStackTrace();
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-        } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
         }
 
         return result.stream();
@@ -135,20 +121,19 @@ public class LocalManifestsManager implements ManifestsManager {
 
     /**
      * Return the local HEAD for a given version
-     * @param invariant
-     * @return
+     * @param invariant for an asset
+     * @return head version of the asset
      */
     public Version getHEAD(IGUID invariant) {
-
         // TODO - see what git/hg do
         return null;
     }
 
     /**
-     * Set the specified invariant as the local HEAD
-     * @param invariant
+     * Set the specified version as the head for the asset that it represents
+     * @param version
      */
-    public void setHEAD(IGUID invariant) {
+    public void setHEAD(IGUID version) {
         // reset current head
     }
 

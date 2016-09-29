@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -40,13 +39,6 @@ public class ManifestsManagerImpl implements ManifestsManager {
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
         return local.findManifest(guid);
-    }
-
-    @Override
-    public Version getLatest(IGUID guid) throws ManifestNotFoundException {
-        // local.findLatestVersion();
-        // not sure when to look for remote too
-        return null;
     }
 
     @Override

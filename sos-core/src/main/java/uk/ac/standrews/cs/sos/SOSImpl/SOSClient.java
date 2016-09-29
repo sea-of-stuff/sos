@@ -178,7 +178,7 @@ public class SOSClient implements Client {
     }
 
     @Override
-    public Version getLatest(IGUID guid) throws ManifestNotFoundException {
+    public Version getHEAD(IGUID guid) throws ManifestNotFoundException {
         // TODO - manifests manager should keep track of the latest
         throw new UnsupportedOperationException();
     }

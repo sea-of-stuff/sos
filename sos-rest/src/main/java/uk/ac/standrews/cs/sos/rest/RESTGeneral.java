@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.rest;
 
 import uk.ac.standrews.cs.sos.HTTP.HTTPState;
-import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
 import javax.ws.rs.GET;
@@ -21,7 +21,7 @@ public class RESTGeneral {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getInfo() {
 
-        SOSLocalNode sos = ServerState.sos;
+        SOSLocalNode sos = RESTConfig.sos;
         return Response.status(HTTPState.OK)
                 .entity(sos.toString())
                 .build();

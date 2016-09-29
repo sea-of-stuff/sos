@@ -4,7 +4,6 @@ import org.glassfish.jersey.test.JerseyTestNg;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.ServerState;
 
 import javax.ws.rs.core.Application;
 
@@ -17,8 +16,6 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
     @Override
     public void setUp() throws Exception {
         super.setUp();
-
-        ServerState.init();
     }
 
     @AfterMethod
@@ -31,7 +28,9 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
 
     @Override
     protected Application configure() {
-        return new RESTConfig().build();
+        System.out.println("CONFIG"); // FIXME - this method is called twice?
+        ServerState.init();
+        return new RESTConfig().build(ServerState.sos);
     }
 
 }

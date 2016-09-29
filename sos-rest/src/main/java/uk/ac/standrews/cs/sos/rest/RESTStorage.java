@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
-import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
@@ -41,7 +41,7 @@ public class RESTStorage {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
-        Storage storage = ServerState.sos.getStorage();
+        Storage storage = RESTConfig.sos.getStorage();
         InputStream inputStream = storage.getAtomContent(atomGUID);
 
         return HTTPResponses.OK(inputStream);
@@ -52,7 +52,7 @@ public class RESTStorage {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response postDataByLocation(LocationModel locationModel) {
-        Storage storage = ServerState.sos.getStorage();
+        Storage storage = RESTConfig.sos.getStorage();
 
         Location location;
         try {
@@ -76,7 +76,7 @@ public class RESTStorage {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final InputStream inputStream) {
-        Storage storage = ServerState.sos.getStorage();
+        Storage storage = RESTConfig.sos.getStorage();
 
         Atom manifest;
         try {

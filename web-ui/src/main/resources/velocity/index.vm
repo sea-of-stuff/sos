@@ -13,8 +13,8 @@
     <h2>All Manifests </h2>
 
     <ul class="list-group">
-    #foreach($m in $manifest)
-    <li class="list-group-item">$m.ManifestType - $m.ContentGUID</li>
+    #foreach($manifest in $manifests)
+    <li class="list-group-item">$manifest.ManifestType - $manifest.ContentGUID</li>
     #end
     </ul>
 
@@ -22,6 +22,10 @@
     Add data
     <br>
     Create compounds/assets
+    <br>
+    Create metadata
+    <br>
+    Search data
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>

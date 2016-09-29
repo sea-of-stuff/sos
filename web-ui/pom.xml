@@ -8,7 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>uk.ac.standrews.cs</groupId>
+    <groupId>uk.ac.standrews.cs.sos</groupId>
     <artifactId>web-ui</artifactId>
     <packaging>jar</packaging>
     <name>web-ui</name>

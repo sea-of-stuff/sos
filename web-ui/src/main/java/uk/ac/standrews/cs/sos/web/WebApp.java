@@ -1,7 +1,8 @@
+package uk.ac.standrews.cs.sos.web;
+
 import spark.ModelAndView;
 import spark.Request;
 import spark.template.velocity.VelocityTemplateEngine;
-import uk.ac.standrews.cs.sos.ServerState;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
@@ -13,12 +14,11 @@ import java.util.Map;
 
 import static spark.Spark.*;
 
-public class Main {
-    public static void main(String[] args) {
+public class WebApp {
+
+    public static void RUN(SOSLocalNode sos) {
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         port(9999);
-
-        SOSLocalNode sos = ServerState.init("config.properties");
 
         get("/", (req, res) -> renderHome(req, sos));
 
@@ -32,11 +32,8 @@ public class Main {
     }
 
     private static String renderHome(Request req, SOSLocalNode sos) throws URISyntaxException, ManifestPersistException, StorageException, ManifestNotFoundException {
-        // Atom atom = sos.getClient().addAtom(new AtomBuilder().setLocation(new URILocation("http://bearnewzealand.co.nz/wp/wp-content/uploads/2016/09/bear-05.jpg")));
-
         Map<String, Object> model = new HashMap<>();
-        // model.put("manifest", ManifestsDAO.manifest(sos, atom.getContentGUID()));
-        model.put("manifest", sos.getClient().getAllManifests().toArray());
+        model.put("manifests", sos.getClient().getAllManifests().toArray());
 
         return renderTemplate("velocity/index.vm", model);
     }
