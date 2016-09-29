@@ -22,32 +22,36 @@ public class ServerState {
 
     public static SOSLocalNode sos;
 
-    public static void init() {
+    public static SOSLocalNode init() {
 
         try {
-            ServerState.startSOS();
+            return ServerState.startSOS();
         } catch (SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
-    public static void init(String propertyFilePath) {
+    public static SOSLocalNode init(String propertyFilePath) {
         try {
-            ServerState.startSOS(propertyFilePath);
+            return ServerState.startSOS(propertyFilePath);
         } catch (SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     public static void kill() {
         sos.kill();
     }
 
-    private static void startSOS() throws SOSException, GUIDGenerationException {
-        startSOS("config.properties");
+    private static SOSLocalNode startSOS() throws SOSException, GUIDGenerationException {
+        return startSOS("config.properties");
     }
 
-    private static void startSOS(String properties) throws SOSException, GUIDGenerationException {
+    private static SOSLocalNode startSOS(String properties) throws SOSException, GUIDGenerationException {
 
         File configFile = new File(properties);
         SOSConfiguration configuration = new SOSConfiguration(configFile);
@@ -71,6 +75,8 @@ public class ServerState {
         sos = builder.configuration(configuration)
                 .internalStorage(internalStorage)
                 .build();
+
+        return sos;
     }
 
 }

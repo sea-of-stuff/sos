@@ -5,6 +5,7 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.ServerState;
+import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -14,17 +15,17 @@ import java.net.URI;
  */
 public class JettyApp {
 
-    public static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
-
-    private static final int DEFAULT_SERVER_PORT = 9998;
-    private static int serverPort;
+    private static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
     private static URI baseUri;
 
-    public static Server startServer(String configFilePath) throws Exception {
+    private static Server startServer(String configFilePath) throws Exception {
         final ResourceConfig rc = new RESTConfig().build();
 
-        ServerState.init(configFilePath);
-        baseUri = uriBuilder.port(serverPort).build();
+        SOSLocalNode sos = ServerState.init(configFilePath);
+        assert sos != null;
+        int port = sos.getHostAddress().getPort();
+
+        baseUri = uriBuilder.port(port).build();
         return JettyHttpContainerFactory.createServer(baseUri, rc);
     }
 
@@ -32,13 +33,10 @@ public class JettyApp {
      * Start a SOS instance and expose it via a Jetty Server.
      *
      * The following parameters are allowed:
-     * - port (default port is 9998)
-     * - TODO: configuration file
-     * Example:
+     * - configuration file path
      *
-     *
-     * @param args
-     * @throws Exception
+     * @param args configuration file path
+     * @throws Exception thrown if the jetty server could not be started properly
      */
     public static void main(String[] args) throws Exception {
         String configFilePath = "config.properties";
