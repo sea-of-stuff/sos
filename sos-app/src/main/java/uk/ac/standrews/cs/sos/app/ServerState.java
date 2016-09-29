@@ -15,7 +15,6 @@ import java.io.File;
 /**
  * The following creates a node instance of the SOS.
  *
- * TODO: this class should be moved aways from this module, so that it can be shared with the webdav code and possibly other modules
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ServerState {
