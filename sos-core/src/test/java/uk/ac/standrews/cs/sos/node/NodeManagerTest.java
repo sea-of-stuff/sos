@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.node;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -17,8 +16,8 @@ import uk.ac.standrews.cs.sos.node.database.DatabaseTypes;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,6 +39,9 @@ public class NodeManagerTest extends CommonTest {
         when(configurationMock.getDBType()).thenReturn(DatabaseTypes.SQLITE_DB);
         when(configurationMock.getDBPath()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
 
+        // Make sure that the DB path is clean
+        HelperTest.DeletePath(configurationMock.getDBPath());
+
         NodeDatabase nodeDatabase;
         try {
             nodeDatabase = new SQLDatabase(configurationMock.getDBType(),
@@ -52,13 +54,14 @@ public class NodeManagerTest extends CommonTest {
         nodeManager = new NodeManager(node, nodeDatabase);
     }
 
-    @AfterMethod
-    public void classTearDown() throws IOException {
-        HelperTest.DeletePath(configurationMock.getDBPath());
-    }
-
     @Test
     public void persistMultipleNodesTest() throws GUIDGenerationException, NodeManagerException {
+
+        Collection<Node> nodes = nodeManager.getKnownNodes();
+        for(Node n:nodes) {
+            System.out.println("GOTCHAYOU " + n.toString());
+        }
+
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
         nodeManager.addNode(node);
