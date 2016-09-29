@@ -22,7 +22,7 @@ public class MAISOS {
         Options options = createOptions();
         CommandLine line = parser.parse(options, args);
 
-        String configFilePath = args[1];
+        String configFilePath = line.getOptionValue(CONFIG_OPT);
         SOSLocalNode sos = ServerState.init(configFilePath);
 
         if (line.hasOption(JETTY_OPT)) {

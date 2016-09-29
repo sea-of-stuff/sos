@@ -24,7 +24,6 @@
         <processorPath useClasspath="true" />
         <module name="core" />
         <module name="rest" />
-        <module name="rest-grizzly" />
         <module name="rest-jetty" />
         <module name="sos-app" />
         <module name="sos-configuration" />
@@ -34,12 +33,10 @@
     <bytecodeTargetLevel>
       <module name="core" target="1.8" />
       <module name="rest" target="1.8" />
-      <module name="rest-grizzly" target="1.8" />
       <module name="rest-jetty" target="1.8" />
       <module name="sos" target="1.8" />
       <module name="sos-app" target="1.8" />
       <module name="sos-configuration" target="1.8" />
-      <module name="sos-web" target="1.7" />
       <module name="web-ui" target="1.8" />
     </bytecodeTargetLevel>
   </component>
