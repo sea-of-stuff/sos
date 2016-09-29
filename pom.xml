@@ -16,8 +16,6 @@
         <module>web-ui</module>
         <module>sos-configuration</module>
         <module>sos-app</module>
-
-        <!-- <module>sos-cli</module> -->
   </modules>
 
     <properties>
