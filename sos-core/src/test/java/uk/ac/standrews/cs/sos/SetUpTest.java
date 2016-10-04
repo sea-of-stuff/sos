@@ -5,7 +5,6 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
@@ -78,7 +77,7 @@ public class SetUpTest extends CommonTest {
     }
 
     @AfterMethod
-    public void tearDown() throws IOException, IndexException, InterruptedException, DataStorageException {
+    public void tearDown() throws IOException, InterruptedException, DataStorageException {
         internalStorage.destroy();
     }
 

@@ -13,7 +13,7 @@ import java.net.URLStreamHandlerFactory;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
+public class    SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     private final static String SOS_PROTOCOL_SCHEME = "sos";
 

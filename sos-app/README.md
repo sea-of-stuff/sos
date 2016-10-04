@@ -9,3 +9,14 @@ Based on passed params:
 - Create web app
 - Create webdav
 
+## How to run
+
+First of all, you need to package the app.
+
+```
+$ mvn package
+```
+
+```
+$ java -jar sos-app-jar-with-dependencies.jar ARGS
+```

@@ -11,7 +11,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class RESTGeneralTest extends CommonRESTTest{
+public class RESTGeneralTest extends CommonRESTTest {
 
     private static final String TEST_NODE_INFO = "{\n" +
             "  \"guid\": \"6b67f67f31908dd0e574699f163eda2cc117f7f4\",\n" +

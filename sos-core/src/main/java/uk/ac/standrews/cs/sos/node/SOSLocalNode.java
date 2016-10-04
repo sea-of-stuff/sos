@@ -75,7 +75,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try {
             DatabaseType databaseType = configuration.getDBType();
-            String databasePath = configuration.getDBPath();
+            String databasePath = configuration.getDBPath(); // TODO - create db folder if necessary
             nodeDatabase = new SQLDatabase(databaseType, databasePath);
         } catch (DatabaseException e) {
             throw new SOSException(e);

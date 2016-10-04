@@ -78,19 +78,15 @@ public class SOSURLConnection extends URLConnection {
 
             boolean dataIsStoredLocally = dataIsStoredLocally(nodeGUID);
             if (dataIsStoredLocally) { // CASE 1
-                LOG.log(LEVEL.INFO, "Data will be fetched from this node");
                 inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nodeManager.getNode(nodeGUID);
 
                 if (nodeToContact == null) { // CASE 2.B
-                    LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
                     nodeToContact = findNodeViaNDS(nodeGUID);
-
                     // TODO: what to do if node cannot be found?
                 }
 
-                LOG.log(LEVEL.INFO, "Data will be fetched from node " + nodeGUID);
                 inputStream = contactNode(nodeToContact, entityGUID);
             }
         } catch (GUIDGenerationException | DataException
@@ -108,6 +104,7 @@ public class SOSURLConnection extends URLConnection {
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
             BindingAbsentException, DataException, IOException {
+        LOG.log(LEVEL.INFO, "Data will be fetched from this node");
 
         Directory directory = internalStorage.getDataDirectory();
         String filename = entityGUID.toString();
@@ -118,6 +115,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private InputStream contactNode(Node node, IGUID entityId) throws IOException {
+        LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
 
         URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
 
@@ -129,6 +127,7 @@ public class SOSURLConnection extends URLConnection {
 
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
+        LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
 
         Collection<Node> ndsNodes = nodeManager.getNDSNodes();
         for(Node ndsNode:ndsNodes) {
