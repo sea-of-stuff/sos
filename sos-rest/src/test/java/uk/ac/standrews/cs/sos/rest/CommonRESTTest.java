@@ -28,9 +28,10 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
 
     @Override
     protected Application configure() {
-        // TODO - pass config file explicitly!
-        System.out.println("CONFIG"); // FIXME - this method is called twice?
-        ServerState.init();
+        ClassLoader classLoader = getClass().getClassLoader();
+        String path = classLoader.getResource("config.properties").getFile();
+        ServerState.init(path);
+
         return new RESTConfig().build(ServerState.sos);
     }
 

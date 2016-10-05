@@ -9,12 +9,11 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
@@ -35,8 +34,7 @@ import java.util.Collections;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -51,7 +49,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
         SOSConfiguration configurationMock = mock(SOSConfiguration.class);
         when(configurationMock.getStorageType()).thenReturn(StorageType.LOCAL);
-        when(configurationMock.getStorageLocation()).thenReturn("~/sos/");
+        when(configurationMock.getStorageLocation()).thenReturn(System.getProperty("user.home") + "/sos/");
 
         storage = new InternalStorage(StorageFactory
                 .createStorage(configurationMock.getStorageType(),
@@ -129,10 +127,10 @@ public class LocalManifestsManagerTest extends CommonTest {
     @Test
     public void addAssetManifestTest() throws Exception {
         LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
-        Identity identity = new IdentityImpl();
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        VersionManifest assetManifest = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
+        Version assetManifest = createDummyVersion(contentGUID);
+
         IGUID guid = assetManifest.getVersionGUID();
         try {
             manifestsManager.addManifest(assetManifest);
@@ -149,8 +147,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testAddAssetManifestNullContent() throws Exception {
-        Identity identity = new IdentityImpl();
-        ManifestFactory.createVersionManifest(null, null, null, null, identity);
+        Version assetManifest = createDummyVersion(null);
     }
 
     @Test
@@ -224,4 +221,62 @@ public class LocalManifestsManagerTest extends CommonTest {
         manifestsManager.addManifest(manifest);
     }
 
+
+    @Test (expectedExceptions = HEADNotFoundException.class)
+    public void getUnsetHEAD() throws Exception {
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+
+        IGUID contentGUID = GUIDFactory.recreateGUID("123");
+        Version version = createDummyVersion(contentGUID);
+        IGUID invariant = version.getInvariantGUID();
+
+        manifestsManager.getHEAD(invariant);
+    }
+
+    @Test (expectedExceptions = HEADNotFoundException.class)
+    public void getRandomVersionUnsetHEAD() throws Exception {
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+
+        IGUID invariant = GUIDFactory.generateRandomGUID();
+
+        manifestsManager.getHEAD(invariant);
+    }
+
+    @Test
+    public void getSetAndGetHEAD() throws Exception {
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+
+        IGUID contentGUID = GUIDFactory.recreateGUID("123");
+        Version version = createDummyVersion(contentGUID);
+        IGUID invariant = version.getInvariantGUID();
+
+        manifestsManager.addManifest(version);
+        manifestsManager.setHEAD(version.getVersionGUID());
+        Version retrievedVersion = manifestsManager.getHEAD(invariant);
+
+        assertNotNull(retrievedVersion);
+        assertEquals(retrievedVersion.toString(), version.toString());
+    }
+
+    @Test (expectedExceptions = HEADNotSetException.class)
+    public void getReSetHEADFail() throws Exception {
+        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+
+        IGUID contentGUID = GUIDFactory.recreateGUID("123");
+        Version version = createDummyVersion(contentGUID);
+        IGUID invariant = version.getInvariantGUID();
+
+        manifestsManager.addManifest(version);
+        manifestsManager.setHEAD(version.getVersionGUID());
+        manifestsManager.setHEAD(GUIDFactory.generateRandomGUID());
+
+        manifestsManager.getHEAD(invariant);
+    }
+
+    private Version createDummyVersion(IGUID contentGUID) throws Exception {
+        Identity identity = new IdentityImpl();
+        Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
+
+        return version;
+    }
 }

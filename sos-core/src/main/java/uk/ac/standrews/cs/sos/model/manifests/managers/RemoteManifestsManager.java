@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -64,7 +66,12 @@ public class RemoteManifestsManager implements ManifestsManager {
     }
 
     @Override
-    public Version getHEAD(IGUID invariant) {
+    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void setHEAD(IGUID version) throws HEADNotSetException {
         throw new NotImplementedException();
     }
 

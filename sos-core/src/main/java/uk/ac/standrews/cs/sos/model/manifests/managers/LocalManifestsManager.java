@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -23,6 +24,7 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -36,6 +38,8 @@ import java.util.stream.Stream;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocalManifestsManager implements ManifestsManager {
+
+    // TODO - cache
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
@@ -121,25 +125,63 @@ public class LocalManifestsManager implements ManifestsManager {
 
     /**
      * Return the local HEAD for a given version
+     *
+     * // TODO - see what git/hg do
      * @param invariant for an asset
      * @return head version of the asset
      */
-    public Version getHEAD(IGUID invariant) {
-        // TODO - see what git/hg do
-        // see notes in the setHEAD method
+    @Override
+    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
+
+        try {
+            File file = getHEADFile(invariant);
+            Data data = file.getData();
+
+            if (data == null || data.getSize() == 0) {
+                throw new HEADNotFoundException("Unable to find head for asset " + invariant);
+            }
+
+            String str = IOUtils.toString(data.getInputStream(),  StandardCharsets.UTF_8);
+            IGUID versionGUID = GUIDFactory.recreateGUID(str);
+            return (Version) getManifestFromFile(versionGUID);
+
+        } catch (DataStorageException | GUIDGenerationException |
+                ManifestNotFoundException | DataException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     /**
      * Set the specified version as the head for the asset that it represents
+     *
      * @param version
      */
-    public void setHEAD(IGUID version) {
-        // reset current head
-        // File name: invariant
-        // Content file: version id
+    @Override
+    public void setHEAD(IGUID version) throws HEADNotSetException {
 
-        // Optionally, use a db
+        try {
+            Version versionManifest = (Version) getManifestFromFile(version);
+
+            IGUID invariant = versionManifest.getInvariantGUID();
+            File file = getHEADFile(invariant);
+            file.setData(new StringData(version.toString()));
+            file.persist();
+
+        } catch (ManifestNotFoundException | DataStorageException | DataException
+                | PersistenceException e) {
+            throw new HEADNotSetException("Unable to set the head for version " + version);
+        }
+    }
+
+    private File getHEADFile(IGUID invariant) throws DataStorageException {
+        Directory headsDir = internalStorage.getHeadsDirectory();
+        File file = internalStorage.createFile(headsDir, invariant.toString());
+
+        return file;
     }
 
     private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {

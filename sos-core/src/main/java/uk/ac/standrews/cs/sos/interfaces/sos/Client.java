@@ -1,10 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.sos;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
@@ -110,7 +107,9 @@ public interface Client extends SeaOfStuff {
      * @return latest known version of the asset
      * @throws ManifestNotFoundException
      */
-    Version getHEAD(IGUID guid) throws ManifestNotFoundException;
+    Version getHEAD(IGUID guid) throws HEADNotFoundException;
+
+    void setHEAD(IGUID version) throws HEADNotSetException;
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by

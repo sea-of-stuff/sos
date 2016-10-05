@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -48,7 +50,12 @@ public class ManifestsManagerImpl implements ManifestsManager {
     }
 
     @Override
-    public Version getHEAD(IGUID invariant) {
+    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
         return local.getHEAD(invariant);
+    }
+
+    @Override
+    public void setHEAD(IGUID version) throws HEADNotSetException {
+        local.setHEAD(version);
     }
 }
