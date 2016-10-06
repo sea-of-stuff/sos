@@ -165,7 +165,6 @@ public class LocalManifestsManager implements ManifestsManager {
 
         try {
             Version versionManifest = (Version) getManifestFromFile(version);
-
             IGUID invariant = versionManifest.getInvariantGUID();
             File file = getHEADFile(invariant);
             file.setData(new StringData(version.toString()));

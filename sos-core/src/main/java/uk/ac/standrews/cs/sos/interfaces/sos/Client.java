@@ -109,7 +109,7 @@ public interface Client extends SeaOfStuff {
      */
     Version getHEAD(IGUID guid) throws HEADNotFoundException;
 
-    void setHEAD(IGUID version) throws HEADNotSetException;
+    void setHEAD(IGUID version) throws HEADNotSetException; // FIXME - pass version manifest?
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by
