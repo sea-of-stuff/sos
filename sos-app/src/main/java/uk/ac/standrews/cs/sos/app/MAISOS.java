@@ -26,7 +26,7 @@ public class MAISOS {
 
     public static void main(String[] args) throws Exception {
         CommandLineParser parser = new DefaultParser();
-        Options options = createOptions();
+        Options options = CreateOptions();
 
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("posix", options );
@@ -56,10 +56,10 @@ public class MAISOS {
         }
 
 
-        handleExit();
+        HandleExit();
     }
 
-    private static Options createOptions() {
+    private static Options CreateOptions() {
         Options options = new Options();
 
         options.addOption(Option.builder(CONFIG_OPT)
@@ -85,7 +85,7 @@ public class MAISOS {
         return options;
     }
 
-    private static void handleExit() throws IOException {
+    private static void HandleExit() throws IOException {
         ShutdownHook shutdownHook = new ShutdownHook();
         shutdownHook.attachShutDownHook();
 
@@ -107,7 +107,7 @@ public class MAISOS {
         }
     }
 
-    public static void Launch(IGUID root, int port, Client client) {
+    private static void Launch(IGUID root, int port, Client client) {
 
         try {
             IFileSystem file_system =
