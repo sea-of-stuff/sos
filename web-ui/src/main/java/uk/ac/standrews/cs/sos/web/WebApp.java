@@ -103,6 +103,7 @@ public class WebApp {
         return renderTemplate("velocity/graph.vm", model);
     }
 
+    // FIXME - return something else!
     private static String renderHome(SOSLocalNode sos) throws URISyntaxException, ManifestPersistException, StorageException, ManifestNotFoundException {
         Map<String, Object> model = new HashMap<>();
         model.put("versions", sos.getClient().getAllManifests().
