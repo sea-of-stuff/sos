@@ -3,13 +3,18 @@ package uk.ac.standrews.cs.sos.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.io.IOUtils;
 import spark.ModelAndView;
+import spark.Request;
 import spark.template.velocity.VelocityTemplateEngine;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
@@ -17,8 +22,10 @@ import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import javax.servlet.MultipartConfigElement;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,6 +50,7 @@ public class WebApp {
     private static void registerRoutes(SOSLocalNode sos) {
         get("/", (req, res) -> renderHome(sos));
         get("/graph", (req, res) -> renderGraph(sos));
+        get("/graph/data/:id", (req, res) -> renderData(req, sos));
         get("/hello", (req, res) -> "Hello World");
 
         post("/data", (request, response) -> {
@@ -55,6 +63,25 @@ public class WebApp {
             return "File uploaded";
         });
 
+    }
+
+    private static String renderData(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, IOException {
+
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+        Manifest manifest = sos.getClient().getManifest(guid);
+
+        if (manifest.getManifestType().equals("Atom")) {
+            Atom atom = (Atom) manifest;
+
+            return InputStreamToString(sos.getClient().getAtomContent(atom));
+        }
+
+        return null;
+    }
+
+    public static String InputStreamToString(InputStream string) throws IOException {
+        return IOUtils.toString(string, StandardCharsets.UTF_8);
     }
 
     private static Object renderGraph(SOSLocalNode sos) {

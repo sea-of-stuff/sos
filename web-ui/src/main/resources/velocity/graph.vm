@@ -2,33 +2,55 @@
 <html>
 <head>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
         #sos-graph {
-            width: 1500px;
-            height: 1500px;
+            width: 1200px;
+            height: 1200px;
             border: 1px solid lightgray;
         }
     </style>
 </head>
 <body>
 
-<div id="sos-graph"></div>
+<div class="container-fluid">
+    <br>
+    <div class="row">
+        <div class="col-sm-9">
+            <div id="sos-graph"></div>
+        </div>
+        <div class="col-sm-3">
+            <p id="eventSpan" style="word-wrap: break-word;"></p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
     var nodes = new vis.DataSet(${nodes});
     var edges = new vis.DataSet(${edges});
 
     // create a network
-    var container = document.getElementById('sos-graph');
+    var container = $('#sos-graph')[0];
     var data = {
         nodes: nodes,
         edges: edges
     };
-    var options = {};
+    var options = {layout:{improvedLayout:true}};
     var network = new vis.Network(container, data, options);
+
+    network.on("doubleClick", function (params) {
+        $.get("/graph/data/" + params['nodes'][0] , function(data) {
+            $('#eventSpan').html(data);
+        })
+    });
 </script>
+
 </body>
 </html>
