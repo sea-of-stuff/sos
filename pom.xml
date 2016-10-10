@@ -16,7 +16,8 @@
         <module>web-ui</module>
         <module>sos-configuration</module>
         <module>sos-app</module>
-  </modules>
+        <module>sos-filesystem</module>
+    </modules>
 
     <properties>
         <jdk.version>1.8</jdk.version>

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -10,12 +10,50 @@
 <body>
 <div class="container-fluid">
     <br>
-    <h2>All Manifests </h2>
+
+    <form action="/data" method="POST" enctype="multipart/form-data">
+        <input type="file" name="atom" accept="*/*">
+        <input type="submit">
+    </form>
+
+    <h3>All Versions </h3>
 
     <ul class="list-group">
-    #foreach($manifest in $manifests)
-    <li class="list-group-item">$manifest.ManifestType - $manifest.ContentGUID</li>
+    #foreach($version in $versions)
+        <li class="list-group-item">
+            <strong>Invariant:</strong> $version.InvariantGUID -
+            <strong>Version:</strong> $version.VersionGUID -
+            <strong>Content:</strong> $version.ContentGUID</li>
     #end
+    </ul>
+
+    <hr>
+    <h3>All Compounds </h3>
+
+    <ul class="list-group">
+        #foreach($compound in $compounds)
+            <li class="list-group-item"><strong>Content:</strong> $compound.ContentGUID
+                #if($compound.contents.size() > 0 )
+                    <hr>
+                    #foreach($content in $compound.contents)
+                        $content.label - $content.GUID
+                        <br>
+                    #end
+
+                #end
+
+            </li>
+
+        #end
+    </ul>
+
+    <hr>
+    <h3>All Atoms </h3>
+
+    <ul class="list-group">
+        #foreach($atom in $atoms)
+            <li class="list-group-item"><strong>Content:</strong> $atom.ContentGUID</li>
+        #end
     </ul>
 
     <br>

@@ -1,9 +1,16 @@
 package uk.ac.standrews.cs.sos.app;
 
 import org.apache.commons.cli.*;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
+import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.WebApp;
+import uk.ac.standrews.cs.webdav.entrypoints.WebDAVLauncher;
 
 import java.io.IOException;
 
@@ -13,8 +20,8 @@ import java.io.IOException;
 public class MAISOS {
 
     private static final String CONFIG_OPT = "c";
-    private static final String JETTY_OPT = "j";
-    private static final String WEB_OPT = "w";
+    private static final String REST_OPT = "j";
+    private static final String WEB_APP_OPT = "w";
     private static final String WEBDAV_OPT = "wd";
 
     public static void main(String[] args) throws Exception {
@@ -34,18 +41,20 @@ public class MAISOS {
         String configFilePath = line.getOptionValue(CONFIG_OPT);
         SOSLocalNode sos = ServerState.init(configFilePath);
 
-        if (line.hasOption(JETTY_OPT)) {
+        if (line.hasOption(REST_OPT)) {
             JettyApp.RUN(sos);
         }
 
-        if (line.hasOption(WEBDAV_OPT)) {
-            // TODO: Start Webdav
-            System.out.println("Starting webdav - N/A");
+        if (line.hasOption(WEB_APP_OPT)) {
+            WebApp.RUN(sos, 9999);
         }
 
-        if (line.hasOption(WEB_OPT)) {
-            WebApp.RUN(sos);
+        if (line.hasOption(WEBDAV_OPT)) {
+            // TODO - pass config info to webdav
+            IGUID root = GUIDFactory.recreateGUID("73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e");
+            Launch(root, 8082, sos.getClient());
         }
+
 
         handleExit();
     }
@@ -56,12 +65,12 @@ public class MAISOS {
         options.addOption(Option.builder(CONFIG_OPT)
                 .required()
                 .hasArg()
-                .desc("Config files used for this SOS instance")
+                .desc("Config file used for this SOS instance")
                 .build());
 
-        options.addOption(Option.builder(JETTY_OPT)
+        options.addOption(Option.builder(REST_OPT)
                 .required(false)
-                .desc("Make a jetty server")
+                .desc("Run a RESTful service")
                 .build());
 
         options.addOption(Option.builder(WEBDAV_OPT)
@@ -69,7 +78,7 @@ public class MAISOS {
                 .desc("Make a webdav server")
                 .build());
 
-        options.addOption(Option.builder(WEB_OPT)
+        options.addOption(Option.builder(WEB_APP_OPT)
                 .required(false)
                 .desc("Run a web interface")
                 .build());
@@ -95,6 +104,21 @@ public class MAISOS {
                     System.out.println("exit");
                 }
             });
+        }
+    }
+
+    public static void Launch(IGUID root, int port, Client client) {
+
+        try {
+            IFileSystem file_system =
+                    new SOSFileSystemFactory(root)
+                            .makeFileSystem(client);
+
+            WebDAVLauncher.StartWebDAVServer(file_system, port);
+        } catch (FileSystemCreationException e) {
+            System.out.println("couldn't create file system: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Socket error: " + e.getMessage());
         }
     }
 

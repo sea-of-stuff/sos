@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-app/sos-app.iml" filepath="$PROJECT_DIR$/sos-app/sos-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-configuration/sos-configuration.iml" filepath="$PROJECT_DIR$/sos-configuration/sos-configuration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-filesystem/sos-filesystem.iml" filepath="$PROJECT_DIR$/sos-filesystem/sos-filesystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-ui/web-ui.iml" filepath="$PROJECT_DIR$/web-ui/web-ui.iml" />
     </modules>
   </component>

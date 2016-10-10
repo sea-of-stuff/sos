@@ -27,6 +27,7 @@
         <module name="rest-jetty" />
         <module name="sos-app" />
         <module name="sos-configuration" />
+        <module name="sos-filesystem" />
         <module name="web-ui" />
       </profile>
     </annotationProcessing>
@@ -37,6 +38,7 @@
       <module name="sos" target="1.8" />
       <module name="sos-app" target="1.8" />
       <module name="sos-configuration" target="1.8" />
+      <module name="sos-filesystem" target="1.8" />
       <module name="web-ui" target="1.8" />
     </bytecodeTargetLevel>
   </component>
