@@ -51,6 +51,7 @@ public class WebApp {
         get("/", (req, res) -> renderHome(sos));
         get("/graph", (req, res) -> renderGraph(sos));
         get("/graph/data/:id", (req, res) -> renderData(req, sos));
+        get("/graph/manifest/:id", (req, res) -> renderManifest(req, sos));
         get("/hello", (req, res) -> "Hello World");
 
         post("/data", (request, response) -> {
@@ -77,7 +78,18 @@ public class WebApp {
             return InputStreamToString(sos.getClient().getAtomContent(atom));
         }
 
-        return null;
+        return "N/A";
+    }
+
+    private static String renderManifest(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, IOException {
+
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+        Manifest manifest = sos.getClient().getManifest(guid);
+
+        ObjectMapper mapper = new ObjectMapper();
+        Object json = mapper.readValue(manifest.toString(), Object.class);
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
     }
 
     public static String InputStreamToString(InputStream string) throws IOException {

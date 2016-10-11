@@ -8,7 +8,7 @@
 
     <style type="text/css">
         #sos-graph {
-            width: 1200px;
+            /*width: 1200px;*/
             height: 1200px;
             border: 1px solid lightgray;
         }
@@ -19,11 +19,11 @@
 <div class="container-fluid">
     <br>
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-8">
             <div id="sos-graph"></div>
         </div>
-        <div class="col-sm-3">
-            <p id="eventSpan" style="word-wrap: break-word;"></p>
+        <div class="col-sm-4">
+            <pre id="eventSpan" style="word-wrap: break-word;"></pre>
         </div>
     </div>
 </div>
@@ -45,9 +45,15 @@
     var options = {layout:{improvedLayout:true}};
     var network = new vis.Network(container, data, options);
 
-    network.on("doubleClick", function (params) {
+    network.on("click", function (params) {
         $.get("/graph/data/" + params['nodes'][0] , function(data) {
-            $('#eventSpan').html(data);
+            $('#eventSpan').html("<h2>Data</h2><br>" + data);
+        })
+    });
+
+    network.on("doubleClick", function (params) {
+        $.get("/graph/manifest/" + params['nodes'][0] , function(data) {
+            $('#eventSpan').html("<h2>Manifest</h2><br>" + data);
         })
     });
 </script>
