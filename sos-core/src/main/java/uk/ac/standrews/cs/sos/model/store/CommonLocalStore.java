@@ -22,12 +22,12 @@ import java.net.MalformedURLException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class CommonStore implements Store {
+public abstract class CommonLocalStore implements Store {
 
     protected InternalStorage storage;
     protected IGUID nodeGUID;
 
-    public CommonStore(IGUID nodeGUID, InternalStorage storage) {
+    public CommonLocalStore(IGUID nodeGUID, InternalStorage storage) {
         this.nodeGUID = nodeGUID;
         this.storage = storage;
     }

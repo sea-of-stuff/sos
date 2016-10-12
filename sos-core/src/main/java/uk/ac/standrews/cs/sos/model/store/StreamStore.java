@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class StreamStore extends CommonStore {
+public abstract class StreamStore extends CommonLocalStore {
 
     private InputStream inputStream;
     private LocationBundle locationBundle;

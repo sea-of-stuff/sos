@@ -15,7 +15,7 @@ public class BasicReplicationPolicy implements ReplicationPolicy {
      * @param replicationFactor (zeroed if negative)
      */
     public BasicReplicationPolicy(int replicationFactor) {
-        this.replicationFactor = replicationFactor >= 0 ? replicationFactor : 0;
+        this.replicationFactor = replicationFactor > 0 ? replicationFactor : 0;
     }
 
     @Override

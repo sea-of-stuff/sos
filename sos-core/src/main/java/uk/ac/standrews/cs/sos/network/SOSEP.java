@@ -41,6 +41,13 @@ public class SOSEP {
         return new URL(url);
     }
 
+    public static URL STORAGE_POST_DATA(Node node) throws MalformedURLException {
+        String url = buildURLBase(node) +
+                "/storage/stream";
+
+        return new URL(url);
+    }
+
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
         String url = HTTP_SCHEME +

@@ -39,7 +39,10 @@ public class Make {
             "\n" +
             "keys.folder=~/sos/keys/\n" +
             "\n" +
-            "policy.replication.factor=0" +
+            "policy.replication.factor=0\n" +
+            "policy.manifest.locally=true\n" +
+            "policy.manifest.remotely=false\n" +
+            "policy.manifest.replication=0\n" +
             "\n";
 
     /**

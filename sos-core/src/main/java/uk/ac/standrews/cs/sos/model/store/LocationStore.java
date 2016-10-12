@@ -17,7 +17,7 @@ import java.io.InputStream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class LocationStore extends CommonStore {
+public abstract class LocationStore extends CommonLocalStore {
 
     private Location origin;
     private LocationBundle locationBundle;

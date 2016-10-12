@@ -1,26 +1,27 @@
 package uk.ac.standrews.cs.sos.configuration;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.FileBasedConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.PropertiesConfigurationLayout;
-import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration2.ex.ConfigurationException;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigValueFactory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
+import uk.ac.standrews.cs.sos.policy.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;
 import uk.ac.standrews.cs.sos.policy.PolicyManagerImpl;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageType;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * This utility class allows the SOS-Core instance to read a configuration file.
@@ -30,57 +31,34 @@ import java.io.IOException;
  */
 public class SOSConfiguration {
 
-    private Configuration configuration;
-    private FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
+    private Config configuration;
+    private File file;
 
     /**
      * Create a configuration using the specified file (must be accessibly locally)
      * @param file
      */
     public SOSConfiguration(File file) throws SOSConfigurationException {
+        this.file = file;
 
-        Parameters params = new Parameters();
-        builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-                        .configure(params.properties()
-                                .setFile(file)
-                                .setLayout(new PropertiesConfigurationLayout())
-                                .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
-
-        try {
-            configuration = builder.getConfiguration();
-        } catch (ConfigurationException e) {
-            throw new SOSConfigurationException(e);
-        }
-
+        configuration = ConfigFactory.parseFile(file);
     }
 
     public IGUID getNodeGUID() throws GUIDGenerationException, IOException {
-        String defaultGuid = GUIDFactory.generateRandomGUID().toString();
-        String guidString = configuration.getString(PropertyKeys.NODE_GUID, defaultGuid);
+        String randomGuid = GUIDFactory.generateRandomGUID().toString();
 
-        if (guidString.equals(defaultGuid)) {
-            setProperty(PropertyKeys.NODE_GUID, defaultGuid);
+        String guidString = randomGuid;
+        try {
+            guidString = configuration.getString(PropertyKeys.NODE_GUID);
+            if (guidString.equals(randomGuid)) {
+                setProperty(PropertyKeys.NODE_GUID, randomGuid);
+            }
+
+        } catch (ConfigException.Missing missing) {
+            SOS_LOG.log(LEVEL.INFO, "GUID missing, use random GUID");
         }
 
         return GUIDFactory.recreateGUID(guidString);
-    }
-
-    public PolicyManager getPolicyManager() {
-
-        ReplicationPolicy replicationPolicy = createReplicationPolicy();
-
-        PolicyManager policyManager = new PolicyManagerImpl();
-        policyManager.setReplicationPolicy(replicationPolicy);
-
-        return policyManager;
-    }
-
-    private ReplicationPolicy createReplicationPolicy() {
-
-        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_REPLICATION);
-
-        ReplicationPolicy replicationPolicy = new BasicReplicationPolicy(replicationFactor);
-        return replicationPolicy;
     }
 
     public String getNodeHostname() {
@@ -151,12 +129,41 @@ public class SOSConfiguration {
         return path;
     }
 
+    public PolicyManager getPolicyManager() {
+
+        ReplicationPolicy replicationPolicy = createReplicationPolicy();
+        ManifestPolicy manifestPolicy = createManifestPolicy();
+
+        PolicyManager policyManager = new PolicyManagerImpl();
+        policyManager.setReplicationPolicy(replicationPolicy);
+        policyManager.setManifestPolicy(manifestPolicy);
+
+        return policyManager;
+    }
+
+    private ReplicationPolicy createReplicationPolicy() {
+
+        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_REPLICATION_FACTOR);
+
+        ReplicationPolicy replicationPolicy = new BasicReplicationPolicy(replicationFactor);
+        return replicationPolicy;
+    }
+
+    private ManifestPolicy createManifestPolicy() {
+
+        boolean storeLocally = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_LOCALLY);
+        boolean storeRemotely = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_REMOTELY);
+        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_MANIFEST_REPLICATION);
+
+        ManifestPolicy manifestPolicy = new BasicManifestPolicy(storeLocally, storeRemotely, replicationFactor);
+        return manifestPolicy;
+    }
+
     private void setProperty(String key, String value) throws IOException {
-        configuration.setProperty(key, value);
-        try {
-            builder.save();
-        } catch (ConfigurationException e) {
-            throw new IOException(e);
+        configuration = configuration.withValue(key, ConfigValueFactory.fromAnyRef(value));
+
+        try(PrintWriter out = new PrintWriter(file)){
+            out.println(configuration.root().render());
         }
     }
 
@@ -187,6 +194,9 @@ public class SOSConfiguration {
 
         public static final String KEYS_FOLDER = "keys.folder";
 
-        public static final String POLICY_REPLICATION = "policy.replication.factor";
+        public static final String POLICY_REPLICATION_FACTOR = "policy.replication.factor";
+        public static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.locally";
+        public static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remotely";
+        public static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
     }
 }

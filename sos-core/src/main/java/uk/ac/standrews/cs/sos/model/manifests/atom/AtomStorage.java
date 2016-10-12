@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.model.store.*;
@@ -40,16 +41,23 @@ public class AtomStorage {
 
     public IGUID persistAtomAndUpdateLocationBundles(Location location,
                                                      Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new LocationPersist(nodeGUID, storage, location);
+        Store persistance = new LocationPersist(nodeGUID, storage, location);
 
-        return storeAtomAndUpdateLocationBundles(cache, bundles);
+        return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
     public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream,
                                                      Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new StreamPersist(nodeGUID, storage, inputStream);
+        Store persistance = new StreamPersist(nodeGUID, storage, inputStream);
 
-        return storeAtomAndUpdateLocationBundles(cache, bundles);
+        return storeAtomAndUpdateLocationBundles(persistance, bundles);
+    }
+
+    public IGUID persistAtomToRemote(Node node, InputStream inputStream) throws StorageException {
+
+        Store remote = new RemoteStore(node, inputStream);
+
+        return storeAtomAndUpdateLocationBundles(remote,null);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.configuration;
 
+import com.typesafe.config.ConfigException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -17,55 +18,46 @@ import static org.testng.Assert.*;
 public class SOSConfigurationTest {
 
     private static final String TEST_RESOURCES_PATH = "src/test/resources/";
-    private static final String MOCK_PROPERTIES = "#Mock Properties\n" +
-            "db.path=\n" +
-            "node.port=8080\n" +
-            "storage.access.key=\n" +
-            "db.password=\n" +
-            "db.username=\n" +
-            "node.hostname=\n" +
-            "node.guid=6b67f67f31908dd0e574699f163eda2cc117f7f4\n" +
-            "keys.folder=\n" +
-            "storage.secret.key=\n" +
-            "storage.type=\n" +
-            "storage.location=\n" +
-            "storage.password=\n" +
-            "db.hostname=\n" +
-            "node.is.client=true\n" +
-            "db.type=sqlite\n" +
-            "storage.username=\n" +
-            "node.is.storage=\n" +
-            "storage.hostname=\n" +
-            "node.is.dds=\n" +
-            "node.is.mcs=\n" +
-            "node.is.nds=\n" +
-            "policy.replication.factor=0\n";
+    private static final String MOCK_PROPERTIES =
+            "{\n" +
+                    "    \"node\" : {\n" +
+                    "        \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\",\n" +
+                    "        \"port\" : 8080\n" +
+                    "        \"is\" : {\n" +
+                    "          \"client\" : true\n" +
+                    "          \"storage\" : true\n" +
+                    "          \"dds\" : true\n" +
+                    "          \"nds\" : true\n" +
+                    "          \"mcs\" : true\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n";
 
     @BeforeMethod
     public void setUp() {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.conf");
         file.delete();
     }
 
     @Test
     public void testFail() throws Exception {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.conf");
         SOSConfiguration configuration = new SOSConfiguration(file);
         assertNotNull(configuration.getNodeGUID());
     }
 
-    @Test
+    @Test (expectedExceptions = ConfigException.Missing.class)
     public void testEmptyKey() throws IOException, SOSConfigurationException {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         SOSConfiguration configuration = new SOSConfiguration(file);
-        assertTrue(configuration.getNodeHostname().isEmpty());
+        configuration.getNodeHostname();
     }
 
     @Test
     public void testExistingKey() throws IOException, GUIDGenerationException, SOSConfigurationException {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         SOSConfiguration configuration = new SOSConfiguration(file);
@@ -75,7 +67,7 @@ public class SOSConfigurationTest {
 
     @Test
     public void testBooleanValue() throws IOException, SOSConfigurationException {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         SOSConfiguration configuration = new SOSConfiguration(file);
@@ -84,7 +76,7 @@ public class SOSConfigurationTest {
 
     @Test
     public void testIntValue() throws IOException, SOSConfigurationException {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         SOSConfiguration configuration = new SOSConfiguration(file);

@@ -22,13 +22,17 @@ public class SyncRequest extends Request {
     public Response play(OkHttpClient client) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
 
-        Response response;
+        Response response = null;
         switch(method) {
             case GET:
                 response = get(client);
                 break;
             case POST:
-                response = postJSON(client);
+                if (inputStream != null) {
+                    response = postData(client);
+                } else if (json_body != null) {
+                    response = postJSON(client);
+                }
                 break;
             case PUT:
                 response = putJSON(client);
@@ -53,6 +57,18 @@ public class SyncRequest extends Request {
 
     protected Response postJSON(OkHttpClient client) throws IOException {
         RequestBody body = RequestBody.create(JSON, json_body);
+
+        request = new okhttp3.Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        response = new Response(client.newCall(request).execute());
+        return response;
+    }
+
+    protected Response postData(OkHttpClient client) throws IOException {
+        RequestBody body = RequestBody.create(MULTIPART, json_body);
 
         request = new okhttp3.Request.Builder()
                 .url(url)

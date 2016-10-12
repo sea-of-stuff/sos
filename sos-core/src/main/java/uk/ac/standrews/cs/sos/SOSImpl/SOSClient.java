@@ -74,6 +74,18 @@ public class SOSClient implements Client {
         } else if (atomBuilder.isInputStream()) {
             InputStream inputStream = atomBuilder.getInputStream();
             guid = store(inputStream, bundles);
+
+            if (policyManager.getManifestPolicy().getReplicationFactor() > 0) {
+                Runnable replicator = () -> {
+                    // TODO - move to separate method
+                    try {
+                        atomStorage.persistAtomToRemote(null, inputStream);
+                    } catch (StorageException e) {
+                        e.printStackTrace();
+                    }
+                };
+            }
+
         } else {
             throw new StorageException("AtomBuilder has not been set correctly");
         }

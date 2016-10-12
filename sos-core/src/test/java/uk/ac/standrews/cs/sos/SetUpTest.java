@@ -27,29 +27,46 @@ public class SetUpTest extends CommonTest {
     protected InternalStorage internalStorage;
 
     private static final String TEST_RESOURCES_PATH = "src/test/resources/";
-    private static final String MOCK_PROPERTIES = "#Mock Properties\n" +
-            "db.path=~/sos/db/dump.db\n" +
-            "node.port=8080\n" +
-            "storage.access.key=\n" +
-            "db.password=\n" +
-            "db.username=\n" +
-            "node.hostname=\n" +
-            "node.guid=6b67f67f31908dd0e574699f163eda2cc117f7f4\n" +
-            "keys.folder=~/sos/keys/\n" +
-            "storage.secret.key=\n" +
-            "storage.type=local\n" +
-            "storage.location=/sos/\n" +
-            "storage.password=\n" +
-            "db.hostname=\n" +
-            "node.is.client=true\n" +
-            "db.type=sqlite\n" +
-            "storage.username=\n" +
-            "node.is.storage=false\n" +
-            "storage.hostname=\n" +
-            "node.is.dds=false\n" +
-            "node.is.mcs=false\n" +
-            "node.is.nds=false\n" +
-            "policy.replication.factor=0";
+    private static final String MOCK_PROPERTIES =
+            "{\n" +
+                    "    \"node\" : {\n" +
+                    "        \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" +
+                    "        \"port\" : 8080\n" +
+                    "        \"hostname\" : \"\"\n" +
+                    "        \"is\" : {\n" +
+                    "            \"client\" : true\n" +
+                    "            \"storage\" : false\n" +
+                    "            \"dds\" : false\n" +
+                    "            \"nds\" : false\n" +
+                    "            \"mcs\" : false\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"db\" : {\n" +
+                    "        \"type\" : \"sqlite\"\n" +
+                    "        \"path\" : \"~/sos/db/dump.db\"\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"storage\" : {\n" +
+                    "        \"type\" : \"local\"\n" +
+                    "        \"location\" : \"/sos/\"\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"keys\" : {\n" +
+                    "        \"folder\" : \"~/sos/keys/\"\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"policy\" : {\n" +
+                    "        \"replication\" : {\n" +
+                    "            \"factor\" : 0\n" +
+                    "        }\n" +
+                    "        \"manifest\" : {\n" +
+                    "            \"locally\" : true\n" +
+                    "            \"remotely\" : false\n" +
+                    "            \"replication\" : 0\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}";
 
     protected SOSConfiguration configuration;
 
@@ -88,7 +105,7 @@ public class SetUpTest extends CommonTest {
     }
 
     protected void createConfiguration() throws SOSConfigurationException, IOException {
-        File file = new File(TEST_RESOURCES_PATH + "config.properties");
+        File file = new File(TEST_RESOURCES_PATH + "config-setup.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         configuration = new SOSConfiguration(file);

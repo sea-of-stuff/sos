@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.network;
 
 import okhttp3.MediaType;
 
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -11,12 +12,15 @@ import java.net.URL;
  */
 public abstract class Request {
 
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    protected static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    protected static final MediaType MULTIPART = MediaType.parse("multipart/form-data data; charset=utf-8");
+    protected static final MediaType APP_FORM = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
 
     protected okhttp3.Request request;
     protected Method method;
     protected URL url;
     protected String json_body;
+    protected InputStream inputStream;
 
     public Request(Method method, URL url) {
         this.method = method;
@@ -25,6 +29,13 @@ public abstract class Request {
 
     public Request setJSONBody(String json_body) {
         this.json_body = json_body;
+        this.inputStream = null;
+        return this;
+    }
+
+    public Request setBody(InputStream inputStream) {
+        this.inputStream = inputStream;
+        this.json_body = null;
         return this;
     }
 
