@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -114,8 +114,8 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
         if (prevs.size() > 0) {
             builder.setPrevious(prevs);
 
-            LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
-            LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Set prev for asset with invariant " + previous.getInvariant());
+            SOS_LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
+            SOS_LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Set prev for asset with invariant " + previous.getInvariant());
         }
 
         // TODO - add metadata

@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -62,12 +62,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     // Each node will have its own log and it will be used to log errors as well
     // as useful information about the node itself.
-    private LOG LOG = new LOG(getNodeGUID());
+    private SOS_LOG SOS_LOG = new SOS_LOG(getNodeGUID());
 
     public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
         super(Builder.configuration);
 
-        LOG.log(LEVEL.INFO, "Starting up node ");
+        SOS_LOG.log(LEVEL.INFO, "Starting up node ");
 
         configuration = Builder.configuration;
         internalStorage = Builder.internalStorage;
@@ -88,15 +88,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initSOSInstances();
 
         try {
-            LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
+            SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
             SOSProtocol.Register(internalStorage, nodeManager, requestsManager);
         } catch (SOSProtocolException e) {
-            LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
+            SOS_LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSException(e);
         }
 
         // TODO: backgroundProcesses();
-        LOG.log(LEVEL.INFO, "Node initialised");
+        SOS_LOG.log(LEVEL.INFO, "Node initialised");
     }
 
     @Override
@@ -166,22 +166,22 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void initSOSInstances() {
         if (isClient()) {
-            LOG.log(LEVEL.INFO, "Creating a Client role");
+            SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
             client = new SOSClient(this, internalStorage, manifestsManager, identity);
         }
 
         if (isStorage()) {
-            LOG.log(LEVEL.INFO, "Creating a Storage role");
+            SOS_LOG.log(LEVEL.INFO, "Creating a Storage role");
             storage = new SOSStorage(this, internalStorage, manifestsManager);
         }
 
         if (isDDS()) {
-            LOG.log(LEVEL.INFO, "Creating a DDS role");
+            SOS_LOG.log(LEVEL.INFO, "Creating a DDS role");
             dds = new SOSDDS(manifestsManager);
         }
 
         if (isNDS()) {
-            LOG.log(LEVEL.INFO, "Creating a NDS role");
+            SOS_LOG.log(LEVEL.INFO, "Creating a NDS role");
             nds = new SOSNDS(nodeManager);
         }
 

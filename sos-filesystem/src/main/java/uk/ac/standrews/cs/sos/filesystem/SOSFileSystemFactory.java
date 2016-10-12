@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -52,32 +52,23 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
-        LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
-
-        Client client = getSOSClient();
-
-        if (client != null) {
-            Version rootAsset = createRoot(client);
-            return new SOSFileSystem(client, rootAsset);
-        } else {
-            LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
-            return null;
-        }
+        Client client = makeSOSClient();
+        return makeFileSystem(client);
     }
 
     public IFileSystem makeFileSystem(Client client) throws FileSystemCreationException {
-        LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
         if (client != null) {
             Version rootAsset = createRoot(client);
             return new SOSFileSystem(client, rootAsset);
         } else {
-            LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
+            SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
             return null;
         }
     }
 
-    private Client getSOSClient() {
+    private Client makeSOSClient() {
         Client client = null;
         try {
             SOSConfiguration configuration = createConfiguration();
@@ -109,7 +100,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             String root = configuration.getStorageLocation();
 
             internalStorage = new InternalStorage(StorageFactory
-                            .createStorage(storageType, root, false)); // FIXME - storage have very different behaviours if mutable or not
+                            .createStorage(storageType, root, false));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
@@ -119,7 +110,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     private Version createRoot(Client sos) {
         Version retval = getRoot(sos, rootGUID);
 
-        LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
         if (retval == null) {
             try {
                 Compound compound = createRootCompound(sos);

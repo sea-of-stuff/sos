@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -13,6 +14,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,23 +47,29 @@ public class RemoteManifestsManager implements ManifestsManager {
             Collection<Node> ddsNodes = nodeManager.getDDSNodes();
 
             for(Node ddsNode:ddsNodes) {
+                SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +
+                        " to node " + ddsNode.getNodeGUID().toString());
                 addManifest(ddsNode, manifest);
             }
 
         }
-
-        // check replication factor
-        // find nodes
-        // make requests
     }
 
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
+
+        // Contact knwon DDS nodes
+        // Ask such nodes about manifest with given guid
+
         return null;
     }
 
     @Override
     public Stream<Manifest> getAllManifests() {
+
+        // This method should not be supported.
+        // Getting all manifests from the entire SOS is meaningless.
+
         return null;
     }
 

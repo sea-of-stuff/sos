@@ -40,7 +40,8 @@ public class StorageTest extends SetUpTest {
             "storage.hostname=\n" +
             "node.is.dds=false\n" +
             "node.is.mcs=false\n" +
-            "node.is.nds=false\n";
+            "node.is.nds=false\n" +
+            "policy.replication.factor=0";
 
     @Override
     @BeforeMethod

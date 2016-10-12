@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
-import uk.ac.standrews.cs.fs.util.Error;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -24,7 +23,8 @@ import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utils.Error;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -127,7 +127,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public void addFile(String name, IFile file, String content_type) throws BindingPresentException {
         // create new compound with given file
         // result in new version
-        LOG.log(LEVEL.INFO, "WEBDAV - Add file " + name + " to folder " + this.name);
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Add file " + name + " to folder " + this.name);
 
         addObject(name, file, null);
     }
@@ -136,7 +136,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public void addDirectory(String name, IDirectory directory) throws BindingPresentException {
         // same as above - from the compound perspective it does not matter whether it is a compound or an atom that we add
         // result in new version
-        LOG.log(LEVEL.INFO, "WEBDAV - Add directory " + name + " to folder " + this.name);
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Add directory " + name + " to folder " + this.name);
 
         addObject(name, directory, null);
     }
@@ -177,7 +177,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         // result in new version
         // iterate over collection and remove element with given name
         // then persist
-        LOG.log(LEVEL.INFO, "WEBDAV - Remove object " + name + " from folder " + this.name);
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Remove object " + name + " from folder " + this.name);
 
         contents.remove(getContent(name));
     }
@@ -235,7 +235,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             if (manifest instanceof Version) {
                 return getObject((Version) manifest);
             } else {
-                LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type");
+                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type");
             }
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();

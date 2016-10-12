@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -104,7 +104,7 @@ public class SOSURLConnection extends URLConnection {
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
             BindingAbsentException, DataException, IOException {
-        LOG.log(LEVEL.INFO, "Data will be fetched from this node");
+        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from this node");
 
         Directory directory = internalStorage.getDataDirectory();
         String filename = entityGUID.toString();
@@ -115,7 +115,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private InputStream contactNode(Node node, IGUID entityId) throws IOException {
-        LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
+        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
 
         URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
 
@@ -127,7 +127,7 @@ public class SOSURLConnection extends URLConnection {
 
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
-        LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
+        SOS_LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
 
         Collection<Node> ndsNodes = nodeManager.getNDSNodes();
         for(Node ndsNode:ndsNodes) {

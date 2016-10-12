@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -61,7 +61,7 @@ public class SOSClient implements Client {
 
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
-        LOG.log(LEVEL.INFO, "Adding atom: " + atomBuilder.toString());
+        SOS_LOG.log(LEVEL.INFO, "Adding atom: " + atomBuilder.toString());
         long start = System.nanoTime();
 
         Collection<LocationBundle> bundles = new ArrayList<>();
@@ -82,7 +82,7 @@ public class SOSClient implements Client {
         manifestsManager.addManifest(manifest);
 
         long end = System.nanoTime();
-        LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
+        SOS_LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
                 +" added in " + (end - start) / 1000000000.0 + " seconds");
 
         return manifest;
@@ -91,12 +91,12 @@ public class SOSClient implements Client {
     @Override
     public Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
-        LOG.log(LEVEL.INFO, "Adding compound");
+        SOS_LOG.log(LEVEL.INFO, "Adding compound");
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
         manifestsManager.addManifest(manifest);
 
-        LOG.log(LEVEL.INFO, "Compound added: " + manifest.getContentGUID());
+        SOS_LOG.log(LEVEL.INFO, "Compound added: " + manifest.getContentGUID());
 
         return manifest;
     }
@@ -105,7 +105,7 @@ public class SOSClient implements Client {
     @Override
     public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
-        LOG.log(LEVEL.INFO, "Adding version");
+        SOS_LOG.log(LEVEL.INFO, "Adding version");
 
         IGUID content = versionBuilder.getContent();
         IGUID invariant = versionBuilder.getInvariant();
@@ -115,7 +115,7 @@ public class SOSClient implements Client {
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
 
-        LOG.log(LEVEL.INFO, "Version added: " + manifest.getContentGUID());
+        SOS_LOG.log(LEVEL.INFO, "Version added: " + manifest.getContentGUID());
 
         return manifest;
     }
@@ -129,7 +129,7 @@ public class SOSClient implements Client {
      */
     @Override
     public InputStream getAtomContent(Atom atom) {
-        LOG.log(LEVEL.INFO, "Getting content for atom: " + atom.getContentGUID());
+        SOS_LOG.log(LEVEL.INFO, "Getting content for atom: " + atom.getContentGUID());
 
         InputStream dataStream = null;
         Collection<LocationBundle> locations = atom.getLocations();
@@ -146,14 +146,14 @@ public class SOSClient implements Client {
             }
         }
 
-        LOG.log(LEVEL.INFO, "Returning atom " + atom.getContentGUID() + "data stream");
+        SOS_LOG.log(LEVEL.INFO, "Returning atom " + atom.getContentGUID() + "data stream");
 
         return dataStream;
     }
 
     @Override
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        LOG.log(LEVEL.INFO, "Adding manifest " + manifest.getContentGUID());
+        SOS_LOG.log(LEVEL.INFO, "Adding manifest " + manifest.getContentGUID());
 
         manifestsManager.addManifest(manifest);
 
@@ -162,12 +162,12 @@ public class SOSClient implements Client {
             throw new UnsupportedOperationException();
         }
 
-        LOG.log(LEVEL.INFO, "Added manifest " + manifest.getContentGUID());
+        SOS_LOG.log(LEVEL.INFO, "Added manifest " + manifest.getContentGUID());
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        LOG.log(LEVEL.INFO, "Getting manifest " + guid);
+        SOS_LOG.log(LEVEL.INFO, "Getting manifest " + guid);
 
         return manifestsManager.findManifest(guid);
     }
@@ -184,18 +184,18 @@ public class SOSClient implements Client {
 
     @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
-        LOG.log(LEVEL.INFO, "Verifying manifest " + manifest.getContentGUID());
+        SOS_LOG.log(LEVEL.INFO, "Verifying manifest " + manifest.getContentGUID());
 
         boolean success = manifest.verify(identity);
 
-        LOG.log(LEVEL.INFO, "Manifest " + manifest.getContentGUID() + " verified. Result: " + success);
+        SOS_LOG.log(LEVEL.INFO, "Manifest " + manifest.getContentGUID() + " verified. Result: " + success);
 
         return success;
     }
 
     @Override
     public Stream<Manifest> getAllManifests() {
-        LOG.log(LEVEL.INFO, "Retrieving all manifests");
+        SOS_LOG.log(LEVEL.INFO, "Retrieving all manifests");
 
         return manifestsManager.getAllManifests();
     }

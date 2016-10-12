@@ -141,6 +141,7 @@ public class SOSAddAtomTest extends ClientTest {
         System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
     }
 
+    // NOTE: this test fails if using mutable internal storage
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomTwiceNoUpdate() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);

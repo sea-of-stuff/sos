@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.store.Store;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 /**

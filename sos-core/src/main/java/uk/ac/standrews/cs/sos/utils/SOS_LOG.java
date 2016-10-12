@@ -10,12 +10,12 @@ import uk.ac.standrews.cs.Logger;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LOG {
+public class SOS_LOG {
 
     private static uk.ac.standrews.cs.LOG log;
     private static IGUID nodeGUID;
 
-    public LOG(IGUID guid) {
+    public SOS_LOG(IGUID guid) {
         nodeGUID = guid;
         log = Logger.LOG();
     }

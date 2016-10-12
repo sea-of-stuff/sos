@@ -36,7 +36,7 @@ public class ManifestsManagerImpl implements ManifestsManager {
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         local.addManifest(manifest);
-        // remote.addManifest(manifest);
+        remote.addManifest(manifest);
     }
 
     @Override

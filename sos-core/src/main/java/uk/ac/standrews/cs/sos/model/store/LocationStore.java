@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests.atom;
+package uk.ac.standrews.cs.sos.model.store;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;

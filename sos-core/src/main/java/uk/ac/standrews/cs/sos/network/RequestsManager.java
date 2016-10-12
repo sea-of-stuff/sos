@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.network;
 
 import okhttp3.OkHttpClient;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 
@@ -23,9 +23,9 @@ public class RequestsManager {
     }
 
     public void shutdown() {
-        LOG.log(LEVEL.INFO, "Attempt to shutdown RequestsManager");
+        SOS_LOG.log(LEVEL.INFO, "Attempt to shutdown RequestsManager");
         client.dispatcher().executorService().shutdown();
-        LOG.log(LEVEL.INFO, "RequestsManager: shutdown finished");
+        SOS_LOG.log(LEVEL.INFO, "RequestsManager: shutdown finished");
     }
 
 }

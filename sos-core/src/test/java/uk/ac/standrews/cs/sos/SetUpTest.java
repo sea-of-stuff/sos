@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -47,7 +48,8 @@ public class SetUpTest extends CommonTest {
             "storage.hostname=\n" +
             "node.is.dds=false\n" +
             "node.is.mcs=false\n" +
-            "node.is.nds=false\n";
+            "node.is.nds=false\n" +
+            "policy.replication.factor=0";
 
     protected SOSConfiguration configuration;
 
@@ -65,14 +67,18 @@ public class SetUpTest extends CommonTest {
 
             internalStorage =
                     new InternalStorage(StorageFactory
-                            .createStorage(storageType, root, true)); // FIXME - storage have very different behaviours if mutable or not
+                            .createStorage(storageType, root, true));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
 
+
+        PolicyManager policyManager = configuration.getPolicyManager();
+
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         localSOSNode = builder.configuration(configuration)
                                 .internalStorage(internalStorage)
+                                .policies(policyManager)
                                 .build();
     }
 

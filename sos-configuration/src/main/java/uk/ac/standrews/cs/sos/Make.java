@@ -38,6 +38,8 @@ public class Make {
             "storage.hostname=\n" +
             "\n" +
             "keys.folder=~/sos/keys/\n" +
+            "\n" +
+            "policy.replication.factor=0" +
             "\n";
 
     /**

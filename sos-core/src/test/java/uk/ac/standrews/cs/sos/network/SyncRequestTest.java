@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +26,7 @@ public class SyncRequestTest extends CommonTest {
     public void setUp(java.lang.reflect.Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        new LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
     }
 
     @Test

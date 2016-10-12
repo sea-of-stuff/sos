@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
-import uk.ac.standrews.cs.fs.util.Error;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
@@ -22,8 +21,9 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.utils.Error;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +61,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     public SOSFile(Client sos)  {
         super(sos);
-        LOG.log(LEVEL.INFO, "WEBDAV - Creating SOS File - Compound Data: true");
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating SOS File - Compound Data: true");
 
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();

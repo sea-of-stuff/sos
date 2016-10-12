@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.network;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.utils.LOG;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +21,7 @@ public class AsyncRequest extends Request {
     }
 
     public void play(OkHttpClient client) throws IOException {
-        LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
+        SOS_LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
 
         switch(method) {
             case GET:
@@ -34,7 +34,7 @@ public class AsyncRequest extends Request {
                 putJSON(client);
                 break;
             default:
-                LOG.log(LEVEL.WARN, "Unknown Request method while playing a request");
+                SOS_LOG.log(LEVEL.WARN, "Unknown Request method while playing a request");
         }
     }
 

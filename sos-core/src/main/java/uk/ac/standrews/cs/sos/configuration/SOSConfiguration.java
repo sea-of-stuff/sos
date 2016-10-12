@@ -1,13 +1,22 @@
 package uk.ac.standrews.cs.sos.configuration;
 
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.FileBasedConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
+import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
+import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;
+import uk.ac.standrews.cs.sos.policy.PolicyManagerImpl;
 import uk.ac.standrews.cs.storage.StorageType;
 
 import java.io.File;
@@ -21,17 +30,24 @@ import java.io.IOException;
  */
 public class SOSConfiguration {
 
-    Configuration configuration;
+    private Configuration configuration;
+    private FileBasedConfigurationBuilder<FileBasedConfiguration> builder;
 
     /**
      * Create a configuration using the specified file (must be accessibly locally)
      * @param file
      */
     public SOSConfiguration(File file) throws SOSConfigurationException {
-        Configurations configs = new Configurations();
+
+        Parameters params = new Parameters();
+        builder = new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+                        .configure(params.properties()
+                                .setFile(file)
+                                .setLayout(new PropertiesConfigurationLayout())
+                                .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
 
         try {
-            configuration = configs.properties(file);
+            configuration = builder.getConfiguration();
         } catch (ConfigurationException e) {
             throw new SOSConfigurationException(e);
         }
@@ -47,6 +63,24 @@ public class SOSConfiguration {
         }
 
         return GUIDFactory.recreateGUID(guidString);
+    }
+
+    public PolicyManager getPolicyManager() {
+
+        ReplicationPolicy replicationPolicy = createReplicationPolicy();
+
+        PolicyManager policyManager = new PolicyManagerImpl();
+        policyManager.setReplicationPolicy(replicationPolicy);
+
+        return policyManager;
+    }
+
+    private ReplicationPolicy createReplicationPolicy() {
+
+        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_REPLICATION);
+
+        ReplicationPolicy replicationPolicy = new BasicReplicationPolicy(replicationFactor);
+        return replicationPolicy;
     }
 
     public String getNodeHostname() {
@@ -119,6 +153,11 @@ public class SOSConfiguration {
 
     private void setProperty(String key, String value) throws IOException {
         configuration.setProperty(key, value);
+        try {
+            builder.save();
+        } catch (ConfigurationException e) {
+            throw new IOException(e);
+        }
     }
 
     private class PropertyKeys {
@@ -147,5 +186,7 @@ public class SOSConfiguration {
         public static final String STORAGE_SECRET_KEY = "storage.secret.key";
 
         public static final String KEYS_FOLDER = "keys.folder";
+
+        public static final String POLICY_REPLICATION = "policy.replication.factor";
     }
 }

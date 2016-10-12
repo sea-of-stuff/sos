@@ -38,7 +38,8 @@ public class SOSConfigurationTest {
             "storage.hostname=\n" +
             "node.is.dds=\n" +
             "node.is.mcs=\n" +
-            "node.is.nds=\n";
+            "node.is.nds=\n" +
+            "policy.replication.factor=0\n";
 
     @BeforeMethod
     public void setUp() {
