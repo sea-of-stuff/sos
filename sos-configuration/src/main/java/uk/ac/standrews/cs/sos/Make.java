@@ -12,7 +12,60 @@ public class Make {
 
     private static final String CURRENT_DIRECTORY = Paths.get(".").toAbsolutePath().normalize().toString();
 
-    private static final String CONFIG_TEMPLATE = "# Fill the following properties \n" +
+    private static final String CONFIG_TEMPLATE =
+            "{\n" +
+                    "    \"node\" : {\n" +
+                    "        \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" +
+                    "        \"port\" : 8080\n" +
+                    "        \"hostname\" : \"\"\n" +
+                    "        \"is\" : {\n" +
+                    "            \"client\" : true\n" +
+                    "            \"storage\" : false\n" +
+                    "            \"dds\" : false\n" +
+                    "            \"nds\" : false\n" +
+                    "            \"mcs\" : false\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"db\" : {\n" +
+                    "        \"type\" : \"sqlite\"\n" +
+                    "        \"path\" : \"~/sos/db/dump.db\"\n" +
+                    "        \"hostname\" : \n" +
+                    "        \"username\" :\n" +
+                    "        \"password\" :\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"storage\" : {\n" +
+                    "        \"type\" : \"local\"\n" +
+                    "        \"location\" : \"/sos/\"\n" +
+                    "        \"access.key\" : \"\"\n" +
+                    "        \"secret.key\" : \"\"\n" +
+                    "        \"hostname\" : \"\"\n" +
+                    "        \"username\" : \"\"\n" +
+                    "        \"password\" : \"\"\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"keys\" : {\n" +
+                    "        \"folder\" : \"~/sos/keys/\"\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"policy\" : {\n" +
+                    "        \"replication\" : {\n" +
+                    "            \"factor\" : 0\n" +
+                    "        }\n" +
+                    "        \"manifest\" : {\n" +
+                    "            \"locally\" : true\n" +
+                    "            \"remotely\" : false\n" +
+                    "            \"replication\" : 0\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    \"bootstrap\" : []\n" +
+                    "\n" +
+                    "}";
+
+
+    private static final String OLD_TEMPLATE = "# Fill the following properties \n" +
             "# You can use the tilde ~ for the home directory\n" +
             "node.guid= # SHA-1 (160bits) - optional\n" +
             "node.port=8080\n" +

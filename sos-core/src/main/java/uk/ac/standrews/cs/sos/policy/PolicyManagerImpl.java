@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 public class PolicyManagerImpl implements PolicyManager {
 
     private ReplicationPolicy replicationPolicy;
+    private ManifestPolicy manifestPolicy;
 
     @Override
     public void setReplicationPolicy(ReplicationPolicy policy) {
@@ -24,7 +25,7 @@ public class PolicyManagerImpl implements PolicyManager {
 
     @Override
     public void setManifestPolicy(ManifestPolicy policy) {
-
+        this.manifestPolicy = policy;
     }
 
     @Override
@@ -39,6 +40,6 @@ public class PolicyManagerImpl implements PolicyManager {
 
     @Override
     public ManifestPolicy getManifestPolicy() {
-        return null;
+        return manifestPolicy;
     }
 }

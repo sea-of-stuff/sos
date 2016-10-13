@@ -71,7 +71,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         configuration = Builder.configuration;
         internalStorage = Builder.internalStorage;
-        policyManager = Builder.policyManager; //FIXME - could have different policies for client, storage, dds, nds, mcs!
+        policyManager = Builder.policyManager;
 
         try {
             DatabaseType databaseType = configuration.getDBType();
@@ -167,7 +167,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initSOSInstances() {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
-            client = new SOSClient(this, internalStorage, manifestsManager, identity);
+            client = new SOSClient(this, internalStorage, manifestsManager, identity, policyManager);
         }
 
         if (isStorage()) {

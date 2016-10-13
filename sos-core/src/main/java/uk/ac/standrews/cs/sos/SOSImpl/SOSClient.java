@@ -46,10 +46,11 @@ public class SOSClient implements Client {
     private AtomStorage atomStorage;
 
     public SOSClient(Node node, InternalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity) {
+                     Identity identity, PolicyManager policyManager) {
 
         this.manifestsManager = manifestsManager;
         this.identity = identity;
+        this.policyManager = policyManager;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -75,7 +76,7 @@ public class SOSClient implements Client {
             InputStream inputStream = atomBuilder.getInputStream();
             guid = store(inputStream, bundles);
 
-            if (policyManager.getManifestPolicy().getReplicationFactor() > 0) {
+            if (policyManager.getReplicationPolicy().getReplicationFactor() > 0) {
                 Runnable replicator = () -> {
                     // TODO - move to separate method
                     try {
