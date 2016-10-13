@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.SOSImpl.Client;
+package uk.ac.standrews.cs.sos.SOSImpl.Client.standard;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

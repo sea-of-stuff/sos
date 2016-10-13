@@ -9,9 +9,11 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.policy.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;
@@ -22,6 +24,8 @@ import uk.ac.standrews.cs.storage.StorageType;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This utility class allows the SOS-Core instance to read a configuration file.
@@ -44,14 +48,15 @@ public class SOSConfiguration {
         configuration = ConfigFactory.parseFile(file);
     }
 
-    public IGUID getNodeGUID() throws GUIDGenerationException, IOException {
+    public IGUID getNodeGUID() throws IOException, GUIDGenerationException {
         String randomGuid = GUIDFactory.generateRandomGUID().toString();
 
         String guidString = randomGuid;
         try {
             guidString = configuration.getString(PropertyKeys.NODE_GUID);
-            if (guidString.equals(randomGuid)) {
+            if (useRandomGUID(guidString, randomGuid)) {
                 setProperty(PropertyKeys.NODE_GUID, randomGuid);
+                guidString = randomGuid;
             }
 
         } catch (ConfigException.Missing missing) {
@@ -59,6 +64,23 @@ public class SOSConfiguration {
         }
 
         return GUIDFactory.recreateGUID(guidString);
+    }
+
+    private boolean useRandomGUID(String guid, String random) {
+        if (guid.isEmpty())
+            return true;
+
+        if (guid.equals(random)) {
+            return true;
+        }
+
+        try {
+            IGUID realGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return true;
+        }
+
+        return false;
     }
 
     public String getNodeHostname() {
@@ -157,6 +179,31 @@ public class SOSConfiguration {
 
         ManifestPolicy manifestPolicy = new BasicManifestPolicy(storeLocally, storeRemotely, replicationFactor);
         return manifestPolicy;
+    }
+
+    public List<Node> getBootstrapNodes() throws GUIDGenerationException {
+
+        List<? extends Config> bootstrap = configuration.getConfigList("bootstrap");
+
+        List<Node> bootstrapNodes = new ArrayList<>();
+        for(Config bootstrapConfig : bootstrap) {
+            String guidString = bootstrapConfig.getString("guid");
+            IGUID guid = GUIDFactory.recreateGUID(guidString);
+
+            String hostname = bootstrapConfig.getString("hostname");
+            int port = bootstrapConfig.getInt("port");
+
+            boolean isClient = bootstrapConfig.getBoolean("is.client");
+            boolean isStorage = bootstrapConfig.getBoolean("is.storage");
+            boolean isDDS = bootstrapConfig.getBoolean("is.dds");
+            boolean isNDS = bootstrapConfig.getBoolean("is.nds");
+            boolean isMCS = bootstrapConfig.getBoolean("is.mcs");
+
+            Node node = new SOSNode(guid, hostname, port, isClient, isStorage, isDDS, isNDS, isMCS);
+            bootstrapNodes.add(node);
+        }
+
+        return bootstrapNodes;
     }
 
     private void setProperty(String key, String value) throws IOException {

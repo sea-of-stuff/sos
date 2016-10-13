@@ -3,13 +3,11 @@ package uk.ac.standrews.cs.sos.model.store;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.SOSEP;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -17,10 +15,12 @@ import java.net.URL;
  */
 public class RemoteStore implements Store {
 
+    private RequestsManager requestsManager;
     private Node node;
     private InputStream inputStream;
 
-    public RemoteStore(Node node, InputStream inputStream) {
+    public RemoteStore(RequestsManager requestsManager, Node node, InputStream inputStream) {
+        this.requestsManager = requestsManager;
         this.node = node;
         this.inputStream = inputStream;
     }
@@ -32,9 +32,12 @@ public class RemoteStore implements Store {
         try {
             url = SOSEP.STORAGE_POST_DATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
+            request.setBody(inputStream);
 
-            System.out.println("REPLICATION--> " + request.getRespondeCode());
-        } catch (MalformedURLException e) {
+            Response response = requestsManager.playSyncRequest(request);
+
+            System.out.println("REPLICATION--> " + response.getCode());
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

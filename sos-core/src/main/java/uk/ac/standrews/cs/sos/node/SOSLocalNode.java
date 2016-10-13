@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SOSImpl.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
@@ -13,6 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.*;
@@ -24,6 +26,8 @@ import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+
+import java.util.List;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -50,7 +54,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Identity identity;
     private ManifestsManager manifestsManager;
     private NodeManager nodeManager;
-    private RequestsManager requestsManager;
+    private RequestsManager requestsManager; // TODO - better way to share this for the network layer
 
     // Node roles
     // All roles will share storage, node manager, manifests manager, etc.
@@ -81,8 +85,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throw new SOSException(e);
         }
 
-        initNodeManager();
         initRequestsManager();
+        initNodeManager();
+        loadBootstrapNodes(Builder.bootstrapNodes);
         initManifestManager();
         initIdentity();
         initSOSInstances();
@@ -138,7 +143,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /* PRIVATE METHODS */
     /**************************************************************************/
 
-
     private void initRequestsManager() {
         requestsManager = new RequestsManager();
     }
@@ -148,6 +152,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             nodeManager = new NodeManager(this, nodeDatabase);
         } catch (NodeManagerException e) {
             throw new SOSException(e);
+        }
+    }
+
+    private void loadBootstrapNodes(List<Node> bootstrapNodes)
+            throws DatabaseConnectionException {
+
+        for(Node node:bootstrapNodes) {
+            nodeManager.addNode(node);
         }
     }
 
@@ -167,7 +179,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initSOSInstances() {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
-            client = new SOSClient(this, internalStorage, manifestsManager, identity, policyManager);
+            client = new SOSClient(this, nodeManager, internalStorage, manifestsManager,
+                                    identity, policyManager, requestsManager);
         }
 
         if (isStorage()) {
@@ -197,6 +210,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         private static SOSConfiguration configuration;
         private static InternalStorage internalStorage;
         private static PolicyManager policyManager;
+        private static List<Node> bootstrapNodes;
 
         public Builder configuration(SOSConfiguration configuration) {
             Builder.configuration = configuration;
@@ -210,6 +224,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         public Builder policies(PolicyManager policyManager) {
             Builder.policyManager = policyManager;
+            return this;
+        }
+
+        public Builder bootstrapNodes(List<Node> bootstrapNodes) {
+            Builder.bootstrapNodes = bootstrapNodes;
             return this;
         }
 

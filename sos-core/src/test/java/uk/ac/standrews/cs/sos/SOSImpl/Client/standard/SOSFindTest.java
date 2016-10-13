@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.SOSImpl.Client;
+package uk.ac.standrews.cs.sos.SOSImpl.Client.standard;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

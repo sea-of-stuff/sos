@@ -12,6 +12,7 @@ public class PolicyManagerImpl implements PolicyManager {
 
     private ReplicationPolicy replicationPolicy;
     private ManifestPolicy manifestPolicy;
+    private MetadataPolicy metadataPolicy;
 
     @Override
     public void setReplicationPolicy(ReplicationPolicy policy) {
@@ -20,7 +21,7 @@ public class PolicyManagerImpl implements PolicyManager {
 
     @Override
     public void setComputationPolicy(MetadataPolicy policy) {
-
+        this.metadataPolicy = policy;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class PolicyManagerImpl implements PolicyManager {
 
     @Override
     public MetadataPolicy getComputationPolicy() {
-        return null;
+        return metadataPolicy;
     }
 
     @Override

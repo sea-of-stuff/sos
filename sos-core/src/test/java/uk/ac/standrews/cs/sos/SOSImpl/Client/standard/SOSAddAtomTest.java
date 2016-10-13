@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.SOSImpl.Client;
+package uk.ac.standrews.cs.sos.SOSImpl.Client.standard;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;

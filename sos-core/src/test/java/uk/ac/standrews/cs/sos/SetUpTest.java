@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.util.List;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -30,7 +32,7 @@ public class SetUpTest extends CommonTest {
     private static final String MOCK_PROPERTIES =
             "{\n" +
                     "    \"node\" : {\n" +
-                    "        \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" +
+                    "        \"guid\" : \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\"\n" +
                     "        \"port\" : 8080\n" +
                     "        \"hostname\" : \"\"\n" +
                     "        \"is\" : {\n" +
@@ -66,6 +68,21 @@ public class SetUpTest extends CommonTest {
                     "            \"replication\" : 0\n" +
                     "        }\n" +
                     "    }\n" +
+                    "\n" +
+                    "    \"bootstrap\" : [\n" +
+                    "        {\n" +
+                    "            \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" +
+                    "            \"port\" : 8080\n" +
+                    "            \"hostname\" : \"cs-wifi-174.cs.st-andrews.ac.uk\"\n" +
+                    "            \"is\" : {\n" +
+                    "                \"client\" : false\n" +
+                    "                \"storage\" : true\n" +
+                    "                \"dds\" : false\n" +
+                    "                \"nds\" : false\n" +
+                    "                \"mcs\" : false\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    ]\n" +
                     "}";
 
     protected SOSConfiguration configuration;
@@ -92,10 +109,13 @@ public class SetUpTest extends CommonTest {
 
         PolicyManager policyManager = configuration.getPolicyManager();
 
+        List<Node> bootstrapNodes = configuration.getBootstrapNodes();
+
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         localSOSNode = builder.configuration(configuration)
                                 .internalStorage(internalStorage)
                                 .policies(policyManager)
+                                .bootstrapNodes(bootstrapNodes)
                                 .build();
     }
 

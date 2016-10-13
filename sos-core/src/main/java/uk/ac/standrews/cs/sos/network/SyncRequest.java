@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.network;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -68,7 +69,9 @@ public class SyncRequest extends Request {
     }
 
     protected Response postData(OkHttpClient client) throws IOException {
-        RequestBody body = RequestBody.create(MULTIPART, json_body);
+        // FIXME - this will fail for large data
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        RequestBody body = RequestBody.create(MULTIPART, bytes);
 
         request = new okhttp3.Request.Builder()
                 .url(url)

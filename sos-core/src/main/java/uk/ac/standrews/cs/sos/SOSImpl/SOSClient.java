@@ -22,12 +22,15 @@ import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
+import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
@@ -39,18 +42,22 @@ import java.util.stream.Stream;
  */
 public class SOSClient implements Client {
 
+    private NodeManager nodeManager;
     private PolicyManager policyManager;
     private Identity identity;
     private ManifestsManager manifestsManager;
+    private RequestsManager requestsManager;
 
     private AtomStorage atomStorage;
 
-    public SOSClient(Node node, InternalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity, PolicyManager policyManager) {
+    public SOSClient(Node node, NodeManager nodeManager, InternalStorage storage, ManifestsManager manifestsManager,
+                     Identity identity, PolicyManager policyManager, RequestsManager requestsManager) {
 
+        this.nodeManager = nodeManager;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
         this.policyManager = policyManager;
+        this.requestsManager = requestsManager;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -75,18 +82,6 @@ public class SOSClient implements Client {
         } else if (atomBuilder.isInputStream()) {
             InputStream inputStream = atomBuilder.getInputStream();
             guid = store(inputStream, bundles);
-
-            if (policyManager.getReplicationPolicy().getReplicationFactor() > 0) {
-                Runnable replicator = () -> {
-                    // TODO - move to separate method
-                    try {
-                        atomStorage.persistAtomToRemote(null, inputStream);
-                    } catch (StorageException e) {
-                        e.printStackTrace();
-                    }
-                };
-            }
-
         } else {
             throw new StorageException("AtomBuilder has not been set correctly");
         }
@@ -97,6 +92,27 @@ public class SOSClient implements Client {
         long end = System.nanoTime();
         SOS_LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
                 +" added in " + (end - start) / 1000000000.0 + " seconds");
+
+        // TODO - move to separate method
+        // TODO - do not apply only for inputstream!
+        InputStream atomContent = getAtomContent(manifest);
+        if (policyManager.getReplicationPolicy().getReplicationFactor() > 0) {
+            Runnable replicator = () -> {
+
+                Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
+                if (storageNodes.hasNext()) {
+                    Node replicaNode = storageNodes.next();
+                    try {
+                        atomStorage.persistAtomToRemote(requestsManager, replicaNode, atomContent);
+                    } catch (StorageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            replicator.run();
+        }
+
 
         return manifest;
     }

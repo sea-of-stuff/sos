@@ -1,10 +1,10 @@
-package uk.ac.standrews.cs.sos.SOSImpl.Storage;
+package uk.ac.standrews.cs.sos.SOSImpl.Client.replication;
 
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +14,9 @@ import java.nio.file.Files;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StorageTest extends SetUpTest {
+public class ClientReplicationTest extends SetUpTest {
 
-    protected Storage storage;
+    protected Client client;
 
     private static final String TEST_RESOURCES_PATH = "src/test/resources/";
     private static final String MOCK_PROPERTIES =
@@ -26,8 +26,8 @@ public class StorageTest extends SetUpTest {
                     "        \"port\" : 8080\n" +
                     "        \"hostname\" : \"\"\n" +
                     "        \"is\" : {\n" +
-                    "            \"client\" : false\n" +
-                    "            \"storage\" : true\n" +
+                    "            \"client\" : true\n" +
+                    "            \"storage\" : false\n" +
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
                     "            \"mcs\" : false\n" +
@@ -50,7 +50,7 @@ public class StorageTest extends SetUpTest {
                     "\n" +
                     "    \"policy\" : {\n" +
                     "        \"replication\" : {\n" +
-                    "            \"factor\" : 0\n" +
+                    "            \"factor\" : 1\n" +
                     "        }\n" +
                     "        \"manifest\" : {\n" +
                     "            \"locally\" : true\n" +
@@ -61,7 +61,7 @@ public class StorageTest extends SetUpTest {
                     "\n" +
                     "    \"bootstrap\" : [\n" +
                     "        {\n" +
-                    "            \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" +
+                    "            \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" + // NOTE: this will work only if LORNA is running.
                     "            \"port\" : 8080\n" +
                     "            \"hostname\" : \"cs-wifi-174.cs.st-andrews.ac.uk\"\n" +
                     "            \"is\" : {\n" +
@@ -80,7 +80,7 @@ public class StorageTest extends SetUpTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        storage = localSOSNode.getStorage();
+        client = localSOSNode.getClient();
     }
 
     @Override
