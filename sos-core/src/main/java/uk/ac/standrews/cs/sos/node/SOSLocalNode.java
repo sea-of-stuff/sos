@@ -203,6 +203,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
     }
 
+    private void garbageCollector() {
+        // check if garbage collector should be run (e.g. not enough space)
+        // iterate over the atom manifests
+        // check what atoms can be removed from the cache
+        // clear cache
+    }
+
     /**
      * This is the builder for the SOSLocalNode.
      */

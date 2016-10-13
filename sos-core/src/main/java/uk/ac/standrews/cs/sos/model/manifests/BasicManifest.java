@@ -25,7 +25,7 @@ public abstract class BasicManifest implements Manifest {
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
     protected IGUID contentGUID;
-    private final String manifestType;
+    private final ManifestType manifestType;
 
     /**
      * Constructor for a BasicManifest.
@@ -33,7 +33,7 @@ public abstract class BasicManifest implements Manifest {
      *
      * @param manifestType
      */
-    protected BasicManifest(String manifestType) {
+    protected BasicManifest(ManifestType manifestType) {
         this.manifestType = manifestType;
     }
 
@@ -43,7 +43,7 @@ public abstract class BasicManifest implements Manifest {
      * @return the type of this manifest.
      */
     @Override
-    public String getManifestType() {
+    public ManifestType getManifestType() {
         return this.manifestType;
     }
 
@@ -92,7 +92,7 @@ public abstract class BasicManifest implements Manifest {
     }
 
     private boolean hasManifestType() {
-        return manifestType != null && !manifestType.isEmpty();
+        return manifestType != null;
     }
 
     @Override

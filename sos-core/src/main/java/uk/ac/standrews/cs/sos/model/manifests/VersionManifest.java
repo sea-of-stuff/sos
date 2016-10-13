@@ -64,7 +64,7 @@ public class VersionManifest extends SignedManifest implements Version {
                            Collection<IGUID> prevs, Collection<IGUID> metadata,
                            Identity identity)
             throws ManifestNotMadeException {
-        super(identity, ManifestConstants.VERSION);
+        super(identity, ManifestType.VERSION);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -98,7 +98,7 @@ public class VersionManifest extends SignedManifest implements Version {
     public VersionManifest(IGUID invariant, IGUID version, IGUID content,
                            Collection<IGUID> prevs, Collection<IGUID> metadata,
                            String signature) {
-        super(null, ManifestConstants.VERSION);
+        super(null, ManifestType.VERSION);
         this.invariant = invariant;
         this.version = version;
         this.contentGUID = content;

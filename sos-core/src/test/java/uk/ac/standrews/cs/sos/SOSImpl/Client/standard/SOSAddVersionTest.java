@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
@@ -35,10 +35,10 @@ public class SOSAddVersionTest extends ClientTest {
 
         VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
         Version manifest = client.addVersion(builder);
-        Assert.assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
+        Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
-        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
@@ -66,10 +66,10 @@ public class SOSAddVersionTest extends ClientTest {
                 .setPrevious(prevs)
                 .setMetadataCollection(metadata);
         Version manifest = client.addVersion(builder);
-        assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
+        assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
-        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.VERSION);
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         IGUID retrievedInvariant = ((VersionManifest) retrievedManifest).getInvariantGUID();
         assertEquals(invariant, retrievedInvariant);

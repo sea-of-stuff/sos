@@ -23,7 +23,7 @@ public abstract class SignedManifest extends BasicManifest {
      * @param identity
      * @param manifestType
      */
-    protected SignedManifest(Identity identity, String manifestType) {
+    protected SignedManifest(Identity identity, ManifestType manifestType) {
         super(manifestType);
         this.identity = identity;
     }

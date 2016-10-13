@@ -76,7 +76,7 @@ public class LocalManifestsManagerTest extends CommonTest {
             manifestsManager.addManifest(atomManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestConstants.ATOM);
+            assertEquals(manifest.getManifestType(), ManifestType.ATOM);
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException |ManifestNotFoundException e) {
@@ -99,7 +99,7 @@ public class LocalManifestsManagerTest extends CommonTest {
             manifestsManager.addManifest(compoundManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
+            assertEquals(manifest.getManifestType(), ManifestType.COMPOUND);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), guid);
             assertEquals(manifest.isValid(), true);
@@ -136,7 +136,7 @@ public class LocalManifestsManagerTest extends CommonTest {
             manifestsManager.addManifest(assetManifest);
             Manifest manifest = manifestsManager.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestConstants.VERSION);
+            assertEquals(manifest.getManifestType(), ManifestType.VERSION);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);

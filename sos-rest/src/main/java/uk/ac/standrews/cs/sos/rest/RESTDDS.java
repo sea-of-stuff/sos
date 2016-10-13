@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
+import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.*;
@@ -31,7 +28,7 @@ public class RESTDDS {
         Manifest manifest;
         try {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
-            String type = node.get(ManifestConstants.KEY_TYPE).textValue();
+            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
             manifest = getManifest(type, json);
         } catch (IOException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
@@ -52,16 +49,16 @@ public class RESTDDS {
         return HTTPResponses.OK("Test");
     }
 
-    private Manifest getManifest(String type, String json) throws IOException {
+    private Manifest getManifest(ManifestType type, String json) throws IOException {
         Manifest manifest;
         switch(type) {
-            case ManifestConstants.ATOM:
+            case ATOM:
                 manifest = getAtomManifest(json);
                 break;
-            case ManifestConstants.COMPOUND:
+            case COMPOUND:
                 manifest = getCompoundManifest(json);
                 break;
-            case ManifestConstants.VERSION:
+            case VERSION:
                 manifest = getVersionManifest(json);
                 break;
             default:

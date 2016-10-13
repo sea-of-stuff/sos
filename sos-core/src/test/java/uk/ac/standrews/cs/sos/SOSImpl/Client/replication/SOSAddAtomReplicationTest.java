@@ -31,6 +31,9 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         stream.close();
         inputStream.close();
 
-        // TODO - get data from replica node
+        // TODO
+        // clear cache
+        // force node to get data from replica node
     }
 }
+

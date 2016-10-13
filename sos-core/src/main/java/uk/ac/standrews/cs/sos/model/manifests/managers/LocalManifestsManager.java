@@ -189,7 +189,7 @@ public class LocalManifestsManager implements ManifestsManager {
             File manifestFile = getManifestFile(guid);
 
             JsonNode node = JSONHelper.JsonObjMapper().readTree(manifestFile.toFile());
-            String type = node.get(ManifestConstants.KEY_TYPE).textValue();
+            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
 
             Manifest manifest = constructManifestFromJson(type, manifestFile);
 
@@ -201,17 +201,17 @@ public class LocalManifestsManager implements ManifestsManager {
 
     }
 
-    private Manifest constructManifestFromJson(String type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+    private Manifest constructManifestFromJson(ManifestType type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
             switch (type) {
-                case ManifestConstants.ATOM:
+                case ATOM:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
                     break;
-                case ManifestConstants.COMPOUND:
+                case COMPOUND:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
                     break;
-                case ManifestConstants.VERSION:
+                case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
                     break;
                 default:
@@ -229,7 +229,7 @@ public class LocalManifestsManager implements ManifestsManager {
         try {
             IGUID manifestFileGUID = getGUIDUsedToStoreManifest(manifest);
 
-            boolean isAtomManifest = manifest.getManifestType().equals(ManifestConstants.ATOM);
+            boolean isAtomManifest = manifest.getManifestType().equals(ManifestType.ATOM);
             boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
 
             if (isAtomManifest && manifestExists) {
@@ -305,7 +305,7 @@ public class LocalManifestsManager implements ManifestsManager {
     private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
         IGUID guid;
 
-        if (manifest.getManifestType().equals(ManifestConstants.VERSION)) {
+        if (manifest.getManifestType().equals(ManifestType.VERSION)) {
             guid = ((VersionManifest) manifest).getVersionGUID();
         } else {
             guid = manifest.getContentGUID();

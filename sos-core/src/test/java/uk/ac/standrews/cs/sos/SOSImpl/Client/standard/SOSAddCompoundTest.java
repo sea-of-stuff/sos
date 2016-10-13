@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,10 +30,10 @@ public class SOSAddCompoundTest extends ClientTest {
         contents.add(cat);
 
         Compound manifest = client.addCompound(CompoundType.DATA, contents);
-        Assert.assertEquals(manifest.getManifestType(), ManifestConstants.COMPOUND);
+        Assert.assertEquals(manifest.getManifestType(), ManifestType.COMPOUND);
 
         Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
-        assertEquals(retrievedManifest.getManifestType(), ManifestConstants.COMPOUND);
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.COMPOUND);
 
         Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
         Iterator<Content> iterator = retrievedContents.iterator();

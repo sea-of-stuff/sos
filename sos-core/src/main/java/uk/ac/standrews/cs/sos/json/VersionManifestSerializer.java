@@ -22,7 +22,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, versionManifest.getManifestType());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, versionManifest.getManifestType().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, versionManifest.getContentGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_INVARIANT, versionManifest.getInvariantGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_VERSION, versionManifest.getVersionGUID().toString());

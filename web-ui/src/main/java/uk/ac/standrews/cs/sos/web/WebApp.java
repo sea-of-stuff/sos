@@ -156,7 +156,7 @@ public class WebApp {
             ObjectNode objectNode1 = mapper.createObjectNode();
             objectNode1.put("id", compound.getContentGUID().toString());
             objectNode1.put("label", compound.getContentGUID().toString().substring(0, 5));
-            objectNode1.put("group", compound.getManifestType());
+            objectNode1.put("group", compound.getManifestType().toString());
             objectNode1.put("shape", "box");
 
             arrayNode.add(objectNode1);
@@ -167,7 +167,7 @@ public class WebApp {
             ObjectNode objectNode1 = mapper.createObjectNode();
             objectNode1.put("id", atom.getContentGUID().toString());
             objectNode1.put("label", atom.getContentGUID().toString().substring(0, 5));
-            objectNode1.put("group", atom.getManifestType());
+            objectNode1.put("group", atom.getManifestType().toString());
             objectNode1.put("shape", "triangle");
 
             arrayNode.add(objectNode1);

@@ -29,7 +29,7 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
     @Override
     protected Application configure() {
         ClassLoader classLoader = getClass().getClassLoader();
-        String path = classLoader.getResource("config.properties").getFile();
+        String path = classLoader.getResource("config.conf").getFile();
         ServerState.init(path);
 
         return new RESTConfig().build(ServerState.sos);

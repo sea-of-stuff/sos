@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -52,6 +53,6 @@ public interface Manifest {
      *
      * @return type of manifest as a string.
      */
-    String getManifestType();
+    ManifestType getManifestType();
 
 }

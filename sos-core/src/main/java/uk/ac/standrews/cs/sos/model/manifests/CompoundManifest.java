@@ -60,7 +60,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      */
     public CompoundManifest(CompoundType type, Collection<Content> contents, Identity identity)
             throws ManifestNotMadeException {
-        super(identity, ManifestConstants.COMPOUND);
+        super(identity, ManifestType.COMPOUND);
 
         this.type = type;
         this.contents = contents;
@@ -78,7 +78,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param signature
      */
     public CompoundManifest(CompoundType type, IGUID contentGUID, Collection<Content> contents, String signature) throws ManifestNotMadeException {
-        super(null, ManifestConstants.COMPOUND);
+        super(null, ManifestType.COMPOUND);
 
         assert(type != null);
 

@@ -44,7 +44,7 @@ public class AtomManifest extends BasicManifest implements Atom {
      * @param locations
      */
     public AtomManifest(IGUID guid, Collection<LocationBundle> locations) {
-        super(ManifestConstants.ATOM);
+        super(ManifestType.ATOM);
         this.contentGUID = guid;
         this.locations = locations;
     }
