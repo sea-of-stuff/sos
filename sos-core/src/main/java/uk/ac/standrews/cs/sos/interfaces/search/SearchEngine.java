@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.search;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.metadata.Metadata;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.util.Collection;
 
@@ -15,7 +15,7 @@ import java.util.Collection;
 public interface SearchEngine {
 
     // TODO - manifest stream?
-    Collection<Manifest> searchManifest(Metadata metadata);
+    Collection<Manifest> searchManifest(SOSMetadata metadata);
 
     Manifest searchManifest(IGUID guid);
 }

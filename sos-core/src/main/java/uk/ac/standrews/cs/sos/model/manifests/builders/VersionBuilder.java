@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.builders;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.metadata.Metadata;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.util.Collection;
 
@@ -11,7 +11,7 @@ import java.util.Collection;
 public class VersionBuilder {
 
     private IGUID content;
-    private Metadata metadata;
+    private SOSMetadata metadata;
     private Collection<IGUID> metadataCollection;
     private IGUID invariant;
     private Collection<IGUID> previousCollection;
@@ -36,7 +36,7 @@ public class VersionBuilder {
         return this;
     }
 
-    public VersionBuilder setMetadata(Metadata metadata) {
+    public VersionBuilder setMetadata(SOSMetadata metadata) {
         if (!metadataIsSet) {
             this.metadata = metadata;
             isMetadata = true;
@@ -97,7 +97,7 @@ public class VersionBuilder {
         return content;
     }
 
-    public Metadata getMetadata() {
+    public SOSMetadata getMetadata() {
         return metadata;
     }
 
