@@ -30,12 +30,10 @@ public class RemoteManifestsManager implements ManifestsManager {
 
     private PolicyManager policyManager;
     private NodeManager nodeManager;
-    private RequestsManager requestsManager;
 
-    public RemoteManifestsManager(PolicyManager policyManager, NodeManager nodeManager, RequestsManager requestsManager) {
+    public RemoteManifestsManager(PolicyManager policyManager, NodeManager nodeManager) {
         this.policyManager = policyManager;
         this.nodeManager = nodeManager;
-        this.requestsManager = requestsManager;
     }
 
     @Override
@@ -91,7 +89,7 @@ public class RemoteManifestsManager implements ManifestsManager {
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setJSONBody(manifest.toString());
 
-            Response response = requestsManager.playSyncRequest(request);
+            Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         } catch (IOException e) {
             e.printStackTrace();

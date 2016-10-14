@@ -33,10 +33,16 @@ public class SyncRequest extends Request {
                     response = postData(client);
                 } else if (json_body != null) {
                     response = postJSON(client);
+                } else {
+                    throw new IOException("No body to post");
                 }
                 break;
             case PUT:
-                response = putJSON(client);
+                if (json_body != null) {
+                    response = putJSON(client);
+                } else {
+                    throw new IOException("No body to post");
+                }
                 break;
             default:
                 SOS_LOG.log(LEVEL.WARN, "Unknown Request method while playing a request");

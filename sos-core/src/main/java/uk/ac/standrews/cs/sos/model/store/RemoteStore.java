@@ -15,12 +15,10 @@ import java.net.URL;
  */
 public class RemoteStore implements Store {
 
-    private RequestsManager requestsManager;
     private Node node;
     private InputStream inputStream;
 
-    public RemoteStore(RequestsManager requestsManager, Node node, InputStream inputStream) {
-        this.requestsManager = requestsManager;
+    public RemoteStore(Node node, InputStream inputStream) {
         this.node = node;
         this.inputStream = inputStream;
     }
@@ -34,7 +32,7 @@ public class RemoteStore implements Store {
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setBody(inputStream);
 
-            Response response = requestsManager.playSyncRequest(request);
+            Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             System.out.println("REPLICATION--> " + response.getCode());
         } catch (IOException e) {

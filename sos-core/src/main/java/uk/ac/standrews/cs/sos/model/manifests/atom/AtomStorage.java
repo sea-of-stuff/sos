@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.model.store.*;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -54,9 +53,9 @@ public class AtomStorage {
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public IGUID persistAtomToRemote(RequestsManager requestsManager, Node node, InputStream inputStream) throws StorageException {
+    public IGUID persistAtomToRemote(Node node, InputStream inputStream) throws StorageException {
 
-        Store remote = new RemoteStore(requestsManager, node, inputStream);
+        Store remote = new RemoteStore(node, inputStream);
 
         return storeAtomAndUpdateLocationBundles(remote,null);
     }

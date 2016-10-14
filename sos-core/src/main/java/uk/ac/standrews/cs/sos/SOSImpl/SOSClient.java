@@ -22,7 +22,6 @@ import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -46,18 +45,16 @@ public class SOSClient implements Client {
     private PolicyManager policyManager;
     private Identity identity;
     private ManifestsManager manifestsManager;
-    private RequestsManager requestsManager;
 
     private AtomStorage atomStorage;
 
     public SOSClient(Node node, NodeManager nodeManager, InternalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity, PolicyManager policyManager, RequestsManager requestsManager) {
+                     Identity identity, PolicyManager policyManager) {
 
         this.nodeManager = nodeManager;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
         this.policyManager = policyManager;
-        this.requestsManager = requestsManager;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -103,7 +100,7 @@ public class SOSClient implements Client {
                 if (storageNodes.hasNext()) {
                     Node replicaNode = storageNodes.next();
                     try {
-                        atomStorage.persistAtomToRemote(requestsManager, replicaNode, atomContent);
+                        atomStorage.persistAtomToRemote(replicaNode, atomContent);
                     } catch (StorageException e) {
                         e.printStackTrace();
                     }

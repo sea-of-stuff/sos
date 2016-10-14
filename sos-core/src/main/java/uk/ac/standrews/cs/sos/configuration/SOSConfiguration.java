@@ -183,27 +183,32 @@ public class SOSConfiguration {
 
     public List<Node> getBootstrapNodes() throws GUIDGenerationException {
 
-        List<? extends Config> bootstrap = configuration.getConfigList("bootstrap");
+        List<? extends Config> bootstrap = configuration.getConfigList(PropertyKeys.BOOTSTRAP_NODES);
 
         List<Node> bootstrapNodes = new ArrayList<>();
         for(Config bootstrapConfig : bootstrap) {
-            String guidString = bootstrapConfig.getString("guid");
-            IGUID guid = GUIDFactory.recreateGUID(guidString);
-
-            String hostname = bootstrapConfig.getString("hostname");
-            int port = bootstrapConfig.getInt("port");
-
-            boolean isClient = bootstrapConfig.getBoolean("is.client");
-            boolean isStorage = bootstrapConfig.getBoolean("is.storage");
-            boolean isDDS = bootstrapConfig.getBoolean("is.dds");
-            boolean isNDS = bootstrapConfig.getBoolean("is.nds");
-            boolean isMCS = bootstrapConfig.getBoolean("is.mcs");
-
-            Node node = new SOSNode(guid, hostname, port, isClient, isStorage, isDDS, isNDS, isMCS);
+            Node node = getNode(bootstrapConfig);
             bootstrapNodes.add(node);
         }
 
         return bootstrapNodes;
+    }
+
+    private Node getNode(Config config) throws GUIDGenerationException {
+        String guidString = config.getString("guid");
+        IGUID guid = GUIDFactory.recreateGUID(guidString);
+
+        String hostname = config.getString("hostname");
+        int port = config.getInt("port");
+
+        boolean isClient = config.getBoolean("is.client");
+        boolean isStorage = config.getBoolean("is.storage");
+        boolean isDDS = config.getBoolean("is.dds");
+        boolean isNDS = config.getBoolean("is.nds");
+        boolean isMCS = config.getBoolean("is.mcs");
+
+        Node node = new SOSNode(guid, hostname, port, isClient, isStorage, isDDS, isNDS, isMCS);
+        return node;
     }
 
     private void setProperty(String key, String value) throws IOException {
@@ -245,5 +250,7 @@ public class SOSConfiguration {
         public static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.locally";
         public static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remotely";
         public static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
+
+        public static final String BOOTSTRAP_NODES = "bootstrap";
     }
 }

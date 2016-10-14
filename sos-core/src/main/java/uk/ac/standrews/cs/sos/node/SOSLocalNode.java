@@ -54,7 +54,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Identity identity;
     private ManifestsManager manifestsManager;
     private NodeManager nodeManager;
-    private RequestsManager requestsManager; // TODO - better way to share this for the network layer
 
     // Node roles
     // All roles will share storage, node manager, manifests manager, etc.
@@ -85,7 +84,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throw new SOSException(e);
         }
 
-        initRequestsManager();
         initNodeManager();
         loadBootstrapNodes(Builder.bootstrapNodes);
         initManifestManager();
@@ -94,7 +92,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try {
             SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
-            SOSProtocol.Register(internalStorage, nodeManager, requestsManager);
+            SOSProtocol.Register(internalStorage, nodeManager);
         } catch (SOSProtocolException e) {
             SOS_LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSException(e);
@@ -136,16 +134,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        // TODO - destroy resources
+        RequestsManager.getInstance().shutdown();
     }
 
     /**************************************************************************/
     /* PRIVATE METHODS */
     /**************************************************************************/
-
-    private void initRequestsManager() {
-        requestsManager = new RequestsManager();
-    }
 
     private void initNodeManager() throws SOSException {
         try {
@@ -164,7 +158,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initManifestManager() {
-        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, nodeManager, requestsManager);
+        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, nodeManager);
     }
 
     private void initIdentity() throws SOSException {
@@ -180,7 +174,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
             client = new SOSClient(this, nodeManager, internalStorage, manifestsManager,
-                                    identity, policyManager, requestsManager);
+                                    identity, policyManager);
         }
 
         if (isStorage()) {

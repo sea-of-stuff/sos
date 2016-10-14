@@ -7,12 +7,24 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 
 /**
+ * Singleton Class
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class RequestsManager {
 
-    // Singleton client instance
+    private static RequestsManager lazyInstance;
     private final OkHttpClient client = new OkHttpClient();
+
+    // Ensure that this class cannot be instantiated by other classes
+    private RequestsManager() {}
+
+    public static RequestsManager getInstance(){
+        if(lazyInstance == null){
+            lazyInstance = new RequestsManager();
+        }
+        return lazyInstance;
+    }
 
     public void playAsyncRequest(AsyncRequest request) throws IOException {
         request.play(client);

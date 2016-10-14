@@ -34,7 +34,6 @@ public class SOSURLConnection extends URLConnection {
 
     private InternalStorage internalStorage;
     private NodeManager nodeManager;
-    private RequestsManager requestsManager;
 
     /**
      * Constructs a URL connection to the specified URL. A connection to
@@ -44,13 +43,11 @@ public class SOSURLConnection extends URLConnection {
      */
     protected SOSURLConnection(InternalStorage internalStorage,
                                NodeManager nodeManager,
-                               RequestsManager requestsManager,
                                URL url) {
         super(url);
 
         this.internalStorage = internalStorage;
         this.nodeManager = nodeManager;
-        this.requestsManager = requestsManager;
     }
 
     @Override
@@ -120,7 +117,7 @@ public class SOSURLConnection extends URLConnection {
         URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
 
         SyncRequest request = new SyncRequest(Method.GET, url);
-        Response response = requestsManager.playSyncRequest(request);
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         return response.getBody();
     }
@@ -134,7 +131,7 @@ public class SOSURLConnection extends URLConnection {
             URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
 
             SyncRequest request = new SyncRequest(Method.GET, url);
-            Response response = requestsManager.playSyncRequest(request);
+            Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             // TODO - check response
         }

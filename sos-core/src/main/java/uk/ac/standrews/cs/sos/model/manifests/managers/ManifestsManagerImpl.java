@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
 import java.util.stream.Stream;
@@ -20,17 +19,14 @@ import java.util.stream.Stream;
  */
 public class ManifestsManagerImpl implements ManifestsManager {
 
-    private PolicyManager policyManager;
-
     private LocalManifestsManager local;
     private RemoteManifestsManager remote;
 
     public ManifestsManagerImpl(PolicyManager policyManager, InternalStorage internalStorage,
-                                NodeManager nodeManager, RequestsManager requestsManager) {
-        this.policyManager = policyManager;
+                                NodeManager nodeManager) {
 
         local = new LocalManifestsManager(internalStorage);
-        remote = new RemoteManifestsManager(policyManager, nodeManager, requestsManager);
+        remote = new RemoteManifestsManager(policyManager, nodeManager);
     }
 
     @Override

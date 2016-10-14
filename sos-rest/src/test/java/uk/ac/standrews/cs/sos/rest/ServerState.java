@@ -25,17 +25,6 @@ public class ServerState {
 
     public static SOSLocalNode sos;
 
-    public static SOSLocalNode init() {
-
-        try {
-            return ServerState.startSOS();
-        } catch (SOSException | GUIDGenerationException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public static SOSLocalNode init(String propertyFilePath) {
         try {
             return ServerState.startSOS(propertyFilePath);
@@ -48,10 +37,6 @@ public class ServerState {
 
     public static void kill() {
         sos.kill();
-    }
-
-    private static SOSLocalNode startSOS() throws SOSException, GUIDGenerationException {
-        return startSOS("config.properties");
     }
 
     private static SOSLocalNode startSOS(String properties) throws SOSException, GUIDGenerationException {
@@ -67,7 +52,7 @@ public class ServerState {
 
             internalStorage =
                     new InternalStorage(StorageFactory
-                            .createStorage(storageType, root, false)); // FIXME - storage have very different behaviours if mutable or not
+                            .createStorage(storageType, root, false));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
