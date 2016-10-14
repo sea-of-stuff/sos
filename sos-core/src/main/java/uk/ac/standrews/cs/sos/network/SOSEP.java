@@ -18,6 +18,10 @@ public class SOSEP {
 
     private static final String HTTP_SCHEME = "http://";
 
+    //////////
+    // DDS
+    //////////
+
     public static URL DDS_POST_MANIFEST(Node node) throws MalformedURLException {
         String url = buildURLBase(node) +
                 "/dds/manifest";
@@ -25,17 +29,14 @@ public class SOSEP {
         return new URL(url);
     }
 
+    //////////
+    // STORAGE
+    //////////
+
+
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws MalformedURLException {
         String url = buildURLBase(node) +
                 "/storage/data/guid/" +
-                guid.toString();
-
-        return new URL(url);
-    }
-
-    public static URL NDS_GET_NODE(Node node, IGUID guid) throws MalformedURLException {
-        String url = buildURLBase(node) +
-                "/nds/guid/" +
                 guid.toString();
 
         return new URL(url);
@@ -48,11 +49,43 @@ public class SOSEP {
         return new URL(url);
     }
 
+    //////////
+    // NDS
+    //////////
+
+    /*
+     * NOTE: This should take into account authorization too.
+     */
+    public static URL NDS_REGISTER_NODE(Node node, IGUID guid) throws MalformedURLException {
+        String url = buildURLBase(node) +
+                "/nds/register/";
+
+        return new URL(url);
+    }
+
+    public static URL NDS_GET_NODE(Node node, IGUID guid) throws MalformedURLException {
+        String url = buildURLBase(node) +
+                "/nds/guid/" +
+                guid.toString();
+
+        return new URL(url);
+    }
+
+    public static URL NDS_GET_NODE(Node node, String role) throws MalformedURLException {
+        String url = buildURLBase(node) +
+                "/nds/role/" +
+                role;
+
+        return new URL(url);
+    }
+
+
+    //////////
+    // PRIVATE
+    //////////
+
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
-        String url = HTTP_SCHEME +
-                address.getHostName() +
-                ":" + address.getPort();
-        return url;
+        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort();
     }
 }

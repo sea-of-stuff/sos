@@ -84,6 +84,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throw new SOSException(e);
         }
 
+        // TODO - register node with NDS
+
         initNodeManager();
         loadBootstrapNodes(Builder.bootstrapNodes);
         initManifestManager();
@@ -98,7 +100,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throw new SOSException(e);
         }
 
-        // TODO: backgroundProcesses();
+        garbageCollector();
         SOS_LOG.log(LEVEL.INFO, "Node initialised");
     }
 
@@ -202,6 +204,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // iterate over the atom manifests
         // check what atoms can be removed from the cache
         // clear cache
+        SOS_LOG.log(LEVEL.INFO, "Garbage collector is not available yet");
     }
 
     /**

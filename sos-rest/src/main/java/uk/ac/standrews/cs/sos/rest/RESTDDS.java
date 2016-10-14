@@ -1,9 +1,16 @@
 package uk.ac.standrews.cs.sos.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
+import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -38,6 +45,13 @@ public class RESTDDS {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }
 
+        DDS dds = RESTConfig.sos.getDDS();
+        try {
+            dds.addManifest(manifest, false);
+        } catch (ManifestPersistException e) {
+            return HTTPResponses.BAD_REQUEST("Invalid Input");
+        }
+
         return HTTPResponses.CREATED(manifest.toString());
     }
 
@@ -45,8 +59,24 @@ public class RESTDDS {
     @Path("/manifest/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getManifest(@PathParam("guid") String guid) {
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
 
-        return HTTPResponses.OK("Test");
+        IGUID manifestGUID;
+        try {
+            manifestGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        DDS dds = RESTConfig.sos.getDDS();
+        try {
+            Manifest manifest = dds.getManifest(manifestGUID);
+            return HTTPResponses.OK(manifest.toString());
+        } catch (ManifestNotFoundException e) {
+            return HTTPResponses.BAD_REQUEST("Invalid Input");
+        }
     }
 
     private Manifest getManifest(ManifestType type, String json) throws IOException {

@@ -90,26 +90,8 @@ public class SOSClient implements Client {
         SOS_LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
                 +" added in " + (end - start) / 1000000000.0 + " seconds");
 
-        // TODO - move to separate method
-        // TODO - do not apply only for inputstream!
-        InputStream atomContent = getAtomContent(manifest);
-        if (policyManager.getReplicationPolicy().getReplicationFactor() > 0) {
-            Runnable replicator = () -> {
-
-                Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
-                if (storageNodes.hasNext()) {
-                    Node replicaNode = storageNodes.next();
-                    try {
-                        atomStorage.persistAtomToRemote(replicaNode, atomContent);
-                    } catch (StorageException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            replicator.run();
-        }
-
+        SOS_LOG.log(LEVEL.INFO, "Replicating atom");
+        replicateData(manifest);
 
         return manifest;
     }
@@ -232,5 +214,26 @@ public class SOSClient implements Client {
 
     protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
         return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
+    }
+
+    private void replicateData(AtomManifest manifest) {
+        InputStream atomContent = getAtomContent(manifest);
+        if (policyManager.getReplicationPolicy().getReplicationFactor() > 0) {
+
+            Runnable replicator = () -> {
+                Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
+                // NOTE: Can also contact NDS for storage nodes: NDS_GET_NODE by role
+                if (storageNodes.hasNext()) {
+                    Node replicaNode = storageNodes.next();
+                    try {
+                        atomStorage.persistAtomToRemote(replicaNode, atomContent);
+                    } catch (StorageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            replicator.run();
+        }
     }
 }
