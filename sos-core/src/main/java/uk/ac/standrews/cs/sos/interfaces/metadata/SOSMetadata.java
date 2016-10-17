@@ -8,4 +8,7 @@ public interface SOSMetadata {
     String getProperty(String propertyName);
 
     String[] getAllPropertyNames();
+
+    // String print();
+    // List<Tuple<String, String>> getTuples()
 }

@@ -9,5 +9,8 @@ public interface MetadataPolicy {
 
     String metadataEngine();
 
+    int replicationFactor();
+
+
 
 }
