@@ -13,11 +13,13 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.*;
+import uk.ac.standrews.cs.sos.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.managers.ManifestsManagerImpl;
@@ -54,6 +56,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Identity identity;
     private ManifestsManager manifestsManager;
     private NodeManager nodeManager;
+    private MetadataEngine metadataEngine;
 
     // Node roles
     // All roles will share storage, node manager, manifests manager, etc.
@@ -90,13 +93,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         loadBootstrapNodes(Builder.bootstrapNodes);
         initManifestManager();
         initIdentity();
+        initMetadataEngine();
+
         initSOSInstances();
 
         try {
-            SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
             SOSProtocol.Register(internalStorage, nodeManager);
         } catch (SOSProtocolException e) {
-            SOS_LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSException(e);
         }
 
@@ -172,11 +175,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     }
 
+    private void initMetadataEngine() {
+        metadataEngine = new TikaMetadataEngine();
+    }
+
     private void initSOSInstances() {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
             client = new SOSClient(this, nodeManager, internalStorage, manifestsManager,
-                                    identity, policyManager);
+                                    identity, policyManager, metadataEngine);
         }
 
         if (isStorage()) {

@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -11,6 +12,8 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.manifests.managers.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
@@ -24,6 +27,7 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -45,16 +49,18 @@ public class SOSClient implements Client {
     private PolicyManager policyManager;
     private Identity identity;
     private ManifestsManager manifestsManager;
+    private MetadataEngine metadataEngine;
 
     private AtomStorage atomStorage;
 
     public SOSClient(Node node, NodeManager nodeManager, InternalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity, PolicyManager policyManager) {
+                     Identity identity, PolicyManager policyManager, MetadataEngine metadataEngine) {
 
         this.nodeManager = nodeManager;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
         this.policyManager = policyManager;
+        this.metadataEngine = metadataEngine;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -206,6 +212,13 @@ public class SOSClient implements Client {
         SOS_LOG.log(LEVEL.INFO, "Retrieving all manifests");
 
         return manifestsManager.getAllManifests();
+    }
+
+    @Override
+    public SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException {
+
+        InputStreamData data = new InputStreamData(inputStream);
+        return metadataEngine.processData(data);
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {

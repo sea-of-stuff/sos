@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.metadata;
+package uk.ac.standrews.cs.sos.metadata.tika;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -6,6 +6,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.metadata.AbstractMetadataEngine;
 import uk.ac.standrews.cs.storage.data.Data;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
         try (InputStream stream = data.getInputStream()) {
             parser.parse(stream, handler, metadata);
 
-            return new TikaMetadata(metadata);
+            return new TikaMetadata(metadata, TikaIgnoreMetadata.IGNORE_METADATA);
         } catch (IOException | TikaException | SAXException e) {
             throw new SOSMetadataException("Unable to parse metadata from given data", e);
         }
