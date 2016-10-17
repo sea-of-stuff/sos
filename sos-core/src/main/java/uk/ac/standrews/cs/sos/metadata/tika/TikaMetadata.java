@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.metadata.tika;
 
 import org.apache.tika.metadata.Metadata;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.util.ArrayList;
@@ -38,5 +39,15 @@ public class TikaMetadata implements SOSMetadata {
         }
 
         return filteredNames.toArray(new String[filteredNames.size()]);
+    }
+
+    @Override
+    public IGUID guid() {
+        return null;
+    }
+
+    @Override
+    public String tabularFormat() {
+        return null;
     }
 }

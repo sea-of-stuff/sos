@@ -141,5 +141,5 @@ public interface Client extends SeaOfStuff {
      * @param inputStream
      * @return metadata
      */
-    SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException;
+    SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException;
 }

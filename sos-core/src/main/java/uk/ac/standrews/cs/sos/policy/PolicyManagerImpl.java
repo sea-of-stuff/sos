@@ -35,7 +35,7 @@ public class PolicyManagerImpl implements PolicyManager {
     }
 
     @Override
-    public MetadataPolicy getComputationPolicy() {
+    public MetadataPolicy getMetadataPolicy() {
         return metadataPolicy;
     }
 

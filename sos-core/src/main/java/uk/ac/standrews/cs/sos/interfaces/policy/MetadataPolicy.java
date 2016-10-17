@@ -11,6 +11,4 @@ public interface MetadataPolicy {
 
     int replicationFactor();
 
-
-
 }

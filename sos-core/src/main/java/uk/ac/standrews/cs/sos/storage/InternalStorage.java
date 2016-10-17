@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.storage;
+package uk.ac.standrews.cs.sos.storage;
 
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -15,10 +15,11 @@ import uk.ac.standrews.cs.storage.interfaces.IStorage;
  */
 public class InternalStorage {
 
-    public static final String DATA_DIRECTORY_NAME = "data";
-    public static final String MANIFESTS_DIRECTORY_NAME = "manifests";
-    public static final String HEADS_DIRECTORY_NAME = "heads";
-    public static final String META_DIRECTORY_NAME = "metadata";
+    private static final String DATA_DIRECTORY_NAME = "data";
+    private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
+    private static final String HEADS_DIRECTORY_NAME = "heads";
+    private static final String META_DIRECTORY_NAME = "metadata";
+    // TODO - cache (save/load caches)
 
     private IStorage storage;
 

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.locations.sos;
 
-import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.storage.InternalStorage;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;

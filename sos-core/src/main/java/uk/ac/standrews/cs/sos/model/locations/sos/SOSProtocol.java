@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.net.URL;

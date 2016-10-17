@@ -13,7 +13,7 @@ public interface PolicyManager {
 
     ReplicationPolicy getReplicationPolicy();
 
-    MetadataPolicy getComputationPolicy();
+    MetadataPolicy getMetadataPolicy();
 
     ManifestPolicy getManifestPolicy();
 

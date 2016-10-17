@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.storage;
+package uk.ac.standrews.cs.sos.storage;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

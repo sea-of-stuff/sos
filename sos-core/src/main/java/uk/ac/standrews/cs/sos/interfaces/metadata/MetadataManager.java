@@ -13,7 +13,7 @@ public interface MetadataManager {
      * Process, cache and store metadata
      * @param inputStream
      */
-    void addMetadata(InputStream inputStream) throws SOSMetadataException;
+    SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException;
 
     // getters, given meta information
 }

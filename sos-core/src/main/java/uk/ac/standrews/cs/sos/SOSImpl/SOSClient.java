@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.*;
-import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
@@ -20,10 +20,9 @@ import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -45,18 +44,18 @@ public class SOSClient implements Client {
     private PolicyManager policyManager;
     private Identity identity;
     private ManifestsManager manifestsManager;
-    private MetadataEngine metadataEngine;
+    private MetadataManager metadataManager;
 
     private AtomStorage atomStorage;
 
     public SOSClient(Node node, NodeManager nodeManager, InternalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity, PolicyManager policyManager, MetadataEngine metadataEngine) {
+                     Identity identity, PolicyManager policyManager, MetadataManager metadataManager) {
 
         this.nodeManager = nodeManager;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
         this.policyManager = policyManager;
-        this.metadataEngine = metadataEngine;
+        this.metadataManager = metadataManager;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -210,11 +209,11 @@ public class SOSClient implements Client {
         return manifestsManager.getAllManifests();
     }
 
-    @Override // FIXME - add metadata
-    public SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException {
+    @Override
+    public SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException {
+        SOS_LOG.log(LEVEL.INFO, "Processing and Adding metadata");
 
-        InputStreamData data = new InputStreamData(inputStream);
-        return metadataEngine.processData(data);
+        return metadataManager.addMetadata(inputStream);
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {

@@ -19,7 +19,7 @@ public class SOSAddMetadataTest extends ClientTest {
         Location location = HelperTest.createDummyDataFile(internalStorage);
 
         InputStream inputStream = location.getSource();
-        SOSMetadata metadata = client.processMetadata(inputStream);
+        SOSMetadata metadata = client.addMetadata(inputStream);
 
         assertEquals(1, metadata.getAllPropertyNames().length);
         assertEquals("text/plain; charset=ISO-8859-1", metadata.getProperty("Content-Type"));
