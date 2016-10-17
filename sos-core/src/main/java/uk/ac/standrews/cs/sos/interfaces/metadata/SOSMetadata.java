@@ -5,5 +5,7 @@ package uk.ac.standrews.cs.sos.interfaces.metadata;
  */
 public interface SOSMetadata {
 
-    // value get(string attr)
+    String getProperty(String propertyName);
+
+    String[] getAllPropertyNames();
 }

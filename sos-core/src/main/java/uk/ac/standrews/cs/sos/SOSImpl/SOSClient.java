@@ -214,7 +214,7 @@ public class SOSClient implements Client {
         return manifestsManager.getAllManifests();
     }
 
-    @Override
+    @Override // FIXME - add metadata
     public SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException {
 
         InputStreamData data = new InputStreamData(inputStream);

@@ -5,22 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67250fa2-ea18-4aea-9ed0-dd222005a327" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaIgnoreMetadata.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__joda_time_joda_time_2_8_1.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddMetadataTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-app/sos-app.iml" afterPath="$PROJECT_DIR$/sos-app/sos-app.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSClient.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Client.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Client.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSProtocol.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSProtocol.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/metadata/TikaMetadataEngineTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/metadata/TikaMetadataEngineTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" afterPath="$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/rest.iml" afterPath="$PROJECT_DIR$/sos-rest/rest.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-ui/web-ui.iml" afterPath="$PROJECT_DIR$/web-ui/web-ui.iml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/TikaMetadata.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadata.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/TikaMetadataEngine.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadataEngine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java" />
     </list>
     <list id="96545ed3-c4e8-4911-9827-f00d4647a686" name="New changelist" comment="" />
     <ignored path="sos.iws" />
@@ -52,16 +40,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TikaMetadataEngine.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadataEngine.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="20" column="40" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Client.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Client.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -85,11 +63,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SOSClient.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SOSMetadata.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SOSClient.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="218" column="0" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
+            <state relative-caret-position="510">
+              <caret line="216" column="37" selection-start-line="216" selection-start-column="37" selection-end-line="216" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SOSAddMetadataTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddMetadataTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="67" selection-start-line="29" selection-start-column="67" selection-end-line="29" selection-end-column="67" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SOSAddAtomTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddAtomTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="49" column="5" selection-start-line="36" selection-start-column="3" selection-end-line="49" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -98,8 +108,8 @@
       <file leaf-file-name="TikaMetadata.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadata.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
+            <state relative-caret-position="435">
+              <caret line="29" column="43" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -122,7 +132,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/AtomManifestSerializer.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/CompoundManifestSerializer.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/VersionManifestSerializer.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/SignedManifest.java" />
@@ -162,7 +171,6 @@
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/MetadataEngine.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/Metadata.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/exceptions/metadata/SOSMetadataException.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/TikaMetadata.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/TikaMetadataEngine.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadataEngine.java" />
@@ -173,6 +181,8 @@
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSProtocol.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSClient.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddMetadataTest.java" />
       </list>
     </option>
   </component>
@@ -303,6 +313,150 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="standard" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Client" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -584,89 +738,7 @@
       <recent name="$PROJECT_DIR$/sos-rest/src/test" />
     </key>
   </component>
-  <component name="RunManager" selected="TestNG.TikaMetadataEngineTest.ignorePropertiesTest">
-    <configuration default="false" name="TikaMetadataEngineTest.testDummy" type="TestNG" factoryName="TestNG" temporary="true" nameIsGenerated="true">
-      <extension name="chronon">
-        <include>
-          <pattern>
-            <option name="PATTERN" value="uk.ac.standrews.cs.sos.metadata.**" />
-            <option name="ENABLED" value="true" />
-          </pattern>
-        </include>
-      </extension>
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="uk.ac.standrews.cs.sos.metadata.tika.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="core" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" value="uk.ac.standrews.cs.sos.metadata" />
-      <option name="MAIN_CLASS_NAME" value="uk.ac.standrews.cs.sos.metadata.TikaMetadataEngineTest" />
-      <option name="METHOD_NAME" value="testDummy" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="METHOD" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
-    <configuration default="false" name="TikaMetadataEngineTest.testDummyAutoParser" type="TestNG" factoryName="TestNG" temporary="true" nameIsGenerated="true">
-      <extension name="chronon">
-        <include>
-          <pattern>
-            <option name="PATTERN" value="uk.ac.standrews.cs.sos.metadata.**" />
-            <option name="ENABLED" value="true" />
-          </pattern>
-        </include>
-      </extension>
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="uk.ac.standrews.cs.sos.metadata.tika.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="core" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" value="uk.ac.standrews.cs.sos.metadata" />
-      <option name="MAIN_CLASS_NAME" value="uk.ac.standrews.cs.sos.metadata.TikaMetadataEngineTest" />
-      <option name="METHOD_NAME" value="testDummyAutoParser" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="METHOD" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="TestNG.SOSAddMetadataTest">
     <configuration default="false" name="TikaMetadataEngineTest.basicMetadata" type="TestNG" factoryName="TestNG" temporary="true" nameIsGenerated="true">
       <extension name="chronon">
         <include>
@@ -773,6 +845,88 @@
       <option name="METHOD_NAME" value="ignorePropertiesTest" />
       <option name="GROUP_NAME" />
       <option name="TEST_OBJECT" value="METHOD" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="false" name="SOSAddMetadataTest.testAddAtom" type="TestNG" factoryName="TestNG" temporary="true" nameIsGenerated="true">
+      <extension name="chronon">
+        <include>
+          <pattern>
+            <option name="PATTERN" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard.**" />
+            <option name="ENABLED" value="true" />
+          </pattern>
+        </include>
+      </extension>
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="core" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard" />
+      <option name="MAIN_CLASS_NAME" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard.SOSAddMetadataTest" />
+      <option name="METHOD_NAME" value="testAddAtom" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="false" name="SOSAddMetadataTest" type="TestNG" factoryName="TestNG" temporary="true" nameIsGenerated="true">
+      <extension name="chronon">
+        <include>
+          <pattern>
+            <option name="PATTERN" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard.**" />
+            <option name="ENABLED" value="true" />
+          </pattern>
+        </include>
+      </extension>
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="core" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard" />
+      <option name="MAIN_CLASS_NAME" value="uk.ac.standrews.cs.sos.SOSImpl.Client.standard.SOSAddMetadataTest" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -1203,19 +1357,19 @@
     <list size="7">
       <item index="0" class="java.lang.String" itemvalue="Application.MAISOS - Test" />
       <item index="1" class="java.lang.String" itemvalue="TestNG.RESTGeneralTest" />
-      <item index="2" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.testDummy" />
-      <item index="3" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.testDummyAutoParser" />
-      <item index="4" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadata" />
-      <item index="5" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadataTest" />
-      <item index="6" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.ignorePropertiesTest" />
+      <item index="2" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadata" />
+      <item index="3" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadataTest" />
+      <item index="4" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.ignorePropertiesTest" />
+      <item index="5" class="java.lang.String" itemvalue="TestNG.SOSAddMetadataTest.testAddAtom" />
+      <item index="6" class="java.lang.String" itemvalue="TestNG.SOSAddMetadataTest" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.ignorePropertiesTest" />
-        <item index="1" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadataTest" />
-        <item index="2" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadata" />
-        <item index="3" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.testDummyAutoParser" />
-        <item index="4" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.testDummy" />
+        <item index="0" class="java.lang.String" itemvalue="TestNG.SOSAddMetadataTest" />
+        <item index="1" class="java.lang.String" itemvalue="TestNG.SOSAddMetadataTest.testAddAtom" />
+        <item index="2" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.ignorePropertiesTest" />
+        <item index="3" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadataTest" />
+        <item index="4" class="java.lang.String" itemvalue="TestNG.TikaMetadataEngineTest.basicMetadata" />
       </list>
     </recent_temporary>
   </component>
@@ -1288,7 +1442,7 @@
       <workItem from="1476292921819" duration="740000" />
       <workItem from="1476347131564" duration="11703000" />
       <workItem from="1476435054038" duration="10401000" />
-      <workItem from="1476696071933" duration="1366000" />
+      <workItem from="1476696071933" duration="1786000" />
     </task>
     <task id="LOCAL-00001" summary="added some performance tests on writing data to SOS + renamed DiscoveryData class to DDS, DNS to NDS and added MCS">
       <created>1471259757714</created>
@@ -1619,18 +1773,25 @@
       <option name="project" value="LOCAL" />
       <updated>1476466539848</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="client processing metadata">
+      <created>1476697494600</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1476697494600</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TikaMetadataEngineTest_basicMetadata - 2016.10.14 at 18h 34m 53s.xml">
-      <configuration name="TikaMetadataEngineTest.basicMetadata" configurationId="TestNG" />
+    <history-entry file="SOSAddMetadataTest - 2016.10.17 at 10h 51m 27s.xml">
+      <configuration name="SOSAddMetadataTest" configurationId="TestNG" />
     </history-entry>
-    <history-entry file="TikaMetadataEngineTest_basicMetadata - 2016.10.14 at 18h 35m 08s.xml">
-      <configuration name="TikaMetadataEngineTest.basicMetadata" configurationId="TestNG" />
+    <history-entry file="SOSAddMetadataTest_testAddAtom - 2016.10.17 at 10h 49m 33s.xml">
+      <configuration name="SOSAddMetadataTest.testAddAtom" configurationId="TestNG" />
     </history-entry>
-    <history-entry file="TikaMetadataEngineTest_basicMetadata - 2016.10.14 at 18h 35m 18s.xml">
-      <configuration name="TikaMetadataEngineTest.basicMetadata" configurationId="TestNG" />
+    <history-entry file="SOSAddMetadataTest_testAddAtom - 2016.10.17 at 10h 50m 58s.xml">
+      <configuration name="SOSAddMetadataTest.testAddAtom" configurationId="TestNG" />
     </history-entry>
     <history-entry file="TikaMetadataEngineTest_basicMetadata - 2016.10.14 at 18h 35m 27s.xml">
       <configuration name="TikaMetadataEngineTest.basicMetadata" configurationId="TestNG" />
@@ -1655,7 +1816,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="223412000" />
+    <option name="totallyTimeSpent" value="223832000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="23" width="1676" height="1027" extended-state="6" />
@@ -1669,13 +1830,14 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4006734" sideWeight="0.5024067" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24666072" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35868806" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18930481" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.284492" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4605722" sideWeight="0.49759325" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2619339" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32937893" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1687,7 +1849,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32996634" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32937893" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="UnknownFeatures">
@@ -1725,7 +1886,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="starting to work on the web app to interact with sos" />
     <MESSAGE value="interim : working on getting the server state class in a proper condition" />
     <MESSAGE value="moved ServerState to sos-app, a new module that will be used as the main entry point for the entire sos app." />
     <MESSAGE value="using common-cli for parsing cli options" />
@@ -1750,7 +1910,8 @@
     <MESSAGE value="more development on the REST endpoints" />
     <MESSAGE value="added Tika dependency, removed commons-beanutils, cleaner sos-core pom.xml" />
     <MESSAGE value="basic Tika engine" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic Tika engine" />
+    <MESSAGE value="client processing metadata" />
+    <option name="LAST_COMMIT_MESSAGE" value="client processing metadata" />
     <option name="PRESELECT_EXISTING_CHANGELIST" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -1777,34 +1938,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sos-rest/src/test/resources/config.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-rest/src/test/java/uk/ac/standrews/cs/sos/rest/RESTGeneralTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="16" column="67" selection-start-line="16" selection-start-column="67" selection-end-line="16" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/network/Request.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="22" column="37" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/network/Method.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/utils/FileHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1909,6 +2042,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="26" column="26" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1954,6 +2088,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="369">
           <caret line="82" column="61" selection-start-line="82" selection-start-column="61" selection-end-line="82" selection-end-column="61" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2109,40 +2244,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadata.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadataEngine.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="20" column="40" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="631">
-          <caret line="141" column="23" selection-start-line="141" selection-start-column="23" selection-end-line="141" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSProtocol.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -2162,11 +2263,79 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddAtomTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="49" column="5" selection-start-line="36" selection-start-column="3" selection-end-line="49" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadataEngine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="20" column="40" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="631">
+          <caret line="141" column="23" selection-start-line="141" selection-start-column="23" selection-end-line="141" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/metadata/tika/TikaMetadata.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="43" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/SOSMetadata.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="218" column="0" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
+        <state relative-caret-position="510">
+          <caret line="216" column="37" selection-start-line="216" selection-start-column="37" selection-end-line="216" selection-end-column="37" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/utils/HelperTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="36" column="27" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/testng/testng/6.9.10/testng-6.9.10.jar!/org/testng/AssertJUnit.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="64" column="23" selection-start-line="64" selection-start-column="23" selection-end-line="64" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddMetadataTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="67" selection-start-line="29" selection-start-column="67" selection-end-line="29" selection-end-column="67" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
