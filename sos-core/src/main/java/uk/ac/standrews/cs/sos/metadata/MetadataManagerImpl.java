@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.metadata;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
@@ -28,8 +30,7 @@ public class MetadataManagerImpl implements MetadataManager {
     private MetadataEngine engine;
     private MetadataPolicy policy;
 
-    // CACHE
-    List<SOSMetadata> naiveCache = new ArrayList<>();
+    private List<SOSMetadata> naiveCache = new ArrayList<>();
 
     public MetadataManagerImpl(InternalStorage internalStorage, MetadataEngine engine, MetadataPolicy policy) {
         this.internalStorage = internalStorage;
@@ -50,6 +51,26 @@ public class MetadataManagerImpl implements MetadataManager {
         return metadata;
     }
 
+    @Override
+    public SOSMetadata getMetadata(IGUID guid) {
+        // Look for metadata and return it
+
+        // check cache
+        // if cache miss, then get it from disk
+        // fill cache and return
+        // if cannot get from disk, then try to get
+        // from another node
+        // fill the cache and return
+
+        return null;
+    }
+
+    @Override
+    public List<IGUID> getVersions(String attribute, String value) {
+        // cache is fundamental here, otherwise we need to look at the disk which is not great
+        return null;
+    }
+
     private void save(SOSMetadata metadata) {
         try {
             Directory directory = internalStorage.getMetadataDirectory();
@@ -62,7 +83,6 @@ public class MetadataManagerImpl implements MetadataManager {
         } catch (DataStorageException | PersistenceException | DataException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -78,5 +98,10 @@ public class MetadataManagerImpl implements MetadataManager {
 
     private void replicate(SOSMetadata metadata, Node node) {
         // TODO - use network layer for this
+    }
+
+    // WORK IN PROGRESS CODE
+    private void processMetadata(Version version) {
+        // TODO - get metadata
     }
 }

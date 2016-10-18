@@ -44,9 +44,6 @@ public class LocalManifestsManager implements ManifestsManager {
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
 
-    private static final int DEFAULT_RESULTS = 10;
-    private static final int DEFAULT_SKIP_RESULTS = 0;
-
     final private InternalStorage internalStorage;
 
     /**

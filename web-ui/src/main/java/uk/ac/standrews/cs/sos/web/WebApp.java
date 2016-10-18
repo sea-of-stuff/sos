@@ -35,6 +35,8 @@ import static spark.Spark.*;
 public class WebApp {
 
     public static void RUN(SOSLocalNode sos, int port) {
+        System.out.println("Starting WEB APP on port: " + port);
+
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         port(port);
 

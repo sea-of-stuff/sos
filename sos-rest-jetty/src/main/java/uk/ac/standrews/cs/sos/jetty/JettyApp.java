@@ -22,8 +22,9 @@ public class JettyApp {
 
         assert sos != null;
         int port = sos.getHostAddress().getPort();
-
         baseUri = uriBuilder.port(port).build();
+        System.out.println("Starting REST Service on port: " + port);
+
         return JettyHttpContainerFactory.createServer(baseUri, rc);
     }
 

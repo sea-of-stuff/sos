@@ -46,6 +46,7 @@ public class MAISOS {
         }
 
         if (line.hasOption(WEB_APP_OPT)) {
+            // TODO get port from config
             WebApp.RUN(sos, 9999);
         }
 
@@ -114,6 +115,7 @@ public class MAISOS {
                     new SOSFileSystemFactory(root)
                             .makeFileSystem(client);
 
+            System.out.println("Starting WEBDAV server on port: " + port);
             WebDAVLauncher.StartWebDAVServer(file_system, port);
         } catch (FileSystemCreationException e) {
             System.out.println("couldn't create file system: " + e.getMessage());
