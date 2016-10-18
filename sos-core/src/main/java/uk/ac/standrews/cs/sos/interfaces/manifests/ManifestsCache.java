@@ -11,4 +11,6 @@ public interface ManifestsCache {
     void addManifest(Manifest manifest);
 
     Manifest getManifest(IGUID guid) throws ManifestsCacheMissException;
+
+    void persist();
 }

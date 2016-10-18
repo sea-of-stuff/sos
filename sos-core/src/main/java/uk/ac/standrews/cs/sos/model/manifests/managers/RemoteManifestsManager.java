@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
+import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -28,18 +28,18 @@ import java.util.stream.Stream;
  */
 public class RemoteManifestsManager implements ManifestsManager {
 
-    private PolicyManager policyManager;
+    private ManifestPolicy manifestPolicy;
     private NodeManager nodeManager;
 
-    public RemoteManifestsManager(PolicyManager policyManager, NodeManager nodeManager) {
-        this.policyManager = policyManager;
+    public RemoteManifestsManager(ManifestPolicy manifestPolicy, NodeManager nodeManager) {
+        this.manifestPolicy = manifestPolicy;
         this.nodeManager = nodeManager;
     }
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
-        int replicationFactor = policyManager.getReplicationPolicy().getReplicationFactor();
+        int replicationFactor = manifestPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
             Collection<Node> ddsNodes = nodeManager.getDDSNodes();

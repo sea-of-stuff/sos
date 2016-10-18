@@ -53,11 +53,11 @@ public class AtomStorage {
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public IGUID persistAtomToRemote(Node node, InputStream inputStream) throws StorageException {
+    public IGUID persistAtomToRemote(Node node, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
 
         Store remote = new RemoteStore(node, inputStream);
 
-        return storeAtomAndUpdateLocationBundles(remote,null);
+        return storeAtomAndUpdateLocationBundles(remote, bundles);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {

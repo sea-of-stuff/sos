@@ -231,6 +231,7 @@ public class SOSClient implements Client {
             Runnable replicator = () -> {
                 Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
                 // NOTE: Can also contact NDS for storage nodes: NDS_GET_NODE by role
+                // TODO - update location bundles of this node?
                 if (storageNodes.hasNext()) {
                     Node replicaNode = storageNodes.next();
                     try {

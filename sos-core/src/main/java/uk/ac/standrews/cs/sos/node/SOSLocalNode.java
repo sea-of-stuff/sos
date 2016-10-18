@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.*;
@@ -166,7 +167,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initManifestManager() {
-        manifestsManager = new ManifestsManagerImpl(policyManager, internalStorage, nodeManager);
+        ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
+        manifestsManager = new ManifestsManagerImpl(manifestPolicy, internalStorage, nodeManager);
     }
 
     private void initIdentity() throws SOSException {

@@ -2,12 +2,15 @@ package uk.ac.standrews.cs.sos.model.store;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -17,6 +20,7 @@ public class RemoteStore implements Store {
 
     private Node node;
     private InputStream inputStream;
+    private IGUID dataGUID;
 
     public RemoteStore(Node node, InputStream inputStream) {
         this.node = node;
@@ -26,7 +30,7 @@ public class RemoteStore implements Store {
     @Override
     public IGUID store() throws StorageException {
 
-        URL url = null;
+        URL url;
         try {
             url = SOSEP.STORAGE_POST_DATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
@@ -34,6 +38,7 @@ public class RemoteStore implements Store {
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
+            dataGUID = null; // TODO - get this from response
             System.out.println("REPLICATION--> " + response.getCode());
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,6 +49,12 @@ public class RemoteStore implements Store {
 
     @Override
     public LocationBundle getLocationBundle() {
+        try {
+            return new PersistLocationBundle(new SOSLocation(node.getNodeGUID(), dataGUID));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

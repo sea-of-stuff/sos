@@ -39,8 +39,6 @@ import java.util.stream.Stream;
  */
 public class LocalManifestsManager implements ManifestsManager {
 
-    // TODO - cache
-
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String JSON_EXTENSION = ".json";
 

@@ -46,6 +46,11 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         return cache.get(guid);
     }
 
+    @Override
+    public void persist() {
+        // TODO - write cache in /sos/caches
+    }
+
     private void applyLRU(IGUID guid) {
         int currentCacheSize = cache.size();
         if (currentCacheSize > MAX_SIZE) {
