@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -103,13 +104,13 @@ public class WebApp {
         Map<String, Object> model = new HashMap<>();
 
         Object[] versions = sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType().equals("Version")).<Version>toArray();
+                filter(m -> m.getManifestType() == ManifestType.VERSION).<Version>toArray();
 
         Object[] compounds = sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType().equals("Compound")).<Compound>toArray();
+                filter(m -> m.getManifestType() == ManifestType.COMPOUND).<Compound>toArray();
 
         Object[] atoms = sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType().equals("Atom")).<Atom>toArray();
+                filter(m -> m.getManifestType() == ManifestType.ATOM).<Atom>toArray();
 
         model.put("nodes", nodes(versions, compounds, atoms));
         model.put("edges", edges(versions, compounds));
@@ -121,13 +122,13 @@ public class WebApp {
     private static String renderHome(SOSLocalNode sos) throws URISyntaxException, ManifestPersistException, StorageException, ManifestNotFoundException {
         Map<String, Object> model = new HashMap<>();
         model.put("versions", sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType().equals("Version")).<Version>toArray());
+                filter(m -> m.getManifestType() == ManifestType.VERSION).<Version>toArray());
 
         model.put("compounds", sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType().equals("Compound")).<Compound>toArray());
+                filter(m -> m.getManifestType() == ManifestType.COMPOUND).<Compound>toArray());
 
         model.put("atoms", sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType().equals("Atom")).<Atom>toArray());
+                filter(m -> m.getManifestType() == ManifestType.ATOM).<Atom>toArray());
 
         return renderTemplate("velocity/index.vm", model);
     }
