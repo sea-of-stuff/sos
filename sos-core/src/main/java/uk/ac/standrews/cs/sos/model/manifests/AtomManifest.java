@@ -67,6 +67,11 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
+    public IGUID guid() {
+        return contentGUID;
+    }
+
+    @Override
     public boolean verify(Identity identity) throws ManifestVerificationException {
         if (contentGUID == null)
             return false;

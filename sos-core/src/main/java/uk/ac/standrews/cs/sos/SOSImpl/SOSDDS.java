@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 
 /**
@@ -17,11 +16,6 @@ public class SOSDDS implements DDS {
 
     public SOSDDS(ManifestsManager manifestsManager) {
         this.manifestsManager = manifestsManager;
-    }
-
-    @Override
-    public PolicyManager getPolicyManager() {
-        return null;
     }
 
     @Override

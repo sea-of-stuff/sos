@@ -55,4 +55,11 @@ public interface Manifest {
      */
     ManifestType getManifestType();
 
+    /**
+     * GUID representing this manifest
+     *
+     * @return
+     */
+    IGUID guid();
+
 }

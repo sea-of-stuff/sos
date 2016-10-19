@@ -222,7 +222,7 @@ public class LocalManifestsManager implements ManifestsManager {
     private void saveManifest(Manifest manifest) throws ManifestManagerException {
 
         try {
-            IGUID manifestFileGUID = getGUIDUsedToStoreManifest(manifest);
+            IGUID manifestFileGUID = manifest.guid();
 
             boolean isAtomManifest = manifest.getManifestType().equals(ManifestType.ATOM);
             boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
@@ -281,7 +281,7 @@ public class LocalManifestsManager implements ManifestsManager {
     private File backupManifest(Manifest manifest) throws ManifestManagerException {
 
         try {
-            IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
+            IGUID manifestGUID = manifest.guid();
             File manifestFileToBackup = getManifestFile(manifestGUID);
 
             Directory manifestsDirectory = internalStorage.getManifestDirectory();
@@ -297,22 +297,10 @@ public class LocalManifestsManager implements ManifestsManager {
 
     }
 
-    private IGUID getGUIDUsedToStoreManifest(Manifest manifest) {
-        IGUID guid;
-
-        if (manifest.getManifestType().equals(ManifestType.VERSION)) {
-            guid = ((VersionManifest) manifest).getVersionGUID();
-        } else {
-            guid = manifest.getContentGUID();
-        }
-
-        return guid;
-    }
-
     private void saveToFile(Manifest manifest) throws ManifestManagerException {
 
         try {
-            IGUID manifestGUID = getGUIDUsedToStoreManifest(manifest);
+            IGUID manifestGUID = manifest.guid();
             File manifestFile = getManifestFile(manifestGUID.toString());
 
             Data manifestData = new StringData(manifest.toString());

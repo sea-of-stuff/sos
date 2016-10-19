@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -29,7 +28,6 @@ import java.util.Collection;
  */
 public class SOSStorage implements Storage {
 
-    private PolicyManager policyManager;
     private ManifestsManager manifestsManager;
 
     private AtomStorage atomStorage;
@@ -39,11 +37,6 @@ public class SOSStorage implements Storage {
         this.manifestsManager = manifestsManager;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
-    }
-
-    @Override
-    public PolicyManager getPolicyManager() {
-        return policyManager;
     }
 
     @Override

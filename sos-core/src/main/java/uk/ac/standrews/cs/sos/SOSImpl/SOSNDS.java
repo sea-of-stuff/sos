@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.SOSImpl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 
@@ -64,8 +63,4 @@ public class SOSNDS implements NDS {
         return node;
     }
 
-    @Override
-    public PolicyManager getPolicyManager() {
-        return null;
-    }
 }

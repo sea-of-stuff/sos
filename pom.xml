@@ -25,7 +25,7 @@
         <powermock.version>1.6.5</powermock.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <commons.io.version>2.5</commons.io.version>
-        <jackson.version>2.8.3</jackson.version>
+        <jackson.version>2.8.4</jackson.version>
 
         <!-- http://stackoverflow.com/questions/3017695/how-to-configure-encoding-in-maven -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,16 +52,18 @@
             <artifactId>commons-io</artifactId>
             <version>${commons.io.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
+
+        <!-- OVERRIDDEN BY TIKA -->
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--<artifactId>jackson-databind</artifactId>-->
+            <!--<version>${jackson.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--<artifactId>jackson-annotations</artifactId>-->
+            <!--<version>${jackson.version}</version>-->
+        <!--</dependency>-->
 
         <!-- St Andrews Libraries -->
         <dependency>
@@ -99,7 +101,7 @@
             <organization>University of St Andrews</organization>
             <organizationUrl>http://www.st-andrews.ac.uk/</organizationUrl>
             <roles>
-                <role>Developer</role>
+                <role>PhD Student</role>
             </roles>
         </developer>
 

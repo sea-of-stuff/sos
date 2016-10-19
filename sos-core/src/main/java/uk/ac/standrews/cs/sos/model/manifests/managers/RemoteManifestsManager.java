@@ -59,7 +59,7 @@ public class RemoteManifestsManager implements ManifestsManager {
         // Contact knwon DDS nodes
         // Ask such nodes about manifest with given guid
 
-        return null;
+        throw new ManifestNotFoundException("remote manager - findManifest not implemented yet");
     }
 
     @Override

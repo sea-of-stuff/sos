@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
+import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 public class SOSClient implements Client {
 
     private NodeManager nodeManager;
-    private PolicyManager policyManager;
+    private ReplicationPolicy replicationPolicy;
     private Identity identity;
     private ManifestsManager manifestsManager;
     private MetadataManager metadataManager;
@@ -49,20 +49,15 @@ public class SOSClient implements Client {
     private AtomStorage atomStorage;
 
     public SOSClient(Node node, NodeManager nodeManager, InternalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity, PolicyManager policyManager, MetadataManager metadataManager) {
+                     Identity identity, ReplicationPolicy replicationPolicy, MetadataManager metadataManager) {
 
         this.nodeManager = nodeManager;
         this.manifestsManager = manifestsManager;
         this.identity = identity;
-        this.policyManager = policyManager;
+        this.replicationPolicy = replicationPolicy;
         this.metadataManager = metadataManager;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
-    }
-
-    @Override
-    public PolicyManager getPolicyManager() {
-        return policyManager;
     }
 
     @Override
@@ -92,7 +87,7 @@ public class SOSClient implements Client {
                 +" added in " + (end - start) / 1000000000.0 + " seconds");
 
         SOS_LOG.log(LEVEL.INFO, "Replicating atom");
-        replicateData(manifest);
+        replicateData(manifest, bundles); // FIXME - bundles are not updated to atom manifest
 
         return manifest;
     }
@@ -224,9 +219,9 @@ public class SOSClient implements Client {
         return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
     }
 
-    private void replicateData(AtomManifest manifest) {
+    private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {
         InputStream atomContent = getAtomContent(manifest);
-        if (policyManager.getReplicationPolicy().getReplicationFactor() > 0) {
+        if (replicationPolicy.getReplicationFactor() > 0) {
 
             Runnable replicator = () -> {
                 Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
@@ -235,7 +230,7 @@ public class SOSClient implements Client {
                 if (storageNodes.hasNext()) {
                     Node replicaNode = storageNodes.next();
                     try {
-                        atomStorage.persistAtomToRemote(replicaNode, atomContent);
+                        atomStorage.persistAtomToRemote(replicaNode, atomContent, bundles);
                     } catch (StorageException e) {
                         e.printStackTrace();
                     }

@@ -29,7 +29,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     @Override
     public synchronized void addManifest(Manifest manifest) {
 
-        IGUID guid = manifest.getContentGUID();
+        IGUID guid = manifest.guid();
         applyLRU(guid);
         cache.put(guid, manifest);
     }

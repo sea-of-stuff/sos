@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
+import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.sos.*;
 import uk.ac.standrews.cs.sos.metadata.MetadataManagerImpl;
 import uk.ac.standrews.cs.sos.metadata.tika.TikaMetadataEngine;
@@ -184,14 +185,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
         MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
         metadataManager = new MetadataManagerImpl(internalStorage, metadataEngine, metadataPolicy);
-
     }
 
     private void initSOSInstances() {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
+            ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
             client = new SOSClient(this, nodeManager, internalStorage, manifestsManager,
-                                    identity, policyManager, metadataManager);
+                                    identity, replicationPolicy, metadataManager);
         }
 
         if (isStorage()) {

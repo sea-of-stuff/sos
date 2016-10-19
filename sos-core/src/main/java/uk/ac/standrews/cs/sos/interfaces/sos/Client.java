@@ -134,10 +134,17 @@ public interface Client extends SeaOfStuff {
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
 
+    /**
+     * Get all manifests for this client
+     *
+     * @return
+     */
     Stream<Manifest> getAllManifests();
 
     /**
      * Process metadata from the given input stream
+     * NOTES: not sure if this is correct, since we have an add version with the metadata
+     *
      * @param inputStream
      * @return metadata
      */

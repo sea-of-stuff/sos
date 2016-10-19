@@ -38,7 +38,7 @@ public class RemoteStore implements Store {
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
-            dataGUID = null; // TODO - get this from response
+            dataGUID = null; // TODO - get info and guid from response
             System.out.println("REPLICATION--> " + response.getCode());
         } catch (IOException e) {
             e.printStackTrace();

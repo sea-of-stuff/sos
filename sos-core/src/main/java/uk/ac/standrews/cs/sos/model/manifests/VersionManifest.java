@@ -162,6 +162,11 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     @Override
+    public IGUID guid() {
+        return getVersionGUID();
+    }
+
+    @Override
     protected String generateSignature(String toSign) throws EncryptionException {
         byte[] signatureBytes = this.identity.sign(toSign);
         byte[] encodedBytes = Base64.encodeBase64(signatureBytes);

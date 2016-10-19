@@ -112,6 +112,11 @@ public class CompoundManifest extends SignedManifest implements Compound {
     }
 
     @Override
+    public IGUID guid() {
+        return contentGUID;
+    }
+
+    @Override
     protected String generateSignature(String toSign) throws EncryptionException {
         byte[] signatureBytes = this.identity.sign(toSign);
         byte[] encodedBytes = Base64.encodeBase64(signatureBytes);

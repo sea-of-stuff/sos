@@ -50,6 +50,9 @@ public class ManifestsManagerImpl implements ManifestsManager {
         if (manifest == null) {
             manifest = findManifest(remote, guid);
         }
+        if (manifest == null) {
+            throw new ManifestNotFoundException("Unable to find manifest in cache, local, remote");
+        }
 
         return manifest;
     }
