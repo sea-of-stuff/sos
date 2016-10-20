@@ -11,11 +11,13 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
+import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.policy.BasicManifestPolicy;
+import uk.ac.standrews.cs.sos.policy.BasicMetadataPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;
 import uk.ac.standrews.cs.sos.policy.PolicyManagerImpl;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -155,10 +157,12 @@ public class SOSConfiguration {
 
         ReplicationPolicy replicationPolicy = createReplicationPolicy();
         ManifestPolicy manifestPolicy = createManifestPolicy();
+        MetadataPolicy metadataPolicy = createMetadataPolicy();
 
         PolicyManager policyManager = new PolicyManagerImpl();
         policyManager.setReplicationPolicy(replicationPolicy);
         policyManager.setManifestPolicy(manifestPolicy);
+        policyManager.setMetadataPolicy(metadataPolicy);
 
         return policyManager;
     }
@@ -179,6 +183,12 @@ public class SOSConfiguration {
 
         ManifestPolicy manifestPolicy = new BasicManifestPolicy(storeLocally, storeRemotely, replicationFactor);
         return manifestPolicy;
+    }
+
+    private MetadataPolicy createMetadataPolicy() {
+        MetadataPolicy metadataPolicy = new BasicMetadataPolicy();
+
+        return metadataPolicy;
     }
 
     public List<Node> getBootstrapNodes() throws GUIDGenerationException {

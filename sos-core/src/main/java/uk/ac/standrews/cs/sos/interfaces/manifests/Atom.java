@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -16,10 +17,8 @@ public interface Atom extends Manifest {
      * Get the locations for this atom.
      *
      * @return locations of this atom
-     *
-     * TODO - have an interface for the location bundle
      */
     Collection<LocationBundle> getLocations();
 
-    // TODO - have method to get data?
+    InputStream getData();
 }

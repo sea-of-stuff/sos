@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -13,7 +12,6 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
@@ -135,20 +133,7 @@ public class SOSClient implements Client {
     public InputStream getAtomContent(Atom atom) {
         SOS_LOG.log(LEVEL.INFO, "Getting content for atom: " + atom.getContentGUID());
 
-        InputStream dataStream = null;
-        Collection<LocationBundle> locations = atom.getLocations();
-        for (LocationBundle location : locations) {
-
-            try {
-                dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
-            } catch (SourceLocationException e) {
-                continue;
-            }
-
-            if (dataStream != null) {
-                break;
-            }
-        }
+        InputStream dataStream = atom.getData();
 
         SOS_LOG.log(LEVEL.INFO, "Returning atom " + atom.getContentGUID() + "data stream");
 
@@ -205,10 +190,14 @@ public class SOSClient implements Client {
     }
 
     @Override
-    public SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException {
+    public SOSMetadata addMetadata(Atom atom) throws SOSMetadataException {
         SOS_LOG.log(LEVEL.INFO, "Processing and Adding metadata");
 
-        return metadataManager.addMetadata(inputStream);
+        InputStream data = atom.getData();
+        SOSMetadata metadata = metadataManager.processMetadata(data);
+        metadataManager.addMetadata(metadata);
+
+        return metadata;
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {

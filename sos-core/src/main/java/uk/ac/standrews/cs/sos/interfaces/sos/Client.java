@@ -111,7 +111,7 @@ public interface Client extends SeaOfStuff {
      */
     Version getHEAD(IGUID guid) throws HEADNotFoundException;
 
-    void setHEAD(IGUID version) throws HEADNotSetException; // FIXME - pass version manifest?
+    void setHEAD(IGUID version) throws HEADNotSetException;
 
     /**
      * Hash-based verification ensures that a file has not been corrupted by
@@ -141,12 +141,5 @@ public interface Client extends SeaOfStuff {
      */
     Stream<Manifest> getAllManifests();
 
-    /**
-     * Process metadata from the given input stream
-     * NOTES: not sure if this is correct, since we have an add version with the metadata
-     *
-     * @param inputStream
-     * @return metadata
-     */
-    SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException;
+    SOSMetadata addMetadata(Atom atom) throws SOSMetadataException;
 }

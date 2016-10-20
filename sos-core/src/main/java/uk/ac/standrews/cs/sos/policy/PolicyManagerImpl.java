@@ -20,7 +20,7 @@ public class PolicyManagerImpl implements PolicyManager {
     }
 
     @Override
-    public void setComputationPolicy(MetadataPolicy policy) {
+    public void setMetadataPolicy(MetadataPolicy policy) {
         this.metadataPolicy = policy;
     }
 

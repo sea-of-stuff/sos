@@ -5,18 +5,25 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -57,14 +64,17 @@ public class SOSAddVersionTest extends ClientTest {
         prevs.add(GUIDFactory.recreateGUID("321"));
         prevs.add(GUIDFactory.recreateGUID("abcef"));
 
-        Collection<IGUID> metadata = new ArrayList<>();
-        metadata.add(GUIDFactory.recreateGUID("897"));
-        metadata.add(GUIDFactory.recreateGUID("456"));
+        Collection<SOSMetadata> metadata = new ArrayList<>();
+        SOSMetadata metaMock = mock(SOSMetadata.class);
+        when(metaMock.guid()).thenReturn(GUIDFactory.recreateGUID("897"));
+
+        SOSMetadata metaMock1 = mock(SOSMetadata.class);
+        when(metaMock1.guid()).thenReturn(GUIDFactory.recreateGUID("456"));
 
         VersionBuilder builder = new VersionBuilder(compound.getContentGUID())
                 .setInvariant(invariant)
                 .setPrevious(prevs)
-                .setMetadataCollection(metadata);
+                .setMetadata(metadata);
         Version manifest = client.addVersion(builder);
         assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
@@ -96,6 +106,42 @@ public class SOSAddVersionTest extends ClientTest {
         Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
 
         assertTrue(client.verifyManifest(localSOSNode.getIdentity(), retrievedManifest));
+    }
+
+    @Test
+    public void testAddAssetWithAtom() throws Exception {
+        Location location = HelperTest.createDummyDataFile(internalStorage);
+        AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
+        Atom atom = client.addAtom(atomBuilder);
+
+        VersionBuilder builder = new VersionBuilder(atom.guid());
+        Version manifest = client.addVersion(builder);
+        Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
+
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
+
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
+    }
+
+
+    @Test
+    public void testAddAssetWithMetadata() throws Exception {
+        Location location = HelperTest.createDummyDataFile(internalStorage);
+        AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
+        Atom atom = client.addAtom(atomBuilder);
+
+        SOSMetadata metadata = client.addMetadata(atom);
+
+        VersionBuilder builder = new VersionBuilder(atom.guid())
+                .setMetadata(metadata);
+        Version manifest = client.addVersion(builder);
+        Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
+
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
+
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
 }

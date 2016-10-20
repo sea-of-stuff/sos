@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.model.metadata.tika;
 
 import org.apache.tika.metadata.Metadata;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.util.ArrayList;
@@ -42,12 +44,15 @@ public class TikaMetadata implements SOSMetadata {
     }
 
     @Override
-    public IGUID guid() {
-        return null;
+    public IGUID guid() throws GUIDGenerationException {
+        String metadata = tabularFormat();
+        IGUID guid = GUIDFactory.generateGUID(metadata);
+
+        return guid;
     }
 
     @Override
     public String tabularFormat() {
-        return null;
+        return " ";
     }
 }

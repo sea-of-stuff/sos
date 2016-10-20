@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.model.metadata;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
@@ -39,16 +39,20 @@ public class MetadataManagerImpl implements MetadataManager {
     }
 
     @Override
-    public SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException {
+    public SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException {
 
         InputStreamData data = new InputStreamData(inputStream);
         SOSMetadata metadata = engine.processData(data);
 
+        return metadata;
+    }
+
+    @Override
+    public void addMetadata(SOSMetadata metadata) {
+
         save(metadata);
         cache(metadata);
         replicate(metadata);
-
-        return metadata;
     }
 
     @Override
@@ -82,6 +86,8 @@ public class MetadataManagerImpl implements MetadataManager {
 
         } catch (DataStorageException | PersistenceException | DataException e) {
             e.printStackTrace();
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
         }
 
     }
@@ -100,8 +106,4 @@ public class MetadataManagerImpl implements MetadataManager {
         // TODO - use network layer for this
     }
 
-    // WORK IN PROGRESS CODE
-    private void processMetadata(Version version) {
-        // TODO - get metadata
-    }
 }

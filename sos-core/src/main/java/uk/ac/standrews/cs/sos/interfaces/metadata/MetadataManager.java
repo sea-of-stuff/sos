@@ -11,11 +11,13 @@ import java.util.List;
  */
 public interface MetadataManager {
 
+    SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException;
+
     /**
-     * Process, cache and store metadata
-     * @param inputStream
+     * cache and store metadata
+     * @param metadata
      */
-    SOSMetadata addMetadata(InputStream inputStream) throws SOSMetadataException;
+    void addMetadata(SOSMetadata metadata);
 
     /**
      * Get the metadata that matches the specified GUID

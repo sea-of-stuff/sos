@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.sos.model.manifests.builders;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -11,17 +13,13 @@ import java.util.Collection;
 public class VersionBuilder {
 
     private IGUID content;
-    private SOSMetadata metadata;
-    private Collection<IGUID> metadataCollection;
+    private Collection<SOSMetadata> metadata;
     private IGUID invariant;
     private Collection<IGUID> previousCollection;
 
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;
-
-    private boolean isMetadata = false;
-    private boolean isMetadataCollection = false;
 
     public VersionBuilder(IGUID content) {
         this.content = content;
@@ -36,20 +34,19 @@ public class VersionBuilder {
         return this;
     }
 
-    public VersionBuilder setMetadata(SOSMetadata metadata) {
+    public VersionBuilder setMetadata(Collection<SOSMetadata> metadata) {
         if (!metadataIsSet) {
             this.metadata = metadata;
-            isMetadata = true;
             metadataIsSet = true;
         }
 
         return this;
     }
 
-    public VersionBuilder setMetadataCollection(Collection<IGUID> metadataCollection) {
+    public VersionBuilder setMetadata(SOSMetadata metadata) {
         if (!metadataIsSet) {
-            this.metadataCollection = metadataCollection;
-            isMetadataCollection = true;
+            this.metadata = new ArrayList<>();
+            this.metadata.add(metadata);
             metadataIsSet = true;
         }
 
@@ -77,32 +74,24 @@ public class VersionBuilder {
         return prevIsSet;
     }
 
-    /**
-     * Return true if the builder encapsulates a metadata object
-     * @return
-     */
-    public boolean isMetadata() {
-        return isMetadata;
-    }
-
-    /**
-     * Return true if the builder encapsulates a metadata collection
-     * @return
-     */
-    public boolean isMetadataCollection() {
-        return isMetadataCollection;
-    }
-
     public IGUID getContent() {
         return content;
     }
 
-    public SOSMetadata getMetadata() {
-        return metadata;
-    }
-
     public Collection<IGUID> getMetadataCollection() {
-        return metadataCollection;
+        if (metadata == null) {
+            return null;
+        }
+
+        Collection<IGUID> retval = new ArrayList<>();
+        for(SOSMetadata meta:metadata) {
+            try {
+                retval.add(meta.guid());
+            } catch (GUIDGenerationException e) {
+                e.printStackTrace();
+            }
+        }
+        return retval;
     }
 
     public IGUID getInvariant() {

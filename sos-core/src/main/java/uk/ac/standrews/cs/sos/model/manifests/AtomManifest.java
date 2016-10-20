@@ -60,6 +60,25 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
+    public InputStream getData() {
+        InputStream dataStream = null;
+        for (LocationBundle location : locations) {
+
+            try {
+                dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
+            } catch (SourceLocationException e) {
+                continue;
+            }
+
+            if (dataStream != null) {
+                break;
+            }
+        }
+
+        return dataStream;
+    }
+
+    @Override
     public boolean isValid() {
         return super.isValid() &&
                 !locations.isEmpty() &&
