@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.metadata.tika;
+package uk.ac.standrews.cs.sos.model.metadata.tika;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

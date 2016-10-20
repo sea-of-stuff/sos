@@ -77,7 +77,7 @@ public class ManifestsManagerImpl implements ManifestsManager {
         try {
             manifest = cache.getManifest(guid);
         } catch (ManifestsCacheMissException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return manifest;
     }
@@ -88,7 +88,7 @@ public class ManifestsManagerImpl implements ManifestsManager {
             manifest = manager.findManifest(guid);
             cache.addManifest(manifest);
         } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         return manifest;

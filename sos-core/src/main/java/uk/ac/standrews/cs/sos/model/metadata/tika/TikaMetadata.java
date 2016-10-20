@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.metadata.tika;
+package uk.ac.standrews.cs.sos.model.metadata.tika;
 
 import org.apache.tika.metadata.Metadata;
 import uk.ac.standrews.cs.IGUID;

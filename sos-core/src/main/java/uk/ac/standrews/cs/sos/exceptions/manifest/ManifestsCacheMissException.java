@@ -6,6 +6,6 @@ package uk.ac.standrews.cs.sos.exceptions.manifest;
 public class ManifestsCacheMissException extends ManifestException {
 
     public ManifestsCacheMissException(String message) {
-        super(message);
+        super("Exception - Cache: " + message);
     }
 }

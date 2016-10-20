@@ -19,7 +19,7 @@ public class InternalStorage {
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String HEADS_DIRECTORY_NAME = "heads";
     private static final String META_DIRECTORY_NAME = "metadata";
-    // TODO - cache (save/load caches)
+    private static final String CACHES_DIRECTORY_NAME = "caches";
 
     private IStorage storage;
 
@@ -88,6 +88,19 @@ public class InternalStorage {
     }
 
     /**
+     * Return the directory used to store the caches
+     * @return
+     * @throws DataStorageException
+     */
+    public Directory getCachesDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(CACHES_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
+    }
+
+    /**
      * Create an arbitrary file in a given directory
      * @param parent
      * @param filename
@@ -131,6 +144,7 @@ public class InternalStorage {
             storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
             storage.getRoot().remove(HEADS_DIRECTORY_NAME);
             storage.getRoot().remove(META_DIRECTORY_NAME);
+            storage.getRoot().remove(CACHES_DIRECTORY_NAME);
 
             // TODO - remove content in the root directory?
         } catch (BindingAbsentException e) {
@@ -140,10 +154,12 @@ public class InternalStorage {
 
     private void createSOSDirectories() throws DataStorageException {
         try {
+            // TODO - db directory, keys?
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
             storage.createDirectory(HEADS_DIRECTORY_NAME).persist();
             storage.createDirectory(META_DIRECTORY_NAME).persist();
+            storage.createDirectory(CACHES_DIRECTORY_NAME).persist();
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }

@@ -1,9 +1,10 @@
-package uk.ac.standrews.cs.sos.metadata;
+package uk.ac.standrews.cs.sos.model.metadata;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
-import uk.ac.standrews.cs.sos.metadata.tika.TikaMetadata;
-import uk.ac.standrews.cs.sos.metadata.tika.TikaMetadataEngine;
+import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadata;
+import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 
@@ -13,7 +14,7 @@ import static org.testng.Assert.assertNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class TikaMetadataEngineTest {
+public class TikaMetadataEngineTest extends CommonTest {
 
     @Test
     public void basicMetadataTest() throws SOSMetadataException {

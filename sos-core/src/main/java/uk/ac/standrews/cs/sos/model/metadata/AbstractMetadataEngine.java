@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.metadata;
+package uk.ac.standrews.cs.sos.model.metadata;
 
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 

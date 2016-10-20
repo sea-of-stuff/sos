@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.manifests.managers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -12,10 +11,10 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -40,7 +39,6 @@ import java.util.stream.Stream;
 public class LocalManifestsManager implements ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
-    private final static String JSON_EXTENSION = ".json";
 
     final private InternalStorage internalStorage;
 
@@ -86,7 +84,7 @@ public class LocalManifestsManager implements ManifestsManager {
             throw new ManifestNotFoundException("Cannot find manifest for null guid");
         }
 
-        return getManifestFromFile(guid);
+        return getManifestFromGUID(guid);
     }
 
     // FIXME - this must be improved
@@ -107,7 +105,7 @@ public class LocalManifestsManager implements ManifestsManager {
 
                 String filename = entry.getFileName().toString();
                 filename = filename.substring(0, filename.length() - 5); // removing extension
-                Manifest manifest = getManifestFromFile(GUIDFactory.recreateGUID(filename));
+                Manifest manifest = getManifestFromGUID(GUIDFactory.recreateGUID(filename));
 
                 result.add(manifest);
             }
@@ -138,7 +136,7 @@ public class LocalManifestsManager implements ManifestsManager {
 
             String str = IOUtils.toString(data.getInputStream(),  StandardCharsets.UTF_8);
             IGUID versionGUID = GUIDFactory.recreateGUID(str);
-            return (Version) getManifestFromFile(versionGUID);
+            return (Version) getManifestFromGUID(versionGUID);
 
         } catch (DataStorageException | GUIDGenerationException |
                 ManifestNotFoundException | DataException e) {
@@ -159,7 +157,7 @@ public class LocalManifestsManager implements ManifestsManager {
     public void setHEAD(IGUID version) throws HEADNotSetException {
 
         try {
-            Version versionManifest = (Version) getManifestFromFile(version);
+            Version versionManifest = (Version) getManifestFromGUID(version);
             IGUID invariant = versionManifest.getInvariantGUID();
             File file = getHEADFile(invariant);
             file.setData(new StringData(version.toString()));
@@ -178,43 +176,9 @@ public class LocalManifestsManager implements ManifestsManager {
         return file;
     }
 
-    private Manifest getManifestFromFile(IGUID guid) throws ManifestNotFoundException {
-
-        try {
-            File manifestFile = getManifestFile(guid);
-
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(manifestFile.toFile());
-            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
-
-            Manifest manifest = constructManifestFromJson(type, manifestFile);
-
-            return manifest;
-        } catch (UnknownManifestTypeException | ManifestNotMadeException
-                | IOException | DataStorageException e) {
-            throw new ManifestNotFoundException("Unable to find manifest for GUID " + guid.toString(), e);
-        }
-
-    }
-
-    private Manifest constructManifestFromJson(ManifestType type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
-        Manifest manifest;
-        try {
-            switch (type) {
-                case ATOM:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
-                    break;
-                case COMPOUND:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
-                    break;
-                case VERSION:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
-                    break;
-                default:
-                    throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
-            }
-        } catch (IOException e) {
-            throw new ManifestNotMadeException("Unable to create a manifest from file at " + manifestData.getPathname());
-        }
+    private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
+        File manifestFile = getManifestFile(guid);
+        Manifest manifest = ManifestsUtils.ManifestFromFile(manifestFile);
 
         return manifest;
     }
@@ -235,7 +199,7 @@ public class LocalManifestsManager implements ManifestsManager {
                 saveToFile(manifest);
             }
 
-        } catch (DataStorageException | ManifestNotFoundException e) {
+        } catch (ManifestNotFoundException e) {
             throw new ManifestManagerException(e);
         }
 
@@ -243,11 +207,11 @@ public class LocalManifestsManager implements ManifestsManager {
 
     private void saveExistingAtomManifest(Manifest manifest) throws ManifestNotFoundException, ManifestManagerException {
         IGUID guid = manifest.getContentGUID();
-        Manifest existingManifest = getManifestFromFile(guid);
+        Manifest existingManifest = getManifestFromGUID(guid);
         mergeAtomManifestAndSave(existingManifest, manifest);
     }
 
-    private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws DataStorageException, ManifestManagerException {
+    private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws ManifestManagerException, ManifestNotFoundException {
         File manifestFile = getManifestFile(manifestFileGUID);
         File backupFile = backupManifest(manifest);
         FileHelper.deleteFile(manifestFile);
@@ -271,7 +235,7 @@ public class LocalManifestsManager implements ManifestsManager {
             }
 
             FileHelper.deleteFile(backupFile);
-        } catch (DataStorageException e) {
+        } catch (ManifestNotFoundException e) {
             throw new ManifestManagerException("Manifests " + existingManifest.getContentGUID().toString()
                     + " and " + manifest.getContentGUID().toString() + "could not be merged", e);
         }
@@ -291,7 +255,7 @@ public class LocalManifestsManager implements ManifestsManager {
             backupManifest.persist();
 
             return backupManifest;
-        } catch (DataStorageException | DataException | PersistenceException e) {
+        } catch (ManifestNotFoundException | DataStorageException | DataException | PersistenceException e) {
             throw new ManifestManagerException("Manifest could not be backed up ", e);
         }
 
@@ -311,18 +275,21 @@ public class LocalManifestsManager implements ManifestsManager {
         }
     }
 
-    private File getManifestFile(IGUID guid) throws DataStorageException {
-        return getManifestFile(guid.toString());
+    private File getManifestFile(IGUID guid) throws ManifestNotFoundException {
+        try {
+            return getManifestFile(guid.toString());
+        } catch (DataStorageException e) {
+            throw new ManifestNotFoundException("Unable to find manifest file for GUID: " + guid);
+        }
     }
 
     private File getManifestFile(String guid) throws DataStorageException {
         Directory manifestsDir = internalStorage.getManifestDirectory();
-        return internalStorage.createFile(manifestsDir, normaliseGUID(guid));
+        File file = ManifestsUtils.ManifestFile(internalStorage, manifestsDir, guid);
+
+        return file;
     }
 
-    private String normaliseGUID(String guid) {
-        return guid + JSON_EXTENSION;
-    }
 
     private Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
         HashSet<LocationBundle> locations = new HashSet<>();
@@ -332,7 +299,7 @@ public class LocalManifestsManager implements ManifestsManager {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    private boolean manifestExistsInStorage(IGUID guid) throws DataStorageException {
+    private boolean manifestExistsInStorage(IGUID guid) throws ManifestNotFoundException {
         File manifest = getManifestFile(guid);
         return manifest.exists();
     }

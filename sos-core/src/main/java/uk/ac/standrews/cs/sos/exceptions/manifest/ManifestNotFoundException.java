@@ -6,10 +6,10 @@ package uk.ac.standrews.cs.sos.exceptions.manifest;
 public class ManifestNotFoundException extends ManifestException {
 
     public ManifestNotFoundException(String message, Throwable throwable) {
-        super(message, throwable);
+        super("Exception: " + message, throwable);
     }
 
     public ManifestNotFoundException(String message) {
-        super(message);
+        super("Exception: " + message);
     }
 }
