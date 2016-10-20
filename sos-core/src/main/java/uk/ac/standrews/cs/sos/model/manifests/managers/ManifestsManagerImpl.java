@@ -24,6 +24,8 @@ public class ManifestsManagerImpl implements ManifestsManager {
     public ManifestsManagerImpl(ManifestPolicy manifestPolicy, InternalStorage internalStorage,
                                 NodeManager nodeManager) {
 
+        // TODO - load cache if there is one
+
         cache = new ManifestsCacheImpl();
         local = new LocalManifestsManager(internalStorage);
         remote = new RemoteManifestsManager(manifestPolicy, nodeManager);

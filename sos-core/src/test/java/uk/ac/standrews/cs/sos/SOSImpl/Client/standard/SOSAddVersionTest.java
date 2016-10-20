@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -143,5 +144,25 @@ public class SOSAddVersionTest extends ClientTest {
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
+
+    @Test
+    public void testAddAssetWithJPEGMetadata() throws Exception {
+        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
+        Atom atom = client.addAtom(atomBuilder);
+
+        SOSMetadata metadata = client.addMetadata(atom);
+
+        VersionBuilder builder = new VersionBuilder(atom.guid())
+                .setMetadata(metadata);
+        Version manifest = client.addVersion(builder);
+        Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
+
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
+
+        JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
+    }
+
 
 }

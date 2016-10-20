@@ -49,7 +49,6 @@ public class MetadataManagerImpl implements MetadataManager {
 
     @Override
     public void addMetadata(SOSMetadata metadata) {
-
         save(metadata);
         cache(metadata);
         replicate(metadata);
@@ -84,9 +83,7 @@ public class MetadataManagerImpl implements MetadataManager {
             metadataFile.setData(data);
             metadataFile.persist();
 
-        } catch (DataStorageException | PersistenceException | DataException e) {
-            e.printStackTrace();
-        } catch (GUIDGenerationException e) {
+        } catch (DataStorageException | PersistenceException | DataException | GUIDGenerationException e) {
             e.printStackTrace();
         }
 

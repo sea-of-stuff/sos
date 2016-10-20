@@ -20,5 +20,9 @@ public interface Atom extends Manifest {
      */
     Collection<LocationBundle> getLocations();
 
+    /**
+     * Return the atom's data
+     * @return
+     */
     InputStream getData();
 }

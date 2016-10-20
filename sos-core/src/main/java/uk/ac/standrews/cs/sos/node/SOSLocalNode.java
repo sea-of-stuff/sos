@@ -54,7 +54,6 @@ import java.util.List;
  */
 public class SOSLocalNode extends SOSNode implements LocalNode {
 
-    private SOSConfiguration configuration;
     private InternalStorage internalStorage;
     private PolicyManager policyManager;
     private NodeDatabase nodeDatabase;
@@ -80,7 +79,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         SOS_LOG.log(LEVEL.INFO, "Starting up node ");
 
-        configuration = Builder.configuration;
+        SOSConfiguration configuration = Builder.configuration;
         internalStorage = Builder.internalStorage;
         policyManager = Builder.policyManager;
 
@@ -144,6 +143,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
+        // TODO - will persist the cache manifestsManager.flush();
+
         RequestsManager.getInstance().shutdown();
     }
 

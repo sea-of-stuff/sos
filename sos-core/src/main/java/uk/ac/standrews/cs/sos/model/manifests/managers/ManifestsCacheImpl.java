@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * TODO - make it serializable, same for guid, manifest?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

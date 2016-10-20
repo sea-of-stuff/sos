@@ -6,6 +6,8 @@ package uk.ac.standrews.cs.sos.model.metadata.tika;
 public class TikaIgnoreMetadata {
 
     protected static String[] IGNORE_METADATA = new String[]
-            {   "X-Parsed-By",
-                "Content-Encoding"};
+            {
+                "Content-Encoding",
+                "File Name"
+            };
 }

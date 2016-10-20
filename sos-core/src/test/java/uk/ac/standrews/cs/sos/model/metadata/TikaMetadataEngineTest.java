@@ -24,8 +24,9 @@ public class TikaMetadataEngineTest extends CommonTest {
         Data data = new StringData("just some text in a string");
         TikaMetadata output = test.processData(data);
 
-        assertEquals(1, output.getAllPropertyNames().length);
+        assertEquals(2, output.getAllPropertyNames().length);
         assertEquals("text/plain; charset=ISO-8859-1", output.getProperty("Content-Type"));
+        assertEquals("org.apache.tika.parser.DefaultParser", output.getProperty("X-Parsed-By"));
     }
 
     @Test
@@ -35,9 +36,6 @@ public class TikaMetadataEngineTest extends CommonTest {
 
         Data data = new StringData("just some text in a string");
         TikaMetadata output = test.processData(data);
-
-        String xParsedBy = output.getProperty("X-Parsed-By");
-        assertNull(xParsedBy);
 
         String contentEncoding = output.getProperty("Content-Encoding");
         assertNull(contentEncoding);

@@ -103,7 +103,6 @@ public class SOSClient implements Client {
         return manifest;
     }
 
-    // TODO - process metadata given the content, see policy
     @Override
     public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {

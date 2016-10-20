@@ -53,9 +53,6 @@ public class SOSEP {
     // NDS
     //////////
 
-    /*
-     * NOTE: This should take into account authorization too.
-     */
     public static URL NDS_REGISTER_NODE(Node node, IGUID guid) throws MalformedURLException {
         String url = buildURLBase(node) +
                 "/nds/register/";

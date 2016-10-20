@@ -53,6 +53,12 @@ public class TikaMetadata implements SOSMetadata {
 
     @Override
     public String tabularFormat() {
-        return " ";
+
+        String retval = "";
+        for(String meta:getAllPropertyNames()) {
+            retval += meta + ", " + getProperty(meta) + "\n";
+        }
+
+        return retval;
     }
 }
