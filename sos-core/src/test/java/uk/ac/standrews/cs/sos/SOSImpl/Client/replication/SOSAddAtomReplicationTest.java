@@ -22,7 +22,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
         Atom manifest = client.addAtom(builder);
         assertNotNull(manifest.getContentGUID());
-        assertEquals(manifest.getLocations().size(), 1);
+        assertEquals(2, manifest.getLocations().size());
 
         // TODO
         // This is meaningless, because data will be also in cache and local disk?

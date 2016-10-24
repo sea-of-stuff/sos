@@ -27,7 +27,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ContentGUID\":\"c3150d68468db3b6fbf7ef2e6486ec188e368248\"," +
+                    "\"ContentGUID\":\"44ebfc76e2671daf7f1e1b02c9538e5fe1e44995\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +

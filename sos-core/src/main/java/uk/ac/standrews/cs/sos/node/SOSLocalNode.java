@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.manifests.MasterManifestManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
@@ -58,7 +58,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private PolicyManager policyManager;
     private NodeDatabase nodeDatabase;
     private Identity identity;
-    private ManifestsManager manifestsManager;
+    private MasterManifestManager manifestsManager;
     private NodeManager nodeManager;
     private MetadataManager metadataManager;
 
@@ -143,7 +143,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        // TODO - will persist the cache manifestsManager.flush();
+        manifestsManager.flush();
 
         RequestsManager.getInstance().shutdown();
     }

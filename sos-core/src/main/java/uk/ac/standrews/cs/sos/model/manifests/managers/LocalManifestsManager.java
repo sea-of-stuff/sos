@@ -172,7 +172,7 @@ public class LocalManifestsManager implements ManifestsManager {
             throw new HEADNotSetException("Unable to set the head for version " + version);
         }
     }
-
+    
     private File getHEADFile(IGUID invariant) throws DataStorageException {
         Directory headsDir = internalStorage.getHeadsDirectory();
         File file = internalStorage.createFile(headsDir, invariant.toString());

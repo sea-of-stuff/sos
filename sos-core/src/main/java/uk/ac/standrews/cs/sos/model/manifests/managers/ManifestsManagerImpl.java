@@ -2,28 +2,35 @@ package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
+import java.io.IOException;
 import java.util.stream.Stream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestsManagerImpl implements ManifestsManager {
+public class ManifestsManagerImpl implements MasterManifestManager {
+
+    private static final String CACHE_FILE = "manifests.cache";
 
     private ManifestsCache cache;
     private LocalManifestsManager local;
     private RemoteManifestsManager remote;
+    private InternalStorage internalStorage;
 
     public ManifestsManagerImpl(ManifestPolicy manifestPolicy, InternalStorage internalStorage,
                                 NodeManager nodeManager) {
 
-        // TODO - load cache if there is one
+        this.internalStorage = internalStorage;
 
-        cache = new ManifestsCacheImpl();
+        loadOrCreateCache();
         local = new LocalManifestsManager(internalStorage);
         remote = new RemoteManifestsManager(manifestPolicy, nodeManager);
     }
@@ -74,6 +81,31 @@ public class ManifestsManagerImpl implements ManifestsManager {
     @Override
     public void setHEAD(IGUID version) throws HEADNotSetException {
         local.setHEAD(version);
+    }
+
+    @Override
+    public void flush() {
+        try {
+            Directory cacheDir = internalStorage.getCachesDirectory();
+            File file = internalStorage.createFile(cacheDir, CACHE_FILE);
+            cache.persist(file);
+        } catch (DataStorageException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadOrCreateCache() {
+        try {
+            Directory cacheDir = internalStorage.getCachesDirectory();
+            File file = internalStorage.createFile(cacheDir, CACHE_FILE);
+            cache = ManifestsCacheImpl.load(internalStorage, file, internalStorage.getManifestDirectory());
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        if (cache == null) {
+            cache = new ManifestsCacheImpl();
+        }
     }
 
     private Manifest findManifestCache(IGUID guid) {
