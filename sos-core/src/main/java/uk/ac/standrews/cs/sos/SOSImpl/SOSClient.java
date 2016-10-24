@@ -116,6 +116,9 @@ public class SOSClient implements Client {
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         manifestsManager.addManifest(manifest);
 
+        // TODO - link version and metadata
+        // versionid, meta property, value
+
         SOS_LOG.log(LEVEL.INFO, "Version added: " + manifest.getContentGUID());
 
         return manifest;

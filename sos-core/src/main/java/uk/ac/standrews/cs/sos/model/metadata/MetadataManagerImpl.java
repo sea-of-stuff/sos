@@ -57,6 +57,7 @@ public class MetadataManagerImpl implements MetadataManager {
     @Override
     public SOSMetadata getMetadata(IGUID guid) {
         // Look for metadata and return it
+        // NOT FOUND EXCEPTION
 
         // check cache
         // if cache miss, then get it from disk
@@ -65,12 +66,23 @@ public class MetadataManagerImpl implements MetadataManager {
         // from another node
         // fill the cache and return
 
+        for(SOSMetadata metadata:naiveCache) {
+            try {
+                if (metadata.guid().equals(guid)) {
+                    return metadata;
+                }
+            } catch (GUIDGenerationException e) {
+                e.printStackTrace();
+            }
+        }
+
         return null;
     }
 
     @Override
     public List<IGUID> getVersions(String attribute, String value) {
         // cache is fundamental here, otherwise we need to look at the disk which is not great
+        // triplestore
         return null;
     }
 
