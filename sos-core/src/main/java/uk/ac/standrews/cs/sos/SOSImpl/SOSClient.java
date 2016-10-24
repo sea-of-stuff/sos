@@ -84,8 +84,14 @@ public class SOSClient implements Client {
         SOS_LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
                 +" added in " + (end - start) / 1000000000.0 + " seconds");
 
+
         SOS_LOG.log(LEVEL.INFO, "Replicating atom");
-        replicateData(manifest, bundles); // FIXME - bundles are not updated to atom manifest
+        replicateData(manifest, bundles);
+        try {
+            manifestsManager.updateAtom(manifest);
+        } catch (ManifestManagerException | ManifestNotFoundException e) {
+            throw new StorageException("Unable to update atom manifest after replication");
+        }
 
         return manifest;
     }
@@ -216,8 +222,8 @@ public class SOSClient implements Client {
 
             Runnable replicator = () -> {
                 Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
-                // NOTE: Can also contact NDS for storage nodes: NDS_GET_NODE by role
-                // TODO - update location bundles of this node?
+                // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
+
                 if (storageNodes.hasNext()) {
                     Node replicaNode = storageNodes.next();
                     try {

@@ -1,10 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 
 import java.util.stream.Stream;
 
@@ -14,6 +11,8 @@ import java.util.stream.Stream;
 public interface ManifestsManager {
 
     void addManifest(Manifest manifest) throws ManifestPersistException;
+
+    void updateAtom(Atom atom) throws ManifestManagerException, ManifestNotFoundException;
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 

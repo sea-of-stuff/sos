@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.managers;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.node.NodeManager;
 import uk.ac.standrews.cs.sos.storage.InternalStorage;
@@ -36,6 +33,11 @@ public class ManifestsManagerImpl implements ManifestsManager {
         cache.addManifest(manifest);
         local.addManifest(manifest);
         remote.addManifest(manifest);
+    }
+
+    @Override
+    public void updateAtom(Atom atom) throws ManifestManagerException, ManifestNotFoundException {
+        local.updateAtom(atom);
     }
 
     @Override

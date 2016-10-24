@@ -71,6 +71,13 @@ public class LocalManifestsManager implements ManifestsManager {
         }
     }
 
+    @Override
+    public void updateAtom(Atom atom) throws ManifestManagerException, ManifestNotFoundException {
+
+        IGUID manifestFileGUID = atom.guid();
+        saveExistingManifest(manifestFileGUID, atom);
+    }
+
     /**
      * Find a manifest in the SOS given a GUID.
      *
@@ -138,10 +145,7 @@ public class LocalManifestsManager implements ManifestsManager {
             IGUID versionGUID = GUIDFactory.recreateGUID(str);
             return (Version) getManifestFromGUID(versionGUID);
 
-        } catch (DataStorageException | GUIDGenerationException |
-                ManifestNotFoundException | DataException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (DataStorageException | GUIDGenerationException | ManifestNotFoundException | DataException | IOException e) {
             e.printStackTrace();
         }
 

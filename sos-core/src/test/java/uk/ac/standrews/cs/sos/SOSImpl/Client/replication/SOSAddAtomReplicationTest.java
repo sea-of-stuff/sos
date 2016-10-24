@@ -24,6 +24,8 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         assertNotNull(manifest.getContentGUID());
         assertEquals(manifest.getLocations().size(), 1);
 
+        // TODO
+        // This is meaningless, because data will be also in cache and local disk?
         InputStream inputStream = client.getAtomContent(manifest);
         String resultString = HelperTest.InputStreamToString(inputStream);
         assertEquals(testString, resultString);
