@@ -12,11 +12,12 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
+import uk.ac.standrews.cs.sos.interfaces.metadata.Triplestore;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SesameTriplestore {
+public class SesameTriplestore implements Triplestore {
 
     private Repository repo;
     private ValueFactory valueFactory;
@@ -30,6 +31,7 @@ public class SesameTriplestore {
         valueFactory = repo.getValueFactory();
     }
 
+    @Override
     public void addTriple(String subject, String predicate, String object) {
 
         try (RepositoryConnection conn = repo.getConnection()) {
@@ -43,11 +45,12 @@ public class SesameTriplestore {
 
     }
 
+    // see http://docs.rdf4j.org/programming/#_using_a_repository_repositoryconnections
+    @Override
     public void getTriples(String predicate) {
 
-
         try (RepositoryConnection conn = repo.getConnection()) {
-            String queryString = "PREFIX sos:<sos://> SELECT ?x ?p ?y WHERE { ?x sos:" + predicate + " ?y . } ";
+            String queryString = "PREFIX sos:<sos://> SELECT ?x ?y WHERE { ?x sos:" + predicate + " ?y . } ";
             TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
 
@@ -55,16 +58,36 @@ public class SesameTriplestore {
                 while (result.hasNext()) {  // iterate over the result
                     BindingSet bindingSet = result.next();
                     Value valueOfX = bindingSet.getValue("x");
-                    Value valueOfP = bindingSet.getValue("p");
                     Value valueOfY = bindingSet.getValue("y");
 
-                    System.out.println(valueOfX + " ||| " + valueOfP + " ||| " + valueOfY);
+                    System.out.println(valueOfX + " ||| " + valueOfY);
                 }
             }
         }
 
     }
 
+    @Override
+    public void getTriples(String object, String predicate) {
+
+        try (RepositoryConnection conn = repo.getConnection()) {
+            String queryString = "PREFIX sos:<sos://> SELECT ?y WHERE { sos:" + object + " sos:" + predicate + " ?y . } ";
+            TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+
+
+            try (TupleQueryResult result = tupleQuery.evaluate()) {
+                while (result.hasNext()) {  // iterate over the result
+                    BindingSet bindingSet = result.next();
+                    Value valueOfY = bindingSet.getValue("y");
+
+                    System.out.println(valueOfY);
+                }
+            }
+        }
+
+    }
+
+    @Override
     public void persist() {
 
     }

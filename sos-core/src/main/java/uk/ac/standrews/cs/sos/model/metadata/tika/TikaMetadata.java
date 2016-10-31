@@ -51,6 +51,8 @@ public class TikaMetadata implements SOSMetadata {
         return guid;
     }
 
+    // NOTE - Order matters
+    // rename method
     @Override
     public String tabularFormat() {
 

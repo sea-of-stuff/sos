@@ -208,6 +208,13 @@ public class SOSClient implements Client {
         return metadata;
     }
 
+    @Override
+    public SOSMetadata getMetadata(IGUID guid) {
+        SOS_LOG.log(LEVEL.INFO, "Getting metadata for guid: " + guid.toString());
+
+        return metadataManager.getMetadata(guid);
+    }
+
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
         return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
     }

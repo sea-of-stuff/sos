@@ -14,6 +14,8 @@ public class SesameTriplestoreTest {
         test.addTriple("simone", "likes", "fish");
         test.addTriple("simone", "likes", "bird");
         test.addTriple("simone", "has", "atom");
+
         test.getTriples("likes");
+        test.getTriples("simone", "likes");
     }
 }

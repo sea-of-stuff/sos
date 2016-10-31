@@ -131,6 +131,7 @@ public class SOSConfiguration {
         return StorageType.getEnum(configuration.getString(PropertyKeys.STORAGE_TYPE));
     }
 
+    // FIXME - base path should not always be user.home
     public String getStorageLocation() {
 
         String base = "";

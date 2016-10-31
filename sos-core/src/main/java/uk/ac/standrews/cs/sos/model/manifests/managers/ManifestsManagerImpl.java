@@ -62,7 +62,7 @@ public class ManifestsManagerImpl implements MasterManifestManager {
             manifest = findManifest(remote, guid);
         }
         if (manifest == null) {
-            throw new ManifestNotFoundException("Unable to find manifest in cache, local, remote");
+            throw new ManifestNotFoundException("Unable to find manifest in cache, local, remote. GUID: " + guid.toString());
         }
 
         return manifest;

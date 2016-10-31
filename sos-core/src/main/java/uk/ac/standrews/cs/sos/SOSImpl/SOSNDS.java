@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.util.Collection;
 
@@ -49,7 +50,8 @@ public class SOSNDS implements NDS {
 
     @Override
     public Node registerNode(Node node) {
-        nodeManager.addNode(node);
+        Node nodeToRegister = new SOSNode(node);
+        nodeManager.addNode(nodeToRegister);
 
         try {
             nodeManager.persistNodesTable();
@@ -60,7 +62,7 @@ public class SOSNDS implements NDS {
         }
 
         // TODO - perform replication across other NDS nodes
-        return node;
+        return nodeToRegister;
     }
 
 }

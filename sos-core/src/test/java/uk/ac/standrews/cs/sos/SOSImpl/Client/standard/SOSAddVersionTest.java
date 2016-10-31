@@ -164,5 +164,28 @@ public class SOSAddVersionTest extends ClientTest {
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
+    @Test
+    public void testAddAssetAndGetJPEGMetadata() throws Exception {
+        Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
+        AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
+        Atom atom = client.addAtom(atomBuilder);
+
+        SOSMetadata metadata = client.addMetadata(atom);
+
+        VersionBuilder builder = new VersionBuilder(atom.guid())
+                .setMetadata(metadata);
+        Version manifest = client.addVersion(builder);
+        Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
+
+        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
+
+        Version retrievedVersion = (Version) retrievedManifest;
+        IGUID retrievedMetadataGUID = (IGUID) retrievedVersion.getMetadata().toArray()[0];
+        assertEquals(metadata.guid(), retrievedMetadataGUID);
+
+        SOSMetadata retrievedMetadata = client.getMetadata(retrievedMetadataGUID);
+        assertEquals(metadata.guid(), retrievedMetadata.guid());
+    }
 
 }

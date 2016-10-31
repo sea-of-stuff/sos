@@ -142,4 +142,6 @@ public interface Client extends SeaOfStuff {
     Stream<Manifest> getAllManifests();
 
     SOSMetadata addMetadata(Atom atom) throws SOSMetadataException;
+
+    SOSMetadata getMetadata(IGUID guid);
 }

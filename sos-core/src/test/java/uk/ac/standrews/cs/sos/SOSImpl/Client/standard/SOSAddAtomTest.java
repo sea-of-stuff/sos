@@ -142,7 +142,7 @@ public class SOSAddAtomTest extends ClientTest {
     }
 
     // NOTE: this test fails if using mutable internal storage
-    @Test (timeOut = TEST_TIMEOUT)
+    @Test (timeOut = TEST_TIMEOUT, enabled = false)
     public void testAddAtomTwiceNoUpdate() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
