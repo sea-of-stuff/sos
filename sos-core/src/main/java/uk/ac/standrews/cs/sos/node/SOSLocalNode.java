@@ -34,6 +34,7 @@ import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -86,6 +87,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         try {
             DatabaseType databaseType = configuration.getDBType();
             String databasePath = configuration.getDBPath(); // TODO - create db folder if necessary
+            File dbDir = new File(databasePath);
+            if (!dbDir.exists()) {
+                dbDir.mkdir();
+            }
+
             nodeDatabase = new SQLDatabase(databaseType, databasePath);
         } catch (DatabaseException e) {
             throw new SOSException(e);
