@@ -51,7 +51,7 @@ public class SetUpTest extends CommonTest {
                     "\n" +
                     "    \"storage\" : {\n" +
                     "        \"type\" : \"local\"\n" +
-                    "        \"location\" : \"/sos/\"\n" +
+                    "        \"location\" : \"~/sos/\"\n" +
                     "    }\n" +
                     "\n" +
                     "    \"keys\" : {\n" +

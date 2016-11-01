@@ -76,8 +76,9 @@ public class SOSConfiguration {
             return true;
         }
 
+        // Check if GUID is valid
         try {
-            IGUID realGUID = GUIDFactory.recreateGUID(guid);
+            GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
             return true;
         }
@@ -131,17 +132,15 @@ public class SOSConfiguration {
         return StorageType.getEnum(configuration.getString(PropertyKeys.STORAGE_TYPE));
     }
 
-    // FIXME - base path should not always be user.home
     public String getStorageLocation() {
 
-        String base = "";
+        String path = configuration.getString(PropertyKeys.STORAGE_LOCATION);
 
-        StorageType type = getStorageType();
-        if (type.equals(StorageType.LOCAL)) {
-            base = System.getProperty("user.home");
+        if (path.charAt(0) == '~') {
+            path = System.getProperty("user.home") + path.substring(1);
         }
 
-        return base + configuration.getString(PropertyKeys.STORAGE_LOCATION);
+        return path;
     }
 
     public String getKeyFolderPath() {

@@ -41,7 +41,7 @@ public class StorageTest extends SetUpTest {
                     "\n" +
                     "    \"storage\" : {\n" +
                     "        \"type\" : \"local\"\n" +
-                    "        \"location\" : \"/sos/\"\n" +
+                    "        \"location\" : \"~/sos/\"\n" +
                     "    }\n" +
                     "\n" +
                     "    \"keys\" : {\n" +
