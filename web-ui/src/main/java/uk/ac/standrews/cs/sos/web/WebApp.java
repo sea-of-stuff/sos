@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.web;
 
 import spark.Request;
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
@@ -22,20 +22,20 @@ import static spark.Spark.*;
 
 public class WebApp {
 
-    public static void RUN(SOSLocalNode sos, IGUID root, int port) {
+    public static void RUN(SOSLocalNode sos, IFileSystem fileSystem, int port) {
         System.out.println("Starting WEB APP on port: " + port);
 
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         port(port);
 
-        registerRoutes(sos, root);
+        registerRoutes(sos, fileSystem);
         registerPostActionRoutes();
     }
 
-    private static void registerRoutes(SOSLocalNode sos, IGUID root) {
+    private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
         get("/", (req, res) -> Home.Render());
 
-        get("/tree", (req, res) -> Tree.Render(sos, root));
+        get("/tree", (req, res) -> Tree.Render(sos, fileSystem));
 
         get("/graph", (req, res) -> Graph.Render(sos));
         get("/graph/data/:id", (req, res) -> Data.Render(req, sos));

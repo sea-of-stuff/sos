@@ -4,16 +4,16 @@ import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.WebApp;
 import uk.ac.standrews.cs.webdav.entrypoints.WebDAVLauncher;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -22,8 +22,7 @@ public class MAISOS {
 
     private static final String CONFIG_OPT = "c";
     private static final String REST_OPT = "j";
-    private static final String WEB_APP_OPT = "w";
-    private static final String WEBDAV_OPT = "wd";
+    private static final String FS_OPT = "fs";
     private static final String ROOT_OPT = "root";
 
     public static void main(String[] args) throws Exception {
@@ -43,23 +42,40 @@ public class MAISOS {
         String configFilePath = line.getOptionValue(CONFIG_OPT);
         SOSLocalNode sos = ServerState.init(configFilePath);
 
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
         IGUID root = getRootGUID(line);
 
-        if (line.hasOption(WEBDAV_OPT)) {
-            // TODO - pass config info to webdav
-            Launch(root, 8082, sos.getClient());
-        }
+        if (line.hasOption(FS_OPT)) {
+            // TODO - pass config info to webdav and webapp
 
-        if (line.hasOption(WEB_APP_OPT)) {
-            // TODO get port from config
-            // TODO - pass fs from webdav
-            WebApp.RUN(sos, root, 9999);
+            IFileSystem fileSystem = new SOSFileSystemFactory(root)
+                    .makeFileSystem(sos.getClient());
+
+            executor.submit(() -> {
+                try {
+                    Launch(fileSystem, 8082);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+
+            WebApp.RUN(sos, fileSystem, 9999);
         }
 
         if (line.hasOption(REST_OPT)) {
-            JettyApp.RUN(sos);
+
+            executor.submit(() -> {
+                try {
+                    JettyApp.RUN(sos);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
+        // FIXME - not working. It might be because there are threads being launghed
         HandleExit();
     }
 
@@ -77,14 +93,9 @@ public class MAISOS {
                 .desc("Run a RESTful service")
                 .build());
 
-        options.addOption(Option.builder(WEBDAV_OPT)
+        options.addOption(Option.builder(FS_OPT)
                 .required(false)
-                .desc("Make a webdav server")
-                .build());
-
-        options.addOption(Option.builder(WEB_APP_OPT)
-                .required(false)
-                .desc("Run a web interface")
+                .desc("Make a webdav server and a web interface")
                 .build());
 
         options.addOption(Option.builder(ROOT_OPT)
@@ -102,6 +113,7 @@ public class MAISOS {
 
         System.out.println("Press Enter to stop");
         System.in.read();
+        System.out.println("Exiting...");
     }
 
     private static class ShutdownHook {
@@ -118,16 +130,11 @@ public class MAISOS {
         }
     }
 
-    private static void Launch(IGUID root, int port, Client client) {
+    private static void Launch(IFileSystem fileSystem, int port) {
 
         try {
-            IFileSystem file_system = new SOSFileSystemFactory(root)
-                            .makeFileSystem(client);
-
             System.out.println("Starting WEBDAV server on port: " + port);
-            WebDAVLauncher.StartWebDAVServer(file_system, port);
-        } catch (FileSystemCreationException e) {
-            System.out.println("couldn't create file system: " + e.getMessage());
+            WebDAVLauncher.StartWebDAVServer(fileSystem, port);
         } catch (IOException e) {
             System.out.println("Socket error: " + e.getMessage());
         }

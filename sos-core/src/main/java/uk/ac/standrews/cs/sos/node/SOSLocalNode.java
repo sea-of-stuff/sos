@@ -86,7 +86,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try {
             DatabaseType databaseType = configuration.getDBType();
-            String databasePath = configuration.getDBPath(); // TODO - create db folder if necessary
+            String databasePath = configuration.getDBPath();
             File dbDir = new File(databasePath);
             if (!dbDir.exists()) {
                 dbDir.mkdir();
@@ -98,20 +98,20 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
 
         // TODO - register node with NDS
-
         initNodeManager();
-        loadBootstrapNodes(Builder.bootstrapNodes);
-        initManifestManager();
-        initIdentity();
-        initMetadataManager();
-
-        initSOSInstances();
 
         try {
             SOSProtocol.Register(internalStorage, nodeManager);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
         }
+
+        loadBootstrapNodes(Builder.bootstrapNodes);
+        initManifestManager();
+        initIdentity();
+        initMetadataManager();
+
+        initSOSInstances();
 
         garbageCollector();
         SOS_LOG.log(LEVEL.INFO, "Node initialised");

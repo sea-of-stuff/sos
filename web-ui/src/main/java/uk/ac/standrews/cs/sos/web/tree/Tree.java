@@ -1,17 +1,16 @@
 package uk.ac.standrews.cs.sos.web.tree;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -20,11 +19,11 @@ import java.util.Map;
 public class Tree {
 
     // TODO - pass FileSystem from webdav instead!
-    public static String Render(SOSLocalNode sos, IGUID root){
+    public static String Render(SOSLocalNode sos, IFileSystem fileSystem){
         Map<String, Object> model = new HashMap<>();
 
         try {
-            String data = getTreeInJson(sos, root);
+            String data = getTreeInJson(sos, fileSystem);
             System.out.println(data);
 
             model.put("tree", data);
@@ -37,13 +36,13 @@ public class Tree {
         return VelocityUtils.RenderTemplate("velocity/tree.vm", model);
     }
 
-    private static String getTreeInJson(SOSLocalNode sos, IGUID root) throws HEADNotFoundException, ManifestNotFoundException {
-        Manifest manifest = sos.getClient().getHEAD(root);
+    private static String getTreeInJson(SOSLocalNode sos, IFileSystem fileSystem) throws HEADNotFoundException, ManifestNotFoundException {
+        IGUID rootGUID = fileSystem.getRootDirectory().getGUID();
 
-        String children = getChildren(sos, (Version) manifest);
+        String children = getChildren(sos, fileSystem.getRootDirectory(), rootGUID);
 
         String data = "'data' : [{" +
-                "id: '" + manifest.guid().toString() + "', " +
+                "id: '" + rootGUID.toString() + "', " +
                 "text: " + "'/', " +
                 "parent: '#'" +
                 "}, " +
@@ -53,16 +52,20 @@ public class Tree {
         return data;
     }
 
-    private static String getChildren(SOSLocalNode sos, Version version) throws ManifestNotFoundException {
+    private static String getChildren(SOSLocalNode sos, IDirectory directory, IGUID parent) throws ManifestNotFoundException {
         String retval = "";
-        Manifest manifest = sos.getClient().getManifest(version.getContentGUID());
 
-        if (manifest.getManifestType() == ManifestType.COMPOUND) {
-            Compound compound = (Compound) manifest;
-            for(Content content:compound.getContents()) {
-                System.out.println(content.getLabel());
-                retval += "{ id: '" + content.getGUID() + "', parent: '" + version.getVersionGUID() + "', text: '" + content.getLabel() + "'}, ";
-            }
+        Iterator<NameAttributedPersistentObjectBinding> it = directory.iterator();
+        while(it.hasNext()) {
+            NameAttributedPersistentObjectBinding c = it.next();
+            System.out.println(c.getName());
+            IGUID guid = c.getObject().getGUID();
+
+            String icon = "icon: 'file'";
+//            if (c.getObject() instanceof IFile) {
+//
+//            }
+            retval += "{ id: '" + guid + "', parent: '" + parent + "', text: '" + c.getName() + "', " + icon + "}, ";
         }
 
         return retval;
