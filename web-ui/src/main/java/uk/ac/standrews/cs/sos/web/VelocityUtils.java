@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.web;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +16,7 @@ public class VelocityUtils {
     }
 
     public static String RenderTemplate(String template) {
-        return new VelocityTemplateEngine().render(template);
+        return new VelocityTemplateEngine().render(new ModelAndView(new HashMap<>(),template));
     }
 
 }

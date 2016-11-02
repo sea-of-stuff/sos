@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.web;
+package uk.ac.standrews.cs.sos.web.graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,15 +96,16 @@ public class Graph {
                 objectNode1.put("arrows", "to");
 
                 arrayNode.add(objectNode1);
+            }
 
                 ObjectNode objectNode2 = mapper.createObjectNode();
                 objectNode2.put("from", version.getVersionGUID().toString());
                 objectNode2.put("to", version.getContentGUID().toString());
-                objectNode1.put("arrows", "to");
+                objectNode2.put("arrows", "to");
                 objectNode2.put("physics", "false");
 
                 arrayNode.add(objectNode2);
-            }
+
         }
 
         for(Object c:compounds) {
@@ -139,6 +141,5 @@ public class Graph {
          */
         // System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode));
     }
-
 
 }
