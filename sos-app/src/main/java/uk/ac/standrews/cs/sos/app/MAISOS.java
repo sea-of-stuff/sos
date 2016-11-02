@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.app;
 import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
@@ -23,6 +24,7 @@ public class MAISOS {
     private static final String REST_OPT = "j";
     private static final String WEB_APP_OPT = "w";
     private static final String WEBDAV_OPT = "wd";
+    private static final String ROOT_OPT = "root";
 
     public static void main(String[] args) throws Exception {
         CommandLineParser parser = new DefaultParser();
@@ -41,21 +43,22 @@ public class MAISOS {
         String configFilePath = line.getOptionValue(CONFIG_OPT);
         SOSLocalNode sos = ServerState.init(configFilePath);
 
-        if (line.hasOption(REST_OPT)) {
-            JettyApp.RUN(sos);
+        IGUID root = getRootGUID(line);
+
+        if (line.hasOption(WEBDAV_OPT)) {
+            // TODO - pass config info to webdav
+            Launch(root, 8082, sos.getClient());
         }
 
         if (line.hasOption(WEB_APP_OPT)) {
             // TODO get port from config
-            WebApp.RUN(sos, 9999);
+            // TODO - pass fs from webdav
+            WebApp.RUN(sos, root, 9999);
         }
 
-        if (line.hasOption(WEBDAV_OPT)) {
-            // TODO - pass config info to webdav
-            IGUID root = GUIDFactory.recreateGUID("73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e");
-            Launch(root, 8082, sos.getClient());
+        if (line.hasOption(REST_OPT)) {
+            JettyApp.RUN(sos);
         }
-
 
         HandleExit();
     }
@@ -83,6 +86,13 @@ public class MAISOS {
                 .required(false)
                 .desc("Run a web interface")
                 .build());
+
+        options.addOption(Option.builder(ROOT_OPT)
+                .required(false)
+                .hasArg()
+                .desc("Define the root GUID for this fs")
+                .build());
+
         return options;
     }
 
@@ -111,8 +121,7 @@ public class MAISOS {
     private static void Launch(IGUID root, int port, Client client) {
 
         try {
-            IFileSystem file_system =
-                    new SOSFileSystemFactory(root)
+            IFileSystem file_system = new SOSFileSystemFactory(root)
                             .makeFileSystem(client);
 
             System.out.println("Starting WEBDAV server on port: " + port);
@@ -122,6 +131,18 @@ public class MAISOS {
         } catch (IOException e) {
             System.out.println("Socket error: " + e.getMessage());
         }
+    }
+
+    private static IGUID getRootGUID(CommandLine line) throws GUIDGenerationException {
+        IGUID root;
+        if (line.hasOption(ROOT_OPT)) {
+            String rootGUID = line.getOptionValue(ROOT_OPT);
+            root = GUIDFactory.recreateGUID(rootGUID);
+        } else {
+            root = GUIDFactory.generateRandomGUID();
+        }
+
+        return root;
     }
 
 }
