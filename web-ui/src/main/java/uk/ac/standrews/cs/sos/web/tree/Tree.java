@@ -60,6 +60,11 @@ public class Tree {
         while(it.hasNext()) {
             NameAttributedPersistentObjectBinding child = it.next();
             retval += getChild(parentGUID, child);
+
+            // Recursively look for children in subdirectories
+            if (child.getObject() instanceof IDirectory) {
+                retval += getChildren(sos, (IDirectory) child.getObject(), child.getObject().getGUID());
+            }
         }
 
         return retval;
