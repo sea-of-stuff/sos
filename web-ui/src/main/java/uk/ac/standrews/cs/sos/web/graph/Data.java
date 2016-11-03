@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.Utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,7 +28,9 @@ public class Data {
         if (manifest.getManifestType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
-            return Utils.InputStreamToString(sos.getClient().getAtomContent(atom));
+            InputStream atomContent = sos.getClient().getAtomContent(atom);
+            String retval = Utils.InputStreamToString(atomContent);
+            return retval;
         }
 
         return "N/A";

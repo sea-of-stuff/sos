@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default/style.min.css" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
 </head>
 <body>
 
@@ -17,7 +17,10 @@
             </div>
 
         </div>
-        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <pre id="manifest" style="word-wrap: break-word;"></pre>
+            <pre id="data" style="word-wrap: break-word;"></pre>
+        </div>
     </div>
 </div>
 
@@ -32,7 +35,13 @@
 
         // 7 bind to events triggered on the tree
         $('#jstree').on("changed.jstree", function (e, data) {
-            console.log(data.selected);
+            $.get("/graph/manifest/" + data.selected[0] , function(data) {
+                $('#manifest').html("<h2>Manifest</h2><br>" + data);
+            })
+
+            $.get("/graph/data/" + data.selected[0] , function(data) {
+                $('#data').html("<h2>Data</h2><br>" + data);
+            })
         });
 
     });

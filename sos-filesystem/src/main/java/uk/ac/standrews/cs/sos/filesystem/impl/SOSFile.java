@@ -57,6 +57,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (ManifestNotMadeException e) {
             e.printStackTrace();
         }
+
+        this.guid = getContentGUID();
     }
 
     public SOSFile(Client sos)  {
@@ -66,6 +68,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();
         // TODO - set version
+        this.guid = getContentGUID();
     }
 
     public SOSFile(Client sos, Version version, Atom atom) {
@@ -73,6 +76,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         this.version = version;
         this.atom = atom;
+
+        this.guid = getContentGUID();
     }
 
     public SOSFile(Client sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
@@ -109,6 +114,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             e.printStackTrace();
         }
 
+        this.guid = getContentGUID();
     }
 
     @Override

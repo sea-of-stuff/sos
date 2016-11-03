@@ -53,7 +53,7 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
     @Override
     public void persist() throws PersistenceException {
         try {
-            IGUID contentGUID = getContentGUID();
+            IGUID contentGUID = getGUID();
             boolean previousVersionDiffers = checkPreviousDiffers(contentGUID);
 
             if (previousVersionDiffers) {
@@ -63,7 +63,7 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
                 sos.setHEAD(version.getVersionGUID());
                 guid = version.getVersionGUID();
             } else {
-                System.out.println("WOOOOOO");
+                System.out.println("WOOOOOO - some strange issue here");
             }
         } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
             e.printStackTrace();

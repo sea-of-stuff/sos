@@ -156,7 +156,13 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IGUID getRootId() {
-        return invariant;
+        Version version = null;
+        try {
+            version = sos.getHEAD(invariant);
+        } catch (HEADNotFoundException e) {
+            e.printStackTrace();
+        }
+        return version.getVersionGUID();
     }
 
     @Override

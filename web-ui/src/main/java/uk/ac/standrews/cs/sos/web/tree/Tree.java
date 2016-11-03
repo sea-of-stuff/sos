@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.web.tree;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
@@ -37,8 +38,8 @@ public class Tree {
     }
 
     private static String getTreeInJson(SOSLocalNode sos, IFileSystem fileSystem) throws HEADNotFoundException, ManifestNotFoundException {
-        IGUID rootGUID = fileSystem.getRootDirectory().getGUID();
 
+        IGUID rootGUID = fileSystem.getRootId();
         String children = getChildren(sos, fileSystem.getRootDirectory(), rootGUID);
 
         String data = "'data' : [{" +
@@ -52,22 +53,30 @@ public class Tree {
         return data;
     }
 
-    private static String getChildren(SOSLocalNode sos, IDirectory directory, IGUID parent) throws ManifestNotFoundException {
+    private static String getChildren(SOSLocalNode sos, IDirectory parent, IGUID parentGUID) throws ManifestNotFoundException {
         String retval = "";
 
-        Iterator<NameAttributedPersistentObjectBinding> it = directory.iterator();
+        Iterator<NameAttributedPersistentObjectBinding> it = parent.iterator();
         while(it.hasNext()) {
-            NameAttributedPersistentObjectBinding c = it.next();
-            System.out.println(c.getName());
-            IGUID guid = c.getObject().getGUID();
-
-            String icon = "icon: 'file'";
-//            if (c.getObject() instanceof IFile) {
-//
-//            }
-            retval += "{ id: '" + guid + "', parent: '" + parent + "', text: '" + c.getName() + "', " + icon + "}, ";
+            NameAttributedPersistentObjectBinding child = it.next();
+            retval += getChild(parentGUID, child);
         }
 
         return retval;
+    }
+
+    private static String getChild(IGUID parent, NameAttributedPersistentObjectBinding child) {
+        if (child == null) {
+            return "";
+        }
+
+        IGUID guid = child.getObject().getGUID();
+        String name = child.getName();
+
+        String icon = "";
+        if (child.getObject() instanceof IFile) {
+            icon = "icon: 'fa fa-file'";
+        }
+        return "{ id: '" + guid + "', parent: '" + parent + "', text: '" + name + "', " + icon + "}, ";
     }
 }

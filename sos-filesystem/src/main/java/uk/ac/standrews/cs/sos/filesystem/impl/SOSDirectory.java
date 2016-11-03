@@ -50,6 +50,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
         }
+
+        this.guid = getContentGUID();
     }
 
     public SOSDirectory(Client sos, Version version, Compound compound) {
@@ -58,6 +60,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         contents = compound.getContents();
         this.compound = compound;
         this.version = version;
+
+        this.guid = getContentGUID();
     }
 
     // Use this constructor for the root folder only
@@ -72,6 +76,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
         }
+
+        this.guid = getContentGUID();
     }
 
     public SOSDirectory(Client sos, SOSDirectory previous, String name, SOSFileSystemObject object) {
@@ -105,6 +111,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             e.printStackTrace();
         }
 
+        this.guid = getContentGUID();
     }
 
     @Override
