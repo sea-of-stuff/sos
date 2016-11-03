@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.fs.exceptions.*;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
@@ -116,12 +117,16 @@ public class SOSFileSystem implements IFileSystem {
         SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
         directory.persist();
 
-        updateParent((SOSDirectory) parent.getParent(), parent.name, directory);
+        SOSDirectory parentParent = (SOSDirectory) parent.getParent();
+        String parentName = parent.getName();
+
+        updateParent(parentParent, parentName, directory);
     }
 
     @Override
     public void deleteObject(IDirectory parent, String name) throws BindingAbsentException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name);
+
         // TODO - This will add a version to the asset with no content
         throw new NotImplementedException();
     }
@@ -168,23 +173,27 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public IAttributedStatefulObject resolveObject(URI uri) {
         // LOG.log(LEVEL.INFO, "WEBDAV - Resolving object with URI " + uri.toString());
-
         Iterator iterator = UriUtil.pathElementIterator(uri);
         IDirectory parent = getRootDirectory();
 
-        IAttributedStatefulObject object = parent;
+        IFileSystemObject object = parent;
 
         while (iterator.hasNext()) {
 
             String name = (String) iterator.next();
             object = parent.get(name);
 
-            if (object == null)
+            if (object == null) {
                 return null;  // No object with the current name.
+            }
+
+            object.setName(name);
+            object.setParent(parent);
 
             try {
-                if (iterator.hasNext())
+                if (iterator.hasNext()) {
                     parent = (IDirectory) object;
+                }
             } catch (ClassCastException e) {
                 return null;  // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
             }

@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
@@ -200,6 +201,15 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     public SOSFile getPreviousFILE() {
         return (SOSFile) previous;
+    }
+
+    public IDirectory getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(IDirectory parent) {
+        this.parent = (SOSDirectory) parent;
     }
 
 }

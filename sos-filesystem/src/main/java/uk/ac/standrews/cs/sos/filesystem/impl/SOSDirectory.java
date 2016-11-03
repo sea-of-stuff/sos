@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -9,6 +8,7 @@ import uk.ac.standrews.cs.fs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
@@ -115,7 +115,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     }
 
     @Override
-    public IAttributedStatefulObject get(String name) {
+    public IFileSystemObject get(String name) {
         Content content = getContent(name);
         IGUID guid = null;
         if (content != null) {
@@ -194,16 +194,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     }
 
     @Override
-    public IDirectory getParent() {
-        return null;
-    }
-
-    @Override
-    public void setParent(IDirectory parent) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public Iterator iterator() {
         // iterate over elements of the compound
         return new CompoundIterator();
@@ -242,7 +232,9 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             if (manifest instanceof Version) {
                 return getObject((Version) manifest);
             } else {
-                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type");
+                // FIXME - not sure why, but this case happens often which is not good IMO
+                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type. " +
+                        "GUID: " + guid + " Type: " + manifest.getManifestType());
             }
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
@@ -281,6 +273,15 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     private SOSDirectory getPreviousDIR() {
         return (SOSDirectory) previous;
+    }
+
+    public IDirectory getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(IDirectory parent) {
+        this.parent = (SOSDirectory) parent;
     }
 
     /**
