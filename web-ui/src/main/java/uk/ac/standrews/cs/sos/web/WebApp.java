@@ -6,11 +6,11 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.web.graph.Data;
-import uk.ac.standrews.cs.sos.web.graph.Graph;
-import uk.ac.standrews.cs.sos.web.graph.Manifest;
-import uk.ac.standrews.cs.sos.web.home.Home;
-import uk.ac.standrews.cs.sos.web.tree.Tree;
+import uk.ac.standrews.cs.sos.web.graph.WData;
+import uk.ac.standrews.cs.sos.web.graph.WGraph;
+import uk.ac.standrews.cs.sos.web.graph.WManifest;
+import uk.ac.standrews.cs.sos.web.home.WHome;
+import uk.ac.standrews.cs.sos.web.tree.WTree;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import javax.servlet.MultipartConfigElement;
@@ -33,13 +33,14 @@ public class WebApp {
     }
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
-        get("/", (req, res) -> Home.Render());
+        get("/", (req, res) -> WHome.Render());
 
-        get("/tree", (req, res) -> Tree.Render(sos, fileSystem));
+        get("/tree", (req, res) -> WTree.Render(sos, fileSystem));
 
-        get("/graph", (req, res) -> Graph.Render(sos));
-        get("/graph/data/:id", (req, res) -> Data.Render(req, sos));
-        get("/graph/manifest/:id", (req, res) -> Manifest.Render(req, sos));
+        get("/graph", (req, res) -> WGraph.Render(sos));
+        get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
+        get("/graph/data/:id", (req, res) -> WData.Render(req, sos));
+        get("/graph/manifest/:id", (req, res) -> WManifest.Render(req, sos));
 
         post("/data", (req, res) -> postData(req, sos));
     }
@@ -47,7 +48,7 @@ public class WebApp {
     private static void registerPostActionRoutes() {
         after((req, res) -> {
             if (res.body() == null) { // if the route didn't return anything
-                res.body(Home.Render());
+                res.body(WHome.Render());
             }
         });
     }

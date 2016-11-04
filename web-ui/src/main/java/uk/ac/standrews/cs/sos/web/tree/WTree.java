@@ -17,20 +17,17 @@ import java.util.Map;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Tree {
+public class WTree {
 
-    // TODO - pass FileSystem from webdav instead!
     public static String Render(SOSLocalNode sos, IFileSystem fileSystem){
         Map<String, Object> model = new HashMap<>();
 
         try {
             String data = getTreeInJson(sos, fileSystem);
-            System.out.println(data);
+            // System.out.println(data);
 
             model.put("tree", data);
-        } catch (HEADNotFoundException e) {
-            e.printStackTrace();
-        } catch (ManifestNotFoundException e) {
+        } catch (HEADNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -39,7 +36,7 @@ public class Tree {
 
     private static String getTreeInJson(SOSLocalNode sos, IFileSystem fileSystem) throws HEADNotFoundException, ManifestNotFoundException {
 
-        IGUID rootGUID = fileSystem.getRootId();
+        IGUID rootGUID = fileSystem.getRootId(); // Version ID for the root
         String children = getChildren(sos, fileSystem.getRootDirectory(), rootGUID);
 
         String data = "'data' : [{" +
