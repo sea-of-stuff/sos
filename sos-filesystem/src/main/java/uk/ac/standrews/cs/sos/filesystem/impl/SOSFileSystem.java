@@ -42,34 +42,16 @@ public class SOSFileSystem implements IFileSystem {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - File System Created");
     }
 
-    // TODO - create compound if large file
-    // maybe have a different call for large files
-    // via appendToFile
+    // TODO - create compound if large file: maybe have a different call for large files via appendToFile
     @Override
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
-
-        // TODO - check if file already exists.
-        // if it does, then throw exception BindingPresentException
-        // should check against sos. So it will be a check by content, not by name
-        // not sure how this will work because the stream will have to be consumed
-        // check(parent, name, ...) // look at StoreBasedFileSystem
 
         SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data);
         file.persist();
 
         updateParent((SOSDirectory) parent, name, file);
 
-        return file;
-    }
-
-    // TODO - should override
-    //  this should be in IFile system
-    // This way we could have a uniform way of dealing with large data (chunked)
-    public IFile createNewFile(IDirectory parent, String name, String content_type) throws BindingPresentException, PersistenceException {
-        // TODO - check if file already exists.
-        // NOTE - add file to parent only when the file is persisted.
-        IFile file = new SOSFile(sos);
         return file;
     }
 
@@ -93,7 +75,6 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public IDirectory createNewDirectory(IDirectory parent, String name) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new directory " + name);
-        // TODO - should check if directory already exists
 
         SOSDirectory directory = null;
         try {
@@ -108,27 +89,22 @@ public class SOSFileSystem implements IFileSystem {
         return directory;
     }
 
-    private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject object) throws PersistenceException {
-        if (parent == null) {
-            return;
-        }
-
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - update directory (invariant) " + parent.getInvariant());
-        SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
-        directory.persist();
-
-        SOSDirectory parentParent = (SOSDirectory) parent.getParent();
-        String parentName = parent.getName();
-
-        updateParent(parentParent, parentName, directory);
-    }
-
     @Override
     public void deleteObject(IDirectory parent, String name) throws BindingAbsentException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name);
 
-        // TODO - This will add a version to the asset with no content
-        throw new NotImplementedException();
+        try {
+            parent.remove(name);
+            parent.persist();
+
+            SOSDirectory parentParent = (SOSDirectory) parent.getParent();
+            String parentName = parent.getName();
+
+            updateParent(parentParent, parentName, (SOSDirectory) parent);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -147,7 +123,6 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IDirectory getRootDirectory() {
-        // LOG.log(LEVEL.INFO, "WEBDAV - Get root");
 
         try {
             Version head = sos.getHEAD(invariant);
@@ -161,18 +136,19 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IGUID getRootId() {
-        Version version = null;
         try {
-            version = sos.getHEAD(invariant);
+            Version version = sos.getHEAD(invariant);
+            return version.getVersionGUID();
         } catch (HEADNotFoundException e) {
             e.printStackTrace();
         }
-        return version.getVersionGUID();
+
+        return null;
     }
 
     @Override
     public IAttributedStatefulObject resolveObject(URI uri) {
-        // LOG.log(LEVEL.INFO, "WEBDAV - Resolving object with URI " + uri.toString());
+
         Iterator iterator = UriUtil.pathElementIterator(uri);
         IDirectory parent = getRootDirectory();
 
@@ -195,10 +171,26 @@ public class SOSFileSystem implements IFileSystem {
                     parent = (IDirectory) object;
                 }
             } catch (ClassCastException e) {
-                return null;  // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
+                // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
+                return null;
             }
         }
 
         return object;
+    }
+
+    private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject object) throws PersistenceException {
+        if (parent == null) {
+            return;
+        }
+
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - update directory (invariant) " + parent.getInvariant());
+        SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
+        directory.persist();
+
+        SOSDirectory parentParent = (SOSDirectory) parent.getParent();
+        String parentName = parent.getName();
+
+        updateParent(parentParent, parentName, directory);
     }
 }

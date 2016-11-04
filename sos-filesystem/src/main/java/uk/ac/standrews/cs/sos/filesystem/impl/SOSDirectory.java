@@ -132,8 +132,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     @Override
     public void addFile(String name, IFile file, String content_type) throws BindingPresentException {
-        // create new compound with given file
-        // result in new version
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Add file " + name + " to folder " + this.name);
 
         addObject(name, file, null);
@@ -141,52 +139,25 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     @Override
     public void addDirectory(String name, IDirectory directory) throws BindingPresentException {
-        // same as above - from the compound perspective it does not matter whether it is a compound or an atom that we add
-        // result in new version
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Add directory " + name + " to folder " + this.name);
 
         addObject(name, directory, null);
     }
 
-    private void addObject(String name, IAttributedStatefulObject object, IAttributes atts) throws BindingPresentException {
-        if (contains(name)) {
-            throw new BindingPresentException("Object already exists");
-        } else {
-            contents.add(new Content(name, object.getGUID()));
-        }
-    }
-
-    private Content getContent(String name) {
-        for(Content content:contents) {
-            if (content.getLabel().equals(name)) {
-                return content;
-            }
-        }
-        return null;
-    }
-
-    private void addOrUpdate(String name, Content newContent) {
-        for(Content content:contents) {
-            if (content.getLabel().equals(name)) {
-                contents.remove(content);
-                contents.add(newContent);
-
-                return;
-            }
-        }
-
-        contents.add(newContent);
-    }
-
     @Override
     public void remove(String name) throws BindingAbsentException {
-        // remove an element from the compound
-        // result in new version
-        // iterate over collection and remove element with given name
-        // then persist
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Remove object " + name + " from folder " + this.name);
 
-        contents.remove(getContent(name));
+        Content contentToRemove = getContent(name);
+        contents.remove(contentToRemove);
+
+        try {
+            compound = sos.addCompound(CompoundType.COLLECTION, contents);
+        } catch (ManifestNotMadeException | ManifestPersistException e) {
+            e.printStackTrace();
+        }
+
+        this.guid = getContentGUID();
     }
 
     protected IGUID getContentGUID() {
@@ -209,9 +180,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     }
 
     @Override
-    public void setAttributes(IAttributes attributes) {
-
-    }
+    public void setAttributes(IAttributes attributes) {}
 
     @Override
     public long getCreationTime() throws AccessFailureException {
@@ -271,10 +240,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         }
     }
 
-    private SOSDirectory getPreviousDIR() {
-        return (SOSDirectory) previous;
-    }
-
     public IDirectory getParent() {
         return parent;
     }
@@ -283,6 +248,41 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public void setParent(IDirectory parent) {
         this.parent = (SOSDirectory) parent;
     }
+
+    private SOSDirectory getPreviousDIR() {
+        return (SOSDirectory) previous;
+    }
+
+    private void addObject(String name, IAttributedStatefulObject object, IAttributes atts) throws BindingPresentException {
+        if (contains(name)) {
+            throw new BindingPresentException("Object already exists");
+        } else {
+            contents.add(new Content(name, object.getGUID()));
+        }
+    }
+
+    private Content getContent(String name) {
+        for(Content content:contents) {
+            if (content.getLabel().equals(name)) {
+                return content;
+            }
+        }
+        return null;
+    }
+
+    private void addOrUpdate(String name, Content newContent) {
+        for(Content content:contents) {
+            if (content.getLabel().equals(name)) {
+                contents.remove(content);
+                contents.add(newContent);
+
+                return;
+            }
+        }
+
+        contents.add(newContent);
+    }
+
 
     /**
      * Iterator for the compound. The iterator returns Contents until hasNext returns false.

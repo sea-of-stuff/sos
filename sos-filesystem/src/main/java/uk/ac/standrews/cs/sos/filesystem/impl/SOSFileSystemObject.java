@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
@@ -13,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +25,7 @@ public class SOSFileSystemObject extends FileSystemObject implements IVersionabl
 
     protected Version version;
     protected SOSDirectory parent;
-    protected SOSFileSystemObject previous;
+    protected SOSFileSystemObject previous; // TODO - make collection (e.g. merging)
 
     public SOSFileSystemObject(Client sos) {
         super(null);
@@ -57,7 +55,7 @@ public class SOSFileSystemObject extends FileSystemObject implements IVersionabl
 
             if (previousVersionDiffers) {
                 VersionBuilder builder = getVersionBuilder(contentGUID);
-                version = sos.addVersion(builder); // TODO - not sure if this is needed, since we create it in constructor too
+                version = sos.addVersion(builder);
 
                 sos.setHEAD(version.getVersionGUID());
                 guid = version.getVersionGUID();
@@ -84,7 +82,7 @@ public class SOSFileSystemObject extends FileSystemObject implements IVersionabl
         return version;
     }
 
-    // MUST BE IMPLEMENTED
+    // MUST BE IMPLEMENTED by subclasses
     protected IGUID getContentGUID() { return null; }
 
     protected boolean checkPreviousDiffers(IGUID contentGUID) {
@@ -95,13 +93,16 @@ public class SOSFileSystemObject extends FileSystemObject implements IVersionabl
         return true;
     }
 
+    // this is a bad way of dealing with previous references.
+    // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
     protected VersionBuilder getVersionBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
-        // FIXME - this is a bad way of dealing with previous references.
-        // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
+
         Collection<IGUID> prevs = new ArrayList<>();
         if (previous != null) {
             IGUID versionGUID = previous.getVersion().getVersionGUID();
             prevs.add(versionGUID);
+        } else if (version != null && version.getPreviousVersions() != null) {
+            prevs.addAll(version.getPreviousVersions());
         }
 
         VersionBuilder builder = new VersionBuilder(contentGUID);
@@ -112,9 +113,6 @@ public class SOSFileSystemObject extends FileSystemObject implements IVersionabl
 
         if (prevs.size() > 0) {
             builder.setPrevious(prevs);
-
-            SOS_LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
-            SOS_LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Set prev for asset with invariant " + previous.getInvariant());
         }
 
         // TODO - add metadata

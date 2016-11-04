@@ -69,6 +69,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();
         // TODO - set version
+
         this.guid = getContentGUID();
     }
 
