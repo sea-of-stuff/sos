@@ -218,11 +218,11 @@ public class LocalManifestsManager implements ManifestsManager {
     private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws ManifestManagerException, ManifestNotFoundException {
         File manifestFile = getManifestFile(manifestFileGUID);
         File backupFile = backupManifest(manifest);
-        FileHelper.deleteFile(manifestFile);
+        FileHelper.DeleteFile(manifestFile);
 
         saveToFile(manifest);
 
-        FileHelper.deleteFile(backupFile);
+        FileHelper.DeleteFile(backupFile);
     }
 
     private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestManagerException {
@@ -234,11 +234,11 @@ public class LocalManifestsManager implements ManifestsManager {
 
             if (!existingManifest.equals(manifest)) {
                 manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
-                FileHelper.deleteFile(manifestFile);
+                FileHelper.DeleteFile(manifestFile);
                 saveToFile(manifest);
             }
 
-            FileHelper.deleteFile(backupFile);
+            FileHelper.DeleteFile(backupFile);
         } catch (ManifestNotFoundException e) {
             throw new ManifestManagerException("Manifests " + existingManifest.getContentGUID().toString()
                     + " and " + manifest.getContentGUID().toString() + "could not be merged", e);

@@ -51,7 +51,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             e.printStackTrace();
         }
 
-        this.guid = getContentGUID();
     }
 
     public SOSDirectory(Client sos, Version version, Compound compound) {
@@ -61,7 +60,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         this.compound = compound;
         this.version = version;
 
-        this.guid = getContentGUID();
+        this.guid = version.guid();
     }
 
     // Use this constructor for the root folder only
@@ -69,6 +68,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         super(sos);
         this.version = version;
         this.name = null;
+        this.guid = version.guid();
 
         try {
             compound = (Compound) sos.getManifest(version.getContentGUID());
@@ -77,7 +77,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             e.printStackTrace();
         }
 
-        this.guid = getContentGUID();
     }
 
     public SOSDirectory(Client sos, SOSDirectory previous, String name, SOSFileSystemObject object) {
@@ -101,6 +100,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
                 version = sos.addVersion(versionBuilder);
 
+                this.guid = version.guid();
                 this.previous = previous;
             } else {
                 System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
@@ -111,7 +111,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             e.printStackTrace();
         }
 
-        this.guid = getContentGUID();
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSFileSystemObject extends FileSystemObject implements IVersionableObject, SOSVersionableObject {
+class SOSFileSystemObject extends FileSystemObject implements IVersionableObject, SOSVersionableObject {
 
     protected Client sos;
 
@@ -50,7 +50,7 @@ public class SOSFileSystemObject extends FileSystemObject implements IVersionabl
     @Override
     public void persist() throws PersistenceException {
         try {
-            IGUID contentGUID = getGUID();
+            IGUID contentGUID = getContentGUID();
             boolean previousVersionDiffers = checkPreviousDiffers(contentGUID);
 
             if (previousVersionDiffers) {

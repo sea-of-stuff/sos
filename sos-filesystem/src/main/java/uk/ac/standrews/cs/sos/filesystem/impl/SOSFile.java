@@ -52,6 +52,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             atom = sos.addAtom(builder);
             version = sos.addVersion(new VersionBuilder(atom.getContentGUID()));
 
+            this.guid = version.guid();
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
@@ -59,7 +60,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             e.printStackTrace();
         }
 
-        this.guid = getContentGUID();
+
     }
 
     public SOSFile(Client sos)  {
@@ -70,7 +71,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.atoms = new ArrayList<>();
         // TODO - set version
 
-        this.guid = getContentGUID();
+        // this.guid = version.guid();
     }
 
     public SOSFile(Client sos, Version version, Atom atom) {
@@ -79,7 +80,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.version = version;
         this.atom = atom;
 
-        this.guid = getContentGUID();
+        this.guid = version.guid();
     }
 
     public SOSFile(Client sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
@@ -103,6 +104,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
                 version = sos.addVersion(versionBuilder);
 
+                this.guid = version.guid();
                 this.previous = previous;
             } else {
                 System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
@@ -116,7 +118,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             e.printStackTrace();
         }
 
-        this.guid = getContentGUID();
     }
 
     @Override

@@ -14,7 +14,6 @@ public abstract class Request {
 
     protected static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     protected static final MediaType MULTIPART = MediaType.parse("multipart/form-data data; charset=utf-8");
-    protected static final MediaType APP_FORM = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
 
     protected okhttp3.Request request;
     protected Method method;

@@ -25,6 +25,8 @@ import java.util.Collection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ *
+ * TODO - replication
  */
 public class SOSStorage implements Storage {
 
@@ -35,7 +37,6 @@ public class SOSStorage implements Storage {
     public SOSStorage(Node node, InternalStorage storage, ManifestsManager manifestsManager) {
 
         this.manifestsManager = manifestsManager;
-
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
 

@@ -48,7 +48,7 @@ public abstract class StreamStore extends CommonLocalStore {
                 File cachedLocation = getAtomLocation(guid);
 
                 // FIXME - use internal storage!!!!!
-                FileHelper.renameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
+                FileHelper.RenameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
 
                 Location location = getLocation(guid);
                 locationBundle = getBundle(location);

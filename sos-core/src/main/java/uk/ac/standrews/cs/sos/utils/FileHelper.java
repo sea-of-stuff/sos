@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.storage.interfaces.File;
  */
 public class FileHelper {
 
-    public static void deleteFile(File file) throws ManifestManagerException {
+    public static void DeleteFile(File file) throws ManifestManagerException {
         Directory parent = file.getParent();
         try {
             parent.remove(file.getName());
@@ -19,7 +19,7 @@ public class FileHelper {
         }
     }
 
-    public static void renameFile(String oldPathname, String newPathname) {
+    public static void RenameFile(String oldPathname, String newPathname) {
         java.io.File oldfile =new java.io.File(oldPathname);
         java.io.File newfile =new java.io.File(newPathname);
         oldfile.renameTo(newfile);

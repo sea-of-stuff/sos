@@ -37,7 +37,7 @@ public class InternalStorage {
 
     /**
      * Return the directory used to store data
-     * @return
+     * @return data directory
      * @throws DataStorageException
      */
     public Directory getDataDirectory() throws DataStorageException {
@@ -50,7 +50,7 @@ public class InternalStorage {
 
     /**
      * Return the directory used to store the manifests
-     * @return
+     * @return manifest directory
      * @throws DataStorageException
      */
     public Directory getManifestDirectory() throws DataStorageException {
@@ -63,7 +63,7 @@ public class InternalStorage {
 
     /**
      * Return the directory used to store the HEAD versions for all assets
-     * @return
+     * @return heads directory
      * @throws DataStorageException
      */
     public Directory getHeadsDirectory() throws DataStorageException {
@@ -76,7 +76,7 @@ public class InternalStorage {
 
     /**
      * Return the directory used to store the metadata relevant to the data in this node
-     * @return
+     * @return metadata directory
      * @throws DataStorageException
      */
     public Directory getMetadataDirectory() throws DataStorageException {
@@ -89,7 +89,7 @@ public class InternalStorage {
 
     /**
      * Return the directory used to store the caches
-     * @return
+     * @return caches directory
      * @throws DataStorageException
      */
     public Directory getCachesDirectory() throws DataStorageException {
@@ -104,7 +104,7 @@ public class InternalStorage {
      * Create an arbitrary file in a given directory
      * @param parent
      * @param filename
-     * @return
+     * @return file being created
      * @throws DataStorageException
      */
     public File createFile(Directory parent, String filename) throws DataStorageException {
@@ -120,7 +120,7 @@ public class InternalStorage {
      * @param parent
      * @param filename
      * @param data
-     * @return
+     * @return file being created
      * @throws DataStorageException
      */
     public File createFile(Directory parent, String filename, Data data) throws DataStorageException {
