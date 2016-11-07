@@ -2,33 +2,21 @@ package uk.ac.standrews.cs.sos.filesystem;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemFactory;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
-import java.io.File;
 import java.util.Collections;
 
 /**
@@ -36,13 +24,11 @@ import java.util.Collections;
  */
 public class SOSFileSystemFactory implements IFileSystemFactory {
 
-    private String configurationPath;
+    private Client client;
     private IGUID rootGUID;
 
-    private InternalStorage internalStorage;
-
-    public SOSFileSystemFactory(String configurationPath, IGUID rootGUID) {
-        this.configurationPath = configurationPath;
+    public SOSFileSystemFactory(Client client, IGUID rootGUID) {
+        this.client = client;
         this.rootGUID = rootGUID;
     }
 
@@ -52,8 +38,11 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
-        Client client = makeSOSClient();
-        return makeFileSystem(client);
+        if (client != null && rootGUID != null) {
+            return makeFileSystem(client);
+        }
+
+        throw new FileSystemCreationException();
     }
 
     public IFileSystem makeFileSystem(Client client) throws FileSystemCreationException {
@@ -66,45 +55,6 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
             return null;
         }
-    }
-
-    private Client makeSOSClient() {
-        Client client = null;
-        try {
-            SOSConfiguration configuration = createConfiguration();
-            createNodeDependencies(configuration);
-
-            SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
-            LocalNode localSOSNode = builder
-                    .configuration(configuration)
-                    .internalStorage(internalStorage)
-                    .build();
-
-            client = localSOSNode.getClient();
-        } catch (GUIDGenerationException | SOSException e) {
-            e.printStackTrace();
-        }
-
-        return client;
-    }
-
-    private SOSConfiguration createConfiguration() throws SOSConfigurationException {
-        File file = new File(configurationPath);
-        return new SOSConfiguration(file);
-    }
-
-    private void createNodeDependencies(SOSConfiguration configuration) throws SOSException {
-        try {
-
-            StorageType storageType = configuration.getStorageType();
-            String root = configuration.getStorageLocation();
-
-            internalStorage = new InternalStorage(StorageFactory
-                            .createStorage(storageType, root, false));
-        } catch (StorageException | DataStorageException e) {
-            throw new SOSException(e);
-        }
-
     }
 
     private Version createRoot(Client sos) {
