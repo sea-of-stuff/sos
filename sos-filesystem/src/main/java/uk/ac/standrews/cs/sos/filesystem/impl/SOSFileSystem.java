@@ -21,6 +21,10 @@ import java.net.URI;
 import java.util.Iterator;
 
 /**
+ *
+ * TODO list:
+ * - create compound if large file: maybe have a different call for large files via appendToFile
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSFileSystem implements IFileSystem {
@@ -42,7 +46,6 @@ public class SOSFileSystem implements IFileSystem {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - File System Created");
     }
 
-    // TODO - create compound if large file: maybe have a different call for large files via appendToFile
     @Override
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
@@ -69,7 +72,8 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public synchronized void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Append to file " + name);
-        // NOTE call a series of append calls on SOSFile and end it with a persist - behaviour is different from the one in abstract file system
+
+        throw new NotImplementedException();
     }
 
     @Override
@@ -79,10 +83,10 @@ public class SOSFileSystem implements IFileSystem {
         SOSDirectory directory = null;
         try {
             directory = new SOSDirectory(sos, (SOSDirectory) parent, name);
+            directory.persist();
         } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }
-        directory.persist();
 
         updateParent((SOSDirectory) parent, name, directory);
 
@@ -179,6 +183,15 @@ public class SOSFileSystem implements IFileSystem {
         return object;
     }
 
+    /**
+     * Traverse the fs tree up recursively and update each directory that is found on the way
+     * @param parent to be updated
+     * @param name name of the object that changed
+     * @param object object changed
+     * @throws PersistenceException
+     *
+     * TODO - test with more than 2-3 recursion, test with deletion
+     */
     private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject object) throws PersistenceException {
         if (parent == null) {
             return;

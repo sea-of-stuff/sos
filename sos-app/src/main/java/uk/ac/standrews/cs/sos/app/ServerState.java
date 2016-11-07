@@ -20,11 +20,11 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ServerState {
+class ServerState {
 
-    public static SOSLocalNode sos;
+    private static SOSLocalNode sos;
 
-    public static SOSLocalNode init(String propertyFilePath) {
+    static SOSLocalNode init(String propertyFilePath) {
         try {
             return ServerState.startSOS(propertyFilePath);
         } catch (SOSException | GUIDGenerationException e) {
@@ -34,7 +34,7 @@ public class ServerState {
         return null;
     }
 
-    public static void kill() {
+    static void kill() {
         sos.kill();
     }
 

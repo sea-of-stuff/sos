@@ -169,7 +169,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return new CompoundIterator();
     }
 
-    public Collection<Content> getContents() {
+    private Collection<Content> getContents() {
         return contents;
     }
 
@@ -191,7 +191,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return 0;
     }
 
-    public SOSFileSystemObject getObject(IGUID guid) {
+    private SOSFileSystemObject getObject(IGUID guid) {
         if (guid == null)
             return null;
 
@@ -200,18 +200,17 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             if (manifest instanceof Version) {
                 return getObject((Version) manifest);
             } else {
-                // FIXME - not sure why, but this case happens often which is not good IMO
                 SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type. " +
                         "GUID: " + guid + " Type: " + manifest.getManifestType());
             }
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
-            return null;
         }
+
         return null;
     }
 
-    public SOSFileSystemObject getObject(Version version) {
+    private SOSFileSystemObject getObject(Version version) {
 
         try {
             IGUID contentGUID = version.getContentGUID();
@@ -224,7 +223,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             }
         } catch (GUIDGenerationException | ManifestNotFoundException e) {
             e.printStackTrace();
-            return null;
         }
 
         return null;
@@ -282,7 +280,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         contents.add(newContent);
     }
 
-
     /**
      * Iterator for the compound. The iterator returns Contents until hasNext returns false.
      */
@@ -290,7 +287,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         Iterator<Content> contentIterator;
 
-        public CompoundIterator() {
+        CompoundIterator() {
             contentIterator = contents.iterator();
         }
 
@@ -307,10 +304,13 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
             SOSFileSystemObject obj = getObject(content.getGUID());
             String name = content.getLabel();
-            if (obj == null)
+            if (obj == null) {
                 return null;
-            else
+            } else {
                 return new NameAttributedPersistentObjectBinding(name, obj);
+            }
         }
+
     }
+
 }

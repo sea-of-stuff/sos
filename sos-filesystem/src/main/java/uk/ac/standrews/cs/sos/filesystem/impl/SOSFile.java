@@ -15,10 +15,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -149,8 +147,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     @Override
     public void update(IData data) {
-        // TODO - this should result in a new version pointing to a previous one
-
         throw new NotImplementedException();
     }
 
@@ -176,16 +172,11 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         if (! isCompoundData) {
             retval = atom.getContentGUID();
         } else {
-            // TODO
             //Compound compound = addAtomsInCompound(atoms);
             //builder = new VersionBuilder(compound.getContentGUID());
         }
 
         return retval;
-    }
-
-    private Compound addAtomsInCompound(Collection<Content> atoms) throws ManifestPersistException, ManifestNotMadeException {
-        return sos.addCompound(CompoundType.DATA, atoms);
     }
 
     @Override
