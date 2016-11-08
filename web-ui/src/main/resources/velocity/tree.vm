@@ -11,7 +11,7 @@
     <style type="text/css">
         #sos-graph {
             /*width: 1200px;*/
-            height: 600px;
+            height: 400px;
             border: 1px solid lightgray;
         }
     </style>
@@ -25,15 +25,24 @@
         <div class="col-sm-8">
             <div id="jstree">
             </div>
-
         </div>
         <div class="col-sm-4">
-            <pre id="manifest" style="word-wrap: break-word;"></pre>
-            <pre id="data" style="word-wrap: break-word;"></pre>
+            <div id="sos-graph"></div>
         </div>
     </div>
     <div class="row">
-        <div id="sos-graph"></div>
+        <div class="col-sm-4">
+            <h2>Manifest</h2>
+            <pre id="manifest" style="word-wrap: break-word;"></pre>
+        </div>
+        <div class="col-sm-4">
+            <h2>Data</h2>
+            <pre id="data" style="word-wrap: break-word;"></pre>
+        </div>
+        <div class="col-sm-4">
+            <h2>Metadata</h2>
+            <pre id="metadata" style="word-wrap: break-word;"></pre>
+        </div>
     </div>
 </div>
 
@@ -48,12 +57,14 @@
 
         $('#jstree').on("changed.jstree", function (e, data) {
             $.get("/graph/manifest/" + data.selected[0] , function(data) {
-                $('#manifest').html("<h2>Manifest</h2><br>" + data);
+                $('#manifest').html(data);
             })
 
             $.get("/graph/data/" + data.selected[0] , function(data) {
-                $('#data').html("<h2>Data</h2><br>" + data);
+                $('#data').html(data);
             })
+
+            // TODO - get metadata
 
             $.get("/graph/" + data.selected[0] , function(data) {
                 console.log(data);

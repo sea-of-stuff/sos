@@ -25,6 +25,17 @@ public class WData {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
         Manifest manifest = sos.getClient().getManifest(guid);
 
+        String data = getData(sos, manifest);
+        return data;
+    }
+
+    private static String getData(SOSLocalNode sos, Manifest manifest) throws IOException, ManifestNotFoundException {
+
+        if (manifest.getManifestType() == ManifestType.VERSION) {
+            Manifest contentManifest = sos.getClient().getManifest(manifest.getContentGUID());
+            return getData(sos, contentManifest);
+        }
+
         if (manifest.getManifestType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
