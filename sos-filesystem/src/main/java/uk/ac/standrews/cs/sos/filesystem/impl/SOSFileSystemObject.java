@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
@@ -26,6 +27,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     protected Version version;
     protected SOSDirectory parent;
     protected SOSFileSystemObject previous; // TODO - make collection (e.g. merging)
+    protected SOSMetadata metadata;
 
     public SOSFileSystemObject(Client sos) {
         super(null);
@@ -87,7 +89,8 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected boolean checkPreviousDiffers(IGUID contentGUID) {
         if (previous != null) {
-            return !previous.getVersion().getContentGUID().equals(contentGUID);
+            IGUID previousContentGUID = previous.getVersion().getContentGUID();
+            return !previousContentGUID.equals(contentGUID);
         }
 
         return true;
@@ -115,7 +118,9 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
             builder.setPrevious(prevs);
         }
 
-        // TODO - add metadata
+        if (metadata != null) {
+            builder.setMetadata(metadata);
+        }
 
         return builder;
     }

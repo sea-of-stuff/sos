@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.sos.model.metadata.tika;
  */
 public class TikaIgnoreMetadata {
 
-    protected static String[] IGNORE_METADATA = new String[]
+    public static String[] IGNORE_METADATA = new String[]
             {
                 "Content-Encoding",
                 "File Name"

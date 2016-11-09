@@ -66,10 +66,6 @@
                 $('#data').html(data);
             })
 
-            // TODO - call only on interaction with graph
-            // TODO - get metadata
-
-            // TODO - show relevant graph
             $.get("/graph/" + data.selected[0] , function(data) {
                 data = JSON.parse(data);
                 var nodes = new vis.DataSet(data['nodes']);
@@ -89,17 +85,15 @@
 
                 var network = new vis.Network(container, graphData, options);
 
-                // FIXME - code below won't work, need to adapt to this page
                 network.on("click", function (params) {
                     id = params['nodes'][0];
                     $.get("/graph/manifest/" + id , function(data) {
                         $('#manifest').html(data);
                     })
 
-                    // FIXME - different behaviour, data for given manifest!
-//                    $.get("/graph/data/" + id , function(data) {
-//                        $('#data').html(data);
-//                    })
+                    $.get("/metadata/" + id , function(data) {
+                        $('#metadata').html(data);
+                    })
                 });
             })
 

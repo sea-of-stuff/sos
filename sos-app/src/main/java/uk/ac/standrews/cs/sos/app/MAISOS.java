@@ -85,7 +85,8 @@ public class MAISOS {
         options.addOption(Option.builder(CONFIG_OPT)
                 .required()
                 .hasArg()
-                .desc("Config file used for this SOS instance")
+                .desc("Config file used for this SOS instance. " +
+                      "You can use the sos-configuration utility to start making your configuration.")
                 .build());
 
         options.addOption(Option.builder(REST_OPT)
@@ -136,7 +137,7 @@ public class MAISOS {
             System.out.println("Starting WEBDAV server on port: " + port);
             WebDAVLauncher.StartWebDAVServer(fileSystem, port);
         } catch (IOException e) {
-            System.out.println("Socket error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 

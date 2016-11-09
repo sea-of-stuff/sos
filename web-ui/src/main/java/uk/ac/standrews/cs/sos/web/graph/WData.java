@@ -26,6 +26,10 @@ public class WData {
         Manifest manifest = sos.getClient().getManifest(guid);
 
         String data = getData(sos, manifest);
+
+        if (data.isEmpty()) {
+            data = " ";
+        }
         return data;
     }
 

@@ -10,7 +10,9 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
@@ -54,13 +56,87 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode graph = mapper.createObjectNode();
 
-        ArrayNode nodes = VersionNodeGraph(version);
-        ArrayNode edges = mapper.createArrayNode();
+        ArrayNode nodes = VersionNodeGraph(sos.getClient(), version);
+        ArrayNode edges = VersionEdgesGraph(sos.getClient(), version);
 
         graph.put("nodes", nodes);
         graph.put("edges", edges);
 
         return graph.toString();
+    }
+
+    // Graph of version and related
+    private static ArrayNode VersionNodeGraph(Client client, Version version) throws ManifestNotFoundException {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
+
+        ObjectNode versionNode = VersionNode(version);
+        arrayNode.add(versionNode);
+
+        Manifest contentManifest = client.getManifest(version.getContentGUID());
+        if (contentManifest.getManifestType() == ManifestType.ATOM) {
+            Atom atom = (Atom) contentManifest;
+            ObjectNode atomNode = AtomNode(atom);
+            arrayNode.add(atomNode);
+        } else if (contentManifest.getManifestType() == ManifestType.COMPOUND) {
+            Compound compound = (Compound) contentManifest;
+            ObjectNode compoundNode = CompoundNode(compound);
+            arrayNode.add(compoundNode);
+        }
+
+        return arrayNode;
+    }
+
+    private static ArrayNode VersionEdgesGraph(Client client, Version version) {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("from", version.getVersionGUID().toString());
+        objectNode.put("to", version.getContentGUID().toString());
+        objectNode.put("arrows", "to");
+        objectNode.put("physics", "false");
+
+        arrayNode.add(objectNode);
+
+        return arrayNode;
+    }
+
+    private static ObjectNode VersionNode(Version version) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", version.getVersionGUID().toString());
+        objectNode.put("label", "Type: " + version.getManifestType() + "\nGUID: " + version.guid().toString().substring(0, 5));
+        objectNode.put("group", version.getInvariantGUID().toString());
+        objectNode.put("shape", "box");
+
+        return objectNode;
+    }
+
+    private static ObjectNode CompoundNode(Compound compound) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", compound.getContentGUID().toString());
+        objectNode.put("label", "Type: " + compound.getManifestType() + "\nGUID: " + compound.guid().toString().substring(0, 5));
+        objectNode.put("group", compound.getManifestType().toString());
+        objectNode.put("shape", "box");
+        objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
+
+        return objectNode;
+    }
+
+    private static ObjectNode AtomNode(Atom atom) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", atom.getContentGUID().toString());
+        objectNode.put("label", "Type: " + atom.getManifestType() + "\nGUID: " + atom.guid().toString().substring(0, 5));
+        objectNode.put("group", atom.getManifestType().toString());
+        objectNode.put("shape", "box");
+
+        return objectNode;
     }
 
     private static String nodes(Object[] versions, Object[] compounds, Object[] atoms) {
@@ -85,52 +161,6 @@ public class WGraph {
         return arrayNode.toString();
     }
 
-    private static ObjectNode VersionNode(Version version) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", version.getVersionGUID().toString());
-        objectNode.put("label", version.getVersionGUID().toString().substring(0, 5));
-        objectNode.put("group", version.getInvariantGUID().toString());
-        objectNode.put("shape", "circle");
-
-        return objectNode;
-    }
-
-    private static ObjectNode CompoundNode(Compound compound) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", compound.getContentGUID().toString());
-        objectNode.put("label", compound.getContentGUID().toString().substring(0, 5));
-        objectNode.put("group", compound.getManifestType().toString());
-        objectNode.put("shape", "box");
-
-        return objectNode;
-    }
-
-    private static ObjectNode AtomNode(Atom atom) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", atom.getContentGUID().toString());
-        objectNode.put("label", atom.getContentGUID().toString().substring(0, 5));
-        objectNode.put("group", atom.getManifestType().toString());
-        objectNode.put("shape", "triangle");
-
-        return objectNode;
-    }
-
-    // Graph of version and related
-    private static ArrayNode VersionNodeGraph(Version version) {
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode arrayNode = mapper.createArrayNode();
-
-        ObjectNode versionNode = VersionNode(version);
-        arrayNode.add(versionNode);
-
-        return arrayNode;
-    }
 
     private static String edges(Object[] versions, Object[] compounds) {
         ObjectMapper mapper = new ObjectMapper();

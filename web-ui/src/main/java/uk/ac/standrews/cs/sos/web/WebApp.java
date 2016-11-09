@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.graph.WData;
 import uk.ac.standrews.cs.sos.web.graph.WGraph;
 import uk.ac.standrews.cs.sos.web.graph.WManifest;
+import uk.ac.standrews.cs.sos.web.graph.WMetadata;
 import uk.ac.standrews.cs.sos.web.home.WHome;
 import uk.ac.standrews.cs.sos.web.tree.WTree;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -41,6 +42,7 @@ public class WebApp {
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
         get("/graph/data/:id", (req, res) -> WData.Render(req, sos));
         get("/graph/manifest/:id", (req, res) -> WManifest.Render(req, sos));
+        get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 
         post("/data", (req, res) -> postData(req, sos));
     }

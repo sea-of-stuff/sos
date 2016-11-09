@@ -12,6 +12,8 @@ public interface SOSMetadata {
 
     String[] getAllPropertyNames();
 
+    String[] getAllFilteredPropertyNames();
+
     IGUID guid() throws GUIDGenerationException;
 
     String tabularFormat();

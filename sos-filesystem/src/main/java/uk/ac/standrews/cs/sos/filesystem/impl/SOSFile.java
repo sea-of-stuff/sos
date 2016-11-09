@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
@@ -48,7 +49,11 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
 
             atom = sos.addAtom(builder);
-            version = sos.addVersion(new VersionBuilder(atom.getContentGUID()));
+            metadata = sos.addMetadata(atom);
+
+            VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
+                    .setMetadata(metadata);
+            version = sos.addVersion(versionBuilder);
 
             this.guid = version.guid();
         } catch (StorageException | IOException |
@@ -56,8 +61,9 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             throw new PersistenceException("SOS atom could not be created");
         } catch (ManifestNotMadeException e) {
             e.printStackTrace();
+        } catch (SOSMetadataException e) {
+            e.printStackTrace();
         }
-
 
     }
 
@@ -90,6 +96,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             InputStream stream = data.getInputStream();
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
             atom = sos.addAtom(builder);
+            metadata = sos.addMetadata(atom);
 
             boolean previousVersionDiffers = checkPreviousDiffers(atom.getContentGUID());
             if (previousVersionDiffers) {
@@ -98,7 +105,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
                 previousVersion.add(previous.getVersion().getVersionGUID());
                 VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
                         .setInvariant(previous.getInvariant())
-                        .setPrevious(previousVersion);
+                        .setPrevious(previousVersion)
+                        .setMetadata(metadata);
 
                 version = sos.addVersion(versionBuilder);
 
@@ -113,6 +121,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         } catch (ManifestNotMadeException e) {
+            e.printStackTrace();
+        } catch (SOSMetadataException e) {
             e.printStackTrace();
         }
 

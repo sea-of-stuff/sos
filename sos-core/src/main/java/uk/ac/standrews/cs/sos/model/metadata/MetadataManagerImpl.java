@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
+import uk.ac.standrews.cs.sos.model.metadata.tika.TikaIgnoreMetadata;
 import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.data.StringData;
@@ -66,17 +67,12 @@ public class MetadataManagerImpl implements MetadataManager {
         // from another node
         // fill the cache and return
 
-        for(SOSMetadata metadata:naiveCache) {
-            try {
-                if (metadata.guid().equals(guid)) {
-                    return metadata;
-                }
-            } catch (GUIDGenerationException e) {
-                e.printStackTrace();
-            }
+        SOSMetadata metadata = findMetadataFromCache(guid);
+        if (metadata == null) {
+            metadata = findMetadataLocal(guid);
         }
 
-        return null;
+        return metadata;
     }
 
     @Override
@@ -114,5 +110,38 @@ public class MetadataManagerImpl implements MetadataManager {
     private void replicate(SOSMetadata metadata, Node node) {
         // TODO - use network layer for this
     }
+
+    private SOSMetadata findMetadataFromCache(IGUID guid) {
+        // TODO - make it faster using hashtable
+        for(SOSMetadata metadata:naiveCache) {
+            try {
+                if (metadata.guid().equals(guid)) {
+                    return metadata;
+                }
+            } catch (GUIDGenerationException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    private SOSMetadata findMetadataLocal(IGUID guid) {
+
+        try {
+            Directory directory = internalStorage.getMetadataDirectory();
+            File metadataFile = internalStorage.createFile(directory, guid.toString());
+
+            SOSMetadata metadata = new BasicMetadata(metadataFile, TikaIgnoreMetadata.IGNORE_METADATA);
+
+            return metadata;
+        } catch (DataStorageException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
 
 }
