@@ -26,6 +26,7 @@ public class WTree {
             String data = getTreeInJson(sos, fileSystem);
             // System.out.println(data);
 
+            model.put("node_id", sos.getNodeGUID().toString());
             model.put("tree", data);
         } catch (HEADNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();

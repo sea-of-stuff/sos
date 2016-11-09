@@ -20,6 +20,7 @@
 <body>
 
 <div class="container-fluid">
+    <h3>Node GUID: ${node_id}</h3>
     <br>
     <div class="row">
         <div class="col-sm-8">
@@ -53,23 +54,24 @@
 
 <script>
     $(function () {
-        $('#jstree').jstree({ 'core' : { ${tree} } });
+        $('#jstree').jstree({
+            'plugins': ["wholerow", "unique"],
+            'core' : { ${tree} } });
 
         $('#jstree').on("changed.jstree", function (e, data) {
-            $.get("/graph/manifest/" + data.selected[0] , function(data) {
-                $('#manifest').html(data);
-            })
+            $('#manifest').html('');
+            $('#metadata').html('');
 
             $.get("/graph/data/" + data.selected[0] , function(data) {
                 $('#data').html(data);
             })
 
+            // TODO - call only on interaction with graph
             // TODO - get metadata
 
+            // TODO - show relevant graph
             $.get("/graph/" + data.selected[0] , function(data) {
-                console.log(data);
                 data = JSON.parse(data);
-                console.log(data);
                 var nodes = new vis.DataSet(data['nodes']);
                 var edges = new vis.DataSet(data['edges']);
 
@@ -86,8 +88,21 @@
                 };
 
                 var network = new vis.Network(container, graphData, options);
+
+                // FIXME - code below won't work, need to adapt to this page
+                network.on("click", function (params) {
+                    id = params['nodes'][0];
+                    $.get("/graph/manifest/" + id , function(data) {
+                        $('#manifest').html(data);
+                    })
+
+                    // FIXME - different behaviour, data for given manifest!
+//                    $.get("/graph/data/" + id , function(data) {
+//                        $('#data').html(data);
+//                    })
+                });
             })
-            // TODO - show relevant graph
+
         });
 
     });
