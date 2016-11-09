@@ -27,7 +27,12 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
         try (InputStream stream = data.getInputStream()) {
             parser.parse(stream, handler, metadata);
 
-            return new TikaMetadata(metadata, TikaIgnoreMetadata.IGNORE_METADATA);
+            TikaMetadata meta = new TikaMetadata(metadata, TikaIgnoreMetadata.IGNORE_METADATA);
+            meta.addProperty("Size", Long.toString(data.getSize()));
+
+            long unixTime = System.currentTimeMillis() / 1000L;
+            meta.addProperty("Timestamp", Long.toString(unixTime));
+            return meta;
         } catch (IOException | TikaException | SAXException e) {
             throw new SOSMetadataException("Unable to parse metadata from given data", e);
         }

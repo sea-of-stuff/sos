@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
+import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaIgnoreMetadata;
 import uk.ac.standrews.cs.sos.storage.InternalStorage;
 import uk.ac.standrews.cs.storage.data.InputStreamData;

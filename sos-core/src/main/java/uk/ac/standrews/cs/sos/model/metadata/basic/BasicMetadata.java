@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.sos.model.metadata;
+package uk.ac.standrews.cs.sos.model.metadata.basic;
 
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;

@@ -147,12 +147,26 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     @Override
     public long getCreationTime() throws AccessFailureException {
-        return 0;
+        long creationtime = 0;
+
+        if (metadata != null) {
+            String s_creationtime = metadata.getProperty("Time").trim();
+            creationtime = Long.parseLong(s_creationtime);
+        }
+
+        return creationtime;
     }
 
     @Override
     public long getModificationTime() throws AccessFailureException {
-        return 0;
+        long modtime = 0;
+
+        if (metadata != null) {
+            String s_modtime = metadata.getProperty("Time").trim();
+            modtime = Long.parseLong(s_modtime);
+        }
+
+        return modtime;
     }
 
     @Override
@@ -196,8 +210,15 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // this will differ based on whether it is a single atom or a compound of atoms sos.getData(guid);
         // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
 
+        int size = 0;
+
+        if (metadata != null) {
+            String s_size = metadata.getProperty("Size").trim();
+            size = (int) Long.parseLong(s_size);
+        }
+
         InputStream stream = sos.getAtomContent(atom);
-        IData data = new InputStreamData(stream, 4092); // FIXME - size of data expected should not be hardcoded
+        IData data = new InputStreamData(stream, size); // 1MB -  5242880 5MB - FIXME - size of data expected should not be hardcoded
 
         return data;
     }

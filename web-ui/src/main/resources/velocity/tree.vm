@@ -94,6 +94,7 @@
                     $.get("/metadata/" + id , function(data) {
                         $('#metadata').html(data);
                     })
+
                 });
             })
 
