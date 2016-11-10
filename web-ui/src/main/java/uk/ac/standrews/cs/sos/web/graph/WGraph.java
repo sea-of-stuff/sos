@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -41,21 +42,34 @@ public class WGraph {
         return graph.toString();
     }
 
+    // TODO - must refactor
     private static ArrayNode ManifestNodeGraph(Client client, Manifest manifest) throws ManifestNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        ObjectNode node = ManifestNode(manifest);
-        arrayNode.add(node);
-
-        // version - show content
-        // compound - show contents
-        // atom - show data
         if (manifest.getManifestType() == ManifestType.VERSION) {
-            Manifest contentManifest = client.getManifest(manifest.getContentGUID());
+            Version version = (Version) manifest;
+
+            ObjectNode node = ManifestNode(version, version.getInvariantGUID().toString());
+            arrayNode.add(node);
+
+            // Content
+            Manifest contentManifest = client.getManifest(version.getContentGUID());
             ObjectNode contentNode = ManifestNode(contentManifest);
             arrayNode.add(contentNode);
+
+            // Previous
+            Collection<IGUID> prevs = version.getPreviousVersions();
+            for(IGUID prev:prevs) {
+                Manifest previousManifest = client.getManifest(prev);
+                ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toString());
+                arrayNode.add(prevNode);
+            }
+
         } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
+            ObjectNode node = ManifestNode(manifest);
+            arrayNode.add(node);
+
             Compound compound = (Compound) manifest;
             Collection<Content> contents = compound.getContents();
             for(Content content:contents) {
@@ -64,6 +78,9 @@ public class WGraph {
                 arrayNode.add(contentNode);
             }
         } else { // ATOM
+            ObjectNode node = ManifestNode(manifest);
+            arrayNode.add(node);
+
             ObjectNode dataNode = DataNode(manifest.getContentGUID());
             arrayNode.add(dataNode);
         }
@@ -77,8 +94,17 @@ public class WGraph {
         ArrayNode arrayNode = mapper.createArrayNode();
 
         if (manifest.getManifestType() == ManifestType.VERSION) {
-            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.getContentGUID());
+            Version version = (Version) manifest;
+
+            ObjectNode objectNode = MakeEdge(version.guid(), version.getContentGUID());
             arrayNode.add(objectNode);
+
+            // Previous
+            Collection<IGUID> prevs = version.getPreviousVersions();
+            for(IGUID prev:prevs) {
+                ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
+                arrayNode.add(prevNode);
+            }
 
         } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
             Compound compound = (Compound) manifest;
@@ -88,7 +114,7 @@ public class WGraph {
                 arrayNode.add(objectNode);
             }
         } else { // ATOM
-            ObjectNode objectNode = MakeDataEdge(manifest.guid(), manifest.getContentGUID(), "DATA-");
+            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.getContentGUID(), "DATA-");
             arrayNode.add(objectNode);
         }
 
@@ -108,28 +134,46 @@ public class WGraph {
         return objectNode;
     }
 
+    private static ObjectNode ManifestNode(Manifest manifest, String group) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", manifest.guid().toString());
+        objectNode.put("label", "Type: " + manifest.getManifestType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
+        objectNode.put("group", group);
+        objectNode.put("shape", "box");
+        objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
+
+        return objectNode;
+    }
+
     private static ObjectNode DataNode(IGUID guid) {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "DATA-" + guid.toString());
         objectNode.put("label", "Type: DATA\nGUID: " + guid.toString().substring(0, 5));
-        objectNode.put("shape", "triangle");
+        objectNode.put("shape", "diamond");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
 
         return objectNode;
     }
 
     private static ObjectNode MakeEdge(IGUID from, IGUID to) {
-        return MakeDataEdge(from, to, "");
+        return MakeEdge(from, to, "");
     }
 
-    private static ObjectNode MakeDataEdge(IGUID from, IGUID to, String toPrefix) {
+    private static ObjectNode MakeEdge(IGUID from, IGUID to, String toPrefix) {
+        return MakeEdge(from, to, toPrefix, "");
+    }
+
+    private static ObjectNode MakeEdge(IGUID from, IGUID to, String toPrefix, String label) {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("from", from.toString());
         objectNode.put("to", toPrefix + to.toString());
+        objectNode.put("label", label);
         objectNode.put("arrows", "to");
         objectNode.put("physics", "false");
 
