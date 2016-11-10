@@ -38,7 +38,6 @@ public class WebApp {
 
         get("/tree", (req, res) -> WTree.Render(sos, fileSystem));
 
-        get("/graph", (req, res) -> WGraph.Render(sos));
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
         get("/graph/data/:id", (req, res) -> WData.Render(req, sos));
         get("/graph/manifest/:id", (req, res) -> WManifest.Render(req, sos));

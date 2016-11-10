@@ -8,56 +8,32 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class WGraph {
 
-    public static Object Render(SOSLocalNode sos) {
-
-        Map<String, Object> model = new HashMap<>();
-
-        Object[] versions = sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType() == ManifestType.VERSION).<Version>toArray();
-
-        Object[] compounds = sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType() == ManifestType.COMPOUND).<Compound>toArray();
-
-        Object[] atoms = sos.getClient().getAllManifests().
-                filter(m -> m.getManifestType() == ManifestType.ATOM).<Atom>toArray();
-
-        model.put("nodes", nodes(versions, compounds, atoms));
-        model.put("edges", edges(versions, compounds));
-
-        return VelocityUtils.RenderTemplate("velocity/graph.vm", model);
-    }
-
     public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         // We assume that the manifest is of type version
-        Version version = (Version) sos.getClient().getManifest(guid);
+        Manifest selectedManifest = sos.getClient().getManifest(guid);
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode graph = mapper.createObjectNode();
 
-        ArrayNode nodes = VersionNodeGraph(sos.getClient(), version);
-        ArrayNode edges = VersionEdgesGraph(sos.getClient(), version);
+        ArrayNode nodes = ManifestNodeGraph(sos.getClient(), selectedManifest);
+        ArrayNode edges = ManifestEdgesGraph(selectedManifest);
 
         graph.put("nodes", nodes);
         graph.put("edges", edges);
@@ -65,153 +41,99 @@ public class WGraph {
         return graph.toString();
     }
 
-    // Graph of version and related
-    private static ArrayNode VersionNodeGraph(Client client, Version version) throws ManifestNotFoundException {
+    private static ArrayNode ManifestNodeGraph(Client client, Manifest manifest) throws ManifestNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        ObjectNode versionNode = VersionNode(version);
-        arrayNode.add(versionNode);
+        ObjectNode node = ManifestNode(manifest);
+        arrayNode.add(node);
 
-        Manifest contentManifest = client.getManifest(version.getContentGUID());
-        if (contentManifest.getManifestType() == ManifestType.ATOM) {
-            Atom atom = (Atom) contentManifest;
-            ObjectNode atomNode = AtomNode(atom);
-            arrayNode.add(atomNode);
-        } else if (contentManifest.getManifestType() == ManifestType.COMPOUND) {
-            Compound compound = (Compound) contentManifest;
-            ObjectNode compoundNode = CompoundNode(compound);
-            arrayNode.add(compoundNode);
+        // version - show content
+        // compound - show contents
+        // atom - show data
+        if (manifest.getManifestType() == ManifestType.VERSION) {
+            Manifest contentManifest = client.getManifest(manifest.getContentGUID());
+            ObjectNode contentNode = ManifestNode(contentManifest);
+            arrayNode.add(contentNode);
+        } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
+            Compound compound = (Compound) manifest;
+            Collection<Content> contents = compound.getContents();
+            for(Content content:contents) {
+                Manifest contentManifest = client.getManifest(content.getGUID());
+                ObjectNode contentNode = ManifestNode(contentManifest);
+                arrayNode.add(contentNode);
+            }
+        } else { // ATOM
+            ObjectNode dataNode = DataNode(manifest.getContentGUID());
+            arrayNode.add(dataNode);
+        }
+
+
+        return arrayNode;
+    }
+
+    private static ArrayNode ManifestEdgesGraph(Manifest manifest) {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
+
+        if (manifest.getManifestType() == ManifestType.VERSION) {
+            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.getContentGUID());
+            arrayNode.add(objectNode);
+
+        } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
+            Compound compound = (Compound) manifest;
+            Collection<Content> contents = compound.getContents();
+            for(Content content:contents) {
+                ObjectNode objectNode = MakeEdge(manifest.guid(), content.getGUID());
+                arrayNode.add(objectNode);
+            }
+        } else { // ATOM
+            ObjectNode objectNode = MakeDataEdge(manifest.guid(), manifest.getContentGUID(), "DATA-");
+            arrayNode.add(objectNode);
         }
 
         return arrayNode;
     }
 
-    private static ArrayNode VersionEdgesGraph(Client client, Version version) {
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode arrayNode = mapper.createArrayNode();
-
-        ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("from", version.getVersionGUID().toString());
-        objectNode.put("to", version.getContentGUID().toString());
-        objectNode.put("arrows", "to");
-        objectNode.put("physics", "false");
-
-        arrayNode.add(objectNode);
-
-        return arrayNode;
-    }
-
-    private static ObjectNode VersionNode(Version version) {
+    private static ObjectNode ManifestNode(Manifest manifest) {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", version.getVersionGUID().toString());
-        objectNode.put("label", "Type: " + version.getManifestType() + "\nGUID: " + version.guid().toString().substring(0, 5));
-        objectNode.put("group", version.getInvariantGUID().toString());
-        objectNode.put("shape", "box");
-
-        return objectNode;
-    }
-
-    private static ObjectNode CompoundNode(Compound compound) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", compound.getContentGUID().toString());
-        objectNode.put("label", "Type: " + compound.getManifestType() + "\nGUID: " + compound.guid().toString().substring(0, 5));
-        objectNode.put("group", compound.getManifestType().toString());
+        objectNode.put("id", manifest.guid().toString());
+        objectNode.put("label", "Type: " + manifest.getManifestType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
+        objectNode.put("group", manifest.getManifestType().toString());
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
 
         return objectNode;
     }
 
-    private static ObjectNode AtomNode(Atom atom) {
+    private static ObjectNode DataNode(IGUID guid) {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", atom.getContentGUID().toString());
-        objectNode.put("label", "Type: " + atom.getManifestType() + "\nGUID: " + atom.guid().toString().substring(0, 5));
-        objectNode.put("group", atom.getManifestType().toString());
-        objectNode.put("shape", "box");
+        objectNode.put("id", "DATA-" + guid.toString());
+        objectNode.put("label", "Type: DATA\nGUID: " + guid.toString().substring(0, 5));
+        objectNode.put("shape", "triangle");
+        objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
 
         return objectNode;
     }
 
-    private static String nodes(Object[] versions, Object[] compounds, Object[] atoms) {
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode arrayNode = mapper.createArrayNode();
-
-        for(Object v:versions) {
-            ObjectNode version = VersionNode((Version)v);
-            arrayNode.add(version);
-        }
-
-        for(Object c:compounds) {
-            ObjectNode compound = CompoundNode((Compound) c);
-            arrayNode.add(compound);
-        }
-
-        for(Object a:atoms) {
-            ObjectNode atom = AtomNode((Atom)a);
-            arrayNode.add(atom);
-        }
-
-        return arrayNode.toString();
+    private static ObjectNode MakeEdge(IGUID from, IGUID to) {
+        return MakeDataEdge(from, to, "");
     }
 
-
-    private static String edges(Object[] versions, Object[] compounds) {
+    private static ObjectNode MakeDataEdge(IGUID from, IGUID to, String toPrefix) {
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode arrayNode = mapper.createArrayNode();
 
-        for(Object v:versions) {
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("from", from.toString());
+        objectNode.put("to", toPrefix + to.toString());
+        objectNode.put("arrows", "to");
+        objectNode.put("physics", "false");
 
-            Version version = (Version)v;
-            if (version.getPreviousVersions() != null && version.getPreviousVersions().size() > 0) {
-                ObjectNode objectNode1 = mapper.createObjectNode();
-
-                objectNode1.put("from", version.getVersionGUID().toString());
-                objectNode1.put("to", version.getPreviousVersions().toArray()[0].toString());
-                objectNode1.put("arrows", "to");
-
-                arrayNode.add(objectNode1);
-            }
-
-            ObjectNode objectNode2 = mapper.createObjectNode();
-            objectNode2.put("from", version.getVersionGUID().toString());
-            objectNode2.put("to", version.getContentGUID().toString());
-            objectNode2.put("arrows", "to");
-            objectNode2.put("physics", "false");
-
-            arrayNode.add(objectNode2);
-        }
-
-        for(Object c:compounds) {
-            Compound compound = (Compound)c;
-
-            IGUID compoundGUID = compound.getContentGUID();
-
-            if (compound.getContents() != null && compound.getContents().size() > 0) {
-                Iterator<Content> contents = compound.getContents().iterator();
-
-                while(contents.hasNext()) {
-                    Content content = contents.next();
-
-                    ObjectNode objectNode1 = mapper.createObjectNode();
-
-                    objectNode1.put("from", compoundGUID.toString());
-                    objectNode1.put("to", content.getGUID().toString());
-                    objectNode1.put("label", content.getLabel());
-                    objectNode1.put("arrows", "to");
-
-                    arrayNode.add(objectNode1);
-                }
-            }
-        }
-
-        return arrayNode.toString();
+        return objectNode;
     }
 
 }

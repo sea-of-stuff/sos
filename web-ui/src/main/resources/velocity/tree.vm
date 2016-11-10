@@ -67,6 +67,10 @@
             })
 
             $.get("/graph/" + data.selected[0] , function(data) {
+                buildAndRenderGraph(data);
+            });
+
+            function buildAndRenderGraph(data) {
                 data = JSON.parse(data);
                 var nodes = new vis.DataSet(data['nodes']);
                 var edges = new vis.DataSet(data['edges']);
@@ -87,6 +91,11 @@
 
                 network.on("click", function (params) {
                     id = params['nodes'][0];
+
+                    if (id.startsWith('DATA-')) {
+                        return;
+                    }
+
                     $.get("/graph/manifest/" + id , function(data) {
                         $('#manifest').html(data);
                     })
@@ -95,8 +104,12 @@
                         $('#metadata').html(data);
                     })
 
+                    $.get("/graph/" + id , function(data) {
+                        buildAndRenderGraph(data);
+                    });
+
                 });
-            })
+            }
 
         });
 
