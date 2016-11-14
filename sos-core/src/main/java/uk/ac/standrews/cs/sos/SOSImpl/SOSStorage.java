@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.node.NodesDirectory;
@@ -49,7 +50,6 @@ public class SOSStorage implements Storage {
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
 
-    // TODO - use different stores based on persist boolean
     @Override
     public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException {
         Collection<LocationBundle> bundles = new ArrayList<>();
@@ -112,7 +112,7 @@ public class SOSStorage implements Storage {
         try {
             Manifest manifest = manifestsDirectory.findManifest(guid);
 
-            if (manifest instanceof Atom) { // TODO - this comparison could be improved, with the manifest returning the type
+            if (manifest.getManifestType() == ManifestType.ATOM) {
                 Atom atom = (Atom) manifest;
                 return getAtomContent(atom);
             }

@@ -8,8 +8,7 @@ import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -24,9 +23,11 @@ public class TikaMetadataEngineTest extends CommonTest {
         Data data = new StringData("just some text in a string");
         TikaMetadata output = test.processData(data);
 
-        assertEquals(2, output.getAllFilteredPropertyNames().length);
+        assertEquals(4, output.getAllFilteredPropertyNames().length);
         assertEquals("text/plain; charset=ISO-8859-1", output.getProperty("Content-Type"));
         assertEquals("org.apache.tika.parser.DefaultParser", output.getProperty("X-Parsed-By"));
+        assertEquals("26", output.getProperty("Size"));
+        assertNotNull(output.getProperty("Timestamp"));
     }
 
     @Test

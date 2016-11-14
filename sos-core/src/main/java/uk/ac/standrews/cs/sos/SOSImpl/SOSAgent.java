@@ -9,7 +9,10 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.sos.*;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
+import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
+import uk.ac.standrews.cs.sos.interfaces.sos.MCS;
+import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -30,13 +33,11 @@ public class SOSAgent implements Agent {
     private Identity identity;
 
     private Storage storage;
-    private NDS nds;
     private DDS dds;
     private MCS mcs;
 
-    public SOSAgent(Storage storage, NDS nds, DDS dds, MCS mcs, Identity identity) {
+    public SOSAgent(Storage storage, DDS dds, MCS mcs, Identity identity) {
         this.storage = storage;
-        this.nds = nds;
         this.dds = dds;
         this.mcs = mcs;
 

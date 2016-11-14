@@ -201,7 +201,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         nds = new SOSNDS(nodesDirectory);
         mcs = new SOSMCS(metadataDirectory);
 
-        agent = new SOSAgent(storage, nds, dds, mcs, identity);
+        agent = new SOSAgent(storage, dds, mcs, identity);
     }
 
     private void garbageCollector() {

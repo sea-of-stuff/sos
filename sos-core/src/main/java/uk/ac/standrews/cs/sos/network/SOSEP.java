@@ -20,21 +20,12 @@ public class SOSEP {
 
     private static final String HTTP_SCHEME = "http://";
 
-    //////////
-    // DDS
-    //////////
-
     public static URL DDS_POST_MANIFEST(Node node) throws MalformedURLException {
         String url = buildURLBase(node) +
                 "/dds/manifest";
 
         return new URL(url);
     }
-
-    //////////
-    // STORAGE
-    //////////
-
 
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws MalformedURLException {
         String url = buildURLBase(node) +
@@ -50,10 +41,6 @@ public class SOSEP {
 
         return new URL(url);
     }
-
-    //////////
-    // NDS
-    //////////
 
     public static URL NDS_REGISTER_NODE(Node node, IGUID guid) throws MalformedURLException {
         String url = buildURLBase(node) +
@@ -78,13 +65,10 @@ public class SOSEP {
         return new URL(url);
     }
 
-
-    //////////
-    // PRIVATE
-    //////////
-
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
-        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort();
+        String baseURL = HTTP_SCHEME + address.getHostName() + ":" + address.getPort();
+
+        return baseURL;
     }
 }

@@ -30,8 +30,6 @@ public class SOSDDS implements DDS {
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
         Manifest manifest = manifestsDirectory.findManifest(guid);
-        // TODO - contact other DDS nodes!
-
         return manifest;
     }
 
