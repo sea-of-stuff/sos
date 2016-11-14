@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.database.DatabaseTypes;
@@ -55,7 +55,7 @@ public class NodesDirectoryTest extends CommonTest {
     }
 
     @Test
-    public void persistMultipleNodesTest() throws GUIDGenerationException, NodeManagerException {
+    public void persistMultipleNodesTest() throws GUIDGenerationException, NodesDirectoryException {
 
         Collection<Node> nodes = nodesDirectory.getKnownNodes();
         for(Node n:nodes) {
@@ -84,7 +84,7 @@ public class NodesDirectoryTest extends CommonTest {
     }
 
     @Test
-    public void persistTest() throws GUIDGenerationException, NodeManagerException {
+    public void persistTest() throws GUIDGenerationException, NodesDirectoryException {
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
 

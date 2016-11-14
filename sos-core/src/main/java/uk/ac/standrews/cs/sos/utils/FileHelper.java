@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.utils;
 
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestManagerException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -10,12 +10,12 @@ import uk.ac.standrews.cs.storage.interfaces.File;
  */
 public class FileHelper {
 
-    public static void DeleteFile(File file) throws ManifestManagerException {
+    public static void DeleteFile(File file) throws ManifestsDirectoryException {
         Directory parent = file.getParent();
         try {
             parent.remove(file.getName());
         } catch (BindingAbsentException e) {
-            throw new ManifestManagerException("Unable to delete file " + file.getName(), e);
+            throw new ManifestsDirectoryException("Unable to delete file " + file.getName(), e);
         }
     }
 

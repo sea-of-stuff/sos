@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.node.NodesDirectory;
@@ -55,7 +55,7 @@ public class SOSNDS implements NDS {
 
         try {
             nodesDirectory.persistNodesTable();
-        } catch (NodeManagerException e) {
+        } catch (NodesDirectoryException e) {
             e.printStackTrace();
             // TODO - throw appropriate exception
             return null;

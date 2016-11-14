@@ -12,7 +12,7 @@ public interface ManifestsDirectory {
 
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
-    void updateAtom(Atom atom) throws ManifestManagerException, ManifestNotFoundException;
+    void updateAtom(Atom atom) throws ManifestsDirectoryException, ManifestNotFoundException;
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 

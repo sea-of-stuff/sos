@@ -63,7 +63,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         if (manifest.isValid()) {
             try {
                 saveManifest(manifest);
-            } catch (ManifestManagerException e) {
+            } catch (ManifestsDirectoryException e) {
                 e.printStackTrace();
             }
         } else {
@@ -72,7 +72,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public void updateAtom(Atom atom) throws ManifestManagerException, ManifestNotFoundException {
+    public void updateAtom(Atom atom) throws ManifestsDirectoryException, ManifestNotFoundException {
 
         IGUID manifestFileGUID = atom.guid();
         saveExistingManifest(manifestFileGUID, atom);
@@ -192,7 +192,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         return manifest;
     }
 
-    private void saveManifest(Manifest manifest) throws ManifestManagerException {
+    private void saveManifest(Manifest manifest) throws ManifestsDirectoryException {
 
         try {
             IGUID manifestFileGUID = manifest.guid();
@@ -209,18 +209,18 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             }
 
         } catch (ManifestNotFoundException e) {
-            throw new ManifestManagerException(e);
+            throw new ManifestsDirectoryException(e);
         }
 
     }
 
-    private void saveExistingAtomManifest(Manifest manifest) throws ManifestNotFoundException, ManifestManagerException {
+    private void saveExistingAtomManifest(Manifest manifest) throws ManifestNotFoundException, ManifestsDirectoryException {
         IGUID guid = manifest.getContentGUID();
         Manifest existingManifest = getManifestFromGUID(guid);
         mergeAtomManifestAndSave(existingManifest, manifest);
     }
 
-    private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws ManifestManagerException, ManifestNotFoundException {
+    private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws ManifestsDirectoryException, ManifestNotFoundException {
         File manifestFile = getManifestFile(manifestFileGUID);
         File backupFile = backupManifest(manifest);
         FileHelper.DeleteFile(manifestFile);
@@ -230,7 +230,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         FileHelper.DeleteFile(backupFile);
     }
 
-    private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestManagerException {
+    private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestsDirectoryException {
         IGUID guid = manifest.getContentGUID();
 
         try {
@@ -245,13 +245,13 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             FileHelper.DeleteFile(backupFile);
         } catch (ManifestNotFoundException e) {
-            throw new ManifestManagerException("Manifests " + existingManifest.getContentGUID().toString()
+            throw new ManifestsDirectoryException("Manifests " + existingManifest.getContentGUID().toString()
                     + " and " + manifest.getContentGUID().toString() + "could not be merged", e);
         }
 
     }
 
-    private File backupManifest(Manifest manifest) throws ManifestManagerException {
+    private File backupManifest(Manifest manifest) throws ManifestsDirectoryException {
 
         try {
             IGUID manifestGUID = manifest.guid();
@@ -265,12 +265,12 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             return backupManifest;
         } catch (ManifestNotFoundException | DataStorageException | DataException | PersistenceException e) {
-            throw new ManifestManagerException("Manifest could not be backed up ", e);
+            throw new ManifestsDirectoryException("Manifest could not be backed up ", e);
         }
 
     }
 
-    private void saveToFile(Manifest manifest) throws ManifestManagerException {
+    private void saveToFile(Manifest manifest) throws ManifestsDirectoryException {
 
         try {
             IGUID manifestGUID = manifest.guid();
@@ -280,7 +280,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             manifestFile.setData(manifestData);
             manifestFile.persist();
         } catch (PersistenceException | DataException | DataStorageException e) {
-            throw new ManifestManagerException(e);
+            throw new ManifestsDirectoryException(e);
         }
     }
 

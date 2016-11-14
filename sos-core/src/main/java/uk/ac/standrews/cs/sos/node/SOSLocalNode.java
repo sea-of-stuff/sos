@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
@@ -161,7 +161,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initNodeManager() throws SOSException {
         try {
             nodesDirectory = new NodesDirectory(this, nodesDatabase);
-        } catch (NodeManagerException e) {
+        } catch (NodesDirectoryException e) {
             throw new SOSException(e);
         }
     }

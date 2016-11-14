@@ -89,7 +89,7 @@ public class SOSClient implements Client {
         replicateData(manifest, bundles);
         try {
             manifestsDirectory.updateAtom(manifest);
-        } catch (ManifestManagerException | ManifestNotFoundException e) {
+        } catch (ManifestsDirectoryException | ManifestNotFoundException e) {
             throw new StorageException("Unable to update atom manifest after replication");
         }
 

@@ -43,7 +43,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     }
 
     @Override
-    public void updateAtom(Atom atom) throws ManifestManagerException, ManifestNotFoundException {
+    public void updateAtom(Atom atom) throws ManifestsDirectoryException, ManifestNotFoundException {
         local.updateAtom(atom);
     }
 

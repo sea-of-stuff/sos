@@ -64,7 +64,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void addAtomManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -74,8 +74,8 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         IGUID guid = atomManifest.getContentGUID();
         try {
-            manifestsManager.addManifest(atomManifest);
-            Manifest manifest = manifestsManager.findManifest(guid);
+            manifestsDirectory.addManifest(atomManifest);
+            Manifest manifest = manifestsDirectory.findManifest(guid);
 
             Assert.assertEquals(manifest.getManifestType(), ManifestType.ATOM);
             assertEquals(manifest.getContentGUID(), guid);
@@ -87,7 +87,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void addCompoundManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -97,8 +97,8 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, identity);
         IGUID guid = compoundManifest.getContentGUID();
         try {
-            manifestsManager.addManifest(compoundManifest);
-            Manifest manifest = manifestsManager.findManifest(guid);
+            manifestsDirectory.addManifest(compoundManifest);
+            Manifest manifest = manifestsDirectory.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestType.COMPOUND);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
@@ -127,15 +127,15 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void addAssetManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version assetManifest = createDummyVersion(contentGUID);
 
         IGUID guid = assetManifest.getVersionGUID();
         try {
-            manifestsManager.addManifest(assetManifest);
-            Manifest manifest = manifestsManager.findManifest(guid);
+            manifestsDirectory.addManifest(assetManifest);
+            Manifest manifest = manifestsDirectory.findManifest(guid);
 
             assertEquals(manifest.getManifestType(), ManifestType.VERSION);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
@@ -153,7 +153,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void updateAtomManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -171,9 +171,9 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         assertEquals(guid, anotherGUID);
 
         try {
-            manifestsManager.addManifest(atomManifest);
-            manifestsManager.addManifest(anotherManifest);
-            AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
+            manifestsDirectory.addManifest(atomManifest);
+            manifestsDirectory.addManifest(anotherManifest);
+            AtomManifest manifest = (AtomManifest) manifestsDirectory.findManifest(guid);
 
             assertEquals(manifest.getLocations().size(), 2);
         } catch (ManifestPersistException | ManifestNotFoundException e) {
@@ -183,7 +183,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void deletePrevAtomWhileNewIsAddedTest() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -201,11 +201,11 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         assertEquals(guid, anotherGUID);
 
         try {
-            manifestsManager.addManifest(atomManifest);
+            manifestsDirectory.addManifest(atomManifest);
             storage.getManifestDirectory().remove(guid.toString() + ".json");
 
-            manifestsManager.addManifest(anotherManifest);
-            AtomManifest manifest = (AtomManifest) manifestsManager.findManifest(guid);
+            manifestsDirectory.addManifest(anotherManifest);
+            AtomManifest manifest = (AtomManifest) manifestsDirectory.findManifest(guid);
 
             assertEquals(manifest.getLocations().size(), 1);
         } catch (ManifestPersistException | ManifestNotFoundException e) {
@@ -215,45 +215,45 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void addNullManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
     }
 
 
     @Test (expectedExceptions = HEADNotFoundException.class)
     public void getUnsetHEAD() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version version = createDummyVersion(contentGUID);
         IGUID invariant = version.getInvariantGUID();
 
-        manifestsManager.getHEAD(invariant);
+        manifestsDirectory.getHEAD(invariant);
     }
 
     @Test (expectedExceptions = HEADNotFoundException.class)
     public void getRandomVersionUnsetHEAD() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID invariant = GUIDFactory.generateRandomGUID();
 
-        manifestsManager.getHEAD(invariant);
+        manifestsDirectory.getHEAD(invariant);
     }
 
     @Test
     public void getSetAndGetHEAD() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version version = createDummyVersion(contentGUID);
         IGUID invariant = version.getInvariantGUID();
 
-        manifestsManager.addManifest(version);
-        manifestsManager.setHEAD(version.getVersionGUID());
-        Version retrievedVersion = manifestsManager.getHEAD(invariant);
+        manifestsDirectory.addManifest(version);
+        manifestsDirectory.setHEAD(version.getVersionGUID());
+        Version retrievedVersion = manifestsDirectory.getHEAD(invariant);
 
         assertNotNull(retrievedVersion);
         assertEquals(retrievedVersion.toString(), version.toString());
@@ -261,17 +261,17 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test (expectedExceptions = HEADNotSetException.class)
     public void getReSetHEADFail() throws Exception {
-        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version version = createDummyVersion(contentGUID);
         IGUID invariant = version.getInvariantGUID();
 
-        manifestsManager.addManifest(version);
-        manifestsManager.setHEAD(version.getVersionGUID());
-        manifestsManager.setHEAD(GUIDFactory.generateRandomGUID());
+        manifestsDirectory.addManifest(version);
+        manifestsDirectory.setHEAD(version.getVersionGUID());
+        manifestsDirectory.setHEAD(GUIDFactory.generateRandomGUID());
 
-        manifestsManager.getHEAD(invariant);
+        manifestsDirectory.getHEAD(invariant);
     }
 
     private Version createDummyVersion(IGUID contentGUID) throws Exception {

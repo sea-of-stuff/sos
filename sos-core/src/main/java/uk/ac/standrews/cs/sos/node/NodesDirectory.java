@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 
@@ -29,7 +29,7 @@ public class NodesDirectory {
 
     private Collection<Node> knownNodes;
 
-    public NodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodeManagerException {
+    public NodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
         this.localNode = localNode;
         this.nodesDatabase = nodesDatabase;
 
@@ -125,28 +125,28 @@ public class NodesDirectory {
     /**
      * Persist the collection of known nodes.
      *
-     * @throws NodeManagerException
+     * @throws NodesDirectoryException
      */
-    public void persistNodesTable() throws NodeManagerException {
+    public void persistNodesTable() throws NodesDirectoryException {
         try {
             for (Node knownNode : knownNodes) {
                 nodesDatabase.addNode(knownNode); // FIXME - do not persist nodes that have not changed
             }
         } catch (DatabaseConnectionException e) {
-            throw new NodeManagerException(e);
+            throw new NodesDirectoryException(e);
         }
     }
 
     /**
      * Load nodes from the DB to the node directory (in memory)
-     * @throws NodeManagerException
+     * @throws NodesDirectoryException
      */
-    private void loadNodesFromDB() throws NodeManagerException {
+    private void loadNodesFromDB() throws NodesDirectoryException {
         try {
             Collection<SOSNode> nodes = nodesDatabase.getNodes();
             knownNodes.addAll(nodes);
         } catch (DatabaseConnectionException e) {
-            throw new NodeManagerException(e);
+            throw new NodesDirectoryException(e);
         }
     }
 }
