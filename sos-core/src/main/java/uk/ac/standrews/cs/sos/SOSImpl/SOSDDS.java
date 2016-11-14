@@ -1,10 +1,13 @@
 package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 
 /**
@@ -30,6 +33,16 @@ public class SOSDDS implements DDS {
         // TODO - contact other DDS nodes!
 
         return manifest;
+    }
+
+    @Override
+    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
+        return manifestsDirectory.getHEAD(invariant);
+    }
+
+    @Override
+    public void setHEAD(IGUID version) throws HEADNotSetException {
+        manifestsDirectory.setHEAD(version);
     }
 
 }

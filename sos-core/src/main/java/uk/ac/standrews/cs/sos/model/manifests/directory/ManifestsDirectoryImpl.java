@@ -30,6 +30,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         this.localStorage = localStorage;
 
         loadOrCreateCache();
+
         local = new LocalManifestsDirectory(localStorage);
         remote = new RemoteManifestsDirectory(manifestPolicy, nodesDirectory);
     }

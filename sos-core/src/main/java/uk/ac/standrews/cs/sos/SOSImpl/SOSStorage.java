@@ -58,10 +58,10 @@ public class SOSStorage implements Storage {
         if (atomBuilder.isLocation()) {
             Location location = atomBuilder.getLocation();
             bundles.add(new ProvenanceLocationBundle(location));
-            guid = store(location, bundles);
+            guid = store(location, bundles, persist);
         } else if (atomBuilder.isInputStream()) {
             InputStream inputStream = atomBuilder.getInputStream();
-            guid = store(inputStream, bundles);
+            guid = store(inputStream, bundles, persist);
         } else {
             throw new StorageException("AtomBuilder has not been set correctly");
         }
@@ -123,12 +123,20 @@ public class SOSStorage implements Storage {
         return null;
     }
 
-    protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
-        return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations!
+    protected IGUID store(Location location, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        if (persist) {
+            return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations!
+        } else {
+            return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
+        }
     }
 
-    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-        return atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
+    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        if (persist) {
+            return atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
+        } else {
+            return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
+        }
     }
 
     private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {

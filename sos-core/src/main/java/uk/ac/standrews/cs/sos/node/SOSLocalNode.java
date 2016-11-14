@@ -59,7 +59,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private PolicyManager policyManager;
     private NodesDatabase nodesDatabase;
     private Identity identity;
-    private ManifestsDirectory manifestsManager;
+    private ManifestsDirectory manifestsDirectory;
     private NodesDirectory nodesDirectory;
     private MetadataDirectory metadataDirectory;
 
@@ -148,7 +148,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        manifestsManager.flush();
+        manifestsDirectory.flush();
 
         RequestsManager.getInstance().shutdown();
     }
@@ -175,7 +175,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void initManifestManager() {
         ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
-        manifestsManager = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nodesDirectory);
+        manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nodesDirectory);
     }
 
     private void initIdentity() throws SOSException {
@@ -194,31 +194,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initSOSInstances() {
-        if (isClient()) {
-            SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
-            ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
-            agent = new SOSAgent(this, nodesDirectory, localStorage, manifestsManager,
-                                    identity, replicationPolicy, metadataDirectory);
-        }
+        ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
 
-        if (isStorage()) {
-            SOS_LOG.log(LEVEL.INFO, "Creating a Storage role");
-            storage = new SOSStorage(this, localStorage, manifestsManager);
-        }
+        storage = new SOSStorage(this, nodesDirectory, localStorage, replicationPolicy, manifestsDirectory);
+        dds = new SOSDDS(manifestsDirectory);
+        nds = new SOSNDS(nodesDirectory);
+        mcs = new SOSMCS(metadataDirectory);
 
-        if (isDDS()) {
-            SOS_LOG.log(LEVEL.INFO, "Creating a DDS role");
-            dds = new SOSDDS(manifestsManager);
-        }
-
-        if (isNDS()) {
-            SOS_LOG.log(LEVEL.INFO, "Creating a NDS role");
-            nds = new SOSNDS(nodesDirectory);
-        }
-
-        if (isMCS()) {
-            mcs = new SOSMCS();
-        }
+        agent = new SOSAgent(storage, nds, dds, mcs, identity);
     }
 
     private void garbageCollector() {

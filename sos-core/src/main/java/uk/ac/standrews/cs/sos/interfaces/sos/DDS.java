@@ -1,9 +1,12 @@
 package uk.ac.standrews.cs.sos.interfaces.sos;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -33,5 +36,16 @@ public interface DDS extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+
+    /**
+     * Return the latest version of a given asset
+     *
+     * @param guid asset's invariant
+     * @return latest known version of the asset
+     * @throws ManifestNotFoundException
+     */
+    Version getHEAD(IGUID guid) throws HEADNotFoundException;
+
+    void setHEAD(IGUID version) throws HEADNotSetException;
 
 }
