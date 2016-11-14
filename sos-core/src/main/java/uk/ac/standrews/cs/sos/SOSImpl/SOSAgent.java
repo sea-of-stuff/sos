@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSClient implements Client {
+public class SOSAgent implements Agent {
 
     private NodesDirectory nodesDirectory;
     private ReplicationPolicy replicationPolicy;
@@ -46,8 +46,8 @@ public class SOSClient implements Client {
 
     private AtomStorage atomStorage;
 
-    public SOSClient(Node node, NodesDirectory nodesDirectory, LocalStorage storage, ManifestsDirectory manifestsDirectory,
-                     Identity identity, ReplicationPolicy replicationPolicy, MetadataDirectory metadataDirectory) {
+    public SOSAgent(Node node, NodesDirectory nodesDirectory, LocalStorage storage, ManifestsDirectory manifestsDirectory,
+                    Identity identity, ReplicationPolicy replicationPolicy, MetadataDirectory metadataDirectory) {
 
         this.nodesDirectory = nodesDirectory;
         this.manifestsDirectory = manifestsDirectory;

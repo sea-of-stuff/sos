@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
 import java.util.ArrayList;
@@ -22,19 +22,19 @@ import java.util.Collection;
  */
 class SOSFileSystemObject extends FileSystemObject implements IVersionableObject, SOSVersionableObject {
 
-    protected Client sos;
+    protected Agent sos;
 
     protected Version version;
     protected SOSDirectory parent;
     protected SOSFileSystemObject previous; // TODO - make collection (e.g. merging)
     protected SOSMetadata metadata;
 
-    public SOSFileSystemObject(Client sos) {
+    public SOSFileSystemObject(Agent sos) {
         super(null);
         this.sos = sos;
     }
 
-    public SOSFileSystemObject(Client sos, IData data) {
+    public SOSFileSystemObject(Agent sos, IData data) {
         super(data, null);
         this.sos = sos;
     }

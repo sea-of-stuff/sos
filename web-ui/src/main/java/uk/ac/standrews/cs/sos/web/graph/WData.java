@@ -23,27 +23,28 @@ public class WData {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getClient().getManifest(guid);
+        Manifest manifest = sos.getAgent().getManifest(guid);
 
         String data = getData(sos, manifest);
 
         if (data.isEmpty()) {
             data = " ";
         }
-        return data;
+
+        return data.length() > 140 ? data.substring(0, 140) + ".... OTHER DATA FOLLOWING" : data;
     }
 
     private static String getData(SOSLocalNode sos, Manifest manifest) throws IOException, ManifestNotFoundException {
 
         if (manifest.getManifestType() == ManifestType.VERSION) {
-            Manifest contentManifest = sos.getClient().getManifest(manifest.getContentGUID());
+            Manifest contentManifest = sos.getAgent().getManifest(manifest.getContentGUID());
             return getData(sos, contentManifest);
         }
 
         if (manifest.getManifestType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
-            InputStream atomContent = sos.getClient().getAtomContent(atom);
+            InputStream atomContent = sos.getAgent().getAtomContent(atom);
             String retval = Utils.InputStreamToString(atomContent);
             return retval;
         }

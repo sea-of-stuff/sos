@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -39,7 +39,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     private Atom atom;
     private Collection<Content> atoms;
 
-    public SOSFile(Client sos, SOSDirectory parent, IData data) throws PersistenceException {
+    public SOSFile(Agent sos, SOSDirectory parent, IData data) throws PersistenceException {
         super(sos, data);
         this.parent = parent;
         this.isCompoundData = false;
@@ -67,7 +67,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     }
 
-    public SOSFile(Client sos)  {
+    public SOSFile(Agent sos)  {
         super(sos);
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating SOS File - Compound Data: true");
 
@@ -78,16 +78,22 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // this.guid = version.guid();
     }
 
-    public SOSFile(Client sos, Version version, Atom atom) {
+    public SOSFile(Agent sos, Version version, Atom atom) {
         super(sos);
 
         this.version = version;
         this.atom = atom;
 
+        Collection<IGUID> meta = version.getMetadata();
+        if (meta != null && !meta.isEmpty()) {
+            IGUID metaGUID = (IGUID) meta.toArray()[0];
+            this.metadata = sos.getMetadata(metaGUID);
+        }
+
         this.guid = version.guid();
     }
 
-    public SOSFile(Client sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
+    public SOSFile(Agent sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
         super(sos, data);
         this.parent = parent;
         this.isCompoundData = false;
@@ -150,7 +156,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         long creationtime = 0;
 
         if (metadata != null) {
-            String s_creationtime = metadata.getProperty("Time").trim();
+            String s_creationtime = metadata.getProperty("Timestamp").trim();
             creationtime = Long.parseLong(s_creationtime);
         }
 
@@ -162,7 +168,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         long modtime = 0;
 
         if (metadata != null) {
-            String s_modtime = metadata.getProperty("Time").trim();
+            String s_modtime = metadata.getProperty("Timestamp").trim();
             modtime = Long.parseLong(s_modtime);
         }
 

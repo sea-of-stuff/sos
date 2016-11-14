@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
@@ -24,9 +24,9 @@ public class WMetadata {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
 
-        Client client = sos.getClient();
+        Agent agent = sos.getAgent();
 
-        Manifest manifest = client.getManifest(guid);
+        Manifest manifest = agent.getManifest(guid);
         if (manifest.getManifestType() == ManifestType.VERSION) {
 
             Version version = (Version) manifest;
@@ -37,7 +37,7 @@ public class WMetadata {
 
             IGUID metadataGUID = (IGUID) metadataArrayList.toArray()[0];
 
-            SOSMetadata metadata = client.getMetadata(metadataGUID);
+            SOSMetadata metadata = agent.getMetadata(metadataGUID);
             return metadata.tabularFormat();
         } else {
             return "N/A";

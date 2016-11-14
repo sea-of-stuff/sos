@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -44,14 +44,14 @@ public class ServerState {
         File configFile = new File(properties);
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
-        InternalStorage internalStorage;
+        LocalStorage localStorage;
         try {
 
             StorageType storageType = configuration.getStorageType();
             String root = configuration.getStorageLocation();
 
-            internalStorage =
-                    new InternalStorage(StorageFactory
+            localStorage =
+                    new LocalStorage(StorageFactory
                             .createStorage(storageType, root, false));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
@@ -62,7 +62,7 @@ public class ServerState {
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         sos = builder.configuration(configuration)
-                .internalStorage(internalStorage)
+                .internalStorage(localStorage)
                 .policies(policyManager)
                 .bootstrapNodes(bootstrapNodes)
                 .build();

@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
@@ -28,12 +28,12 @@ public class WGraph {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         // We assume that the manifest is of type version
-        Manifest selectedManifest = sos.getClient().getManifest(guid);
+        Manifest selectedManifest = sos.getAgent().getManifest(guid);
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode graph = mapper.createObjectNode();
 
-        ArrayNode nodes = ManifestNodeGraph(sos.getClient(), selectedManifest);
+        ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), selectedManifest);
         ArrayNode edges = ManifestEdgesGraph(selectedManifest);
 
         graph.put("nodes", nodes);
@@ -43,7 +43,7 @@ public class WGraph {
     }
 
     // TODO - must refactor
-    private static ArrayNode ManifestNodeGraph(Client client, Manifest manifest) throws ManifestNotFoundException {
+    private static ArrayNode ManifestNodeGraph(Agent agent, Manifest manifest) throws ManifestNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
@@ -54,14 +54,14 @@ public class WGraph {
             arrayNode.add(node);
 
             // Content
-            Manifest contentManifest = client.getManifest(version.getContentGUID());
+            Manifest contentManifest = agent.getManifest(version.getContentGUID());
             ObjectNode contentNode = ManifestNode(contentManifest);
             arrayNode.add(contentNode);
 
             // Previous
             Collection<IGUID> prevs = version.getPreviousVersions();
             for(IGUID prev:prevs) {
-                Manifest previousManifest = client.getManifest(prev);
+                Manifest previousManifest = agent.getManifest(prev);
                 ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toString());
                 arrayNode.add(prevNode);
             }
@@ -73,7 +73,7 @@ public class WGraph {
             Compound compound = (Compound) manifest;
             Collection<Content> contents = compound.getContents();
             for(Content content:contents) {
-                Manifest contentManifest = client.getManifest(content.getGUID());
+                Manifest contentManifest = agent.getManifest(content.getGUID());
                 ObjectNode contentNode = ManifestNode(contentManifest);
                 arrayNode.add(contentNode);
             }

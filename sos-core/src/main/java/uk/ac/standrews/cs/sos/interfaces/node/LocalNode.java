@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.sos.*;
  */
 public interface LocalNode extends Node {
 
-    Client getClient();
+    Agent getAgent();
 
     Storage getStorage();
 

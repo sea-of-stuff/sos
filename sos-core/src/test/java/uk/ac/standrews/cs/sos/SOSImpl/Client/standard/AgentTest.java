@@ -5,33 +5,33 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 
 import java.lang.reflect.Method;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ClientTest extends SetUpTest {
+public class AgentTest extends SetUpTest {
 
-    protected Client client;
+    protected Agent agent;
 
     @Override
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        client = localSOSNode.getClient();
+        agent = localSOSNode.getAgent();
     }
 
     @Test(expectedExceptions = ManifestNotFoundException.class)
     public void testFailGetManifest() throws Exception {
-        client.getManifest(GUIDFactory.generateRandomGUID());
+        agent.getManifest(GUIDFactory.generateRandomGUID());
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)
     public void testFailGetManifestNull() throws Exception {
-        client.getManifest(null);
+        agent.getManifest(null);
     }
 
 }

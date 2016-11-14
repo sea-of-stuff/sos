@@ -59,7 +59,7 @@ public class WebApp {
 
         try (InputStream is = request.raw().getPart("atom").getInputStream()) {
             AtomBuilder builder = new AtomBuilder().setInputStream(is);
-            Atom atom = sos.getClient().addAtom(builder);
+            Atom atom = sos.getAgent().addAtom(builder);
         }
         return "File uploaded";
     }

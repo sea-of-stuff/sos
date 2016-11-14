@@ -31,7 +31,7 @@ import java.util.stream.Stream;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Client extends SeaOfStuff {
+public interface Agent {
 
     /**
      * Adds data to the Sea of Stuff as an atom.

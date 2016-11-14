@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.SOSImpl.Client.standard;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSFindTest extends ClientTest {
+public class SOSFindTest extends AgentTest {
 
 //    @Test
 //    public void testFindAtoms() throws Exception {

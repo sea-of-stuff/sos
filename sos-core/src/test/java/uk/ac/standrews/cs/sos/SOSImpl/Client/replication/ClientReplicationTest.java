@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.nio.file.Files;
  */
 public class ClientReplicationTest extends SetUpTest {
 
-    protected Client client;
+    protected Agent agent;
 
     private static final String TEST_RESOURCES_PATH = "src/test/resources/";
     private static final String MOCK_PROPERTIES =
@@ -80,7 +80,7 @@ public class ClientReplicationTest extends SetUpTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        client = localSOSNode.getClient();
+        agent = localSOSNode.getAgent();
     }
 
     @Override

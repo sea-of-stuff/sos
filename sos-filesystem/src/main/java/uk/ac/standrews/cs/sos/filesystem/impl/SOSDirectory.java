@@ -19,7 +19,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -39,7 +39,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     private Collection<Content> contents;
     private Compound compound;
 
-    public SOSDirectory(Client sos, SOSDirectory parent, String name) throws GUIDGenerationException {
+    public SOSDirectory(Agent sos, SOSDirectory parent, String name) throws GUIDGenerationException {
         super(sos);
         this.name = name;
         this.parent = parent;
@@ -53,7 +53,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     }
 
-    public SOSDirectory(Client sos, Version version, Compound compound) {
+    public SOSDirectory(Agent sos, Version version, Compound compound) {
         super(sos);
 
         contents = compound.getContents();
@@ -64,7 +64,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     }
 
     // Use this constructor for the root folder only
-    public SOSDirectory(Client sos, Version version) {
+    public SOSDirectory(Agent sos, Version version) {
         super(sos);
         this.version = version;
         this.name = null;
@@ -79,7 +79,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     }
 
-    public SOSDirectory(Client sos, SOSDirectory previous, String name, SOSFileSystemObject object) {
+    public SOSDirectory(Agent sos, SOSDirectory previous, String name, SOSFileSystemObject object) {
         super(sos);
 
         try {

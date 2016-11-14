@@ -50,7 +50,7 @@ public class MAISOS {
             // TODO - pass config info to webdav and webapp
 
             IFileSystem fileSystem = new SOSFileSystemFactory(root)
-                    .makeFileSystem(sos.getClient());
+                    .makeFileSystem(sos.getAgent());
 
             executor.submit(() -> {
                 try {

@@ -31,7 +31,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddVersionTest extends ClientTest {
+public class SOSAddVersionTest extends AgentTest {
 
     @Test
     public void testAddAsset() throws Exception {
@@ -39,13 +39,13 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Compound compound = agent.addCompound(CompoundType.DATA, contents);
 
         VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
-        Version manifest = client.addVersion(builder);
+        Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -59,7 +59,7 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Compound compound = agent.addCompound(CompoundType.DATA, contents);
 
         Collection<IGUID> prevs = new ArrayList<>();
         prevs.add(GUIDFactory.recreateGUID("321"));
@@ -76,10 +76,10 @@ public class SOSAddVersionTest extends ClientTest {
                 .setInvariant(invariant)
                 .setPrevious(prevs)
                 .setMetadata(metadata);
-        Version manifest = client.addVersion(builder);
+        Version manifest = agent.addVersion(builder);
         assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         IGUID retrievedInvariant = ((VersionManifest) retrievedManifest).getInvariantGUID();
@@ -100,26 +100,26 @@ public class SOSAddVersionTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound compound = client.addCompound(CompoundType.DATA, contents);
+        Compound compound = agent.addCompound(CompoundType.DATA, contents);
 
         VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
-        Version manifest = client.addVersion(builder);
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Version manifest = agent.addVersion(builder);
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
 
-        assertTrue(client.verifyManifest(localSOSNode.getIdentity(), retrievedManifest));
+        assertTrue(agent.verifyManifest(localSOSNode.getIdentity(), retrievedManifest));
     }
 
     @Test
     public void testAddAssetWithAtom() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
-        Atom atom = client.addAtom(atomBuilder);
+        Atom atom = agent.addAtom(atomBuilder);
 
         VersionBuilder builder = new VersionBuilder(atom.guid());
-        Version manifest = client.addVersion(builder);
+        Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -130,16 +130,16 @@ public class SOSAddVersionTest extends ClientTest {
     public void testAddAssetWithMetadata() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
-        Atom atom = client.addAtom(atomBuilder);
+        Atom atom = agent.addAtom(atomBuilder);
 
-        SOSMetadata metadata = client.addMetadata(atom);
+        SOSMetadata metadata = agent.addMetadata(atom);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
-        Version manifest = client.addVersion(builder);
+        Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -149,16 +149,16 @@ public class SOSAddVersionTest extends ClientTest {
     public void testAddAssetWithJPEGMetadata() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
-        Atom atom = client.addAtom(atomBuilder);
+        Atom atom = agent.addAtom(atomBuilder);
 
-        SOSMetadata metadata = client.addMetadata(atom);
+        SOSMetadata metadata = agent.addMetadata(atom);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
-        Version manifest = client.addVersion(builder);
+        Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -168,23 +168,23 @@ public class SOSAddVersionTest extends ClientTest {
     public void testAddAssetAndGetJPEGMetadata() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
-        Atom atom = client.addAtom(atomBuilder);
+        Atom atom = agent.addAtom(atomBuilder);
 
-        SOSMetadata metadata = client.addMetadata(atom);
+        SOSMetadata metadata = agent.addMetadata(atom);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
-        Version manifest = client.addVersion(builder);
+        Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.VERSION);
 
         Version retrievedVersion = (Version) retrievedManifest;
         IGUID retrievedMetadataGUID = (IGUID) retrievedVersion.getMetadata().toArray()[0];
         assertEquals(metadata.guid(), retrievedMetadataGUID);
 
-        SOSMetadata retrievedMetadata = client.getMetadata(retrievedMetadataGUID);
+        SOSMetadata retrievedMetadata = agent.getMetadata(retrievedMetadataGUID);
         assertEquals(metadata.guid(), retrievedMetadata.guid());
     }
 

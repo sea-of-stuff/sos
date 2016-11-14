@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -24,11 +24,11 @@ import java.util.Collections;
  */
 public class SOSFileSystemFactory implements IFileSystemFactory {
 
-    private Client client;
+    private Agent agent;
     private IGUID rootGUID;
 
-    public SOSFileSystemFactory(Client client, IGUID rootGUID) {
-        this.client = client;
+    public SOSFileSystemFactory(Agent agent, IGUID rootGUID) {
+        this.agent = agent;
         this.rootGUID = rootGUID;
     }
 
@@ -38,26 +38,26 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
-        if (client != null && rootGUID != null) {
-            return makeFileSystem(client);
+        if (agent != null && rootGUID != null) {
+            return makeFileSystem(agent);
         }
 
         throw new FileSystemCreationException();
     }
 
-    public IFileSystem makeFileSystem(Client client) throws FileSystemCreationException {
+    public IFileSystem makeFileSystem(Agent agent) throws FileSystemCreationException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
-        if (client != null) {
-            Version rootAsset = createRoot(client);
-            return new SOSFileSystem(client, rootAsset);
+        if (agent != null) {
+            Version rootAsset = createRoot(agent);
+            return new SOSFileSystem(agent, rootAsset);
         } else {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
             return null;
         }
     }
 
-    private Version createRoot(Client sos) {
+    private Version createRoot(Agent sos) {
         Version retval = getRoot(sos, rootGUID);
 
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
@@ -78,7 +78,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         return retval;
     }
 
-    private Version getRoot(Client sos, IGUID root) {
+    private Version getRoot(Agent sos, IGUID root) {
         Version retval;
         try {
             retval = sos.getHEAD(root);
@@ -88,7 +88,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         return retval;
     }
 
-    private Compound createRootCompound(Client sos) throws ManifestPersistException, ManifestNotMadeException {
+    private Compound createRootCompound(Agent sos) throws ManifestPersistException, ManifestNotMadeException {
         return sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
     }
 

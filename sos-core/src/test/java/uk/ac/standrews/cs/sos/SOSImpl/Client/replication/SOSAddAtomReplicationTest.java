@@ -20,13 +20,13 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         String testString = "first line and second line - replica";
         InputStream stream = HelperTest.StringToInputStream(testString);
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-        Atom manifest = client.addAtom(builder);
+        Atom manifest = agent.addAtom(builder);
         assertNotNull(manifest.getContentGUID());
         assertEquals(2, manifest.getLocations().size());
 
         // TODO
         // This is meaningless, because data will be also in cache and local disk?
-        InputStream inputStream = client.getAtomContent(manifest);
+        InputStream inputStream = agent.getAtomContent(manifest);
         String resultString = HelperTest.InputStreamToString(inputStream);
         assertEquals(testString, resultString);
 

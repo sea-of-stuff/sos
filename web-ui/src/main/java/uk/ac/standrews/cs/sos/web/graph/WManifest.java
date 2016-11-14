@@ -19,7 +19,7 @@ public class WManifest {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        uk.ac.standrews.cs.sos.interfaces.manifests.Manifest manifest = sos.getClient().getManifest(guid);
+        uk.ac.standrews.cs.sos.interfaces.manifests.Manifest manifest = sos.getAgent().getManifest(guid);
 
         ObjectMapper mapper = new ObjectMapper();
         Object json = mapper.readValue(manifest.toString(), Object.class);

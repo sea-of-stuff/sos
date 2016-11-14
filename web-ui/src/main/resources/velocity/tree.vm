@@ -104,6 +104,10 @@
                         $('#metadata').html(data);
                     })
 
+                    $.get("/graph/data/" + id , function(data) {
+                        $('#data').html(data);
+                    })
+
                     $.get("/graph/" + id , function(data) {
                         buildAndRenderGraph(data);
                     });

@@ -14,7 +14,7 @@ public class LocalSOSNodeTest extends SetUpTest {
     @Test
     public void isClientByDefault() {
         assertTrue(localSOSNode.isClient());
-        assertNotNull(localSOSNode.getClient());
+        assertNotNull(localSOSNode.getAgent());
     }
 
 }

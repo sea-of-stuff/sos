@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * This class represents the SOSNode of this machine.
  *
- * A SOSLocalNode may expose multiple SOS interfaces to the caller: Client, Storage
+ * A SOSLocalNode may expose multiple SOS interfaces to the caller: Agent, Storage
  *  NDS, DDS, and MCS
  *
  * A SOSLocalNode is created via a builder.
@@ -65,7 +65,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     // Node roles
     // All roles will share storage, node directory, manifests directory, etc.
-    private Client client;
+    private Agent agent;
     private Storage storage;
     private DDS dds;
     private NDS nds;
@@ -117,9 +117,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         SOS_LOG.log(LEVEL.INFO, "Node initialised");
     }
 
-    @Override
-    public Client getClient() {
-        return client;
+    public Agent getAgent() {
+        return agent;
     }
 
     @Override
@@ -198,7 +197,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
             ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
-            client = new SOSClient(this, nodesDirectory, localStorage, manifestsManager,
+            agent = new SOSAgent(this, nodesDirectory, localStorage, manifestsManager,
                                     identity, replicationPolicy, metadataDirectory);
         }
 

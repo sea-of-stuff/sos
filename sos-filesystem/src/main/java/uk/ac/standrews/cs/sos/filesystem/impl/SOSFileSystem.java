@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
-import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.UriUtil;
 
@@ -29,10 +29,10 @@ import java.util.Iterator;
  */
 public class SOSFileSystem implements IFileSystem {
 
-    private Client sos;
+    private Agent sos;
     private IGUID invariant;
 
-    public SOSFileSystem(Client sos, Version root) {
+    public SOSFileSystem(Agent sos, Version root) {
         this.sos = sos;
         this.invariant = root.getInvariantGUID();
 

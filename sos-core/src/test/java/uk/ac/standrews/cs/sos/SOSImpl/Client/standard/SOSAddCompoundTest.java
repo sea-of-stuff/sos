@@ -21,7 +21,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddCompoundTest extends ClientTest {
+public class SOSAddCompoundTest extends AgentTest {
 
     @Test
     public void testAddCompound() throws Exception {
@@ -29,10 +29,10 @@ public class SOSAddCompoundTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = client.addCompound(CompoundType.DATA, contents);
+        Compound manifest = agent.addCompound(CompoundType.DATA, contents);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.COMPOUND);
 
-        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.COMPOUND);
 
         Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
@@ -48,10 +48,10 @@ public class SOSAddCompoundTest extends ClientTest {
         Collection<Content> contents = new ArrayList<>();
         contents.add(cat);
 
-        Compound manifest = client.addCompound(CompoundType.DATA, contents);
-        Manifest retrievedManifest = client.getManifest(manifest.getContentGUID());
+        Compound manifest = agent.addCompound(CompoundType.DATA, contents);
+        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
 
-        boolean isVerified = client.verifyManifest(localSOSNode.getIdentity(), retrievedManifest);
+        boolean isVerified = agent.verifyManifest(localSOSNode.getIdentity(), retrievedManifest);
         assertTrue(isVerified);
     }
 
