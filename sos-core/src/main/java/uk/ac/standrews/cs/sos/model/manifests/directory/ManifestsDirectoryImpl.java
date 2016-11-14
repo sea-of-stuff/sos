@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
-import java.util.stream.Stream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -66,11 +65,6 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         }
 
         return manifest;
-    }
-
-    @Override
-    public Stream<Manifest> getAllManifests() {
-        return local.getAllManifests();
     }
 
     @Override

@@ -24,14 +24,7 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -92,35 +85,6 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         }
 
         return getManifestFromGUID(guid);
-    }
-
-    // FIXME - this must be improved
-    // Making a list and converting it to a stream is not really optimal.
-    @Override
-    public Stream<Manifest> getAllManifests() {
-
-        Path dir = null;
-        try {
-            dir = localStorage.getManifestDirectory().toFile().toPath();
-        } catch (IOException | DataStorageException e) {
-            e.printStackTrace();
-        }
-
-        List<Manifest> result = new ArrayList<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.json")) {
-            for (Path entry: stream) {
-
-                String filename = entry.getFileName().toString();
-                filename = filename.substring(0, filename.length() - 5); // removing extension
-                Manifest manifest = getManifestFromGUID(GUIDFactory.recreateGUID(filename));
-
-                result.add(manifest);
-            }
-        } catch (DirectoryIteratorException | IOException | GUIDGenerationException | ManifestNotFoundException ex) {
-            ex.printStackTrace();
-        }
-
-        return result.stream();
     }
 
     /**

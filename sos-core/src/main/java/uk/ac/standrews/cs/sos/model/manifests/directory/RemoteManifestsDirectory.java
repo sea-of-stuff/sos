@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.stream.Stream;
 
 /**
  * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
@@ -66,15 +65,6 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // Ask such nodes about manifest with given guid
 
         throw new ManifestNotFoundException("remote directory - findManifest not implemented yet");
-    }
-
-    @Override
-    public Stream<Manifest> getAllManifests() {
-
-        // This method should not be supported.
-        // Getting all manifests from the entire SOS is meaningless.
-
-        return null;
     }
 
     @Override

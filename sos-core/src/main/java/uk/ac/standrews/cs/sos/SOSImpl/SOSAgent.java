@@ -24,7 +24,6 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.stream.Stream;
 
 /**
  * Implementation class for the SeaOfStuff interface.
@@ -129,20 +128,8 @@ public class SOSAgent implements Agent {
 
     @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
-        SOS_LOG.log(LEVEL.INFO, "Verifying manifest " + manifest.getContentGUID());
-
         boolean success = manifest.verify(identity);
-
-        SOS_LOG.log(LEVEL.INFO, "Manifest " + manifest.getContentGUID() + " verified. Result: " + success);
-
         return success;
-    }
-
-    @Override
-    public Stream<Manifest> getAllManifests() {
-        SOS_LOG.log(LEVEL.INFO, "Retrieving all manifests");
-
-        return manifestsDirectory.getAllManifests();
     }
 
     @Override
