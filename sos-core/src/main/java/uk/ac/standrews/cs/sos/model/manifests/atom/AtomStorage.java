@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.store.*;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -17,10 +17,10 @@ import java.util.Collection;
 public class AtomStorage {
 
     private IGUID nodeGUID;
-    private InternalStorage storage;
+    private LocalStorage storage;
 
 
-    public AtomStorage(IGUID nodeGUID, InternalStorage storage) {
+    public AtomStorage(IGUID nodeGUID, LocalStorage storage) {
         this.nodeGUID = nodeGUID;
         this.storage = storage;
     }

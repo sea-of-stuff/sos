@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.net.URL;
@@ -14,12 +14,12 @@ import java.net.URLStreamHandlerFactory;
  */
 public class SOSProtocol {
 
-    public static void Register(InternalStorage internalStorage, NodeManager nodeManager) throws SOSProtocolException {
+    public static void Register(LocalStorage localStorage, NodeManager nodeManager) throws SOSProtocolException {
         SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
         try {
             if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
                 URLStreamHandlerFactory urlStreamHandlerFactory =
-                        new SOSURLStreamHandlerFactory(internalStorage, nodeManager);
+                        new SOSURLStreamHandlerFactory(localStorage, nodeManager);
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
             }
         } catch (Error e) {

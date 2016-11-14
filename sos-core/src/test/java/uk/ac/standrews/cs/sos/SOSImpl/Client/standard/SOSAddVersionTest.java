@@ -111,7 +111,7 @@ public class SOSAddVersionTest extends ClientTest {
 
     @Test
     public void testAddAssetWithAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = client.addAtom(atomBuilder);
 
@@ -128,7 +128,7 @@ public class SOSAddVersionTest extends ClientTest {
 
     @Test
     public void testAddAssetWithMetadata() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = client.addAtom(atomBuilder);
 

@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -26,7 +26,7 @@ import java.util.List;
 public class SetUpTest extends CommonTest {
 
     protected SOSLocalNode localSOSNode;
-    protected InternalStorage internalStorage;
+    protected LocalStorage localStorage;
 
     private static final String TEST_RESOURCES_PATH = "src/test/resources/";
     private static final String MOCK_PROPERTIES =
@@ -99,8 +99,8 @@ public class SetUpTest extends CommonTest {
             StorageType storageType = configuration.getStorageType();
             String root = configuration.getStorageLocation();
 
-            internalStorage =
-                    new InternalStorage(StorageFactory
+            localStorage =
+                    new LocalStorage(StorageFactory
                             .createStorage(storageType, root, true));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
@@ -113,7 +113,7 @@ public class SetUpTest extends CommonTest {
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         localSOSNode = builder.configuration(configuration)
-                                .internalStorage(internalStorage)
+                                .internalStorage(localStorage)
                                 .policies(policyManager)
                                 .bootstrapNodes(bootstrapNodes)
                                 .build();
@@ -121,7 +121,7 @@ public class SetUpTest extends CommonTest {
 
     @AfterMethod
     public void tearDown() throws IOException, InterruptedException, DataStorageException {
-        internalStorage.destroy();
+        localStorage.destroy();
     }
 
     protected void createConfiguration() throws SOSConfigurationException, IOException {

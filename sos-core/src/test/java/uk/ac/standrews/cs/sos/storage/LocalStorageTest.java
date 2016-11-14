@@ -21,39 +21,39 @@ import static org.testng.Assert.assertNotNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class InternalStorageTest extends CommonTest {
+public class LocalStorageTest extends CommonTest {
 
-    protected InternalStorage internalStorage;
+    protected LocalStorage localStorage;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        internalStorage =
-                new InternalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
+        localStorage =
+                new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
     }
 
     @AfterMethod
     public void tearDown() throws DataStorageException {
-        internalStorage.destroy();
+        localStorage.destroy();
     }
 
     @Test
     public void defaultDirectoriesExistTest() throws DataStorageException {
-        assertNotNull(internalStorage.getDataDirectory());
-        assertNotNull(internalStorage.getManifestDirectory());
-        assertNotNull(internalStorage.getHeadsDirectory());
-        assertNotNull(internalStorage.getMetadataDirectory());
+        assertNotNull(localStorage.getDataDirectory());
+        assertNotNull(localStorage.getManifestDirectory());
+        assertNotNull(localStorage.getHeadsDirectory());
+        assertNotNull(localStorage.getMetadataDirectory());
     }
 
     @Test
     public void createFileTest() throws DataStorageException, BindingAbsentException,
             PersistenceException, DataException {
 
-        internalStorage.createFile(internalStorage.getManifestDirectory(),
+        localStorage.createFile(localStorage.getManifestDirectory(),
                 "test.txt").persist();
 
-        File file = (File) internalStorage.getManifestDirectory().get("test.txt");
+        File file = (File) localStorage.getManifestDirectory().get("test.txt");
         assertNotNull(file);
 
         assertEquals(file.getData().getSize(), 0);
@@ -63,10 +63,10 @@ public class InternalStorageTest extends CommonTest {
     public void createFileWithDataTest() throws DataStorageException, BindingAbsentException,
             PersistenceException, DataException {
 
-        internalStorage.createFile(internalStorage.getManifestDirectory(),
+        localStorage.createFile(localStorage.getManifestDirectory(),
                 "test.txt", new StringData("test-data")).persist();
 
-        File file = (File) internalStorage.getManifestDirectory().get("test.txt");
+        File file = (File) localStorage.getManifestDirectory().get("test.txt");
         assertNotNull(file);
 
         assertEquals(file.getData().getSize(), 9);

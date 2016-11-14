@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
@@ -42,7 +42,7 @@ import static org.testng.Assert.*;
  */
 public class LocalManifestsManagerTest extends CommonTest {
 
-    private InternalStorage storage;
+    private LocalStorage storage;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
@@ -52,7 +52,7 @@ public class LocalManifestsManagerTest extends CommonTest {
         when(configurationMock.getStorageType()).thenReturn(StorageType.LOCAL);
         when(configurationMock.getStorageLocation()).thenReturn(System.getProperty("user.home") + "/sos/");
 
-        storage = new InternalStorage(StorageFactory
+        storage = new LocalStorage(StorageFactory
                 .createStorage(configurationMock.getStorageType(),
                         configurationMock.getStorageLocation(), true));
     }

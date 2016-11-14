@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -22,7 +22,7 @@ public abstract class LocationStore extends CommonLocalStore {
     private Location origin;
     private LocationBundle locationBundle;
 
-    public LocationStore(IGUID nodeGUID, InternalStorage storage, Location location) {
+    public LocationStore(IGUID nodeGUID, LocalStorage storage, Location location) {
         super(nodeGUID, storage);
         this.origin = location;
     }

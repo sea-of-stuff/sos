@@ -19,7 +19,7 @@ import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -46,7 +46,7 @@ public class SOSClient implements Client {
 
     private AtomStorage atomStorage;
 
-    public SOSClient(Node node, NodeManager nodeManager, InternalStorage storage, ManifestsManager manifestsManager,
+    public SOSClient(Node node, NodeManager nodeManager, LocalStorage storage, ManifestsManager manifestsManager,
                      Identity identity, ReplicationPolicy replicationPolicy, MetadataManager metadataManager) {
 
         this.nodeManager = nodeManager;

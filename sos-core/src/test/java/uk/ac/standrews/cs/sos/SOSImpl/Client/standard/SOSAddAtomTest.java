@@ -36,7 +36,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAddAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
@@ -51,7 +51,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
@@ -65,7 +65,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerify() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
@@ -76,7 +76,7 @@ public class SOSAddAtomTest extends ClientTest {
 
     @Test
     public void testAtomDataVerifyFails() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = client.addAtom(builder);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
@@ -148,11 +148,11 @@ public class SOSAddAtomTest extends ClientTest {
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = client.addAtom(builder);
 
-        Directory dataDir = internalStorage.getDataDirectory();
-        Directory manifestsDir = internalStorage.getManifestDirectory();
+        Directory dataDir = localStorage.getDataDirectory();
+        Directory manifestsDir = localStorage.getManifestDirectory();
 
-        File file = internalStorage.createFile(dataDir, manifest.getContentGUID().toString());
-        File manifestFile = internalStorage.createFile(manifestsDir, manifest.getContentGUID() + ".json");
+        File file = localStorage.createFile(dataDir, manifest.getContentGUID().toString());
+        File manifestFile = localStorage.createFile(manifestsDir, manifest.getContentGUID() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -164,8 +164,8 @@ public class SOSAddAtomTest extends ClientTest {
 
         assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
 
-        File newFile = internalStorage.createFile(dataDir, newManifest.getContentGUID().toString());
-        File newManifestFile = internalStorage.createFile(manifestsDir, newManifest.getContentGUID() + ".json");
+        File newFile = localStorage.createFile(dataDir, newManifest.getContentGUID().toString());
+        File newManifestFile = localStorage.createFile(manifestsDir, newManifest.getContentGUID() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 

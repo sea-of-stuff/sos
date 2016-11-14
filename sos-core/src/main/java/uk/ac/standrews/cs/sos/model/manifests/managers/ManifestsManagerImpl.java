@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
@@ -23,15 +23,15 @@ public class ManifestsManagerImpl implements MasterManifestManager {
     private ManifestsCache cache;
     private LocalManifestsManager local;
     private RemoteManifestsManager remote;
-    private InternalStorage internalStorage;
+    private LocalStorage localStorage;
 
-    public ManifestsManagerImpl(ManifestPolicy manifestPolicy, InternalStorage internalStorage,
+    public ManifestsManagerImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage,
                                 NodeManager nodeManager) {
 
-        this.internalStorage = internalStorage;
+        this.localStorage = localStorage;
 
         loadOrCreateCache();
-        local = new LocalManifestsManager(internalStorage);
+        local = new LocalManifestsManager(localStorage);
         remote = new RemoteManifestsManager(manifestPolicy, nodeManager);
     }
 
@@ -86,8 +86,8 @@ public class ManifestsManagerImpl implements MasterManifestManager {
     @Override
     public void flush() {
         try {
-            Directory cacheDir = internalStorage.getCachesDirectory();
-            File file = internalStorage.createFile(cacheDir, CACHE_FILE);
+            Directory cacheDir = localStorage.getCachesDirectory();
+            File file = localStorage.createFile(cacheDir, CACHE_FILE);
             cache.persist(file);
         } catch (DataStorageException | IOException e) {
             e.printStackTrace();
@@ -96,9 +96,9 @@ public class ManifestsManagerImpl implements MasterManifestManager {
 
     private void loadOrCreateCache() {
         try {
-            Directory cacheDir = internalStorage.getCachesDirectory();
-            File file = internalStorage.createFile(cacheDir, CACHE_FILE);
-            cache = ManifestsCacheImpl.load(internalStorage, file, internalStorage.getManifestDirectory());
+            Directory cacheDir = localStorage.getCachesDirectory();
+            File file = localStorage.createFile(cacheDir, CACHE_FILE);
+            cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestDirectory());
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }

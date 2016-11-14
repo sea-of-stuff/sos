@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -36,7 +36,7 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class AtomManifestTest extends CommonTest {
 
-    private InternalStorage internalStorage;
+    private LocalStorage localStorage;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
@@ -44,8 +44,8 @@ public class AtomManifestTest extends CommonTest {
 
         try {
             String location = System.getProperty("user.home") + "/sos";
-            internalStorage =
-                    new InternalStorage(StorageFactory
+            localStorage =
+                    new LocalStorage(StorageFactory
                             .createStorage(StorageType.LOCAL, location, true));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
@@ -55,7 +55,7 @@ public class AtomManifestTest extends CommonTest {
 
     @AfterMethod
     public void tearDown() throws DataStorageException {
-        internalStorage.destroy();
+        localStorage.destroy();
     }
 
     @Test
@@ -70,7 +70,7 @@ public class AtomManifestTest extends CommonTest {
     @Test
     public void testNullGUID() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
@@ -82,7 +82,7 @@ public class AtomManifestTest extends CommonTest {
     @Test
     public void testGetLocations() throws Exception {
         Collection<LocationBundle> bundles = new ArrayList<>();
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 

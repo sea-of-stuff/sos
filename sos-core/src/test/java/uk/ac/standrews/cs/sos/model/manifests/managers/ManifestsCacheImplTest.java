@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -94,13 +94,13 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void persistCache() throws IOException, ClassNotFoundException, ManifestsCacheMissException, StorageException,
             DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException {
 
-        InternalStorage internalStorage =
-                new InternalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
+        LocalStorage localStorage =
+                new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
 
-        Directory manifestsDir = internalStorage.getManifestDirectory();
-        Directory cachesDir = internalStorage.getCachesDirectory();
+        Directory manifestsDir = localStorage.getManifestDirectory();
+        Directory cachesDir = localStorage.getCachesDirectory();
 
-        LocalManifestsManager localManifestsManager = new LocalManifestsManager(internalStorage);
+        LocalManifestsManager localManifestsManager = new LocalManifestsManager(localStorage);
         ManifestsCache cache = new ManifestsCacheImpl();
 
         Manifest manifest = getValidManifest();
@@ -110,10 +110,10 @@ public class ManifestsCacheImplTest extends CommonTest {
         localManifestsManager.addManifest(manifest);
         cache.addManifest(manifest);
 
-        File file = internalStorage.createFile(cachesDir, "manifests.cache");
+        File file = localStorage.createFile(cachesDir, "manifests.cache");
         cache.persist(file);
 
-        ManifestsCache persistedCache = ManifestsCacheImpl.load(internalStorage, file, manifestsDir);
+        ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
 
         assertNotNull(persistedCache.getManifest(guid));
     }
@@ -122,11 +122,11 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void persistCacheFailsWhenNoManifestsNotSaved() throws IOException, ClassNotFoundException,
             ManifestsCacheMissException, StorageException, DataStorageException {
 
-        InternalStorage internalStorage =
-                new InternalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
+        LocalStorage localStorage =
+                new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
 
-        Directory manifestsDir = internalStorage.getManifestDirectory();
-        Directory cachesDir = internalStorage.getCachesDirectory();
+        Directory manifestsDir = localStorage.getManifestDirectory();
+        Directory cachesDir = localStorage.getCachesDirectory();
 
         ManifestsCache cache = new ManifestsCacheImpl();
 
@@ -134,10 +134,10 @@ public class ManifestsCacheImplTest extends CommonTest {
         IGUID guid = manifest.guid();
         cache.addManifest(manifest);
 
-        File file = internalStorage.createFile(cachesDir, "manifests.cache");
+        File file = localStorage.createFile(cachesDir, "manifests.cache");
         cache.persist(file);
 
-        ManifestsCache persistedCache = ManifestsCacheImpl.load(internalStorage, file, manifestsDir);
+        ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
         persistedCache.getManifest(guid);
     }
 

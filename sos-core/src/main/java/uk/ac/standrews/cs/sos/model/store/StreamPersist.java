@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 
 import java.io.InputStream;
 
@@ -13,7 +13,7 @@ import java.io.InputStream;
  */
 public class StreamPersist extends StreamStore {
 
-    public StreamPersist(IGUID nodeGUID, InternalStorage storage, InputStream inputStream) {
+    public StreamPersist(IGUID nodeGUID, LocalStorage storage, InputStream inputStream) {
         super(nodeGUID, storage, inputStream);
     }
 

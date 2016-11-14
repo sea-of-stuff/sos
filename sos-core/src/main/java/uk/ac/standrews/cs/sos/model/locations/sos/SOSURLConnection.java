@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.NodeManager;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
@@ -32,7 +32,7 @@ import java.util.Collection;
  */
 public class SOSURLConnection extends URLConnection {
 
-    private InternalStorage internalStorage;
+    private LocalStorage localStorage;
     private NodeManager nodeManager;
 
     /**
@@ -41,12 +41,12 @@ public class SOSURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(InternalStorage internalStorage,
+    protected SOSURLConnection(LocalStorage localStorage,
                                NodeManager nodeManager,
                                URL url) {
         super(url);
 
-        this.internalStorage = internalStorage;
+        this.localStorage = localStorage;
         this.nodeManager = nodeManager;
     }
 
@@ -103,7 +103,7 @@ public class SOSURLConnection extends URLConnection {
             BindingAbsentException, DataException, IOException {
         SOS_LOG.log(LEVEL.INFO, "Data will be fetched from this node");
 
-        Directory directory = internalStorage.getDataDirectory();
+        Directory directory = localStorage.getDataDirectory();
         String filename = entityGUID.toString();
         File file = (File) directory.get(filename);
         Data data = file.getData();

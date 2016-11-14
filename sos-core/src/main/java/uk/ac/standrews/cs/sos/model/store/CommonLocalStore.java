@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
@@ -24,10 +24,10 @@ import java.net.MalformedURLException;
  */
 public abstract class CommonLocalStore implements Store {
 
-    protected InternalStorage storage;
+    protected LocalStorage storage;
     protected IGUID nodeGUID;
 
-    public CommonLocalStore(IGUID nodeGUID, InternalStorage storage) {
+    public CommonLocalStore(IGUID nodeGUID, LocalStorage storage) {
         this.nodeGUID = nodeGUID;
         this.storage = storage;
     }

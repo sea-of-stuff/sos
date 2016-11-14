@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
@@ -79,7 +79,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         return lru;
     }
 
-    public static ManifestsCache load(InternalStorage storage, File file, Directory manifestsDir) throws IOException, ClassNotFoundException {
+    public static ManifestsCache load(LocalStorage storage, File file, Directory manifestsDir) throws IOException, ClassNotFoundException {
         FileInputStream istream = new FileInputStream(file.toFile());
         ObjectInputStream q = new ObjectInputStream(istream);
 
@@ -113,7 +113,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         lru.add(guid);
     }
 
-    private static Manifest loadManifest(InternalStorage storage, Directory manifestsDir, IGUID guid) {
+    private static Manifest loadManifest(LocalStorage storage, Directory manifestsDir, IGUID guid) {
         try {
             File file = ManifestsUtils.ManifestFile(storage, manifestsDir, guid.toString());
             Manifest manifest = ManifestsUtils.ManifestFromFile(file);

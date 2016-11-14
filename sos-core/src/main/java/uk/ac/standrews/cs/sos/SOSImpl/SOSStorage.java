@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -34,7 +34,7 @@ public class SOSStorage implements Storage {
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, InternalStorage storage, ManifestsManager manifestsManager) {
+    public SOSStorage(Node node, LocalStorage storage, ManifestsManager manifestsManager) {
 
         this.manifestsManager = manifestsManager;
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);

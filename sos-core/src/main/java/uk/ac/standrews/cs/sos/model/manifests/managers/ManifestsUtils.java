@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -58,7 +58,7 @@ public class ManifestsUtils {
         return manifest;
     }
 
-    public static File ManifestFile(InternalStorage storage, Directory directory, String guid) throws DataStorageException {
+    public static File ManifestFile(LocalStorage storage, Directory directory, String guid) throws DataStorageException {
         return storage.createFile(directory, normaliseGUID(guid));
     }
 

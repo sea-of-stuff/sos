@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -25,7 +25,7 @@ public abstract class StreamStore extends CommonLocalStore {
     private InputStream inputStream;
     private LocationBundle locationBundle;
 
-    public StreamStore(IGUID nodeGUID, InternalStorage storage, InputStream inputStream) {
+    public StreamStore(IGUID nodeGUID, LocalStorage storage, InputStream inputStream) {
         super(nodeGUID, storage);
         this.inputStream = inputStream;
     }

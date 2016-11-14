@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
@@ -40,17 +40,17 @@ public class LocalManifestsManager implements ManifestsManager {
 
     private final static String BACKUP_EXTENSION = ".bak";
 
-    final private InternalStorage internalStorage;
+    final private LocalStorage localStorage;
 
     /**
      * Creates a manifests manager given a sea of stuff configuration object and
      * a policy for the sea of stuff. The configuration object is need to know the
      * locations for the manifests.
      *
-     * @param internalStorage
+     * @param localStorage
      */
-    public LocalManifestsManager(InternalStorage internalStorage) {
-        this.internalStorage = internalStorage;
+    public LocalManifestsManager(LocalStorage localStorage) {
+        this.localStorage = localStorage;
     }
 
     /**
@@ -101,7 +101,7 @@ public class LocalManifestsManager implements ManifestsManager {
 
         Path dir = null;
         try {
-            dir = internalStorage.getManifestDirectory().toFile().toPath();
+            dir = localStorage.getManifestDirectory().toFile().toPath();
         } catch (IOException | DataStorageException e) {
             e.printStackTrace();
         }
@@ -174,8 +174,8 @@ public class LocalManifestsManager implements ManifestsManager {
     }
     
     private File getHEADFile(IGUID invariant) throws DataStorageException {
-        Directory headsDir = internalStorage.getHeadsDirectory();
-        File file = internalStorage.createFile(headsDir, invariant.toString());
+        Directory headsDir = localStorage.getHeadsDirectory();
+        File file = localStorage.createFile(headsDir, invariant.toString());
 
         return file;
     }
@@ -252,8 +252,8 @@ public class LocalManifestsManager implements ManifestsManager {
             IGUID manifestGUID = manifest.guid();
             File manifestFileToBackup = getManifestFile(manifestGUID);
 
-            Directory manifestsDirectory = internalStorage.getManifestDirectory();
-            File backupManifest = internalStorage.createFile(manifestsDirectory,
+            Directory manifestsDirectory = localStorage.getManifestDirectory();
+            File backupManifest = localStorage.createFile(manifestsDirectory,
                     manifestFileToBackup.getName() + BACKUP_EXTENSION,
                     manifestFileToBackup.getData());
             backupManifest.persist();
@@ -288,8 +288,8 @@ public class LocalManifestsManager implements ManifestsManager {
     }
 
     private File getManifestFile(String guid) throws DataStorageException {
-        Directory manifestsDir = internalStorage.getManifestDirectory();
-        File file = ManifestsUtils.ManifestFile(internalStorage, manifestsDir, guid);
+        Directory manifestsDir = localStorage.getManifestDirectory();
+        File file = ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
 
         return file;
     }

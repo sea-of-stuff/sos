@@ -31,7 +31,7 @@ import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
@@ -55,7 +55,7 @@ import java.util.List;
  */
 public class SOSLocalNode extends SOSNode implements LocalNode {
 
-    private InternalStorage internalStorage;
+    private LocalStorage localStorage;
     private PolicyManager policyManager;
     private NodeDatabase nodeDatabase;
     private Identity identity;
@@ -81,7 +81,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         SOS_LOG.log(LEVEL.INFO, "Starting up node ");
 
         SOSConfiguration configuration = Builder.configuration;
-        internalStorage = Builder.internalStorage;
+        localStorage = Builder.localStorage;
         policyManager = Builder.policyManager;
 
         try {
@@ -101,7 +101,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initNodeManager();
 
         try {
-            SOSProtocol.Register(internalStorage, nodeManager);
+            SOSProtocol.Register(localStorage, nodeManager);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
         }
@@ -176,7 +176,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void initManifestManager() {
         ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
-        manifestsManager = new ManifestsManagerImpl(manifestPolicy, internalStorage, nodeManager);
+        manifestsManager = new ManifestsManagerImpl(manifestPolicy, localStorage, nodeManager);
     }
 
     private void initIdentity() throws SOSException {
@@ -191,20 +191,20 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initMetadataManager() {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
         MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
-        metadataManager = new MetadataManagerImpl(internalStorage, metadataEngine, metadataPolicy);
+        metadataManager = new MetadataManagerImpl(localStorage, metadataEngine, metadataPolicy);
     }
 
     private void initSOSInstances() {
         if (isClient()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Client role");
             ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
-            client = new SOSClient(this, nodeManager, internalStorage, manifestsManager,
+            client = new SOSClient(this, nodeManager, localStorage, manifestsManager,
                                     identity, replicationPolicy, metadataManager);
         }
 
         if (isStorage()) {
             SOS_LOG.log(LEVEL.INFO, "Creating a Storage role");
-            storage = new SOSStorage(this, internalStorage, manifestsManager);
+            storage = new SOSStorage(this, localStorage, manifestsManager);
         }
 
         if (isDDS()) {
@@ -235,7 +235,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     public static class Builder {
         private static SOSConfiguration configuration;
-        private static InternalStorage internalStorage;
+        private static LocalStorage localStorage;
         private static PolicyManager policyManager;
         private static List<Node> bootstrapNodes;
 
@@ -244,8 +244,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             return this;
         }
 
-        public Builder internalStorage(InternalStorage internalStorage) {
-            Builder.internalStorage = internalStorage;
+        public Builder internalStorage(LocalStorage localStorage) {
+            Builder.localStorage = localStorage;
             return this;
         }
 

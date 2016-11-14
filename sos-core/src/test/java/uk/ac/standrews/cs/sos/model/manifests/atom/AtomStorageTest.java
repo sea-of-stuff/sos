@@ -37,17 +37,17 @@ public class AtomStorageTest extends SetUpTest {
     public void setUp(Method method) throws Exception {
         super.setUp(method);
 
-        atomStorage = new AtomStorage(NODE_GUID, internalStorage);
+        atomStorage = new AtomStorage(NODE_GUID, localStorage);
     }
 
     @AfterMethod
     public void tearDown() throws DataStorageException {
-        internalStorage.destroy();
+        localStorage.destroy();
     }
     
     @Test
     public void testStoreAtomNullBundles() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         Collection<LocationBundle> bundles = null;
 
         IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
@@ -67,7 +67,7 @@ public class AtomStorageTest extends SetUpTest {
 
     @Test
     public void testStoreAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
@@ -139,7 +139,7 @@ public class AtomStorageTest extends SetUpTest {
 
     @Test
     public void testStorePersistAtom() throws Exception {
-        Location location = HelperTest.createDummyDataFile(internalStorage);
+        Location location = HelperTest.createDummyDataFile(localStorage);
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = atomStorage.persistAtomAndUpdateLocationBundles(location, bundles);

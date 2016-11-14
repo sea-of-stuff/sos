@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaIgnoreMetadata;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -28,14 +28,14 @@ import java.util.List;
  */
 public class MetadataManagerImpl implements MetadataManager {
 
-    private InternalStorage internalStorage;
+    private LocalStorage localStorage;
     private MetadataEngine engine;
     private MetadataPolicy policy;
 
     private List<SOSMetadata> naiveCache = new ArrayList<>();
 
-    public MetadataManagerImpl(InternalStorage internalStorage, MetadataEngine engine, MetadataPolicy policy) {
-        this.internalStorage = internalStorage;
+    public MetadataManagerImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy) {
+        this.localStorage = localStorage;
         this.engine = engine;
         this.policy = policy;
     }
@@ -85,9 +85,9 @@ public class MetadataManagerImpl implements MetadataManager {
 
     private void save(SOSMetadata metadata) {
         try {
-            Directory directory = internalStorage.getMetadataDirectory();
+            Directory directory = localStorage.getMetadataDirectory();
 
-            File metadataFile = internalStorage.createFile(directory, metadata.guid().toString());
+            File metadataFile = localStorage.createFile(directory, metadata.guid().toString());
             StringData data = new StringData(metadata.tabularFormat());
             metadataFile.setData(data);
             metadataFile.persist();
@@ -130,8 +130,8 @@ public class MetadataManagerImpl implements MetadataManager {
     private SOSMetadata findMetadataLocal(IGUID guid) {
 
         try {
-            Directory directory = internalStorage.getMetadataDirectory();
-            File metadataFile = internalStorage.createFile(directory, guid.toString());
+            Directory directory = localStorage.getMetadataDirectory();
+            File metadataFile = localStorage.createFile(directory, guid.toString());
 
             SOSMetadata metadata = new BasicMetadata(metadataFile, TikaIgnoreMetadata.IGNORE_METADATA);
 

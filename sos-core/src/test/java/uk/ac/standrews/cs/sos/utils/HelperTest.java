@@ -5,7 +5,7 @@ import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
-import uk.ac.standrews.cs.sos.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -34,11 +34,11 @@ public class HelperTest {
         return location.getURI().getPath();
     }
 
-    public static Location createDummyDataFile(InternalStorage storage) throws URISyntaxException, StorageException, DataStorageException {
+    public static Location createDummyDataFile(LocalStorage storage) throws URISyntaxException, StorageException, DataStorageException {
         return createDummyDataFile(storage, "testData.txt");
     }
 
-    public static Location createDummyDataFile(InternalStorage storage, String filename)
+    public static Location createDummyDataFile(LocalStorage storage, String filename)
             throws URISyntaxException, StorageException, DataStorageException {
         Directory testDir = storage.getDataDirectory();
         return createDummyDataFile(testDir, filename);

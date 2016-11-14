@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.storage.interfaces.IStorage;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class InternalStorage {
+public class LocalStorage {
 
     private static final String DATA_DIRECTORY_NAME = "data";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
@@ -29,7 +29,7 @@ public class InternalStorage {
      * @param storage
      * @throws DataStorageException
      */
-    public InternalStorage(IStorage storage) throws DataStorageException {
+    public LocalStorage(IStorage storage) throws DataStorageException {
         this.storage = storage;
 
         createSOSDirectories();
