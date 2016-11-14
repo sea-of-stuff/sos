@@ -11,9 +11,8 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
+import uk.ac.standrews.cs.sos.interfaces.sos.*;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
@@ -24,9 +23,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
@@ -38,21 +35,29 @@ import java.util.stream.Stream;
  */
 public class SOSAgent implements Agent {
 
-    private NodesDirectory nodesDirectory;
-    private ReplicationPolicy replicationPolicy;
     private Identity identity;
     private ManifestsDirectory manifestsDirectory;
     private MetadataDirectory metadataDirectory;
 
     private AtomStorage atomStorage;
 
+    private Storage storage;
+    private NDS nds;
+    private DDS dds;
+    private MCS mcs;
+
+    public SOSAgent(Storage storage, NDS nds, DDS dds, MCS mcs) {
+        this.storage = storage;
+        this.nds = nds;
+        this.dds = dds;
+        this.mcs = mcs;
+    }
+
     public SOSAgent(Node node, NodesDirectory nodesDirectory, LocalStorage storage, ManifestsDirectory manifestsDirectory,
                     Identity identity, ReplicationPolicy replicationPolicy, MetadataDirectory metadataDirectory) {
 
-        this.nodesDirectory = nodesDirectory;
         this.manifestsDirectory = manifestsDirectory;
         this.identity = identity;
-        this.replicationPolicy = replicationPolicy;
         this.metadataDirectory = metadataDirectory;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
@@ -60,51 +65,16 @@ public class SOSAgent implements Agent {
 
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
-        SOS_LOG.log(LEVEL.INFO, "Adding atom: " + atomBuilder.toString());
-        long start = System.nanoTime();
-
-        Collection<LocationBundle> bundles = new ArrayList<>();
-
-        IGUID guid;
-        if (atomBuilder.isLocation()) {
-            Location location = atomBuilder.getLocation();
-            bundles.add(new ProvenanceLocationBundle(location));
-            guid = store(location, bundles);
-        } else if (atomBuilder.isInputStream()) {
-            InputStream inputStream = atomBuilder.getInputStream();
-            guid = store(inputStream, bundles);
-        } else {
-            throw new StorageException("AtomBuilder has not been set correctly");
-        }
-
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsDirectory.addManifest(manifest);
-
-        long end = System.nanoTime();
-        SOS_LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
-                +" added in " + (end - start) / 1000000000.0 + " seconds");
-
-
-        SOS_LOG.log(LEVEL.INFO, "Replicating atom");
-        replicateData(manifest, bundles);
-        try {
-            manifestsDirectory.updateAtom(manifest);
-        } catch (ManifestsDirectoryException | ManifestNotFoundException e) {
-            throw new StorageException("Unable to update atom manifest after replication");
-        }
-
+        Atom manifest = storage.addAtom(atomBuilder, false);
         return manifest;
     }
 
     @Override
     public Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
-        SOS_LOG.log(LEVEL.INFO, "Adding compound");
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
-        manifestsDirectory.addManifest(manifest);
-
-        SOS_LOG.log(LEVEL.INFO, "Compound added: " + manifest.getContentGUID());
+        dds.addManifest(manifest, false);
 
         return manifest;
     }
@@ -112,7 +82,6 @@ public class SOSAgent implements Agent {
     @Override
     public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
-        SOS_LOG.log(LEVEL.INFO, "Adding version");
 
         IGUID content = versionBuilder.getContent();
         IGUID invariant = versionBuilder.getInvariant();
@@ -120,12 +89,7 @@ public class SOSAgent implements Agent {
         Collection<IGUID> metadata = versionBuilder.getMetadataCollection();
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
-        manifestsDirectory.addManifest(manifest);
-
-        // TODO - link version and metadata
-        // versionid, meta property, value
-
-        SOS_LOG.log(LEVEL.INFO, "Version added: " + manifest.getContentGUID());
+        dds.addManifest(manifest, false);
 
         return manifest;
     }
@@ -139,34 +103,18 @@ public class SOSAgent implements Agent {
      */
     @Override
     public InputStream getAtomContent(Atom atom) {
-        SOS_LOG.log(LEVEL.INFO, "Getting content for atom: " + atom.getContentGUID());
-
-        InputStream dataStream = atom.getData();
-
-        SOS_LOG.log(LEVEL.INFO, "Returning atom " + atom.getContentGUID() + "data stream");
-
+        InputStream dataStream = storage.getAtomContent(atom);
         return dataStream;
     }
 
     @Override
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        SOS_LOG.log(LEVEL.INFO, "Adding manifest " + manifest.getContentGUID());
-
-        manifestsDirectory.addManifest(manifest);
-
-        // TODO - recursively look for other manifests to add to the NodeManager
-        if (recursive) {
-            throw new UnsupportedOperationException();
-        }
-
-        SOS_LOG.log(LEVEL.INFO, "Added manifest " + manifest.getContentGUID());
+        dds.addManifest(manifest, recursive);
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        SOS_LOG.log(LEVEL.INFO, "Getting manifest " + guid);
-
-        return manifestsDirectory.findManifest(guid);
+        return dds.getManifest(guid);
     }
 
     @Override
@@ -215,6 +163,7 @@ public class SOSAgent implements Agent {
         return metadataDirectory.getMetadata(guid);
     }
 
+    // FIXME - do not use this weird pattern anymore
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
         return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
     }
@@ -223,25 +172,5 @@ public class SOSAgent implements Agent {
         return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
     }
 
-    private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {
-        InputStream atomContent = getAtomContent(manifest);
-        if (replicationPolicy.getReplicationFactor() > 0) {
 
-            Runnable replicator = () -> {
-                Iterator<Node> storageNodes = nodesDirectory.getStorageNodes().iterator();
-                // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
-
-                if (storageNodes.hasNext()) {
-                    Node replicaNode = storageNodes.next();
-                    try {
-                        atomStorage.persistAtomToRemote(replicaNode, atomContent, bundles);
-                    } catch (StorageException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            replicator.run();
-        }
-    }
 }

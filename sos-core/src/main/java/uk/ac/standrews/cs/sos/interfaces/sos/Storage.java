@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.interfaces.sos;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -17,29 +17,7 @@ import java.io.InputStream;
  */
 public interface Storage extends SeaOfStuff {
 
-    /**
-     * Adds an atom to the Sea of Stuff.
-     * The atom is stored locally and replicated according to the policy used by this instance.
-     *
-     * @param location of the data for the atom.
-     * @return the added atom.
-     * @throws StorageException
-     * @throws ManifestPersistException
-     */
-    Atom addAtom(Location location)
-            throws StorageException, ManifestPersistException;
-
-    /**
-     * Adds a stream of data to the Sea of Stuff as an atom.
-     * The atom is stored locally and replicated according to the policy used by this instance.
-     *
-     * @param inputStream for this atom
-     * @return the added atom
-     * @throws StorageException
-     * @throws ManifestPersistException
-     */
-    Atom addAtom(InputStream inputStream)
-            throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.
