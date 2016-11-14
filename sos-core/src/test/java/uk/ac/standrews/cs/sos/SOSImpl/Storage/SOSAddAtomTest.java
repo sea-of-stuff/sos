@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -26,7 +27,9 @@ public class SOSAddAtomTest extends StorageTest {
     @Test
     public void testRetrieveAtomData() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
-        Atom manifest = storage.addAtom(location);
+
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = storage.addAtom(builder, true);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         InputStream inputStream = storage.getAtomContent(manifest);
@@ -37,7 +40,9 @@ public class SOSAddAtomTest extends StorageTest {
     @Test
     public void testAddAtomPersistentLocation() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
-        Atom manifest = storage.addAtom(location);
+
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = storage.addAtom(builder, true);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -55,7 +60,9 @@ public class SOSAddAtomTest extends StorageTest {
     public void testAddAtomStreamPersistentLocation() throws Exception {
         String testString = "first line and second line";
         InputStream stream = HelperTest.StringToInputStream(testString);
-        Atom manifest = storage.addAtom(stream);
+
+        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+        Atom manifest = storage.addAtom(builder, true);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -69,7 +76,9 @@ public class SOSAddAtomTest extends StorageTest {
     @Test
     public void testAddAtomFromURLPersistentLocation() throws Exception {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
-        Atom manifest = storage.addAtom(location);
+
+        AtomBuilder builder = new AtomBuilder().setLocation(location);
+        Atom manifest = storage.addAtom(builder, true);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Collection<LocationBundle> retrievedLocations = (manifest.getLocations());

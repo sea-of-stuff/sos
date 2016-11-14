@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import javax.ws.rs.*;
@@ -62,7 +63,8 @@ public class RESTStorage {
         }
 
         try {
-            Atom atom = storage.addAtom(location);
+            AtomBuilder builder = new AtomBuilder().setLocation(location);
+            Atom atom = storage.addAtom(builder, true);
 
             return HTTPResponses.CREATED(atom.toString());
         } catch (StorageException | ManifestPersistException e) {
@@ -80,7 +82,8 @@ public class RESTStorage {
 
         Atom manifest;
         try {
-            manifest = storage.addAtom(inputStream);
+            AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
+            manifest = storage.addAtom(builder, true);
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
