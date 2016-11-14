@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests.managers;
+package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -100,7 +100,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         Directory manifestsDir = localStorage.getManifestDirectory();
         Directory cachesDir = localStorage.getCachesDirectory();
 
-        LocalManifestsManager localManifestsManager = new LocalManifestsManager(localStorage);
+        LocalManifestsDirectory localManifestsManager = new LocalManifestsDirectory(localStorage);
         ManifestsCache cache = new ManifestsCacheImpl();
 
         Manifest manifest = getValidManifest();

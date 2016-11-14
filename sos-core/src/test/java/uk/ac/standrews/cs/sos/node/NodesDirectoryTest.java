@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.database.DatabaseTypes;
 import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -26,9 +26,9 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class NodeManagerTest extends CommonTest {
+public class NodesDirectoryTest extends CommonTest {
 
-    NodeManager nodeManager;
+    NodesDirectory nodesDirectory;
 
     SOSConfiguration configurationMock = mock(SOSConfiguration.class);
 
@@ -42,29 +42,29 @@ public class NodeManagerTest extends CommonTest {
         // Make sure that the DB path is clean
         HelperTest.DeletePath(configurationMock.getDBPath());
 
-        NodeDatabase nodeDatabase;
+        NodesDatabase nodesDatabase;
         try {
-            nodeDatabase = new SQLDatabase(configurationMock.getDBType(),
+            nodesDatabase = new SQLDatabase(configurationMock.getDBType(),
                     configurationMock.getDBPath());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
 
         Node node = mock(SOSLocalNode.class);
-        nodeManager = new NodeManager(node, nodeDatabase);
+        nodesDirectory = new NodesDirectory(node, nodesDatabase);
     }
 
     @Test
     public void persistMultipleNodesTest() throws GUIDGenerationException, NodeManagerException {
 
-        Collection<Node> nodes = nodeManager.getKnownNodes();
+        Collection<Node> nodes = nodesDirectory.getKnownNodes();
         for(Node n:nodes) {
             System.out.println("GOTCHAYOU " + n.toString());
         }
 
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
-        nodeManager.addNode(node);
+        nodesDirectory.addNode(node);
 
         addNode(true, false, false, false, false);
         addNode(false, true, false, false, false);
@@ -75,12 +75,12 @@ public class NodeManagerTest extends CommonTest {
         addNode(true, true, false, false, false);
         addNode(true, true, true, true, true);
 
-        assertEquals(nodeManager.getKnownNodes().size(), 8);
-        assertEquals(nodeManager.getNode(guid), node);
-        assertEquals(nodeManager.getStorageNodes().size(), 3);
-        assertEquals(nodeManager.getDDSNodes().size(), 2);
-        assertEquals(nodeManager.getNDSNodes().size(), 2);
-        assertEquals(nodeManager.getMCSNodes().size(), 2);
+        assertEquals(nodesDirectory.getKnownNodes().size(), 8);
+        assertEquals(nodesDirectory.getNode(guid), node);
+        assertEquals(nodesDirectory.getStorageNodes().size(), 3);
+        assertEquals(nodesDirectory.getDDSNodes().size(), 2);
+        assertEquals(nodesDirectory.getNDSNodes().size(), 2);
+        assertEquals(nodesDirectory.getMCSNodes().size(), 2);
     }
 
     @Test
@@ -88,17 +88,17 @@ public class NodeManagerTest extends CommonTest {
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
 
-        assertEquals(nodeManager.getKnownNodes().size(), 0);
+        assertEquals(nodesDirectory.getKnownNodes().size(), 0);
 
-        nodeManager.addNode(node);
-        assertEquals(nodeManager.getKnownNodes().size(), 1);
+        nodesDirectory.addNode(node);
+        assertEquals(nodesDirectory.getKnownNodes().size(), 1);
 
-        nodeManager.persistNodesTable();
-        assertEquals(nodeManager.getKnownNodes().size(), 1);
+        nodesDirectory.persistNodesTable();
+        assertEquals(nodesDirectory.getKnownNodes().size(), 1);
     }
 
     private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
-        nodeManager.addNode(new SOSNode(guid, "example.com", 8080,
+        nodesDirectory.addNode(new SOSNode(guid, "example.com", 8080,
                 isClient, isStorage, isDDS,
                 isNDS, isMCS));
     }

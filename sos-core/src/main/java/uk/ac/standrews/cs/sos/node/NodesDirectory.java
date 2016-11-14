@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,30 +15,30 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 
 /**
- * This is the node manager for this node, which keeps track of the known nodes.
+ * This is the node directory for this node, which keeps track of the known nodes.
  *
  * TODO - apply policy to enforce what to return and how much
  * TODO - queries are not performed at the DB level, this might be a bit inefficient
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class NodeManager {
+public class NodesDirectory {
 
     private Node localNode;
-    private NodeDatabase nodeDatabase;
+    private NodesDatabase nodesDatabase;
 
     private Collection<Node> knownNodes;
 
-    public NodeManager(Node localNode, NodeDatabase nodeDatabase) throws NodeManagerException {
+    public NodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodeManagerException {
         this.localNode = localNode;
-        this.nodeDatabase = nodeDatabase;
+        this.nodesDatabase = nodesDatabase;
 
         this.knownNodes = new HashSet<>();
         loadNodesFromDB();
     }
 
     /**
-     * Add an arbitrary node to the manager.
+     * Add an arbitrary node to the directory.
      * This will be used to discovery nodes/data in the LocalSOSNode.
      *
      * @param node
@@ -130,7 +130,7 @@ public class NodeManager {
     public void persistNodesTable() throws NodeManagerException {
         try {
             for (Node knownNode : knownNodes) {
-                nodeDatabase.addNode(knownNode); // FIXME - do not persist nodes that have not changed
+                nodesDatabase.addNode(knownNode); // FIXME - do not persist nodes that have not changed
             }
         } catch (DatabaseConnectionException e) {
             throw new NodeManagerException(e);
@@ -138,12 +138,12 @@ public class NodeManager {
     }
 
     /**
-     * Load nodes from the DB to the node manager (in memory)
+     * Load nodes from the DB to the node directory (in memory)
      * @throws NodeManagerException
      */
     private void loadNodesFromDB() throws NodeManagerException {
         try {
-            Collection<SOSNode> nodes = nodeDatabase.getNodes();
+            Collection<SOSNode> nodes = nodesDatabase.getNodes();
             knownNodes.addAll(nodes);
         } catch (DatabaseConnectionException e) {
             throw new NodeManagerException(e);

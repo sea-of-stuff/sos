@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations.sos;
 
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 
 import java.net.URLStreamHandler;
@@ -19,16 +19,16 @@ public class    SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
     public static boolean URLStreamHandlerFactoryIsSet = false;
 
     private LocalStorage localStorage;
-    private NodeManager nodeManager;
+    private NodesDirectory nodesDirectory;
 
     /**
-     * Construct the factory with the given node manager.
+     * Construct the factory with the given nodes directory.
      *
-     * @param nodeManager
+     * @param nodesDirectory
      */
-    public SOSURLStreamHandlerFactory(LocalStorage localStorage, NodeManager nodeManager) {
+    public SOSURLStreamHandlerFactory(LocalStorage localStorage, NodesDirectory nodesDirectory) {
         this.localStorage = localStorage;
-        this.nodeManager = nodeManager;
+        this.nodesDirectory = nodesDirectory;
 
         URLStreamHandlerFactoryIsSet = true;
     }
@@ -36,7 +36,7 @@ public class    SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
         if (protocol.equals(SOS_PROTOCOL_SCHEME)) {
-            return new SOSURLStreamHandler(localStorage, nodeManager);
+            return new SOSURLStreamHandler(localStorage, nodesDirectory);
         }
 
         return null;

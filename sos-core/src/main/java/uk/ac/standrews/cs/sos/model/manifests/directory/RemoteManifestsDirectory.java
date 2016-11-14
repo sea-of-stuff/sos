@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests.managers;
+package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
@@ -9,12 +9,12 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.network.*;
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -23,18 +23,18 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
- * The remote manifest manager allows the node to replicate manifests to other nodes in the SOS
+ * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
  * as well as finding manifests in the rest of the SOS
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class RemoteManifestsManager implements ManifestsManager {
+public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private ManifestPolicy manifestPolicy;
-    private NodeManager nodeManager;
+    private NodesDirectory nodesDirectory;
 
-    public RemoteManifestsManager(ManifestPolicy manifestPolicy, NodeManager nodeManager) {
+    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, NodesDirectory nodesDirectory) {
         this.manifestPolicy = manifestPolicy;
-        this.nodeManager = nodeManager;
+        this.nodesDirectory = nodesDirectory;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RemoteManifestsManager implements ManifestsManager {
         int replicationFactor = manifestPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
-            Collection<Node> ddsNodes = nodeManager.getDDSNodes();
+            Collection<Node> ddsNodes = nodesDirectory.getDDSNodes();
 
             for(Node ddsNode:ddsNodes) {
                 SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +
@@ -65,7 +65,7 @@ public class RemoteManifestsManager implements ManifestsManager {
         // Contact knwon DDS nodes
         // Ask such nodes about manifest with given guid
 
-        throw new ManifestNotFoundException("remote manager - findManifest not implemented yet");
+        throw new ManifestNotFoundException("remote directory - findManifest not implemented yet");
     }
 
     @Override
@@ -85,6 +85,11 @@ public class RemoteManifestsManager implements ManifestsManager {
     @Override
     public void setHEAD(IGUID version) throws HEADNotSetException {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public void flush() {
+
     }
 
     private void addManifest(Node node, Manifest manifest) {

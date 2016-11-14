@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.network.*;
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -33,7 +33,7 @@ import java.util.Collection;
 public class SOSURLConnection extends URLConnection {
 
     private LocalStorage localStorage;
-    private NodeManager nodeManager;
+    private NodesDirectory nodesDirectory;
 
     /**
      * Constructs a URL connection to the specified URL. A connection to
@@ -42,12 +42,12 @@ public class SOSURLConnection extends URLConnection {
      * @param url the specified URL.
      */
     protected SOSURLConnection(LocalStorage localStorage,
-                               NodeManager nodeManager,
+                               NodesDirectory nodesDirectory,
                                URL url) {
         super(url);
 
         this.localStorage = localStorage;
-        this.nodeManager = nodeManager;
+        this.nodesDirectory = nodesDirectory;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SOSURLConnection extends URLConnection {
             if (dataIsStoredLocally) { // CASE 1
                 inputStream = getDataLocally(entityGUID);
             } else {
-                Node nodeToContact = nodeManager.getNode(nodeGUID);
+                Node nodeToContact = nodesDirectory.getNode(nodeGUID);
 
                 if (nodeToContact == null) { // CASE 2.B
                     nodeToContact = findNodeViaNDS(nodeGUID);
@@ -95,7 +95,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private boolean dataIsStoredLocally(IGUID nodeGUID) {
-        IGUID localNodeGUID = nodeManager.getLocalNode().getNodeGUID();
+        IGUID localNodeGUID = nodesDirectory.getLocalNode().getNodeGUID();
         return localNodeGUID.equals(nodeGUID);
     }
 
@@ -126,7 +126,7 @@ public class SOSURLConnection extends URLConnection {
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
 
-        Collection<Node> ndsNodes = nodeManager.getNDSNodes();
+        Collection<Node> ndsNodes = nodesDirectory.getNDSNodes();
         for(Node ndsNode:ndsNodes) {
             URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
 

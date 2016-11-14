@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface MetadataManager {
+public interface MetadataDirectory {
 
     SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException;
 

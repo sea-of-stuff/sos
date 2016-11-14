@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests.managers;
+package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests.managers;
+package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
@@ -36,20 +36,20 @@ import java.util.stream.Stream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalManifestsManager implements ManifestsManager {
+public class LocalManifestsDirectory implements ManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
 
     final private LocalStorage localStorage;
 
     /**
-     * Creates a manifests manager given a sea of stuff configuration object and
+     * Creates a manifests directory given a sea of stuff configuration object and
      * a policy for the sea of stuff. The configuration object is need to know the
      * locations for the manifests.
      *
      * @param localStorage
      */
-    public LocalManifestsManager(LocalStorage localStorage) {
+    public LocalManifestsDirectory(LocalStorage localStorage) {
         this.localStorage = localStorage;
     }
 
@@ -172,7 +172,12 @@ public class LocalManifestsManager implements ManifestsManager {
             throw new HEADNotSetException("Unable to set the head for version " + version);
         }
     }
-    
+
+    @Override
+    public void flush() {
+
+    }
+
     private File getHEADFile(IGUID invariant) throws DataStorageException {
         Directory headsDir = localStorage.getHeadsDirectory();
         File file = localStorage.createFile(headsDir, invariant.toString());

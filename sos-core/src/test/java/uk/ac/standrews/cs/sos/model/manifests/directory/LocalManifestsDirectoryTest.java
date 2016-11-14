@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.manifests.managers;
+package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -40,7 +40,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalManifestsManagerTest extends CommonTest {
+public class LocalManifestsDirectoryTest extends CommonTest {
 
     private LocalStorage storage;
 
@@ -64,7 +64,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void addAtomManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -87,7 +87,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void addCompoundManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -127,7 +127,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void addAssetManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version assetManifest = createDummyVersion(contentGUID);
@@ -153,7 +153,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void updateAtomManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -183,7 +183,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void deletePrevAtomWhileNewIsAddedTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -215,7 +215,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void addNullManifestTest() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);
@@ -225,7 +225,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test (expectedExceptions = HEADNotFoundException.class)
     public void getUnsetHEAD() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version version = createDummyVersion(contentGUID);
@@ -236,7 +236,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test (expectedExceptions = HEADNotFoundException.class)
     public void getRandomVersionUnsetHEAD() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         IGUID invariant = GUIDFactory.generateRandomGUID();
 
@@ -245,7 +245,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test
     public void getSetAndGetHEAD() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version version = createDummyVersion(contentGUID);
@@ -261,7 +261,7 @@ public class LocalManifestsManagerTest extends CommonTest {
 
     @Test (expectedExceptions = HEADNotSetException.class)
     public void getReSetHEADFail() throws Exception {
-        LocalManifestsManager manifestsManager = new LocalManifestsManager(storage);
+        LocalManifestsDirectory manifestsManager = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Version version = createDummyVersion(contentGUID);

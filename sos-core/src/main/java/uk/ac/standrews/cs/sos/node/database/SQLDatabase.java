@@ -8,7 +8,7 @@ import com.j256.ormlite.table.TableUtils;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodeDatabase;
+import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ import static uk.ac.standrews.cs.sos.node.database.DatabaseTypes.SQLITE_DB;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SQLDatabase implements NodeDatabase {
+public class SQLDatabase implements NodesDatabase {
 
     private DatabaseType databaseType;
     private String pathname;

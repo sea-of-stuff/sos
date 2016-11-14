@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.*;
-import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -38,22 +38,22 @@ import java.util.stream.Stream;
  */
 public class SOSClient implements Client {
 
-    private NodeManager nodeManager;
+    private NodesDirectory nodesDirectory;
     private ReplicationPolicy replicationPolicy;
     private Identity identity;
-    private ManifestsManager manifestsManager;
-    private MetadataManager metadataManager;
+    private ManifestsDirectory manifestsDirectory;
+    private MetadataDirectory metadataDirectory;
 
     private AtomStorage atomStorage;
 
-    public SOSClient(Node node, NodeManager nodeManager, LocalStorage storage, ManifestsManager manifestsManager,
-                     Identity identity, ReplicationPolicy replicationPolicy, MetadataManager metadataManager) {
+    public SOSClient(Node node, NodesDirectory nodesDirectory, LocalStorage storage, ManifestsDirectory manifestsDirectory,
+                     Identity identity, ReplicationPolicy replicationPolicy, MetadataDirectory metadataDirectory) {
 
-        this.nodeManager = nodeManager;
-        this.manifestsManager = manifestsManager;
+        this.nodesDirectory = nodesDirectory;
+        this.manifestsDirectory = manifestsDirectory;
         this.identity = identity;
         this.replicationPolicy = replicationPolicy;
-        this.metadataManager = metadataManager;
+        this.metadataDirectory = metadataDirectory;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -78,7 +78,7 @@ public class SOSClient implements Client {
         }
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
 
         long end = System.nanoTime();
         SOS_LOG.log(LEVEL.INFO, "Atom: " + manifest.getContentGUID()
@@ -88,7 +88,7 @@ public class SOSClient implements Client {
         SOS_LOG.log(LEVEL.INFO, "Replicating atom");
         replicateData(manifest, bundles);
         try {
-            manifestsManager.updateAtom(manifest);
+            manifestsDirectory.updateAtom(manifest);
         } catch (ManifestManagerException | ManifestNotFoundException e) {
             throw new StorageException("Unable to update atom manifest after replication");
         }
@@ -102,7 +102,7 @@ public class SOSClient implements Client {
         SOS_LOG.log(LEVEL.INFO, "Adding compound");
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
 
         SOS_LOG.log(LEVEL.INFO, "Compound added: " + manifest.getContentGUID());
 
@@ -120,7 +120,7 @@ public class SOSClient implements Client {
         Collection<IGUID> metadata = versionBuilder.getMetadataCollection();
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
 
         // TODO - link version and metadata
         // versionid, meta property, value
@@ -152,7 +152,7 @@ public class SOSClient implements Client {
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         SOS_LOG.log(LEVEL.INFO, "Adding manifest " + manifest.getContentGUID());
 
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
 
         // TODO - recursively look for other manifests to add to the NodeManager
         if (recursive) {
@@ -166,17 +166,17 @@ public class SOSClient implements Client {
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
         SOS_LOG.log(LEVEL.INFO, "Getting manifest " + guid);
 
-        return manifestsManager.findManifest(guid);
+        return manifestsDirectory.findManifest(guid);
     }
 
     @Override
     public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
-        return manifestsManager.getHEAD(invariant);
+        return manifestsDirectory.getHEAD(invariant);
     }
 
     @Override
     public void setHEAD(IGUID version) throws HEADNotSetException {
-        manifestsManager.setHEAD(version);
+        manifestsDirectory.setHEAD(version);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class SOSClient implements Client {
     public Stream<Manifest> getAllManifests() {
         SOS_LOG.log(LEVEL.INFO, "Retrieving all manifests");
 
-        return manifestsManager.getAllManifests();
+        return manifestsDirectory.getAllManifests();
     }
 
     @Override
@@ -202,8 +202,8 @@ public class SOSClient implements Client {
         SOS_LOG.log(LEVEL.INFO, "Processing and Adding metadata");
 
         InputStream data = atom.getData();
-        SOSMetadata metadata = metadataManager.processMetadata(data);
-        metadataManager.addMetadata(metadata);
+        SOSMetadata metadata = metadataDirectory.processMetadata(data);
+        metadataDirectory.addMetadata(metadata);
 
         return metadata;
     }
@@ -212,7 +212,7 @@ public class SOSClient implements Client {
     public SOSMetadata getMetadata(IGUID guid) {
         SOS_LOG.log(LEVEL.INFO, "Getting metadata for guid: " + guid.toString());
 
-        return metadataManager.getMetadata(guid);
+        return metadataDirectory.getMetadata(guid);
     }
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles) throws StorageException {
@@ -228,7 +228,7 @@ public class SOSClient implements Client {
         if (replicationPolicy.getReplicationFactor() > 0) {
 
             Runnable replicator = () -> {
-                Iterator<Node> storageNodes = nodeManager.getStorageNodes().iterator();
+                Iterator<Node> storageNodes = nodesDirectory.getStorageNodes().iterator();
                 // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
 
                 if (storageNodes.hasNext()) {

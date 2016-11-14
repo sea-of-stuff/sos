@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -14,12 +14,12 @@ import java.net.URLStreamHandlerFactory;
  */
 public class SOSProtocol {
 
-    public static void Register(LocalStorage localStorage, NodeManager nodeManager) throws SOSProtocolException {
+    public static void Register(LocalStorage localStorage, NodesDirectory nodesDirectory) throws SOSProtocolException {
         SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
         try {
             if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
                 URLStreamHandlerFactory urlStreamHandlerFactory =
-                        new SOSURLStreamHandlerFactory(localStorage, nodeManager);
+                        new SOSURLStreamHandlerFactory(localStorage, nodesDirectory);
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
             }
         } catch (Error e) {

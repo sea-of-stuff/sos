@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ManifestsManager {
+public interface ManifestsDirectory {
 
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
@@ -22,4 +22,5 @@ public interface ManifestsManager {
 
     void setHEAD(IGUID version) throws HEADNotSetException;
 
+    void flush();
 }

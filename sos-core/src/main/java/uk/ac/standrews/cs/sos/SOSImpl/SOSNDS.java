@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeManagerException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.util.Collection;
@@ -17,44 +17,44 @@ import java.util.Collection;
  */
 public class SOSNDS implements NDS {
 
-    private NodeManager nodeManager;
+    private NodesDirectory nodesDirectory;
 
-    public SOSNDS(NodeManager nodeManager) {
-        this.nodeManager = nodeManager;
+    public SOSNDS(NodesDirectory nodesDirectory) {
+        this.nodesDirectory = nodesDirectory;
     }
 
     @Override
     public Node getNode(IGUID guid) {
-        return nodeManager.getNode(guid);
+        return nodesDirectory.getNode(guid);
     }
 
     @Override
     public Collection<Node> getNDSNodes() {
-        return nodeManager.getNDSNodes();
+        return nodesDirectory.getNDSNodes();
     }
 
     @Override
     public Collection<Node> getDDSNodes() {
-        return nodeManager.getDDSNodes();
+        return nodesDirectory.getDDSNodes();
     }
 
     @Override
     public Collection<Node> getMCSNodes() {
-        return nodeManager.getMCSNodes();
+        return nodesDirectory.getMCSNodes();
     }
 
     @Override
     public Collection<Node> getStorageNodes() {
-        return nodeManager.getStorageNodes();
+        return nodesDirectory.getStorageNodes();
     }
 
     @Override
     public Node registerNode(Node node) {
         Node nodeToRegister = new SOSNode(node);
-        nodeManager.addNode(nodeToRegister);
+        nodesDirectory.addNode(nodeToRegister);
 
         try {
-            nodeManager.persistNodesTable();
+            nodesDirectory.persistNodesTable();
         } catch (NodeManagerException e) {
             e.printStackTrace();
             // TODO - throw appropriate exception

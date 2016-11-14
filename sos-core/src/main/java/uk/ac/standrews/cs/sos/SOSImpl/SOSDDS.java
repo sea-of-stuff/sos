@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 
 /**
@@ -12,21 +12,21 @@ import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
  */
 public class SOSDDS implements DDS {
 
-    protected ManifestsManager manifestsManager;
+    protected ManifestsDirectory manifestsDirectory;
 
-    public SOSDDS(ManifestsManager manifestsManager) {
-        this.manifestsManager = manifestsManager;
+    public SOSDDS(ManifestsDirectory manifestsDirectory) {
+        this.manifestsDirectory = manifestsDirectory;
     }
 
     @Override
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
     }
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
-        Manifest manifest = manifestsManager.findManifest(guid);
+        Manifest manifest = manifestsDirectory.findManifest(guid);
         // TODO - contact other DDS nodes!
 
         return manifest;

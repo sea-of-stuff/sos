@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsManager;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
@@ -30,13 +30,13 @@ import java.util.Collection;
  */
 public class SOSStorage implements Storage {
 
-    private ManifestsManager manifestsManager;
+    private ManifestsDirectory manifestsDirectory;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalStorage storage, ManifestsManager manifestsManager) {
+    public SOSStorage(Node node, LocalStorage storage, ManifestsDirectory manifestsDirectory) {
 
-        this.manifestsManager = manifestsManager;
+        this.manifestsDirectory = manifestsDirectory;
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
 
@@ -48,7 +48,7 @@ public class SOSStorage implements Storage {
 
         IGUID guid = store(location, bundles);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
 
         return manifest;
     }
@@ -60,7 +60,7 @@ public class SOSStorage implements Storage {
         Collection<LocationBundle> bundles = new ArrayList<>();
         IGUID guid = store(inputStream, bundles);
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsManager.addManifest(manifest);
+        manifestsDirectory.addManifest(manifest);
 
         return manifest;
     }
@@ -95,7 +95,7 @@ public class SOSStorage implements Storage {
     @Override
     public InputStream getAtomContent(IGUID guid) {
         try {
-            Manifest manifest = manifestsManager.findManifest(guid);
+            Manifest manifest = manifestsDirectory.findManifest(guid);
 
             if (manifest instanceof Atom) { // TODO - this comparison could be improved, with the manifest returning the type
                 Atom atom = (Atom) manifest;

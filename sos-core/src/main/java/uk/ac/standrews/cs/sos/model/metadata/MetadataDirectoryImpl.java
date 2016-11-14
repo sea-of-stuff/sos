@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
-import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataManager;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class MetadataManagerImpl implements MetadataManager {
+public class MetadataDirectoryImpl implements MetadataDirectory {
 
     private LocalStorage localStorage;
     private MetadataEngine engine;
@@ -34,7 +34,7 @@ public class MetadataManagerImpl implements MetadataManager {
 
     private List<SOSMetadata> naiveCache = new ArrayList<>();
 
-    public MetadataManagerImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy) {
+    public MetadataDirectoryImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy) {
         this.localStorage = localStorage;
         this.engine = engine;
         this.policy = policy;

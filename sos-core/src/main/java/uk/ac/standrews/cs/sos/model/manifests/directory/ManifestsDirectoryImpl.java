@@ -1,11 +1,11 @@
-package uk.ac.standrews.cs.sos.model.manifests.managers;
+package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.node.NodeManager;
+import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -16,23 +16,23 @@ import java.util.stream.Stream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestsManagerImpl implements MasterManifestManager {
+public class ManifestsDirectoryImpl implements ManifestsDirectory {
 
     private static final String CACHE_FILE = "manifests.cache";
 
     private ManifestsCache cache;
-    private LocalManifestsManager local;
-    private RemoteManifestsManager remote;
+    private LocalManifestsDirectory local;
+    private RemoteManifestsDirectory remote;
     private LocalStorage localStorage;
 
-    public ManifestsManagerImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage,
-                                NodeManager nodeManager) {
+    public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage,
+                                  NodesDirectory nodesDirectory) {
 
         this.localStorage = localStorage;
 
         loadOrCreateCache();
-        local = new LocalManifestsManager(localStorage);
-        remote = new RemoteManifestsManager(manifestPolicy, nodeManager);
+        local = new LocalManifestsDirectory(localStorage);
+        remote = new RemoteManifestsDirectory(manifestPolicy, nodesDirectory);
     }
 
     @Override
@@ -118,10 +118,10 @@ public class ManifestsManagerImpl implements MasterManifestManager {
         return manifest;
     }
 
-    private Manifest findManifest(ManifestsManager manager, IGUID guid) {
+    private Manifest findManifest(ManifestsDirectory directory, IGUID guid) {
         Manifest manifest = null;
         try {
-            manifest = manager.findManifest(guid);
+            manifest = directory.findManifest(guid);
             cache.addManifest(manifest);
         } catch (ManifestNotFoundException e) {
             System.out.println(e.getMessage());

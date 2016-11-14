@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface NodeDatabase {
+public interface NodesDatabase {
 
     /**
      * Add a given node to the database
