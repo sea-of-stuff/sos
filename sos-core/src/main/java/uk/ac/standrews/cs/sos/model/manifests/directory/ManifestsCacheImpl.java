@@ -80,6 +80,13 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     public static ManifestsCache load(LocalStorage storage, File file, Directory manifestsDir) throws IOException, ClassNotFoundException {
+
+        // Check that file is not empty
+        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
+        if (br.readLine() == null) {
+            return null;
+        }
+
         FileInputStream istream = new FileInputStream(file.toFile());
         ObjectInputStream q = new ObjectInputStream(istream);
 

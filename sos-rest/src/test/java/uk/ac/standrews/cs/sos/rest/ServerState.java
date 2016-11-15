@@ -52,7 +52,7 @@ public class ServerState {
 
             localStorage =
                     new LocalStorage(StorageFactory
-                            .createStorage(storageType, root, false));
+                            .createStorage(storageType, root));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }

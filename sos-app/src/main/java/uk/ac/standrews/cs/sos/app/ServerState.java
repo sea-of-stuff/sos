@@ -46,7 +46,7 @@ class ServerState {
             String root = configuration.getStorageLocation();
 
             localStorage = new LocalStorage(StorageFactory
-                            .createStorage(storageType, root, false)); // FIXME - storage have very different behaviours if mutable or not
+                            .createStorage(storageType, root));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }

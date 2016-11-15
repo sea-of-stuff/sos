@@ -30,7 +30,7 @@ public class LocalStorageTest extends CommonTest {
         super.setUp(testMethod);
 
         localStorage =
-                new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/", true));
+                new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
     }
 
     @AfterMethod

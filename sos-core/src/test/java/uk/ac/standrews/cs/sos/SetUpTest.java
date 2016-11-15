@@ -101,7 +101,7 @@ public class SetUpTest extends CommonTest {
 
             localStorage =
                     new LocalStorage(StorageFactory
-                            .createStorage(storageType, root, true));
+                            .createStorage(storageType, root));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }

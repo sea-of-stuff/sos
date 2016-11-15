@@ -47,7 +47,7 @@ public class HelperTest {
     private static Location createDummyDataFile(Directory sosParent, String filename) throws URISyntaxException, StorageException {
 
         Data data = new StringData("The first line\nThe second line");
-        File sosFile = new FileBasedFile(sosParent, filename, data, false);
+        File sosFile = new FileBasedFile(sosParent, filename, data);
         sosFile.persist();
 
         return new URILocation("file://" + sosFile.getPathname());

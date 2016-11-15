@@ -54,7 +54,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         storage = new LocalStorage(StorageFactory
                 .createStorage(configurationMock.getStorageType(),
-                        configurationMock.getStorageLocation(), true));
+                        configurationMock.getStorageLocation()));
     }
 
     @AfterMethod

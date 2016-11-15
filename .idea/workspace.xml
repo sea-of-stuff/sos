@@ -6,42 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="67250fa2-ea18-4aea-9ed0-dd222005a327" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSAgent.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSAgent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSDDS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSDDS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/configuration/SOSConfiguration.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/configuration/SOSConfiguration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/manifests/ManifestsDirectory.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/manifests/ManifestsDirectory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/Node.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/Node.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Agent.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Agent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/DDS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/DDS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/VersionManifestDeserializer.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/VersionManifestDeserializer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/VersionManifestSerializer.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/json/VersionManifestSerializer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestConstants.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestFactory.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestType.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectory.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsDirectoryImpl.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsDirectoryImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsUtils.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/RemoteManifestsDirectory.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/RemoteManifestsDirectory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSNode.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSNode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/configuration/SOSConfigurationTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/configuration/SOSConfigurationTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/ServerState.java" afterPath="$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/ServerState.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImpl.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SetUpTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SetUpTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/AtomManifestTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/AtomManifestTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectoryTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectoryTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/node/LocalSOSNodeTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/node/LocalSOSNodeTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/SOSFileSystemFactory.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/SOSFileSystemFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFile.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystemObject.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystemObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSVersionableObject.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSVersionableObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/json/model/NodeModel.java" afterPath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/json/model/NodeModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTDDS.java" afterPath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTDDS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTNDS.java" afterPath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTNDS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WData.java" afterPath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WGraph.java" afterPath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WGraph.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WMetadata.java" afterPath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WMetadata.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/VersionManifest.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/AssetManifest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/manifests/Version.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/manifests/Asset.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/VersionManifestTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/AssetManifestTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddVersionTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddAssetTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImplTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImplTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/storage/LocalStorageTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/storage/LocalStorageTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/utils/HelperTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/utils/HelperTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/test/java/uk/ac/standrews/cs/sos/rest/ServerState.java" afterPath="$PROJECT_DIR$/sos-rest/src/test/java/uk/ac/standrews/cs/sos/rest/ServerState.java" />
     </list>
     <list id="96545ed3-c4e8-4911-9827-f00d4647a686" name="New changelist" comment="" />
     <ignored path="sos.iws" />
@@ -73,104 +46,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="NodeModel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/json/model/NodeModel.java">
+      <file leaf-file-name="ManifestsDirectoryImpl.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsDirectoryImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
+            <state relative-caret-position="435">
+              <caret line="39" column="36" selection-start-line="39" selection-start-column="36" selection-end-line="39" selection-end-column="36" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RESTNDS.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTNDS.java">
+      <file leaf-file-name="ManifestsCacheImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1140">
-              <caret line="89" column="23" selection-start-line="89" selection-start-column="23" selection-end-line="89" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RESTConfig.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/RESTConfig.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RESTGeneral.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTGeneral.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ManifestType.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestType.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AssetManifest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/AssetManifest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="44" column="66" selection-start-line="44" selection-start-column="66" selection-end-line="44" selection-end-column="66" />
-              <folding>
-                <marker date="1479216715000" expanded="true" signature="2495:3081" ph="{...}" />
-                <marker date="1479216715000" expanded="true" signature="3434:3684" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ManifestConstants.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="645">
-              <caret line="43" column="17" selection-start-line="43" selection-start-column="17" selection-end-line="43" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SOSDirectory.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="96" column="19" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
+            <state relative-caret-position="228">
+              <caret line="73" column="24" selection-start-line="73" selection-start-column="24" selection-end-line="73" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -191,23 +81,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/metadata/tika/TikaMetadata.java" />
-        <option value="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/WebApp.java" />
-        <option value="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WGraph.java" />
-        <option value="$PROJECT_DIR$/web-ui/src/main/resources/velocity/tree.vm" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/storage/InternalStorage.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/storage/LocalStorage.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/manifests/ManifestsManager.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/manifests/MasterManifestDirectory.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/managers/ManifestsDirectoryImpl.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/managers/LocalManifestsDirectory.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/MetadataManager.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/MetadataDirectory.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/NodesDirectory.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/NodesDatabase.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/NodeManager.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/NodesDirectory.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectoryTest.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/exceptions/node/NodeManagerException.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/exceptions/node/NodesDirectoryException.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/exceptions/manifest/ManifestManagerException.java" />
@@ -227,12 +104,10 @@
         <option value="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTStorage.java" />
         <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Storage/SOSAddAtomTest.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSAgent.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSDDS.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSStorage.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/network/SOSEP.java" />
         <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/metadata/TikaMetadataEngineTest.java" />
-        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/configuration/SOSConfiguration.java" />
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSNode.java" />
         <option value="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/json/model/NodeModel.java" />
         <option value="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTNDS.java" />
@@ -242,6 +117,21 @@
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestConstants.java" />
         <option value="$PROJECT_DIR$/sos-core/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/configuration/SOSConfiguration.java" />
+        <option value="$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/MAISOS.java" />
+        <option value="$PROJECT_DIR$/sos-app/resources/config.conf" />
+        <option value="$MAVEN_REPOSITORY$/uk/ac/standrews/cs/storage-sta/1.0-SNAPSHOT/storage-sta-1.0-SNAPSHOT.jar!/uk/ac/standrews/cs/storage/implementations/filesystem/FileBasedStorage.class" />
+        <option value="$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/ServerState.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImplTest.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectoryTest.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/storage/LocalStorageTest.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/AtomManifestTest.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SetUpTest.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/utils/HelperTest.java" />
+        <option value="$PROJECT_DIR$/sos-rest/src/test/java/uk/ac/standrews/cs/sos/rest/ServerState.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImpl.java" />
       </list>
     </option>
   </component>
@@ -369,6 +259,40 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-rest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -744,11 +668,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="SOSImpl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Storage" />
+              <option name="myItemId" value="utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -783,6 +703,86 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="standard" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Client" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -838,6 +838,44 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -903,6 +941,78 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="SOSImpl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1160,12 +1270,92 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/repos/java-ipfs-api" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../storage-sta-git" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="project.structure.last.edited" value="SDKs" />
@@ -1187,18 +1377,8 @@
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/sos-app" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="uk.ac.standrews.cs.sos" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="uk.ac.standrews.cs.sos.filesystem" />
-      <recent name="uk.ac.standrews.cs.sos.filesystem.util" />
-      <recent name="uk.ac.standrews.cs.sos.rest" />
-      <recent name="uk.ac.standrews.cs.sos.app" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl" />
@@ -1206,6 +1386,16 @@
       <recent name="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/interface" />
       <recent name="$PROJECT_DIR$/sos-app/src/main/resources" />
       <recent name="$PROJECT_DIR$/sos-rest/src/test" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="uk.ac.standrews.cs.sos.filesystem" />
+      <recent name="uk.ac.standrews.cs.sos.filesystem.util" />
+      <recent name="uk.ac.standrews.cs.sos.rest" />
+      <recent name="uk.ac.standrews.cs.sos.app" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/sos-app" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager" selected="Application.MAISOS - Test">
@@ -1759,7 +1949,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="uk.ac.standrews.cs.sos.app.MAISOS" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="-fs -j -c $USER_HOME$/config.conf -root 73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e" />
+      <option name="PROGRAM_PARAMETERS" value="-j -c $USER_HOME$/config.conf -root 73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -1921,21 +2111,7 @@
       <workItem from="1478873570422" duration="4476000" />
       <workItem from="1479117332984" duration="21000" />
       <workItem from="1479124958379" duration="9929000" />
-      <workItem from="1479216544145" duration="397000" />
-    </task>
-    <task id="LOCAL-00039" summary="worked on replication policy and configs">
-      <created>1476272924757</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1476272924757</updated>
-    </task>
-    <task id="LOCAL-00040" summary="managing configuration using typesafe/config">
-      <created>1476293668399</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1476293668399</updated>
+      <workItem from="1479216544145" duration="3278000" />
     </task>
     <task id="LOCAL-00041" summary="interim - configuration and policies">
       <created>1476348432123</created>
@@ -2266,7 +2442,21 @@
       <option name="project" value="LOCAL" />
       <updated>1479136210193</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Version --&gt; Asset">
+      <created>1479216966619</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1479216966619</updated>
+    </task>
+    <task id="LOCAL-00089" summary="read ports for webdav, webapp and rest api from config file">
+      <created>1479218284980</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1479218284980</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -2302,7 +2492,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="342155000" />
+    <option name="totallyTimeSpent" value="345036000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2325,7 +2515,8 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4902357" sideWeight="0.50361013" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24661893" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35824916" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32390574" sideWeight="0.49759325" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33939394" sideWeight="0.4963899" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3084175" sideWeight="0.49759325" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1789976" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -2336,14 +2527,13 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33670035" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32996634" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23569024" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33939394" sideWeight="0.4963899" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="UnknownFeatures">
@@ -2381,8 +2571,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="first not-excellent version of jstree for root node" />
-    <MESSAGE value="init SOS protocol as soon as possible + web app: inject file system to tree class" />
     <MESSAGE value="fixed minor issue with SOS FileSystem + working on combining jstree with previous graph page" />
     <MESSAGE value="updating folders and parents correctly" />
     <MESSAGE value="build tree recursively" />
@@ -2406,7 +2594,9 @@
     <MESSAGE value="almost there with the refactoring of the agent" />
     <MESSAGE value="resolved all compilation issues" />
     <MESSAGE value="interim changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="interim changes" />
+    <MESSAGE value="Version --&gt; Asset" />
+    <MESSAGE value="read ports for webdav, webapp and rest api from config file" />
+    <option name="LAST_COMMIT_MESSAGE" value="read ports for webdav, webapp and rest api from config file" />
     <option name="PRESELECT_EXISTING_CHANGELIST" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -2415,7 +2605,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/uk/ac/standrews/cs/storage-sta/1.0-SNAPSHOT/storage-sta-1.0-SNAPSHOT.jar!/uk/ac/standrews/cs/storage/implementations/filesystem/FileBasedFile.class</url>
-          <line>102</line>
+          <line>85</line>
           <properties />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
@@ -2449,8 +2639,14 @@
           <properties />
           <option name="timeStamp" value="194" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsDirectoryImpl.java</url>
+          <line>94</line>
+          <properties />
+          <option name="timeStamp" value="202" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="197" />
+      <option name="time" value="203" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="TestNG">
@@ -2463,175 +2659,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/database/SQLDatabase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="26" column="49" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/NodesDatabase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/atom/AtomStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="63" column="19" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectoryTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="263" column="50" selection-start-line="263" selection-start-column="50" selection-end-line="263" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/NodesDirectory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLStreamHandlerFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="28" column="65" selection-start-line="28" selection-start-column="65" selection-end-line="28" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/exceptions/node/NodesDirectoryException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="27" selection-start-line="7" selection-start-column="27" selection-end-line="7" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/metadata/MetadataDirectory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/exceptions/manifest/ManifestsDirectoryException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="31" selection-start-line="5" selection-start-column="31" selection-end-line="5" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/NDS.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/MCS.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/standrews/cs/webdav-server/1.0-SNAPSHOT/webdav-server-1.0-SNAPSHOT.jar!/uk/ac/standrews/cs/webdav/impl/methods/GET.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="87" column="5" selection-start-line="87" selection-start-column="5" selection-end-line="87" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSNDS.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Storage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="39" column="43" selection-start-line="39" selection-start-column="43" selection-end-line="39" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/DDS.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="48" column="59" selection-start-line="48" selection-start-column="59" selection-end-line="48" selection-end-column="59" />
-          <folding>
-            <element signature="docComment;method#getHEAD#0;class#DDS#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/AgentTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddCompoundTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/SOSAddAssetTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1690">
-          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/builders/AtomBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Storage/SOSAddAtomTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1080">
@@ -2644,6 +2671,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2734,14 +2762,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsDirectoryImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-75">
-          <caret line="61" column="29" selection-start-line="61" selection-start-column="29" selection-end-line="61" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/SOSImpl/SOSAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -2770,30 +2790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="78" column="37" selection-start-line="78" selection-start-column="37" selection-end-line="78" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/configuration/SOSConfiguration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2640">
-          <caret line="219" column="26" selection-start-line="219" selection-start-column="26" selection-end-line="219" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2265">
-          <caret line="172" column="30" selection-start-line="172" selection-start-column="28" selection-end-line="172" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/json/model/NodeModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -2810,26 +2806,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/RESTConfig.java">
+    <entry file="file://$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        <state relative-caret-position="325">
+          <caret line="96" column="19" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTGeneral.java">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        <state relative-caret-position="495">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestType.java">
+    <entry file="file://$PROJECT_DIR$/sos-core/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        <state relative-caret-position="645">
+          <caret line="43" column="17" selection-start-line="43" selection-start-column="17" selection-end-line="43" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
           <folding />
         </state>
       </provider>
@@ -2845,34 +2849,239 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestConstants.java">
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/ManifestType.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+        <state relative-caret-position="120">
+          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-core/pom.xml">
+    <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTGeneral.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="43" column="17" selection-start-line="43" selection-start-column="17" selection-end-line="43" selection-end-column="17" />
+        <state relative-caret-position="120">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/RESTConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        <state relative-caret-position="105">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java">
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/database/DatabaseType.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="96" column="19" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
+        <state relative-caret-position="105">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/database/DatabaseTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/database/SQLDatabase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2022">
+          <caret line="172" column="30" selection-start-line="172" selection-start-column="28" selection-end-line="172" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/NodesDirectory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/standrews/cs/storage-sta/1.0-SNAPSHOT/storage-sta-1.0-SNAPSHOT.jar!/uk/ac/standrews/cs/storage/implementations/filesystem/FileBasedStorage.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/standrews/cs/storage-sta/1.0-SNAPSHOT/storage-sta-1.0-SNAPSHOT.jar!/uk/ac/standrews/cs/storage/interfaces/IStorage.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="20" column="9" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/storage/LocalStorage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="754">
+          <caret line="138" column="7" selection-start-line="138" selection-start-column="7" selection-end-line="138" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/configuration/SOSConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="232" column="58" selection-start-line="232" selection-start-column="58" selection-end-line="232" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/uk/ac/standrews/cs/storage-sta/1.0-SNAPSHOT/storage-sta-1.0-SNAPSHOT.jar!/uk/ac/standrews/cs/storage/implementations/filesystem/FileBasedFile.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="27" column="27" selection-start-line="27" selection-start-column="27" selection-end-line="27" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/MAISOS.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="51" column="36" selection-start-line="51" selection-start-column="36" selection-end-line="51" selection-end-column="36" />
+          <folding>
+            <element signature="e#4108#4109#0" expanded="true" />
+            <element signature="e#4170#4171#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-app/resources/config.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="54" column="14" selection-start-line="54" selection-start-column="14" selection-end-line="54" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-75">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/constants/Hashes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/LocalManifestsDirectoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="56" column="62" selection-start-line="56" selection-start-column="62" selection-end-line="56" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/storage/LocalStorageTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="32" column="89" selection-start-line="32" selection-start-column="89" selection-end-line="32" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/AtomManifestTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="48" column="70" selection-start-line="48" selection-start-column="70" selection-end-line="48" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SetUpTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="103" column="60" selection-start-line="103" selection-start-column="60" selection-end-line="103" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/SOSImpl/Client/standard/AgentTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-rest/src/test/java/uk/ac/standrews/cs/sos/rest/ServerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="54" column="60" selection-start-line="54" selection-start-column="60" selection-end-line="54" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/ServerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="66" column="1" selection-start-line="66" selection-start-column="1" selection-end-line="66" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/utils/HelperTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="49" column="66" selection-start-line="49" selection-start-column="66" selection-end-line="49" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImplTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsCacheImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="73" column="24" selection-start-line="73" selection-start-column="24" selection-end-line="73" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/directory/ManifestsDirectoryImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="39" column="36" selection-start-line="39" selection-start-column="36" selection-end-line="39" selection-end-column="36" />
           <folding />
         </state>
       </provider>

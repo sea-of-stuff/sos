@@ -46,7 +46,7 @@ public class AtomManifestTest extends CommonTest {
             String location = System.getProperty("user.home") + "/sos";
             localStorage =
                     new LocalStorage(StorageFactory
-                            .createStorage(StorageType.LOCAL, location, true));
+                            .createStorage(StorageType.LOCAL, location));
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
