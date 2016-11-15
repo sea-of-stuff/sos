@@ -60,10 +60,13 @@ public class WGraph {
 
             // Previous
             Collection<IGUID> prevs = asset.getPreviousVersions();
-            for(IGUID prev:prevs) {
-                Manifest previousManifest = agent.getManifest(prev);
-                ObjectNode prevNode = ManifestNode(previousManifest, asset.getInvariantGUID().toString());
-                arrayNode.add(prevNode);
+
+            if (prevs != null && !prevs.isEmpty()) {
+                for (IGUID prev : prevs) {
+                    Manifest previousManifest = agent.getManifest(prev);
+                    ObjectNode prevNode = ManifestNode(previousManifest, asset.getInvariantGUID().toString());
+                    arrayNode.add(prevNode);
+                }
             }
 
         } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
@@ -101,9 +104,11 @@ public class WGraph {
 
             // Previous
             Collection<IGUID> prevs = asset.getPreviousVersions();
-            for(IGUID prev:prevs) {
-                ObjectNode prevNode = MakeEdge(asset.guid(), prev, "", "Previous");
-                arrayNode.add(prevNode);
+            if (prevs != null && !prevs.isEmpty()) {
+                for (IGUID prev : prevs) {
+                    ObjectNode prevNode = MakeEdge(asset.guid(), prev, "", "Previous");
+                    arrayNode.add(prevNode);
+                }
             }
 
         } else if (manifest.getManifestType() == ManifestType.COMPOUND) {

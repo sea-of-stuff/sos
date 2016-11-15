@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
-import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
-import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
+import uk.ac.standrews.cs.sos.json.AssetManifestDeserializer;
+import uk.ac.standrews.cs.sos.json.AssetManifestSerializer;
 
 import java.util.Collection;
 
@@ -40,8 +40,8 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = VersionManifestSerializer.class)
-@JsonDeserialize(using = VersionManifestDeserializer.class)
+@JsonSerialize(using = AssetManifestSerializer.class)
+@JsonDeserialize(using = AssetManifestDeserializer.class)
 public class AssetManifest extends SignedManifest implements Asset {
 
     final private IGUID version;

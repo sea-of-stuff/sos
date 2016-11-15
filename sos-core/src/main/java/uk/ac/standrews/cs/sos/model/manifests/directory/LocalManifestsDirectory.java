@@ -90,7 +90,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     /**
      * Return the local HEAD for a given version
      *
-     * // TODO - see what git/hg do
+     * TODO - deal with failure cases (e.g. invariant is wrong or file is empty)
+     * TODO - see what git/hg do
      * @param invariant for an asset
      * @return head version of the asset
      */

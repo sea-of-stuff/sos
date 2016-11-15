@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionManifestDeserializer extends JsonDeserializer<AssetManifest> {
+public class AssetManifestDeserializer extends JsonDeserializer<AssetManifest> {
 
     @Override
     public AssetManifest deserialize(JsonParser jsonParser,

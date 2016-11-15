@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, compoundManifest.getManifestType().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.COMPOUND.toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_COMPOUND_TYPE, compoundManifest.getType().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, compoundManifest.getContentGUID().toString());
 

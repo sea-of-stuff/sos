@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,7 +14,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionManifestSerializer extends JsonSerializer<AssetManifest> {
+public class AssetManifestSerializer extends JsonSerializer<AssetManifest> {
 
     @Override
     public void serialize(AssetManifest assetManifest,
@@ -22,7 +23,7 @@ public class VersionManifestSerializer extends JsonSerializer<AssetManifest> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, assetManifest.getManifestType().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.ASSET.toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, assetManifest.getContentGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_INVARIANT, assetManifest.getInvariantGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_VERSION, assetManifest.getVersionGUID().toString());

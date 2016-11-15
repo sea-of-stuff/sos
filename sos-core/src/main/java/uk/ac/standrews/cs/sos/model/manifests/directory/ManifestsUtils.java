@@ -28,8 +28,7 @@ public class ManifestsUtils {
             ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
 
             return constructManifestFromJson(type, file);
-        } catch (UnknownManifestTypeException | ManifestNotMadeException
-                | IOException e) {
+        } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
             throw new ManifestNotFoundException("Unable to find manifest given file " + file.getPathname(), e);
         }
 
