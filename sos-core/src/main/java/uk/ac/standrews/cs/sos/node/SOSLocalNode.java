@@ -35,6 +35,7 @@ import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -89,12 +90,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             String databasePath = configuration.getDBPath();
             File dbDir = new File(databasePath);
             if (!dbDir.exists()) {
-                dbDir.mkdir();
+                new File(dbDir.getParent()).mkdir();
+                dbDir.createNewFile();
             }
 
             nodesDatabase = new SQLDatabase(databaseType, databasePath);
         } catch (DatabaseException e) {
             throw new SOSException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // TODO - register node with NDS

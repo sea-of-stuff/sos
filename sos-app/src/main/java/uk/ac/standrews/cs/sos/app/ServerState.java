@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -24,9 +23,9 @@ class ServerState {
 
     private static SOSLocalNode sos;
 
-    static SOSLocalNode init(String propertyFilePath) {
+    static SOSLocalNode init(SOSConfiguration configuration) {
         try {
-            return ServerState.startSOS(propertyFilePath);
+            return ServerState.startSOS(configuration);
         } catch (SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
@@ -38,10 +37,7 @@ class ServerState {
         sos.kill();
     }
 
-    private static SOSLocalNode startSOS(String properties) throws SOSException, GUIDGenerationException {
-
-        File configFile = new File(properties);
-        SOSConfiguration configuration = new SOSConfiguration(configFile);
+    private static SOSLocalNode startSOS(SOSConfiguration configuration) throws SOSException, GUIDGenerationException {
 
         LocalStorage localStorage;
         try {

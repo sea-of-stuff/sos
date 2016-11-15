@@ -221,6 +221,18 @@ public class SOSConfiguration {
         return node;
     }
 
+    public int getWebDAVPort() {
+        return configuration.getInt(PropertyKeys.WEBDAV_PORT);
+    }
+
+    public int getWebAppPort() {
+        return configuration.getInt(PropertyKeys.WEBAPP_PORT);
+    }
+
+    public int getRESTPort() {
+        return configuration.getInt(PropertyKeys.REST_PORT);
+    }
+
     private void setProperty(String key, String value) throws IOException {
         configuration = configuration.withValue(key, ConfigValueFactory.fromAnyRef(value));
 
@@ -231,36 +243,40 @@ public class SOSConfiguration {
 
     private class PropertyKeys {
 
-        public static final String NODE_GUID = "node.guid";
-        public static final String NODE_HOSTNAME = "node.hostname";
-        public static final String NODE_PORT = "node.port";
-        public static final String NODE_IS_AGENT = "node.is.agent";
-        public static final String NODE_IS_STORAGE = "node.is.storage";
-        public static final String NODE_IS_DDS = "node.is.dds";
-        public static final String NODE_IS_NDS = "node.is.nds";
-        public static final String NODE_IS_MCS = "node.is.mcs";
+        static final String NODE_GUID = "node.guid";
+        static final String NODE_HOSTNAME = "node.hostname";
+        static final String NODE_PORT = "node.port";
+        static final String NODE_IS_AGENT = "node.is.agent";
+        static final String NODE_IS_STORAGE = "node.is.storage";
+        static final String NODE_IS_DDS = "node.is.dds";
+        static final String NODE_IS_NDS = "node.is.nds";
+        static final String NODE_IS_MCS = "node.is.mcs";
 
-        public static final String DB_TYPE = "db.type";
-        public static final String DB_PATH = "db.path";
-        public static final String DB_HOSTNAME = "db.hostname";
-        public static final String DB_USERNAME = "db.username";
-        public static final String DB_PASSWORD = "db.password";
+        static final String DB_TYPE = "db.type";
+        static final String DB_PATH = "db.path";
+        static final String DB_HOSTNAME = "db.hostname";
+        static final String DB_USERNAME = "db.username";
+        static final String DB_PASSWORD = "db.password";
 
-        public static final String STORAGE_TYPE = "storage.type";
-        public static final String STORAGE_HOSTNAME = "storage.hostname";
-        public static final String STORAGE_LOCATION = "storage.location";
-        public static final String STORAGE_USERNAME = "storage.username";
-        public static final String STORAGE_PASSWORD = "storage.password";
-        public static final String STORAGE_ACCESS_KEY = "storage.access.key";
-        public static final String STORAGE_SECRET_KEY = "storage.secret.key";
+        static final String STORAGE_TYPE = "storage.type";
+        static final String STORAGE_HOSTNAME = "storage.hostname";
+        static final String STORAGE_LOCATION = "storage.location";
+        static final String STORAGE_USERNAME = "storage.username";
+        static final String STORAGE_PASSWORD = "storage.password";
+        static final String STORAGE_ACCESS_KEY = "storage.access.key";
+        static final String STORAGE_SECRET_KEY = "storage.secret.key";
 
-        public static final String KEYS_FOLDER = "keys.folder";
+        static final String KEYS_FOLDER = "keys.folder";
 
-        public static final String POLICY_REPLICATION_FACTOR = "policy.replication.factor";
-        public static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.locally";
-        public static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remotely";
-        public static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
+        static final String POLICY_REPLICATION_FACTOR = "policy.replication.factor";
+        static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.locally";
+        static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remotely";
+        static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
 
-        public static final String BOOTSTRAP_NODES = "bootstrap";
+        static final String BOOTSTRAP_NODES = "bootstrap";
+
+        static final String WEBDAV_PORT = "webdav.port";
+        static final String WEBAPP_PORT = "webapp.port";
+        static final String REST_PORT = "rest.port";
     }
 }

@@ -5,12 +5,14 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.WebApp;
 import uk.ac.standrews.cs.webdav.entrypoints.WebDAVLauncher;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,28 +42,29 @@ public class MAISOS {
         }
 
         String configFilePath = line.getOptionValue(CONFIG_OPT);
-        SOSLocalNode sos = ServerState.init(configFilePath);
+        File configFile = new File(configFilePath);
+        SOSConfiguration configuration = new SOSConfiguration(configFile);
+
+        SOSLocalNode sos = ServerState.init(configuration);
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         IGUID root = getRootGUID(line);
 
         if (line.hasOption(FS_OPT)) {
-            // TODO - pass config info to webdav and webapp
-
             IFileSystem fileSystem = new SOSFileSystemFactory(root)
                     .makeFileSystem(sos.getAgent());
 
             executor.submit(() -> {
                 try {
-                    Launch(fileSystem, 8082);
+                    LaunchWebDAV(fileSystem, configuration.getWebDAVPort());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
 
 
-            WebApp.RUN(sos, fileSystem, 9999);
+            WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
         }
 
         if (line.hasOption(REST_OPT)) {
@@ -75,8 +78,8 @@ public class MAISOS {
             });
         }
 
-        // FIXME - not working. It might be because there are threads being launghed
-        HandleExit();
+        // FIXME - not working. It might be because there are threads being launched
+        HandleExit(executor);
     }
 
     private static Options CreateOptions() {
@@ -108,8 +111,8 @@ public class MAISOS {
         return options;
     }
 
-    private static void HandleExit() throws IOException {
-        ShutdownHook shutdownHook = new ShutdownHook();
+    private static void HandleExit(ExecutorService executorService) throws IOException {
+        ShutdownHook shutdownHook = new ShutdownHook(executorService);
         shutdownHook.attachShutDownHook();
 
         System.out.println("Press Enter to stop");
@@ -119,19 +122,26 @@ public class MAISOS {
 
     private static class ShutdownHook {
 
+        ExecutorService executorService;
+
+        ShutdownHook(ExecutorService executorService) {
+            this.executorService = executorService;
+        }
+
         void attachShutDownHook() {
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
-                    ServerState.kill();
+                    executorService.shutdown();
 
-                    System.out.println("exit");
+                    ServerState.kill();
+                    System.out.println("SOS instance terminated");
                 }
             });
         }
     }
 
-    private static void Launch(IFileSystem fileSystem, int port) {
+    private static void LaunchWebDAV(IFileSystem fileSystem, int port) {
 
         try {
             System.out.println("Starting WEBDAV server on port: " + port);
