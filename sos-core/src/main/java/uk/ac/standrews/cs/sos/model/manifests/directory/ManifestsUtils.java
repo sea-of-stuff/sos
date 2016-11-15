@@ -45,8 +45,8 @@ public class ManifestsUtils {
                 case COMPOUND:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
                     break;
-                case VERSION:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
+                case ASSET:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AssetManifest.class);
                     break;
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");

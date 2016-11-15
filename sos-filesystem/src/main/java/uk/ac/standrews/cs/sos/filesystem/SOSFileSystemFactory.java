@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -49,7 +49,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
         if (agent != null) {
-            Version rootAsset = createRoot(agent);
+            Asset rootAsset = createRoot(agent);
             return new SOSFileSystem(agent, rootAsset);
         } else {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
@@ -57,8 +57,8 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         }
     }
 
-    private Version createRoot(Agent sos) {
-        Version retval = getRoot(sos, rootGUID);
+    private Asset createRoot(Agent sos) {
+        Asset retval = getRoot(sos, rootGUID);
 
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
         if (retval == null) {
@@ -78,8 +78,8 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         return retval;
     }
 
-    private Version getRoot(Agent sos, IGUID root) {
-        Version retval;
+    private Asset getRoot(Agent sos, IGUID root) {
+        Asset retval;
         try {
             retval = sos.getHEAD(root);
         } catch (HEADNotFoundException e) {

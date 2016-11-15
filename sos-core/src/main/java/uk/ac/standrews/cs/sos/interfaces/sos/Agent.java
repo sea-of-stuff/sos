@@ -4,10 +4,10 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
@@ -68,7 +68,7 @@ public interface Agent {
      * @throws ManifestPersistException
      *
      */
-    Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
+    Asset addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
 
     /**
@@ -108,7 +108,7 @@ public interface Agent {
      * @return latest known version of the asset
      * @throws ManifestNotFoundException
      */
-    Version getHEAD(IGUID guid) throws HEADNotFoundException;
+    Asset getHEAD(IGUID guid) throws HEADNotFoundException;
 
     void setHEAD(IGUID version) throws HEADNotSetException;
 

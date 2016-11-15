@@ -32,7 +32,7 @@ public class SOSNode implements Node {
     @DatabaseField(canBeNull = false)
     private int DB_port;
     @DatabaseField(canBeNull = false)
-    protected boolean DB_is_client;
+    protected boolean DB_is_agent;
     @DatabaseField(canBeNull = false)
     protected boolean DB_is_storage;
     @DatabaseField(canBeNull = false)
@@ -46,7 +46,7 @@ public class SOSNode implements Node {
     protected SOSNode() {}
 
     public SOSNode(IGUID guid, String hostname, int port,
-                   boolean isClient, boolean isStorage, boolean isDDS,
+                   boolean isAgent, boolean isStorage, boolean isDDS,
                    boolean isNDS, boolean isMCS) {
         this.nodeGUID = guid;
         this.hostAddress = new InetSocketAddress(hostname, port);
@@ -54,7 +54,7 @@ public class SOSNode implements Node {
         this.DB_nodeid = guid.toString();
         this.DB_hostname = hostname;
         this.DB_port = port;
-        this.DB_is_client = isClient;
+        this.DB_is_agent = isAgent;
         this.DB_is_storage = isStorage;
         this.DB_is_dds = isDDS;
         this.DB_is_nds = isNDS;
@@ -74,7 +74,7 @@ public class SOSNode implements Node {
             this.DB_hostname = hostname;
             this.DB_port = port;
 
-            this.DB_is_client = configuration.nodeIsClient();
+            this.DB_is_agent = configuration.nodeIsAgent();
             this.DB_is_storage = configuration.nodeIsStorage();
             this.DB_is_dds = configuration.nodeIsDDS();
             this.DB_is_nds = configuration.nodeIsNDS();
@@ -87,7 +87,7 @@ public class SOSNode implements Node {
     // Cloning constructor
     public SOSNode(Node node) {
         this(node.getNodeGUID(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
-                node.isClient(), node.isStorage(), node.isDDS(),
+                node.isAgent(), node.isStorage(), node.isDDS(),
                 node.isNDS(), node.isMCS());
     }
 
@@ -119,8 +119,8 @@ public class SOSNode implements Node {
     }
 
     @Override
-    public boolean isClient() {
-        return DB_is_client;
+    public boolean isAgent() {
+        return DB_is_agent;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class SOSNode implements Node {
             json += "\"roles\" : ";
             json += "{";
             {
-                json += "\"client\" : " + isClient() + ", ";
+                json += "\"agent\" : " + isAgent() + ", ";
                 json += "\"storage\" : " + isStorage() + ", ";
                 json += "\"dds\" : " + isDDS() + ", ";
                 json += "\"nds\" : " + isNDS() + ", ";

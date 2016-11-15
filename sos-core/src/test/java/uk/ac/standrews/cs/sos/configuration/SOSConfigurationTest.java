@@ -71,7 +71,7 @@ public class SOSConfigurationTest {
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         SOSConfiguration configuration = new SOSConfiguration(file);
-        assertTrue(configuration.nodeIsClient());
+        assertTrue(configuration.nodeIsAgent());
     }
 
     @Test

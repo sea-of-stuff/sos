@@ -94,8 +94,8 @@ public class SOSConfiguration {
         return configuration.getInt(PropertyKeys.NODE_PORT);
     }
 
-    public boolean nodeIsClient() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_CLIENT);
+    public boolean nodeIsAgent() {
+        return configuration.getBoolean(PropertyKeys.NODE_IS_AGENT);
     }
 
     public boolean nodeIsStorage() {
@@ -211,13 +211,13 @@ public class SOSConfiguration {
         String hostname = config.getString("hostname");
         int port = config.getInt("port");
 
-        boolean isClient = config.getBoolean("is.client");
+        boolean isAgent = config.getBoolean("is.agent");
         boolean isStorage = config.getBoolean("is.storage");
         boolean isDDS = config.getBoolean("is.dds");
         boolean isNDS = config.getBoolean("is.nds");
         boolean isMCS = config.getBoolean("is.mcs");
 
-        Node node = new SOSNode(guid, hostname, port, isClient, isStorage, isDDS, isNDS, isMCS);
+        Node node = new SOSNode(guid, hostname, port, isAgent, isStorage, isDDS, isNDS, isMCS);
         return node;
     }
 
@@ -234,7 +234,7 @@ public class SOSConfiguration {
         public static final String NODE_GUID = "node.guid";
         public static final String NODE_HOSTNAME = "node.hostname";
         public static final String NODE_PORT = "node.port";
-        public static final String NODE_IS_CLIENT = "node.is.client";
+        public static final String NODE_IS_AGENT = "node.is.agent";
         public static final String NODE_IS_STORAGE = "node.is.storage";
         public static final String NODE_IS_DDS = "node.is.dds";
         public static final String NODE_IS_NDS = "node.is.nds";

@@ -63,18 +63,18 @@ public class ManifestFactory {
      * @return an asset manifest
      * @throws ManifestNotMadeException
      */
-    public static VersionManifest createVersionManifest(IGUID content,
-                                                        IGUID invariant,
-                                                        Collection<IGUID> prevs,
-                                                        Collection<IGUID> metadata,
-                                                        Identity identity)
+    public static AssetManifest createVersionManifest(IGUID content,
+                                                      IGUID invariant,
+                                                      Collection<IGUID> prevs,
+                                                      Collection<IGUID> metadata,
+                                                      Identity identity)
             throws ManifestNotMadeException {
 
         if (content == null) {
             throw new ManifestNotMadeException("Content parameters missing or null");
         }
 
-        return new VersionManifest(invariant, content, prevs, metadata, identity);
+        return new AssetManifest(invariant, content, prevs, metadata, identity);
     }
 
 }

@@ -13,8 +13,8 @@ import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
@@ -130,14 +130,14 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Version assetManifest = createDummyVersion(contentGUID);
+        Asset assetManifest = createDummyVersion(contentGUID);
 
         IGUID guid = assetManifest.getVersionGUID();
         try {
             manifestsDirectory.addManifest(assetManifest);
             Manifest manifest = manifestsDirectory.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestType.VERSION);
+            assertEquals(manifest.getManifestType(), ManifestType.ASSET);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);
@@ -148,7 +148,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testAddAssetManifestNullContent() throws Exception {
-        Version assetManifest = createDummyVersion(null);
+        Asset assetManifest = createDummyVersion(null);
     }
 
     @Test
@@ -228,8 +228,8 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Version version = createDummyVersion(contentGUID);
-        IGUID invariant = version.getInvariantGUID();
+        Asset asset = createDummyVersion(contentGUID);
+        IGUID invariant = asset.getInvariantGUID();
 
         manifestsDirectory.getHEAD(invariant);
     }
@@ -248,15 +248,15 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Version version = createDummyVersion(contentGUID);
-        IGUID invariant = version.getInvariantGUID();
+        Asset asset = createDummyVersion(contentGUID);
+        IGUID invariant = asset.getInvariantGUID();
 
-        manifestsDirectory.addManifest(version);
-        manifestsDirectory.setHEAD(version.getVersionGUID());
-        Version retrievedVersion = manifestsDirectory.getHEAD(invariant);
+        manifestsDirectory.addManifest(asset);
+        manifestsDirectory.setHEAD(asset.getVersionGUID());
+        Asset retrievedAsset = manifestsDirectory.getHEAD(invariant);
 
-        assertNotNull(retrievedVersion);
-        assertEquals(retrievedVersion.toString(), version.toString());
+        assertNotNull(retrievedAsset);
+        assertEquals(retrievedAsset.toString(), asset.toString());
     }
 
     @Test (expectedExceptions = HEADNotSetException.class)
@@ -264,20 +264,20 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Version version = createDummyVersion(contentGUID);
-        IGUID invariant = version.getInvariantGUID();
+        Asset asset = createDummyVersion(contentGUID);
+        IGUID invariant = asset.getInvariantGUID();
 
-        manifestsDirectory.addManifest(version);
-        manifestsDirectory.setHEAD(version.getVersionGUID());
+        manifestsDirectory.addManifest(asset);
+        manifestsDirectory.setHEAD(asset.getVersionGUID());
         manifestsDirectory.setHEAD(GUIDFactory.generateRandomGUID());
 
         manifestsDirectory.getHEAD(invariant);
     }
 
-    private Version createDummyVersion(IGUID contentGUID) throws Exception {
+    private Asset createDummyVersion(IGUID contentGUID) throws Exception {
         Identity identity = new IdentityImpl();
-        Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
+        Asset asset = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
 
-        return version;
+        return asset;
     }
 }

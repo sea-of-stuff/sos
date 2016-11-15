@@ -8,9 +8,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -47,22 +47,22 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        if (manifest.getManifestType() == ManifestType.VERSION) {
-            Version version = (Version) manifest;
+        if (manifest.getManifestType() == ManifestType.ASSET) {
+            Asset asset = (Asset) manifest;
 
-            ObjectNode node = ManifestNode(version, version.getInvariantGUID().toString());
+            ObjectNode node = ManifestNode(asset, asset.getInvariantGUID().toString());
             arrayNode.add(node);
 
             // Content
-            Manifest contentManifest = agent.getManifest(version.getContentGUID());
+            Manifest contentManifest = agent.getManifest(asset.getContentGUID());
             ObjectNode contentNode = ManifestNode(contentManifest);
             arrayNode.add(contentNode);
 
             // Previous
-            Collection<IGUID> prevs = version.getPreviousVersions();
+            Collection<IGUID> prevs = asset.getPreviousVersions();
             for(IGUID prev:prevs) {
                 Manifest previousManifest = agent.getManifest(prev);
-                ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toString());
+                ObjectNode prevNode = ManifestNode(previousManifest, asset.getInvariantGUID().toString());
                 arrayNode.add(prevNode);
             }
 
@@ -93,16 +93,16 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        if (manifest.getManifestType() == ManifestType.VERSION) {
-            Version version = (Version) manifest;
+        if (manifest.getManifestType() == ManifestType.ASSET) {
+            Asset asset = (Asset) manifest;
 
-            ObjectNode objectNode = MakeEdge(version.guid(), version.getContentGUID());
+            ObjectNode objectNode = MakeEdge(asset.guid(), asset.getContentGUID());
             arrayNode.add(objectNode);
 
             // Previous
-            Collection<IGUID> prevs = version.getPreviousVersions();
+            Collection<IGUID> prevs = asset.getPreviousVersions();
             for(IGUID prev:prevs) {
-                ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
+                ObjectNode prevNode = MakeEdge(asset.guid(), prev, "", "Previous");
                 arrayNode.add(prevNode);
             }
 

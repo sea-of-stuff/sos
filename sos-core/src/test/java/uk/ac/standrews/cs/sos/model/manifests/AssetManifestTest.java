@@ -24,7 +24,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionManifestTest extends CommonTest {
+public class AssetManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_BASIC_ASSET =
             "{\"Type\":\"Version\"," +
@@ -65,7 +65,7 @@ public class VersionManifestTest extends CommonTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        VersionManifest assetManifest = new VersionManifest(null, guid, null, null, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, guid, null, null, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
@@ -88,7 +88,7 @@ public class VersionManifestTest extends CommonTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        VersionManifest assetManifest = new VersionManifest(null, guid, null, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, guid, null, metadata, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
@@ -114,7 +114,7 @@ public class VersionManifestTest extends CommonTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, null, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, null, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
@@ -145,7 +145,7 @@ public class VersionManifestTest extends CommonTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
@@ -176,7 +176,7 @@ public class VersionManifestTest extends CommonTest {
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        VersionManifest assetManifest = new VersionManifest(invariantGUID, guid, previous, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
 
         assertEquals(assetManifest.getContentGUID(), guid);
         assertEquals(assetManifest.getInvariantGUID(), invariantGUID);

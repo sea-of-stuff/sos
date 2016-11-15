@@ -87,7 +87,7 @@ public class RESTNDS {
             case "mcs":
                 nodes = nds.getMCSNodes();
                 break;
-            case "client":
+            case "agent":
             default:
                 return HTTPResponses.BAD_REQUEST("Bad input");
         }

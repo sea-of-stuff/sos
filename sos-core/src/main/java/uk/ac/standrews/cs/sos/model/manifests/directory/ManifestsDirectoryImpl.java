@@ -69,7 +69,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     }
 
     @Override
-    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
+    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
         return local.getHEAD(invariant);
     }
 

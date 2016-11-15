@@ -14,7 +14,7 @@ public interface ManifestsDirectory {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
-    Version getHEAD(IGUID invariant) throws HEADNotFoundException;
+    Asset getHEAD(IGUID invariant) throws HEADNotFoundException;
 
     void setHEAD(IGUID version) throws HEADNotSetException;
 

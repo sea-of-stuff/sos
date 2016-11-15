@@ -6,7 +6,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 public enum ManifestType {
     ATOM("Atom"),
     COMPOUND("Compound"),
-    VERSION("Version");
+    ASSET("Asset");
 
     private final String text;
 

@@ -4,10 +4,10 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
@@ -61,7 +61,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Version addVersion(VersionBuilder versionBuilder)
+    public Asset addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
 
         IGUID content = versionBuilder.getContent();
@@ -69,7 +69,7 @@ public class SOSAgent implements Agent {
         Collection<IGUID> prevs = versionBuilder.getPreviousCollection();
         Collection<IGUID> metadata = versionBuilder.getMetadataCollection();
 
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
+        AssetManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         dds.addManifest(manifest, false);
 
         return manifest;
@@ -99,7 +99,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
+    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
         return dds.getHEAD(invariant);
     }
 

@@ -31,7 +31,7 @@ public interface Node {
      * Returns true if this is a client node
      * @return
      */
-    boolean isClient();
+    boolean isAgent();
 
     /**
      * Returns true if this is a storage node

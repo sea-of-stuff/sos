@@ -10,11 +10,6 @@ public class ManifestConstants {
     // Suppresses default constructor, ensuring non-instantiability.
     private ManifestConstants() {}
 
-//    // Manifest types
-//    public static final String ATOM = "Atom";
-//    public static final String COMPOUND = "Compound";
-//    public static final String VERSION = "Version";
-
     // Manifest keys
     public static final String KEY_TYPE = "Type";
     public static final String KEY_TIMESTAMP = "Timestamp";

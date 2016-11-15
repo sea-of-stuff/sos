@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -95,7 +95,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
      * @return head version of the asset
      */
     @Override
-    public Version getHEAD(IGUID invariant) throws HEADNotFoundException {
+    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
 
         try {
             File file = getHEADFile(invariant);
@@ -107,7 +107,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             String str = IOUtils.toString(data.getInputStream(),  StandardCharsets.UTF_8);
             IGUID versionGUID = GUIDFactory.recreateGUID(str);
-            return (Version) getManifestFromGUID(versionGUID);
+            return (Asset) getManifestFromGUID(versionGUID);
 
         } catch (DataStorageException | GUIDGenerationException | ManifestNotFoundException | DataException | IOException e) {
             e.printStackTrace();
@@ -125,8 +125,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     public void setHEAD(IGUID version) throws HEADNotSetException {
 
         try {
-            Version versionManifest = (Version) getManifestFromGUID(version);
-            IGUID invariant = versionManifest.getInvariantGUID();
+            Asset assetManifest = (Asset) getManifestFromGUID(version);
+            IGUID invariant = assetManifest.getInvariantGUID();
             File file = getHEADFile(invariant);
             file.setData(new StringData(version.toString()));
             file.persist();

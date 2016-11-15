@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
 
@@ -31,7 +31,7 @@ import java.util.Collection;
  * <p>
  * Version - GUID <br>
  * Invariant - GUID <br>
- * ManifestType - VERSION <br>
+ * ManifestType - ASSET <br>
  * Signature - ? <br>
  * Previous Assets - GUID <br>
  * Content - GUID <br>
@@ -42,7 +42,7 @@ import java.util.Collection;
  */
 @JsonSerialize(using = VersionManifestSerializer.class)
 @JsonDeserialize(using = VersionManifestDeserializer.class)
-public class VersionManifest extends SignedManifest implements Version {
+public class AssetManifest extends SignedManifest implements Asset {
 
     final private IGUID version;
     final private IGUID invariant;
@@ -60,11 +60,11 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public VersionManifest(IGUID invariant, IGUID content,
-                           Collection<IGUID> prevs, Collection<IGUID> metadata,
-                           Identity identity)
+    public AssetManifest(IGUID invariant, IGUID content,
+                         Collection<IGUID> prevs, Collection<IGUID> metadata,
+                         Identity identity)
             throws ManifestNotMadeException {
-        super(identity, ManifestType.VERSION);
+        super(identity, ManifestType.ASSET);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -95,10 +95,10 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param metadata
      * @param signature
      */
-    public VersionManifest(IGUID invariant, IGUID version, IGUID content,
-                           Collection<IGUID> prevs, Collection<IGUID> metadata,
-                           String signature) {
-        super(null, ManifestType.VERSION);
+    public AssetManifest(IGUID invariant, IGUID version, IGUID content,
+                         Collection<IGUID> prevs, Collection<IGUID> metadata,
+                         String signature) {
+        super(null, ManifestType.ASSET);
         this.invariant = invariant;
         this.version = version;
         this.contentGUID = content;

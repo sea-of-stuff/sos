@@ -88,7 +88,7 @@ public class RESTDDS {
             case COMPOUND:
                 manifest = getCompoundManifest(json);
                 break;
-            case VERSION:
+            case ASSET:
                 manifest = getVersionManifest(json);
                 break;
             default:
@@ -106,7 +106,7 @@ public class RESTDDS {
         return JSONHelper.JsonObjMapper().readValue(json, CompoundManifest.class);
     }
 
-    private VersionManifest getVersionManifest(String json) throws IOException {
-        return JSONHelper.JsonObjMapper().readValue(json, VersionManifest.class);
+    private AssetManifest getVersionManifest(String json) throws IOException {
+        return JSONHelper.JsonObjMapper().readValue(json, AssetManifest.class);
     }
 }

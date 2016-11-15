@@ -15,8 +15,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
@@ -53,9 +53,9 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
             VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
                     .setMetadata(metadata);
-            version = sos.addVersion(versionBuilder);
+            asset = sos.addVersion(versionBuilder);
 
-            this.guid = version.guid();
+            this.guid = asset.guid();
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
@@ -78,19 +78,19 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // this.guid = version.guid();
     }
 
-    public SOSFile(Agent sos, Version version, Atom atom) {
+    public SOSFile(Agent sos, Asset asset, Atom atom) {
         super(sos);
 
-        this.version = version;
+        this.asset = asset;
         this.atom = atom;
 
-        Collection<IGUID> meta = version.getMetadata();
+        Collection<IGUID> meta = asset.getMetadata();
         if (meta != null && !meta.isEmpty()) {
             IGUID metaGUID = (IGUID) meta.toArray()[0];
             this.metadata = sos.getMetadata(metaGUID);
         }
 
-        this.guid = version.guid();
+        this.guid = asset.guid();
     }
 
     public SOSFile(Agent sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
@@ -108,15 +108,15 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             if (previousVersionDiffers) {
 
                 Collection<IGUID> previousVersion = new ArrayList<>();
-                previousVersion.add(previous.getVersion().getVersionGUID());
+                previousVersion.add(previous.getAsset().getVersionGUID());
                 VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion)
                         .setMetadata(metadata);
 
-                version = sos.addVersion(versionBuilder);
+                asset = sos.addVersion(versionBuilder);
 
-                this.guid = version.guid();
+                this.guid = asset.guid();
                 this.previous = previous;
             } else {
                 System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");

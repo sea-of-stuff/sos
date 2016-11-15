@@ -9,7 +9,7 @@ import java.util.Collection;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Version extends Manifest {
+public interface Asset extends Manifest {
 
     /**
      * This is the unique ID of this version.

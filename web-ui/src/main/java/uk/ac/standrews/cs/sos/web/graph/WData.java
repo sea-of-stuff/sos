@@ -36,7 +36,7 @@ public class WData {
 
     private static String getData(SOSLocalNode sos, Manifest manifest) throws IOException, ManifestNotFoundException {
 
-        if (manifest.getManifestType() == ManifestType.VERSION) {
+        if (manifest.getManifestType() == ManifestType.ASSET) {
             Manifest contentManifest = sos.getAgent().getManifest(manifest.getContentGUID());
             return getData(sos, contentManifest);
         }

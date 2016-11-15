@@ -15,10 +15,10 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
@@ -53,25 +53,25 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     }
 
-    public SOSDirectory(Agent sos, Version version, Compound compound) {
+    public SOSDirectory(Agent sos, Asset asset, Compound compound) {
         super(sos);
 
         contents = compound.getContents();
         this.compound = compound;
-        this.version = version;
+        this.asset = asset;
 
-        this.guid = version.guid();
+        this.guid = asset.guid();
     }
 
     // Use this constructor for the root folder only
-    public SOSDirectory(Agent sos, Version version) {
+    public SOSDirectory(Agent sos, Asset asset) {
         super(sos);
-        this.version = version;
+        this.asset = asset;
         this.name = null;
-        this.guid = version.guid();
+        this.guid = asset.guid();
 
         try {
-            compound = (Compound) sos.getManifest(version.getContentGUID());
+            compound = (Compound) sos.getManifest(asset.getContentGUID());
             contents = compound.getContents();
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
@@ -93,14 +93,14 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             if (previousVersionDiffers) {
 
                 Collection<IGUID> previousVersion = new ArrayList<>();
-                previousVersion.add(previous.getVersion().getVersionGUID());
+                previousVersion.add(previous.getAsset().getVersionGUID());
                 VersionBuilder versionBuilder = new VersionBuilder(compound.getContentGUID())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
 
-                version = sos.addVersion(versionBuilder);
+                asset = sos.addVersion(versionBuilder);
 
-                this.guid = version.guid();
+                this.guid = asset.guid();
                 this.previous = previous;
             } else {
                 System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
@@ -197,8 +197,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         try {
             Manifest manifest = sos.getManifest(guid);
-            if (manifest instanceof Version) {
-                return getObject((Version) manifest);
+            if (manifest instanceof Asset) {
+                return getObject((Asset) manifest);
             } else {
                 SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type. " +
                         "GUID: " + guid + " Type: " + manifest.getManifestType());
@@ -210,16 +210,16 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return null;
     }
 
-    private SOSFileSystemObject getObject(Version version) {
+    private SOSFileSystemObject getObject(Asset asset) {
 
         try {
-            IGUID contentGUID = version.getContentGUID();
+            IGUID contentGUID = asset.getContentGUID();
             Manifest manifest = sos.getManifest(contentGUID);
             if (manifest instanceof Atom) {
-                return new SOSFile(sos, version, (Atom) manifest);
+                return new SOSFile(sos, asset, (Atom) manifest);
 
             } else if (manifest instanceof  Compound) {
-                return getCompoundObject(version, (Compound) manifest);
+                return getCompoundObject(asset, (Compound) manifest);
             }
         } catch (GUIDGenerationException | ManifestNotFoundException e) {
             e.printStackTrace();
@@ -228,12 +228,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return null;
     }
 
-    private SOSDirectory getCompoundObject(Version version, Compound compound) throws GUIDGenerationException {
+    private SOSDirectory getCompoundObject(Asset asset, Compound compound) throws GUIDGenerationException {
         // Still this might be a data compound
         if (compound.getType() == CompoundType.DATA) {
             return null; // Make compound file
         } else {
-            return new SOSDirectory(sos, version, compound);
+            return new SOSDirectory(sos, asset, compound);
         }
     }
 

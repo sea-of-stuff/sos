@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.UriUtil;
@@ -32,7 +32,7 @@ public class SOSFileSystem implements IFileSystem {
     private Agent sos;
     private IGUID invariant;
 
-    public SOSFileSystem(Agent sos, Version root) {
+    public SOSFileSystem(Agent sos, Asset root) {
         this.sos = sos;
         this.invariant = root.getInvariantGUID();
 
@@ -129,7 +129,7 @@ public class SOSFileSystem implements IFileSystem {
     public IDirectory getRootDirectory() {
 
         try {
-            Version head = sos.getHEAD(invariant);
+            Asset head = sos.getHEAD(invariant);
             return new SOSDirectory(sos, head);
         } catch (HEADNotFoundException e) {
             e.printStackTrace();
@@ -141,8 +141,8 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public IGUID getRootId() {
         try {
-            Version version = sos.getHEAD(invariant);
-            return version.getVersionGUID();
+            Asset asset = sos.getHEAD(invariant);
+            return asset.getVersionGUID();
         } catch (HEADNotFoundException e) {
             e.printStackTrace();
         }

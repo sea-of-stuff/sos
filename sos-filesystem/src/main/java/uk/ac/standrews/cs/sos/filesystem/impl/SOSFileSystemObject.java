@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -24,7 +24,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected Agent sos;
 
-    protected Version version;
+    protected Asset asset;
     protected SOSDirectory parent;
     protected SOSFileSystemObject previous; // TODO - make collection (e.g. merging)
     protected SOSMetadata metadata;
@@ -57,10 +57,10 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
             if (previousVersionDiffers) {
                 VersionBuilder builder = getVersionBuilder(contentGUID);
-                version = sos.addVersion(builder);
+                asset = sos.addVersion(builder);
 
-                sos.setHEAD(version.getVersionGUID());
-                guid = version.getVersionGUID();
+                sos.setHEAD(asset.getVersionGUID());
+                guid = asset.getVersionGUID();
             } else {
                 System.out.println("WOOOOOO - some strange issue here");
             }
@@ -71,17 +71,16 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     @Override
     public Collection<IGUID> getPrevious() {
-        return version.getPreviousVersions();
+        return asset.getPreviousVersions();
     }
 
     @Override
     public IGUID getInvariant() {
-        return version.getInvariantGUID();
+        return asset.getInvariantGUID();
     }
 
-    @Override
-    public Version getVersion() {
-        return version;
+    public Asset getAsset() {
+        return asset;
     }
 
     // MUST BE IMPLEMENTED by subclasses
@@ -89,7 +88,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected boolean checkPreviousDiffers(IGUID contentGUID) {
         if (previous != null) {
-            IGUID previousContentGUID = previous.getVersion().getContentGUID();
+            IGUID previousContentGUID = previous.getAsset().getContentGUID();
             return !previousContentGUID.equals(contentGUID);
         }
 
@@ -102,16 +101,16 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
         Collection<IGUID> prevs = new ArrayList<>();
         if (previous != null) {
-            IGUID versionGUID = previous.getVersion().getVersionGUID();
+            IGUID versionGUID = previous.getAsset().getVersionGUID();
             prevs.add(versionGUID);
-        } else if (version != null && version.getPreviousVersions() != null) {
-            prevs.addAll(version.getPreviousVersions());
+        } else if (asset != null && asset.getPreviousVersions() != null) {
+            prevs.addAll(asset.getPreviousVersions());
         }
 
         VersionBuilder builder = new VersionBuilder(contentGUID);
 
-        if (version != null) {
-            builder.setInvariant(version.getInvariantGUID());
+        if (asset != null) {
+            builder.setInvariant(asset.getInvariantGUID());
         }
 
         if (prevs.size() > 0) {

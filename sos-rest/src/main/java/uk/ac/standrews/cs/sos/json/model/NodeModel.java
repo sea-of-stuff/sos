@@ -13,7 +13,7 @@ import java.net.InetSocketAddress;
  */
 public class NodeModel implements Node {
 
-    private boolean isClient;
+    private boolean isAgent;
     private boolean isStorage;
     private boolean isDDS;
     private boolean isNDS;
@@ -45,12 +45,12 @@ public class NodeModel implements Node {
     }
 
     @Override
-    public boolean isClient() {
-        return isClient;
+    public boolean isAgent() {
+        return isAgent;
     }
 
-    public void setClient(boolean client) {
-        isClient = client;
+    public void setAgent(boolean agent) {
+        isAgent = agent;
     }
 
     @Override
