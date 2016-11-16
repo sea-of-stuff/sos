@@ -139,6 +139,7 @@ public class SOSStorage implements Storage {
         }
     }
 
+    // TODO - move this method in a Replication class
     private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {
         InputStream atomContent = getAtomContent(manifest);
         if (replicationPolicy.getReplicationFactor() > 0) {

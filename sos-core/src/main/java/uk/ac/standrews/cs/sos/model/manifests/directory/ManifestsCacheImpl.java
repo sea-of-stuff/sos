@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
+    // Maximum number of manifests kept in the cache at one time
     private static final int MAX_DEFAULT_SIZE = 1024;
 
     private int size;
@@ -132,6 +133,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
     }
 
+    // This method defines how the cache is serialises
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
@@ -143,6 +145,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         }
     }
 
+    // This method defines how the cache is de-serialised
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 

@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.store.*;
+import uk.ac.standrews.cs.sos.model.manifests.atom.store.*;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -19,7 +19,6 @@ public class AtomStorage {
     private IGUID nodeGUID;
     private LocalStorage storage;
 
-
     public AtomStorage(IGUID nodeGUID, LocalStorage storage) {
         this.nodeGUID = nodeGUID;
         this.storage = storage;
@@ -27,44 +26,43 @@ public class AtomStorage {
 
     public IGUID cacheAtomAndUpdateLocationBundles(Location location,
                                                    Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new LocationCache(nodeGUID, storage, location);
 
+        Store cache = new LocationCache(nodeGUID, storage, location);
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
     public IGUID cacheAtomAndUpdateLocationBundles(InputStream inputStream,
                                                    Collection<LocationBundle> bundles) throws StorageException {
-        Store cache = new StreamCache(nodeGUID, storage, inputStream);
 
+        Store cache = new StreamCache(nodeGUID, storage, inputStream);
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
     public IGUID persistAtomAndUpdateLocationBundles(Location location,
                                                      Collection<LocationBundle> bundles) throws StorageException {
-        Store persistance = new LocationPersist(nodeGUID, storage, location);
 
+        Store persistance = new LocationPersist(nodeGUID, storage, location);
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
     public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream,
                                                      Collection<LocationBundle> bundles) throws StorageException {
-        Store persistance = new StreamPersist(nodeGUID, storage, inputStream);
 
+        Store persistance = new StreamPersist(nodeGUID, storage, inputStream);
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
     public IGUID persistAtomToRemote(Node node, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
 
         Store remote = new RemoteStore(node, inputStream);
-
         return storeAtomAndUpdateLocationBundles(remote, bundles);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {
-        AtomStorageManager atomStorageManager = new AtomStorageManager(store);
-        IGUID guid = atomStorageManager.storeAtom();
+
+        IGUID guid = store.store();
         if (bundles!= null && guid != null) {
-            bundles.add(atomStorageManager.getLocationBundle());
+            bundles.add(store.getLocationBundle());
         }
 
         return guid;

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.store;
+package uk.ac.standrews.cs.sos.model.manifests.atom.store;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;

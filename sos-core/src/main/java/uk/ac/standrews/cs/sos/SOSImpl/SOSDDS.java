@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
  */
 public class SOSDDS implements DDS {
 
-    protected ManifestsDirectory manifestsDirectory;
+    private ManifestsDirectory manifestsDirectory;
 
     public SOSDDS(ManifestsDirectory manifestsDirectory) {
         this.manifestsDirectory = manifestsDirectory;
@@ -24,6 +24,8 @@ public class SOSDDS implements DDS {
     @Override
     public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
         manifestsDirectory.addManifest(manifest);
+
+        // TODO - replicate if necessary
     }
 
     @Override

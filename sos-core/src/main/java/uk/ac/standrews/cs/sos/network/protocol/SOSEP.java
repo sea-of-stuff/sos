@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.network;
+package uk.ac.standrews.cs.sos.network.protocol;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;

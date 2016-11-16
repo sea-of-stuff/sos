@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.model.store;
+package uk.ac.standrews.cs.sos.model.manifests.atom.store;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -8,7 +8,11 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.network.*;
+import uk.ac.standrews.cs.sos.network.Method;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
+import uk.ac.standrews.cs.sos.network.Response;
+import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.network.protocol.SOSEP;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
