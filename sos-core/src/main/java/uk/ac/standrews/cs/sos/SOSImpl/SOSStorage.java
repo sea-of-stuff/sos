@@ -90,6 +90,9 @@ public class SOSStorage implements Storage {
     @Override
     public InputStream getAtomContent(Atom atom) {
         InputStream dataStream = null;
+
+        // TODO - atomStorage.getLocationIterator(guid)
+
         Collection<LocationBundle> locations = atom.getLocations();
         for(LocationBundle location:locations) {
 
@@ -125,7 +128,7 @@ public class SOSStorage implements Storage {
 
     protected IGUID store(Location location, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
         if (persist) {
-            return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations!
+            return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations(and indeX)
         } else {
             return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
         }

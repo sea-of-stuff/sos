@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.atom.store.*;
@@ -19,9 +20,13 @@ public class AtomStorage {
     private IGUID nodeGUID;
     private LocalStorage storage;
 
+    private LocationsIndex locationIndex;
+
     public AtomStorage(IGUID nodeGUID, LocalStorage storage) {
         this.nodeGUID = nodeGUID;
         this.storage = storage;
+
+        locationIndex = new LocationsIndexImpl();
     }
 
     public IGUID cacheAtomAndUpdateLocationBundles(Location location,
@@ -62,7 +67,10 @@ public class AtomStorage {
 
         IGUID guid = store.store();
         if (bundles!= null && guid != null) {
-            bundles.add(store.getLocationBundle());
+            LocationBundle locationBundle = store.getLocationBundle();
+            bundles.add(locationBundle);
+
+            locationIndex.addLocation(guid, locationBundle);
         }
 
         return guid;
