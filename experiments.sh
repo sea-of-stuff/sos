@@ -10,23 +10,39 @@ killall() {
     echo "**** Shutting down... ****"
     kill -TERM 0         # fixed order, send TERM not INT
     wait
+    echo "All processes are killed"
+
+    echo "Archiving logs"
+    time=$(date)
+    mkdir logs-archive/
+    mkdir logs-archive/"$time"
+    cp logs/*.log logs-archive/"$time"
+
+    rm -rf logs/*.log
+    rm -rf logs
+    echo "Archiving logs finished"
+    
     echo DONE
 }
+
+mkdir logs
 
 for (( i=1; i<=$#; i++ )); do
     config="${!i}"
 
     echo "Running SOS instance with config: $config"
+    output=logs/node-output-${i}.log
+    error=logs/node-error-${i}.log
 
-    echo "---------------------------" >> node-output-${i}.txt
-    echo "OUTPUT LOG -- Time: $(date)" >> node-output-${i}.txt
-    echo "---------------------------" >> node-output-${i}.txt
+    echo "------------------------------------------------------" >> $output
+    echo "OUTPUT LOG -- Time: $(date)" >> $output
+    echo "------------------------------------------------------" >> $output
 
-    echo "---------------------------" >> node-error-${i}.txt
-    echo "ERROR LOG -- Time: $(date)" >> node-error-${i}.txt
-	echo "---------------------------" >> node-error-${i}.txt
+    echo "------------------------------------------------------" >> $error
+    echo "ERROR LOG -- Time: $(date)" >> $error
+	echo "------------------------------------------------------" >> $error
 
-	java -jar sos.jar -c $config -fs -j >> node-output-${i}.txt 2>> node-error-${i}.txt &
+	java -jar sos.jar -c $config -fs -j >> $output 2>> $error &
 	echo "Java process run at id: $!"
 done
 

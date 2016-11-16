@@ -229,10 +229,6 @@ public class SOSConfiguration {
         return configuration.getInt(PropertyKeys.WEBAPP_PORT);
     }
 
-    public int getRESTPort() {
-        return configuration.getInt(PropertyKeys.REST_PORT);
-    }
-
     private void setProperty(String key, String value) throws IOException {
         configuration = configuration.withValue(key, ConfigValueFactory.fromAnyRef(value));
 
@@ -277,6 +273,5 @@ public class SOSConfiguration {
 
         static final String WEBDAV_PORT = "webdav.port";
         static final String WEBAPP_PORT = "webapp.port";
-        static final String REST_PORT = "rest.port";
     }
 }
