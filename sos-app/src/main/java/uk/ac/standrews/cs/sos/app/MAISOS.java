@@ -4,9 +4,11 @@ import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
+import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.WebApp;
@@ -28,11 +30,36 @@ public class MAISOS {
     private static final String ROOT_OPT = "root";
 
     public static void main(String[] args) throws Exception {
+        CommandLine line = InitCLI(args);
+
+        String configFilePath = line.getOptionValue(CONFIG_OPT);
+        File configFile = new File(configFilePath);
+        SOSConfiguration configuration = new SOSConfiguration(configFile);
+
+        SOSLocalNode sos = ServerState.init(configuration);
+        assert sos != null;
+
+        IGUID root = getRootGUID(line);
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        if (line.hasOption(FS_OPT)) {
+            HandleFSApp(executorService, sos, root, configuration);
+        }
+
+        if (line.hasOption(REST_OPT)) {
+            HandleJettyApp(executorService, sos);
+        }
+
+        HandleExit(executorService);
+    }
+
+    private static CommandLine InitCLI(String[] args) throws MAISOSException {
         CommandLineParser parser = new DefaultParser();
         Options options = CreateOptions();
 
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("posix", options );
+        formatter.printHelp("posix", options);
 
         CommandLine line;
         try {
@@ -41,45 +68,7 @@ public class MAISOS {
             throw new MAISOSException(e);
         }
 
-        String configFilePath = line.getOptionValue(CONFIG_OPT);
-        File configFile = new File(configFilePath);
-        SOSConfiguration configuration = new SOSConfiguration(configFile);
-
-        SOSLocalNode sos = ServerState.init(configuration);
-
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        IGUID root = getRootGUID(line);
-
-        if (line.hasOption(FS_OPT)) {
-            IFileSystem fileSystem = new SOSFileSystemFactory(root)
-                    .makeFileSystem(sos.getAgent());
-
-            executor.submit(() -> {
-                try {
-                    LaunchWebDAV(fileSystem, configuration.getWebDAVPort());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-
-
-            WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
-        }
-
-        if (line.hasOption(REST_OPT)) {
-
-            executor.submit(() -> {
-                try {
-                    JettyApp.RUN(sos);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-        // FIXME - not working. It might be because there are threads being launched
-        HandleExit(executor);
+        return line;
     }
 
     private static Options CreateOptions() {
@@ -139,6 +128,39 @@ public class MAISOS {
                 }
             });
         }
+    }
+
+    private static void HandleFSApp(ExecutorService executorService, SOSLocalNode sos, IGUID root,
+                                    SOSConfiguration configuration) throws FileSystemCreationException {
+
+        Agent agent = sos.getAgent();
+        if (agent == null) {
+            return;
+        }
+
+        IFileSystem fileSystem = new SOSFileSystemFactory(root)
+                .makeFileSystem(agent);
+
+        executorService.submit(() -> {
+            try {
+                LaunchWebDAV(fileSystem, configuration.getWebDAVPort());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
+    }
+
+    private static void HandleJettyApp(ExecutorService executorService, SOSLocalNode sos) {
+        executorService.submit(() -> {
+            try {
+                JettyApp.RUN(sos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private static void LaunchWebDAV(IFileSystem fileSystem, int port) {
