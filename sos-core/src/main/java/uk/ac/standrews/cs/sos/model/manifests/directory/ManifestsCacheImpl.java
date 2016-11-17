@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -133,14 +132,12 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
     }
 
-    // This method defines how the cache is serialises
+    // This method defines how the cache is serialised
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
         out.writeInt(lru.size());
-        Iterator<IGUID> it = lru.iterator();
-        while (it.hasNext()) {
-            IGUID guid = it.next();
+        for (IGUID guid : lru) {
             out.writeUTF(guid.toString());
         }
     }

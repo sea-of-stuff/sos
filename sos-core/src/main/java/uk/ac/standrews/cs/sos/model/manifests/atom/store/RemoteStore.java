@@ -49,6 +49,7 @@ public class RemoteStore implements Store {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(response.getBody());
             String guid = node.get("ContentGUID").textValue();
 
+            // TODO - get locations back!
             dataGUID = GUIDFactory.recreateGUID(guid);
         } catch (IOException | GUIDGenerationException e) {
             e.printStackTrace();
