@@ -225,7 +225,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         }
 
         InputStream stream = sos.getAtomContent(atom);
-        IData data = new InputStreamData(stream, size); // 1MB -  5242880 5MB - FIXME - size of data expected should not be hardcoded
+        IData data = new InputStreamData(stream, size);
 
         return data;
     }
