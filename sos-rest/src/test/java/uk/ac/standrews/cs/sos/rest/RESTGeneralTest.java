@@ -18,7 +18,7 @@ public class RESTGeneralTest extends CommonRESTTest {
             "  \"hostname\": \"localhost\",\n" +
             "  \"port\": 8080,\n" +
             "  \"roles\": {\n" +
-            "    \"client\": true,\n" +
+            "    \"agent\": true,\n" +
             "    \"storage\": true,\n" +
             "    \"dds\": true,\n" +
             "    \"nds\": true,\n" +

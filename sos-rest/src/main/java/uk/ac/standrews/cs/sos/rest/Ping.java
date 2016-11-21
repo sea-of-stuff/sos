@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
  * This is a test end-point.
  */
 @Path("/ping")
-public class Hello {
+public class Ping {
 
     @GET
     @Path("/{param}")

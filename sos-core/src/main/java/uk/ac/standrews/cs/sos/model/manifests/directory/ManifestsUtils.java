@@ -61,6 +61,10 @@ public class ManifestsUtils {
         return storage.createFile(directory, normaliseGUID(guid));
     }
 
+    public static File ManifestTempFile(LocalStorage storage, Directory directory, String guid) throws DataStorageException {
+        return storage.createFile(directory, normaliseGUID(guid) + "-TEMP");
+    }
+
     private static String normaliseGUID(String guid) {
         return guid + JSON_EXTENSION;
     }

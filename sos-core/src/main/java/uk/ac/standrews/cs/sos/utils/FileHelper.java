@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
+import java.io.IOException;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -20,8 +22,18 @@ public class FileHelper {
     }
 
     public static void RenameFile(String oldPathname, String newPathname) {
-        java.io.File oldfile =new java.io.File(oldPathname);
-        java.io.File newfile =new java.io.File(newPathname);
+        java.io.File oldfile = new java.io.File(oldPathname);
+        java.io.File newfile = new java.io.File(newPathname);
         oldfile.renameTo(newfile);
+    }
+
+    public static void RenameFile(File oldFile, File newFile) {
+        try {
+            java.io.File oldfile =  oldFile.toFile();
+            java.io.File newfile = newFile.toFile();
+            oldfile.renameTo(newfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -200,6 +200,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
         try {
             File manifestFile = getManifestFile(guid);
+
             File backupFile = backupManifest(existingManifest);
 
             if (!existingManifest.equals(manifest)) {
@@ -238,12 +239,15 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private void saveToFile(Manifest manifest) throws ManifestsDirectoryException {
 
         try {
-            IGUID manifestGUID = manifest.guid();
-            File manifestFile = getManifestFile(manifestGUID.toString());
+            String manifestGUID = manifest.guid().toString();
+            File manifestTempFile = getManifestTempFile(manifestGUID);
 
             Data manifestData = new StringData(manifest.toString());
-            manifestFile.setData(manifestData);
-            manifestFile.persist();
+            manifestTempFile.setData(manifestData);
+            manifestTempFile.persist();
+
+            File manifestFile = getManifestFile(manifestGUID);
+            FileHelper.RenameFile(manifestTempFile, manifestFile);
         } catch (PersistenceException | DataException | DataStorageException e) {
             throw new ManifestsDirectoryException(e);
         }
@@ -260,6 +264,13 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private File getManifestFile(String guid) throws DataStorageException {
         Directory manifestsDir = localStorage.getManifestDirectory();
         File file = ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
+
+        return file;
+    }
+
+    private File getManifestTempFile(String guid) throws DataStorageException {
+        Directory manifestsDir = localStorage.getManifestDirectory();
+        File file = ManifestsUtils.ManifestTempFile(localStorage, manifestsDir, guid);
 
         return file;
     }

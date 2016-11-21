@@ -23,7 +23,7 @@ public class RESTNDSTest extends CommonRESTTest {
                 "    \"guid\" : \"ccc6adc7e831ee563a8d0daa230690c296a\",\n" +
                 "\t\"ip\": \"234:234:20:2\",\n" +
                 "\t\"port\": 8081,\n" +
-                "\t\"client\": false,\n" +
+                "\t\"agent\": false,\n" +
                 "\t\"storage\": true,\n" +
                 "\t\"NDS\": true,\n" +
                 "\t\"DDS\": true,\n" +

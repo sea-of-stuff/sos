@@ -24,7 +24,7 @@ public class SOSConfigurationTest {
                     "        \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\",\n" +
                     "        \"port\" : 8080\n" +
                     "        \"is\" : {\n" +
-                    "          \"client\" : true\n" +
+                    "          \"agent\" : true\n" +
                     "          \"storage\" : true\n" +
                     "          \"dds\" : true\n" +
                     "          \"nds\" : true\n" +

@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
+import uk.ac.standrews.cs.sos.filesystem.Helper;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
@@ -160,7 +161,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             creationtime = Long.parseLong(s_creationtime);
         }
 
-        return creationtime;
+        return Helper.UnixTimeToFileTime(creationtime);
     }
 
     @Override
@@ -172,7 +173,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             modtime = Long.parseLong(s_modtime);
         }
 
-        return modtime;
+        return Helper.UnixTimeToFileTime(modtime);
     }
 
     @Override

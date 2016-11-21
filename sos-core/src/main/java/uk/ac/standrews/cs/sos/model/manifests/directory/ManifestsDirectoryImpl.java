@@ -93,7 +93,9 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         try {
             Directory cacheDir = localStorage.getCachesDirectory();
             File file = localStorage.createFile(cacheDir, CACHE_FILE);
-            cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestDirectory());
+            if (file.exists()) {
+                cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestDirectory());
+            }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }

@@ -14,10 +14,10 @@ killall() {
 
     echo "Archiving logs"
     time=$(date)
-    mkdir logs-archive/
-    mkdir logs-archive/"$time"
+    mkdir -p logs-archive/"$time"
     cp logs/*.log logs-archive/"$time"
 
+    echo "Deleting temp logs"
     rm -rf logs/*.log
     rm -rf logs
     echo "Archiving logs finished"
@@ -25,7 +25,8 @@ killall() {
     echo DONE
 }
 
-mkdir logs
+
+mkdir -p logs
 
 for (( i=1; i<=$#; i++ )); do
     config="${!i}"

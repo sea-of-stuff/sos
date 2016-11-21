@@ -27,20 +27,20 @@ import static org.testng.Assert.assertEquals;
 public class AssetManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_BASIC_ASSET =
-            "{\"Type\":\"Version\"," +
+            "{\"Type\":\"Asset\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_ASSET =
-            "{\"Type\":\"Version\"," +
+            "{\"Type\":\"Asset\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_PREVIOUS_ASSET =
-            "{\"Type\":\"Version\"," +
+            "{\"Type\":\"Asset\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
@@ -48,7 +48,7 @@ public class AssetManifestTest extends CommonTest {
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET =
-            "{\"Type\":\"Version\"," +
+            "{\"Type\":\"Asset\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +

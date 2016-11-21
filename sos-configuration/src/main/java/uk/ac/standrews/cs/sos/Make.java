@@ -19,7 +19,7 @@ public class Make {
                     "        \"port\" : 8080\n" +
                     "        \"hostname\" : \"\"\n" +
                     "        \"is\" : {\n" +
-                    "            \"client\" : true\n" +
+                    "            \"agent\" : true\n" +
                     "            \"storage\" : false\n" +
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
@@ -70,7 +70,7 @@ public class Make {
             "node.guid= # SHA-1 (160bits) - optional\n" +
             "node.port=8080\n" +
             "node.hostname= \t # true/false\n" +
-            "node.is.client= \t # true/false\n" +
+            "node.is.agent= \t # true/false\n" +
             "node.is.storage= \t # true/false\n" +
             "node.is.dds= \t # true/false\n" +
             "node.is.mcs= \t # true/false\n" +

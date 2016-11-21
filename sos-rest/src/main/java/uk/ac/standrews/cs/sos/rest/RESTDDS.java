@@ -34,8 +34,8 @@ public class RESTDDS {
 
         Manifest manifest;
         try {
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
-            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
+            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(json);
+            ManifestType type = ManifestType.get(jsonNode.get(ManifestConstants.KEY_TYPE).textValue());
             manifest = getManifest(type, json);
         } catch (IOException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");

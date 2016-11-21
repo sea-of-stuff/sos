@@ -73,4 +73,4 @@ We use fluentd to aggregate the logs. Make sure that Docker is installed and you
 
 The run:
 
-`$ docker run -d -p 24224:24224 -v /tmp/data:/fluentd/log fluent/fluentd`
+$ docker run -d -p 24224:24224 -v /tmp/data:/fluentd/log fluent/fluentd

@@ -36,7 +36,7 @@ public class SetUpTest extends CommonTest {
                     "        \"port\" : 8080\n" +
                     "        \"hostname\" : \"\"\n" +
                     "        \"is\" : {\n" +
-                    "            \"client\" : true\n" +
+                    "            \"agent\" : true\n" +
                     "            \"storage\" : false\n" +
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
@@ -75,7 +75,7 @@ public class SetUpTest extends CommonTest {
                     "            \"port\" : 8080\n" +
                     "            \"hostname\" : \"cs-wifi-174.cs.st-andrews.ac.uk\"\n" +
                     "            \"is\" : {\n" +
-                    "                \"client\" : false\n" +
+                    "                \"agent\" : false\n" +
                     "                \"storage\" : true\n" +
                     "                \"dds\" : false\n" +
                     "                \"nds\" : false\n" +
