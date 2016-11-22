@@ -64,7 +64,7 @@ public abstract class LocationStore extends CommonLocalStore {
 
             InputStreamData data = new InputStreamData(dataStream);
             storeData(guid, data);
-        } catch (SourceLocationException | DataStorageException | IOException e) {
+        } catch (DataStorageException | IOException e) {
             throw new StorageException();
         }
     }

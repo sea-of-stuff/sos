@@ -5,12 +5,11 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,11 +29,11 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
 
         if (index.containsKey(guid)) {
+            index.get(guid).add(locationBundle);
+        } else {
             ArrayList<LocationBundle> bundles = new ArrayList<>();
             bundles.add(locationBundle);
             index.put(guid, bundles);
-        } else {
-            index.get(guid).add(locationBundle);
         }
     }
 
@@ -59,6 +58,32 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
             return it.next();
         }
 
+    }
+
+    @Override
+    public void persist(File file) throws IOException {
+        FileOutputStream ostream = new FileOutputStream(file.toFile());
+        ObjectOutputStream p = new ObjectOutputStream(ostream);
+
+        p.writeObject(this);
+        p.flush();
+        ostream.close();
+    }
+
+    public static LocationsIndex load(LocalStorage storage, File file) throws IOException, ClassNotFoundException {
+
+        // Check that file is not empty
+        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
+        if (br.readLine() == null) {
+            return null;
+        }
+
+        FileInputStream istream = new FileInputStream(file.toFile());
+        ObjectInputStream q = new ObjectInputStream(istream);
+
+        LocationsIndex persistedLocationsIndex = (LocationsIndex)q.readObject();
+
+        return persistedLocationsIndex;
     }
 
     // This method defines how the cache is serialised

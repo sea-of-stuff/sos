@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -64,11 +63,7 @@ public class AtomManifest extends BasicManifest implements Atom {
         InputStream dataStream = null;
         for (LocationBundle location : locations) {
 
-            try {
-                dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
-            } catch (SourceLocationException e) {
-                continue;
-            }
+            dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
 
             if (dataStream != null) {
                 break;
@@ -101,7 +96,7 @@ public class AtomManifest extends BasicManifest implements Atom {
                 if (!verifyStream(dataStream)) {
                     return false;
                 }
-            } catch (SourceLocationException | GUIDGenerationException| IOException e) {
+            } catch (GUIDGenerationException| IOException e) {
                 throw new ManifestVerificationException("Unable to verify Atom Manifest", e);
             }
         }
