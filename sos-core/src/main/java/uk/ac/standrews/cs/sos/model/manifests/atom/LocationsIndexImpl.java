@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -16,8 +17,7 @@ import java.util.Iterator;
  */
 public class LocationsIndexImpl implements LocationsIndex, Serializable {
 
-    // TODO - support multiple locations!
-    private transient HashMap<IGUID, LocationBundle> index;
+    private transient HashMap<IGUID, ArrayList<LocationBundle>> index;
 
     public LocationsIndexImpl() {
         index = new HashMap<>();
@@ -25,30 +25,35 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
 
     @Override
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
-        index.put(guid, locationBundle);
+
+        if (index.containsKey(guid)) {
+            ArrayList<LocationBundle> bundles = new ArrayList<>();
+            bundles.add(locationBundle);
+            index.put(guid, bundles);
+        } else {
+            index.get(guid).add(locationBundle);
+        }
     }
 
     @Override
     public Iterator<LocationBundle> findLocations(IGUID guid) {
-        return new LocationsIterator();
+        return new LocationsIterator(guid);
     }
 
     private class LocationsIterator implements Iterator<LocationBundle> {
 
-        Iterator<IGUID> iterator;
+        Iterator<LocationBundle> it;
 
-        LocationsIterator() {
-            iterator = index.keySet().iterator();
+        LocationsIterator(IGUID guid) {
+            it = index.get(guid).iterator();
         }
 
         public boolean hasNext() {
-            return iterator.hasNext();
+            return it.hasNext();
         }
 
         public LocationBundle next() {
-            IGUID key = iterator.next();
-
-            return index.get(key);
+            return it.next();
         }
 
     }
@@ -58,14 +63,14 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         out.defaultWriteObject();
 
         out.writeInt(index.size());
-        Iterator<IGUID> indexIt = index.keySet().iterator();
-        while(indexIt.hasNext()) {
-            IGUID key = indexIt.next();
-            LocationBundle locationBundle = index.get(key);
+        for (IGUID key : index.keySet()) {
+            Iterator<LocationBundle> it = findLocations(key);
 
             out.writeUTF(key.toString());
-            out.writeUTF(locationBundle.toString());
-            // TODO - store location bundle too
+
+            while (it.hasNext()) {
+                out.writeUTF(it.next().toString());
+            }
         }
     }
 

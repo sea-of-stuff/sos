@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.SOSImpl;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
@@ -91,16 +90,12 @@ public class SOSStorage implements Storage {
     public InputStream getAtomContent(Atom atom) {
         InputStream dataStream = null;
 
-        // TODO - atomStorage.getLocationIterator(guid)
+        Iterator<LocationBundle> it = atomStorage.getLocationsIterator(atom.guid());
+        while(it.hasNext()) {
+            LocationBundle locationBundle = it.next();
 
-        Collection<LocationBundle> locations = atom.getLocations();
-        for(LocationBundle location:locations) {
-
-            try {
-                dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
-            } catch (SourceLocationException e) {
-                continue;
-            }
+            Location location = locationBundle.getLocation();
+            dataStream = LocationUtility.getInputStreamFromLocation(location);
 
             if (dataStream != null) {
                 break;

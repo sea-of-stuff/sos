@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,6 +28,10 @@ public class AtomStorage {
         this.storage = storage;
 
         locationIndex = new LocationsIndexImpl();
+    }
+
+    public Iterator<LocationBundle> getLocationsIterator(IGUID guid) {
+        return locationIndex.findLocations(guid);
     }
 
     public IGUID cacheAtomAndUpdateLocationBundles(Location location,
