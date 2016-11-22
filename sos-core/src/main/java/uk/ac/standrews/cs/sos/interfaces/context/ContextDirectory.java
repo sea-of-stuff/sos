@@ -9,18 +9,21 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ContextIndex {
+public interface ContextDirectory {
 
     /**
      * Add a given asset under the specified context
      * @param context
      * @param asset
      */
-    void addToContext(Context context, Asset asset);
+    void add(Context context, Asset asset);
 
     /**
      * Get all assets associated with the given context
      * @param context
+     *
+     * TODO - return a list of assets
+     * Use pagination?
      */
     void getAssets(Context context);
 }
