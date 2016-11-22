@@ -5,13 +5,13 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -19,7 +19,7 @@ import java.util.Iterator;
  */
 public class LocationsIndexImpl implements LocationsIndex, Serializable {
 
-    private transient HashMap<IGUID, ArrayList<LocationBundle>> index;
+    private transient HashMap<IGUID, HashSet<LocationBundle>> index;
 
     public LocationsIndexImpl() {
         index = new HashMap<>();
@@ -31,7 +31,7 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         if (index.containsKey(guid)) {
             index.get(guid).add(locationBundle);
         } else {
-            ArrayList<LocationBundle> bundles = new ArrayList<>();
+            HashSet<LocationBundle> bundles = new HashSet<>();
             bundles.add(locationBundle);
             index.put(guid, bundles);
         }
@@ -47,7 +47,11 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         Iterator<LocationBundle> it;
 
         LocationsIterator(IGUID guid) {
-            it = index.get(guid).iterator();
+            if (index.containsKey(guid)) {
+                it = index.get(guid).iterator();
+            } else {
+                it = Collections.emptyIterator();
+            }
         }
 
         public boolean hasNext() {
@@ -70,7 +74,7 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         ostream.close();
     }
 
-    public static LocationsIndex load(LocalStorage storage, File file) throws IOException, ClassNotFoundException {
+    public static LocationsIndex load(File file) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
         BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));

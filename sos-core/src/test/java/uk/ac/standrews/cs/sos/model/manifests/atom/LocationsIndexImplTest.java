@@ -43,6 +43,16 @@ public class LocationsIndexImplTest {
     }
 
     @Test
+    public void noLocationsTest() throws URISyntaxException {
+        LocationsIndex locationsIndex = new LocationsIndexImpl();
+
+        IGUID guid = GUIDFactory.generateRandomGUID();
+
+        Iterator<LocationBundle> it = locationsIndex.findLocations(guid);
+        assertFalse(it.hasNext());
+    }
+
+    @Test
     public void persistLocationsIndexTest() throws StorageException, DataStorageException, URISyntaxException, IOException, ClassNotFoundException {
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
 
@@ -57,13 +67,12 @@ public class LocationsIndexImplTest {
         File file = localStorage.createFile(cachesDir, "locations.index");
         locationsIndex.persist(file);
 
-        LocationsIndex locationsIndexPersisted = LocationsIndexImpl.load(localStorage, file);
+        LocationsIndex locationsIndexPersisted = LocationsIndexImpl.load(file);
         assertNotNull(locationsIndexPersisted);
 
         Iterator<LocationBundle> it = locationsIndexPersisted.findLocations(guid);
         assertTrue(it.hasNext());
         assertEquals(locationBundle, it.next());
     }
-
 
 }
