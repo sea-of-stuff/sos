@@ -35,4 +35,6 @@ public interface Storage extends SeaOfStuff {
      */
     InputStream getAtomContent(IGUID guid);
 
+    void flush();
+
 }

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -8,7 +9,10 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.atom.store.*;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,7 +31,31 @@ public class AtomStorage {
         this.nodeGUID = nodeGUID;
         this.storage = storage;
 
-        locationIndex = new LocationsIndexImpl();
+
+        try {
+            Directory cacheDir = storage.getCachesDirectory();
+            File file = storage.createFile(cacheDir, "locations.index");
+            if (file.exists()) {
+                locationIndex = LocationsIndexImpl.load(file);
+            }
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        if (locationIndex == null) {
+            locationIndex = new LocationsIndexImpl();
+        }
+
+    }
+
+    public void flush() {
+        try {
+            Directory cacheDir = storage.getCachesDirectory();
+            File file = storage.createFile(cacheDir, "locations.index");
+            locationIndex.persist(file);
+        } catch (IOException | DataStorageException e) {
+            e.printStackTrace();
+        }
     }
 
     public Iterator<LocationBundle> getLocationsIterator(IGUID guid) {

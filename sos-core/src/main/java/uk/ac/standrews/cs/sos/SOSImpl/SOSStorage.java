@@ -122,6 +122,11 @@ public class SOSStorage implements Storage {
         return null;
     }
 
+    @Override
+    public void flush() {
+        atomStorage.flush();
+    }
+
     protected IGUID store(Location location, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
         if (persist) {
             return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations(and indeX)

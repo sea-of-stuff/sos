@@ -153,6 +153,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     @Override
     public void kill() {
         manifestsDirectory.flush();
+        storage.flush();
 
         RequestsManager.getInstance().shutdown();
     }

@@ -217,12 +217,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             size = (int) Long.parseLong(s_size);
         }
 
-        try (InputStream stream = sos.getAtomContent(atom)) {
-            IData data = new InputStreamData(stream, size);
-            return data;
-        } catch (IOException e) {
-            return null;
-        }
+        InputStream stream = sos.getAtomContent(atom);
+        IData data = new InputStreamData(stream, size);
+
+        return data;
     }
 
     public SOSFile getPreviousFILE() {
