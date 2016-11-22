@@ -57,10 +57,9 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        InputStream inputStream = agent.getAtomContent((AtomManifest) retrievedManifest);
-
-        assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
-        inputStream.close();
+        try (InputStream inputStream = agent.getAtomContent((AtomManifest) retrievedManifest)) {
+            assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
+        }
     }
 
     @Test
@@ -197,12 +196,11 @@ public class SOSAddAtomTest extends AgentTest {
         String bigString = RandomStringUtils.randomAscii(HUNDRED_MB);
         long start = System.nanoTime();
 
-        InputStream stream = HelperTest.StringToInputStream(bigString);
-        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-        Atom manifest = agent.addAtom(builder);
-        assertNotNull(manifest.getContentGUID());
-
-        stream.close();
+        try (InputStream stream = HelperTest.StringToInputStream(bigString)) {
+            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            Atom manifest = agent.addAtom(builder);
+            assertNotNull(manifest.getContentGUID());
+        }
 
         System.out.println("1 atoms of 100mb uploaded in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }

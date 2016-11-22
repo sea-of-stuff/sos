@@ -97,7 +97,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     // this is a bad way of dealing with previous references.
     // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
-    protected VersionBuilder getVersionBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
+    private VersionBuilder getVersionBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
 
         Collection<IGUID> prevs = new ArrayList<>();
         if (previous != null) {

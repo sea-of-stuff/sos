@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,24 +140,28 @@ public class SOSStorage implements Storage {
 
     // TODO - move this method in a Replication class
     private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {
-        InputStream atomContent = getAtomContent(manifest);
-        if (replicationPolicy.getReplicationFactor() > 0) {
 
-            Runnable replicator = () -> {
-                Iterator<Node> storageNodes = nodesDirectory.getStorageNodes().iterator();
-                // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
+        try (InputStream atomContent = getAtomContent(manifest)) {
+            if (replicationPolicy.getReplicationFactor() > 0) {
 
-                if (storageNodes.hasNext()) {
-                    Node replicaNode = storageNodes.next();
-                    try {
-                        atomStorage.persistAtomToRemote(replicaNode, atomContent, bundles);
-                    } catch (StorageException e) {
-                        e.printStackTrace();
+                Runnable replicator = () -> {
+                    Iterator<Node> storageNodes = nodesDirectory.getStorageNodes().iterator();
+                    // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
+
+                    if (storageNodes.hasNext()) {
+                        Node replicaNode = storageNodes.next();
+                        try {
+                            atomStorage.persistAtomToRemote(replicaNode, atomContent, bundles);
+                        } catch (StorageException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            };
+                };
 
-            replicator.run();
+                replicator.run();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

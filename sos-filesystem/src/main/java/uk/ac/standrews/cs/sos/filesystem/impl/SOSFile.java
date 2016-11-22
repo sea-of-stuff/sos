@@ -36,7 +36,7 @@ import java.util.Collection;
  */
 public class SOSFile extends SOSFileSystemObject implements IFile {
 
-    boolean isCompoundData;
+    private boolean isCompoundData;
     private Atom atom;
     private Collection<Content> atoms;
 
@@ -60,9 +60,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (ManifestNotMadeException e) {
-            e.printStackTrace();
-        } catch (SOSMetadataException e) {
+        } catch (ManifestNotMadeException | SOSMetadataException e) {
             e.printStackTrace();
         }
 
@@ -127,9 +125,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (ManifestNotMadeException e) {
-            e.printStackTrace();
-        } catch (SOSMetadataException e) {
+        } catch (ManifestNotMadeException | SOSMetadataException e) {
             e.printStackTrace();
         }
 
@@ -138,7 +134,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     @Override
     public IAttributes getAttributes() {
 
-        // TODO - iterate over metadata and build attributes
         IAttributes dummyAttributes = new Attributes(FileSystemConstants.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +
                 FileSystemConstants.CONTENT + Attributes.EQUALS + "text" + Attributes.SEPARATOR );
 
@@ -210,24 +205,24 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         return retval;
     }
 
+
+    // this will differ based on whether it is a single atom or a compound of atoms sos.getData(guid);
+    // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
     @Override
     public IData reify() {
-        // LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Reify file with name " + name);
-
-        // this will differ based on whether it is a single atom or a compound of atoms sos.getData(guid);
-        // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
 
         int size = 0;
-
         if (metadata != null) {
             String s_size = metadata.getProperty("Size").trim();
             size = (int) Long.parseLong(s_size);
         }
 
-        InputStream stream = sos.getAtomContent(atom);
-        IData data = new InputStreamData(stream, size);
-
-        return data;
+        try (InputStream stream = sos.getAtomContent(atom)) {
+            IData data = new InputStreamData(stream, size);
+            return data;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public SOSFile getPreviousFILE() {

@@ -32,9 +32,9 @@ public class SOSAddAtomTest extends StorageTest {
         Atom manifest = storage.addAtom(builder, true);
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
-        InputStream inputStream = storage.getAtomContent(manifest);
-        assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
-        inputStream.close();
+        try (InputStream inputStream = storage.getAtomContent(manifest)) {
+            assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
+        }
     }
 
     @Test

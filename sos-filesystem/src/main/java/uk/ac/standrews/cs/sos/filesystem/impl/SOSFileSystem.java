@@ -22,9 +22,6 @@ import java.util.Iterator;
 
 /**
  *
- * TODO list:
- * - create compound if large file: maybe have a different call for large files via appendToFile
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSFileSystem implements IFileSystem {
@@ -197,7 +194,6 @@ public class SOSFileSystem implements IFileSystem {
             return;
         }
 
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - update directory (invariant) " + parent.getInvariant());
         SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
         directory.persist();
 
