@@ -1,8 +1,11 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -64,10 +67,13 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
 
         out.writeInt(index.size());
         for (IGUID key : index.keySet()) {
-            Iterator<LocationBundle> it = findLocations(key);
 
             out.writeUTF(key.toString());
 
+            int numberOfLocations = index.get(key).size();
+            out.writeInt(numberOfLocations);
+
+            Iterator<LocationBundle> it = findLocations(key);
             while (it.hasNext()) {
                 out.writeUTF(it.next().toString());
             }
@@ -78,6 +84,22 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        // TODO - recreate index
+        int indexSize = in.readInt();
+        index = new HashMap<>();
+        for(int i = 0; i < indexSize; i++) {
+            try {
+                IGUID key = GUIDFactory.recreateGUID(in.readUTF());
+                int numberOfLocations = in.readInt();
+
+                for (int j = 0; j < numberOfLocations; j++) {
+                    LocationBundle bundle = JSONHelper.JsonObjMapper().readValue(in.readUTF(), LocationBundle.class);
+                    addLocation(key, bundle);
+                }
+
+            } catch (GUIDGenerationException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
