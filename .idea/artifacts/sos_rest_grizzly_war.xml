@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="sos-rest-grizzly:war">
-    <output-path>$PROJECT_DIR$/sos-rest-grizzly/target</output-path>
-    <root id="archive" name="sos-rest-standalone.war">
-      <element id="artifact" artifact-name="sos-rest-grizzly:war exploded" />
-    </root>
-  </artifact>
-</component>
