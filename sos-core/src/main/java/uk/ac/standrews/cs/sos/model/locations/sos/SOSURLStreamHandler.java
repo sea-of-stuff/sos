@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations.sos;
 
-import uk.ac.standrews.cs.sos.node.NodesDirectory;
+import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 
 import java.io.IOException;
@@ -14,15 +14,15 @@ import java.net.URLStreamHandler;
 public class SOSURLStreamHandler extends URLStreamHandler {
 
     private LocalStorage localStorage;
-    private NodesDirectory nodesDirectory;
+    private NDS nds;
 
-    public SOSURLStreamHandler(LocalStorage localStorage, NodesDirectory nodesDirectory) {
+    public SOSURLStreamHandler(LocalStorage localStorage, NDS nds) {
         this.localStorage = localStorage;
-        this.nodesDirectory = nodesDirectory;
+        this.nds = nds;
     }
 
     @Override
     protected URLConnection openConnection(URL url) throws IOException {
-        return new SOSURLConnection(localStorage, nodesDirectory, url);
+        return new SOSURLConnection(localStorage, nds, url);
     }
 }

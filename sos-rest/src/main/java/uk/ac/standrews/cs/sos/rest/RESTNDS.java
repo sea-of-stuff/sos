@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.json.model.NodeModel;
@@ -55,13 +56,14 @@ public class RESTNDS {
         }
 
         NDS nds = RESTConfig.sos.getNDS();
-        Node node = nds.getNode(nodeGUID);
-
-        if (node != null) {
+        Node node = null;
+        try {
+            node = nds.getNode(nodeGUID);
             return HTTPResponses.OK(node.toString());
-        } else {
+        } catch (NodeNotFoundException e) {
             return HTTPResponses.NOT_FOUND("Node with GUID: " + nodeGUID.toString() + " could not be found");
         }
+
     }
 
     @GET

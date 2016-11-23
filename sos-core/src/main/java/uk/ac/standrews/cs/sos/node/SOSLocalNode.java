@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.node;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.SOSImpl.*;
+import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
@@ -24,13 +24,14 @@ import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.sos.*;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
-import uk.ac.standrews.cs.sos.model.locations.sos.SOSProtocol;
+import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.node.database.DatabaseType;
-import uk.ac.standrews.cs.sos.node.database.SQLDatabase;
+import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
+import uk.ac.standrews.cs.sos.node.directory.database.DatabaseType;
+import uk.ac.standrews.cs.sos.node.directory.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -61,7 +62,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private NodesDatabase nodesDatabase;
     private Identity identity;
     private ManifestsDirectory manifestsDirectory;
-    private NodesDirectory nodesDirectory;
+    private LocalNodesDirectory localNodesDirectory;
     private MetadataDirectory metadataDirectory;
 
     // Node roles
@@ -104,8 +105,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // TODO - register node with NDS
         initNodeManager();
 
+
         try {
-            SOSProtocol.Register(localStorage, nodesDirectory);
+            SOSURLProtocol.getInstance().register(localStorage);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
         }
@@ -164,7 +166,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void initNodeManager() throws SOSException {
         try {
-            nodesDirectory = new NodesDirectory(this, nodesDatabase);
+            localNodesDirectory = new LocalNodesDirectory(this, nodesDatabase);
         } catch (NodesDirectoryException e) {
             throw new SOSException(e);
         }
@@ -174,13 +176,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throws DatabaseConnectionException {
 
         for(Node node:bootstrapNodes) {
-            nodesDirectory.addNode(node);
+            localNodesDirectory.addNode(node);
         }
     }
 
     private void initManifestManager() {
         ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
-        manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nodesDirectory);
+        manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, localNodesDirectory);
     }
 
     private void initIdentity() throws SOSException {
@@ -199,11 +201,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initSOSInstances() {
+        nds = new SOSNDS(localNodesDirectory);
+        SOSURLProtocol.getInstance().setNDS(nds);
+
         ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
 
-        storage = new SOSStorage(this, nodesDirectory, localStorage, replicationPolicy, manifestsDirectory);
+        storage = new SOSStorage(this, localNodesDirectory, localStorage, replicationPolicy, manifestsDirectory);
         dds = new SOSDDS(manifestsDirectory);
-        nds = new SOSNDS(nodesDirectory);
         mcs = new SOSMCS(metadataDirectory);
 
         agent = new SOSAgent(storage, dds, mcs, identity);

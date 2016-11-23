@@ -4,14 +4,15 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.protocol.SOSEP;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.Response;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
-import uk.ac.standrews.cs.sos.network.protocol.SOSEP;
-import uk.ac.standrews.cs.sos.node.NodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -37,7 +38,7 @@ import java.util.Collection;
 public class SOSURLConnection extends URLConnection {
 
     private LocalStorage localStorage;
-    private NodesDirectory nodesDirectory;
+    private NDS nds;
 
     /**
      * Constructs a URL connection to the specified URL. A connection to
@@ -46,12 +47,12 @@ public class SOSURLConnection extends URLConnection {
      * @param url the specified URL.
      */
     protected SOSURLConnection(LocalStorage localStorage,
-                               NodesDirectory nodesDirectory,
+                               NDS nds,
                                URL url) {
         super(url);
 
         this.localStorage = localStorage;
-        this.nodesDirectory = nodesDirectory;
+        this.nds = nds;
     }
 
     @Override
@@ -81,7 +82,7 @@ public class SOSURLConnection extends URLConnection {
             if (dataIsStoredLocally) { // CASE 1
                 inputStream = getDataLocally(entityGUID);
             } else {
-                Node nodeToContact = nodesDirectory.getNode(nodeGUID);
+                Node nodeToContact = nds.getNode(nodeGUID);
 
                 if (nodeToContact == null) { // CASE 2.B
                     nodeToContact = findNodeViaNDS(nodeGUID);
@@ -91,7 +92,7 @@ public class SOSURLConnection extends URLConnection {
                 inputStream = contactNode(nodeToContact, entityGUID);
             }
         } catch (GUIDGenerationException | DataException
-                | BindingAbsentException | DataStorageException e) {
+                | BindingAbsentException | DataStorageException | NodeNotFoundException e) {
             throw new IOException(e);
         }
 
@@ -99,7 +100,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private boolean dataIsStoredLocally(IGUID nodeGUID) {
-        IGUID localNodeGUID = nodesDirectory.getLocalNode().getNodeGUID();
+        IGUID localNodeGUID = nds.getThisNode().getNodeGUID();
         return localNodeGUID.equals(nodeGUID);
     }
 
@@ -126,11 +127,11 @@ public class SOSURLConnection extends URLConnection {
         return response.getBody();
     }
 
-
+    // TODO - replace with NodeDiscovery protocol
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
 
-        Collection<Node> ndsNodes = nodesDirectory.getNDSNodes();
+        Collection<Node> ndsNodes = nds.getNDSNodes();
         for(Node ndsNode:ndsNodes) {
             URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
 

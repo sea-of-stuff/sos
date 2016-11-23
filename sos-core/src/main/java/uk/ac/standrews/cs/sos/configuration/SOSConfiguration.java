@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.node.database.DatabaseType;
+import uk.ac.standrews.cs.sos.node.directory.database.DatabaseType;
 import uk.ac.standrews.cs.sos.policy.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicMetadataPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;

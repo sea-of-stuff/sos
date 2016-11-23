@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.*;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.node.NodesDirectory;
+import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -25,14 +25,14 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     private LocalStorage localStorage;
 
     public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage,
-                                  NodesDirectory nodesDirectory) {
+                                  LocalNodesDirectory localNodesDirectory) {
 
         this.localStorage = localStorage;
 
         loadOrCreateCache();
 
         local = new LocalManifestsDirectory(localStorage);
-        remote = new RemoteManifestsDirectory(manifestPolicy, nodesDirectory);
+        remote = new RemoteManifestsDirectory(manifestPolicy, localNodesDirectory);
     }
 
     @Override

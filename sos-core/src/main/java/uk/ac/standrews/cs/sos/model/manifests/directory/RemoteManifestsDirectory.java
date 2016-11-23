@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.actors.protocol.SOSEP;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -17,8 +18,7 @@ import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.Response;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
-import uk.ac.standrews.cs.sos.network.protocol.SOSEP;
-import uk.ac.standrews.cs.sos.node.NodesDirectory;
+import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -33,11 +33,11 @@ import java.util.Collection;
 public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private ManifestPolicy manifestPolicy;
-    private NodesDirectory nodesDirectory;
+    private LocalNodesDirectory localNodesDirectory;
 
-    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, NodesDirectory nodesDirectory) {
+    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, LocalNodesDirectory localNodesDirectory) {
         this.manifestPolicy = manifestPolicy;
-        this.nodesDirectory = nodesDirectory;
+        this.localNodesDirectory = localNodesDirectory;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         int replicationFactor = manifestPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
-            Collection<Node> ddsNodes = nodesDirectory.getDDSNodes();
+            Collection<Node> ddsNodes = localNodesDirectory.getDDSNodes();
 
             for(Node ddsNode:ddsNodes) {
                 SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +

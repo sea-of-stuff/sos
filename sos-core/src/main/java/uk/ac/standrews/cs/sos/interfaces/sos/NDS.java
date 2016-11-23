@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.sos;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.util.Collection;
@@ -13,6 +14,8 @@ import java.util.Collection;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface NDS extends SeaOfStuff {
+
+    Node getThisNode();
 
     /**
      * Registers a node to the SOS
@@ -28,7 +31,7 @@ public interface NDS extends SeaOfStuff {
      * @param guid
      * @return
      */
-    Node getNode(IGUID guid);
+    Node getNode(IGUID guid) throws NodeNotFoundException;
 
     /**
      * Return all matching NDS nodes
