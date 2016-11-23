@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
  */
 public class ClosureImpl implements Closure {
 
-
     @Override
     public boolean apply(Asset asset) {
         return false;

@@ -15,6 +15,8 @@ public class ContextImpl implements Context {
 
     private Closure closure;
 
+    private Object[] policies;
+
     public ContextImpl(String name, Closure closure) {
         this.name = name;
         this.closure = closure;
@@ -32,9 +34,14 @@ public class ContextImpl implements Context {
         return name;
     }
 
+    public void setPolicies() {
+        // TODO
+        // this.policies =
+    }
+
     @Override
     public void getContextPolicies() {
-
+        // return policies;
     }
 
     @Override
@@ -44,11 +51,19 @@ public class ContextImpl implements Context {
 
     @Override
     public Context AND(Context context) {
-        return null;
+        String newName = name + "AND" + context.getName();
+        Closure newClosure = closure.AND(context.getClosure());
+
+        Context newContext = new ContextImpl(newName, newClosure);
+        return newContext;
     }
 
     @Override
     public Context OR(Context context) {
-        return null;
+        String newName = name + "OR" + context.getName();
+        Closure newClosure = closure.OR(context.getClosure());
+
+        Context newContext = new ContextImpl(newName, newClosure);
+        return newContext;
     }
 }

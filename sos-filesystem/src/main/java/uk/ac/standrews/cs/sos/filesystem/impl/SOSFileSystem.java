@@ -112,12 +112,22 @@ public class SOSFileSystem implements IFileSystem {
     public void moveObject(IDirectory source_parent, String source_name, IDirectory destination_parent, String destination_name, boolean overwrite) throws BindingAbsentException, BindingPresentException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Move object " + source_name + " TO " + destination_name);
 
+
+        // TODO - delete and create
+
         throw new NotImplementedException();
     }
 
     @Override
     public void copyObject(IDirectory source_parent, String source_name, IDirectory destination_parent, String destination_name, boolean overwrite) throws BindingAbsentException, BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Copy object " + source_name + " TO " + destination_name);
+
+        IFileSystemObject object = source_parent.get(source_name);
+        if (object instanceof IDirectory) {
+            // TODO - Iterate over directory?
+        } else {
+            // TODO - get data from sourcename, create new resource at destination_name and put data there
+        }
 
         throw new NotImplementedException();
     }
