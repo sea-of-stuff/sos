@@ -56,9 +56,9 @@ public class RESTNDS {
         }
 
         NDS nds = RESTConfig.sos.getNDS();
-        Node node = null;
+
         try {
-            node = nds.getNode(nodeGUID);
+            Node node = nds.getNode(nodeGUID);
             return HTTPResponses.OK(node.toString());
         } catch (NodeNotFoundException e) {
             return HTTPResponses.NOT_FOUND("Node with GUID: " + nodeGUID.toString() + " could not be found");

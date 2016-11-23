@@ -62,29 +62,25 @@ public class AtomStorage {
         return locationIndex.findLocations(guid);
     }
 
-    public IGUID cacheAtomAndUpdateLocationBundles(Location location,
-                                                   Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID cacheAtomAndUpdateLocationBundles(Location location, Collection<LocationBundle> bundles) throws StorageException {
 
         Store cache = new LocationCache(nodeGUID, storage, location);
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public IGUID cacheAtomAndUpdateLocationBundles(InputStream inputStream,
-                                                   Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID cacheAtomAndUpdateLocationBundles(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
 
         Store cache = new StreamCache(nodeGUID, storage, inputStream);
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public IGUID persistAtomAndUpdateLocationBundles(Location location,
-                                                     Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID persistAtomAndUpdateLocationBundles(Location location, Collection<LocationBundle> bundles) throws StorageException {
 
         Store persistance = new LocationPersist(nodeGUID, storage, location);
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream,
-                                                     Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
 
         Store persistance = new StreamPersist(nodeGUID, storage, inputStream);
         return storeAtomAndUpdateLocationBundles(persistance, bundles);

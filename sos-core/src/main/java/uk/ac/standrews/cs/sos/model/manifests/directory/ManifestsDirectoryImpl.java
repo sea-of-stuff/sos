@@ -3,7 +3,10 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.*;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
@@ -40,11 +43,6 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         cache.addManifest(manifest);
         local.addManifest(manifest);
         remote.addManifest(manifest);
-    }
-
-    @Override
-    public void updateAtom(Atom atom) throws ManifestsDirectoryException, ManifestNotFoundException {
-        local.updateAtom(atom);
     }
 
     @Override

@@ -64,13 +64,6 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         }
     }
 
-    @Override
-    public void updateAtom(Atom atom) throws ManifestsDirectoryException, ManifestNotFoundException {
-
-        IGUID manifestFileGUID = atom.guid();
-        saveExistingManifest(manifestFileGUID, atom);
-    }
-
     /**
      * Find a manifest in the SOS given a GUID.
      *

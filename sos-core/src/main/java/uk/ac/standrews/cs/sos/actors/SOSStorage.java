@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.protocol.Replication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -56,12 +57,9 @@ public class SOSStorage implements Storage {
 
         IGUID guid;
         if (atomBuilder.isLocation()) {
-            Location location = atomBuilder.getLocation();
-            bundles.add(new ProvenanceLocationBundle(location));
-            guid = store(location, bundles, persist);
+            guid = addAtomByLocation(atomBuilder, bundles, persist);
         } else if (atomBuilder.isInputStream()) {
-            InputStream inputStream = atomBuilder.getInputStream();
-            guid = store(inputStream, bundles, persist);
+            guid = addAtomByStream(atomBuilder, bundles, persist);
         } else {
             throw new StorageException("AtomBuilder has not been set correctly");
         }
@@ -70,22 +68,28 @@ public class SOSStorage implements Storage {
         manifestsDirectory.addManifest(manifest);
 
         replicateData(manifest, bundles);
-        try {
-            manifestsDirectory.updateAtom(manifest);
-        } catch (ManifestsDirectoryException | ManifestNotFoundException e) {
-            throw new StorageException("Unable to update atom manifest after replication");
-        }
+        manifestsDirectory.addManifest(manifest); // Will update
 
         return manifest;
     }
 
+    private IGUID addAtomByLocation(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        Location location = atomBuilder.getLocation();
+        bundles.add(new ProvenanceLocationBundle(location));
+        return store(location, bundles, persist);
+    }
+
+    private IGUID addAtomByStream(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        InputStream inputStream = atomBuilder.getInputStream();
+        return store(inputStream, bundles, persist);
+    }
 
     /**
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.
      *
      * @param atom describing the atom to retrieve.
-     * @return
+     * @return data referenced by the atom
      */
     @Override
     public InputStream getAtomContent(Atom atom) {
@@ -169,4 +173,21 @@ public class SOSStorage implements Storage {
             e.printStackTrace();
         }
     }
+
+    private void replicateData(Atom atom) {
+        if (replicationPolicy.getReplicationFactor() > 0) {
+            try (InputStream atomContent = getAtomContent(atom)) {
+
+                Collection<Node> storageNodes = localNodesDirectory.getStorageNodes();
+                Replication.ReplicateData(atomContent, (Set<Node>) storageNodes); // FIXME - avoid casting
+
+                // TODO - get data back from replication
+                // TODO - async operation
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
