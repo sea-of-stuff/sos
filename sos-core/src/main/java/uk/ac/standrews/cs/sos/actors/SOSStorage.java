@@ -55,33 +55,26 @@ public class SOSStorage implements Storage {
     public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException {
         Collection<LocationBundle> bundles = new ArrayList<>();
 
-        IGUID guid;
-        if (atomBuilder.isLocation()) {
-            guid = addAtomByLocation(atomBuilder, bundles, persist);
-        } else if (atomBuilder.isInputStream()) {
-            guid = addAtomByStream(atomBuilder, bundles, persist);
-        } else {
-            throw new StorageException("AtomBuilder has not been set correctly");
-        }
+        IGUID guid = addAtom(atomBuilder, bundles, persist);
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         manifestsDirectory.addManifest(manifest);
 
+        // Run asynchronously
         replicateData(manifest, bundles);
-        manifestsDirectory.addManifest(manifest); // Will update
+
+        // Let the caller do this?
+        // TODO - send manifest to DDS
+        notifyDDS(manifest);
 
         return manifest;
     }
 
-    private IGUID addAtomByLocation(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
-        Location location = atomBuilder.getLocation();
-        bundles.add(new ProvenanceLocationBundle(location));
-        return store(location, bundles, persist);
-    }
+    private void notifyDDS(AtomManifest manifest) {
 
-    private IGUID addAtomByStream(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
-        InputStream inputStream = atomBuilder.getInputStream();
-        return store(inputStream, bundles, persist);
+        // Find DDS
+
+        // Notify DDS via protocol
     }
 
     /**
@@ -131,7 +124,31 @@ public class SOSStorage implements Storage {
         atomStorage.flush();
     }
 
-    protected IGUID store(Location location, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID addAtom(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        IGUID guid;
+        if (atomBuilder.isLocation()) {
+            guid = addAtomByLocation(atomBuilder, bundles, persist);
+        } else if (atomBuilder.isInputStream()) {
+            guid = addAtomByStream(atomBuilder, bundles, persist);
+        } else {
+            throw new StorageException("AtomBuilder has not been set correctly");
+        }
+
+        return guid;
+    }
+
+    private IGUID addAtomByLocation(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        Location location = atomBuilder.getLocation();
+        bundles.add(new ProvenanceLocationBundle(location));
+        return store(location, bundles, persist);
+    }
+
+    private IGUID addAtomByStream(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+        InputStream inputStream = atomBuilder.getInputStream();
+        return store(inputStream, bundles, persist);
+    }
+
+    private IGUID store(Location location, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
         if (persist) {
             return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations(and indeX)
         } else {
@@ -139,7 +156,7 @@ public class SOSStorage implements Storage {
         }
     }
 
-    protected IGUID store(InputStream inputStream, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID store(InputStream inputStream, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
         if (persist) {
             return atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
         } else {
@@ -147,6 +164,7 @@ public class SOSStorage implements Storage {
         }
     }
 
+    // FIXME - do some serious refactoring here
     // TODO - move this method in a Replication class
     private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {
 
@@ -164,6 +182,12 @@ public class SOSStorage implements Storage {
                         } catch (StorageException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    try {
+                        manifestsDirectory.addManifest(manifest); // Will update
+                    } catch (ManifestPersistException e) {
+                        e.printStackTrace();
                     }
                 };
 
