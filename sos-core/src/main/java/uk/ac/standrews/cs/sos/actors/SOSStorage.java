@@ -7,9 +7,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
+import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -37,16 +37,16 @@ public class SOSStorage implements Storage {
 
     private LocalNodesDirectory localNodesDirectory;
     private ReplicationPolicy replicationPolicy;
-    private ManifestsDirectory manifestsDirectory;
+    private DDS dds;
 
     private AtomStorage atomStorage;
 
     public SOSStorage(Node node, LocalNodesDirectory localNodesDirectory, LocalStorage storage,
-                      ReplicationPolicy replicationPolicy, ManifestsDirectory manifestsDirectory) {
+                      ReplicationPolicy replicationPolicy, DDS dds) {
 
         this.localNodesDirectory = localNodesDirectory;
         this.replicationPolicy = replicationPolicy;
-        this.manifestsDirectory = manifestsDirectory;
+        this.dds = dds;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -58,7 +58,7 @@ public class SOSStorage implements Storage {
         IGUID guid = addAtom(atomBuilder, bundles, persist);
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsDirectory.addManifest(manifest);
+        dds.addManifest(manifest, false);
 
         // Run asynchronously
         replicateData(manifest, bundles);
@@ -106,7 +106,7 @@ public class SOSStorage implements Storage {
     @Override
     public InputStream getAtomContent(IGUID guid) {
         try {
-            Manifest manifest = manifestsDirectory.findManifest(guid);
+            Manifest manifest = dds.getManifest(guid);
 
             if (manifest.getManifestType() == ManifestType.ATOM) {
                 Atom atom = (Atom) manifest;
@@ -185,7 +185,7 @@ public class SOSStorage implements Storage {
                     }
 
                     try {
-                        manifestsDirectory.addManifest(manifest); // Will update
+                        dds.addManifest(manifest, false); // Will update
                     } catch (ManifestPersistException e) {
                         e.printStackTrace();
                     }
