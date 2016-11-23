@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collection;
 
 /**
  * This class handles all requests on the URLs under the sos:// scheme.
@@ -60,14 +59,9 @@ public class SOSURLConnection extends URLConnection {
 
     /**
      * Return the input stream given a sos location.
-     * There are two cases:
-     * 1 - the location is this one, thus we get the data from the internal storage
-     * 2 - the location is not this node:
-     *  a - if the location is known, we contact that node.
-     *  b - if the location is not known, we contact a nds first
      *
-     * @return
-     * @throws IOException
+     * @return data
+     * @throws IOException if data could not be found
      */
     @Override
     public InputStream getInputStream() throws IOException {
@@ -83,16 +77,11 @@ public class SOSURLConnection extends URLConnection {
                 inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nds.getNode(nodeGUID);
-
-                if (nodeToContact == null) { // CASE 2.B
-                    nodeToContact = findNodeViaNDS(nodeGUID);
-                    // TODO: what to do if node cannot be found?
-                }
-
-                inputStream = contactNode(nodeToContact, entityGUID);
+                inputStream = getDataFromNode(nodeToContact, entityGUID);
             }
         } catch (GUIDGenerationException | DataException
-                | BindingAbsentException | DataStorageException | NodeNotFoundException e) {
+                | BindingAbsentException | DataStorageException
+                | NodeNotFoundException e) {
             throw new IOException(e);
         }
 
@@ -116,7 +105,7 @@ public class SOSURLConnection extends URLConnection {
         return data.getInputStream();
     }
 
-    private InputStream contactNode(Node node, IGUID entityId) throws IOException {
+    private InputStream getDataFromNode(Node node, IGUID entityId) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
 
         URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
@@ -125,23 +114,6 @@ public class SOSURLConnection extends URLConnection {
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         return response.getBody();
-    }
-
-    // TODO - replace with NodeDiscovery protocol
-    private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
-        SOS_LOG.log(LEVEL.INFO, "Looking up for node " + nodeGUID);
-
-        Collection<Node> ndsNodes = nds.getNDSNodes();
-        for(Node ndsNode:ndsNodes) {
-            URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
-
-            SyncRequest request = new SyncRequest(Method.GET, url);
-            Response response = RequestsManager.getInstance().playSyncRequest(request);
-
-            // TODO - check response
-        }
-
-        return null; // TODO - return node
     }
 
 }
