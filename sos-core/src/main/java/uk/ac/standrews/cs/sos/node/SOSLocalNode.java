@@ -208,7 +208,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         dds = new SOSDDS(manifestsDirectory);
 
-        storage = new SOSStorage(this, localNodesDirectory, localStorage, replicationPolicy, dds);
+        storage = new SOSStorage(this, localStorage, replicationPolicy, nds, dds);
 
         mcs = new SOSMCS(metadataDirectory);
 

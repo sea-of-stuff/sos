@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.actors.Storage;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
@@ -29,7 +30,7 @@ public class SOSAddAtomTest extends StorageTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = storage.addAtom(builder, true);
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         try (InputStream inputStream = storage.getAtomContent(manifest)) {
@@ -42,7 +43,7 @@ public class SOSAddAtomTest extends StorageTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = storage.addAtom(builder, true);
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -62,7 +63,7 @@ public class SOSAddAtomTest extends StorageTest {
         InputStream stream = HelperTest.StringToInputStream(testString);
 
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-        Atom manifest = storage.addAtom(builder, true);
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -78,7 +79,7 @@ public class SOSAddAtomTest extends StorageTest {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = storage.addAtom(builder, true);
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Collection<LocationBundle> retrievedLocations = (manifest.getLocations());

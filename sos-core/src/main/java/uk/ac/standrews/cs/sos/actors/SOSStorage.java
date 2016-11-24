@@ -1,10 +1,12 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.actors.protocol.Replication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -19,40 +21,37 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSStorage implements Storage {
 
-    private LocalNodesDirectory localNodesDirectory;
     private ReplicationPolicy replicationPolicy;
+
+    private NDS nds;
     private DDS dds;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalNodesDirectory localNodesDirectory, LocalStorage storage,
-                      ReplicationPolicy replicationPolicy, DDS dds) {
+    public SOSStorage(Node node, LocalStorage storage, ReplicationPolicy replicationPolicy, NDS nds, DDS dds) {
 
-        this.localNodesDirectory = localNodesDirectory;
         this.replicationPolicy = replicationPolicy;
+
+        this.nds = nds;
         this.dds = dds;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException {
+    public Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
         Collection<LocationBundle> bundles = new ArrayList<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);
@@ -65,16 +64,28 @@ public class SOSStorage implements Storage {
 
         // Let the caller do this?
         // TODO - send manifest to DDS
-        notifyDDS(manifest);
+        notifyDDS(ddsNotificationInfo, manifest);
 
         return manifest;
     }
 
-    private void notifyDDS(AtomManifest manifest) {
+    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, AtomManifest manifest) {
 
-        // Find DDS
+        if (ddsNotificationInfo.notifyDDSNodes()) {
+            Set<Node> ddsNodes = new HashSet<>(); // HashSet does not preserve order
 
-        // Notify DDS via protocol
+            if (ddsNotificationInfo.useDefaultDDSNodes()) {
+                ddsNodes.addAll(nds.getDDSNodes());
+            }
+
+            if (ddsNotificationInfo.useSuggestedDDSNodes()) {
+                ddsNodes.addAll(ddsNotificationInfo.getSuggestedDDSNodes());
+            }
+
+            Replication.ReplicateManifest(manifest, ddsNodes);
+
+        }
+
     }
 
     /**
@@ -172,7 +183,7 @@ public class SOSStorage implements Storage {
             if (replicationPolicy.getReplicationFactor() > 0) {
 
                 Runnable replicator = () -> {
-                    Iterator<Node> storageNodes = localNodesDirectory.getStorageNodes().iterator();
+                    Iterator<Node> storageNodes = nds.getStorageNodes().iterator();
                     // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
 
                     if (storageNodes.hasNext()) {
@@ -202,7 +213,7 @@ public class SOSStorage implements Storage {
         if (replicationPolicy.getReplicationFactor() > 0) {
             try (InputStream atomContent = getAtomContent(atom)) {
 
-                Collection<Node> storageNodes = localNodesDirectory.getStorageNodes();
+                Collection<Node> storageNodes = nds.getStorageNodes();
                 Replication.ReplicateData(atomContent, (Set<Node>) storageNodes); // FIXME - avoid casting
 
                 // TODO - get data back from replication

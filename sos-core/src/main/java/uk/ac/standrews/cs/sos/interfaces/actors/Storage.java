@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
@@ -22,11 +23,12 @@ public interface Storage extends SeaOfStuff {
      *
      * @param atomBuilder defines the sources for the atom to be added
      * @param persist if true the atom is persisted in this node, otherwise it is cached (e.g. it can be later purged)
+     * @param ddsNotificationInfo information used by the storage actor to notify any DDS actors about the atom manifest
      * @return the atom manifest for the added atom
      * @throws StorageException
      * @throws ManifestPersistException
      */
-    Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.

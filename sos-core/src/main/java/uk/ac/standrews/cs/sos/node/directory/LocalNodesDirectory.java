@@ -7,11 +7,9 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,6 +19,8 @@ import static java.util.stream.Collectors.toList;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocalNodesDirectory {
+
+    private static final int NO_LIMIT = 0;
 
     private Node localNode;
     private NodesDatabase nodesDatabase;
@@ -71,45 +71,51 @@ public class LocalNodesDirectory {
     /**
      * Get all NDS Nodes
      *
-     * @return
+     * @return NDS nodes
      */
     public Collection<Node> getNDSNodes() {
-        return getNodes(Node::isNDS);
+        return getNodes(Node::isNDS, NO_LIMIT);
     }
 
     /**
      * Get all DDS Nodes
      *
-     * @return
+     * @return DDS nodes
      */
     public Collection<Node> getDDSNodes() {
-        return getNodes(Node::isDDS);
+        return getNodes(Node::isDDS, NO_LIMIT);
     }
 
     /**
      * Get all MCS Nodes
      *
-     * @return
+     * @return MCS nodes
      */
     public Collection<Node> getMCSNodes() {
-        return getNodes(Node::isMCS);
+        return getNodes(Node::isMCS, NO_LIMIT);
     }
 
     /**
      * Get all Storage Nodes
-     * @return
+     * @return Storage nodes
      */
     public Collection<Node> getStorageNodes() {
-        return getNodes(Node::isStorage);
+        return getNodes(Node::isStorage, NO_LIMIT);
     }
 
-    private Collection<Node> getNodes(Predicate<Node> predicate) {
+    private Collection<Node> getNodes(Predicate<Node> predicate, int limit) {
 
-        List<Node> retval = knownNodes.parallelStream()
-                .filter(predicate)
-                .collect(toList());
+        Stream<Node> nodesStream = knownNodes.parallelStream()
+                .filter(predicate);
 
-        return retval;
+        if (limit > 0) {
+            nodesStream = nodesStream.limit(limit);
+        }
+
+        List<Node> nodes = nodesStream.collect(toList());
+        Collections.shuffle(nodes); // Naive load balancing
+
+        return nodes;
     }
 
     /**
