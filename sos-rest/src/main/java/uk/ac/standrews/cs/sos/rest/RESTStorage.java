@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
+import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
@@ -53,6 +54,11 @@ public class RESTStorage {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response postDataByLocation(LocationModel locationModel) {
+
+        if (locationModel == null) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+
         Storage storage = RESTConfig.sos.getStorage();
 
         Location location;
@@ -64,7 +70,7 @@ public class RESTStorage {
 
         try {
             AtomBuilder builder = new AtomBuilder().setLocation(location);
-            Atom atom = storage.addAtom(builder, true);
+            Atom atom = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
 
             return HTTPResponses.CREATED(atom.toString());
         } catch (StorageException | ManifestPersistException e) {
@@ -83,7 +89,7 @@ public class RESTStorage {
         Atom manifest;
         try {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
-            manifest = storage.addAtom(builder, true);
+            manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
