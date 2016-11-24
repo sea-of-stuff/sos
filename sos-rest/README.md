@@ -35,6 +35,8 @@ Then use bind the ResourceConfig with your server.
 
 Tests are available in the `test` package.
 
+If you are command-line guy, you may like using a combination of curl and jq (e.g. `curl URL | jq`).
+
 ### Postman
 
 You can use Postman to test this REST API. A collection of standard requests is available inside the postman folder.
