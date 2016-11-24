@@ -14,7 +14,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class RESTNDSTest extends CommonRESTTest {
 
-    private final static String TEST_NODE_INFO = "{ \"guid\" : \"00000ccc6adc7e831ee563a8d0daa230690c296a\", \"hostname\" : \"234:234:20:2\", \"port\" : 8081, \"roles\" : {\"client\" : false, \"storage\" : true, \"dds\" : true, \"nds\" : true, \"mcs\" : false} }";
+    private final static String TEST_NODE_INFO = "{ \"guid\" : \"00000ccc6adc7e831ee563a8d0daa230690c296a\", \"hostname\" : \"234:234:20:2\", \"port\" : 8081, \"roles\" : {\"agent\" : false, \"storage\" : true, \"dds\" : true, \"nds\" : true, \"mcs\" : false} }";
 
     @Test
     public void testRegister() throws Exception {
@@ -33,8 +33,8 @@ public class RESTNDSTest extends CommonRESTTest {
         Response response = target("/nds/register")
                 .request()
                 .put(Entity.json(data));
-        assertEquals(response.getStatus(), HTTPState.OK);
 
+        assertEquals(response.getStatus(), HTTPState.OK);
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
     }
 
