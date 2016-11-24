@@ -1,0 +1,45 @@
+{
+	"variables": [],
+	"info": {
+		"name": "sos",
+		"_postman_id": "7c93528d-19b9-3c1a-32f8-f6f65463c2b7",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:8080/storage/stream",
+			"request": {
+				"url": "localhost:8080/storage/stream",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/info",
+			"request": {
+				"url": "http://localhost:8080/info",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
