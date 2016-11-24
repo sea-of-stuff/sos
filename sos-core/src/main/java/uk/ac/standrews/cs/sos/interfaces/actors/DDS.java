@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.sos;
+package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;

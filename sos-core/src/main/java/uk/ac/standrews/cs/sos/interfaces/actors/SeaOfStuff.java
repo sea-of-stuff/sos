@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.sos;
+package uk.ac.standrews.cs.sos.interfaces.actors;
 
 /**
  * The SeaOfStuff interface provides a very simplistic and general abstraction

@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6331f18f-f1f7-4a96-8dce-4b082c3f6ffe" name="Default" comment="removed old projects">
+    <list default="true" id="6331f18f-f1f7-4a96-8dce-4b082c3f6ffe" name="Default" comment="interim">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Agent.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Agent.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/DDS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/DDS.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/MCS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/MCS.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/NDS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/NDS.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/SeaOfStuff.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/SeaOfStuff.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Storage.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Storage.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ClosureImpl.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ClosureImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ContextImpl.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ContextImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/MAISOS.java" afterPath="$PROJECT_DIR$/sos-app/src/main/java/uk/ac/standrews/cs/sos/app/MAISOS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSAgent.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSAgent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSDDS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSDDS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSMCS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSMCS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSNDS.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSNDS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSStorage.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSStorage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/LocalNode.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/node/LocalNode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLConnection.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLConnection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLProtocol.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLProtocol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLStreamHandler.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLStreamHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLStreamHandlerFactory.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/locations/sos/SOSURLStreamHandlerFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" afterPath="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/node/SOSLocalNode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/actors/Client/replication/ClientReplicationTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/actors/Client/replication/ClientReplicationTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/actors/Client/standard/AgentTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/actors/Client/standard/AgentTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/actors/Storage/StorageTest.java" afterPath="$PROJECT_DIR$/sos-core/src/test/java/uk/ac/standrews/cs/sos/actors/Storage/StorageTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/SOSFileSystemFactory.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/SOSFileSystemFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSDirectory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFile.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFile.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSVersionableObject.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSVersionableObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystemObject.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystemObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-filesystem/src/test/java/uk/ac/standrews/cs/sos/filesystem/SOSFileSystemFactoryTest.java" afterPath="$PROJECT_DIR$/sos-filesystem/src/test/java/uk/ac/standrews/cs/sos/filesystem/SOSFileSystemFactoryTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTDDS.java" afterPath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTDDS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTNDS.java" afterPath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTNDS.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTStorage.java" afterPath="$PROJECT_DIR$/sos-rest/src/main/java/uk/ac/standrews/cs/sos/rest/RESTStorage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WGraph.java" afterPath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WGraph.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WMetadata.java" afterPath="$PROJECT_DIR$/web-ui/src/main/java/uk/ac/standrews/cs/sos/web/graph/WMetadata.java" />
     </list>
     <ignored path="$PROJECT_DIR$/web-ui/target/" />
     <ignored path="$PROJECT_DIR$/sos-core/target/" />
@@ -31,58 +59,22 @@
     <favorites_list name="sos" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="SOSStorage.java" pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="SOSStorage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSStorage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="77" column="5" lean-forward="false" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
+            <state relative-caret-position="615">
+              <caret line="69" column="24" lean-forward="true" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ContextImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ContextImpl.java">
+      <file leaf-file-name="Storage.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Storage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="43" column="27" lean-forward="false" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#677#678#0" expanded="true" />
-                <element signature="e#704#705#0" expanded="true" />
-                <element signature="e#749#750#0" expanded="true" />
-                <element signature="e#776#777#0" expanded="true" />
-                <element signature="e#995#996#0" expanded="true" />
-                <element signature="e#1025#1026#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClosureImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ClosureImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="45" lean-forward="false" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#322#323#0" expanded="true" />
-                <element signature="e#350#351#0" expanded="true" />
-                <element signature="e#407#408#0" expanded="true" />
-                <element signature="e#434#435#0" expanded="true" />
-                <element signature="e#490#491#0" expanded="true" />
-                <element signature="e#517#518#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SOSFileSystem.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="699">
-              <caret line="126" column="22" lean-forward="false" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
+            <state relative-caret-position="285">
+              <caret line="25" column="31" lean-forward="false" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -100,6 +92,10 @@
         <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ClosureImpl.java" />
         <option value="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSVersionableObject.java" />
         <option value="$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/sos/Storage.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSAgent.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Agent.java" />
+        <option value="$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Storage.java" />
       </list>
     </option>
   </component>
@@ -119,10 +115,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="482" />
-    <option name="y" value="23" />
-    <option name="width" value="1840" />
-    <option name="height" value="1577" />
+    <option name="x" value="4" />
+    <option name="y" value="22" />
+    <option name="width" value="2556" />
+    <option name="height" value="1578" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -139,8 +135,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -163,7 +158,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="sos-filesystem" />
+              <option name="myItemId" value="sos-core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -177,7 +172,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="sos-filesystem" />
+              <option name="myItemId" value="sos-core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -195,7 +190,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="sos-filesystem" />
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-git" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -211,7 +228,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="filesystem" />
+              <option name="myItemId" value="sos" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -225,7 +242,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="sos-filesystem" />
+              <option name="myItemId" value="sos-core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -241,17 +258,90 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="filesystem" />
+              <option name="myItemId" value="sos" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="impl" />
+              <option name="myItemId" value="interfaces" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-git" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="interfaces" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="actors" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-git" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sos" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="actors" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -456,6 +546,12 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.npm" factoryName="npm">
@@ -476,7 +572,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1479910835178</updated>
-      <workItem from="1479910836695" duration="4578000" />
+      <workItem from="1479910836695" duration="4663000" />
+      <workItem from="1479982550049" duration="1077000" />
     </task>
     <task id="LOCAL-00001" summary="general project hygiene">
       <created>1479911140589</created>
@@ -499,39 +596,46 @@
       <option name="project" value="LOCAL" />
       <updated>1479911399620</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="interim">
+      <created>1479915685988</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1479915685988</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4578000" />
+    <option name="totallyTimeSpent" value="5740000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="482" y="23" width="1840" height="1577" extended-state="0" />
+    <frame x="4" y="22" width="2556" height="1578" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22087543" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32996634" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24972191" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22072679" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32996634" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1805887" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -565,7 +669,8 @@
     <MESSAGE value="general project hygiene" />
     <MESSAGE value="scripts folder" />
     <MESSAGE value="removed old projects" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed old projects" />
+    <MESSAGE value="interim" />
+    <option name="LAST_COMMIT_MESSAGE" value="interim" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -573,67 +678,36 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.hgignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rest-app/src/main/java/uk/ac/standrews/cs/sos/ServletContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="44" column="8" lean-forward="true" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSStorage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="77" column="5" lean-forward="false" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ContextImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
+        <state relative-caret-position="540">
           <caret line="43" column="27" lean-forward="false" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#677#678#0" expanded="true" />
-            <element signature="e#704#705#0" expanded="true" />
-            <element signature="e#749#750#0" expanded="true" />
-            <element signature="e#776#777#0" expanded="true" />
-            <element signature="e#995#996#0" expanded="true" />
-            <element signature="e#1025#1026#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ClosureImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
+        <state relative-caret-position="105">
           <caret line="8" column="45" lean-forward="false" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#322#323#0" expanded="true" />
-            <element signature="e#350#351#0" expanded="true" />
-            <element signature="e#407#408#0" expanded="true" />
-            <element signature="e#434#435#0" expanded="true" />
-            <element signature="e#490#491#0" expanded="true" />
-            <element signature="e#517#518#0" expanded="true" />
-          </folding>
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.hgignore" />
+    <entry file="file://$PROJECT_DIR$/rest-app/src/main/java/uk/ac/standrews/cs/sos/ServletContext.java" />
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="44" column="8" lean-forward="true" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -649,14 +723,69 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="14" column="22" lean-forward="false" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sos-filesystem/src/main/java/uk/ac/standrews/cs/sos/filesystem/impl/SOSFileSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="699">
-          <caret line="126" column="22" lean-forward="false" selection-start-line="126" selection-start-column="22" selection-end-line="126" selection-end-column="22" />
+        <state relative-caret-position="429">
+          <caret line="108" column="5" lean-forward="false" selection-start-line="108" selection-start-column="5" selection-end-line="108" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ClosureImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="45" lean-forward="false" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/context/ContextImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="626">
+          <caret line="43" column="27" lean-forward="false" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Agent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="22" column="2" lean-forward="false" selection-start-line="22" selection-start-column="2" selection-end-line="22" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="30" column="13" lean-forward="false" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/model/manifests/builders/AtomBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/interfaces/actors/Storage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="25" column="31" lean-forward="false" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sos-core/src/main/java/uk/ac/standrews/cs/sos/actors/SOSStorage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="69" column="24" lean-forward="true" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
           <folding />
         </state>
       </provider>

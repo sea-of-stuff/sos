@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.json.model.NodeModel;
 
 import javax.ws.rs.*;

@@ -5,10 +5,10 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 

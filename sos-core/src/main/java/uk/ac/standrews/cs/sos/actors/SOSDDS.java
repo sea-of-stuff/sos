@@ -5,10 +5,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

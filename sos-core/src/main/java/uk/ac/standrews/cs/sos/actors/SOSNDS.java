@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.NodeDiscovery;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 

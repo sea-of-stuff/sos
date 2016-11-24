@@ -12,8 +12,8 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.UriUtil;
 

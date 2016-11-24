@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.sos.DDS;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 

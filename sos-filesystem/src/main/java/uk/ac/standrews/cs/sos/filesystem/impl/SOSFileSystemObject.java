@@ -9,9 +9,9 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
 import java.util.ArrayList;

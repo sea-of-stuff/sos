@@ -10,9 +10,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

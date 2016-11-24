@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.interfaces.sos.Storage;
+import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
 
 import java.io.File;
 import java.io.IOException;

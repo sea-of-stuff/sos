@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.WebApp;

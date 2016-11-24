@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.locations.sos;
 
-import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 
 import java.net.URLStreamHandler;

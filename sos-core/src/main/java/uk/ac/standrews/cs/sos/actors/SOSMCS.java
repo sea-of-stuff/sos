@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.sos.MCS;
 
 import java.io.InputStream;
 

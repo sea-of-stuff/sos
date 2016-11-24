@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.sos;
+package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
@@ -20,7 +20,7 @@ import java.util.Collection;
 
 /**
  * The Client is one of the node roles within the Sea of Stuff.
- * <br>
+ *
  * The Client supports the following operations:
  * - pushing data/manifests to the SOS
  * - get data/manifests from the SOS
@@ -54,7 +54,7 @@ public interface Agent {
      *
      * @see Manifest
      *
-     * TODO - use CompoundBuilder too!
+     * TODO - use CompoundBuilder
      */
     Compound addCompound(CompoundType type, Collection<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException;
@@ -110,9 +110,17 @@ public interface Agent {
      */
     Asset getHEAD(IGUID guid) throws HEADNotFoundException;
 
+    /**
+     *
+     * @param version
+     * @throws HEADNotSetException
+     */
     void setHEAD(IGUID version) throws HEADNotSetException;
 
     /**
+     * Verify the integrity of the manifest's GUID against the
+     * content of the manifest.
+     *
      * Hash-based verification ensures that a file has not been corrupted by
      * comparing the data's hash value to a previously calculated value.
      * If these values match, the data is presumed to be unmodified.
@@ -120,20 +128,28 @@ public interface Agent {
      * in false positives, but the likelihood of collisions is
      * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
      *
-     * <p>
-     * verifyManifest checks the integrity of the manifest's GUID against the
-     * content of the manifest.
-     * </p>
-     *
      * @param identity                      used to verify the manifest
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
-     * @throws ManifestVerificationException
+     * @throws ManifestVerificationException if the manifest could not be verified
      */
     boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
 
+    /**
+     * Generate and add metadata for this atom
+     *
+     * @param atom used to generate the metadata
+     * @return the metadata generated
+     * @throws SOSMetadataException if the metadata could not be generated
+     */
     SOSMetadata addMetadata(Atom atom) throws SOSMetadataException;
 
+    /**
+     * Get the metadata mapped to the specified guid
+     *
+     * @param guid for the metadata
+     * @return SOSMetadata mapped with the guid
+     */
     SOSMetadata getMetadata(IGUID guid);
 }

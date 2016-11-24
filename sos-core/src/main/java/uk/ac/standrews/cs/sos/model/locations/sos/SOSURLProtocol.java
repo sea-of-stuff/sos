@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.interfaces.sos.NDS;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

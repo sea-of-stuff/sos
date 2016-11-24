@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.sos.Agent;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 
 import java.lang.reflect.Method;
 

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.sos;
+package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -17,6 +17,15 @@ import java.io.InputStream;
  */
 public interface Storage extends SeaOfStuff {
 
+    /**
+     * Adds data to the Sea of Stuff as an atom.
+     *
+     * @param atomBuilder defines the sources for the atom to be added
+     * @param persist if true the atom is persisted in this node, otherwise it is cached (e.g. it can be later purged)
+     * @return the atom manifest for the added atom
+     * @throws StorageException
+     * @throws ManifestPersistException
+     */
     Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException;
 
     /**
@@ -35,6 +44,9 @@ public interface Storage extends SeaOfStuff {
      */
     InputStream getAtomContent(IGUID guid);
 
+    /**
+     * Flush all indexes and caches managed by the storage actor
+     */
     void flush();
 
 }
