@@ -16,6 +16,7 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     private final static String SOS_PROTOCOL_SCHEME = "sos";
     protected static boolean URLStreamHandlerFactoryIsSet = false;
+    private SOSURLStreamHandler sosurlStreamHandler;
 
     private LocalStorage localStorage;
     private NDS nds;
@@ -29,17 +30,18 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
         URLStreamHandlerFactoryIsSet = true;
     }
 
-    protected void setNDS(NDS nds) {
-        this.nds = nds;
-    }
-
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
         if (protocol.equals(SOS_PROTOCOL_SCHEME)) {
-            return new SOSURLStreamHandler(localStorage, nds);
+            sosurlStreamHandler = new SOSURLStreamHandler(localStorage);
+            return sosurlStreamHandler;
         }
 
         return null;
+    }
+
+    protected SOSURLStreamHandler getSOSURLStreamHandler() {
+        return sosurlStreamHandler;
     }
 
 }

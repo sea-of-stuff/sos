@@ -16,13 +16,16 @@ public class SOSURLStreamHandler extends URLStreamHandler {
     private LocalStorage localStorage;
     private NDS nds;
 
-    public SOSURLStreamHandler(LocalStorage localStorage, NDS nds) {
+    public SOSURLStreamHandler(LocalStorage localStorage) {
         this.localStorage = localStorage;
-        this.nds = nds;
     }
 
     @Override
     protected URLConnection openConnection(URL url) throws IOException {
         return new SOSURLConnection(localStorage, nds, url);
+    }
+
+    public void setNds(NDS nds) {
+        this.nds = nds;
     }
 }

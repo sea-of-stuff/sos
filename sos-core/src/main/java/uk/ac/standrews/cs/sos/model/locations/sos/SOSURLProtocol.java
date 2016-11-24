@@ -42,7 +42,7 @@ public class SOSURLProtocol {
     }
 
     public void setNDS(NDS nds) {
-        urlStreamHandlerFactory.setNDS(nds);
+        urlStreamHandlerFactory.getSOSURLStreamHandler().setNds(nds);
     }
 
 }
