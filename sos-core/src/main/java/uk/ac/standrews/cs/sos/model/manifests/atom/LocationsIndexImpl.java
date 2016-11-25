@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
@@ -67,7 +68,11 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
     @Override
     public void persist(File file) throws IOException {
         if (!file.exists()) {
-            return;
+            try {
+                file.persist();
+            } catch (PersistenceException e) {
+                throw new IOException(e);
+            }
         }
 
         FileOutputStream ostream = new FileOutputStream(file.toFile());

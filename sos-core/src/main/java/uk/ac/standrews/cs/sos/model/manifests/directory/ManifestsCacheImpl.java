@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
@@ -67,7 +68,11 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     @Override
     public void persist(File file) throws IOException {
         if (!file.exists()) {
-            return;
+            try {
+                file.persist();
+            } catch (PersistenceException e) {
+                throw new IOException(e);
+            }
         }
 
         FileOutputStream ostream = new FileOutputStream(file.toFile());
