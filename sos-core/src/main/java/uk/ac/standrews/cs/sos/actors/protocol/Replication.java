@@ -35,7 +35,6 @@ public class Replication {
 
         for(Node node:nodes) {
             Runnable runnable = transferData(data, node, index);
-
             executor.submit(runnable);
         }
 
@@ -88,7 +87,6 @@ public class Replication {
                 }
             }
 
-
             retval = new Tuple<>(guid, bundles);
         } catch (IOException | GUIDGenerationException e) {
             e.printStackTrace();
@@ -97,21 +95,27 @@ public class Replication {
         return retval;
     }
 
-    public static void ReplicateManifest(Manifest manifest, Set<Node> nodes) {
+    public static ExecutorService ReplicateManifest(Manifest manifest, Set<Node> nodes) {
+
+        ExecutorService executor = Executors.newCachedThreadPool();
 
         for(Node node:nodes) {
-            transferManifest(manifest, node);
+            Runnable runnable = transferManifest(manifest, node);
+
+            executor.submit(runnable);
         }
+
+        return executor;
     }
 
-    private static void transferManifest(Manifest manifest, Node node) {
+    private static Runnable transferManifest(Manifest manifest, Node node) {
 
         Runnable replicator = () -> {
             transferManifestRequest(manifest, node);
             // TODO - Collect information from requests and return it back
         };
 
-        replicator.run();
+        return replicator;
     }
 
     private static void transferManifestRequest(Manifest manifest, Node node) {
