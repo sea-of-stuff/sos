@@ -4,45 +4,66 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.Response;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.Tuple;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Replication {
 
-    public static void ReplicateData(InputStream data, Set<Node> nodes) {
+    public static ExecutorService ReplicateData(InputStream data, Set<Node> nodes, LocationsIndex index) {
+
+        ExecutorService executor = Executors.newCachedThreadPool();
 
         for(Node node:nodes) {
-            transferData(data, node);
+            Runnable runnable = transferData(data, node, index);
+
+            executor.submit(runnable);
         }
+
+        return executor;
     }
 
     // Synchronously
-    private static void transferData(InputStream data, Node node) {
+    private static Runnable transferData(InputStream data, Node node, LocationsIndex index) {
 
         Runnable replicator = () -> {
-            transferDataRequest(data, node);
-            // TODO - Collect information from requests and return it back
+            Tuple<IGUID, Set<LocationBundle>> tuple = transferDataRequest(data, node);
+
+            if (tuple == null) {
+                // ERROR - Replication failed, should throw exception
+                return;
+            }
+
+            for(LocationBundle locationBundle:tuple.y) {
+                index.addLocation(tuple.x, locationBundle);
+            }
         };
 
-        replicator.run();
+        return replicator;
     }
 
-    private static IGUID transferDataRequest(InputStream data, Node node) {
+    private static Tuple<IGUID, Set<LocationBundle>> transferDataRequest(InputStream data, Node node) {
 
-        IGUID retval = null;
+        Tuple<IGUID, Set<LocationBundle>> retval = null;
 
         URL url;
         try {
@@ -54,10 +75,21 @@ public class Replication {
 
             InputStream body = response.getBody();
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-            String guid = jsonNode.get("ContentGUID").textValue();
+            String stringGUID = jsonNode.get("ContentGUID").textValue();
 
-            // TODO - get locations back!
-            retval = GUIDFactory.recreateGUID(guid);
+            IGUID guid = GUIDFactory.recreateGUID(stringGUID);
+
+            JsonNode bundlesNode = jsonNode.get(ManifestConstants.KEY_LOCATIONS);
+            Set<LocationBundle> bundles = new HashSet<>();
+            if (bundlesNode.isArray()) {
+                for(final JsonNode bundleNode:bundlesNode) {
+                    LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
+                    bundles.add(bundle);
+                }
+            }
+
+
+            retval = new Tuple<>(guid, bundles);
         } catch (IOException | GUIDGenerationException e) {
             e.printStackTrace();
         }
@@ -73,7 +105,7 @@ public class Replication {
     }
 
     private static void transferManifest(Manifest manifest, Node node) {
-        
+
         Runnable replicator = () -> {
             transferManifestRequest(manifest, node);
             // TODO - Collect information from requests and return it back

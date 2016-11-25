@@ -214,7 +214,7 @@ public class SOSStorage implements Storage {
             try (InputStream atomContent = getAtomContent(atom)) {
 
                 Collection<Node> storageNodes = nds.getStorageNodes();
-                Replication.ReplicateData(atomContent, (Set<Node>) storageNodes); // FIXME - avoid casting
+                Replication.ReplicateData(atomContent, (Set<Node>) storageNodes, null); // FIXME - avoid casting
 
                 // TODO - get data back from replication
                 // TODO - async operation
