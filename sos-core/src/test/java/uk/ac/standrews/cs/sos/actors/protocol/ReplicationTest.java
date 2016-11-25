@@ -127,4 +127,36 @@ public class ReplicationTest {
         assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
     }
 
+    @Test
+    public void replicateOnlyOnceTest() throws IOException, InterruptedException, GUIDGenerationException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, false, false, false, false);
+
+
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+        nodes.add(storageNode);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertTrue(it.hasNext());
+
+        LocationBundle locationBundle = it.next();
+        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+    }
+
 }
