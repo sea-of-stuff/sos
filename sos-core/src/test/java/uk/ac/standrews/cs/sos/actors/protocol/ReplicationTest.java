@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
-import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -31,20 +30,20 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ReplicationTest {
 
-    private ClientAndProxy proxy;
     private ClientAndServer mockServer;
 
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
 
     @BeforeMethod
-    public void startProxy() throws SOSProtocolException, GUIDGenerationException {
+    public void setUp() throws SOSProtocolException, GUIDGenerationException {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         mockServer = startClientAndServer(9998);
@@ -76,7 +75,7 @@ public class ReplicationTest {
     }
 
     @AfterMethod
-    public void stopProxy() {
+    public void tearDown() {
         mockServer.stop();
     }
 
@@ -98,13 +97,34 @@ public class ReplicationTest {
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
-        // index.findLocations("")
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+    }
+
+    @Test
+    public void replicateToNoStorageNodeTest() throws IOException, InterruptedException, GUIDGenerationException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, false, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
     }
 
 }

@@ -33,13 +33,30 @@ public class Replication {
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        for(Node node:nodes) {
-            Runnable runnable = transferData(data, node, index);
-            executor.submit(runnable);
-        }
+        nodes.stream()
+                .filter(Node::isStorage)
+                .forEach(n -> {
+                    Runnable runnable = transferData(data, n, index);
+                    executor.submit(runnable);
+                });
 
         return executor;
     }
+
+    public static ExecutorService ReplicateManifest(Manifest manifest, Set<Node> nodes) {
+
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        nodes.stream()
+                .filter(Node::isDDS)
+                .forEach(n -> {
+                    Runnable runnable = transferManifest(manifest, n);
+                    executor.submit(runnable);
+                });
+
+        return executor;
+    }
+
 
     // Synchronously
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index) {
@@ -93,19 +110,6 @@ public class Replication {
         }
 
         return retval;
-    }
-
-    public static ExecutorService ReplicateManifest(Manifest manifest, Set<Node> nodes) {
-
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        for(Node node:nodes) {
-            Runnable runnable = transferManifest(manifest, node);
-
-            executor.submit(runnable);
-        }
-
-        return executor;
     }
 
     private static Runnable transferManifest(Manifest manifest, Node node) {
