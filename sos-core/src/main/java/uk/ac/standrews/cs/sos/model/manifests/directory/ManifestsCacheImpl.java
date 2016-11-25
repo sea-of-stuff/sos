@@ -66,6 +66,10 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
     @Override
     public void persist(File file) throws IOException {
+        if (!file.exists()) {
+            return;
+        }
+
         FileOutputStream ostream = new FileOutputStream(file.toFile());
         ObjectOutputStream p = new ObjectOutputStream(ostream);
 

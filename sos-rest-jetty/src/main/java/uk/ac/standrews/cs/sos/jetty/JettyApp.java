@@ -18,7 +18,10 @@ public class JettyApp {
     private static URI baseUri;
 
     private static Server startServer(SOSLocalNode sos) throws Exception {
-        final ResourceConfig rc = new RESTConfig().build(sos);
+        RESTConfig restConfig = new RESTConfig();
+        restConfig.setSOS(sos);
+
+        final ResourceConfig rc = restConfig.build();
 
         assert sos != null;
         int port = sos.getHostAddress().getPort();

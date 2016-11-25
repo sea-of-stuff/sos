@@ -33,6 +33,8 @@ public class RESTGeneralTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPState.OK);
 
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
+
+        response.close();
     }
 
 }

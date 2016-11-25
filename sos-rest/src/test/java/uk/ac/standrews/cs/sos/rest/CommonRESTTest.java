@@ -12,10 +12,21 @@ import javax.ws.rs.core.Application;
  */
 public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest  {
 
+    protected ServerState state;
+    protected RESTConfig config;
+
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        String path = classLoader.getResource("config.conf").getFile();
+
+        state = new ServerState();
+        state.init(path);
+
+        config.setSOS(state.sos);
     }
 
     @AfterMethod
@@ -23,16 +34,13 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
     public void tearDown() throws Exception {
         super.tearDown();
 
-        ServerState.kill();
+        state.kill();
     }
 
     @Override
     protected Application configure() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        String path = classLoader.getResource("config.conf").getFile();
-        ServerState.init(path);
-
-        return new RESTConfig().build(ServerState.sos);
+        config = new RESTConfig();
+        return config.build();
     }
 
 }

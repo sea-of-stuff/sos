@@ -140,15 +140,21 @@ public class LocalStorage {
     public void destroy() throws DataStorageException {
 
         try {
-            storage.getRoot().remove(DATA_DIRECTORY_NAME);
-            storage.getRoot().remove(MANIFESTS_DIRECTORY_NAME);
-            storage.getRoot().remove(HEADS_DIRECTORY_NAME);
-            storage.getRoot().remove(META_DIRECTORY_NAME);
-            storage.getRoot().remove(CACHES_DIRECTORY_NAME);
+            remove(DATA_DIRECTORY_NAME);
+            remove(MANIFESTS_DIRECTORY_NAME);
+            remove(HEADS_DIRECTORY_NAME);
+            remove(META_DIRECTORY_NAME);
+            remove(CACHES_DIRECTORY_NAME);
 
             // TODO - remove content in the root directory?
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
+        }
+    }
+
+    private void remove(String directoryName) throws BindingAbsentException {
+        if (storage.getRoot().contains(directoryName)) {
+            storage.getRoot().remove(directoryName);
         }
     }
 

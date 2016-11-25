@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.HTTP.HTTPState;
 import uk.ac.standrews.cs.sos.rest.utils.HelperTest;
 
@@ -33,15 +33,15 @@ public class RESTStorageTest extends CommonRESTTest {
     private final static String TEST_HTTP_BIN_ATOM_MANIFEST =
             "{\n" +
             "  \"Type\": \"Atom\",\n" +
-            "  \"ContentGUID\": \"fc8ef58da68b3d753343f4bea07b95bf71fa3850\",\n" +
+            "  \"ContentGUID\": \"d68c19a0a345b7eab78d5e11e991c026ec60db63\",\n" +
             "  \"Locations\": [\n" +
             "    {\n" +
             "      \"Type\": \"provenance\",\n" +
-            "      \"Location\": \"https://httpbin.org/stream/10\"\n" +
+            "      \"Location\": \"https://httpbin.org/range/10\"\n" +
             "    },\n" +
             "    {\n" +
             "      \"Type\": \"persistent\",\n" +
-            "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/fc8ef58da68b3d753343f4bea07b95bf71fa3850\"\n" +
+            "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
             "    }\n" +
             "  ]\n" +
             "}";
@@ -58,9 +58,10 @@ public class RESTStorageTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPState.CREATED);
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
 
+        response.close();
     }
 
-    @Test (expected = ProcessingException.class)
+    @Test (expectedExceptions = ProcessingException.class)
     public void testStoreEmptyInputStream() throws Exception {
 
         InputStream testData = HelperTest.StringToInputStream("");
@@ -70,11 +71,19 @@ public class RESTStorageTest extends CommonRESTTest {
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
     }
 
+    @Test (expectedExceptions = NullPointerException.class)
+    public void testStoreNullInputStream() throws Exception {
+
+        target("/storage/stream")
+                .request()
+                .post(Entity.entity(null, MediaType.MULTIPART_FORM_DATA_TYPE));
+    }
+
     @Test
     public void testStoreViaURL() throws Exception {
 
         String data = "{\n" +
-                "    \"uri\" : \"https://httpbin.org/stream/10\"\n" +
+                "    \"uri\" : \"https://httpbin.org/range/10\"\n" +
                 "}";
 
         Response response = target("/storage/uri")
@@ -84,6 +93,7 @@ public class RESTStorageTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPState.CREATED);
         JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
 
+        response.close();
     }
 
 }

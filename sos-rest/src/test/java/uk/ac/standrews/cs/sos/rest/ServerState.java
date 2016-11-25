@@ -23,11 +23,12 @@ import java.util.List;
  */
 public class ServerState {
 
-    public static SOSLocalNode sos;
+    public SOSLocalNode sos;
+    private LocalStorage localStorage;
 
-    public static SOSLocalNode init(String propertyFilePath) {
+    public SOSLocalNode init(String propertyFilePath) {
         try {
-            return ServerState.startSOS(propertyFilePath);
+            return startSOS(propertyFilePath);
         } catch (SOSException | GUIDGenerationException e) {
             e.printStackTrace();
         }
@@ -35,16 +36,17 @@ public class ServerState {
         return null;
     }
 
-    public static void kill() {
+    public void kill() throws DataStorageException {
         sos.kill();
+
+        localStorage.destroy();
     }
 
-    private static SOSLocalNode startSOS(String properties) throws SOSException, GUIDGenerationException {
+    private SOSLocalNode startSOS(String properties) throws SOSException, GUIDGenerationException {
 
         File configFile = new File(properties);
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
-        LocalStorage localStorage;
         try {
 
             StorageType storageType = configuration.getStorageType();

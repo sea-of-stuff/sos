@@ -16,8 +16,7 @@ public class RESTConfig {
 
     public static SOSLocalNode sos;
 
-    public ResourceConfig build(SOSLocalNode sos) {
-        this.sos = sos;
+    public ResourceConfig build() {
 
         return new ResourceConfig()
                 .packages(REST_PACKAGE)
@@ -25,5 +24,9 @@ public class RESTConfig {
                 .register(StorageFilter.class)
                 .register(NDSFilter.class)
                 .register(DDSFilter.class);
+    }
+
+    public void setSOS(SOSLocalNode sos) {
+        this.sos = sos;
     }
 }

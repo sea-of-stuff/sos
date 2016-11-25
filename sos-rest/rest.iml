@@ -179,6 +179,8 @@
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.7.2" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:4.48" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-jdbc:4.48" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.sun.jersey:jersey-bundle:1.18.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.ws.rs:jsr311-api:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:guid-sta:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:logger:1.0-SNAPSHOT" level="project" />

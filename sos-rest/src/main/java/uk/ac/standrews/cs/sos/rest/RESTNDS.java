@@ -24,7 +24,7 @@ import java.util.Collection;
 @NDSNode
 public class RESTNDS {
 
-    @PUT
+    @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
