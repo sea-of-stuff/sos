@@ -95,7 +95,6 @@
     <orderEntry type="library" name="Maven: org.quartz-scheduler:quartz:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: c3p0:c3p0:0.9.1.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache-core:2.6.2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:17.0" level="project" />
     <orderEntry type="library" name="Maven: edu.ucar:httpservices:4.5.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.2.6" level="project" />
@@ -140,14 +139,66 @@
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-s3:1.11.13" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-kms:1.11.13" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-core:1.11.13" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.6" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.6.6" level="project" />
     <orderEntry type="library" name="Maven: com.dropbox.core:dropbox-core-sdk:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.7.2" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:4.48" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-jdbc:4.48" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.skyscreamer:jsonassert:1.3.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mock-server:mockserver-netty:3.10.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mock-server:mockserver-client-java:3.10.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mock-server:mockserver-core:3.10.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.servlet:javax.servlet-api:3.0.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec-socks:4.0.34.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:finagle-native_2.11:6.33.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scala-lang:scala-library:2.11.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:finagle-core_2.11:6.33.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-app_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-cache_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-codec_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-collection_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-core_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-function_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-hashing_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-jvm_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-lint_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-logging_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-registry_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:util-stats_2.11:6.32.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:jsr166e:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty:3.10.1.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.twitter:finagle-http_2.11:6.33.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.jcraft:jzlib:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:json-schema-validator:2.2.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.google.code.findbugs:jsr305:3.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.googlecode.libphonenumber:libphonenumber:6.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:json-schema-core:1.2.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:uri-template:0.9" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:msg-simple:1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:btf:1.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.github.fge:jackson-coreutils:1.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mozilla:rhino:1.7R4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.mail:mailapi:1.4.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.sf.jopt-simple:jopt-simple:4.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: xerces:xercesImpl:2.4.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-buffer:4.0.34.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec:4.0.34.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec-http:4.0.34.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-common:4.0.34.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-handler:4.0.34.Final" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-transport:4.0.34.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: ch.qos.logback:logback-classic:1.1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: ch.qos.logback:logback-core:1.1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: janino:janino:2.5.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mock-server:mockserver-logging:3.10.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:guid-sta:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:logger:1.0-SNAPSHOT" level="project" />
