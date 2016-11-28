@@ -38,6 +38,7 @@ import static org.testng.AssertJUnit.assertFalse;
 public class ReplicationTest {
 
     private ClientAndServer mockServer;
+    private static final int MOCK_SERVER_PORT = 10001;
 
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
@@ -46,7 +47,7 @@ public class ReplicationTest {
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
-        mockServer = startClientAndServer(9998);
+        mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
         mockServer
                 .when(
@@ -86,7 +87,7 @@ public class ReplicationTest {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
@@ -112,7 +113,7 @@ public class ReplicationTest {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
@@ -134,12 +135,12 @@ public class ReplicationTest {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false);
 
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
@@ -168,16 +169,16 @@ public class ReplicationTest {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false);
 
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
         Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true);
 
         Set<Node> nodes = new HashSet<>();
@@ -208,11 +209,11 @@ public class ReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false);
 
         Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", 9998,
+                "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
@@ -223,7 +224,7 @@ public class ReplicationTest {
         ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
 
         executorService.shutdown();
-        executorService.awaitTermination(10000, TimeUnit.SECONDS);
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());

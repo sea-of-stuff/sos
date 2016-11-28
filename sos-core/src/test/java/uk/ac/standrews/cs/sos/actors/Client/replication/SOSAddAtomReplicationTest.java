@@ -38,4 +38,3 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         // force node to get data from replica node
     }
 }
-
