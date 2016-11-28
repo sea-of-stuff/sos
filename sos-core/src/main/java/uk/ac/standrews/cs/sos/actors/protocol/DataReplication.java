@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
@@ -27,9 +26,9 @@ import java.util.concurrent.Executors;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Replication {
+public class DataReplication {
 
-    public static ExecutorService ReplicateData(InputStream data, Set<Node> nodes, LocationsIndex index) {
+    public static ExecutorService Replicate(InputStream data, Set<Node> nodes, LocationsIndex index) {
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -43,22 +42,6 @@ public class Replication {
 
         return executor;
     }
-
-    public static ExecutorService ReplicateManifest(Manifest manifest, Set<Node> nodes) {
-
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        nodes.stream()
-                .filter(Node::isDDS)
-                .distinct()
-                .forEach(n -> {
-                    Runnable runnable = transferManifest(manifest, n);
-                    executor.submit(runnable);
-                });
-
-        return executor;
-    }
-
 
     // Synchronously
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index) {
@@ -93,20 +76,13 @@ public class Replication {
 
             InputStream body = response.getBody();
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-            String stringGUID = jsonNode.get("ContentGUID").textValue();
+            JsonNode manifestNode = jsonNode.get("Manifest");
+            JsonNode ddsInfo = jsonNode.has("DDS") ? jsonNode.get("DDS") : null;
 
-            IGUID guid = GUIDFactory.recreateGUID(stringGUID);
+            retval = getManifestNode(manifestNode);
 
-            JsonNode bundlesNode = jsonNode.get(ManifestConstants.KEY_LOCATIONS);
-            Set<LocationBundle> bundles = new HashSet<>();
-            if (bundlesNode.isArray()) {
-                for(final JsonNode bundleNode:bundlesNode) {
-                    LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
-                    bundles.add(bundle);
-                }
-            }
+            getDDSInfoFeedback(ddsInfo);
 
-            retval = new Tuple<>(guid, bundles);
         } catch (IOException | GUIDGenerationException e) {
             e.printStackTrace();
         }
@@ -114,36 +90,34 @@ public class Replication {
         return retval;
     }
 
-    private static Runnable transferManifest(Manifest manifest, Node node) {
+    private static Tuple<IGUID, Set<LocationBundle>> getManifestNode(JsonNode manifestNode) throws GUIDGenerationException {
+        String stringGUID = manifestNode.get("ContentGUID").textValue();
 
-        Runnable replicator = () -> {
-            transferManifestRequest(manifest, node);
-            // TODO - Collect information from requests and return it back
-        };
+        IGUID guid = GUIDFactory.recreateGUID(stringGUID);
 
-        return replicator;
-    }
-
-    private static void transferManifestRequest(Manifest manifest, Node node) {
-        System.out.println("Transfer manifest to DDS node - WORK IN PROGRESS");
-
-        try {
-            URL url = SOSEP.DDS_POST_MANIFEST(node);
-            SyncRequest request = new SyncRequest(Method.POST, url);
-            request.setJSONBody(manifest.toString());
-
-            Response response = RequestsManager.getInstance().playSyncRequest(request);
-            // JUST A 201 Response
-
-//            InputStream body = response.getBody();
-//            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-//
-//            System.out.println("RESPONSE from node: " + node.getNodeGUID().toString());
-//            System.out.println(jsonNode.toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        JsonNode bundlesNode = manifestNode.get(ManifestConstants.KEY_LOCATIONS);
+        Set<LocationBundle> bundles = new HashSet<>();
+        if (bundlesNode.isArray()) {
+            for(final JsonNode bundleNode:bundlesNode) {
+                LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
+                bundles.add(bundle);
+            }
         }
+
+        return new Tuple<>(guid, bundles);
     }
 
+    private static void getDDSInfoFeedback(JsonNode ddsInfo) throws GUIDGenerationException {
+        if (ddsInfo == null ||  !ddsInfo.isArray()) {
+            return;
+        }
+
+        Set<IGUID> nodeGUIDs = new HashSet<>();
+        for(JsonNode entry:ddsInfo) {
+            IGUID nodeGUID = GUIDFactory.recreateGUID(entry.toString());
+            nodeGUIDs.add(nodeGUID);
+        }
+
+        // TODO - add this info to this node state
+    }
 }

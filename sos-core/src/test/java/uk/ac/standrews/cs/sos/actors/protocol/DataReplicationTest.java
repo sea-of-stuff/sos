@@ -61,15 +61,19 @@ public class DataReplicationTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "{\n" +
-                                                "  \"Type\": \"Atom\",\n" +
-                                                "  \"ContentGUID\": \""+ testGUID +"\",\n" +
-                                                "  \"Locations\": [\n" +
-                                                "    {\n" +
-                                                "      \"Type\": \"persistent\",\n" +
-                                                "      \"Location\": \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
-                                                "    }\n" +
-                                                "  ]\n" +
-                                                "}"
+                                        "    \"Manifest\" : \n" +
+                                        "    {\n" +
+                                        "        \"Type\" : \"Atom\",\n" +
+                                        "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
+                                        "        \"Locations\" : \n" +
+                                        "        [\n" +
+                                        "              {\n" +
+                                        "                \"Type\" : \"persistent\",\n" +
+                                        "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
+                                        "            } \n" +
+                                        "        ]\n" +
+                                        "    }\n" +
+                                        "}"
                                 )
                 );
 
@@ -94,7 +98,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -120,7 +124,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -148,7 +152,7 @@ public class DataReplicationTest {
         nodes.add(storageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -187,7 +191,7 @@ public class DataReplicationTest {
         nodes.add(anotherNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -221,7 +225,7 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

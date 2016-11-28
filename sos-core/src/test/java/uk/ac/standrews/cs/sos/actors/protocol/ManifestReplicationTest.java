@@ -77,7 +77,7 @@ public class ManifestReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = Replication.ReplicateManifest(mockManifest, nodes);
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -98,7 +98,7 @@ public class ManifestReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = Replication.ReplicateManifest(mockManifest, nodes);
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

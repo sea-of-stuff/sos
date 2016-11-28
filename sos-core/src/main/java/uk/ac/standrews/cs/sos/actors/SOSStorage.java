@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
-import uk.ac.standrews.cs.sos.actors.protocol.Replication;
+import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
@@ -85,7 +85,7 @@ public class SOSStorage implements Storage {
                 ddsNodes.addAll(ddsNotificationInfo.getSuggestedDDSNodes());
             }
 
-            Replication.ReplicateManifest(manifest, ddsNodes);
+            ManifestReplication.Replicate(manifest, ddsNodes);
         }
     }
 

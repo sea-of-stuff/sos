@@ -102,7 +102,7 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
