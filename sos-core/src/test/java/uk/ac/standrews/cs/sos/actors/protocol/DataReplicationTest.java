@@ -61,15 +61,15 @@ public class DataReplicationTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "{\n" +
-                                        "  \"Type\": \"Atom\",\n" +
-                                        "  \"ContentGUID\": \""+ testGUID +"\",\n" +
-                                        "  \"Locations\": [\n" +
-                                        "    {\n" +
-                                        "      \"Type\": \"persistent\",\n" +
-                                        "      \"Location\": \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
-                                        "    }\n" +
-                                        "  ]\n" +
-                                        "}"
+                                                "  \"Type\": \"Atom\",\n" +
+                                                "  \"ContentGUID\": \""+ testGUID +"\",\n" +
+                                                "  \"Locations\": [\n" +
+                                                "    {\n" +
+                                                "      \"Type\": \"persistent\",\n" +
+                                                "      \"Location\": \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
+                                                "    }\n" +
+                                                "  ]\n" +
+                                                "}"
                                 )
                 );
 
