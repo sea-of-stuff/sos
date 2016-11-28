@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests.atom;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.DataReplication;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -87,8 +88,8 @@ public class AtomStorage {
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public void replicate(InputStream data, Set<Node> nodes) {
-        DataReplication.Replicate(data, nodes, locationIndex);
+    public void replicate(InputStream data, Set<Node> nodes, NDS nds) {
+        DataReplication.Replicate(data, nodes, locationIndex, nds);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Set<LocationBundle> bundles) throws StorageException {

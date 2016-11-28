@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
@@ -25,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.mockito.Mockito.mock;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -42,6 +44,8 @@ public class DataReplicationTest {
 
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
+
+    private NDS mockNDS;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -61,7 +65,7 @@ public class DataReplicationTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "{\n" +
-                                        "    \"Manifest\" : \n" +
+                                        "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                         "    {\n" +
                                         "        \"Type\" : \"Atom\",\n" +
                                         "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
@@ -78,6 +82,7 @@ public class DataReplicationTest {
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        mockNDS = mock(NDS.class);
     }
 
     @AfterMethod
@@ -98,7 +103,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -124,7 +129,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -152,7 +157,7 @@ public class DataReplicationTest {
         nodes.add(storageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -191,7 +196,7 @@ public class DataReplicationTest {
         nodes.add(anotherNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -225,7 +230,7 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

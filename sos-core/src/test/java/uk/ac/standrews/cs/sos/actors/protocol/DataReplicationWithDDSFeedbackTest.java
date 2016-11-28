@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
@@ -25,6 +26,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -60,7 +63,7 @@ public class DataReplicationWithDDSFeedbackTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "{\n" +
-                                        "    \"Manifest\" : \n" +
+                                        "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                         "    {\n" +
                                         "        \"Type\" : \"Atom\",\n" +
                                         "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
@@ -72,12 +75,24 @@ public class DataReplicationWithDDSFeedbackTest {
                                         "            } \n" +
                                         "        ]\n" +
                                         "    },\n" +
-                                        "    \"DDS\" : \n" +
-                                        "    [\n" +
-                                        "        \"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-                                        "        \"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
-                                        "        \"002bfd93ab9a6e2ed501fc583685088cca66bac2\"\n" +
-                                        "    ]\n" +
+                                        "    \"" + SOSConstants.DDD_INFO + "\" : \n" +
+                                        "        [\n" +
+                                        "                {\n" +
+                                        "                        \"guid\" : \"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "                        \"hostname\" : \"http://example1.org\",\n" +
+                                        "                        \"port\" : 12345\n" +
+                                        "                },\n" +
+                                        "                {\n" +
+                                        "                        \"guid\" : \"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
+                                        "                        \"hostname\" : \"http://example2.org\",\n" +
+                                        "                        \"port\" : 12346\n" +
+                                        "                },\n" +
+                                        "                {        \n" +
+                                        "                        \"guid\" : \"002bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "                        \"hostname\" : \"http://example3.org\",\n" +
+                                        "                        \"port\" : 12347\n" +
+                                        "                }\n" +
+                                        "        ]\n" +
                                         "}")
                 );
 
@@ -102,10 +117,11 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index);
+        NDS mockNDS = mock(NDS.class);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
 
         executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        executorService.awaitTermination(1000, TimeUnit.SECONDS);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -113,5 +129,7 @@ public class DataReplicationWithDDSFeedbackTest {
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+
+        verify(mockNDS, times(3)).registerNode(anyObject());
     }
 }

@@ -181,7 +181,7 @@ public class SOSStorage implements Storage {
             try (InputStream data = getAtomContent(atom)) {
 
                 Set<Node> storageNodes = nds.getStorageNodes();
-                atomStorage.replicate(data, (Set<Node>) storageNodes);
+                atomStorage.replicate(data, storageNodes, nds);
 
                 // Note: dds is not notified with new atom manifest
 

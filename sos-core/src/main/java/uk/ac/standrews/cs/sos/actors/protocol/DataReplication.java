@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -12,12 +13,14 @@ import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.Response;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +31,7 @@ import java.util.concurrent.Executors;
  */
 public class DataReplication {
 
-    public static ExecutorService Replicate(InputStream data, Set<Node> nodes, LocationsIndex index) {
+    public static ExecutorService Replicate(InputStream data, Set<Node> nodes, LocationsIndex index, NDS nds) {
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -36,7 +39,7 @@ public class DataReplication {
                 .filter(Node::isStorage)
                 .distinct()
                 .forEach(n -> {
-                    Runnable runnable = transferData(data, n, index);
+                    Runnable runnable = transferData(data, n, index, nds);
                     executor.submit(runnable);
                 });
 
@@ -44,27 +47,31 @@ public class DataReplication {
     }
 
     // Synchronously
-    private static Runnable transferData(InputStream data, Node node, LocationsIndex index) {
+    private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds) {
 
         Runnable replicator = () -> {
-            Tuple<IGUID, Set<LocationBundle>> tuple = transferDataRequest(data, node);
+            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple = transferDataRequest(data, node);
 
             if (tuple == null) {
                 // ERROR - Replication failed, should throw exception
                 return;
             }
 
-            for(LocationBundle locationBundle:tuple.y) {
+            for(LocationBundle locationBundle:tuple.y.x) {
                 index.addLocation(tuple.x, locationBundle);
+            }
+
+            for(Node ddsNode:tuple.y.y) {
+                nds.registerNode(ddsNode);
             }
         };
 
         return replicator;
     }
 
-    private static Tuple<IGUID, Set<LocationBundle>> transferDataRequest(InputStream data, Node node) {
+    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) {
 
-        Tuple<IGUID, Set<LocationBundle>> retval = null;
+        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval = null;
 
         URL url;
         try {
@@ -76,13 +83,14 @@ public class DataReplication {
 
             InputStream body = response.getBody();
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-            JsonNode manifestNode = jsonNode.get("Manifest");
-            JsonNode ddsInfo = jsonNode.has("DDS") ? jsonNode.get("DDS") : null;
+            JsonNode manifestNode = jsonNode.get(SOSConstants.MANIFEST);
+            JsonNode ddsInfo = jsonNode.has(SOSConstants.DDD_INFO) ? jsonNode.get(SOSConstants.DDD_INFO) : null;
 
-            retval = getManifestNode(manifestNode);
+            Tuple<IGUID, Set<LocationBundle>> manifestNodeInfo  = getManifestNode(manifestNode);
 
-            getDDSInfoFeedback(ddsInfo);
+            Set<Node> ddsNodes = getDDSInfoFeedback(ddsInfo);
 
+            retval = new Tuple<>(manifestNodeInfo.x, new Tuple<>(manifestNodeInfo.y, ddsNodes));
         } catch (IOException | GUIDGenerationException e) {
             e.printStackTrace();
         }
@@ -107,17 +115,23 @@ public class DataReplication {
         return new Tuple<>(guid, bundles);
     }
 
-    private static void getDDSInfoFeedback(JsonNode ddsInfo) throws GUIDGenerationException {
+    private static Set<Node> getDDSInfoFeedback(JsonNode ddsInfo) throws GUIDGenerationException {
         if (ddsInfo == null ||  !ddsInfo.isArray()) {
-            return;
+            return Collections.emptySet();
         }
 
-        Set<IGUID> nodeGUIDs = new HashSet<>();
+        Set<Node> ddsNodes = new HashSet<>();
         for(JsonNode entry:ddsInfo) {
-            IGUID nodeGUID = GUIDFactory.recreateGUID(entry.toString());
-            nodeGUIDs.add(nodeGUID);
+            IGUID nodeGUID = GUIDFactory.recreateGUID(entry.get(SOSConstants.GUID).asText());
+            String hostname = entry.get(SOSConstants.HOSTNAME).asText();
+            int port = entry.get(SOSConstants.PORT).asInt();
+
+            // TODO - what if there is already an entry for this node, but different roles?
+            // need a way to merge roles
+            Node node = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
+            ddsNodes.add(node);
         }
 
-        // TODO - add this info to this node state
+        return ddsNodes;
     }
 }
