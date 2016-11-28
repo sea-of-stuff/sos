@@ -10,10 +10,10 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -50,7 +50,7 @@ public class CompoundManifestTest extends CommonTest {
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
@@ -67,7 +67,7 @@ public class CompoundManifestTest extends CommonTest {
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
@@ -84,7 +84,7 @@ public class CompoundManifestTest extends CommonTest {
 
     @Test
     public void testGetNoContents() throws Exception {
-        Collection<Content> contents = Collections.EMPTY_LIST;
+        Set<Content> contents = Collections.EMPTY_SET;
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
@@ -97,7 +97,7 @@ public class CompoundManifestTest extends CommonTest {
 
     @Test
     public void testToStringNoContents() throws Exception {
-        Collection<Content> contents = Collections.EMPTY_LIST;
+        Set<Content> contents = Collections.EMPTY_SET;
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
@@ -113,7 +113,7 @@ public class CompoundManifestTest extends CommonTest {
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
@@ -126,7 +126,7 @@ public class CompoundManifestTest extends CommonTest {
 
     @Test
     public void testIsNotValidManifest() throws Exception {
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};

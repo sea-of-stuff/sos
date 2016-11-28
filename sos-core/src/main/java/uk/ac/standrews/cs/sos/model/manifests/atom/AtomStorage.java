@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -64,25 +63,25 @@ public class AtomStorage {
         return locationIndex.findLocations(guid);
     }
 
-    public IGUID cacheAtomAndUpdateLocationBundles(Location location, Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID cacheAtomAndUpdateLocationBundles(Location location, Set<LocationBundle> bundles) throws StorageException {
 
         Store cache = new LocationCache(nodeGUID, storage, location);
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public IGUID cacheAtomAndUpdateLocationBundles(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID cacheAtomAndUpdateLocationBundles(InputStream inputStream, Set<LocationBundle> bundles) throws StorageException {
 
         Store cache = new StreamCache(nodeGUID, storage, inputStream);
         return storeAtomAndUpdateLocationBundles(cache, bundles);
     }
 
-    public IGUID persistAtomAndUpdateLocationBundles(Location location, Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID persistAtomAndUpdateLocationBundles(Location location, Set<LocationBundle> bundles) throws StorageException {
 
         Store persistance = new LocationPersist(nodeGUID, storage, location);
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
+    public IGUID persistAtomAndUpdateLocationBundles(InputStream inputStream, Set<LocationBundle> bundles) throws StorageException {
 
         Store persistance = new StreamPersist(nodeGUID, storage, inputStream);
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
@@ -92,7 +91,7 @@ public class AtomStorage {
         Replication.ReplicateData(data, nodes, locationIndex);
     }
 
-    private IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {
+    private IGUID storeAtomAndUpdateLocationBundles(Store store, Set<LocationBundle> bundles) throws StorageException {
 
         IGUID guid = store.store();
         if (bundles!= null && guid != null) {

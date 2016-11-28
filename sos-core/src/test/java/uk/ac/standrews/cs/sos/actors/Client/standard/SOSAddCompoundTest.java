@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
@@ -26,7 +26,7 @@ public class SOSAddCompoundTest extends AgentTest {
     @Test
     public void testAddCompound() throws Exception {
         Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Compound manifest = agent.addCompound(CompoundType.DATA, contents);
@@ -35,7 +35,7 @@ public class SOSAddCompoundTest extends AgentTest {
         Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
         assertEquals(retrievedManifest.getManifestType(), ManifestType.COMPOUND);
 
-        Collection<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
+        Set<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
         Iterator<Content> iterator = retrievedContents.iterator();
         assertEquals(cat, iterator.next());
 
@@ -45,7 +45,7 @@ public class SOSAddCompoundTest extends AgentTest {
     @Test
     public void testAddCompoundAndVerify() throws Exception {
         Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Compound manifest = agent.addCompound(CompoundType.DATA, contents);

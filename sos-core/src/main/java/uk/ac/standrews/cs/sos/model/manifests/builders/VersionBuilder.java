@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -13,9 +13,9 @@ import java.util.Collection;
 public class VersionBuilder {
 
     private IGUID content;
-    private Collection<SOSMetadata> metadata;
+    private Set<SOSMetadata> metadata;
     private IGUID invariant;
-    private Collection<IGUID> previousCollection;
+    private Set<IGUID> previousCollection;
 
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
@@ -34,7 +34,7 @@ public class VersionBuilder {
         return this;
     }
 
-    public VersionBuilder setMetadata(Collection<SOSMetadata> metadata) {
+    public VersionBuilder setMetadata(Set<SOSMetadata> metadata) {
         if (!metadataIsSet) {
             this.metadata = metadata;
             metadataIsSet = true;
@@ -45,7 +45,7 @@ public class VersionBuilder {
 
     public VersionBuilder setMetadata(SOSMetadata metadata) {
         if (!metadataIsSet) {
-            this.metadata = new ArrayList<>();
+            this.metadata = new LinkedHashSet<>();
             this.metadata.add(metadata);
             metadataIsSet = true;
         }
@@ -53,7 +53,7 @@ public class VersionBuilder {
         return this;
     }
 
-    public VersionBuilder setPrevious(Collection<IGUID> previousCollection) {
+    public VersionBuilder setPrevious(Set<IGUID> previousCollection) {
         if (!prevIsSet) {
             this.previousCollection = previousCollection;
             prevIsSet = true;
@@ -78,12 +78,12 @@ public class VersionBuilder {
         return content;
     }
 
-    public Collection<IGUID> getMetadataCollection() {
+    public Set<IGUID> getMetadataCollection() {
         if (metadata == null) {
             return null;
         }
 
-        Collection<IGUID> retval = new ArrayList<>();
+        Set<IGUID> retval = new LinkedHashSet<>();
         for(SOSMetadata meta:metadata) {
             try {
                 retval.add(meta.guid());
@@ -98,7 +98,7 @@ public class VersionBuilder {
         return invariant;
     }
 
-    public Collection<IGUID> getPreviousCollection() {
+    public Set<IGUID> getPreviousCollection() {
         return previousCollection;
     }
 

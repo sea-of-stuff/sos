@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * A compound is an immutable collection of (references to)
@@ -47,7 +47,7 @@ import java.util.Collection;
 @JsonDeserialize(using = CompoundManifestDeserializer.class)
 public class CompoundManifest extends SignedManifest implements Compound {
 
-    final private Collection<Content> contents;
+    final private Set<Content> contents;
     final private CompoundType type;
 
     /**
@@ -58,7 +58,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public CompoundManifest(CompoundType type, Collection<Content> contents, Identity identity)
+    public CompoundManifest(CompoundType type, Set<Content> contents, Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestType.COMPOUND);
 
@@ -77,7 +77,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param contents
      * @param signature
      */
-    public CompoundManifest(CompoundType type, IGUID contentGUID, Collection<Content> contents, String signature) throws ManifestNotMadeException {
+    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, String signature) throws ManifestNotMadeException {
         super(null, ManifestType.COMPOUND);
 
         assert(type != null);
@@ -94,7 +94,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @return the contents of this compound.
      */
     @Override
-    public Collection<Content> getContents() {
+    public Set<Content> getContents() {
         return contents;
     }
 

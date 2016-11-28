@@ -19,7 +19,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.util.Collections;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyCollectionOf;
+import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -65,10 +65,10 @@ public class SOSFileSystemFactoryTest {
 
         IGUID contentsGUID = GUIDFactory.generateRandomGUID();
 
-        when(mockAgent.addCompound(any(), anyCollectionOf(Content.class))).thenReturn(mockRootFolder);
+        when(mockAgent.addCompound(any(), anySetOf(Content.class))).thenReturn(mockRootFolder);
         when(mockAgent.addVersion(any())).thenReturn(mockRootAsset);
 
-        when(mockRootFolder.getContents()).thenReturn(Collections.emptyList());
+        when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());
         when(mockRootAsset.getInvariantGUID()).thenReturn(guid);
         when(mockRootAsset.getVersionGUID()).thenReturn(versionGUID);
         when(mockRootAsset.getContentGUID()).thenReturn(contentsGUID);

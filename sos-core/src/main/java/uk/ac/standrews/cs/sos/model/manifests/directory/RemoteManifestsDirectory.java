@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
@@ -45,7 +45,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         int replicationFactor = manifestPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
-            Collection<Node> ddsNodes = localNodesDirectory.getDDSNodes();
+            Set<Node> ddsNodes = localNodesDirectory.getDDSNodes();
 
             for(Node ddsNode:ddsNodes) {
                 SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +

@@ -15,8 +15,8 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Manifest describing an Atom.
@@ -34,7 +34,7 @@ import java.util.Objects;
 @JsonDeserialize(using = AtomManifestDeserializer.class)
 public class AtomManifest extends BasicManifest implements Atom {
 
-    final private Collection<LocationBundle> locations;
+    final private Set<LocationBundle> locations;
 
     /**
      * Creates a valid atom manifest given an atom.
@@ -42,7 +42,7 @@ public class AtomManifest extends BasicManifest implements Atom {
      * @param guid
      * @param locations
      */
-    public AtomManifest(IGUID guid, Collection<LocationBundle> locations) {
+    public AtomManifest(IGUID guid, Set<LocationBundle> locations) {
         super(ManifestType.ATOM);
         this.contentGUID = guid;
         this.locations = locations;
@@ -54,7 +54,7 @@ public class AtomManifest extends BasicManifest implements Atom {
      * @return locations of this atom.
      */
     @Override
-    public Collection<LocationBundle> getLocations() {
+    public Set<LocationBundle> getLocations() {
         return locations;
     }
 

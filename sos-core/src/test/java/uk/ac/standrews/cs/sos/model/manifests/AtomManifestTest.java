@@ -24,8 +24,8 @@ import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -60,33 +60,33 @@ public class AtomManifestTest extends CommonTest {
 
     @Test
     public void testNoLocations() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 
-        Collection<LocationBundle> others = atomManifest.getLocations();
+        Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
     }
 
     @Test
     public void testNullGUID() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         Location location = HelperTest.createDummyDataFile(localStorage);
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
-        Collection<LocationBundle> others = atomManifest.getLocations();
+        Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
         assertFalse(atomManifest.isValid());
     }
 
     @Test
     public void testGetLocations() throws Exception {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         Location location = HelperTest.createDummyDataFile(localStorage);
         bundles.add(new CacheLocationBundle(location));
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 
-        Collection<LocationBundle> others = atomManifest.getLocations();
+        Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
     }
 
@@ -94,11 +94,11 @@ public class AtomManifestTest extends CommonTest {
     public void testToJSON() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
-        Collection<LocationBundle> newBundles = atomManifest.getLocations();
+        Set<LocationBundle> newBundles = atomManifest.getLocations();
         assertEquals(newBundles.size(), 1);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(atomManifest.toString());
@@ -111,7 +111,7 @@ public class AtomManifestTest extends CommonTest {
     public void testIsValid() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
@@ -122,7 +122,7 @@ public class AtomManifestTest extends CommonTest {
     public void testIsVerified() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
@@ -131,7 +131,7 @@ public class AtomManifestTest extends CommonTest {
 
     @Test
     public void verifyAtomWithNullGUIDTest() throws ManifestVerificationException {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
         assertFalse(atomManifest.verify(null));

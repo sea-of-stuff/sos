@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * NDS - Node Discovery Service
@@ -38,11 +38,11 @@ public interface NDS extends SeaOfStuff {
      *
      * @return an empty collection if there are not matching nodes
      */
-    Collection<Node> getNDSNodes();
+    Set<Node> getNDSNodes();
 
-    Collection<Node> getDDSNodes();
+    Set<Node> getDDSNodes();
 
-    Collection<Node> getMCSNodes();
+    Set<Node> getMCSNodes();
 
-    Collection<Node> getStorageNodes();
+    Set<Node> getStorageNodes();
 }

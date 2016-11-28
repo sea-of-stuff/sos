@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -41,7 +41,7 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
     }
 
     private void serializeContents(CompoundManifest compoundManifest, JsonGenerator jsonGenerator) throws IOException {
-        Collection<Content> contents = compoundManifest.getContents();
+        Set<Content> contents = compoundManifest.getContents();
         for(Content content:contents) {
             jsonGenerator.writeObject(content);
         }

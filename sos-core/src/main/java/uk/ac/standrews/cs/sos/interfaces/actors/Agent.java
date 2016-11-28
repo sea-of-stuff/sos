@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * The Client is one of the node roles within the Sea of Stuff.
@@ -56,7 +56,7 @@ public interface Agent {
      *
      * TODO - use CompoundBuilder
      */
-    Compound addCompound(CompoundType type, Collection<Content> contents)
+    Compound addCompound(CompoundType type, Set<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException;
 
     /**

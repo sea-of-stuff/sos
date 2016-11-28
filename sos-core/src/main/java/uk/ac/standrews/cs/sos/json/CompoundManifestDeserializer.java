@@ -14,8 +14,8 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -37,7 +37,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
             CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
 
             JsonNode contentsNode = node.get(ManifestConstants.KEY_CONTENTS);
-            Collection<Content> contents = new ArrayList<>();
+            Set<Content> contents = new LinkedHashSet<>();
             if (contentsNode.isArray()) {
                 for(final JsonNode contentNode:contentsNode) {
                     Content content = JSONHelper.JsonObjMapper().convertValue(contentNode, Content.class);

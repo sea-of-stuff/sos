@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -35,7 +35,7 @@ public class AtomManifestSerializer extends JsonSerializer<AtomManifest> {
     }
 
     private void serializeLocations(AtomManifest atomManifest, JsonGenerator jsonGenerator) throws IOException {
-        Collection<LocationBundle> locations = atomManifest.getLocations();
+        Set<LocationBundle> locations = atomManifest.getLocations();
         for(LocationBundle location:locations) {
             jsonGenerator.writeObject(location);
         }

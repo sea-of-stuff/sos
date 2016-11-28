@@ -20,8 +20,8 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,7 @@ public class SOSAddAssetTest extends AgentTest {
     @Test
     public void testAddAsset() throws Exception {
         Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Compound compound = agent.addCompound(CompoundType.DATA, contents);
@@ -56,16 +56,16 @@ public class SOSAddAssetTest extends AgentTest {
         IGUID invariant = GUIDFactory.recreateGUID("1a2b3c");
 
         Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Compound compound = agent.addCompound(CompoundType.DATA, contents);
 
-        Collection<IGUID> prevs = new ArrayList<>();
+        Set<IGUID> prevs = new LinkedHashSet<>();
         prevs.add(GUIDFactory.recreateGUID("321"));
         prevs.add(GUIDFactory.recreateGUID("abcef"));
 
-        Collection<SOSMetadata> metadata = new ArrayList<>();
+        Set<SOSMetadata> metadata = new LinkedHashSet<>();
         SOSMetadata metaMock = mock(SOSMetadata.class);
         when(metaMock.guid()).thenReturn(GUIDFactory.recreateGUID("897"));
 
@@ -85,10 +85,10 @@ public class SOSAddAssetTest extends AgentTest {
         IGUID retrievedInvariant = ((AssetManifest) retrievedManifest).getInvariantGUID();
         assertEquals(invariant, retrievedInvariant);
 
-        Collection<IGUID> retrievedMetadata = ((AssetManifest) retrievedManifest).getMetadata();
+        Set<IGUID> retrievedMetadata = ((AssetManifest) retrievedManifest).getMetadata();
         assertTrue(retrievedMetadata.containsAll(metadata));
 
-        Collection<IGUID> retrievedPrevs = ((AssetManifest) retrievedManifest).getPreviousVersions();
+        Set<IGUID> retrievedPrevs = ((AssetManifest) retrievedManifest).getPreviousVersions();
         assertTrue(retrievedPrevs.containsAll(prevs));
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -97,7 +97,7 @@ public class SOSAddAssetTest extends AgentTest {
     @Test
     public void testAddAssetAndVerify() throws Exception {
         Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Compound compound = agent.addCompound(CompoundType.DATA, contents);

@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * This factory is used to create manifests for atoms, compounds and versions.
@@ -25,7 +25,7 @@ public class ManifestFactory {
      * @return the manifest for the atom
      */
     public static AtomManifest createAtomManifest(IGUID guid,
-                                                  Collection<LocationBundle> locations) {
+                                                  Set<LocationBundle> locations) {
 
         return new AtomManifest(guid, locations);
     }
@@ -39,7 +39,7 @@ public class ManifestFactory {
      * @throws ManifestNotMadeException
      */
     public static CompoundManifest createCompoundManifest(CompoundType type,
-                                                          Collection<Content> contents,
+                                                          Set<Content> contents,
                                                           Identity identity)
             throws ManifestNotMadeException {
 
@@ -65,8 +65,8 @@ public class ManifestFactory {
      */
     public static AssetManifest createVersionManifest(IGUID content,
                                                       IGUID invariant,
-                                                      Collection<IGUID> prevs,
-                                                      Collection<IGUID> metadata,
+                                                      Set<IGUID> prevs,
+                                                      Set<IGUID> metadata,
                                                       Identity identity)
             throws ManifestNotMadeException {
 

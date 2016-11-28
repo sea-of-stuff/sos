@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,7 +43,7 @@ public class SOSAddAtomTest extends AgentTest {
 
         Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
         assertEquals(ManifestType.ATOM, retrievedManifest.getManifestType());
-        Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
+        Set<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         assertEquals(2, retrievedLocations.size());
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
@@ -81,7 +81,7 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        Collection<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
+        Set<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         LocationBundle cachedLocation = retrievedLocations.iterator().next();
 
         HelperTest.appendToFile(cachedLocation.getLocation(), "Data has changed");

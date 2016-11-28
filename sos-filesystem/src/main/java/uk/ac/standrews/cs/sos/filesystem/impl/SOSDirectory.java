@@ -26,17 +26,17 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.Error;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
-    private Collection<Content> contents;
+    private Set<Content> contents;
     private Compound compound;
 
     public SOSDirectory(Agent sos, SOSDirectory parent, String name) throws GUIDGenerationException {
@@ -84,7 +84,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         try {
             this.name = previous.name;
-            contents = new ArrayList<>(previous.getContents());
+            contents = new LinkedHashSet<>(previous.getContents());
             addOrUpdate(name, new Content(name, object.getGUID()));
 
             compound = sos.addCompound(CompoundType.COLLECTION, contents);
@@ -92,7 +92,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             boolean previousVersionDiffers = checkPreviousDiffers(compound.getContentGUID());
             if (previousVersionDiffers) {
 
-                Collection<IGUID> previousVersion = new ArrayList<>();
+                Set<IGUID> previousVersion = new LinkedHashSet<>();
                 previousVersion.add(previous.getAsset().getVersionGUID());
                 VersionBuilder versionBuilder = new VersionBuilder(compound.getContentGUID())
                         .setInvariant(previous.getInvariant())
@@ -169,7 +169,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return new CompoundIterator();
     }
 
-    private Collection<Content> getContents() {
+    private Set<Content> getContents() {
         return contents;
     }
 

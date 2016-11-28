@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
+import java.util.Set;
 
 
 /**
@@ -49,7 +49,7 @@ public class NodeDiscovery {
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
 
-        Collection<Node> ndsNodes = localNodesDirectory.getNDSNodes();
+        Set<Node> ndsNodes = localNodesDirectory.getNDSNodes();
         for(Node ndsNode:ndsNodes) {
             URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
 

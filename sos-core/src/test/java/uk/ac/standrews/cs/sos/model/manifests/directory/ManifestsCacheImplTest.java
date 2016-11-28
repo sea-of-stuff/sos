@@ -27,8 +27,8 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -143,7 +143,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     private Manifest getValidManifest() throws GUIDGenerationException, URISyntaxException {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 

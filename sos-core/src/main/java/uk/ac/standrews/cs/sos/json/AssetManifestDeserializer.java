@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -34,8 +34,8 @@ public class AssetManifestDeserializer extends JsonDeserializer<AssetManifest> {
                 signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
             }
 
-            Collection<IGUID> prevs = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_PREVIOUS_GUID);
-            Collection<IGUID> metadata = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_METADATA_GUID);
+            Set<IGUID> prevs = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_PREVIOUS_GUID);
+            Set<IGUID> metadata = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_METADATA_GUID);
 
             return new AssetManifest(invariant, version, content, prevs, metadata, signature);
         } catch (GUIDGenerationException e) {

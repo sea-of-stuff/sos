@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.node.directory.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -58,7 +58,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void persistMultipleNodesTest() throws GUIDGenerationException, NodesDirectoryException {
 
-        Collection<Node> nodes = localNodesDirectory.getKnownNodes();
+        Set<Node> nodes = localNodesDirectory.getKnownNodes();
         for(Node n:nodes) {
             System.out.println("GOTCHAYOU " + n.toString());
         }

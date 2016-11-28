@@ -12,7 +12,8 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.node.directory.database.DatabaseTypes.MYSQL_DB;
 import static uk.ac.standrews.cs.sos.node.directory.database.DatabaseTypes.SQLITE_DB;
@@ -54,16 +55,16 @@ public class SQLDatabase implements NodesDatabase {
     }
 
     @Override
-    public Collection<SOSNode> getNodes() throws DatabaseConnectionException {
+    public Set<SOSNode> getNodes() throws DatabaseConnectionException {
 
         ConnectionSource connection = null;
-        Collection<SOSNode> nodes;
+        Set<SOSNode> nodes;
         try {
             connection = getDBConnection();
             createNodesTable(connection);
 
             Dao<SOSNode, String> nodesDAO = DaoManager.createDao(connection, SOSNode.class);
-            nodes = nodesDAO.queryForAll();
+            nodes = new HashSet<>(nodesDAO.queryForAll());
         } catch (SQLException | DatabaseException e) {
             throw new DatabaseConnectionException(e);
         } finally {

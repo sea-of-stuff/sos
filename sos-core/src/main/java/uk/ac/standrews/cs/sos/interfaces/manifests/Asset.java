@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * A Version Manifest represents a particular snapshot for some given data.
@@ -31,12 +31,12 @@ public interface Asset extends Manifest {
      *
      * @return a list of GUIDs for the previous versions
      */
-    Collection<IGUID> getPreviousVersions();
+    Set<IGUID> getPreviousVersions();
 
     /**
      * Returns a list of GUIDs for the manifests under the metadata relationship.
      *
      * @return a list of GUIDs for this versions' metadata
      */
-    Collection<IGUID> getMetadata();
+    Set<IGUID> getMetadata();
 }

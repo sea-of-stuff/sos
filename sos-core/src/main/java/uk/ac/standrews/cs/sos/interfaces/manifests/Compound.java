@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * A compound serves as an aggregator of atoms, compounds and versions.
@@ -17,7 +17,7 @@ public interface Compound extends Manifest {
      *
      * @return the contents of this compound
      */
-    Collection<Content> getContents();
+    Set<Content> getContents();
 
     /**
      * Get the type of compound.

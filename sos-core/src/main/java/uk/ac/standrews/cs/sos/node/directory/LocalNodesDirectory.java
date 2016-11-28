@@ -25,7 +25,7 @@ public class LocalNodesDirectory {
     private Node localNode;
     private NodesDatabase nodesDatabase;
 
-    private Collection<Node> knownNodes;
+    private Set<Node> knownNodes;
 
     public LocalNodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
         this.localNode = localNode;
@@ -50,7 +50,7 @@ public class LocalNodesDirectory {
      *
      * @return
      */
-    public Collection<Node> getKnownNodes() {
+    public Set<Node> getKnownNodes() {
         return knownNodes;
     }
 
@@ -73,7 +73,7 @@ public class LocalNodesDirectory {
      *
      * @return NDS nodes
      */
-    public Collection<Node> getNDSNodes() {
+    public Set<Node> getNDSNodes() {
         return getNodes(Node::isNDS, NO_LIMIT);
     }
 
@@ -82,7 +82,7 @@ public class LocalNodesDirectory {
      *
      * @return DDS nodes
      */
-    public Collection<Node> getDDSNodes() {
+    public Set<Node> getDDSNodes() {
         return getNodes(Node::isDDS, NO_LIMIT);
     }
 
@@ -91,7 +91,7 @@ public class LocalNodesDirectory {
      *
      * @return MCS nodes
      */
-    public Collection<Node> getMCSNodes() {
+    public Set<Node> getMCSNodes() {
         return getNodes(Node::isMCS, NO_LIMIT);
     }
 
@@ -99,14 +99,15 @@ public class LocalNodesDirectory {
      * Get all Storage Nodes
      * @return Storage nodes
      */
-    public Collection<Node> getStorageNodes() {
+    public Set<Node> getStorageNodes() {
         return getNodes(Node::isStorage, NO_LIMIT);
     }
 
-    private Collection<Node> getNodes(Predicate<Node> predicate, int limit) {
+    private Set<Node> getNodes(Predicate<Node> predicate, int limit) {
 
         Stream<Node> nodesStream = knownNodes.parallelStream()
-                .filter(predicate);
+                .filter(predicate)
+                .distinct();
 
         if (limit > 0) {
             nodesStream = nodesStream.limit(limit);
@@ -115,7 +116,7 @@ public class LocalNodesDirectory {
         List<Node> nodes = nodesStream.collect(toList());
         Collections.shuffle(nodes); // Naive load balancing
 
-        return nodes;
+        return new HashSet<>(nodes);
     }
 
     /**
@@ -147,7 +148,7 @@ public class LocalNodesDirectory {
      */
     private void loadNodesFromDB() throws NodesDirectoryException {
         try {
-            Collection<SOSNode> nodes = nodesDatabase.getNodes();
+            Set<SOSNode> nodes = nodesDatabase.getNodes();
             knownNodes.addAll(nodes);
         } catch (DatabaseConnectionException e) {
             throw new NodesDirectoryException(e);

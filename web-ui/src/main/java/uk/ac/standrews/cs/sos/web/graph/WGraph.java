@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -59,7 +59,7 @@ public class WGraph {
             arrayNode.add(contentNode);
 
             // Previous
-            Collection<IGUID> prevs = asset.getPreviousVersions();
+            Set<IGUID> prevs = asset.getPreviousVersions();
 
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
@@ -74,7 +74,7 @@ public class WGraph {
             arrayNode.add(node);
 
             Compound compound = (Compound) manifest;
-            Collection<Content> contents = compound.getContents();
+            Set<Content> contents = compound.getContents();
             for(Content content:contents) {
                 Manifest contentManifest = agent.getManifest(content.getGUID());
                 ObjectNode contentNode = ManifestNode(contentManifest);
@@ -103,7 +103,7 @@ public class WGraph {
             arrayNode.add(objectNode);
 
             // Previous
-            Collection<IGUID> prevs = asset.getPreviousVersions();
+            Set<IGUID> prevs = asset.getPreviousVersions();
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
                     ObjectNode prevNode = MakeEdge(asset.guid(), prev, "", "Previous");
@@ -113,7 +113,7 @@ public class WGraph {
 
         } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
             Compound compound = (Compound) manifest;
-            Collection<Content> contents = compound.getContents();
+            Set<Content> contents = compound.getContents();
             for(Content content:contents) {
                 ObjectNode objectNode = MakeEdge(manifest.guid(), content.getGUID());
                 arrayNode.add(objectNode);

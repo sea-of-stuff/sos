@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -51,14 +51,14 @@ public class AssetManifestSerializer extends JsonSerializer<AssetManifest> {
     }
 
     private void serializePrevious(AssetManifest assetManifest, JsonGenerator jsonGenerator) throws IOException {
-        Collection<IGUID> previous = assetManifest.getPreviousVersions();
+        Set<IGUID> previous = assetManifest.getPreviousVersions();
         for(IGUID prev:previous) {
             jsonGenerator.writeString(prev.toString());
         }
     }
 
     private void serializeMetadata(AssetManifest assetManifest, JsonGenerator jsonGenerator) throws IOException {
-        Collection<IGUID> metadata = assetManifest.getMetadata();
+        Set<IGUID> metadata = assetManifest.getMetadata();
         for(IGUID meta:metadata) {
             jsonGenerator.writeString(meta.toString());
         }

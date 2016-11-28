@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.sos.json.model.NodeModel;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * https://quicksilver.host.cs.st-andrews.ac.uk/sos/api.html#node-discovery-service
@@ -74,7 +74,7 @@ public class RESTNDS {
 
         NDS nds = RESTConfig.sos.getNDS();
 
-        Collection<Node> nodes;
+        Set<Node> nodes;
 
         switch(role) {
             case "storage":
@@ -98,7 +98,7 @@ public class RESTNDS {
         return HTTPResponses.OK(json);
     }
 
-    private String collectionToJson(Collection<Node> nodes) {
+    private String collectionToJson(Set<Node> nodes) {
 
         String json = "[";
         for(Node node:nodes) {

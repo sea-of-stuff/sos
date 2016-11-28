@@ -14,8 +14,8 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -70,7 +70,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     }
 
     @Override
-    public Collection<IGUID> getPrevious() {
+    public Set<IGUID> getPrevious() {
         return asset.getPreviousVersions();
     }
 
@@ -99,7 +99,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
     private VersionBuilder getVersionBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
 
-        Collection<IGUID> prevs = new ArrayList<>();
+        Set<IGUID> prevs = new LinkedHashSet<>();
         if (previous != null) {
             IGUID versionGUID = previous.getAsset().getVersionGUID();
             prevs.add(versionGUID);

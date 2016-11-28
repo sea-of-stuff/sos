@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * This is the interface for the Atom manifest.
@@ -18,7 +18,7 @@ public interface Atom extends Manifest {
      *
      * @return locations of this atom
      */
-    Collection<LocationBundle> getLocations();
+    Set<LocationBundle> getLocations();
 
     /**
      * Return the atom's data

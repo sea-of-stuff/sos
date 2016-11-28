@@ -14,8 +14,8 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
@@ -46,7 +46,7 @@ public class SOSAddAtomTest extends StorageTest {
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
-        Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
+        Set<LocationBundle> retrievedLocations = (manifest.getLocations());
         Iterator<LocationBundle> bundles = retrievedLocations.iterator();
         assertEquals(2, retrievedLocations.size());
 
@@ -66,7 +66,7 @@ public class SOSAddAtomTest extends StorageTest {
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
-        Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
+        Set<LocationBundle> retrievedLocations = (manifest.getLocations());
         Iterator<LocationBundle> bundles = retrievedLocations.iterator();
         assertEquals(1, retrievedLocations.size());
 
@@ -82,7 +82,7 @@ public class SOSAddAtomTest extends StorageTest {
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
-        Collection<LocationBundle> retrievedLocations = (manifest.getLocations());
+        Set<LocationBundle> retrievedLocations = (manifest.getLocations());
         Iterator<LocationBundle> bundles = retrievedLocations.iterator();
         assertEquals(2, retrievedLocations.size());
 

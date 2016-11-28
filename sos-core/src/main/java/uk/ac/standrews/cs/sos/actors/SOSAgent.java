@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Implementation class for the SeaOfStuff interface.
@@ -52,7 +52,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Compound addCompound(CompoundType type, Collection<Content> contents)
+    public Compound addCompound(CompoundType type, Set<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
@@ -67,8 +67,8 @@ public class SOSAgent implements Agent {
 
         IGUID content = versionBuilder.getContent();
         IGUID invariant = versionBuilder.getInvariant();
-        Collection<IGUID> prevs = versionBuilder.getPreviousCollection();
-        Collection<IGUID> metadata = versionBuilder.getMetadataCollection();
+        Set<IGUID> prevs = versionBuilder.getPreviousCollection();
+        Set<IGUID> metadata = versionBuilder.getMetadataCollection();
 
         AssetManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         dds.addManifest(manifest, false);

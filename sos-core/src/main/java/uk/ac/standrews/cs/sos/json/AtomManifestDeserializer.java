@@ -12,8 +12,8 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -31,7 +31,7 @@ public class AtomManifestDeserializer extends JsonDeserializer<AtomManifest> {
             IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_CONTENT_GUID);
 
             JsonNode bundlesNode = node.get(ManifestConstants.KEY_LOCATIONS);
-            Collection<LocationBundle> bundles = new ArrayList<>();
+            Set<LocationBundle> bundles = new LinkedHashSet<>();
             if (bundlesNode.isArray()) {
                 for(final JsonNode bundleNode:bundlesNode) {
                     LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);

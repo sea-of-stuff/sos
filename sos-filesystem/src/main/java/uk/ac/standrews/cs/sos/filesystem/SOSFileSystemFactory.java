@@ -89,7 +89,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     private Compound createRootCompound(Agent sos) throws ManifestPersistException, ManifestNotMadeException {
-        return sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
+        return sos.addCompound(CompoundType.COLLECTION, Collections.emptySet());
     }
 
 }

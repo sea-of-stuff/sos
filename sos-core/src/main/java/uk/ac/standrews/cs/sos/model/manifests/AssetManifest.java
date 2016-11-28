@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.json.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.AssetManifestSerializer;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * An Version is identified by an asset GUID (invariant).
@@ -46,8 +46,8 @@ public class AssetManifest extends SignedManifest implements Asset {
 
     final private IGUID version;
     final private IGUID invariant;
-    final private Collection<IGUID> prevs;
-    final private Collection<IGUID> metadata;
+    final private Set<IGUID> prevs;
+    final private Set<IGUID> metadata;
 
     /**
      * Creates an VersionManifest given a content, an identity, the GUIDs of the previous
@@ -61,7 +61,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @throws ManifestNotMadeException
      */
     public AssetManifest(IGUID invariant, IGUID content,
-                         Collection<IGUID> prevs, Collection<IGUID> metadata,
+                         Set<IGUID> prevs, Set<IGUID> metadata,
                          Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestType.ASSET);
@@ -96,7 +96,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param signature
      */
     public AssetManifest(IGUID invariant, IGUID version, IGUID content,
-                         Collection<IGUID> prevs, Collection<IGUID> metadata,
+                         Set<IGUID> prevs, Set<IGUID> metadata,
                          String signature) {
         super(null, ManifestType.ASSET);
         this.invariant = invariant;
@@ -134,7 +134,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      *         Null if the asset does not have a previous version.
      */
     @Override
-    public Collection<IGUID> getPreviousVersions() {
+    public Set<IGUID> getPreviousVersions() {
         return prevs;
     }
 
@@ -151,7 +151,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      *
      */
     @Override
-    public Collection<IGUID> getMetadata() {
+    public Set<IGUID> getMetadata() {
         return metadata;
     }
 
@@ -219,7 +219,7 @@ public class AssetManifest extends SignedManifest implements Asset {
         return retval;
     }
 
-    private String getCollectionToHashOrSign(Collection<?> collection) {
+    private String getCollectionToHashOrSign(Set<?> collection) {
         String toHash = "";
         for(Object obj:collection) {
             toHash += obj.toString() + ".";

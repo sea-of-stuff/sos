@@ -28,8 +28,8 @@ import uk.ac.standrews.cs.utils.Error;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -38,7 +38,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     private boolean isCompoundData;
     private Atom atom;
-    private Collection<Content> atoms;
+    private Set<Content> atoms;
 
     public SOSFile(Agent sos, SOSDirectory parent, IData data) throws PersistenceException {
         super(sos, data);
@@ -71,7 +71,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating SOS File - Compound Data: true");
 
         this.isCompoundData = true;
-        this.atoms = new ArrayList<>();
+        this.atoms = new LinkedHashSet<>();
         // TODO - set version
 
         // this.guid = version.guid();
@@ -83,7 +83,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.asset = asset;
         this.atom = atom;
 
-        Collection<IGUID> meta = asset.getMetadata();
+        Set<IGUID> meta = asset.getMetadata();
         if (meta != null && !meta.isEmpty()) {
             IGUID metaGUID = (IGUID) meta.toArray()[0];
             this.metadata = sos.getMetadata(metaGUID);
@@ -106,7 +106,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             boolean previousVersionDiffers = checkPreviousDiffers(atom.getContentGUID());
             if (previousVersionDiffers) {
 
-                Collection<IGUID> previousVersion = new ArrayList<>();
+                Set<IGUID> previousVersion = new LinkedHashSet<>();
                 previousVersion.add(previous.getAsset().getVersionGUID());
                 VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
                         .setInvariant(previous.getInvariant())

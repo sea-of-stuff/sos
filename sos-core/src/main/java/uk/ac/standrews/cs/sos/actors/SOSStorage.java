@@ -26,7 +26,10 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -52,7 +55,7 @@ public class SOSStorage implements Storage {
 
     @Override
     public Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);
 
@@ -133,7 +136,7 @@ public class SOSStorage implements Storage {
         atomStorage.flush();
     }
 
-    private IGUID addAtom(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
         IGUID guid;
         if (atomBuilder.isLocation()) {
             guid = addAtomByLocation(atomBuilder, bundles, persist);
@@ -146,18 +149,18 @@ public class SOSStorage implements Storage {
         return guid;
     }
 
-    private IGUID addAtomByLocation(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID addAtomByLocation(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
         Location location = atomBuilder.getLocation();
         bundles.add(new ProvenanceLocationBundle(location));
         return store(location, bundles, persist);
     }
 
-    private IGUID addAtomByStream(AtomBuilder atomBuilder, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID addAtomByStream(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
         InputStream inputStream = atomBuilder.getInputStream();
         return store(inputStream, bundles, persist);
     }
 
-    private IGUID store(Location location, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID store(Location location, Set<LocationBundle> bundles, boolean persist) throws StorageException {
         if (persist) {
             return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations(and indeX)
         } else {
@@ -165,7 +168,7 @@ public class SOSStorage implements Storage {
         }
     }
 
-    private IGUID store(InputStream inputStream, Collection<LocationBundle> bundles, boolean persist) throws StorageException {
+    private IGUID store(InputStream inputStream, Set<LocationBundle> bundles, boolean persist) throws StorageException {
         if (persist) {
             return atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
         } else {
@@ -177,7 +180,7 @@ public class SOSStorage implements Storage {
         if (replicationPolicy.getReplicationFactor() > 0) {
             try (InputStream data = getAtomContent(atom)) {
 
-                Collection<Node> storageNodes = nds.getStorageNodes();
+                Set<Node> storageNodes = nds.getStorageNodes();
                 atomStorage.replicate(data, (Set<Node>) storageNodes);
 
                 // Note: dds is not notified with new atom manifest

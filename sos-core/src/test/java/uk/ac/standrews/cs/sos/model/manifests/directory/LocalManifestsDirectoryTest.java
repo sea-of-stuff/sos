@@ -28,9 +28,9 @@ import uk.ac.standrews.cs.storage.StorageType;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -68,7 +68,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
-        Collection<LocationBundle> bundles = new ArrayList<>();
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
@@ -91,7 +91,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, identity);
@@ -115,7 +115,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Content cat = new Content("cat", guid);
-        Collection<Content> contents = new ArrayList<>();
+        Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
@@ -160,12 +160,12 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
+                new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
         IGUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
+                new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);
@@ -190,12 +190,12 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
+                new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
         IGUID guid = atomManifest.getContentGUID();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new ArrayList<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
+                new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.getContentGUID();
 
         assertEquals(guid, anotherGUID);

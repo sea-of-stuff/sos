@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * The SOSNDS represents a basic NDS implementation.
@@ -40,22 +40,22 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public Collection<Node> getNDSNodes() {
+    public Set<Node> getNDSNodes() {
         return localNodesDirectory.getNDSNodes();
     }
 
     @Override
-    public Collection<Node> getDDSNodes() {
+    public Set<Node> getDDSNodes() {
         return localNodesDirectory.getDDSNodes();
     }
 
     @Override
-    public Collection<Node> getMCSNodes() {
+    public Set<Node> getMCSNodes() {
         return localNodesDirectory.getMCSNodes();
     }
 
     @Override
-    public Collection<Node> getStorageNodes() {
+    public Set<Node> getStorageNodes() {
         return localNodesDirectory.getStorageNodes();
     }
 

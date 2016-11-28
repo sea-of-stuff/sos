@@ -13,8 +13,8 @@ import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -81,7 +81,7 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
-        Collection<IGUID> metadata = new ArrayList<>();
+        Set<IGUID> metadata = new LinkedHashSet<>();
         metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
@@ -107,7 +107,7 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
-        Collection<IGUID> previous = new ArrayList<>();
+        Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
         Identity identityMocked = mock(Identity.class);
@@ -133,12 +133,12 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
-        Collection<IGUID> previous = new ArrayList<>();
+        Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
-        Collection<IGUID> metadata = new ArrayList<>();
+        Set<IGUID> metadata = new LinkedHashSet<>();
         metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
@@ -164,12 +164,12 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
-        Collection<IGUID> previous = new ArrayList<>();
+        Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
-        Collection<IGUID> metadata = new ArrayList<>();
+        Set<IGUID> metadata = new LinkedHashSet<>();
         metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
