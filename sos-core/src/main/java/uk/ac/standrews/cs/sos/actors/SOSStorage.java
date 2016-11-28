@@ -60,7 +60,7 @@ public class SOSStorage implements Storage {
         dds.addManifest(manifest, false);
 
         // Run asynchronously
-        replicateData(manifest, bundles);
+        replicateData(manifest);
 
         // Let the caller do this?
         // TODO - send manifest to DDS
@@ -83,9 +83,7 @@ public class SOSStorage implements Storage {
             }
 
             Replication.ReplicateManifest(manifest, ddsNodes);
-
         }
-
     }
 
     /**
@@ -175,49 +173,14 @@ public class SOSStorage implements Storage {
         }
     }
 
-    // FIXME - do some serious refactoring here
-    // TODO - move this method in a Replication class
-    private void replicateData(AtomManifest manifest, Collection<LocationBundle> bundles) {
-
-        try (InputStream atomContent = getAtomContent(manifest)) {
-            if (replicationPolicy.getReplicationFactor() > 0) {
-
-                Runnable replicator = () -> {
-                    Iterator<Node> storageNodes = nds.getStorageNodes().iterator();
-                    // NOTE: contact NDS for storage nodes: NDS_GET_NODE by role
-
-                    if (storageNodes.hasNext()) {
-                        Node replicaNode = storageNodes.next();
-                        try {
-                            atomStorage.persistAtomToRemote(replicaNode, atomContent, bundles);
-                        } catch (StorageException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    try {
-                        dds.addManifest(manifest, false); // Will update
-                    } catch (ManifestPersistException e) {
-                        e.printStackTrace();
-                    }
-                };
-
-                replicator.run();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void replicateData(Atom atom) {
         if (replicationPolicy.getReplicationFactor() > 0) {
-            try (InputStream atomContent = getAtomContent(atom)) {
+            try (InputStream data = getAtomContent(atom)) {
 
                 Collection<Node> storageNodes = nds.getStorageNodes();
-                Replication.ReplicateData(atomContent, (Set<Node>) storageNodes, null); // FIXME - avoid casting
+                atomStorage.replicate(data, (Set<Node>) storageNodes);
 
-                // TODO - get data back from replication
-                // TODO - async operation
+                // Note: dds is not notified with new atom manifest
 
             } catch (IOException e) {
                 e.printStackTrace();

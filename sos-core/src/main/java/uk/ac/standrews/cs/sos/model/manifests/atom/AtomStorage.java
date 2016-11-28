@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.protocol.Replication;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -90,6 +92,10 @@ public class AtomStorage {
 
         Store remote = new RemoteStore(node, inputStream);
         return storeAtomAndUpdateLocationBundles(remote, bundles);
+    }
+
+    public void replicate(InputStream data, Set<Node> nodes) {
+        Replication.ReplicateData(data, nodes, locationIndex);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Collection<LocationBundle> bundles) throws StorageException {
