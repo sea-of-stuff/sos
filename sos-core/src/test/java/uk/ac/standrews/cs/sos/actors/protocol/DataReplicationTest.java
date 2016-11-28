@@ -35,7 +35,7 @@ import static org.testng.AssertJUnit.assertFalse;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ReplicationTest {
+public class DataReplicationTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10001;

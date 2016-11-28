@@ -133,11 +133,13 @@ public class Replication {
             request.setJSONBody(manifest.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            InputStream body = response.getBody();
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
+            // JUST A 201 Response
 
-            System.out.println("RESPONSE from node: " + node.getNodeGUID().toString());
-            System.out.println(jsonNode.toString());
+//            InputStream body = response.getBody();
+//            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
+//
+//            System.out.println("RESPONSE from node: " + node.getNodeGUID().toString());
+//            System.out.println(jsonNode.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
