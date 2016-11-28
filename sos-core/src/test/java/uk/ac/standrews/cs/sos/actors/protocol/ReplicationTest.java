@@ -47,6 +47,7 @@ public class ReplicationTest {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         mockServer = startClientAndServer(9998);
+        mockServer.dumpToLog();
         mockServer
                 .when(
                         request()
@@ -157,6 +158,81 @@ public class ReplicationTest {
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void replicateOnlyOnceSecondTest() throws IOException, InterruptedException, GUIDGenerationException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, false, false, false, false);
+
+
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, true, false, false, false);
+
+        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                true, false, true, true, true);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+        nodes.add(storageNode);
+        nodes.add(anotherNode);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertTrue(it.hasNext());
+
+        LocationBundle locationBundle = it.next();
+        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void replicateToSameNodeTwiceTest() throws IOException, InterruptedException, GUIDGenerationException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, false, false, false, false);
+
+        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", 9998,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(storageNode);
+        nodes.add(twinStorageNode);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10000, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertTrue(it.hasNext());
+
+        LocationBundle locationBundle = it.next();
+        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+
+        assertFalse(it.hasNext());
     }
 
 }

@@ -88,12 +88,6 @@ public class AtomStorage {
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public IGUID persistAtomToRemote(Node node, InputStream inputStream, Collection<LocationBundle> bundles) throws StorageException {
-
-        Store remote = new RemoteStore(node, inputStream);
-        return storeAtomAndUpdateLocationBundles(remote, bundles);
-    }
-
     public void replicate(InputStream data, Set<Node> nodes) {
         Replication.ReplicateData(data, nodes, locationIndex);
     }

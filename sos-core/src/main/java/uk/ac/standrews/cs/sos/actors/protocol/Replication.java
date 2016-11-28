@@ -35,6 +35,7 @@ public class Replication {
 
         nodes.stream()
                 .filter(Node::isStorage)
+                .distinct()
                 .forEach(n -> {
                     Runnable runnable = transferData(data, n, index);
                     executor.submit(runnable);
@@ -49,6 +50,7 @@ public class Replication {
 
         nodes.stream()
                 .filter(Node::isDDS)
+                .distinct()
                 .forEach(n -> {
                     Runnable runnable = transferManifest(manifest, n);
                     executor.submit(runnable);
