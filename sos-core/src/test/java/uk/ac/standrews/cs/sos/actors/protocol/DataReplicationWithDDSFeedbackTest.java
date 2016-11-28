@@ -78,19 +78,19 @@ public class DataReplicationWithDDSFeedbackTest {
                                         "    \"" + SOSConstants.DDD_INFO + "\" : \n" +
                                         "        [\n" +
                                         "                {\n" +
-                                        "                        \"guid\" : \"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-                                        "                        \"hostname\" : \"http://example1.org\",\n" +
-                                        "                        \"port\" : 12345\n" +
+                                        "                        \"" + SOSConstants.GUID + "\" : \"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "                        \"" + SOSConstants.HOSTNAME + "\" : \"http://example1.org\",\n" +
+                                        "                        \"" + SOSConstants.PORT + "\" : 12345\n" +
                                         "                },\n" +
                                         "                {\n" +
-                                        "                        \"guid\" : \"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
-                                        "                        \"hostname\" : \"http://example2.org\",\n" +
-                                        "                        \"port\" : 12346\n" +
+                                        "                        \"" + SOSConstants.GUID + "\" : \"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
+                                        "                        \"" + SOSConstants.HOSTNAME + "\" : \"http://example2.org\",\n" +
+                                        "                        \"" + SOSConstants.PORT + "\" : 12346\n" +
                                         "                },\n" +
                                         "                {        \n" +
-                                        "                        \"guid\" : \"002bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-                                        "                        \"hostname\" : \"http://example3.org\",\n" +
-                                        "                        \"port\" : 12347\n" +
+                                        "                        \"" + SOSConstants.GUID + "\" : \"002bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "                        \"" + SOSConstants.HOSTNAME + "\" : \"http://example3.org\",\n" +
+                                        "                        \"" + SOSConstants.PORT + "\" : 12347\n" +
                                         "                }\n" +
                                         "        ]\n" +
                                         "}")
