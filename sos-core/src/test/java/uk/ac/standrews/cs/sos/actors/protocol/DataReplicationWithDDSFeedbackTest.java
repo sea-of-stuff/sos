@@ -8,11 +8,27 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
+import uk.ac.standrews.cs.sos.model.manifests.atom.LocationsIndexImpl;
+import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.utils.HelperTest;
+
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -26,35 +42,12 @@ public class DataReplicationWithDDSFeedbackTest {
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
 
-    private static final String RESPONSE_WITH_DDS_INFO =
-            "{\n" +
-                    "\t\"Manifest\" : \n" +
-                    "\t{\n" +
-                    "\t\t\"Type\" : \"Atom\",\n" +
-                    "\t\t\"ContentGUID\" : \"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
-                    "\t\t\"Locations\" : \n" +
-                    "\t\t[\n" +
-                    "\t\t  \t{\n" +
-                    "\t\t\t    \"Type\" : \"persistent\",\n" +
-                    "\t\t\t    \"Location\" : \"sos://029bfd93ab9a6e2ed501fc583685088cca66bac2/da39a3ee5e6b4b0d3255bfef95601890afd80709\"\n" +
-                    "\t\t\t} \n" +
-                    "\t\t]\n" +
-                    "\t},\n" +
-                    "\t\"DDS\" : \n" +
-                    "\t[\n" +
-                    "\t\t\"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-                    "\t\t\"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
-                    "\t\t\"002bfd93ab9a6e2ed501fc583685088cca66bac2\"\n" +
-                    "\t]\n" +
-                    "}";
-
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
-
         mockServer
                 .when(
                         request()
@@ -65,7 +58,27 @@ public class DataReplicationWithDDSFeedbackTest {
                 .respond(
                         response()
                                 .withStatusCode(201)
-                                .withBody(RESPONSE_WITH_DDS_INFO)
+                                .withBody(
+                                        "{\n" +
+                                        "    \"Manifest\" : \n" +
+                                        "    {\n" +
+                                        "        \"Type\" : \"Atom\",\n" +
+                                        "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
+                                        "        \"Locations\" : \n" +
+                                        "        [\n" +
+                                        "              {\n" +
+                                        "                \"Type\" : \"persistent\",\n" +
+                                        "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
+                                        "            } \n" +
+                                        "        ]\n" +
+                                        "    },\n" +
+                                        "    \"DDS\" : \n" +
+                                        "    [\n" +
+                                        "        \"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "        \"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
+                                        "        \"002bfd93ab9a6e2ed501fc583685088cca66bac2\"\n" +
+                                        "    ]\n" +
+                                        "}")
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
@@ -77,7 +90,28 @@ public class DataReplicationWithDDSFeedbackTest {
     }
 
     @Test
-    public void dummyTest() {
-        assertTrue(true);
+    public void dummyTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = Replication.ReplicateData(inputStream, nodes, index);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertTrue(it.hasNext());
+
+        LocationBundle locationBundle = it.next();
+        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
     }
 }
