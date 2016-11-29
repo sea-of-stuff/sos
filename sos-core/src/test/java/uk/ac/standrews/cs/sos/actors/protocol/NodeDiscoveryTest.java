@@ -27,10 +27,10 @@ import static org.testng.Assert.assertEquals;
  */
 public class NodeDiscoveryTest {
 
-    LocalNodesDirectory localNodesDirectory;
-    SOSConfiguration configurationMock = mock(SOSConfiguration.class);
-    Node localNode;
-    IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
+    private LocalNodesDirectory localNodesDirectory;
+    private SOSConfiguration configurationMock = mock(SOSConfiguration.class);
+    private Node localNode;
+    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
