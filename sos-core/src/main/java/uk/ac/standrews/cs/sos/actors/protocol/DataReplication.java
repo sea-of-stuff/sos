@@ -3,18 +3,18 @@ package uk.ac.standrews.cs.sos.actors.protocol;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.Response;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 
 import java.io.IOException;
@@ -31,7 +31,11 @@ import java.util.concurrent.Executors;
  */
 public class DataReplication {
 
-    public static ExecutorService Replicate(InputStream data, Set<Node> nodes, LocationsIndex index, NDS nds) {
+    public static ExecutorService Replicate(InputStream data, Set<Node> nodes, LocationsIndex index, NDS nds) throws SOSProtocolException {
+
+        if (index == null || nds == null) {
+            throw new SOSProtocolException("Index and/or NDS are null, thus data replication will fail");
+        }
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -50,10 +54,16 @@ public class DataReplication {
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds) {
 
         Runnable replicator = () -> {
-            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple = transferDataRequest(data, node);
+            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple = null;
+            try {
+                tuple = transferDataRequest(data, node);
+            } catch (SOSProtocolException e) {
+                SOS_LOG.log(LEVEL.ERROR, e.getMessage());
+                return;
+            }
 
             if (tuple == null) {
-                // ERROR - Replication failed, should throw exception
+                SOS_LOG.log(LEVEL.ERROR, "Error while trasnfering data to other nodes");
                 return;
             }
 
@@ -69,7 +79,7 @@ public class DataReplication {
         return replicator;
     }
 
-    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) {
+    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval = null;
 
@@ -82,6 +92,10 @@ public class DataReplication {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             InputStream body = response.getBody();
+            if (request.getRespondeCode() != HTTPStatus.CREATED) {
+                throw new SOSProtocolException("Unable to transfer DATA to node: " + node.getNodeGUID());
+            }
+
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
             JsonNode manifestNode = jsonNode.get(SOSConstants.MANIFEST);
             JsonNode ddsInfo = jsonNode.has(SOSConstants.DDD_INFO) ? jsonNode.get(SOSConstants.DDD_INFO) : null;
@@ -92,7 +106,7 @@ public class DataReplication {
 
             retval = new Tuple<>(manifestNodeInfo.x, new Tuple<>(manifestNodeInfo.y, ddsNodes));
         } catch (IOException | GUIDGenerationException e) {
-            e.printStackTrace();
+            throw new SOSProtocolException("Unable to transfer DATA. Exception: " + e.getMessage());
         }
 
         return retval;

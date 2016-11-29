@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.model.manifests.atom.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
@@ -105,7 +106,7 @@ public class DataReplicationWithDDSFeedbackTest {
     }
 
     @Test
-    public void dummyTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException {
+    public void registeringNDSFeedbackTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException, SOSProtocolException {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
@@ -131,5 +132,41 @@ public class DataReplicationWithDDSFeedbackTest {
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
 
         verify(mockNDS, times(3)).registerNode(anyObject());
+    }
+
+    @Test (expectedExceptions = SOSProtocolException.class)
+    public void failWithNoIndexNDSNotCalledTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        NDS mockNDS = mock(NDS.class);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, null, mockNDS);
+
+        executorService.shutdown();
+        executorService.awaitTermination(1000, TimeUnit.SECONDS);
+    }
+
+    @Test (expectedExceptions = SOSProtocolException.class)
+    public void failWithNullNDSTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, null);
+
+        executorService.shutdown();
+        executorService.awaitTermination(1000, TimeUnit.SECONDS);
     }
 }

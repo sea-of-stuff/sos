@@ -8,4 +8,8 @@ public class SOSProtocolException extends Exception {
     public SOSProtocolException(Error e) {
         super(e);
     }
+
+    public SOSProtocolException(String message) {
+        super(message);
+    }
 }

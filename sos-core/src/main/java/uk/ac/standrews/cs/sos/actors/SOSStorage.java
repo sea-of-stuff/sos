@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
@@ -185,7 +186,8 @@ public class SOSStorage implements Storage {
 
                 // Note: dds is not notified with new atom manifest
 
-            } catch (IOException e) {
+            } catch (IOException | SOSProtocolException e) {
+                // TODO - throw exception
                 e.printStackTrace();
             }
         }

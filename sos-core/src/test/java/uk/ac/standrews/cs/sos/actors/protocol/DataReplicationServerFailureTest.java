@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.atom.LocationsIndexImpl;
@@ -30,28 +29,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationTest {
+public class DataReplicationServerFailureTest {
 
     private ClientAndServer mockServer;
-    private static final int MOCK_SERVER_PORT = 10001;
+    private static final int MOCK_SERVER_PORT = 10004;
 
     private static final String TEST_DATA = "test-data";
-    private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
-
-    private static final String TEST_FAIL_DATA = "fail-data";
+    private static final String TEST_MORE_DATA = "test-more-data";
+    private static final String TEST_EMPTY_DATA = " ";
+    private static final String TEST_NO_RESPONSE_DATA = "test-no-response-data";
+    private static final String TEST_RANDOM_DATA = "test-random-data";
 
     private NDS mockNDS;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -64,23 +61,44 @@ public class DataReplicationTest {
                 )
                 .respond(
                         response()
+                                .withStatusCode(500)
+                );
+
+        mockServer
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/storage/stream")
+                                .withBody(TEST_MORE_DATA)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(400)
+                );
+
+        mockServer
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/storage/stream")
+                                .withBody(TEST_EMPTY_DATA)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(500)
+                );
+
+        mockServer
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/storage/stream")
+                                .withBody(TEST_NO_RESPONSE_DATA)
+                )
+                .respond(
+                        response()
                                 .withStatusCode(201)
-                                .withBody(
-                                        "{\n" +
-                                        "    \"" + SOSConstants.MANIFEST + "\" : \n" +
-                                        "    {\n" +
-                                        "        \"Type\" : \"Atom\",\n" +
-                                        "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
-                                        "        \"Locations\" : \n" +
-                                        "        [\n" +
-                                        "              {\n" +
-                                        "                \"Type\" : \"persistent\",\n" +
-                                        "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
-                                        "            } \n" +
-                                        "        ]\n" +
-                                        "    }\n" +
-                                        "}"
-                                )
+                                .withBody("")
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
@@ -93,7 +111,7 @@ public class DataReplicationTest {
     }
 
     @Test
-    public void basicMockServerTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void replicationFailsTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
@@ -111,91 +129,20 @@ public class DataReplicationTest {
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
-        assertTrue(it.hasNext());
-
-        LocationBundle locationBundle = it.next();
-        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
-    }
-
-    @Test
-    public void replicateToNoStorageNodeTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
-
-        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
-
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
-
-        LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
-
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
-        assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
-    }
-
-    @Test
-    public void replicateOnlyOnceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
-
-        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
-
-
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
-
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
-        nodes.add(storageNode);
-
-        LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
-
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
-        assertTrue(it.hasNext());
-
-        LocationBundle locationBundle = it.next();
-        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
-
         assertFalse(it.hasNext());
     }
 
     @Test
-    public void replicateOnlyOnceSecondTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+    public void replicationFails400ErrorTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_MORE_DATA);
 
-        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_MORE_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
-
-
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
-        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", MOCK_SERVER_PORT,
-                true, false, true, true, true);
-
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
-        nodes.add(storageNode);
-        nodes.add(anotherNode);
 
         LocationsIndex index = new LocationsIndexImpl();
         ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
@@ -204,32 +151,20 @@ public class DataReplicationTest {
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
-        assertTrue(it.hasNext());
-
-        LocationBundle locationBundle = it.next();
-        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
-
         assertFalse(it.hasNext());
     }
 
     @Test
-    public void replicateToSameNodeTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+    public void replicationNoDataFailsErrorTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_EMPTY_DATA);
 
-        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
-                "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
-
-        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_EMPTY_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
-        nodes.add(storageNode);
-        nodes.add(twinStorageNode);
+        nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
         ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
@@ -238,13 +173,50 @@ public class DataReplicationTest {
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
-        assertTrue(it.hasNext());
-
-        LocationBundle locationBundle = it.next();
-        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
-
         assertFalse(it.hasNext());
     }
 
+    @Test
+    public void replicationNoResponseFailsErrorTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_NO_RESPONSE_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_NO_RESPONSE_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void badHostnameTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_RANDOM_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_RANDOM_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "badhostname", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertFalse(it.hasNext());
+    }
 }
