@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.rest;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.HTTP.HTTPState;
+import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 
 import javax.ws.rs.core.Response;
 
@@ -30,7 +30,7 @@ public class RESTGeneralTest extends CommonRESTTest {
     public void testGetInfo() throws Exception {
 
         Response response = target("/info").request().get();
-        assertEquals(response.getStatus(), HTTPState.OK);
+        assertEquals(response.getStatus(), HTTPStatus.OK);
 
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
 

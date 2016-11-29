@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import uk.ac.standrews.cs.sos.HTTP.HTTPState;
+import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
@@ -22,7 +22,7 @@ public class RESTGeneral {
     public Response getInfo() {
 
         SOSLocalNode sos = RESTConfig.sos;
-        return Response.status(HTTPState.OK)
+        return Response.status(HTTPStatus.OK)
                 .entity(sos.toString())
                 .build();
     }

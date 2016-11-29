@@ -87,7 +87,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     @Override
     public boolean verify(Identity identity) throws ManifestVerificationException {
-        if (contentGUID == null)
+        if (contentGUID == null || contentGUID.isInvalid())
             return false;
 
         for(LocationBundle location:locations) {

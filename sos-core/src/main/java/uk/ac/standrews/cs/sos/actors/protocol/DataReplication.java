@@ -54,7 +54,7 @@ public class DataReplication {
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds) {
 
         Runnable replicator = () -> {
-            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple = null;
+            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
             try {
                 tuple = transferDataRequest(data, node);
             } catch (SOSProtocolException e) {
@@ -81,7 +81,7 @@ public class DataReplication {
 
     private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
-        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval = null;
+        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
         URL url;
         try {

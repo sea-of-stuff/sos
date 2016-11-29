@@ -84,7 +84,7 @@ public abstract class BasicManifest implements Manifest {
      * @return true if the guid is valid.
      */
     protected boolean isGUIDValid(IGUID guid) {
-        if (guid == null)
+        if (guid == null || guid.isInvalid())
             return false;
 
         Matcher matcher = HEX_PATTERN.matcher(guid.toString());

@@ -192,7 +192,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     }
 
     private SOSFileSystemObject getObject(IGUID guid) {
-        if (guid == null)
+        if (guid == null || guid.isInvalid())
             return null;
 
         try {

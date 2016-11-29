@@ -10,4 +10,8 @@ public class NodeNotFoundException extends SOSException {
     public NodeNotFoundException(Throwable throwable) {
         super(throwable);
     }
+
+    public NodeNotFoundException(String message) {
+        super(message);
+    }
 }

@@ -30,8 +30,8 @@ import static org.testng.Assert.assertEquals;
 public class LocalNodesDirectoryTest extends CommonTest {
 
     LocalNodesDirectory localNodesDirectory;
-
     SOSConfiguration configurationMock = mock(SOSConfiguration.class);
+    Node testNode;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
@@ -51,8 +51,14 @@ public class LocalNodesDirectoryTest extends CommonTest {
             throw new SOSException(e);
         }
 
-        Node node = mock(SOSLocalNode.class);
-        localNodesDirectory = new LocalNodesDirectory(node, nodesDatabase);
+        testNode = mock(SOSLocalNode.class);
+        localNodesDirectory = new LocalNodesDirectory(testNode, nodesDatabase);
+    }
+
+    @Test
+    public void getLocalNodeTest() {
+        Node localNode = localNodesDirectory.getLocalNode();
+        assertEquals(localNode, testNode);
     }
 
     @Test

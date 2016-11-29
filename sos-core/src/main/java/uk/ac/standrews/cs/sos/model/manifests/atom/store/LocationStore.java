@@ -36,7 +36,7 @@ public abstract class LocationStore extends CommonLocalStore {
 
         try {
             guid = generateGUID(origin);
-            if (guid == null) {
+            if (guid == null || guid.isInvalid()) {
                 return null;
             }
 

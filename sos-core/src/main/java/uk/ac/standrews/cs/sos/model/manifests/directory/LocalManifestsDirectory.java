@@ -73,7 +73,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
      */
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
-        if (guid == null) {
+        if (guid == null || guid.isInvalid()) {
             throw new ManifestNotFoundException("Cannot find manifest for null guid");
         }
 

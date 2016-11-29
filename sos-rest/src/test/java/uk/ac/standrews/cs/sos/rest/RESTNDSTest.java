@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.rest;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.HTTP.HTTPState;
+import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.RESTConfig;
 
 import javax.ws.rs.client.Entity;
@@ -43,7 +43,7 @@ public class RESTNDSTest extends CommonRESTTest {
                 .request()
                 .post(Entity.json(data));
 
-        assertEquals(response.getStatus(), HTTPState.OK);
+        assertEquals(response.getStatus(), HTTPStatus.OK);
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
 
         response.close();

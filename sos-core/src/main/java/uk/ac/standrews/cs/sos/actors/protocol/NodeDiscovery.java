@@ -34,6 +34,15 @@ public class NodeDiscovery {
 
     public Node findNode(IGUID nodeGUID) throws NodeNotFoundException {
 
+        if (nodeGUID == null || nodeGUID.isInvalid()) {
+            throw new NodeNotFoundException("Cannot find node for invalid GUID");
+        }
+
+        Node localNode = localNodesDirectory.getLocalNode();
+        if (localNode.getNodeGUID().equals(nodeGUID)) {
+            return localNode;
+        }
+
         Node nodeToContact = localNodesDirectory.getNode(nodeGUID);
 
         if (nodeToContact == null) {
@@ -42,6 +51,10 @@ public class NodeDiscovery {
             } catch (IOException e) {
                 throw new NodeNotFoundException(e);
             }
+        }
+
+        if (nodeToContact == null) {
+            throw new NodeNotFoundException("Unable to find node for GUID: " + nodeGUID.toString());
         }
 
         return nodeToContact;

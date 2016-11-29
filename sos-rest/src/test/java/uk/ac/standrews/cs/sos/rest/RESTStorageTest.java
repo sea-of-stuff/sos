@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.rest;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.HTTP.HTTPState;
+import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.rest.utils.HelperTest;
 
 import javax.ws.rs.ProcessingException;
@@ -55,7 +55,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
 
-        assertEquals(response.getStatus(), HTTPState.CREATED);
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
 
         response.close();
@@ -90,7 +90,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 .request()
                 .post(Entity.json(data));
 
-        assertEquals(response.getStatus(), HTTPState.CREATED);
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
         JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
 
         response.close();
