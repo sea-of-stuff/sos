@@ -66,7 +66,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
         Set<Node> nodes = localNodesDirectory.getKnownNodes();
         for(Node n:nodes) {
-            System.out.println("GOTCHAYOU " + n.toString());
+            System.err.println("GOTCHAYOU " + n.toString());
         }
 
         IGUID guid = GUIDFactory.generateRandomGUID();

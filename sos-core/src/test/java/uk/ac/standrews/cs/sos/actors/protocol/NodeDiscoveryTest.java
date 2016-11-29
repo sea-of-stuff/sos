@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
+import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -8,8 +9,10 @@ import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
+import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.node.directory.database.DatabaseTypes;
@@ -17,9 +20,13 @@ import uk.ac.standrews.cs.sos.node.directory.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -72,7 +79,73 @@ public class NodeDiscoveryTest {
     @Test (expectedExceptions = NodeNotFoundException.class)
     public void findUnknownNodeTest() throws NodeNotFoundException {
         NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
-        Node node = nodeDiscovery.findNode(GUIDFactory.generateRandomGUID());
-        System.out.println(node.toString());
+        nodeDiscovery.findNode(GUIDFactory.generateRandomGUID());
+    }
+
+    @Test
+    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException {
+
+        IGUID nodeToFind = GUIDFactory.generateRandomGUID();
+
+        final String NODE_HOSTNAME = "localhost";
+        final int NODE_PORT = 12345;
+        ClientAndServer mockServer = startClientAndServer(NODE_PORT);
+        mockServer.dumpToLog();
+        mockServer
+                .when(
+                        request()
+                                .withMethod("GET")
+                                .withPath("/nds/guid/" + nodeToFind.toString())
+                )
+                .respond(
+                        response()
+                                .withStatusCode(200)
+                                .withBody(nodeToFind.toString())
+                );
+
+        SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+
+        Node ndsMock = mock(Node.class);
+        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
+        when(ndsMock.isNDS()).thenReturn(true);
+        localNodesDirectory.addNode(ndsMock);
+
+        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
+        Node node = nodeDiscovery.findNode(nodeToFind);
+
+        mockServer.stop();
+    }
+
+    @Test (expectedExceptions = NodeNotFoundException.class)
+    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException {
+
+        IGUID nodeToFind = GUIDFactory.generateRandomGUID();
+
+        final String NODE_HOSTNAME = "localhost";
+        final int NODE_PORT = 12345;
+        ClientAndServer mockServer = startClientAndServer(NODE_PORT);
+        mockServer.dumpToLog();
+        mockServer
+                .when(
+                        request()
+                                .withMethod("GET")
+                                .withPath("/nds/guid/" + nodeToFind.toString())
+                )
+                .respond(
+                        response()
+                                .withStatusCode(400)
+                );
+
+        SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+
+        Node ndsMock = mock(Node.class);
+        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
+        when(ndsMock.isNDS()).thenReturn(true);
+        localNodesDirectory.addNode(ndsMock);
+
+        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
+        nodeDiscovery.findNode(nodeToFind);
     }
 }

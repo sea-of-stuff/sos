@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Singleton Class
@@ -14,10 +15,15 @@ import java.io.IOException;
 public class RequestsManager {
 
     private static RequestsManager lazyInstance;
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build();
 
     // Ensure that this class cannot be instantiated by other classes
-    private RequestsManager() {}
+    private RequestsManager() {
+    }
 
     public static RequestsManager getInstance(){
         if(lazyInstance == null){
