@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -9,8 +10,10 @@ import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.Response;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.utils.IO;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,6 +76,8 @@ public class NodeDiscovery {
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
 
+        Node retval = null;
+
         Set<Node> ndsNodes = localNodesDirectory.getNDSNodes();
         for(Node ndsNode:ndsNodes) {
             URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
@@ -80,25 +85,34 @@ public class NodeDiscovery {
             SyncRequest request = new SyncRequest(Method.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
+            retval = parseNode(response.getBody());
 
-            // TODO - check response and parse it to node object
-            // then break else continue
+            if (retval != null) {
+                break;
+            }
         }
 
-        return null;
+        return retval;
     }
 
     private Node parseNode(InputStream inputStream) {
 
+        Node retval = null;
+        
         try {
-            String guidString = IO.InputStreamToString(inputStream);
-            GUIDFactory.recreateGUID(guidString);
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            String body = IO.InputStreamToString(inputStream);
+            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
+
+
+            IGUID nodeGUID = GUIDFactory.recreateGUID(jsonNode.get(SOSConstants.GUID).asText());
+            String hostname = jsonNode.get(SOSConstants.HOSTNAME).asText();
+            int port = jsonNode.get(SOSConstants.PORT).asInt();
+
+            retval = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
+        } catch (GUIDGenerationException | IOException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return retval;
     }
 }

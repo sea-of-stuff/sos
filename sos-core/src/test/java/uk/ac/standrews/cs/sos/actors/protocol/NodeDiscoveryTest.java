@@ -100,7 +100,13 @@ public class NodeDiscoveryTest {
                 .respond(
                         response()
                                 .withStatusCode(200)
-                                .withBody(nodeToFind.toString())
+                                .withBody(
+                                        "{\n" +
+                                        "    \"" + SOSConstants.GUID +"\": \"" +  nodeToFind.toString() + "\",\n" +
+                                        "    \"" + SOSConstants.HOSTNAME + "\": \"localhost\",\n" +
+                                        "    \"" + SOSConstants.PORT + "\": 12345\n" +
+                                        "}"
+                                       )
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
