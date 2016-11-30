@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e # use -x option for debugging
 
+echo 'This script will start sos-nodes with the specified configurations'
+echo 'Run this script as """sh experiment.sh [CONFIG_PATHS]""".'
+
+if [ ! -f sos.jar ]; then
+    echo "sos.jar not found!"
+    echo "Aborting"
+    exit 1
+fi
+
 # Solution from SO:
 # http://unix.stackexchange.com/questions/55558/how-can-i-kill-and-wait-for-background-processes-to-finish-in-a-shell-script-whe
 trap 'killall' INT
@@ -49,5 +58,4 @@ done
 
 echo 'All instances are running. Check logs for more info.'
 echo 'CTRL-C to stop all nodes.'
-
-cat # wait forver
+cat # wait forever

@@ -156,6 +156,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-
 # Mac Specific
 .DS_Store
+
+# SOS Specific
+scripts/logs*
