@@ -1,11 +1,10 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.Response;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.network.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +17,11 @@ import java.util.concurrent.Executors;
  */
 public class ManifestReplication {
 
-    public static ExecutorService Replicate(Manifest manifest, Set<Node> nodes) {
+    public static ExecutorService Replicate(Manifest manifest, Set<Node> nodes, DDS dds) throws SOSProtocolException {
+
+        if (dds == null) {
+            throw new SOSProtocolException("DDS is null. Manifest replication process is aborted.");
+        }
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -26,25 +29,27 @@ public class ManifestReplication {
                 .filter(Node::isDDS)
                 .distinct()
                 .forEach(n -> {
-                    Runnable runnable = transferManifest(manifest, n);
+                    Runnable runnable = transferManifest(manifest, n, dds);
                     executor.submit(runnable);
                 });
 
         return executor;
     }
 
-    private static Runnable transferManifest(Manifest manifest, Node node) {
+    private static Runnable transferManifest(Manifest manifest, Node node, DDS dds) {
 
         Runnable replicator = () -> {
-            transferManifestRequest(manifest, node);
-            // TODO - Collect information from requests and return it back
+            boolean transferWasSuccessful = transferManifestRequest(manifest, node);
+
+            if (transferWasSuccessful) {
+                dds.addManifestDDSAssociation(manifest.guid(), node.getNodeGUID());
+            }
         };
 
         return replicator;
     }
 
-    private static void transferManifestRequest(Manifest manifest, Node node) {
-        System.out.println("Transfer manifest to DDS node - WORK IN PROGRESS");
+    private static boolean transferManifestRequest(Manifest manifest, Node node) {
 
         try {
             URL url = SOSEP.DDS_POST_MANIFEST(node);
@@ -52,17 +57,12 @@ public class ManifestReplication {
             request.setJSONBody(manifest.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            // JUST A 201 Response
-
-//            InputStream body = response.getBody();
-//            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-//
-//            System.out.println("RESPONSE from node: " + node.getNodeGUID().toString());
-//            System.out.println(jsonNode.toString());
-
+            return response.getCode() == HTTPStatus.CREATED;
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
 }

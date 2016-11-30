@@ -31,7 +31,6 @@ public class NodeRegistrationTest {
 
     private LocalNodesDirectory localNodesDirectory;
     private SOSConfiguration configurationMock = mock(SOSConfiguration.class);
-    private Node localNode;
     private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
 
     @BeforeMethod
@@ -45,13 +44,12 @@ public class NodeRegistrationTest {
 
         NodesDatabase nodesDatabase;
         try {
-            nodesDatabase = new SQLDatabase(configurationMock.getDBType(),
-                    configurationMock.getDBPath());
+            nodesDatabase = new SQLDatabase(configurationMock.getDBType(), configurationMock.getDBPath());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
 
-        localNode = mock(SOSLocalNode.class);
+        Node localNode = mock(SOSLocalNode.class);
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
         localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
     }

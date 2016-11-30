@@ -72,25 +72,6 @@ public class SOSStorage implements Storage {
         return manifest; // TODO - update response
     }
 
-    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, AtomManifest manifest) {
-
-        if (ddsNotificationInfo.notifyDDSNodes()) {
-            Set<Node> ddsNodes = new HashSet<>(); // Remember that HashSet does not preserve order
-
-            if (ddsNotificationInfo.useDefaultDDSNodes()) {
-                Set<Node> defaultNDSNodes = nds.getDDSNodes(); // TODO - use limit param (e.g. max 3 nodes)
-                ddsNodes.addAll(defaultNDSNodes);
-            }
-
-            if (ddsNotificationInfo.useSuggestedDDSNodes()) {
-                Set<Node> suggestedNodes = ddsNotificationInfo.getSuggestedDDSNodes();
-                ddsNodes.addAll(suggestedNodes);
-            }
-
-            ManifestReplication.Replicate(manifest, ddsNodes);
-        }
-    }
-
     /**
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.
@@ -179,13 +160,39 @@ public class SOSStorage implements Storage {
     }
 
     private void replicateData(Atom atom) {
+
         if (replicationPolicy.getReplicationFactor() > 0) {
+
             try (InputStream data = getAtomContent(atom)) {
 
                 Set<Node> storageNodes = nds.getStorageNodes();
                 atomStorage.replicate(data, storageNodes, nds, dds);
-
             } catch (IOException | SOSProtocolException e) {
+                // TODO - throw exception
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, AtomManifest manifest) {
+
+        if (ddsNotificationInfo.notifyDDSNodes()) {
+
+            Set<Node> ddsNodes = new HashSet<>(); // Remember that HashSet does not preserve order
+
+            if (ddsNotificationInfo.useDefaultDDSNodes()) {
+                Set<Node> defaultNDSNodes = nds.getDDSNodes(); // TODO - use limit param (e.g. max 3 nodes)
+                ddsNodes.addAll(defaultNDSNodes);
+            }
+
+            if (ddsNotificationInfo.useSuggestedDDSNodes()) {
+                Set<Node> suggestedNodes = ddsNotificationInfo.getSuggestedDDSNodes();
+                ddsNodes.addAll(suggestedNodes);
+            }
+
+            try {
+                ManifestReplication.Replicate(manifest, ddsNodes, dds);
+            } catch (SOSProtocolException e) {
                 // TODO - throw exception
                 e.printStackTrace();
             }

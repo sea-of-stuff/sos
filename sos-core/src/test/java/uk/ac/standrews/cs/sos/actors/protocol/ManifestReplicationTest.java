@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
@@ -65,7 +66,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicManifestReplication() throws InterruptedException {
+    public void basicManifestReplicationTest() throws InterruptedException, SOSProtocolException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
@@ -77,17 +78,21 @@ public class ManifestReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes);
+        DDS ddsMock = mock(DDS.class);
+
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, ddsMock);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
+
+        verify(ddsMock, times(1)).addManifestDDSAssociation(anyObject(), anyObject());
     }
 
     @Test
-    public void cannotReplicateManifestToNoDDSNodeReplication() throws InterruptedException {
+    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws InterruptedException, SOSProtocolException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
@@ -98,12 +103,35 @@ public class ManifestReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes);
+        DDS ddsMock = mock(DDS.class);
+
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, ddsMock);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         verify(node, times(1)).isDDS();
         verify(node, times(0)).getHostAddress();
+
+        verify(ddsMock, times(0)).addManifestDDSAssociation(anyObject(), anyObject());
+    }
+
+    @Test (expectedExceptions = SOSProtocolException.class)
+    public void basicManifestReplicationFailsTest() throws InterruptedException, SOSProtocolException {
+
+        Manifest mockManifest = mock(Manifest.class);
+        when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
+
+        Node node = mock(Node.class);
+        when(node.isDDS()).thenReturn(true);
+        when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, null);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
     }
 }
