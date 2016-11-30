@@ -62,7 +62,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private NodesDatabase nodesDatabase;
     private Identity identity;
     private ManifestsDirectory manifestsDirectory;
-    private LocalNodesDirectory localNodesDirectory;
+    private LocalNodesDirectory localNodesDirectory; // TODO - use NDS!
     private MetadataDirectory metadataDirectory;
 
     // Node roles

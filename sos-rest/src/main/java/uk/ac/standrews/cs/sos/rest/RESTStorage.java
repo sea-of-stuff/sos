@@ -94,8 +94,7 @@ public class RESTStorage {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-
-        // TODO - return manifest + dds nodes
+        // NOTE - storage will return manifest + dds nodes
 
         return HTTPResponses.CREATED(manifest.toString());
     }

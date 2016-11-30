@@ -63,28 +63,28 @@ public class SOSStorage implements Storage {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest, false);
 
-        // Run asynchronously
-        replicateData(manifest);
-
-        Set<Node> ddsNodes = nds.getDDSNodes();
-        notifyDDS(ddsNotificationInfo, manifest);
-
         // TODO - build response using manifest + ddsNodes (if ddsNodes is not empty)
 
-        return manifest;
+        // Run asynchronously
+        replicateData(manifest);
+        notifyDDS(ddsNotificationInfo, manifest);
+
+        return manifest; // TODO - update response
     }
 
     private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, AtomManifest manifest) {
 
         if (ddsNotificationInfo.notifyDDSNodes()) {
-            Set<Node> ddsNodes = new HashSet<>(); // HashSet does not preserve order
+            Set<Node> ddsNodes = new HashSet<>(); // Remember that HashSet does not preserve order
 
             if (ddsNotificationInfo.useDefaultDDSNodes()) {
-                ddsNodes.addAll(nds.getDDSNodes());
+                Set<Node> defaultNDSNodes = nds.getDDSNodes(); // TODO - use limit param (e.g. max 3 nodes)
+                ddsNodes.addAll(defaultNDSNodes);
             }
 
             if (ddsNotificationInfo.useSuggestedDDSNodes()) {
-                ddsNodes.addAll(ddsNotificationInfo.getSuggestedDDSNodes());
+                Set<Node> suggestedNodes = ddsNotificationInfo.getSuggestedDDSNodes();
+                ddsNodes.addAll(suggestedNodes);
             }
 
             ManifestReplication.Replicate(manifest, ddsNodes);
