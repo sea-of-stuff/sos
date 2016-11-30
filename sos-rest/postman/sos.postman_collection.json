@@ -40,6 +40,20 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "http://localhost:8080/info mini-mac",
+			"request": {
+				"url": "http://cs-wifi-174.cs.st-andrews.ac.uk:8080/info",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

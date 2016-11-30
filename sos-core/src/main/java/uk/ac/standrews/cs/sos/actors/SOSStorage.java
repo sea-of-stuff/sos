@@ -66,10 +66,10 @@ public class SOSStorage implements Storage {
         // Run asynchronously
         replicateData(manifest);
 
-        // FIXME
-        // Let the caller do this?
-        // TODO - send manifest to DDS
+        Set<Node> ddsNodes = nds.getDDSNodes();
         notifyDDS(ddsNotificationInfo, manifest);
+
+        // TODO - build response using manifest + ddsNodes (if ddsNodes is not empty)
 
         return manifest;
     }

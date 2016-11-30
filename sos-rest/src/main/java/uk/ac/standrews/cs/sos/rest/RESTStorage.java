@@ -70,7 +70,7 @@ public class RESTStorage {
 
         try {
             AtomBuilder builder = new AtomBuilder().setLocation(location);
-            Atom atom = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
+            Atom atom = storage.addAtom(builder, true, new DDSNotificationInfo());
 
             return HTTPResponses.CREATED(atom.toString());
         } catch (StorageException | ManifestPersistException e) {
@@ -89,10 +89,13 @@ public class RESTStorage {
         Atom manifest;
         try {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
-            manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
+            manifest = storage.addAtom(builder, true, new DDSNotificationInfo());
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
+
+
+        // TODO - return manifest + dds nodes
 
         return HTTPResponses.CREATED(manifest.toString());
     }

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.actors.protocol;
 
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,6 +14,10 @@ public class DDSNotificationInfo {
     private boolean useDefaultDDSNodes;
     private boolean useSuggestedDDSNodes;
     private Set<Node> suggestedDDSNodes;
+
+    public DDSNotificationInfo() {
+        this.suggestedDDSNodes = new HashSet<>();
+    }
 
     public boolean notifyDDSNodes() {
         return notifyDDSNodes;

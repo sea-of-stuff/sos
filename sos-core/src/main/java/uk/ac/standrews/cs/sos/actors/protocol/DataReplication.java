@@ -53,7 +53,6 @@ public class DataReplication {
         return executor;
     }
 
-    // Synchronously
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
 
         Runnable replicator = () -> {
