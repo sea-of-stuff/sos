@@ -40,6 +40,9 @@ public class ManifestReplicationTest {
             "  \"Signature\" : \"MCwCFBEWwqB+/f7s5iCzdxFc/N4FrIQtAhRB07czCQZ+G6dnlM6XrXTb1jqXeA==\"\n" +
             "}";
 
+    private static final String TEST_BAD_MANIFEST =
+            "BAD";
+
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
 
@@ -55,6 +58,18 @@ public class ManifestReplicationTest {
                 .respond(
                         response()
                                 .withStatusCode(201)
+                );
+
+        mockServer
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/dds/manifest")
+                                .withBody(TEST_BAD_MANIFEST)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(400)
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
@@ -133,5 +148,31 @@ public class ManifestReplicationTest {
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void badManifestReplicationTest() throws InterruptedException, SOSProtocolException {
+
+        Manifest mockManifest = mock(Manifest.class);
+        when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);
+
+        Node node = mock(Node.class);
+        when(node.isDDS()).thenReturn(true);
+        when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        DDS ddsMock = mock(DDS.class);
+
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, ddsMock);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        verify(node, times(1)).isDDS();
+        verify(node, times(1)).getHostAddress();
+
+        verify(ddsMock, times(0)).addManifestDDSAssociation(anyObject(), anyObject());
     }
 }
