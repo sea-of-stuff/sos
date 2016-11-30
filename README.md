@@ -31,35 +31,41 @@ The mapping used is the following:
 - folder :: asset manifest -> compound manifest
 
 
-## sos-webdav
-
-This is a simple WebDAV server that exposes the sos-filesystem.
+The sos-fs is used in the sos-app. Here, the filesystem is passed to a WebDAV server (https://github.com/quicksilver-sta/WebDAV-server) and the WebUI project.
+The WebDAV server exposes the sos-fs to the OS as well as any other application that wishes to interact with the SOS.
 
 
 ## web-ui
 
-The web-ui exposes the sos-filesystem, similarly to the sos-webdav. However, here we are not constrained by the WebDAV protocol, thus
+The web-ui exposes the sos-filesystem, similarly to the WebDAV server. However, here we are not constrained by the WebDAV protocol, thus
 we are able to demonstrate additional features of the SOS.
 
 
 ## sos-configuration
 
-This is a simple command line tool that creates a template file for your configuration.
+This is a simple command line tool that creates a template file for an SOS node configuration.
+
+```
+$ mvn package -pl sos-configuration -am -DskipTests
+$ java -jar sos-configuration/target/sos-configuration-jar-with-dependencies.jar (PARAMS <- define them here!)
+```
 
 
-## Running the SOS
+## Running a SOS node
 
 
 ### Configuration file
 
 `$ touch configuration.conf`
 
+Otherwise use the sos-configuration CLI to start with a fresh template.
+
 ### Packaging
 
 ```
 $ mvn package # use -DskipTests to not run any tests during the packaging process
 $ mv target/sos-app-jar-with-dependencies.jar sos.jar
-$ java -jar sos.jar ARGS
+$ java -jar sos.jar -c configuration.conf ARGS
 ```
 
 ### How to run fluentd
@@ -69,3 +75,10 @@ We use fluentd to aggregate the logs. Make sure that Docker is installed and you
 The run:
 
 $ docker run -d -p 24224:24224 -v /tmp/data:/fluentd/log fluent/fluentd
+
+
+### Running multiple nodes
+
+You can bootstrap multiple nodes using the `experiments.sh` bash script (see script folder)
+
+You can also find other useful bash scripts in the script folder.
