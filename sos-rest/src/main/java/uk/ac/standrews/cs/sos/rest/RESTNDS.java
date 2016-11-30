@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.json.model.NodeModel;
@@ -31,7 +32,12 @@ public class RESTNDS {
     public Response register(NodeModel node) {
         NDS nds = RESTConfig.sos.getNDS();
 
-        Node registerNode = nds.registerNode(node);
+        Node registerNode;
+        try {
+            registerNode = nds.registerNode(node);
+        } catch (NodeRegistrationException e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
 
         if (registerNode != null) {
             return HTTPResponses.OK(registerNode.toString());

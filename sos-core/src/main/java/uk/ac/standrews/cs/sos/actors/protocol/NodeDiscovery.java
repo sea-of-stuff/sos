@@ -74,6 +74,42 @@ public class NodeDiscovery {
         return nodeToContact;
     }
 
+    /**
+     * Get all NDS Nodes
+     *
+     * @return NDS Nodes
+     */
+    public Set<Node> getNDSNodes() {
+        return localNodesDirectory.getNDSNodes();
+    }
+
+    /**
+     * Get all DDS Nodes
+     *
+     * @return DDS nodes
+     */
+    public Set<Node> getDDSNodes() {
+        return localNodesDirectory.getDDSNodes();
+    }
+
+    /**
+     * Get all MCS Nodes
+     *
+     * @return MCS nodes
+     */
+    public Set<Node> getMCSNodes() {
+        return localNodesDirectory.getMCSNodes();
+    }
+
+    /**
+     * Get all Storage Nodes
+     *
+     * @return Storage nodes
+     */
+    public Set<Node> getStorageNodes() {
+        return localNodesDirectory.getStorageNodes();
+    }
+
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
 
         Node retval = null;
@@ -95,14 +131,13 @@ public class NodeDiscovery {
         return retval;
     }
 
-    private Node parseNode(InputStream inputStream) {
+    private Node parseNode(InputStream inputStream) throws IOException {
 
-        Node retval = null;
+        Node retval;
         
         try {
             String body = IO.InputStreamToString(inputStream);
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-
 
             IGUID nodeGUID = GUIDFactory.recreateGUID(jsonNode.get(SOSConstants.GUID).asText());
             String hostname = jsonNode.get(SOSConstants.HOSTNAME).asText();
@@ -110,7 +145,7 @@ public class NodeDiscovery {
 
             retval = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
         } catch (GUIDGenerationException | IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
 
         return retval;

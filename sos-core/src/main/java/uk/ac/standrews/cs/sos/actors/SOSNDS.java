@@ -2,7 +2,9 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.NodeDiscovery;
+import uk.ac.standrews.cs.sos.actors.protocol.NodeRegistration;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -24,7 +26,6 @@ public class SOSNDS implements NDS {
 
     public SOSNDS(LocalNodesDirectory localNodesDirectory) {
         this.localNodesDirectory = localNodesDirectory;
-
         nodeDiscovery = new NodeDiscovery(localNodesDirectory);
     }
 
@@ -35,44 +36,44 @@ public class SOSNDS implements NDS {
 
     @Override
     public Node getNode(IGUID guid) throws NodeNotFoundException {
-
         return nodeDiscovery.findNode(guid);
     }
 
     @Override
     public Set<Node> getNDSNodes() {
-        return localNodesDirectory.getNDSNodes();
+        return nodeDiscovery.getNDSNodes();
     }
 
     @Override
     public Set<Node> getDDSNodes() {
-        return localNodesDirectory.getDDSNodes();
+        return nodeDiscovery.getDDSNodes();
     }
 
     @Override
     public Set<Node> getMCSNodes() {
-        return localNodesDirectory.getMCSNodes();
+        return nodeDiscovery.getMCSNodes();
     }
 
     @Override
     public Set<Node> getStorageNodes() {
-        return localNodesDirectory.getStorageNodes();
+        return nodeDiscovery.getStorageNodes();
     }
 
     @Override
-    public Node registerNode(Node node) {
+    public Node registerNode(Node node) throws NodeRegistrationException {
+
         Node nodeToRegister = new SOSNode(node);
-        localNodesDirectory.addNode(nodeToRegister);
 
         try {
+            localNodesDirectory.addNode(nodeToRegister);
             localNodesDirectory.persistNodesTable();
         } catch (NodesDirectoryException e) {
-            e.printStackTrace();
-            // TODO - throw appropriate exception
-            return null;
+            throw new NodeRegistrationException("Unable to register node", e);
         }
 
-        // TODO - perform replication across other NDS nodes
+        // TODO - register to a given set of nds nodes
+        NodeRegistration.RegisterNode(node, null);
+
         return nodeToRegister;
     }
 

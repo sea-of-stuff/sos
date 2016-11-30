@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.util.Set;
@@ -22,7 +23,7 @@ public interface NDS extends SeaOfStuff {
      * @param node
      * @return
      */
-    Node registerNode(Node node);
+    Node registerNode(Node node) throws NodeRegistrationException;
 
     /**
      * Get a known node to this Sea Of Stuff.

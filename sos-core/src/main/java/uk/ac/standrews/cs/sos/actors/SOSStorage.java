@@ -66,6 +66,7 @@ public class SOSStorage implements Storage {
         // Run asynchronously
         replicateData(manifest);
 
+        // FIXME
         // Let the caller do this?
         // TODO - send manifest to DDS
         notifyDDS(ddsNotificationInfo, manifest);
@@ -182,9 +183,7 @@ public class SOSStorage implements Storage {
             try (InputStream data = getAtomContent(atom)) {
 
                 Set<Node> storageNodes = nds.getStorageNodes();
-                atomStorage.replicate(data, storageNodes, nds);
-
-                // Note: dds is not notified with new atom manifest
+                atomStorage.replicate(data, storageNodes, nds, dds);
 
             } catch (IOException | SOSProtocolException e) {
                 // TODO - throw exception

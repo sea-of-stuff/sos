@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -48,6 +49,7 @@ public class DataReplicationTest {
     private static final String TEST_FAIL_DATA = "fail-data";
 
     private NDS mockNDS;
+    private DDS mockDDS;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -85,6 +87,7 @@ public class DataReplicationTest {
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
         mockNDS = mock(NDS.class);
+        mockDDS = mock(DDS.class);
     }
 
     @AfterMethod
@@ -105,7 +108,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -131,7 +134,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -159,7 +162,7 @@ public class DataReplicationTest {
         nodes.add(storageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -198,7 +201,7 @@ public class DataReplicationTest {
         nodes.add(anotherNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -232,7 +235,7 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

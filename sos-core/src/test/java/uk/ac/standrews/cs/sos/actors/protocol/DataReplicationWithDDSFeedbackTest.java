@@ -7,7 +7,9 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -45,6 +47,9 @@ public class DataReplicationWithDDSFeedbackTest {
 
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
+
+    private NDS mockNDS;
+    private DDS mockDDS;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -98,6 +103,9 @@ public class DataReplicationWithDDSFeedbackTest {
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+
+        mockNDS = mock(NDS.class);
+        mockDDS = mock(DDS.class);
     }
 
     @AfterMethod
@@ -106,7 +114,7 @@ public class DataReplicationWithDDSFeedbackTest {
     }
 
     @Test
-    public void registeringNDSFeedbackTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException, SOSProtocolException {
+    public void registeringNDSFeedbackTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException, SOSProtocolException, NodeRegistrationException {
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
@@ -118,11 +126,10 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        NDS mockNDS = mock(NDS.class);
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
 
         executorService.shutdown();
-        executorService.awaitTermination(1000, TimeUnit.SECONDS);
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -132,6 +139,7 @@ public class DataReplicationWithDDSFeedbackTest {
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
 
         verify(mockNDS, times(3)).registerNode(anyObject());
+        verify(mockDDS, times(3)).addManifestDDSAssociation(anyObject(), anyObject());
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -145,11 +153,10 @@ public class DataReplicationWithDDSFeedbackTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        NDS mockNDS = mock(NDS.class);
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, null, mockNDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, null, mockNDS, mockDDS);
 
         executorService.shutdown();
-        executorService.awaitTermination(1000, TimeUnit.SECONDS);
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -164,9 +171,27 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, null);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, null, mockDDS);
 
         executorService.shutdown();
-        executorService.awaitTermination(1000, TimeUnit.SECONDS);
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Test (expectedExceptions = SOSProtocolException.class)
+    public void failWithNullDDSTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(node);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, null);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
     }
 }

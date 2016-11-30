@@ -6,5 +6,5 @@ command -v parallel >/dev/null 2>&1 || { echo >&2 "I require parallel but it's n
 time=$(date)
 mkdir -p logs-test-nds/"$time"
 
-seq 4 | parallel -n0 "curl -X GET "http://cs-wifi-174.cs.st-andrews.ac.uk:8080/info"" > logs-test-nds/"$time"/test-nds.log
+seq 10000 | parallel -n0 "curl -X GET "http://cs-wifi-174.cs.st-andrews.ac.uk:8080/info"" > logs-test-nds/"$time"/test-nds.log
 

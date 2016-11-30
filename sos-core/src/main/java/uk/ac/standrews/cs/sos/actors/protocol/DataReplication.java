@@ -5,7 +5,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -31,10 +33,11 @@ import java.util.concurrent.Executors;
  */
 public class DataReplication {
 
-    public static ExecutorService Replicate(InputStream data, Set<Node> nodes, LocationsIndex index, NDS nds) throws SOSProtocolException {
+    public static ExecutorService Replicate(InputStream data, Set<Node> nodes,
+                                            LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
 
-        if (index == null || nds == null) {
-            throw new SOSProtocolException("Index and/or NDS are null, thus data replication will fail");
+        if (index == null || nds == null || dds == null) {
+            throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -43,7 +46,7 @@ public class DataReplication {
                 .filter(Node::isStorage)
                 .distinct()
                 .forEach(n -> {
-                    Runnable runnable = transferData(data, n, index, nds);
+                    Runnable runnable = transferData(data, n, index, nds, dds);
                     executor.submit(runnable);
                 });
 
@@ -51,7 +54,7 @@ public class DataReplication {
     }
 
     // Synchronously
-    private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds) {
+    private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
 
         Runnable replicator = () -> {
             Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
@@ -72,7 +75,16 @@ public class DataReplication {
             }
 
             for(Node ddsNode:tuple.y.y) {
-                nds.registerNode(ddsNode);
+                try {
+                    nds.registerNode(ddsNode);
+                } catch (NodeRegistrationException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
+                    return;
+                }
+            }
+
+            for(Node ddsNode:tuple.y.y) {
+                dds.addManifestDDSAssociation(tuple.x, ddsNode.getNodeGUID());
             }
         };
 

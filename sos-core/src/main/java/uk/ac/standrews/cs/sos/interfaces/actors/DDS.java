@@ -27,6 +27,13 @@ public interface DDS extends SeaOfStuff {
     void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
 
     /**
+     *
+     * @param manifest
+     * @param ddsNode
+     */
+    void addManifestDDSAssociation(IGUID manifest, IGUID ddsNode);
+
+    /**
      * Get the manifest that matches a given GUID.
      *
      * @param guid                  of the manifest.
