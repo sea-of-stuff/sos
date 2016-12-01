@@ -40,8 +40,7 @@ public class ManifestReplicationTest {
             "  \"Signature\" : \"MCwCFBEWwqB+/f7s5iCzdxFc/N4FrIQtAhRB07czCQZ+G6dnlM6XrXTb1jqXeA==\"\n" +
             "}";
 
-    private static final String TEST_BAD_MANIFEST =
-            "BAD";
+    private static final String TEST_BAD_MANIFEST = "BAD Manifest";
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
