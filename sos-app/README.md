@@ -18,5 +18,5 @@ $ mvn package
 ```
 
 ```
-$ java -jar sos-app-jar-with-dependencies.jar ARGS
+$ java -jar sos-app.jar ARGS
 ```

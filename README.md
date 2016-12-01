@@ -64,7 +64,7 @@ Otherwise use the sos-configuration CLI to start with a fresh template.
 
 ```
 $ mvn package # use -DskipTests to not run any tests during the packaging process
-$ mv target/sos-app-jar-with-dependencies.jar sos.jar
+$ mv target/sos-app.jar sos.jar
 $ java -jar sos.jar -c configuration.conf ARGS
 ```
 

@@ -54,7 +54,6 @@
     </dependencies>
 
     <build>
-        <finalName>sos-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -72,13 +71,11 @@
                 <version>2.6</version>
                 <inherited>true</inherited>
                 <configuration>
-
-                    <!-- get all project dependencies -->
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <!-- MainClass in mainfest make a executable jar -->
-
+                    <finalName>sos-app</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>uk.ac.standrews.cs.sos.app.MAISOS</mainClass>
