@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
@@ -10,7 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -21,7 +21,8 @@ import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -48,58 +49,24 @@ public class DataReplication {
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        nodes.stream()
-                .filter(Node::isStorage)
-                .distinct()
-                .forEach(n -> {
-                    Runnable runnable = transferData(new BufferedInputStream(data), n, index, nds, dds); // FIXME
-                    executor.submit(runnable);
-                });
+        try (final ByteArrayOutputStream baos = InputStreamToByteArrayOutputStream(data)){
 
-        return executor;
-    }
-
-    public static ExecutorService Replicate(BufferedInputStream data, Set<Node> nodes,
-                                            LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
-
-        if (index == null || nds == null || dds == null) {
-            throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
+            nodes.stream() // This can be parallelised if we want to
+                    .filter(Node::isStorage)
+                    .distinct()
+                    .forEach(n -> {
+                        InputStream dataClone = new ByteArrayInputStream(baos.toByteArray());
+                        Runnable runnable = transferData(dataClone, n, index, nds, dds);
+                        executor.submit(runnable);
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        nodes.stream()
-                .filter(Node::isStorage)
-                .distinct()
-                .forEach(n -> {
-                    Runnable runnable = transferData(data, n, index, nds, dds);
-                    executor.submit(runnable);
-                });
-
         return executor;
     }
 
-    public static ExecutorService Replicate(Location location, Set<Node> nodes,
-                                            LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
-
-        if (index == null || nds == null || dds == null) {
-            throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
-        }
-
-        ExecutorService executor = Executors.newCachedThreadPool();
-
-        nodes.stream()
-                .filter(Node::isStorage)
-                .distinct()
-                .forEach(n -> {
-                    Runnable runnable = transferData(location, n, index, nds, dds);
-                    executor.submit(runnable);
-                });
-
-        return executor;
-    }
-
-    private static Runnable transferData(BufferedInputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
+    private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
 
         Runnable replicator = () -> {
             Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
@@ -136,96 +103,18 @@ public class DataReplication {
         return replicator;
     }
 
-    private static Runnable transferData(Location location, Node node, LocationsIndex index, NDS nds, DDS dds) {
-
-        Runnable replicator = () -> {
-            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
-            try {
-                tuple = transferDataRequest(location, node);
-            } catch (SOSProtocolException e) {
-                SOS_LOG.log(LEVEL.ERROR, e.getMessage());
-                return;
-            }
-
-            if (tuple == null) {
-                SOS_LOG.log(LEVEL.ERROR, "Error while trasnfering data to other nodes");
-                return;
-            }
-
-            for(LocationBundle locationBundle:tuple.y.x) {
-                index.addLocation(tuple.x, locationBundle);
-            }
-
-            for(Node ddsNode:tuple.y.y) {
-                try {
-                    nds.registerNode(ddsNode);
-                } catch (NodeRegistrationException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
-                    return;
-                }
-            }
-
-            for(Node ddsNode:tuple.y.y) {
-                dds.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
-            }
-        };
-
-        return replicator;
-    }
-
-    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(BufferedInputStream data, Node node) throws SOSProtocolException {
+    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
         URL url;
         try {
             url = SOSEP.STORAGE_POST_DATA(node);
-            data.reset();
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setBody(data);
 
-            System.out.println("printing request");
-            Response response = RequestsManager.getInstance().playSyncRequest(request);
-            System.out.println("0");
-            InputStream body = response.getBody();
-            System.out.println("1");
-            if (request.getRespondeCode() != HTTPStatus.CREATED) {
-                System.out.println("2");
-                throw new SOSProtocolException("Unable to transfer DATA to node: " + node.getNodeGUID());
-            }
-
-            System.out.println("a");
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-            System.out.println("b");
-            JsonNode manifestNode = jsonNode.get(SOSConstants.MANIFEST);
-            System.out.println("c");
-            JsonNode ddsInfo = jsonNode.has(SOSConstants.DDD_INFO) ? jsonNode.get(SOSConstants.DDD_INFO) : null;
-            System.out.println("d");
-            Tuple<IGUID, Set<LocationBundle>> manifestNodeInfo  = getManifestNode(manifestNode);
-            System.out.println("e");
-            Set<Node> ddsNodes = getDDSInfoFeedback(ddsInfo);
-            System.out.println("f");
-            retval = new Tuple<>(manifestNodeInfo.x, new Tuple<>(manifestNodeInfo.y, ddsNodes));
-        } catch (IOException | SOSURLException | GUIDGenerationException e) {
-            throw new SOSProtocolException("Unable to transfer DATA. Exception: " + e.getMessage());
-        }
-
-        return retval;
-    }
-
-    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(Location location, Node node) throws SOSProtocolException {
-
-        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
-
-        URL url;
-        try {
-            url = SOSEP.STORAGE_POST_DATA(node);
-            SyncRequest request = new SyncRequest(Method.POST, url);
-            request.setBody(location.getSource());
-
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             InputStream body = response.getBody();
-
             if (request.getRespondeCode() != HTTPStatus.CREATED) {
                 throw new SOSProtocolException("Unable to transfer DATA to node: " + node.getNodeGUID());
             }
@@ -274,12 +163,19 @@ public class DataReplication {
             int port = entry.get(SOSConstants.PORT).asInt();
 
             // TODO - what if there is already an entry for this node, but different roles?
+            // Do not hard code this bit
             // need a way to merge roles
             Node node = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
             ddsNodes.add(node);
         }
 
         return ddsNodes;
+    }
+
+    private static ByteArrayOutputStream InputStreamToByteArrayOutputStream(InputStream input) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        IOUtils.copy(input, baos);
+        return baos;
     }
 
 }

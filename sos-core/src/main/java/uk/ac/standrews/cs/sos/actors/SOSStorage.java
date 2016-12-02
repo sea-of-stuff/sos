@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -181,14 +182,11 @@ public class SOSStorage implements Storage {
         int replicationFactor = replicationPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
-            try {
-                Location location = getAtomLocation(atom);
+            try (InputStream data = getAtomContent(atom)){
+
                 Set<Node> storageNodes = nds.getStorageNodes(replicationFactor);
-//                BufferedInputStream bufferedInputStream = new BufferedInputStream(data);
-//                bufferedInputStream.mark(Integer.MAX_VALUE);
-                atomStorage.replicate(location, storageNodes, nds, dds);
-//                atomStorage.replicate(data, storageNodes, nds, dds);
-            } catch (SOSProtocolException e) {
+                atomStorage.replicate(data, storageNodes, nds, dds);
+            } catch (SOSProtocolException | IOException e) {
                 // TODO - throw exception
                 e.printStackTrace();
             }

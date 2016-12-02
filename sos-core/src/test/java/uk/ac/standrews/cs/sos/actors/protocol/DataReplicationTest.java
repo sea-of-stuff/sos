@@ -41,10 +41,13 @@ import static org.testng.AssertJUnit.assertFalse;
 public class DataReplicationTest {
 
     private ClientAndServer mockServer;
+    private ClientAndServer mockServerTwin;
     private static final int MOCK_SERVER_PORT = 10001;
+    private static final int MOCK_TWIN_SERVER_PORT = 10002;
 
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
+    private static final String TWIN_NODE_ID = "22aafd93ab9a6e2ed501fc583685088cca66bac2";
 
     private NDS mockNDS;
     private DDS mockDDS;
@@ -83,6 +86,36 @@ public class DataReplicationTest {
                                 )
                 );
 
+        mockServerTwin = startClientAndServer(MOCK_TWIN_SERVER_PORT);
+        mockServerTwin.dumpToLog();
+        mockServerTwin
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/storage/stream")
+                                .withBody(TEST_DATA)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(201)
+                                .withBody(
+                                        "{\n" +
+                                                "    \"" + SOSConstants.MANIFEST + "\" : \n" +
+                                                "    {\n" +
+                                                "        \"Type\" : \"Atom\",\n" +
+                                                "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
+                                                "        \"Locations\" : \n" +
+                                                "        [\n" +
+                                                "              {\n" +
+                                                "                \"Type\" : \"persistent\",\n" +
+                                                "                \"Location\" : \"sos://" + TWIN_NODE_ID + "/" + testGUID + "\"\n" +
+                                                "            } \n" +
+                                                "        ]\n" +
+                                                "    }\n" +
+                                                "}"
+                                )
+                );
+
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
         mockNDS = mock(NDS.class);
         mockDDS = mock(DDS.class);
@@ -91,6 +124,7 @@ public class DataReplicationTest {
     @AfterMethod
     public void tearDown() {
         mockServer.stop();
+        mockServerTwin.stop();
     }
 
     @Test
@@ -148,7 +182,7 @@ public class DataReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
+                false, false, false, false, false); // Won't replicate to non-storage
 
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
@@ -182,7 +216,7 @@ public class DataReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
+                false, false, false, false, false); // Won't replicate to non-storage
 
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
@@ -191,7 +225,7 @@ public class DataReplicationTest {
 
         Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                true, false, true, true, true);
+                true, false, true, true, true); // Won't replicate to non-storage
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -222,7 +256,7 @@ public class DataReplicationTest {
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
+                false, true, false, false, false);
 
         Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
@@ -244,6 +278,42 @@ public class DataReplicationTest {
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
+
+        assertFalse(it.hasNext());
+    }
+
+    @Test // FIXME - this test fails sometimes. Index does nt seem to be update consistently
+    public void replicateSameDataTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+
+        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
+
+        Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID),
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false);
+
+        Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID),
+                "localhost", MOCK_TWIN_SERVER_PORT,
+                false, true, false, false, false);
+
+        Set<Node> nodes = new HashSet<>();
+        nodes.add(storageNode);
+        nodes.add(twinStorageNode);
+
+        LocationsIndex index = new LocationsIndexImpl();
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+
+        executorService.shutdown();
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
+
+        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        assertTrue(it.hasNext());
+        LocationBundle locationBundle = it.next();
+        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
+
+        assertTrue(it.hasNext());
+        locationBundle = it.next();
+        assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
 
         assertFalse(it.hasNext());
     }

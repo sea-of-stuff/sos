@@ -61,7 +61,7 @@ public class ClientReplicationTest extends SetUpTest {
                     "\n" +
                     "    \"bootstrap\" : [\n" +
                     "        {\n" +
-                    "            \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" + // NOTE: this will work only if LORNA is running.
+                    "            \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" + // NOTE: this will work only if LORNA is running. - FIXME change to localhost and startup a mockserver
                     "            \"port\" : 8080\n" +
                     "            \"hostname\" : \"cs-wifi-174.cs.st-andrews.ac.uk\"\n" +
                     "            \"is\" : {\n" +
