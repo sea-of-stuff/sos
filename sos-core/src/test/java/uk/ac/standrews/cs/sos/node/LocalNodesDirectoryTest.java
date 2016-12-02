@@ -23,6 +23,7 @@ import java.util.Set;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -67,6 +68,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         Set<Node> nodes = localNodesDirectory.getKnownNodes();
         for(Node n:nodes) {
             System.err.println("GOTCHAYOU " + n.toString());
+            assertTrue(false);
         }
 
         IGUID guid = GUIDFactory.generateRandomGUID();
@@ -78,16 +80,15 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(false, false, true, false, false);
         addNode(false, false, false, true, false);
         addNode(false, false, false, false, true);
-
         addNode(true, true, false, false, false);
         addNode(true, true, true, true, true);
 
         assertEquals(localNodesDirectory.getKnownNodes().size(), 8);
         assertEquals(localNodesDirectory.getNode(guid), node);
-        assertEquals(localNodesDirectory.getStorageNodes().size(), 3);
-        assertEquals(localNodesDirectory.getDDSNodes().size(), 2);
-        assertEquals(localNodesDirectory.getNDSNodes().size(), 2);
-        assertEquals(localNodesDirectory.getMCSNodes().size(), 2);
+        assertEquals(localNodesDirectory.getStorageNodes(LocalNodesDirectory.NO_LIMIT).size(), 3);
+        assertEquals(localNodesDirectory.getDDSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getMCSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
     }
 
     @Test
@@ -102,6 +103,60 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
         localNodesDirectory.persistNodesTable();
         assertEquals(localNodesDirectory.getKnownNodes().size(), 1);
+    }
+
+    @Test
+    public void getStorageNodesWithLimitTest() {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        localNodesDirectory.addNode(node);
+
+        addNode(true, false, false, false, false);
+        addNode(false, true, false, false, false);
+        addNode(false, false, true, false, false);
+        addNode(false, false, false, true, false);
+        addNode(false, false, false, false, true);
+        addNode(true, true, false, false, false);
+        addNode(true, true, true, true, true);
+
+        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(3);
+        assertEquals(storageNodes.size(), 3);
+    }
+
+    @Test
+    public void getStorageNodesWithLimitCapTest() {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        localNodesDirectory.addNode(node);
+
+        addNode(true, false, false, false, false);
+        addNode(false, true, false, false, false);
+        addNode(false, false, true, false, false);
+        addNode(false, false, false, true, false);
+        addNode(false, false, false, false, true);
+        addNode(true, true, false, false, false);
+        addNode(true, true, true, true, true);
+
+        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(2);
+        assertEquals(storageNodes.size(), 2);
+    }
+
+    @Test
+    public void getStorageNodesWithLimitInExcessTest() {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        localNodesDirectory.addNode(node);
+
+        addNode(true, false, false, false, false);
+        addNode(false, true, false, false, false);
+        addNode(false, false, true, false, false);
+        addNode(false, false, false, true, false);
+        addNode(false, false, false, false, true);
+        addNode(true, true, false, false, false);
+        addNode(true, true, true, true, true);
+
+        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(10);
+        assertEquals(storageNodes.size(), 3);
     }
 
     private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {

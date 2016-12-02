@@ -161,11 +161,12 @@ public class SOSStorage implements Storage {
 
     private void replicateData(Atom atom) {
 
-        if (replicationPolicy.getReplicationFactor() > 0) {
+        int replicationFactor = replicationPolicy.getReplicationFactor();
+        if (replicationFactor > 0) {
 
             try (InputStream data = getAtomContent(atom)) {
 
-                Set<Node> storageNodes = nds.getStorageNodes();
+                Set<Node> storageNodes = nds.getStorageNodes(replicationFactor);
                 atomStorage.replicate(data, storageNodes, nds, dds);
             } catch (IOException | SOSProtocolException e) {
                 // TODO - throw exception
@@ -181,7 +182,8 @@ public class SOSStorage implements Storage {
             Set<Node> ddsNodes = new HashSet<>(); // Remember that HashSet does not preserve order
 
             if (ddsNotificationInfo.useDefaultDDSNodes()) {
-                Set<Node> defaultNDSNodes = nds.getDDSNodes(); // TODO - use limit param (e.g. max 3 nodes)
+                int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
+                Set<Node> defaultNDSNodes = nds.getDDSNodes(noDDSNodes);
                 ddsNodes.addAll(defaultNDSNodes);
             }
 

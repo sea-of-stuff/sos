@@ -13,8 +13,6 @@ import java.net.URL;
  *
  * This is a helper class that should be used to get the SOS rest URL end-points
  *
- * TODO - SOSURLException
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSEP {
@@ -80,8 +78,6 @@ public class SOSEP {
 
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
-        String baseURL = HTTP_SCHEME + address.getHostName() + ":" + address.getPort();
-
-        return baseURL;
+        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort();
     }
 }

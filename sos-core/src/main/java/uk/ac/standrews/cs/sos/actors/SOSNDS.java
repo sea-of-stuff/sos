@@ -21,12 +21,10 @@ import java.util.Set;
  */
 public class SOSNDS implements NDS {
 
-    private LocalNodesDirectory localNodesDirectory;
     private NodeDiscovery nodeDiscovery;
     private NodeRegistration nodeRegistration;
 
     public SOSNDS(LocalNodesDirectory localNodesDirectory) {
-        this.localNodesDirectory = localNodesDirectory; // TODO - do not ahve this here
 
         nodeDiscovery = new NodeDiscovery(localNodesDirectory);
         nodeRegistration = new NodeRegistration(localNodesDirectory);
@@ -34,8 +32,9 @@ public class SOSNDS implements NDS {
 
     @Override
     public Node getThisNode() {
-        return localNodesDirectory.getLocalNode();
-    } // TODO - use discoverynode
+        return nodeDiscovery.getLocalNode();
+    }
+
 
     @Override
     public Node getNode(IGUID guid) throws NodeNotFoundException {
@@ -53,6 +52,11 @@ public class SOSNDS implements NDS {
     }
 
     @Override
+    public Set<Node> getDDSNodes(int limit) {
+        return nodeDiscovery.getDDSNodes(limit);
+    }
+
+    @Override
     public Set<Node> getMCSNodes() {
         return nodeDiscovery.getMCSNodes();
     }
@@ -63,10 +67,15 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public Node registerNode(Node node) throws NodeRegistrationException {
+    public Set<Node> getStorageNodes(int limit) {
+        return nodeDiscovery.getStorageNodes(limit);
+    }
 
-        Node registeredNode = nodeRegistration.registerNode(node);
-        return registeredNode;
+
+
+    @Override
+    public Node registerNode(Node node) throws NodeRegistrationException {
+        return nodeRegistration.registerNode(node);
     }
 
 }

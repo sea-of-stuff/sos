@@ -34,7 +34,7 @@ public class NodeRegistration {
             throw new NodeRegistrationException("Unable to register node", e);
         }
 
-        Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(); // TODO - limit number of nds nodes
+        Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
         ndsNodes.parallelStream()
                 .forEach(n -> registerNode(node, n));
 

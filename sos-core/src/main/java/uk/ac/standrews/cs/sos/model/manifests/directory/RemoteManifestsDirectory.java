@@ -40,9 +40,8 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
         int replicationFactor = manifestPolicy.getReplicationFactor();
-        if (replicationFactor > 0) { // TODO - use replication factor!
-
-            Set<Node> ddsNodes = localNodesDirectory.getDDSNodes();
+        if (replicationFactor > 0) {
+            Set<Node> ddsNodes = localNodesDirectory.getDDSNodes(replicationFactor);
 
             for(Node ddsNode:ddsNodes) {
                 SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +
@@ -52,10 +51,9 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
                 if (replicationIsSuccessful) {
                     ddsIndex.addEntry(manifest.guid(), ddsNode.getNodeGUID());
                 }
-
             }
-
         }
+
     }
 
     @Override

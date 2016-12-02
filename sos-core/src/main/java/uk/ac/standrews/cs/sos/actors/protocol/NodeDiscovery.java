@@ -40,6 +40,10 @@ public class NodeDiscovery {
         this.localNodesDirectory = localNodesDirectory;
     }
 
+    public Node getLocalNode() {
+        return localNodesDirectory.getLocalNode();
+    }
+
     /**
      * Attempt to find a node matching the given GUID first locally, then by contacting known NDS nodes.
      *
@@ -81,7 +85,7 @@ public class NodeDiscovery {
      * @return NDS Nodes
      */
     public Set<Node> getNDSNodes() {
-        return localNodesDirectory.getNDSNodes();
+        return localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
     }
 
     /**
@@ -90,7 +94,11 @@ public class NodeDiscovery {
      * @return DDS nodes
      */
     public Set<Node> getDDSNodes() {
-        return localNodesDirectory.getDDSNodes();
+        return localNodesDirectory.getDDSNodes(LocalNodesDirectory.NO_LIMIT);
+    }
+
+    public Set<Node> getDDSNodes(int limit) {
+        return localNodesDirectory.getDDSNodes(limit);
     }
 
     /**
@@ -99,7 +107,7 @@ public class NodeDiscovery {
      * @return MCS nodes
      */
     public Set<Node> getMCSNodes() {
-        return localNodesDirectory.getMCSNodes();
+        return localNodesDirectory.getMCSNodes(LocalNodesDirectory.NO_LIMIT);
     }
 
     /**
@@ -108,14 +116,18 @@ public class NodeDiscovery {
      * @return Storage nodes
      */
     public Set<Node> getStorageNodes() {
-        return localNodesDirectory.getStorageNodes();
+        return localNodesDirectory.getStorageNodes(LocalNodesDirectory.NO_LIMIT);
+    }
+
+    public Set<Node> getStorageNodes(int limit) {
+        return localNodesDirectory.getStorageNodes(limit);
     }
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException, SOSURLException {
 
         Node retval = null;
 
-        Set<Node> ndsNodes = localNodesDirectory.getNDSNodes();
+        Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
         for(Node ndsNode:ndsNodes) {
             URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
 

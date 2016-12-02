@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class LocalNodesDirectory {
 
-    private static final int NO_LIMIT = 0;
+    public static final int NO_LIMIT = 0;
 
     private Node localNode;
     private NodesDatabase nodesDatabase;
@@ -73,8 +73,8 @@ public class LocalNodesDirectory {
      *
      * @return NDS nodes
      */
-    public Set<Node> getNDSNodes() {
-        return getNodes(Node::isNDS, NO_LIMIT);
+    public Set<Node> getNDSNodes(int limit) {
+        return getNodes(Node::isNDS, limit);
     }
 
     /**
@@ -82,8 +82,8 @@ public class LocalNodesDirectory {
      *
      * @return DDS nodes
      */
-    public Set<Node> getDDSNodes() {
-        return getNodes(Node::isDDS, NO_LIMIT);
+    public Set<Node> getDDSNodes(int limit) {
+        return getNodes(Node::isDDS, limit);
     }
 
     /**
@@ -91,16 +91,12 @@ public class LocalNodesDirectory {
      *
      * @return MCS nodes
      */
-    public Set<Node> getMCSNodes() {
-        return getNodes(Node::isMCS, NO_LIMIT);
+    public Set<Node> getMCSNodes(int limit) {
+        return getNodes(Node::isMCS, limit);
     }
 
-    /**
-     * Get all Storage Nodes
-     * @return Storage nodes
-     */
-    public Set<Node> getStorageNodes() {
-        return getNodes(Node::isStorage, NO_LIMIT);
+    public Set<Node> getStorageNodes(int limit) {
+        return getNodes(Node::isStorage, limit);
     }
 
     private Set<Node> getNodes(Predicate<Node> predicate, int limit) {
@@ -109,7 +105,7 @@ public class LocalNodesDirectory {
                 .filter(predicate)
                 .distinct();
 
-        if (limit > 0) {
+        if (limit > NO_LIMIT) {
             nodesStream = nodesStream.limit(limit);
         }
 

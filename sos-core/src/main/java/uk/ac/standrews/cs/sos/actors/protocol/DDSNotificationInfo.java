@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public class DDSNotificationInfo {
 
+    private static final int MAX_DEFAULT_DDS_NODES = 3;
+
     private boolean notifyDDSNodes;
     private boolean useDefaultDDSNodes;
     private boolean useSuggestedDDSNodes;
@@ -37,6 +39,10 @@ public class DDSNotificationInfo {
         this.useDefaultDDSNodes = useDefaultDDSNodes;
 
         return this;
+    }
+
+    public int getMaxDefaultDDSNodes() {
+        return MAX_DEFAULT_DDS_NODES;
     }
 
     public boolean useSuggestedDDSNodes() {
