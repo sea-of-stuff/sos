@@ -19,6 +19,15 @@ import java.net.URL;
  */
 public class FetchData {
 
+    /**
+     * Fetch data that matched the entityId from a specified node
+     *
+     * @param node - storage node where to fetch the data from
+     * @param entityId - guid of the data
+     * @return InputStream of the data
+     * @throws IOException
+     * @throws SOSURLException
+     */
     public static InputStream Fetch(Node node, IGUID entityId) throws IOException, SOSURLException {
         if (!node.isStorage()) {
             throw new IOException("Attempting to fetch data from non-Storage node");
