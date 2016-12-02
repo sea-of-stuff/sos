@@ -139,7 +139,7 @@ public class DataReplicationWithDDSFeedbackTest {
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
 
         verify(mockNDS, times(3)).registerNode(anyObject());
-        verify(mockDDS, times(3)).addManifestDDSAssociation(anyObject(), anyObject());
+        verify(mockDDS, times(3)).addManifestDDSMapping(anyObject(), anyObject());
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)

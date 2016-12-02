@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
@@ -62,7 +63,7 @@ public class NodeDiscovery {
         if (nodeToContact == null) {
             try {
                 nodeToContact = findNodeViaNDS(nodeGUID);
-            } catch (IOException e) {
+            } catch (IOException | SOSURLException e) {
                 throw new NodeNotFoundException(e);
             }
         }
@@ -110,7 +111,7 @@ public class NodeDiscovery {
         return localNodesDirectory.getStorageNodes();
     }
 
-    private Node findNodeViaNDS(IGUID nodeGUID) throws IOException {
+    private Node findNodeViaNDS(IGUID nodeGUID) throws IOException, SOSURLException {
 
         Node retval = null;
 

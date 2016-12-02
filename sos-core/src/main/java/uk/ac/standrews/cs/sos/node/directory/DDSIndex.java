@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * Indexing ManifestGUID --> [DDS]
  *
+ * TODO - serialize it
  * TODO - limit size?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

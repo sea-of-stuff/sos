@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
@@ -58,7 +59,7 @@ public class DataReplication {
         Runnable replicator = () -> {
             Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
             try {
-                tuple = transferDataRequest(data, node);
+                tuple = TransferDataRequest(data, node);
             } catch (SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, e.getMessage());
                 return;
@@ -83,14 +84,14 @@ public class DataReplication {
             }
 
             for(Node ddsNode:tuple.y.y) {
-                dds.addManifestDDSAssociation(tuple.x, ddsNode.getNodeGUID());
+                dds.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
             }
         };
 
         return replicator;
     }
 
-    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
+    public static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > TransferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
@@ -116,7 +117,7 @@ public class DataReplication {
             Set<Node> ddsNodes = getDDSInfoFeedback(ddsInfo);
 
             retval = new Tuple<>(manifestNodeInfo.x, new Tuple<>(manifestNodeInfo.y, ddsNodes));
-        } catch (IOException | GUIDGenerationException e) {
+        } catch (IOException | SOSURLException | GUIDGenerationException e) {
             throw new SOSProtocolException("Unable to transfer DATA. Exception: " + e.getMessage());
         }
 

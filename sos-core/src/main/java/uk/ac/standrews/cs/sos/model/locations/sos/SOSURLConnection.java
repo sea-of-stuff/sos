@@ -4,15 +4,12 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.protocol.SOSEP;
+import uk.ac.standrews.cs.sos.actors.protocol.FetchData;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.Response;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -73,15 +70,16 @@ public class SOSURLConnection extends URLConnection {
             IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial slash
 
             boolean dataIsStoredLocally = dataIsStoredLocally(nodeGUID);
-            if (dataIsStoredLocally) { // CASE 1
+            if (dataIsStoredLocally) {
                 inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nds.getNode(nodeGUID);
-                inputStream = getDataFromNode(nodeToContact, entityGUID);
+                inputStream = FetchData.Fetch(nodeToContact, entityGUID);
             }
+
         } catch (GUIDGenerationException | DataException
                 | BindingAbsentException | DataStorageException
-                | NodeNotFoundException e) {
+                | NodeNotFoundException | SOSURLException e) {
             throw new IOException(e);
         }
 
@@ -103,17 +101,6 @@ public class SOSURLConnection extends URLConnection {
         Data data = file.getData();
 
         return data.getInputStream();
-    }
-
-    private InputStream getDataFromNode(Node node, IGUID entityId) throws IOException {
-        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
-
-        URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
-
-        SyncRequest request = new SyncRequest(Method.GET, url);
-        Response response = RequestsManager.getInstance().playSyncRequest(request);
-
-        return response.getBody();
     }
 
 }

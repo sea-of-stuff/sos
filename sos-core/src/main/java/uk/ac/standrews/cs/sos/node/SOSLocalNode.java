@@ -207,11 +207,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
 
         dds = new SOSDDS(manifestsDirectory);
-
         storage = new SOSStorage(this, localStorage, replicationPolicy, nds, dds);
-
         mcs = new SOSMCS(metadataDirectory);
-
         agent = new SOSAgent(storage, dds, mcs, identity);
     }
 

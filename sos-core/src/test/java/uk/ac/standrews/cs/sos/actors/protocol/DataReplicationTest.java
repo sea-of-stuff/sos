@@ -46,8 +46,6 @@ public class DataReplicationTest {
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
 
-    private static final String TEST_FAIL_DATA = "fail-data";
-
     private NDS mockNDS;
     private DDS mockDDS;
 

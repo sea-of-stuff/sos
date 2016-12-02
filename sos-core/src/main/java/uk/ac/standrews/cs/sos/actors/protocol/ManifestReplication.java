@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -39,17 +40,17 @@ public class ManifestReplication {
     private static Runnable transferManifest(Manifest manifest, Node node, DDS dds) {
 
         Runnable replicator = () -> {
-            boolean transferWasSuccessful = transferManifestRequest(manifest, node);
+            boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
             if (transferWasSuccessful) {
-                dds.addManifestDDSAssociation(manifest.guid(), node.getNodeGUID());
+                dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
             }
         };
 
         return replicator;
     }
 
-    private static boolean transferManifestRequest(Manifest manifest, Node node) {
+    public static boolean TransferManifestRequest(Manifest manifest, Node node) {
 
         try {
             URL url = SOSEP.DDS_POST_MANIFEST(node);
@@ -58,7 +59,7 @@ public class ManifestReplication {
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             return response.getCode() == HTTPStatus.CREATED;
-        } catch (IOException e) {
+        } catch (IOException | SOSURLException e) {
             e.printStackTrace();
         }
 

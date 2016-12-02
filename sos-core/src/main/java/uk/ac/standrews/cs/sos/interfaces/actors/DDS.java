@@ -31,7 +31,7 @@ public interface DDS extends SeaOfStuff {
      * @param manifest
      * @param ddsNode
      */
-    void addManifestDDSAssociation(IGUID manifest, IGUID ddsNode);
+    void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
 
     /**
      * Get the manifest that matches a given GUID.

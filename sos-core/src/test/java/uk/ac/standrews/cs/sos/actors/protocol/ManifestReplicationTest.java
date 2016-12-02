@@ -102,7 +102,7 @@ public class ManifestReplicationTest {
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
 
-        verify(ddsMock, times(1)).addManifestDDSAssociation(anyObject(), anyObject());
+        verify(ddsMock, times(1)).addManifestDDSMapping(anyObject(), anyObject());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ManifestReplicationTest {
         verify(node, times(1)).isDDS();
         verify(node, times(0)).getHostAddress();
 
-        verify(ddsMock, times(0)).addManifestDDSAssociation(anyObject(), anyObject());
+        verify(ddsMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -172,6 +172,6 @@ public class ManifestReplicationTest {
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
 
-        verify(ddsMock, times(0)).addManifestDDSAssociation(anyObject(), anyObject());
+        verify(ddsMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
     }
 }

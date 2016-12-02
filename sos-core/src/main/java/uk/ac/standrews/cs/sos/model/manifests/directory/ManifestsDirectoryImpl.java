@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
+import uk.ac.standrews.cs.sos.node.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
@@ -27,15 +28,18 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     private RemoteManifestsDirectory remote;
     private LocalStorage localStorage;
 
+    private DDSIndex ddsIndex;
+
     public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage,
                                   LocalNodesDirectory localNodesDirectory) {
 
         this.localStorage = localStorage;
 
         loadOrCreateCache();
+        ddsIndex = new DDSIndex(); // TODO - loadOrCreate
 
         local = new LocalManifestsDirectory(localStorage);
-        remote = new RemoteManifestsDirectory(manifestPolicy, localNodesDirectory);
+        remote = new RemoteManifestsDirectory(manifestPolicy, localNodesDirectory, ddsIndex);
     }
 
     @Override
@@ -43,6 +47,11 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         cache.addManifest(manifest);
         local.addManifest(manifest);
         remote.addManifest(manifest);
+    }
+
+    @Override
+    public void addManifestDDSMapping(IGUID manifestGUID, IGUID ddsNodeGUID) {
+        ddsIndex.addEntry(manifestGUID, ddsNodeGUID);
     }
 
     @Override

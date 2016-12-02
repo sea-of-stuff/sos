@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.protocol.SOSEP;
+import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -13,15 +13,10 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.Response;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.node.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Set;
 
 /**
@@ -33,31 +28,45 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private ManifestPolicy manifestPolicy;
     private LocalNodesDirectory localNodesDirectory;
+    private DDSIndex ddsIndex;
 
-    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, LocalNodesDirectory localNodesDirectory) {
+    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, LocalNodesDirectory localNodesDirectory, DDSIndex ddsIndex) {
         this.manifestPolicy = manifestPolicy;
         this.localNodesDirectory = localNodesDirectory;
+        this.ddsIndex = ddsIndex;
     }
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
         int replicationFactor = manifestPolicy.getReplicationFactor();
-        if (replicationFactor > 0) {
+        if (replicationFactor > 0) { // TODO - use replication factor!
 
             Set<Node> ddsNodes = localNodesDirectory.getDDSNodes();
 
             for(Node ddsNode:ddsNodes) {
                 SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +
                         " to node " + ddsNode.getNodeGUID().toString());
-                addManifest(ddsNode, manifest);
+
+                boolean replicationIsSuccessful = ManifestReplication.TransferManifestRequest(manifest, ddsNode);
+                if (replicationIsSuccessful) {
+                    ddsIndex.addEntry(manifest.guid(), ddsNode.getNodeGUID());
+                }
+
             }
 
         }
     }
 
     @Override
+    public void addManifestDDSMapping(IGUID manifestGUID, IGUID ddsNodeGUID) {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
+
+        // See if we know dds nodes already (using ddsIndex)
 
         // Contact knwon DDS nodes
         // Ask such nodes about manifest with given guid
@@ -76,22 +85,6 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public void flush() {
+    public void flush() {}
 
-    }
-
-    private void addManifest(Node node, Manifest manifest) {
-
-        try {
-            URL url = SOSEP.DDS_POST_MANIFEST(node);
-
-            SyncRequest request = new SyncRequest(Method.POST, url);
-            request.setJSONBody(manifest.toString());
-
-            Response response = RequestsManager.getInstance().playSyncRequest(request);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
