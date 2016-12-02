@@ -4,8 +4,8 @@ set -e # use -x option for debugging
 echo 'This script will start sos-nodes with the specified configurations'
 echo 'Run this script as """sh experiment.sh [CONFIG_PATHS]""".'
 
-if [ ! -f sos.jar ]; then
-    echo "sos.jar not found!"
+if [ ! -f sos-app.jar ]; then
+    echo "sos-app.jar not found!"
     echo "Aborting"
     exit 1
 fi
@@ -30,7 +30,7 @@ killall() {
     rm -rf logs/*.log
     rm -rf logs
     echo "Archiving logs finished"
-    
+
     echo DONE
 }
 
@@ -41,8 +41,10 @@ for (( i=1; i<=$#; i++ )); do
     config="${!i}"
 
     echo "Running SOS instance with config: $config"
-    output=logs/node-output-${i}.log
-    error=logs/node-error-${i}.log
+    configname=${config%.*}
+
+    output=logs/${configname}-output-${i}.log
+    error=logs/${configname}-error-${i}.log
 
     echo "------------------------------------------------------" >> $output
     echo "OUTPUT LOG -- Time: $(date)" >> $output
@@ -52,7 +54,7 @@ for (( i=1; i<=$#; i++ )); do
     echo "ERROR LOG -- Time: $(date)" >> $error
 	echo "------------------------------------------------------" >> $error
 
-	java -jar sos.jar -c $config -fs -j >> $output 2>> $error &
+	java -jar sos-app.jar -c $config -fs -j >> $output 2>> $error &
 	echo "Java process run at id: $!"
 done
 

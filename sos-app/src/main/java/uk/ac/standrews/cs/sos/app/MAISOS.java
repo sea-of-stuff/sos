@@ -41,14 +41,14 @@ public class MAISOS {
 
         IGUID root = getRootGUID(line);
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-        if (line.hasOption(FS_OPT)) {
-            HandleFSApp(executorService, sos, root, configuration);
-        }
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
 
         if (line.hasOption(REST_OPT)) {
             HandleJettyApp(executorService, sos);
+        }
+
+        if (line.hasOption(FS_OPT)) {
+            HandleFSApp(executorService, sos, root, configuration);
         }
 
         HandleExit(executorService);
@@ -143,6 +143,7 @@ public class MAISOS {
 
         executorService.submit(() -> {
             try {
+                WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
                 LaunchWebDAV(fileSystem, configuration.getWebDAVPort());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -150,7 +151,6 @@ public class MAISOS {
         });
 
 
-        WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
     }
 
     private static void HandleJettyApp(ExecutorService executorService, SOSLocalNode sos) {
