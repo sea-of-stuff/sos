@@ -59,7 +59,7 @@ public class DataReplication {
         Runnable replicator = () -> {
             Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
             try {
-                tuple = TransferDataRequest(data, node);
+                tuple = transferDataRequest(data, node);
             } catch (SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, e.getMessage());
                 return;
@@ -91,7 +91,7 @@ public class DataReplication {
         return replicator;
     }
 
-    public static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > TransferDataRequest(InputStream data, Node node) throws SOSProtocolException {
+    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
