@@ -23,7 +23,6 @@ import java.util.Set;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -66,10 +65,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     public void persistMultipleNodesTest() throws GUIDGenerationException, NodesDirectoryException {
 
         Set<Node> nodes = localNodesDirectory.getKnownNodes();
-        for(Node n:nodes) {
-            System.err.println("GOTCHAYOU " + n.toString());
-            assertTrue(false);
-        }
+        assertEquals(nodes.size(), 0);
 
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
@@ -156,6 +152,24 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(true, true, true, true, true);
 
         Set<Node> storageNodes = localNodesDirectory.getStorageNodes(10);
+        assertEquals(storageNodes.size(), 3);
+    }
+
+    @Test
+    public void getStorageNodesIgnoreNegativeLimitTest() {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        localNodesDirectory.addNode(node);
+
+        addNode(true, false, false, false, false);
+        addNode(false, true, false, false, false);
+        addNode(false, false, true, false, false);
+        addNode(false, false, false, true, false);
+        addNode(false, false, false, false, true);
+        addNode(true, true, false, false, false);
+        addNode(true, true, true, true, true);
+
+        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(-1);
         assertEquals(storageNodes.size(), 3);
     }
 
