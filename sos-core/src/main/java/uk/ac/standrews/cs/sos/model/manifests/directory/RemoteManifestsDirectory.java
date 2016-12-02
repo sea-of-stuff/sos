@@ -49,6 +49,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
                 boolean replicationIsSuccessful = ManifestReplication.TransferManifestRequest(manifest, ddsNode);
                 if (replicationIsSuccessful) {
+                    SOS_LOG.log(LEVEL.WARN, "ddsindex is " + ddsIndex);
                     ddsIndex.addEntry(manifest.guid(), ddsNode.getNodeGUID());
                 }
             }

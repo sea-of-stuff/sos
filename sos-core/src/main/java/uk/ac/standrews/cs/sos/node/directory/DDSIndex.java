@@ -24,7 +24,7 @@ public class DDSIndex {
 
     public void addEntry(IGUID manifestGUID, IGUID dds) {
 
-        if (index.containsKey(manifestGUID)) {
+        if (!index.containsKey(manifestGUID)) {
             index.put(manifestGUID, new HashSet<>());
         }
 

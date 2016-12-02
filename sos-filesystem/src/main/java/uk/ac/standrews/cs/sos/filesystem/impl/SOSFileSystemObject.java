@@ -62,6 +62,8 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
                 sos.setHEAD(asset.getVersionGUID());
                 guid = asset.getVersionGUID();
             } else {
+                // This happens if data is the same? test by having multiple of the same commands
+                // e.g. echo data > test.txt; echo data > test.txt; echo data > test.txt
                 System.out.println("WOOOOOO - some strange issue here");
             }
         } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {

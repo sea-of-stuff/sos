@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -92,6 +93,14 @@ public class AtomStorage {
 
     public void replicate(InputStream data, Set<Node> nodes, NDS nds, DDS dds) throws SOSProtocolException {
         DataReplication.Replicate(data, nodes, locationIndex, nds, dds);
+    }
+
+    public void replicate(BufferedInputStream data, Set<Node> nodes, NDS nds, DDS dds) throws SOSProtocolException {
+        DataReplication.Replicate(data, nodes, locationIndex, nds, dds);
+    }
+
+    public void replicate(Location location, Set<Node> nodes, NDS nds, DDS dds) throws SOSProtocolException {
+        DataReplication.Replicate(location, nodes, locationIndex, nds, dds);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Set<LocationBundle> bundles) throws StorageException {

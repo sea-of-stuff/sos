@@ -25,7 +25,6 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -98,6 +97,24 @@ public class SOSStorage implements Storage {
         return dataStream;
     }
 
+    public Location getAtomLocation(Atom atom) {
+
+        Location location = null;
+        Iterator<LocationBundle> it = atomStorage.getLocationsIterator(atom.guid());
+        while(it.hasNext()) {
+            LocationBundle locationBundle = it.next();
+
+            location = locationBundle.getLocation();
+            InputStream dataStream = LocationUtility.getInputStreamFromLocation(location);
+
+            if (dataStream != null) {
+                break;
+            }
+        }
+
+        return location;
+    }
+
     @Override
     public InputStream getAtomContent(IGUID guid) {
         try {
@@ -164,11 +181,14 @@ public class SOSStorage implements Storage {
         int replicationFactor = replicationPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
-            try (InputStream data = getAtomContent(atom)) {
-
+            try {
+                Location location = getAtomLocation(atom);
                 Set<Node> storageNodes = nds.getStorageNodes(replicationFactor);
-                atomStorage.replicate(data, storageNodes, nds, dds);
-            } catch (IOException | SOSProtocolException e) {
+//                BufferedInputStream bufferedInputStream = new BufferedInputStream(data);
+//                bufferedInputStream.mark(Integer.MAX_VALUE);
+                atomStorage.replicate(location, storageNodes, nds, dds);
+//                atomStorage.replicate(data, storageNodes, nds, dds);
+            } catch (SOSProtocolException e) {
                 // TODO - throw exception
                 e.printStackTrace();
             }
