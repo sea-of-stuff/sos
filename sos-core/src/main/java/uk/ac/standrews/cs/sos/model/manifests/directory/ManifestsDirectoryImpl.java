@@ -21,6 +21,7 @@ import java.io.IOException;
 public class ManifestsDirectoryImpl implements ManifestsDirectory {
 
     private static final String CACHE_FILE = "manifests.cache";
+    private static final String DDS_INDEX_FILE = "dds.index";
 
     private ManifestsCache cache;
     private LocalManifestsDirectory local;
@@ -35,7 +36,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         this.localStorage = localStorage;
 
         loadOrCreateCache();
-        ddsIndex = new DDSIndex(); // TODO - loadOrCreate
+        loadOrCreateDDSIndex();
 
         local = new LocalManifestsDirectory(localStorage);
         remote = new RemoteManifestsDirectory(manifestPolicy, localNodesDirectory, ddsIndex);
@@ -88,8 +89,13 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     public void flush() {
         try {
             Directory cacheDir = localStorage.getCachesDirectory();
-            File file = localStorage.createFile(cacheDir, CACHE_FILE);
-            cache.persist(file);
+
+            File cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
+            cache.persist(cacheFile);
+
+            File ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
+            ddsIndex.persist(ddsIndexFile);
+
         } catch (DataStorageException | IOException e) {
             e.printStackTrace();
         }
@@ -108,6 +114,22 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
 
         if (cache == null) {
             cache = new ManifestsCacheImpl();
+        }
+    }
+
+    private void loadOrCreateDDSIndex() {
+        try {
+            Directory cacheDir = localStorage.getCachesDirectory();
+            File file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
+            if (file.exists()) {
+                ddsIndex = DDSIndex.load(file);
+            }
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        if (ddsIndex == null) {
+            ddsIndex = new DDSIndex();
         }
     }
 
