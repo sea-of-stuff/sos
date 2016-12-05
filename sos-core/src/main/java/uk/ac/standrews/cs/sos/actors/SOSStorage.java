@@ -69,7 +69,7 @@ public class SOSStorage implements Storage {
         replicateData(manifest);
         notifyDDS(ddsNotificationInfo, manifest);
 
-        return manifest; // TODO - update response
+        return manifest; // TODO - update response to include dds promises
     }
 
     /**
@@ -96,24 +96,6 @@ public class SOSStorage implements Storage {
         }
 
         return dataStream;
-    }
-
-    public Location getAtomLocation(Atom atom) {
-
-        Location location = null;
-        Iterator<LocationBundle> it = atomStorage.getLocationsIterator(atom.guid());
-        while(it.hasNext()) {
-            LocationBundle locationBundle = it.next();
-
-            location = locationBundle.getLocation();
-            InputStream dataStream = LocationUtility.getInputStreamFromLocation(location);
-
-            if (dataStream != null) {
-                break;
-            }
-        }
-
-        return location;
     }
 
     @Override

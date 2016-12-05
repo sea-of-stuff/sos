@@ -54,7 +54,7 @@ public class LocationsIndexImplTest {
 
     @Test
     public void persistLocationsIndexTest() throws StorageException, DataStorageException, URISyntaxException, IOException, ClassNotFoundException {
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
+        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
 
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 

@@ -94,7 +94,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void persistCacheTest() throws IOException, ClassNotFoundException, ManifestsCacheMissException, StorageException,
             DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException {
 
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
+        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
 
         Directory manifestsDir = localStorage.getManifestDirectory();
         Directory cachesDir = localStorage.getCachesDirectory();
@@ -121,7 +121,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
             ManifestsCacheMissException, StorageException, DataStorageException {
 
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
+        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
 
         Directory manifestsDir = localStorage.getManifestDirectory();
         Directory cachesDir = localStorage.getCachesDirectory();

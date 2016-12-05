@@ -33,8 +33,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * TODO - test this function with location, inputstream (file), and bufferedinputstream
- * TODO - test with parallel requests
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

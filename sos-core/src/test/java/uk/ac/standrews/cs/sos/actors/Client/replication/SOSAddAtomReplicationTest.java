@@ -16,31 +16,51 @@ import static org.testng.AssertJUnit.assertNotNull;
 public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
     @Test
-    public void testAddAtomFromStream() throws Exception {
-        String testString = "first line and second line - replica";
-        InputStream stream = HelperTest.StringToInputStream(testString);
+    public void replicateDataAndFetchItTest() throws Exception {
+
+        InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
         Atom manifest = agent.addAtom(builder);
 
+        Thread.sleep(1000); // Let replication happen
+
         assertNotNull(manifest.getContentGUID());
-        assertEquals(2, manifest.getLocations().size());
+        assertEquals(1, manifest.getLocations().size());
 
+        // Delete atom and atom manifest
+        localStorage.getManifestDirectory().remove(manifest.guid() + ".json");
+        localStorage.getDataDirectory().remove(manifest.guid().toString());
 
-//
-//        assertNotNull(manifest.getContentGUID());
-//        assertEquals(2, manifest.getLocations().size());
-//
-//        // TODO
-//        // This is meaningless, because data will be also in cache and local disk?
-//        InputStream inputStream = agent.getAtomContent(manifest);
-//        String resultString = HelperTest.InputStreamToString(inputStream);
-//        assertEquals(testString, resultString);
-//
-//        stream.close();
-//        inputStream.close();
+        // Look at locationIndex in atomStorage
+        // Get data from external source (data is never kept in memory, unlike manifests)
+        InputStream inputStream = agent.getAtomContent(manifest);
+        assertNotNull(inputStream);
 
-        // TODO
-        // clear cache
-        // force node to get data from replica node
+        String retrievedData = HelperTest.InputStreamToString(inputStream);
+        assertEquals(retrievedData, TEST_DATA);
+    }
+
+    @Test
+    public void fetchReplicatedDataIgnoreManifestTest() throws Exception {
+
+        InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
+        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+        Atom manifest = agent.addAtom(builder);
+
+        Thread.sleep(1000); // Let replication happen
+
+        assertNotNull(manifest.getContentGUID());
+        assertEquals(1, manifest.getLocations().size());
+
+        // Delete atom ONLY
+        localStorage.getDataDirectory().remove(manifest.guid().toString());
+
+        // Manifest is ignored
+        // Get data from external source (data is never kept in memory, unlike manifests)
+        InputStream inputStream = agent.getAtomContent(manifest);
+        assertNotNull(inputStream);
+
+        String retrievedData = HelperTest.InputStreamToString(inputStream);
+        assertEquals(retrievedData, TEST_DATA);
     }
 }

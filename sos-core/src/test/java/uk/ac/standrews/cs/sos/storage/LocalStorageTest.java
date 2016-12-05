@@ -29,8 +29,7 @@ public class LocalStorageTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        localStorage =
-                new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
+        localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
     }
 
     @AfterMethod
