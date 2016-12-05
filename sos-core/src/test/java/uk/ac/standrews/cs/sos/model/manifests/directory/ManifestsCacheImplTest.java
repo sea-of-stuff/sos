@@ -91,7 +91,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     }
 
     @Test
-    public void persistCache() throws IOException, ClassNotFoundException, ManifestsCacheMissException, StorageException,
+    public void persistCacheTest() throws IOException, ClassNotFoundException, ManifestsCacheMissException, StorageException,
             DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException {
 
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
@@ -118,7 +118,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     }
 
     @Test (expectedExceptions = ManifestsCacheMissException.class)
-    public void persistCacheFailsWhenNoManifestsNotSaved() throws IOException, ClassNotFoundException,
+    public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
             ManifestsCacheMissException, StorageException, DataStorageException {
 
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, "~/sos/"));
