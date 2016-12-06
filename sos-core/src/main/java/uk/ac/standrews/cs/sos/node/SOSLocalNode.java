@@ -38,6 +38,8 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -64,6 +66,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private ManifestsDirectory manifestsDirectory;
     private LocalNodesDirectory localNodesDirectory; // TODO - use NDS!
     private MetadataDirectory metadataDirectory;
+
+    private ScheduledExecutorService garbageCollectorService;
 
     // Node roles
     // All roles will share storage, node directory, manifests directory, etc.
@@ -118,8 +122,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initMetadataManager();
 
         initSOSInstances();
-
         garbageCollector();
+
         SOS_LOG.log(LEVEL.INFO, "Node initialised");
     }
 
@@ -157,12 +161,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         manifestsDirectory.flush();
         storage.flush();
 
+        garbageCollectorService.shutdown();
+
         RequestsManager.getInstance().shutdown();
     }
-
-    /**************************************************************************/
-    /* PRIVATE METHODS */
-    /**************************************************************************/
 
     private void initNodeManager() throws SOSException {
         try {
@@ -213,11 +215,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void garbageCollector() {
-        // check if garbage collector should be run (e.g. not enough space)
-        // iterate over the atom manifests
-        // check what atoms can be removed from the cache
-        // clear cache
-        SOS_LOG.log(LEVEL.INFO, "Garbage collector is not available yet");
+        SOS_LOG.log(LEVEL.INFO, "Garbage collector started");
+
+        GarbageCollector garbageCollector = new GarbageCollector(localStorage);
+
+        garbageCollectorService = Executors.newScheduledThreadPool(1);
+        garbageCollectorService.scheduleAtFixedRate(garbageCollector, 0, GarbageCollector.PERIOD, GarbageCollector.TIME_UNIT);
+
     }
 
     /**

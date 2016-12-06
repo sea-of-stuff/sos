@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
+import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 import java.util.List;
 
@@ -45,8 +46,8 @@ class ServerState {
             StorageType storageType = configuration.getStorageType();
             String root = configuration.getStorageLocation();
 
-            localStorage = new LocalStorage(StorageFactory
-                            .createStorage(storageType, root));
+            IStorage storage = StorageFactory.createStorage(storageType, root);
+            localStorage = new LocalStorage(storage);
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }

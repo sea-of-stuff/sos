@@ -47,7 +47,7 @@ public class SOSAgent implements Agent {
 
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
-        Atom manifest = storage.addAtom(atomBuilder, false, new DDSNotificationInfo().setNotifyDDSNodes(false));
+        Atom manifest = storage.addAtom(atomBuilder, false, new DDSNotificationInfo().setNotifyDDSNodes(true));
         return manifest;
     }
 

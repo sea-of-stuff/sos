@@ -145,8 +145,6 @@ public class LocalStorage {
             remove(HEADS_DIRECTORY_NAME);
             remove(META_DIRECTORY_NAME);
             remove(CACHES_DIRECTORY_NAME);
-
-            // TODO - remove content in the root directory?
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
         }

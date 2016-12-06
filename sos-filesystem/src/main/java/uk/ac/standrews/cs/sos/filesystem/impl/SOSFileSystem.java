@@ -70,7 +70,16 @@ public class SOSFileSystem implements IFileSystem {
     public synchronized void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Append to file " + name);
 
-        throw new NotImplementedException();
+        // FIXME!
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Update file " + name);
+
+        SOSFile previous = (SOSFile) parent.get(name);
+        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, previous);
+        file.persist();
+
+        updateParent((SOSDirectory) parent, name, file);
+
+        // throw notimplementedexception
     }
 
     @Override

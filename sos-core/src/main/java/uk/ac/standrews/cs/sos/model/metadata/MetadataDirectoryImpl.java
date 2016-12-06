@@ -20,10 +20,11 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * FIXME - pass either atom or directory (compound data). in the case of compound data, the streams should be chained
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class MetadataDirectoryImpl implements MetadataDirectory {
@@ -32,7 +33,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     private MetadataEngine engine;
     private MetadataPolicy policy;
 
-    private List<SOSMetadata> naiveCache = new ArrayList<>();
+    private List<SOSMetadata> naiveCache = new CopyOnWriteArrayList<>(); // TODO - make it faster using hashtable
 
     public MetadataDirectoryImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy) {
         this.localStorage = localStorage;
@@ -113,7 +114,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     }
 
     private SOSMetadata findMetadataFromCache(IGUID guid) {
-        // TODO - make it faster using hashtable
+
         for(SOSMetadata metadata:naiveCache) {
             try {
                 if (metadata.guid().equals(guid)) {
