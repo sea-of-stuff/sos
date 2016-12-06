@@ -55,4 +55,6 @@ public interface DDS extends SeaOfStuff {
 
     void setHEAD(IGUID version) throws HEADNotSetException;
 
+    void flush();
+
 }

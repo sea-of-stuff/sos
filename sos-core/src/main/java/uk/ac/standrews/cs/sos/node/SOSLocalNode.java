@@ -5,15 +5,13 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
@@ -25,11 +23,9 @@ import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
-import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.node.directory.database.DatabaseType;
 import uk.ac.standrews.cs.sos.node.directory.database.SQLDatabase;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
@@ -63,8 +59,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private PolicyManager policyManager;
     private NodesDatabase nodesDatabase;
     private Identity identity;
-    private ManifestsDirectory manifestsDirectory;
-    private LocalNodesDirectory localNodesDirectory; // TODO - use NDS!
     private MetadataDirectory metadataDirectory;
 
     private ScheduledExecutorService garbageCollectorService;
@@ -106,18 +100,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             e.printStackTrace();
         }
 
-        // TODO - register node with NDS
-        initNodeManager();
-
-
-        try {
-            SOSURLProtocol.getInstance().register(localStorage);
-        } catch (SOSProtocolException e) {
-            throw new SOSException(e);
-        }
+        // TODO - register node with NDS (not this NDS)
+        initNDS();
 
         loadBootstrapNodes(Builder.bootstrapNodes);
-        initManifestManager();
         initIdentity();
         initMetadataManager();
 
@@ -158,7 +144,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        manifestsDirectory.flush();
+        dds.flush();
         storage.flush();
 
         garbageCollectorService.shutdown();
@@ -166,25 +152,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         RequestsManager.getInstance().shutdown();
     }
 
-    private void initNodeManager() throws SOSException {
-        try {
-            localNodesDirectory = new LocalNodesDirectory(this, nodesDatabase);
-        } catch (NodesDirectoryException e) {
-            throw new SOSException(e);
-        }
-    }
-
     private void loadBootstrapNodes(List<Node> bootstrapNodes)
-            throws DatabaseConnectionException {
+            throws NodeRegistrationException {
 
         for(Node node:bootstrapNodes) {
-            localNodesDirectory.addNode(node);
+            nds.registerNode(node, true);
         }
-    }
-
-    private void initManifestManager() {
-        ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
-        manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, localNodesDirectory);
     }
 
     private void initIdentity() throws SOSException {
@@ -199,16 +172,24 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initMetadataManager() {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
         MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
-        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy);
+        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy); // TODO - do it in MCS
+    }
+
+    private void initNDS() throws SOSException {
+        try {
+            SOSURLProtocol.getInstance().register(localStorage);
+            nds = new SOSNDS(this, nodesDatabase);
+            SOSURLProtocol.getInstance().setNDS(nds);
+        } catch (SOSProtocolException e) {
+            throw new SOSException(e);
+        }
     }
 
     private void initSOSInstances() {
-        nds = new SOSNDS(localNodesDirectory);
-        SOSURLProtocol.getInstance().setNDS(nds);
-
         ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
+        ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
 
-        dds = new SOSDDS(manifestsDirectory);
+        dds = new SOSDDS(localStorage, manifestPolicy, nds);
         storage = new SOSStorage(this, localStorage, replicationPolicy, nds, dds);
         mcs = new SOSMCS(metadataDirectory);
         agent = new SOSAgent(storage, dds, mcs, identity);

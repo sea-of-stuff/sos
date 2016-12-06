@@ -86,7 +86,7 @@ public class DataReplication {
 
             for(Node ddsNode:tuple.y.y) {
                 try {
-                    nds.registerNode(ddsNode);
+                    nds.registerNode(ddsNode, true);
                 } catch (NodeRegistrationException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
                     return;

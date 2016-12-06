@@ -138,7 +138,7 @@ public class DataReplicationWithDDSFeedbackTest {
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
 
-        verify(mockNDS, times(3)).registerNode(anyObject());
+        verify(mockNDS, times(3)).registerNode(anyObject(), anyBoolean());
         verify(mockDDS, times(3)).addManifestDDSMapping(anyObject(), anyObject());
     }
 

@@ -59,7 +59,7 @@ public class NodeRegistrationTest {
         NodeRegistration nodeRegistration = new NodeRegistration(localNodesDirectory);
 
         Node nodeMock = makeMockNode();
-        Node registeredNode = nodeRegistration.registerNode(nodeMock);
+        Node registeredNode = nodeRegistration.registerNode(nodeMock, true);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
@@ -68,7 +68,7 @@ public class NodeRegistrationTest {
     public void registrationFailsTest() throws NodeRegistrationException {
         NodeRegistration nodeRegistration = new NodeRegistration(localNodesDirectory);
 
-        nodeRegistration.registerNode(null);
+        nodeRegistration.registerNode(null, true);
     }
 
     private Node makeMockNode() {

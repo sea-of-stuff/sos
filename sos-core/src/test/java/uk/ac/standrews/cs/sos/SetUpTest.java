@@ -69,20 +69,7 @@ public class SetUpTest extends CommonTest {
                     "        }\n" +
                     "    }\n" +
                     "\n" +
-                    "    \"bootstrap\" : [\n" +
-                    "        {\n" +
-                    "            \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\"\n" +
-                    "            \"port\" : 8080\n" +
-                    "            \"hostname\" : \"cs-wifi-174.cs.st-andrews.ac.uk\"\n" +
-                    "            \"is\" : {\n" +
-                    "                \"agent\" : false\n" +
-                    "                \"storage\" : true\n" +
-                    "                \"dds\" : false\n" +
-                    "                \"nds\" : false\n" +
-                    "                \"mcs\" : false\n" +
-                    "            }\n" +
-                    "        }\n" +
-                    "    ]\n" +
+                    "    \"bootstrap\" : []\n" +
                     "}";
 
     protected SOSConfiguration configuration;

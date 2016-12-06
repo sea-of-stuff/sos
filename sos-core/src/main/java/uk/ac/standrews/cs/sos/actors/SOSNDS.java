@@ -5,8 +5,10 @@ import uk.ac.standrews.cs.sos.actors.protocol.NodeDiscovery;
 import uk.ac.standrews.cs.sos.actors.protocol.NodeRegistration;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 
 import java.util.Set;
@@ -24,10 +26,16 @@ public class SOSNDS implements NDS {
     private NodeDiscovery nodeDiscovery;
     private NodeRegistration nodeRegistration;
 
-    public SOSNDS(LocalNodesDirectory localNodesDirectory) {
+    public SOSNDS(Node localNode, NodesDatabase nodesDatabase) {
+        LocalNodesDirectory localNodesDirectory = null;
+        try {
+            localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
+            nodeDiscovery = new NodeDiscovery(localNodesDirectory);
+            nodeRegistration = new NodeRegistration(localNodesDirectory);
+        } catch (NodesDirectoryException e) {
+            e.printStackTrace();
+        }
 
-        nodeDiscovery = new NodeDiscovery(localNodesDirectory);
-        nodeRegistration = new NodeRegistration(localNodesDirectory);
     }
 
     @Override
@@ -74,8 +82,8 @@ public class SOSNDS implements NDS {
 
 
     @Override
-    public Node registerNode(Node node) throws NodeRegistrationException {
-        return nodeRegistration.registerNode(node);
+    public Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException {
+        return nodeRegistration.registerNode(node, localOnly);
     }
 
 }

@@ -8,12 +8,12 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Set;
@@ -26,12 +26,12 @@ import java.util.Set;
 public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private ManifestPolicy manifestPolicy;
-    private LocalNodesDirectory localNodesDirectory;
+    private NDS nds;
     private DDSIndex ddsIndex;
 
-    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, LocalNodesDirectory localNodesDirectory, DDSIndex ddsIndex) {
+    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, NDS nds, DDSIndex ddsIndex) {
         this.manifestPolicy = manifestPolicy;
-        this.localNodesDirectory = localNodesDirectory;
+        this.nds = nds;
         this.ddsIndex = ddsIndex;
     }
 
@@ -40,7 +40,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
         int replicationFactor = manifestPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
-            Set<Node> ddsNodes = localNodesDirectory.getDDSNodes(replicationFactor);
+            Set<Node> ddsNodes = nds.getDDSNodes(replicationFactor);
 
             for(Node ddsNode:ddsNodes) {
                 SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +

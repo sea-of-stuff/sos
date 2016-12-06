@@ -3,12 +3,12 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -30,8 +30,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
 
     private DDSIndex ddsIndex;
 
-    public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage,
-                                  LocalNodesDirectory localNodesDirectory) {
+    public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage, NDS nds) {
 
         this.localStorage = localStorage;
 
@@ -39,7 +38,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         loadOrCreateDDSIndex();
 
         local = new LocalManifestsDirectory(localStorage);
-        remote = new RemoteManifestsDirectory(manifestPolicy, localNodesDirectory, ddsIndex);
+        remote = new RemoteManifestsDirectory(manifestPolicy, nds, ddsIndex);
     }
 
     @Override

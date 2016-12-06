@@ -34,7 +34,7 @@ public class RESTNDS {
 
         Node registerNode;
         try {
-            registerNode = nds.registerNode(node);
+            registerNode = nds.registerNode(node, true);
         } catch (NodeRegistrationException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }

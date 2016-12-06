@@ -69,8 +69,7 @@ public class SOSURLConnection extends URLConnection {
             IGUID nodeGUID = GUIDFactory.recreateGUID(url.getHost());
             IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial slash
 
-            boolean dataIsStoredLocally = dataIsStoredLocally(nodeGUID);
-            if (dataIsStoredLocally) {
+            if (isLocalNode(nodeGUID) && dataIsStorageLocally(entityGUID)) {
                 inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nds.getNode(nodeGUID);
@@ -86,9 +85,13 @@ public class SOSURLConnection extends URLConnection {
         return inputStream;
     }
 
-    private boolean dataIsStoredLocally(IGUID nodeGUID) {
+    private boolean isLocalNode(IGUID nodeGUID) {
         IGUID localNodeGUID = nds.getThisNode().getNodeGUID();
         return localNodeGUID.equals(nodeGUID);
+    }
+
+    private boolean dataIsStorageLocally(IGUID guid) throws DataStorageException {
+        return localStorage.getDataDirectory().contains(guid.toString());
     }
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,

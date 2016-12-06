@@ -21,9 +21,10 @@ public interface NDS extends SeaOfStuff {
     /**
      * Registers a node to the SOS
      * @param node
+     * @param localOnly
      * @return
      */
-    Node registerNode(Node node) throws NodeRegistrationException;
+    Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException;
 
     /**
      * Get a known node to this Sea Of Stuff.

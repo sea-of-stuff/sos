@@ -14,7 +14,8 @@ public class GarbageCollector implements Runnable {
     protected static final int PERIOD = 10;
     protected static final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
 
-    private static final long ONE_MB = 1024L * 1024L;
+    private static final long ONE_KB = 1024L;
+    private static final long ONE_MB = ONE_KB * ONE_KB;
     private static final long DATA_SIZE_LIMIT = 1L * ONE_MB;
 
     private LocalStorage localStorage;
@@ -51,8 +52,9 @@ public class GarbageCollector implements Runnable {
     }
 
     private void gc() {
-        // Remove unnecessary files
+        System.out.println("Garbage Collecting - WORK IN PROGRESS");
+
+        // Remove unnecessary files - least used files or bigger files
         // Check caches and indices
-        System.out.println("garbage collecting - WORK IN PROGRESS");
     }
 }
