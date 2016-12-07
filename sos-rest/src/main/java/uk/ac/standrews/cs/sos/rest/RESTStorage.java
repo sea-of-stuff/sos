@@ -93,13 +93,13 @@ public class RESTStorage {
         Tuple<Atom, Set<Node>> tuple;
         try {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
-            tuple = storage.addAtom(builder, true, new DDSNotificationInfo());
+            tuple = storage.addAtom(builder, true, new DDSNotificationInfo()
+                    .setNotifyDDSNodes(true)
+                    .setUseDefaultDDSNodes(true)); // TODO - must be configurable
 
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
-
-        // NOTE - storage will return manifest + dds nodes
 
         String response = JSONResponse(tuple);
         return HTTPResponses.CREATED(response);
@@ -108,18 +108,18 @@ public class RESTStorage {
     private String JSONResponse(Tuple<Atom, Set<Node>> tuple) {
         String retval = "{";
 
-        retval += "\"Manifest\" : {";
-        retval += tuple.x.toString();
-        retval += "}";
+        retval += "\"Manifest\" : " + tuple.x.toString() + ",\n";
 
         retval += "\"DDS\" : [";
         for(Node node:tuple.y) {
             retval += "{";
-            retval += "\"GUID\" : " + node.getNodeGUID().toString();
-            retval += "\"Hostname\" : " + node.getHostAddress().getHostName();
+            retval += "\"GUID\" : \"" + node.getNodeGUID().toString() + "\", ";
+            retval += "\"Hostname\" : \"" + node.getHostAddress().getHostName() + "\", ";
             retval += "\"Port\" : " + node.getHostAddress().getPort();
             retval += "},";
         }
+        retval = retval.substring(0, retval.length()-1); // removing last comma
+
         retval += "]";
 
         retval += "}";

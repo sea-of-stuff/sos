@@ -67,7 +67,7 @@ public class SOSStorage implements Storage {
         replicateData(manifest);
         notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
 
-        return new Tuple(manifest, defaultDDSNodes);
+        return new Tuple<>(manifest, defaultDDSNodes);
     }
 
     /**
@@ -181,7 +181,9 @@ public class SOSStorage implements Storage {
 
             if (ddsNotificationInfo.useDefaultDDSNodes()) {
                 int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
+                System.out.println("GET MAX " + noDDSNodes + " ddsnodes");
                 retval = nds.getDDSNodes(noDDSNodes);
+                System.out.println("retval: " + retval.size());
             }
         }
 
@@ -193,6 +195,7 @@ public class SOSStorage implements Storage {
      *
      * TODO - see manifest replication info
      * - embed dds notif info in configuration policies
+     * - set a limit on the number of dds nodes
      * @param ddsNotificationInfo
      * @param manifest
      */
