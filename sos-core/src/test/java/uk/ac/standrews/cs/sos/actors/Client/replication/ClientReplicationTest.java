@@ -90,8 +90,6 @@ public class ClientReplicationTest extends SetUpTest {
                     "    ]\n" +
                     "}";
 
-
-
     @Override
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {

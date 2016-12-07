@@ -23,14 +23,12 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -55,7 +53,7 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
+    public Tuple<Atom, Set<Node>> addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);
@@ -63,13 +61,13 @@ public class SOSStorage implements Storage {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest, false);
 
-        // TODO - build response using manifest + ddsNodes (if ddsNodes is not empty)
+        Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo);
 
         // Run asynchronously
         replicateData(manifest);
-        notifyDDS(ddsNotificationInfo, manifest);
+        notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
 
-        return manifest; // TODO - update response to include dds promises
+        return new Tuple(manifest, defaultDDSNodes);
     }
 
     /**
@@ -175,17 +173,35 @@ public class SOSStorage implements Storage {
         }
     }
 
-    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, AtomManifest manifest) {
+    private Set<Node> getDefaultDDSNodesForReplication(DDSNotificationInfo ddsNotificationInfo) {
+
+        Set<Node> retval = Collections.EMPTY_SET;
+
+        if (ddsNotificationInfo.notifyDDSNodes()) {
+
+            if (ddsNotificationInfo.useDefaultDDSNodes()) {
+                int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
+                retval = nds.getDDSNodes(noDDSNodes);
+            }
+        }
+
+        return retval;
+    }
+
+    /**
+     * Send manifest to DDS nodes
+     *
+     * TODO - see manifest replication info
+     * - embed dds notif info in configuration policies
+     * @param ddsNotificationInfo
+     * @param manifest
+     */
+    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, Set<Node> defaultDDSNodes, AtomManifest manifest) {
 
         if (ddsNotificationInfo.notifyDDSNodes()) {
 
             Set<Node> ddsNodes = new HashSet<>(); // Remember that HashSet does not preserve order
-
-            if (ddsNotificationInfo.useDefaultDDSNodes()) {
-                int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
-                Set<Node> defaultNDSNodes = nds.getDDSNodes(noDDSNodes);
-                ddsNodes.addAll(defaultNDSNodes);
-            }
+            ddsNodes.addAll(defaultDDSNodes);
 
             if (ddsNotificationInfo.useSuggestedDDSNodes()) {
                 Set<Node> suggestedNodes = ddsNotificationInfo.getSuggestedDDSNodes();

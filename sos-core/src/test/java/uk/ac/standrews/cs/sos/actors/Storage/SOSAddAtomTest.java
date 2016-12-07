@@ -30,7 +30,7 @@ public class SOSAddAtomTest extends StorageTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         try (InputStream inputStream = storage.getAtomContent(manifest)) {
@@ -43,7 +43,7 @@ public class SOSAddAtomTest extends StorageTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -63,7 +63,7 @@ public class SOSAddAtomTest extends StorageTest {
         InputStream stream = HelperTest.StringToInputStream(testString);
 
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -79,7 +79,7 @@ public class SOSAddAtomTest extends StorageTest {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false));
+        Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
         assertEquals(manifest.getManifestType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());

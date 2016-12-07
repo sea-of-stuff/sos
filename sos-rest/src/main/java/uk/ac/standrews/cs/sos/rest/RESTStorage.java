@@ -11,8 +11,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import javax.ws.rs.*;
@@ -20,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -70,9 +73,10 @@ public class RESTStorage {
 
         try {
             AtomBuilder builder = new AtomBuilder().setLocation(location);
-            Atom atom = storage.addAtom(builder, true, new DDSNotificationInfo());
+            Tuple<Atom, Set<Node>> tuple = storage.addAtom(builder, true, new DDSNotificationInfo());
 
-            return HTTPResponses.CREATED(atom.toString());
+            String response = JSONResponse(tuple);
+            return HTTPResponses.CREATED(response);
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
@@ -86,17 +90,41 @@ public class RESTStorage {
     public Response addAtomStream(final InputStream inputStream) {
         Storage storage = RESTConfig.sos.getStorage();
 
-        Atom manifest;
+        Tuple<Atom, Set<Node>> tuple;
         try {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
-            manifest = storage.addAtom(builder, true, new DDSNotificationInfo());
+            tuple = storage.addAtom(builder, true, new DDSNotificationInfo());
+
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
         // NOTE - storage will return manifest + dds nodes
 
-        return HTTPResponses.CREATED(manifest.toString());
+        String response = JSONResponse(tuple);
+        return HTTPResponses.CREATED(response);
+    }
+
+    private String JSONResponse(Tuple<Atom, Set<Node>> tuple) {
+        String retval = "{";
+
+        retval += "\"Manifest\" : {";
+        retval += tuple.x.toString();
+        retval += "}";
+
+        retval += "\"DDS\" : [";
+        for(Node node:tuple.y) {
+            retval += "{";
+            retval += "\"GUID\" : " + node.getNodeGUID().toString();
+            retval += "\"Hostname\" : " + node.getHostAddress().getHostName();
+            retval += "\"Port\" : " + node.getHostAddress().getPort();
+            retval += "},";
+        }
+        retval += "]";
+
+        retval += "}";
+
+        return retval;
     }
 
 }

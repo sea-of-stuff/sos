@@ -17,12 +17,10 @@ public class SOS_LOG {
 
     public SOS_LOG(IGUID guid) {
         nodeGUID = guid;
-        log = Logger.LOG();
+        log = Logger.LOG(Logger.LOG4J_LOGGER);
     }
 
     public static void log(LEVEL level, String message) {
-        System.out.println(message); // DEBUG ONLY
-
         if (log != null) {
             log.log("sos", level, nodeGUID.toString(), message);
         } else {

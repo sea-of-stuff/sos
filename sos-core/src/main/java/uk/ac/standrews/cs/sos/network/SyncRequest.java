@@ -23,30 +23,40 @@ public class SyncRequest extends Request {
     public Response play(OkHttpClient client) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
 
-        Response response = null;
+        Response response;
         switch(method) {
-            case GET:
-                response = get(client);
-                break;
-            case POST:
-                if (inputStream != null) {
-                    response = postData(client);
-                } else if (json_body != null) {
-                    response = postJSON(client);
-                } else {
-                    throw new IOException("No body to post");
-                }
-                break;
-            case PUT:
-                if (json_body != null) {
-                    response = putJSON(client);
-                } else {
-                    throw new IOException("No body to post");
-                }
-                break;
+            case GET: response = get(client); break;
+            case POST: response = managePOST(client); break;
+            case PUT: response = managePUT(client); break;
             default:
-                SOS_LOG.log(LEVEL.WARN, "Unknown Request method while playing a request");
+                SOS_LOG.log(LEVEL.ERROR, "Unknown Request method while playing a request");
                 throw new IOException("Unknown Request method");
+        }
+
+        return response;
+    }
+
+    private Response managePOST(OkHttpClient client) throws IOException {
+
+        Response response;
+        if (inputStream != null) {
+            response = postData(client);
+        } else if (json_body != null) {
+            response = postJSON(client);
+        } else {
+            throw new IOException("No body to post");
+        }
+
+        return response;
+    }
+
+    private Response managePUT(OkHttpClient client) throws IOException {
+
+        Response response;
+        if (json_body != null) {
+            response = putJSON(client);
+        } else {
+            throw new IOException("No body to post");
         }
 
         return response;
@@ -62,7 +72,7 @@ public class SyncRequest extends Request {
         return response;
     }
 
-    protected Response postJSON(OkHttpClient client) throws IOException {
+    private Response postJSON(OkHttpClient client) throws IOException {
         RequestBody body = RequestBody.create(JSON, json_body);
 
         request = new okhttp3.Request.Builder()
@@ -74,8 +84,8 @@ public class SyncRequest extends Request {
         return response;
     }
 
-    protected Response postData(OkHttpClient client) throws IOException {
-        // FIXME - this will fail for large data
+    private Response postData(OkHttpClient client) throws IOException {
+        // FIXME - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
         RequestBody body = RequestBody.create(MULTIPART, bytes);
 
@@ -88,7 +98,7 @@ public class SyncRequest extends Request {
         return response;
     }
 
-    protected Response putJSON(OkHttpClient client) throws IOException {
+    private Response putJSON(OkHttpClient client) throws IOException {
         RequestBody body = RequestBody.create(JSON, json_body);
 
         request = new okhttp3.Request.Builder()
