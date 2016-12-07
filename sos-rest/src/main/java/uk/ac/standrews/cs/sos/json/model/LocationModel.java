@@ -23,6 +23,8 @@ public class LocationModel {
     }
 
     public Location getLocation() throws IOException {
+        System.out.println("attempting to make location");
+        System.out.println("uri " + uri);
         return LocationFactory.makeLocation(uri);
     }
 }

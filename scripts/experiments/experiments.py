@@ -11,7 +11,7 @@ def URL(row):
     return '%s:%s%s' % (row[1], row[2], row[3])
 
 def printResponse(response):
-    print ">> Response: %s - %s" % (response.status_code, response.text)
+    print ">> Response: %s" % (response.status_code)
 
 def GET(url):
     response = requests.request("GET", url)

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.rest;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
@@ -14,6 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -35,6 +37,8 @@ public class RESTStorage {
     @Path("/data/guid/{guid}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") String guid) {
+        SOS_LOG.log(LEVEL.INFO, "REST: /storage/data/guid/{guid}");
+
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
@@ -55,8 +59,9 @@ public class RESTStorage {
     @POST
     @Path("/uri")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response postDataByLocation(LocationModel locationModel) {
+        SOS_LOG.log(LEVEL.INFO, "REST: /storage/uri");
 
         if (locationModel == null) {
             return HTTPResponses.INTERNAL_SERVER();
@@ -88,6 +93,8 @@ public class RESTStorage {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final InputStream inputStream) {
+        SOS_LOG.log(LEVEL.INFO, "REST: /storage/stream");
+
         Storage storage = RESTConfig.sos.getStorage();
 
         Tuple<Atom, Set<Node>> tuple;
@@ -118,8 +125,9 @@ public class RESTStorage {
             retval += "\"Port\" : " + node.getHostAddress().getPort();
             retval += "},";
         }
-        retval = retval.substring(0, retval.length()-1); // removing last comma
-
+        if (tuple.y.size() > 0) {
+            retval = retval.substring(0, retval.length() - 1); // removing last comma
+        }
         retval += "]";
 
         retval += "}";

@@ -1,5 +1,22 @@
 method,url,port,path,headers,datapath
-GET,http://cs-wifi-174.cs.st-andrews.ac.uk,8080,/info,,
-POST,http://cs-wifi-174.cs.st-andrews.ac.uk,8080,/storage/stream,{'content-type': "multipart/form-data"},data/small-text.txt
-POST,http://localhost,8080,/storage/uri,{'content-type': "application/json"},{"uri" : "http://www.w3schools.com/css/img_fjords.jpg"}
-
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/storage/data/guid/a20122ce36863c334971951b9b5092972194c291,,
+GET,http://tv.local,8080,/info,,
+POST,http://tv.local,8080,/storage/stream,{'content-type': "multipart/form-data"},data/small-text.txt
+POST,http://tv.local,8080,/storage/uri,{'content-type': "application/json"},{"uri" : "http://www.w3schools.com/css/img_fjords.jpg"}
+POST,http://tv.local,8080,/storage/uri,{'content-type': "application/json"},{"uri" : "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg"}
