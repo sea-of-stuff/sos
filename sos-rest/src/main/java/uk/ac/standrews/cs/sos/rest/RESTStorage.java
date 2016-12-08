@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
@@ -51,7 +52,12 @@ public class RESTStorage {
         }
 
         Storage storage = RESTConfig.sos.getStorage();
-        InputStream inputStream = storage.getAtomContent(atomGUID);
+        InputStream inputStream = null;
+        try {
+            inputStream = storage.getAtomContent(atomGUID);
+        } catch (AtomNotFoundException e) {
+            return HTTPResponses.NOT_FOUND("Atom not found");
+        }
 
         return HTTPResponses.OK(inputStream);
     }

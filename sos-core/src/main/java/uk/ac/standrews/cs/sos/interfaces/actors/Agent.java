@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -87,8 +88,9 @@ public interface Agent {
      *
      * @param atom describing the atom to retrieve.
      * @return InputStream
+     * @throws AtomNotFoundException
      */
-    InputStream getAtomContent(Atom atom);
+    InputStream getAtomContent(Atom atom) throws AtomNotFoundException;
 
     /**
      * Get the manifest matching the given GUID.

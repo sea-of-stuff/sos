@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
@@ -217,7 +218,12 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             size = (int) Long.parseLong(s_size);
         }
 
-        InputStream stream = sos.getAtomContent(atom);
+        InputStream stream = null;
+        try {
+            stream = sos.getAtomContent(atom);
+        } catch (AtomNotFoundException e) {
+            e.printStackTrace(); // TODO - define EmptyDATA() OBJECT
+        }
         IData data = new InputStreamData(stream, size);
 
         return data;

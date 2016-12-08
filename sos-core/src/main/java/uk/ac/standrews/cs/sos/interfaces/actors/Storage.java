@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -48,8 +49,9 @@ public interface Storage extends SeaOfStuff {
      *
      * @param guid
      * @return
+     * @throws AtomNotFoundException
      */
-    InputStream getAtomContent(IGUID guid);
+    InputStream getAtomContent(IGUID guid) throws AtomNotFoundException;
 
     /**
      * Flush all indexes and caches managed by the storage actor

@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.node;
 
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 
 import java.util.concurrent.TimeUnit;
@@ -11,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class GarbageCollector implements Runnable {
 
-    protected static final int PERIOD = 10;
+    protected static final int PERIOD = 60;
     protected static final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
 
     private static final long ONE_KB = 1024L;
@@ -42,7 +44,8 @@ public class GarbageCollector implements Runnable {
         try {
             Directory datDir = localStorage.getDataDirectory();
             long dataSize = datDir.getSize();
-            System.out.println("size is: " + dataSize);
+            SOS_LOG.log(LEVEL.INFO, "GC: size is: " + dataSize);
+
             return dataSize > DATA_SIZE_LIMIT;
         } catch (DataStorageException e) {
             e.printStackTrace();
@@ -52,9 +55,10 @@ public class GarbageCollector implements Runnable {
     }
 
     private void gc() {
-        System.out.println("Garbage Collecting - WORK IN PROGRESS");
+        SOS_LOG.log(LEVEL.INFO, "GC: Work in progress");
 
         // Remove unnecessary files - least used files or bigger files
         // Check caches and indices
+        // check that data is replicated
     }
 }

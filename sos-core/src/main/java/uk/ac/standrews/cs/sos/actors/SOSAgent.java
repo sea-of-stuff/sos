@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
@@ -84,9 +85,8 @@ public class SOSAgent implements Agent {
      * @return
      */
     @Override
-    public InputStream getAtomContent(Atom atom) {
-        InputStream dataStream = storage.getAtomContent(atom);
-        return dataStream;
+    public InputStream getAtomContent(Atom atom) throws AtomNotFoundException {
+        return storage.getAtomContent(atom);
     }
 
     @Override

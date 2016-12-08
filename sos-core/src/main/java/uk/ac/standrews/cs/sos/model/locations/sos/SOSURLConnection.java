@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.protocol.FetchData;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -11,7 +10,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -42,9 +40,7 @@ public class SOSURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(LocalStorage localStorage,
-                               NDS nds,
-                               URL url) {
+    protected SOSURLConnection(LocalStorage localStorage, NDS nds, URL url) {
         super(url);
 
         this.localStorage = localStorage;
@@ -96,7 +92,6 @@ public class SOSURLConnection extends URLConnection {
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
             BindingAbsentException, DataException, IOException {
-        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from this node");
 
         Directory directory = localStorage.getDataDirectory();
         String filename = entityGUID.toString();

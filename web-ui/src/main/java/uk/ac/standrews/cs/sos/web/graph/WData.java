@@ -4,6 +4,7 @@ import spark.Request;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -44,7 +45,12 @@ public class WData {
         if (manifest.getManifestType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
-            InputStream atomContent = sos.getAgent().getAtomContent(atom);
+            InputStream atomContent = null;
+            try {
+                atomContent = sos.getAgent().getAtomContent(atom);
+            } catch (AtomNotFoundException e) {
+                return "ATOM NOT FOUND";
+            }
             String retval = Utils.InputStreamToString(atomContent);
             return retval;
         }

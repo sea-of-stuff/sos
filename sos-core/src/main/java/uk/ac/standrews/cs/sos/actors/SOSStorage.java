@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
+import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -23,6 +25,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -97,7 +100,7 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public InputStream getAtomContent(IGUID guid) {
+    public InputStream getAtomContent(IGUID guid) throws AtomNotFoundException {
         try {
             Manifest manifest = dds.getManifest(guid);
 
@@ -106,7 +109,7 @@ public class SOSStorage implements Storage {
                 return getAtomContent(atom);
             }
         } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
+            throw new AtomNotFoundException();
         }
 
         return null;
@@ -181,9 +184,9 @@ public class SOSStorage implements Storage {
 
             if (ddsNotificationInfo.useDefaultDDSNodes()) {
                 int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
-                System.out.println("GET MAX " + noDDSNodes + " ddsnodes");
+                SOS_LOG.log(LEVEL.DEBUG,"GET MAX " + noDDSNodes + " ddsnodes");
                 retval = nds.getDDSNodes(noDDSNodes);
-                System.out.println("retval: " + retval.size());
+                SOS_LOG.log(LEVEL.DEBUG,"nodes retrieved: " + retval.size());
             }
         }
 
