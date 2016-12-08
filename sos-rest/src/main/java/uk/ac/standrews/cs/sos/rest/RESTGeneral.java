@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,6 +22,7 @@ public class RESTGeneral {
     @Path("/info")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getInfo() {
+        SOS_LOG.log(LEVEL.INFO, "REST: /info");
 
         SOSLocalNode sos = RESTConfig.sos;
         return Response.status(HTTPStatus.OK)

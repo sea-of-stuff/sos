@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.rest;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
@@ -11,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.json.model.NodeModel;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,6 +32,8 @@ public class RESTNDS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response register(NodeModel node) {
+        SOS_LOG.log(LEVEL.INFO, "REST: /nds/register");
+
         NDS nds = RESTConfig.sos.getNDS();
 
         Node registerNode;
@@ -50,6 +54,8 @@ public class RESTNDS {
     @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid) {
+        SOS_LOG.log(LEVEL.INFO, "REST: /nds/guid/{guid}");
+
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
@@ -76,6 +82,8 @@ public class RESTNDS {
     @Path("/role/{role}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByRole(@PathParam("role") String role) {
+        SOS_LOG.log(LEVEL.INFO, "REST: /nds/role/{role}");
+
         role = role.toLowerCase();
 
         NDS nds = RESTConfig.sos.getNDS();

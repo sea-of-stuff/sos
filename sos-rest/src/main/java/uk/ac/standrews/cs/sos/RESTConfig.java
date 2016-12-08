@@ -27,6 +27,6 @@ public class RESTConfig {
     }
 
     public void setSOS(SOSLocalNode sos) {
-        this.sos = sos;
+        RESTConfig.sos = sos;
     }
 }
