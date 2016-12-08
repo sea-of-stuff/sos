@@ -70,7 +70,7 @@ public class SyncRequest extends Request {
                 .url(url)
                 .build();
 
-        response = new ResponseImpl(client.newCall(request).execute());
+        makeRequest(client);
         return response;
     }
 
@@ -82,12 +82,7 @@ public class SyncRequest extends Request {
                 .post(body)
                 .build();
 
-        try {
-            response = new ResponseImpl(client.newCall(request).execute());
-        } catch (ConnectException e) {
-            response = new ErrorResponseImpl();
-        }
-
+        makeRequest(client);
         return response;
     }
 
@@ -101,7 +96,7 @@ public class SyncRequest extends Request {
                 .post(body)
                 .build();
 
-        response = new ResponseImpl(client.newCall(request).execute());
+        makeRequest(client);
         return response;
     }
 
@@ -113,8 +108,17 @@ public class SyncRequest extends Request {
                 .put(body)
                 .build();
 
-        response = new ResponseImpl(client.newCall(request).execute());
+        makeRequest(client);
         return response;
+    }
+
+    private void makeRequest(OkHttpClient client) throws IOException {
+        try {
+            response = new ResponseImpl(client.newCall(request).execute());
+        } catch (ConnectException e) {
+            response = new ErrorResponseImpl();
+        }
+
     }
 
     public int getRespondeCode() {
