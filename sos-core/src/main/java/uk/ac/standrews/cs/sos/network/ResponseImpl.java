@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.network;
 
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
+
 import java.io.InputStream;
 
 /**
@@ -7,18 +9,20 @@ import java.io.InputStream;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Response {
+public class ResponseImpl implements Response {
 
     private okhttp3.Response response;
 
-    public Response(okhttp3.Response response) {
+    public ResponseImpl(okhttp3.Response response) {
         this.response = response;
     }
 
+    @Override
     public int getCode() {
         return response.code();
     }
 
+    @Override
     public InputStream getBody() {
         return response.body().byteStream();
     }

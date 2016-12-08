@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.sos.actors.protocol;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.Response;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

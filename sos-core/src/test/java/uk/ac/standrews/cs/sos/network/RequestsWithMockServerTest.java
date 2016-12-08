@@ -5,6 +5,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.IOException;

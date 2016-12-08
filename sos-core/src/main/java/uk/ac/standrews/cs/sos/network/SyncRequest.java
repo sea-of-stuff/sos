@@ -4,9 +4,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URL;
 
 /**
@@ -68,7 +70,7 @@ public class SyncRequest extends Request {
                 .url(url)
                 .build();
 
-        response = new Response(client.newCall(request).execute());
+        response = new ResponseImpl(client.newCall(request).execute());
         return response;
     }
 
@@ -80,7 +82,12 @@ public class SyncRequest extends Request {
                 .post(body)
                 .build();
 
-        response = new Response(client.newCall(request).execute());
+        try {
+            response = new ResponseImpl(client.newCall(request).execute());
+        } catch (ConnectException e) {
+            response = new ErrorResponseImpl();
+        }
+
         return response;
     }
 
@@ -94,7 +101,7 @@ public class SyncRequest extends Request {
                 .post(body)
                 .build();
 
-        response = new Response(client.newCall(request).execute());
+        response = new ResponseImpl(client.newCall(request).execute());
         return response;
     }
 
@@ -106,7 +113,7 @@ public class SyncRequest extends Request {
                 .put(body)
                 .build();
 
-        response = new Response(client.newCall(request).execute());
+        response = new ResponseImpl(client.newCall(request).execute());
         return response;
     }
 

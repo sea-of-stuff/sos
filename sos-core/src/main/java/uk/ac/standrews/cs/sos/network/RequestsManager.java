@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.network;
 
 import okhttp3.OkHttpClient;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
