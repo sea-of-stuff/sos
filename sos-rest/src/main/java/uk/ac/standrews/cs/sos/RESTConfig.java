@@ -20,10 +20,10 @@ public class RESTConfig {
 
         return new ResourceConfig()
                 .packages(REST_PACKAGE)
-                .register(JacksonProvider.class)
-                .register(StorageFilter.class)
-                .register(NDSFilter.class)
-                .register(DDSFilter.class);
+                .register(new JacksonProvider())
+                .register(new StorageFilter())
+                .register(new NDSFilter())
+                .register(new DDSFilter());
     }
 
     public void setSOS(SOSLocalNode sos) {
