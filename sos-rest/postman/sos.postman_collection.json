@@ -54,6 +54,108 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "/storage/stream MINIMAC",
+			"request": {
+				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/storage/stream",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "minimac - get data",
+			"request": {
+				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/storage/data/guid/a20122ce36863c334971951b9b5092972194c291",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "minimac - get data (uri)",
+			"request": {
+				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/storage/data/guid/a83142925f242671d6448bb5e132db4998904725",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "local POST /storage/uri",
+			"request": {
+				"url": "http://localhost:8080/storage/uri",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"uri\": \"http://image.flaticon.com/teams/new/1-freepik.jpg\"\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "minimac POST /storage/uri",
+			"request": {
+				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/storage/uri",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"uri\": \"http://image.flaticon.com/teams/new/1-freepik.jpg\"\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "LOCAL - get data",
+			"request": {
+				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/storage/data/guid/a20122ce36863c334971951b9b5092972194c291",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }
