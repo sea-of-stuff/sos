@@ -146,7 +146,7 @@
 		{
 			"name": "LOCAL - get data",
 			"request": {
-				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/storage/data/guid/a20122ce36863c334971951b9b5092972194c291",
+				"url": "localhost:8080/storage/data/guid/a20122ce36863c334971951b9b5092972194c291",
 				"method": "GET",
 				"header": [],
 				"body": {

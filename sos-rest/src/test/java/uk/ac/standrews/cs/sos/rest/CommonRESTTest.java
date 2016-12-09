@@ -39,8 +39,7 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
 
     @Override
     protected Application configure() {
-        config = new RESTConfig();
-        return config.build();
+        return new RESTConfig();
     }
 
 }

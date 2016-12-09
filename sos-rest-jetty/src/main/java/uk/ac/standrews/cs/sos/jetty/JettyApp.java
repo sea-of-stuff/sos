@@ -1,34 +1,31 @@
 package uk.ac.standrews.cs.sos.jetty;
 
 import org.eclipse.jetty.server.Server;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class JettyApp {
 
-    private static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
-    private static URI baseUri;
-
     private static Server startServer(SOSLocalNode sos) throws Exception {
-        RESTConfig restConfig = new RESTConfig();
-        restConfig.setSOS(sos);
-
-        final ResourceConfig rc = restConfig.build();
 
         assert sos != null;
         int port = sos.getHostAddress().getPort();
-        baseUri = uriBuilder.port(port).build();
-        System.out.println("Starting REST Service on port: " + port);
 
-        return JettyHttpContainerFactory.createServer(baseUri, rc);
+        RESTConfig restConfig = new RESTConfig();
+        restConfig.setSOS(sos);
+
+        ServletHolder servlet = new ServletHolder(new ServletContainer(restConfig));
+        Server server = new Server(port);
+        ServletContextHandler context = new ServletContextHandler(server, "/*");
+        context.addServlet(servlet, "/*");
+
+        return server;
     }
 
     public static void RUN(SOSLocalNode sos) throws Exception  {

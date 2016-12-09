@@ -20,8 +20,7 @@ public class RESTNDSTest extends CommonRESTTest {
 
     @Override
     protected Application configure() {
-        config = new RESTConfig();
-        return config.build();
+        return new RESTConfig();
     }
 
     @Test
@@ -37,7 +36,6 @@ public class RESTNDSTest extends CommonRESTTest {
                 "\t\"DDS\": true,\n" +
                 "\t\"MCS\": false\n" +
                 "}";
-
 
         Response response = target("/nds/register")
                 .request()
