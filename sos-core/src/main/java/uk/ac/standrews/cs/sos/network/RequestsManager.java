@@ -7,6 +7,8 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Singleton Class
@@ -16,14 +18,17 @@ import java.util.concurrent.TimeUnit;
 public class RequestsManager {
 
     private static RequestsManager lazyInstance;
+
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build();
 
-    // Ensure that this class cannot be instantiated by other classes
+    // Ensure that this class cannot be instantiated by other classes by making the constructor private
     private RequestsManager() {
+        SOS_LOG.log(LEVEL.INFO, "Init OkHttpClient logging");
+        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
     }
 
     public static RequestsManager getInstance(){

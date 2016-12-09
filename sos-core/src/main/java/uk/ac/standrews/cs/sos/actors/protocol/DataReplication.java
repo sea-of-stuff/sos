@@ -57,15 +57,24 @@ public class DataReplication {
                     .filter(Node::isStorage)
                     .distinct()
                     .forEach(n -> {
-                        InputStream dataClone = new ByteArrayInputStream(baos.toByteArray());
-                        Runnable runnable = transferData(dataClone, n, index, nds, dds);
-                        executor.submit(runnable);
+                        PerformReplication(executor, baos, n, index, nds, dds);
                     });
         } catch (IOException e) {
             throw new SOSProtocolException("Data replication process failed", e);
         }
 
         return executor;
+    }
+
+    private static void PerformReplication(ExecutorService executorService, ByteArrayOutputStream baos,
+                                           Node node, LocationsIndex index, NDS nds, DDS dds) {
+
+        try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
+            Runnable runnable = transferData(dataClone, node, index, nds, dds);
+            executorService.submit(runnable);
+        } catch (IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
+        }
     }
 
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
