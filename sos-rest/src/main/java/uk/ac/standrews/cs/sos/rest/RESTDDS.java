@@ -33,7 +33,7 @@ public class RESTDDS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response postManifest(String json) throws IOException {
-        SOS_LOG.log(LEVEL.INFO, "REST: /dds/manifest");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/manifest");
 
         Manifest manifest;
         try {
@@ -62,7 +62,7 @@ public class RESTDDS {
     @Path("/manifest/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getManifest(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /dds/manifest/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /dds/manifest/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");

@@ -62,13 +62,14 @@ public class DataReplication {
                         executor.submit(runnable);
                     });
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SOSProtocolException("Data replication process failed", e);
         }
 
         return executor;
     }
 
     private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
+        SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
         Runnable replicator = () -> {
             Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
@@ -116,21 +117,32 @@ public class DataReplication {
             request.setBody(data);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            InputStream body = response.getBody();
-            if (request.getRespondeCode() != HTTPStatus.CREATED) {
-                throw new SOSProtocolException("Unable to transfer DATA to node: " + node.getNodeGUID());
+            if (response.getCode() != HTTPStatus.CREATED) {
+                throw new SOSProtocolException("Unable to transfer DATA to node : " + node.getNodeGUID());
             }
 
+            retval = parseResponse(response);
+        } catch (IOException | SOSURLException e) {
+            throw new SOSProtocolException("Unable to transfer DATA", e);
+        }
+
+        return retval;
+    }
+
+    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > parseResponse(Response response) throws SOSProtocolException {
+        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval = null;
+
+        try (InputStream body = response.getBody()) {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
             JsonNode manifestNode = jsonNode.get(SOSConstants.MANIFEST);
             JsonNode ddsInfo = jsonNode.has(SOSConstants.DDD_INFO) ? jsonNode.get(SOSConstants.DDD_INFO) : null;
 
-            Tuple<IGUID, Set<LocationBundle>> manifestNodeInfo  = getManifestNode(manifestNode);
+            Tuple<IGUID, Set<LocationBundle>> manifestNodeInfo = getManifestNode(manifestNode);
             Set<Node> ddsNodes = getDDSInfoFeedback(ddsInfo);
 
             retval = new Tuple<>(manifestNodeInfo.x, new Tuple<>(manifestNodeInfo.y, ddsNodes));
-        } catch (IOException | SOSURLException | GUIDGenerationException e) {
-            throw new SOSProtocolException("Unable to transfer DATA. Exception: " + e.getMessage());
+        } catch (IOException | GUIDGenerationException e) {
+            throw new SOSProtocolException("Unable to parse response from slave replication node", e);
         }
 
         return retval;

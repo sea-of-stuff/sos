@@ -38,7 +38,7 @@ public class RESTStorage {
     @Path("/data/guid/{guid}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /storage/data/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /storage/data/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -67,7 +67,7 @@ public class RESTStorage {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postDataByLocation(LocationModel locationModel) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /storage/uri");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/uri");
 
         if (locationModel == null) {
             return HTTPResponses.INTERNAL_SERVER();
@@ -99,7 +99,7 @@ public class RESTStorage {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final InputStream inputStream) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /storage/stream");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
 
         Storage storage = RESTConfig.sos.getStorage();
 

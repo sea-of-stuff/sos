@@ -17,7 +17,7 @@ public class Ping {
     @GET
     @Path("/{param}")
     public Response getMsg(@PathParam("param") String msg) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /ping/{params}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /ping/{params}");
 
         if (msg == null || msg.isEmpty()) {
             msg = "What? Please give me a message.";

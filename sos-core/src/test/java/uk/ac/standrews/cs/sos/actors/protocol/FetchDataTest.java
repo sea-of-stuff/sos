@@ -70,6 +70,8 @@ public class FetchDataTest {
         InputStream fetchedData = FetchData.Fetch(node, testGUID);
         String fetchedDataString = IO.InputStreamToString(fetchedData);
         assertEquals(fetchedDataString, TEST_DATA);
+
+        fetchedData.close();
     }
 
     @Test (expectedExceptions = IOException.class)

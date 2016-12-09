@@ -134,7 +134,7 @@ public class NodeDiscovery {
             SyncRequest request = new SyncRequest(Method.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
-            retval = parseNode(response.getBody());
+            retval = parseNode(response);
 
             if (retval != null) {
                 break;
@@ -144,11 +144,11 @@ public class NodeDiscovery {
         return retval;
     }
 
-    private Node parseNode(InputStream inputStream) throws IOException {
+    private Node parseNode(Response response) throws IOException {
 
         Node retval;
         
-        try {
+        try (InputStream inputStream = response.getBody()){
             String body = IO.InputStreamToString(inputStream);
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
 

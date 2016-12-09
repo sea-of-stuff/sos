@@ -22,7 +22,7 @@ public class RESTGeneral {
     @Path("/info")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getInfo() {
-        SOS_LOG.log(LEVEL.INFO, "REST: /info");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /info");
 
         SOSLocalNode sos = RESTConfig.sos;
         return Response.status(HTTPStatus.OK)

@@ -12,4 +12,8 @@ public class SOSProtocolException extends Exception {
     public SOSProtocolException(String message) {
         super(message);
     }
+
+    public SOSProtocolException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
 }

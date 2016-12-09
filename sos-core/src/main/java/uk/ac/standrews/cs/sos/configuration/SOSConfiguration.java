@@ -23,7 +23,9 @@ import uk.ac.standrews.cs.sos.policy.PolicyManagerImpl;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageType;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,21 +46,7 @@ public class SOSConfiguration {
      */
     public SOSConfiguration(File file) throws SOSConfigurationException {
         this.file = file;
-        System.out.println(file.toString());
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = null; //REMOVEME
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         configuration = ConfigFactory.parseFile(file);
-        System.out.println(configuration.toString());
     }
 
     public IGUID getNodeGUID() throws IOException, GUIDGenerationException {

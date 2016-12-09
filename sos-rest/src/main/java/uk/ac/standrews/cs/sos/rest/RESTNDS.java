@@ -32,7 +32,7 @@ public class RESTNDS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response register(NodeModel node) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /nds/register");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /nds/register");
 
         NDS nds = RESTConfig.sos.getNDS();
 
@@ -54,7 +54,7 @@ public class RESTNDS {
     @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /nds/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -82,7 +82,7 @@ public class RESTNDS {
     @Path("/role/{role}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByRole(@PathParam("role") String role) {
-        SOS_LOG.log(LEVEL.INFO, "REST: /nds/role/{role}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/role/{role}");
 
         role = role.toLowerCase();
 
