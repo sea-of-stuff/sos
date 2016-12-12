@@ -79,8 +79,6 @@ public class SOSNDS implements NDS {
         return nodeDiscovery.getStorageNodes(limit);
     }
 
-
-
     @Override
     public Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException {
         return nodeRegistration.registerNode(node, localOnly);

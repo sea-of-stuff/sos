@@ -13,20 +13,14 @@ import java.net.InetSocketAddress;
  */
 public class NodeModel implements Node {
 
-    private boolean isAgent;
-    private boolean isStorage;
-    private boolean isDDS;
-    private boolean isNDS;
-    private boolean isMCS;
-
     private String guid;
-    private String ip;
+    private String hostname;
     private int port;
+    private RolesModel roles;
 
     public NodeModel() {}
 
     @JsonIgnore
-    @Override
     public IGUID getNodeGUID() {
 
         try {
@@ -39,62 +33,41 @@ public class NodeModel implements Node {
     }
 
     @JsonIgnore
-    @Override
     public InetSocketAddress getHostAddress() {
-        return new InetSocketAddress(ip, port);
+        return new InetSocketAddress(hostname, port);
     }
 
     @Override
     public boolean isAgent() {
-        return isAgent;
-    }
-
-    public void setAgent(boolean agent) {
-        isAgent = agent;
+        return roles.isAgent();
     }
 
     @Override
     public boolean isStorage() {
-        return isStorage;
-    }
-
-    public void setStorage(boolean storage) {
-        isStorage = storage;
+        return roles.isStorage();
     }
 
     @Override
     public boolean isDDS() {
-        return isDDS;
-    }
-
-    public void setDDS(boolean DDS) {
-        isDDS = DDS;
+        return roles.isDDS();
     }
 
     @Override
     public boolean isNDS() {
-        return isNDS;
-    }
-
-    public void setNDS(boolean NDS) {
-        isNDS = NDS;
+        return roles.isNDS();
     }
 
     @Override
     public boolean isMCS() {
-        return isMCS;
+        return roles.isMCS();
     }
 
-    public void setMCS(boolean MCS) {
-        isMCS = MCS;
+    public String getHostname() {
+        return hostname;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     public int getPort() {
@@ -111,5 +84,13 @@ public class NodeModel implements Node {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public RolesModel getRoles() {
+        return roles;
+    }
+
+    public void setRoles(RolesModel roles) {
+        this.roles = roles;
     }
 }

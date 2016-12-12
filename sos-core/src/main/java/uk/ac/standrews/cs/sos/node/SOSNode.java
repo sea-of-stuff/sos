@@ -20,7 +20,7 @@ import java.util.Objects;
 public class SOSNode implements Node {
 
     private IGUID nodeGUID;
-    private InetSocketAddress hostAddress;
+    protected InetSocketAddress hostAddress;
 
     /******************
      * ORMLite fields *
@@ -112,6 +112,7 @@ public class SOSNode implements Node {
 
         if (hostAddress == null) {
             // TODO - assuming that DB_hostname, DB_port exist
+            // deal with cases when there is not enoug information
             hostAddress = new InetSocketAddress(DB_hostname, DB_port);
         }
 

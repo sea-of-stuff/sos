@@ -36,18 +36,19 @@ public class RESTNDS {
 
         NDS nds = RESTConfig.sos.getNDS();
 
-        Node registerNode;
         try {
-            registerNode = nds.registerNode(node, true);
+            Node registerNode = nds.registerNode(node, true); // TODO - might change based on configuration
+            if (registerNode != null) {
+                return HTTPResponses.OK(registerNode.toString());
+            } else {
+                return HTTPResponses.INTERNAL_SERVER();
+            }
+
         } catch (NodeRegistrationException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-        if (registerNode != null) {
-            return HTTPResponses.OK(registerNode.toString());
-        } else {
-            return HTTPResponses.INTERNAL_SERVER();
-        }
+
     }
 
     @GET

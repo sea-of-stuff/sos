@@ -33,6 +33,9 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -100,10 +103,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             e.printStackTrace();
         }
 
-        // TODO - register node with NDS (not this NDS)
         initNDS();
-
         loadBootstrapNodes(Builder.bootstrapNodes);
+        registerNode(configuration.getNodePort());
+
         initIdentity();
         initMetadataManager();
 
@@ -158,6 +161,19 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         for(Node node:bootstrapNodes) {
             nds.registerNode(node, true);
         }
+    }
+
+    private void registerNode(int port) throws NodeRegistrationException {
+
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            this.hostAddress = new InetSocketAddress(inetAddress, port);
+
+            nds.registerNode(this, false);
+        } catch (UnknownHostException | NodeRegistrationException e) {
+            throw new NodeRegistrationException(e);
+        }
+
     }
 
     private void initIdentity() throws SOSException {

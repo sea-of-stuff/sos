@@ -41,7 +41,7 @@ public class SOSEP {
         return makeURL(url);
     }
 
-    public static URL NDS_REGISTER_NODE(Node node, IGUID guid) throws SOSURLException {
+    public static URL NDS_REGISTER_NODE(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "/nds/register/";
 
