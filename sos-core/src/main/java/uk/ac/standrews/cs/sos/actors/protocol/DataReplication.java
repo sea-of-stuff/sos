@@ -126,10 +126,6 @@ public class DataReplication {
             request.setBody(data);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            if (response.getCode() != HTTPStatus.CREATED) {
-                throw new SOSProtocolException("Unable to transfer DATA to node : " + node.getNodeGUID());
-            }
-
             retval = parseResponse(response);
         } catch (IOException | SOSURLException e) {
             throw new SOSProtocolException("Unable to transfer DATA", e);
@@ -139,7 +135,16 @@ public class DataReplication {
     }
 
     private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > parseResponse(Response response) throws SOSProtocolException {
-        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval = null;
+
+        if (response.getCode() != HTTPStatus.CREATED) {
+            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+            catch (IOException e) {
+                throw new SOSProtocolException("Unable to transfer DATA and manage data stream correctly");
+            }
+            throw new SOSProtocolException("Unable to transfer DATA");
+        }
+
+        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
         try (InputStream body = response.getBody()) {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);

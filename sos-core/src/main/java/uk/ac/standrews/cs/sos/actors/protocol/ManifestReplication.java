@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -62,7 +63,11 @@ public class ManifestReplication {
             request.setJSONBody(manifest.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            return response.getCode() == HTTPStatus.CREATED;
+            boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
+
+            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+
+            return transferWasSuccessful;
         } catch (IOException | SOSURLException e) {
             e.printStackTrace();
         }

@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
@@ -145,6 +146,11 @@ public class NodeDiscovery {
     }
 
     private Node parseNode(Response response) throws IOException {
+
+        if (response.getCode() != HTTPStatus.OK) {
+            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+            return null;
+        }
 
         Node retval;
         
