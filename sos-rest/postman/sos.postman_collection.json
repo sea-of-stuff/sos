@@ -156,6 +156,46 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "localhost:8082/nds/register",
+			"request": {
+				"url": "localhost:8080/nds/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"guid\": \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n\t\"hostname\": \"dyn-209-236.cs.st-andrews.ac.uk\",\n\t\"port\": 8080,\n\t\"roles\": {\n\t\t\"agent\": true,\n\t\t\"storage\": true,\n\t\t\"dds\": false,\n\t\t\"nds\": false,\n\t\t\"mcs\": false\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "minimac - /nds/register",
+			"request": {
+				"url": "cs-wifi-174.cs.st-andrews.ac.uk:8080/nds/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"guid\": \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n\t\"hostname\": \"dyn-209-236.cs.st-andrews.ac.uk\",\n\t\"port\": 8080,\n\t\"roles\": {\n\t\t\"agent\": true,\n\t\t\"storage\": true,\n\t\t\"dds\": false,\n\t\t\"nds\": false,\n\t\t\"mcs\": false\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }
