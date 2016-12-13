@@ -51,7 +51,7 @@ public class ContextImpl implements Context {
 
     @Override
     public Context AND(Context context) {
-        String newName = name + "AND" + context.getName();
+        String newName = name + ".AND." + context.getName();
         Closure newClosure = closure.AND(context.getClosure());
 
         Context newContext = new ContextImpl(newName, newClosure);
@@ -60,7 +60,7 @@ public class ContextImpl implements Context {
 
     @Override
     public Context OR(Context context) {
-        String newName = name + "OR" + context.getName();
+        String newName = name + ".OR." + context.getName();
         Closure newClosure = closure.OR(context.getClosure());
 
         Context newContext = new ContextImpl(newName, newClosure);
