@@ -46,9 +46,7 @@ public class SOSStorage implements Storage {
     private AtomStorage atomStorage;
 
     public SOSStorage(Node node, LocalStorage storage, ReplicationPolicy replicationPolicy, NDS nds, DDS dds) {
-
         this.replicationPolicy = replicationPolicy;
-
         this.nds = nds;
         this.dds = dds;
 
@@ -167,6 +165,9 @@ public class SOSStorage implements Storage {
 
             try (InputStream data = getAtomContent(atom)){
 
+                // FIXME - check if data is already replicated.
+                // Note: instruct other storage node to replicate on behalf of this node
+                // FIXME - need to get more nodes, since some replications might fail
                 Set<Node> storageNodes = nds.getStorageNodes(replicationFactor);
                 atomStorage.replicate(data, storageNodes, nds, dds);
             } catch (SOSProtocolException | IOException e) {

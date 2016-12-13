@@ -62,6 +62,11 @@ public class AtomStorage {
         }
     }
 
+    /**
+     * Return an iterator of locations for data matching the given guid
+     * @param guid
+     * @return
+     */
     public Iterator<LocationBundle> getLocationsIterator(IGUID guid) {
         return locationIndex.findLocations(guid);
     }
