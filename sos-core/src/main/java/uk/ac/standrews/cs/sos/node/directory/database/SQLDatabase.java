@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.node.directory.database;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
@@ -11,6 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +35,9 @@ public class SQLDatabase implements NodesDatabase {
     public SQLDatabase(DatabaseType databaseType, String pathname) throws DatabaseException {
         this.databaseType = databaseType;
         this.pathname = pathname;
+
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
+        System.setProperty(LocalLog.LOCAL_LOG_FILE_PROPERTY, "db-log.out");
     }
 
     @Override
@@ -111,7 +116,7 @@ public class SQLDatabase implements NodesDatabase {
         try {
             if (connection != null)
                 connection.close();
-        } catch (SQLException e) {
+        } catch (IOException e) {
             throw new DatabaseConnectionException(e);
         }
 
