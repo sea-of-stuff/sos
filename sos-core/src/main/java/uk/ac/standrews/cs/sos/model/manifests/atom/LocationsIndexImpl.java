@@ -4,23 +4,21 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
+import uk.ac.standrews.cs.sos.model.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocationsIndexImpl implements LocationsIndex, Serializable {
 
-    private transient HashMap<IGUID, HashSet<LocationBundle>> index;
+    private transient HashMap<IGUID, PriorityQueue<LocationBundle>> index;
 
     public LocationsIndexImpl() {
         index = new HashMap<>();
@@ -32,7 +30,7 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         if (index.containsKey(guid)) {
             index.get(guid).add(locationBundle);
         } else {
-            HashSet<LocationBundle> bundles = new HashSet<>();
+            PriorityQueue<LocationBundle> bundles = new PriorityQueue<>(comparator());
             bundles.add(locationBundle);
             index.put(guid, bundles);
         }
@@ -63,6 +61,37 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
             return it.next();
         }
 
+    }
+
+    private Comparator<LocationBundle> comparator() {
+        return (o1, o2) -> {
+            if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.CACHE)
+                return 0;
+
+            if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.PERSISTENT)
+                return 0;
+
+            if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.PROVENANCE)
+                return 0;
+
+
+            if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.PERSISTENT)
+                return -1;
+            if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.CACHE)
+                return 1;
+
+            if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.PROVENANCE)
+                return -1;
+            if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.CACHE)
+                return 1;
+
+            if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.PROVENANCE)
+                return -1;
+            if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.PERSISTENT)
+                return 1;
+
+            return 0;
+        };
     }
 
     @Override

@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
@@ -73,6 +74,27 @@ public class LocationsIndexImplTest {
         Iterator<LocationBundle> it = locationsIndexPersisted.findLocations(guid);
         assertTrue(it.hasNext());
         assertEquals(locationBundle, it.next());
+    }
+
+    @Test
+    public void iteratorOrderingTest() throws URISyntaxException {
+        LocationsIndex locationsIndex = new LocationsIndexImpl();
+
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
+        LocationBundle locationBundlePersist = new PersistLocationBundle(new URILocation("http://example.org/persist"));
+
+        locationsIndex.addLocation(guid, locationBundlePersist);
+        locationsIndex.addLocation(guid, locationBundle);
+
+        Iterator<LocationBundle> it = locationsIndex.findLocations(guid);
+        assertTrue(it.hasNext());
+
+        LocationBundle indexedLocationBundle = it.next();
+        assertEquals(indexedLocationBundle, locationBundle);
+
+        LocationBundle indexedLocationBundle2 = it.next();
+        assertEquals(indexedLocationBundle2, locationBundlePersist);
     }
 
 }
