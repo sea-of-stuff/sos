@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
@@ -62,6 +63,13 @@ public class NodeRegistration {
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);
+
+            if (response.getCode() == HTTPStatus.OK) {
+                SOS_LOG.log(LEVEL.INFO, "Node " + node.toString() + " was successfully registered to NDS " + ndsNode.getNodeGUID());
+            } else {
+                SOS_LOG.log(LEVEL.WARN, "Node " + node.toString() + " was NOT successfully registered to NDS " + ndsNode.getNodeGUID());
+            }
+
 
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
 

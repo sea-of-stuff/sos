@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
@@ -42,6 +43,12 @@ public class FetchData {
         URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
         SyncRequest request = new SyncRequest(Method.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
+
+        if (response.getCode() == HTTPStatus.OK) {
+            SOS_LOG.log(LEVEL.INFO, "Data fetched successfully from node " + node.getNodeGUID());
+        } else {
+            SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.getNodeGUID());
+        }
 
         return response.getBody();
     }

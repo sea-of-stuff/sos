@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.actors.protocol;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
@@ -16,6 +17,7 @@ import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,6 +77,8 @@ public class NodeDiscovery {
 
         if (nodeToContact == null) {
             throw new NodeNotFoundException("Unable to find node for GUID: " + nodeGUID.toString());
+        } else {
+            SOS_LOG.log(LEVEL.INFO, "Node with GUID " + nodeGUID + " was found: " + nodeToContact.toString());
         }
 
         return nodeToContact;

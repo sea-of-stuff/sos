@@ -94,6 +94,7 @@ public class DataReplication {
                 return;
             }
 
+            SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
             for(LocationBundle locationBundle:tuple.y.x) {
                 index.addLocation(tuple.x, locationBundle);
             }

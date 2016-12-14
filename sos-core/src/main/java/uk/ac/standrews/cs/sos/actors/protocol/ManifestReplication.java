@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +50,10 @@ public class ManifestReplication {
             boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
             if (transferWasSuccessful) {
+                SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicates successfully to node: " + node.toString());
                 dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
+            } else {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
             }
         };
 

@@ -13,8 +13,6 @@ import uk.ac.standrews.cs.sos.node.SOSLocalNode;
  */
 public class JettyApp {
 
-
-
     private static Server startServer(SOSLocalNode sos) throws Exception {
 
         assert sos != null;
