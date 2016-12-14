@@ -1,11 +1,13 @@
 package uk.ac.standrews.cs.sos.web;
 
 import spark.Request;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.graph.WData;
 import uk.ac.standrews.cs.sos.web.graph.WGraph;
 import uk.ac.standrews.cs.sos.web.graph.WManifest;
@@ -24,7 +26,7 @@ import static spark.Spark.*;
 public class WebApp {
 
     public static void RUN(SOSLocalNode sos, IFileSystem fileSystem, int port) {
-        System.out.println("Starting WEB APP on port: " + port);
+        SOS_LOG.log(LEVEL.INFO, "Starting WEB APP on port: " + port);
 
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         port(port);

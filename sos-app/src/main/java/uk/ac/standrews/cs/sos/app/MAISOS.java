@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.app;
 import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
@@ -11,6 +12,7 @@ import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.WebApp;
 import uk.ac.standrews.cs.webdav.entrypoints.WebDAVLauncher;
 
@@ -30,24 +32,24 @@ public class MAISOS {
     private static final String ROOT_OPT = "root";
 
     public static void main(String[] args) throws Exception {
-        CommandLine line = InitCLI(args);
+        CommandLine cli = InitCLI(args);
 
-        String configFilePath = line.getOptionValue(CONFIG_OPT);
+        String configFilePath = cli.getOptionValue(CONFIG_OPT);
         File configFile = new File(configFilePath);
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         SOSLocalNode sos = ServerState.init(configuration);
         assert sos != null;
 
-        IGUID root = getRootGUID(line);
+        IGUID root = getRootGUID(cli);
 
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-        if (line.hasOption(REST_OPT)) {
+        if (cli.hasOption(REST_OPT)) {
             HandleJettyApp(executorService, sos);
         }
 
-        if (line.hasOption(FS_OPT)) {
+        if (cli.hasOption(FS_OPT)) {
             HandleFSApp(executorService, sos, root, configuration);
         }
 
@@ -104,9 +106,7 @@ public class MAISOS {
         ShutdownHook shutdownHook = new ShutdownHook(executorService);
         shutdownHook.attachShutDownHook();
 
-        System.out.println("Press Enter to stop");
-        System.in.read();
-        System.out.println("Exiting...");
+        SOS_LOG.log(LEVEL.INFO, "SOS Shutdown handler has been registered. Send SIGTERM on process");
     }
 
     private static class ShutdownHook {
@@ -124,7 +124,7 @@ public class MAISOS {
                     executorService.shutdown();
 
                     ServerState.kill();
-                    System.out.println("SOS instance terminated");
+                    SOS_LOG.log(LEVEL.INFO, "SOS Instance Terminated");
                 }
             });
         }
@@ -166,10 +166,10 @@ public class MAISOS {
     private static void LaunchWebDAV(IFileSystem fileSystem, int port) {
 
         try {
-            System.out.println("Starting WEBDAV server on port: " + port);
+            SOS_LOG.log(LEVEL.INFO, "Starting WebDAV server on port: " + port);
             WebDAVLauncher.StartWebDAVServer(fileSystem, port);
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            SOS_LOG.log(LEVEL.ERROR, "Error while starting WebDAV server on port: " + port + " with error: " + e.getMessage());
         }
     }
 
