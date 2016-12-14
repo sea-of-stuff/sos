@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.node.directory.database.DatabaseType;
 import uk.ac.standrews.cs.sos.policy.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicMetadataPolicy;
 import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;
@@ -111,10 +110,6 @@ public class SOSConfiguration {
 
     public boolean nodeIsMCS() {
         return configuration.getBoolean(PropertyKeys.NODE_IS_MCS);
-    }
-
-    public DatabaseType getDBType() {
-        return new DatabaseType(configuration.getString(PropertyKeys.DB_TYPE));
     }
 
     public String getDBPath() {

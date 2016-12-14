@@ -16,8 +16,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.node.directory.database.DatabaseTypes;
-import uk.ac.standrews.cs.sos.node.directory.database.SQLDatabase;
+import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.lang.reflect.Method;
@@ -52,7 +51,6 @@ public class NodeDiscoveryTest {
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
 
-        when(configurationMock.getDBType()).thenReturn(DatabaseTypes.SQLITE_DB);
         when(configurationMock.getDBPath()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
 
         // Make sure that the DB path is clean
@@ -60,8 +58,7 @@ public class NodeDiscoveryTest {
 
         NodesDatabase nodesDatabase;
         try {
-            nodesDatabase = new SQLDatabase(configurationMock.getDBType(),
-                    configurationMock.getDBPath());
+            nodesDatabase = new SQLiteDB(configurationMock.getDBPath());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
@@ -69,7 +66,6 @@ public class NodeDiscoveryTest {
         localNode = mock(SOSLocalNode.class);
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
         localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
-
 
         // MOCK SERVER SETUP
         nodeFound = GUIDFactory.generateRandomGUID();

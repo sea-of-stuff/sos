@@ -157,9 +157,7 @@
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-core:1.11.13" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.6.6" level="project" />
     <orderEntry type="library" name="Maven: com.dropbox.core:dropbox-core-sdk:2.0.6" level="project" />
-    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.7.2" level="project" />
-    <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:5.0" level="project" />
-    <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-jdbc:5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.15.1" level="project" />
     <orderEntry type="module" module-name="rest" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-server:2.24.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-common:2.24.1" level="project" />

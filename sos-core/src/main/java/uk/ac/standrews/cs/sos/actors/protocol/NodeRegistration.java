@@ -54,7 +54,7 @@ public class NodeRegistration {
     }
 
     private void registerNode(Node node, Node ndsNode) {
-        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.getNodeGUID() + " to NDS " + ndsNode.toString());
+        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.toString() + " to NDS: " + ndsNode.toString());
 
         try {
             URL url = SOSEP.NDS_REGISTER_NODE(ndsNode);
@@ -63,9 +63,9 @@ public class NodeRegistration {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
-                SOS_LOG.log(LEVEL.INFO, "Node " + node.getNodeGUID() + " was successfully registered to NDS " + ndsNode.toString());
+                SOS_LOG.log(LEVEL.INFO, "Node " + node.getNodeGUID() + " was successfully registered to NDS: " + ndsNode.toString());
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Node " + node.getNodeGUID() + " was NOT successfully registered to NDS " + ndsNode.toString());
+                SOS_LOG.log(LEVEL.WARN, "Node " + node.getNodeGUID() + " was NOT successfully registered to NDS: " + ndsNode.toString());
             }
 
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.

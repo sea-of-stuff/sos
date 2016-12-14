@@ -39,8 +39,7 @@
         <tika.version>1.14</tika.version>
         <rdf4j.version>2.0.2</rdf4j.version>
 
-        <sqlite.jdbc.version>3.7.2</sqlite.jdbc.version>
-        <ormlite.version>5.0</ormlite.version>
+        <sqlite.jdbc.version>3.15.1</sqlite.jdbc.version>
     </properties>
 
     <dependencies>
@@ -124,16 +123,6 @@
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite.jdbc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-core</artifactId>
-            <version>${ormlite.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-jdbc</artifactId>
-            <version>${ormlite.version}</version>
         </dependency>
 
         <!-- TEST DEPENDENCIES -->

@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.sos.node;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -16,30 +14,21 @@ import java.util.Objects;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@DatabaseTable(tableName = "nodes")
 public class SOSNode implements Node {
 
     private IGUID nodeGUID;
     protected InetSocketAddress hostAddress;
 
     /******************
-     * ORMLite fields *
+     * DB fields *
      ******************/
-    @DatabaseField(id = true)
     private String DB_nodeid;
-    @DatabaseField(canBeNull = false)
     private String DB_hostname;
-    @DatabaseField(canBeNull = false)
     private int DB_port;
-    @DatabaseField(canBeNull = false)
     protected boolean DB_is_agent;
-    @DatabaseField(canBeNull = false)
     protected boolean DB_is_storage;
-    @DatabaseField(canBeNull = false)
     protected boolean DB_is_dds;
-    @DatabaseField(canBeNull = false)
     protected boolean DB_is_nds;
-    @DatabaseField(canBeNull = false)
     protected boolean DB_is_mcs;
 
     // no-args constructor needed for ORMLite

@@ -26,8 +26,7 @@ import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.node.directory.database.DatabaseType;
-import uk.ac.standrews.cs.sos.node.directory.database.SQLDatabase;
+import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -88,7 +87,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         policyManager = Builder.policyManager;
 
         try {
-            DatabaseType databaseType = configuration.getDBType();
             String databasePath = configuration.getDBPath();
             File dbDir = new File(databasePath);
             if (!dbDir.exists()) {
@@ -96,7 +94,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                 dbDir.createNewFile();
             }
 
-            nodesDatabase = new SQLDatabase(databaseType, databasePath);
+            nodesDatabase = new SQLiteDB(databasePath);
         } catch (DatabaseException e) {
             throw new SOSException(e);
         } catch (IOException e) {
