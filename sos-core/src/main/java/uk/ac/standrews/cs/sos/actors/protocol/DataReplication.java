@@ -101,6 +101,7 @@ public class DataReplication {
 
             for(Node ddsNode:tuple.y.y) {
                 try {
+                    SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
                     nds.registerNode(ddsNode, true);
                 } catch (NodeRegistrationException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
@@ -192,9 +193,9 @@ public class DataReplication {
             int port = entry.get(SOSConstants.PORT).asInt();
 
             // TODO - what if there is already an entry for this node, but different roles?
-            // Do not hard code this bit
+            // FIXME - Do not hard code this bit
             // need a way to merge roles
-            Node node = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
+            Node node = new SOSNode(nodeGUID, hostname, port, false, false, true, false, false);
             ddsNodes.add(node);
         }
 
