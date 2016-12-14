@@ -41,6 +41,10 @@ public class JettyApp {
         }
     }
 
+    /**
+     * Enable logging by overriding the functions below and setting the LOG level in
+     * /resources/jetty-logging.properties
+     */
     public static class NoLogging implements Logger {
         @Override public String getName() { return "no"; }
         @Override public void warn(String msg, Object... args) { }

@@ -49,7 +49,6 @@ public class NodeRegistration {
             Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
             ndsNodes.parallelStream()
                     .forEach(n -> registerNode(nodeToRegister, n));
-
         }
 
         return nodeToRegister;
@@ -65,11 +64,10 @@ public class NodeRegistration {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
-                SOS_LOG.log(LEVEL.INFO, "Node " + node.toString() + " was successfully registered to NDS " + ndsNode.getNodeGUID());
+                SOS_LOG.log(LEVEL.INFO, "Node " + node.getNodeGUID() + " was successfully registered to NDS " + ndsNode.toString());
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Node " + node.toString() + " was NOT successfully registered to NDS " + ndsNode.getNodeGUID());
+                SOS_LOG.log(LEVEL.WARN, "Node " + node.getNodeGUID() + " was NOT successfully registered to NDS " + ndsNode.toString());
             }
-
 
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
 
