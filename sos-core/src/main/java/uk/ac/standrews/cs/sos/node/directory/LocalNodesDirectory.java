@@ -42,7 +42,15 @@ public class LocalNodesDirectory {
      * @param node
      */
     public void addNode(Node node) {
-        knownNodes.add(node);
+
+        synchronized (knownNodes) {
+            SOSNode clone = new SOSNode(node);
+            if (knownNodes.contains(node)) {
+                knownNodes.remove(node);
+            }
+            knownNodes.add(clone);
+        }
+
     }
 
     /**
@@ -55,7 +63,7 @@ public class LocalNodesDirectory {
     }
 
     /**
-     * Get a LocalSOSNode node given its guid identifier.
+     * Get a Node node given its guid identifier.
      *
      * @param guid
      * @return

@@ -62,6 +62,16 @@ public class LocalNodesDirectoryTest extends CommonTest {
     }
 
     @Test
+    public void basicAddGetNodeTest() {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+
+        localNodesDirectory.addNode(node);
+        Node retrievedNode = localNodesDirectory.getNode(guid);
+        assertEquals(retrievedNode, node);
+    }
+
+    @Test
     public void persistMultipleNodesTest() throws GUIDGenerationException, NodesDirectoryException {
 
         Set<Node> nodes = localNodesDirectory.getKnownNodes();
@@ -171,6 +181,24 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
         Set<Node> storageNodes = localNodesDirectory.getStorageNodes(-1);
         assertEquals(storageNodes.size(), 3);
+    }
+
+    @Test
+    public void nodeIsUpdatedTest() throws NodesDirectoryException {
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+
+        localNodesDirectory.addNode(node);
+        Node retrievedNode = localNodesDirectory.getNode(guid);
+        assertEquals(retrievedNode, node);
+
+        // Now isStorage node too
+        Node updatedNode = new SOSNode(guid, "example.com", 8080, true, true, false, false, false);
+        localNodesDirectory.addNode(updatedNode);
+
+        Node retrievedUpdatedNode = localNodesDirectory.getNode(guid);
+        assertEquals(retrievedUpdatedNode, updatedNode);
+        assertEquals(retrievedUpdatedNode.isStorage(), true);
     }
 
     private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
