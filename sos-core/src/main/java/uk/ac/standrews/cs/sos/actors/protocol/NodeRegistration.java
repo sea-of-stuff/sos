@@ -47,15 +47,14 @@ public class NodeRegistration {
 
         if (!localOnly) {
             Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
-            ndsNodes.parallelStream()
-                    .forEach(n -> registerNode(nodeToRegister, n));
+            ndsNodes.forEach(n -> registerNode(nodeToRegister, n));
         }
 
         return nodeToRegister;
     }
 
     private void registerNode(Node node, Node ndsNode) {
-        SOS_LOG.log(LEVEL.INFO, "WIP - should register node: " + node.toString());
+        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.getNodeGUID() + " to NDS " + ndsNode.toString());
 
         try {
             URL url = SOSEP.NDS_REGISTER_NODE(ndsNode);

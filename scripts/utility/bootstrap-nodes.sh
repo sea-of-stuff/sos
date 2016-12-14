@@ -56,6 +56,9 @@ for (( i=1; i<=$#; i++ )); do
 
 	java -jar sos-app.jar -c $config -fs -j >> $output 2>> $error &
 	echo "Java process run at id: $!"
+
+    echo "Waiting for node to finish the startup process"
+    sleep 25 # Let each node to finish its startup
 done
 
 echo 'All instances are running. Check logs for more info.'
