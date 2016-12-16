@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -48,6 +49,7 @@ public interface NDS extends SeaOfStuff {
     Set<Node> getMCSNodes();
 
     Set<Node> getStorageNodes();
+    Iterator<Node> getStorageNodesIterator();
 
     /**
      * Return a set of storage nodes. This method will return maximum the number of nodes specified

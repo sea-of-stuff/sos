@@ -31,7 +31,7 @@ public class LocalNodesDirectory {
         this.localNode = localNode;
         this.nodesDatabase = nodesDatabase;
 
-        this.knownNodes = new HashSet<>();
+        this.knownNodes = new HashSet<>(); // Order not preserved
         loadNodesFromDB();
     }
 
@@ -107,6 +107,10 @@ public class LocalNodesDirectory {
         return getNodes(Node::isStorage, limit);
     }
 
+    public Iterator<Node> getStorageNodesIterator() {
+        return getNodesIterator(Node::isStorage);
+    }
+
     private Set<Node> getNodes(Predicate<Node> predicate, int limit) {
 
         Stream<Node> nodesStream = knownNodes.parallelStream()
@@ -121,6 +125,14 @@ public class LocalNodesDirectory {
         Collections.shuffle(nodes); // Naive load balancing
 
         return new HashSet<>(nodes);
+    }
+
+    private Iterator<Node> getNodesIterator(Predicate<Node> predicate) {
+
+        return knownNodes.parallelStream()
+                .filter(predicate)
+                .distinct()
+                .iterator();
     }
 
     /**

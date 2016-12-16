@@ -167,9 +167,9 @@ public class SOSStorage implements Storage {
 
                 // FIXME - check if data is already replicated.
                 // Note: instruct other storage node to replicate on behalf of this node
-                // FIXME - need to get more nodes, since some replications might fail
-                Set<Node> storageNodes = nds.getStorageNodes(replicationFactor);
-                atomStorage.replicate(data, storageNodes, nds, dds);
+
+                Iterator<Node> storageNodes = nds.getStorageNodesIterator();
+                atomStorage.replicate(data, storageNodes, replicationFactor, nds, dds);
             } catch (SOSProtocolException | IOException e) {
                 // TODO - throw exception
                 e.printStackTrace();

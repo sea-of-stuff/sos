@@ -140,7 +140,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -166,7 +166,7 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -194,7 +194,7 @@ public class DataReplicationTest {
         nodes.add(storageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -233,7 +233,7 @@ public class DataReplicationTest {
         nodes.add(anotherNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 3, index, mockNDS, mockDDS); // TODO - test with different replication factor
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -267,7 +267,7 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS); // TODO - rep factor 1
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -301,7 +301,7 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

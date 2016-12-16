@@ -22,6 +22,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Set;
 
 
@@ -122,6 +123,10 @@ public class NodeDiscovery {
      */
     public Set<Node> getStorageNodes() {
         return localNodesDirectory.getStorageNodes(LocalNodesDirectory.NO_LIMIT);
+    }
+
+    public Iterator<Node> getStorageNodesIterator() {
+        return localNodesDirectory.getStorageNodesIterator();
     }
 
     public Set<Node> getStorageNodes(int limit) {

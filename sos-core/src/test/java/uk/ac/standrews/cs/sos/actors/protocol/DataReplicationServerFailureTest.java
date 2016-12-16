@@ -128,7 +128,7 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -150,7 +150,7 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -172,7 +172,7 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -194,7 +194,7 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -216,7 +216,7 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

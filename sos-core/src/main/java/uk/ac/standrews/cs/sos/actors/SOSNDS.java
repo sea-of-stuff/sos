@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -72,6 +73,11 @@ public class SOSNDS implements NDS {
     @Override
     public Set<Node> getStorageNodes() {
         return nodeDiscovery.getStorageNodes();
+    }
+
+    @Override
+    public Iterator<Node> getStorageNodesIterator() {
+        return nodeDiscovery.getStorageNodesIterator();
     }
 
     @Override

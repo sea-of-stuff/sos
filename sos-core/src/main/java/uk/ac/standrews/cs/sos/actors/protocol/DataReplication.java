@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
@@ -21,6 +20,7 @@ import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,7 +43,7 @@ import java.util.concurrent.Executors;
  */
 public class DataReplication {
 
-    public static ExecutorService Replicate(InputStream data, Set<Node> nodes,
+    public static ExecutorService Replicate(InputStream data, Iterator<Node> nodes, int replicationFactor,
                                             LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
 
         if (index == null || nds == null || dds == null) {
@@ -50,80 +51,97 @@ public class DataReplication {
         }
 
         ExecutorService executor = Executors.newCachedThreadPool();
+        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data)) {
 
-        try (final ByteArrayOutputStream baos = InputStreamToByteArrayOutputStream(data)){
+            Runnable runnable = PerformReplications(baos, nodes, replicationFactor, index, nds, dds);
+            executor.submit(runnable);
 
-            nodes.stream() // This can be parallelised if we want to
-                    .filter(Node::isStorage)
-                    .distinct()
-                    .forEach(n -> {
-                        PerformReplication(executor, baos, n, index, nds, dds);
-                    });
         } catch (IOException e) {
-            throw new SOSProtocolException("Data replication process failed", e);
+            throw new SOSProtocolException("An exception occurred while replicating data");
         }
 
         return executor;
     }
 
-    private static void PerformReplication(ExecutorService executorService, ByteArrayOutputStream baos,
-                                           Node node, LocationsIndex index, NDS nds, DDS dds) {
 
-        try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
-            Runnable runnable = transferData(dataClone, node, index, nds, dds);
-            executorService.submit(runnable);
-        } catch (IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
-        }
-    }
+    private static Runnable PerformReplications(final ByteArrayOutputStream baos, Iterator<Node> nodes, int replicationFactor,
+                                                LocationsIndex index, NDS nds, DDS dds) {
 
-    private static Runnable transferData(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
-        SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
+        return () -> {
 
-        Runnable replicator = () -> {
-            Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
-            try {
-                tuple = transferDataRequest(data, node);
-            } catch (SOSProtocolException e) {
-                SOS_LOG.log(LEVEL.ERROR, e.getMessage());
-                return;
-            }
+            int successfulReplicas = 0;
+            while (nodes.hasNext() || successfulReplicas == replicationFactor) {
 
-            if (tuple == null) {
-                SOS_LOG.log(LEVEL.ERROR, "Error while trasnfering data to other nodes");
-                return;
-            }
+                Node node = nodes.next();
+                if (node.isStorage()) {
+                    try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
+                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, index, nds, dds);
 
-            SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
-            for(LocationBundle locationBundle:tuple.y.x) {
-                index.addLocation(tuple.x, locationBundle);
-            }
+                        if (transferWasSuccessful) {
+                            successfulReplicas++;
+                        }
 
-            for(Node ddsNode:tuple.y.y) {
-                try {
-                    SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
-                    nds.registerNode(ddsNode, true);
-                } catch (NodeRegistrationException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
-                    return;
+                    } catch (IOException e) {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
+                    }
                 }
             }
 
-            for(Node ddsNode:tuple.y.y) {
-                dds.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
-            }
         };
+    }
 
-        return replicator;
+    /**
+     * Transfer a stream of data to a given node and update this node state
+     * @param data
+     * @param node
+     * @param index
+     * @param nds
+     * @param dds
+     * @return true if the data was transferred successfully.
+     */
+    private static boolean transferDataAndUpdateNodeState(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
+        SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
+
+        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
+        try {
+            tuple = transferDataRequest(data, node);
+        } catch (SOSProtocolException e) {
+            SOS_LOG.log(LEVEL.ERROR, e.getMessage());
+            return false;
+        }
+
+        if (tuple == null) {
+            SOS_LOG.log(LEVEL.ERROR, "Error while trasnfering data to other nodes");
+            return false;
+        }
+
+        SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
+        for(LocationBundle locationBundle:tuple.y.x) {
+            index.addLocation(tuple.x, locationBundle);
+        }
+
+        for(Node ddsNode:tuple.y.y) {
+            try {
+                SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
+                nds.registerNode(ddsNode, true);
+            } catch (NodeRegistrationException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
+            }
+        }
+
+        for(Node ddsNode:tuple.y.y) {
+            dds.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
+        }
+
+        return true;
     }
 
     private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
-        URL url;
         try {
-            url = SOSEP.STORAGE_POST_DATA(node);
+            URL url = SOSEP.STORAGE_POST_DATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setBody(data);
 
@@ -200,12 +218,6 @@ public class DataReplication {
         }
 
         return ddsNodes;
-    }
-
-    private static ByteArrayOutputStream InputStreamToByteArrayOutputStream(InputStream input) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        IOUtils.copy(input, baos);
-        return baos;
     }
 
 }

@@ -126,7 +126,7 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -153,7 +153,7 @@ public class DataReplicationWithDDSFeedbackTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, null, mockNDS, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, null, mockNDS, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -171,7 +171,7 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, null, mockDDS);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, null, mockDDS);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -189,7 +189,7 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes, index, mockNDS, null);
+        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, null);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

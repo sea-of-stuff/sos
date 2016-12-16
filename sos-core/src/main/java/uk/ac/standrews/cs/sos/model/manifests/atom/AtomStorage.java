@@ -95,8 +95,8 @@ public class AtomStorage {
         return storeAtomAndUpdateLocationBundles(persistance, bundles);
     }
 
-    public void replicate(InputStream data, Set<Node> nodes, NDS nds, DDS dds) throws SOSProtocolException {
-        DataReplication.Replicate(data, nodes, locationIndex, nds, dds);
+    public void replicate(InputStream data, Iterator<Node> nodes, int replicationFactor, NDS nds, DDS dds) throws SOSProtocolException {
+        DataReplication.Replicate(data, nodes, replicationFactor, locationIndex, nds, dds);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Set<LocationBundle> bundles) throws StorageException {
