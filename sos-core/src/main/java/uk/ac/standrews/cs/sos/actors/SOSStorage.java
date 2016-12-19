@@ -65,8 +65,13 @@ public class SOSStorage implements Storage {
         Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo);
 
         // Run asynchronously
-        replicateData(manifest);
-        notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
+
+        try {
+            replicateData(manifest);
+            notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
+        } catch (SOSProtocolException | IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
+        }
 
         return new Tuple<>(manifest, defaultDDSNodes);
     }
@@ -158,21 +163,18 @@ public class SOSStorage implements Storage {
         }
     }
 
-    private void replicateData(Atom atom) {
+    private void replicateData(Atom atom) throws SOSProtocolException, IOException {
 
         int replicationFactor = replicationPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
-            try (InputStream data = getAtomContent(atom)){
+            try (InputStream data = getAtomContent(atom)) {
 
                 // FIXME - check if data is already replicated.
                 // Note: instruct other storage node to replicate on behalf of this node
 
                 Iterator<Node> storageNodes = nds.getStorageNodesIterator();
                 atomStorage.replicate(data, storageNodes, replicationFactor, nds, dds);
-            } catch (SOSProtocolException | IOException e) {
-                // TODO - throw exception
-                e.printStackTrace();
             }
         }
     }
@@ -203,7 +205,7 @@ public class SOSStorage implements Storage {
      * @param ddsNotificationInfo
      * @param manifest
      */
-    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, Set<Node> defaultDDSNodes, AtomManifest manifest) {
+    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, Set<Node> defaultDDSNodes, AtomManifest manifest) throws SOSProtocolException {
 
         if (ddsNotificationInfo.notifyDDSNodes()) {
 
@@ -215,12 +217,7 @@ public class SOSStorage implements Storage {
                 ddsNodes.addAll(suggestedNodes);
             }
 
-            try {
-                ManifestReplication.Replicate(manifest, ddsNodes.iterator(), 100000, dds); // FIXME
-            } catch (SOSProtocolException e) {
-                // TODO - throw exception
-                e.printStackTrace();
-            }
+            ManifestReplication.Replicate(manifest, ddsNodes.iterator(), ddsNodes.size(), dds);
         }
     }
 

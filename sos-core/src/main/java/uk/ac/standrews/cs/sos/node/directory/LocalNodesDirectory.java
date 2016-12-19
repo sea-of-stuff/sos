@@ -155,7 +155,7 @@ public class LocalNodesDirectory {
     public void persistNodesTable() throws NodesDirectoryException {
         try {
             for (Node knownNode : knownNodes) {
-                nodesDatabase.addNode(knownNode); // FIXME - do not persist nodes that have not changed
+                nodesDatabase.addNode(knownNode);
             }
         } catch (DatabaseConnectionException e) {
             throw new NodesDirectoryException(e);
