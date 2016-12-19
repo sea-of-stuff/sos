@@ -212,10 +212,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void garbageCollector() {
         SOS_LOG.log(LEVEL.INFO, "Garbage collector started");
 
-        GarbageCollector garbageCollector = new GarbageCollector(localStorage);
+        CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
 
         garbageCollectorService = Executors.newScheduledThreadPool(1);
-        garbageCollectorService.scheduleAtFixedRate(garbageCollector, 0, GarbageCollector.PERIOD, GarbageCollector.TIME_UNIT);
+        garbageCollectorService.scheduleAtFixedRate(cacheFlusher, 0, CacheFlusher.PERIOD, CacheFlusher.TIME_UNIT);
 
     }
 

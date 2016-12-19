@@ -36,6 +36,8 @@ import java.util.List;
  */
 public class SOSConfiguration {
 
+    private static final char HOME_SYMBOL = '~';
+    private static final String HOME_PATH = System.getProperty("user.home");
     private Config configuration;
     private File file;
 
@@ -84,10 +86,6 @@ public class SOSConfiguration {
         return false;
     }
 
-    public String getNodeHostname() {
-        return configuration.getString(PropertyKeys.NODE_HOSTNAME);
-    }
-
     public int getNodePort() {
         return configuration.getInt(PropertyKeys.NODE_PORT);
     }
@@ -114,12 +112,7 @@ public class SOSConfiguration {
 
     public String getDBPath() {
         String path = configuration.getString(PropertyKeys.DB_PATH);
-
-        if (path.charAt(0) == '~') {
-            path = System.getProperty("user.home") + path.substring(1);
-        }
-
-        return path;
+        return absolutePath(path);
     }
 
     public StorageType getStorageType() {
@@ -127,24 +120,13 @@ public class SOSConfiguration {
     }
 
     public String getStorageLocation() {
-
         String path = configuration.getString(PropertyKeys.STORAGE_LOCATION);
-
-        if (path.charAt(0) == '~') {
-            path = System.getProperty("user.home") + path.substring(1);
-        }
-
-        return path;
+        return absolutePath(path);
     }
 
     public String getKeyFolderPath() {
         String path = configuration.getString(PropertyKeys.KEYS_FOLDER);
-
-        if (path.charAt(0) == '~') {
-            path = System.getProperty("user.home") + path.substring(1);
-        }
-
-        return path;
+        return absolutePath(path);
     }
 
     public PolicyManager getPolicyManager() {
@@ -199,17 +181,17 @@ public class SOSConfiguration {
     }
 
     private Node getNode(Config config) throws GUIDGenerationException {
-        String guidString = config.getString("guid");
+        String guidString = config.getString(PropertyKeys.BOOTSTRAP_NODE_GUID);
         IGUID guid = GUIDFactory.recreateGUID(guidString);
 
-        String hostname = config.getString("hostname");
-        int port = config.getInt("port");
+        String hostname = config.getString(PropertyKeys.BOOTSTRAP_NODE_HOSTNAME);
+        int port = config.getInt(PropertyKeys.BOOTSTRAP_NODE_PORT);
 
-        boolean isAgent = config.getBoolean("is.agent");
-        boolean isStorage = config.getBoolean("is.storage");
-        boolean isDDS = config.getBoolean("is.dds");
-        boolean isNDS = config.getBoolean("is.nds");
-        boolean isMCS = config.getBoolean("is.mcs");
+        boolean isAgent = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_AGENT);
+        boolean isStorage = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_STORAGE);
+        boolean isDDS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_DDS);
+        boolean isNDS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_NDS);
+        boolean isMCS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MCS);
 
         Node node = new SOSNode(guid, hostname, port, isAgent, isStorage, isDDS, isNDS, isMCS);
         return node;
@@ -231,10 +213,17 @@ public class SOSConfiguration {
         }
     }
 
+    private String absolutePath(String path) {
+        if (path.charAt(0) == HOME_SYMBOL) {
+            path = HOME_PATH + path.substring(1); // Skip tilde
+        }
+
+        return path;
+    }
+
     private class PropertyKeys {
 
         static final String NODE_GUID = "node.guid";
-        static final String NODE_HOSTNAME = "node.hostname";
         static final String NODE_PORT = "node.port";
         static final String NODE_IS_AGENT = "node.is.agent";
         static final String NODE_IS_STORAGE = "node.is.storage";
@@ -242,11 +231,7 @@ public class SOSConfiguration {
         static final String NODE_IS_NDS = "node.is.nds";
         static final String NODE_IS_MCS = "node.is.mcs";
 
-        static final String DB_TYPE = "db.type";
         static final String DB_PATH = "db.path";
-        static final String DB_HOSTNAME = "db.hostname";
-        static final String DB_USERNAME = "db.username";
-        static final String DB_PASSWORD = "db.password";
 
         static final String STORAGE_TYPE = "storage.type";
         static final String STORAGE_HOSTNAME = "storage.hostname";
@@ -259,13 +244,24 @@ public class SOSConfiguration {
         static final String KEYS_FOLDER = "keys.folder";
 
         static final String POLICY_REPLICATION_FACTOR = "policy.replication.factor";
-        static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.locally";
-        static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remotely";
+        static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.local";
+        static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remote";
         static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
 
         static final String BOOTSTRAP_NODES = "bootstrap";
+        static final String BOOTSTRAP_NODE_GUID = "guid";
+        static final String BOOTSTRAP_NODE_HOSTNAME = "hostname";
+        static final String BOOTSTRAP_NODE_PORT = "port";
+        static final String BOOTSTRAP_NODE_IS_AGENT = "is.agent";
+        static final String BOOTSTRAP_NODE_IS_STORAGE = "is.storage";
+        static final String BOOTSTRAP_NODE_IS_DDS = "is.dds";
+        static final String BOOTSTRAP_NODE_IS_NDS = "is.nds";
+        static final String BOOTSTRAP_NODE_IS_MCS = "is.mcs";
+
+
 
         static final String WEBDAV_PORT = "webdav.port";
         static final String WEBAPP_PORT = "webapp.port";
+        static final String FS_ROOT_GUID = "fs.root";
     }
 }

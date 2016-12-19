@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 
@@ -55,12 +56,12 @@ public class SOSNode implements Node {
         try {
             this.nodeGUID = configuration.getNodeGUID();
 
-            String hostname = configuration.getNodeHostname();
+            InetAddress hostname = InetAddress.getLocalHost();
             int port = configuration.getNodePort();
             this.hostAddress = new InetSocketAddress(hostname, port);
 
             this.DB_nodeid = nodeGUID.toString();
-            this.DB_hostname = hostname;
+            this.DB_hostname = hostname.getHostAddress();
             this.DB_port = port;
 
             this.DB_is_agent = configuration.nodeIsAgent();
