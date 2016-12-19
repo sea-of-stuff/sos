@@ -68,24 +68,6 @@ public class SOSConfiguration {
         return GUIDFactory.recreateGUID(guidString);
     }
 
-    private boolean useRandomGUID(String guid, String random) {
-        if (guid.isEmpty())
-            return true;
-
-        if (guid.equals(random)) {
-            return true;
-        }
-
-        // Check if GUID is valid
-        try {
-            GUIDFactory.recreateGUID(guid);
-        } catch (GUIDGenerationException e) {
-            return true;
-        }
-
-        return false;
-    }
-
     public int getNodePort() {
         return configuration.getInt(PropertyKeys.NODE_PORT);
     }
@@ -153,8 +135,8 @@ public class SOSConfiguration {
 
     private ManifestPolicy createManifestPolicy() {
 
-        boolean storeLocally = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_LOCALLY);
-        boolean storeRemotely = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_REMOTELY);
+        boolean storeLocally = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_LOCAL);
+        boolean storeRemotely = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_REMOTE);
         int replicationFactor = configuration.getInt(PropertyKeys.POLICY_MANIFEST_REPLICATION);
 
         ManifestPolicy manifestPolicy = new BasicManifestPolicy(storeLocally, storeRemotely, replicationFactor);
@@ -213,9 +195,27 @@ public class SOSConfiguration {
         }
     }
 
+    private boolean useRandomGUID(String guid, String random) {
+        if (guid.isEmpty())
+            return true;
+
+        if (guid.equals(random)) {
+            return true;
+        }
+
+        // Check if GUID is valid
+        try {
+            GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return true;
+        }
+
+        return false;
+    }
+
     private String absolutePath(String path) {
         if (path.charAt(0) == HOME_SYMBOL) {
-            path = HOME_PATH + path.substring(1); // Skip tilde
+            path = HOME_PATH + path.substring(1); // Skip HOME_SYMBOL
         }
 
         return path;
@@ -244,8 +244,8 @@ public class SOSConfiguration {
         static final String KEYS_FOLDER = "keys.folder";
 
         static final String POLICY_REPLICATION_FACTOR = "policy.replication.factor";
-        static final String POLICY_MANIFEST_LOCALLY = "policy.manifest.local";
-        static final String POLICY_MANIFEST_REMOTELY = "policy.manifest.remote";
+        static final String POLICY_MANIFEST_LOCAL = "policy.manifest.local";
+        static final String POLICY_MANIFEST_REMOTE = "policy.manifest.remote";
         static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
 
         static final String BOOTSTRAP_NODES = "bootstrap";
@@ -258,10 +258,12 @@ public class SOSConfiguration {
         static final String BOOTSTRAP_NODE_IS_NDS = "is.nds";
         static final String BOOTSTRAP_NODE_IS_MCS = "is.mcs";
 
-
-
         static final String WEBDAV_PORT = "webdav.port";
         static final String WEBAPP_PORT = "webapp.port";
-        static final String FS_ROOT_GUID = "fs.root";
+
+        static final String FS_ROOT_GUID = "fs.root.guid";
+
+        static final String CACHE_FLUSHER_FREQUENCY = "cache.flusher.frequency"; // in minutes
+        static final String CACHE_MAX_SIZE = "cache.max.size"; // in MB
     }
 }

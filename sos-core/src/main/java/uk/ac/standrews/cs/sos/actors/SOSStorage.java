@@ -216,7 +216,7 @@ public class SOSStorage implements Storage {
             }
 
             try {
-                ManifestReplication.Replicate(manifest, ddsNodes, dds);
+                ManifestReplication.Replicate(manifest, ddsNodes.iterator(), 100000, dds); // FIXME
             } catch (SOSProtocolException e) {
                 // TODO - throw exception
                 e.printStackTrace();

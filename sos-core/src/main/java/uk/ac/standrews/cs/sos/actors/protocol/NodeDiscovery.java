@@ -107,6 +107,10 @@ public class NodeDiscovery {
         return localNodesDirectory.getDDSNodes(limit);
     }
 
+    public Iterator<Node> getDDSNodesIterator() {
+        return localNodesDirectory.getDDSNodesIterator();
+    }
+
     /**
      * Get all MCS Nodes
      *

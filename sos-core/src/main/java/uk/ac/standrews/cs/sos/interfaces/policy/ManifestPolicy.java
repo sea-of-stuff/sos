@@ -8,12 +8,11 @@ package uk.ac.standrews.cs.sos.interfaces.policy;
 public interface ManifestPolicy extends Policy {
 
     /**
-     * Defines whether the node applying this policy has to store the manifests
-     * inside its storage
+     * Defines whether the node applying this policy has to store the manifests locally.
      *
      * @return
      */
-    boolean storeManifestsLocally();
+    boolean storeManifestsLocally(); // TODO - make use of this
 
     /**
      * Defines whether the node applying this policy has to store the manifests

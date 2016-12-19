@@ -94,6 +94,10 @@ public class LocalNodesDirectory {
         return getNodes(Node::isDDS, limit);
     }
 
+    public Iterator<Node> getDDSNodesIterator() {
+        return getNodesIterator(Node::isDDS);
+    }
+
     /**
      * Get all MCS Nodes
      *

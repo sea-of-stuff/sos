@@ -22,7 +22,7 @@ public class SOSDDS implements DDS {
     private ManifestsDirectory manifestsDirectory;
 
     public SOSDDS(LocalStorage localStorage, ManifestPolicy manifestPolicy, NDS nds) {
-        manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nds);
+        manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nds, this);
     }
 
     @Override

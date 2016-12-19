@@ -35,7 +35,6 @@ public class StorageTest extends SetUpTest {
                     "    }\n" +
                     "\n" +
                     "    \"db\" : {\n" +
-                    "        \"type\" : \"sqlite\"\n" +
                     "        \"path\" : \"~/sos/db/dump.db\"\n" +
                     "    }\n" +
                     "\n" +
@@ -53,8 +52,8 @@ public class StorageTest extends SetUpTest {
                     "            \"factor\" : 0\n" +
                     "        }\n" +
                     "        \"manifest\" : {\n" +
-                    "            \"locally\" : true\n" +
-                    "            \"remotely\" : false\n" +
+                    "            \"local\" : true\n" +
+                    "            \"remote\" : false\n" +
                     "            \"replication\" : 0\n" +
                     "        }\n" +
                     "    }\n" +

@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -30,7 +31,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
 
     private DDSIndex ddsIndex;
 
-    public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage, NDS nds) {
+    public ManifestsDirectoryImpl(ManifestPolicy manifestPolicy, LocalStorage localStorage, NDS nds, DDS dds) {
 
         this.localStorage = localStorage;
 
@@ -38,7 +39,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         loadOrCreateDDSIndex();
 
         local = new LocalManifestsDirectory(localStorage);
-        remote = new RemoteManifestsDirectory(manifestPolicy, nds, ddsIndex);
+        remote = new RemoteManifestsDirectory(manifestPolicy, nds, dds);
     }
 
     @Override

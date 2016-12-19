@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Set;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,42 +25,46 @@ import java.util.concurrent.Executors;
  */
 public class ManifestReplication {
 
-    public static ExecutorService Replicate(Manifest manifest, Set<Node> nodes, DDS dds) throws SOSProtocolException {
+    public static ExecutorService Replicate(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DDS dds) throws SOSProtocolException {
 
         if (dds == null) {
             throw new SOSProtocolException("DDS is null. Manifest replication process is aborted.");
         }
 
         ExecutorService executor = Executors.newCachedThreadPool();
-
-        nodes.stream()
-                .filter(Node::isDDS)
-                .distinct()
-                .forEach(n -> {
-                    Runnable runnable = transferManifest(manifest, n, dds);
-                    executor.submit(runnable);
-                });
+        Runnable runnable = transferManifest(manifest, nodes, replicationFactor, dds);
+        executor.submit(runnable);
 
         return executor;
     }
 
-    private static Runnable transferManifest(Manifest manifest, Node node, DDS dds) {
+    private static Runnable transferManifest(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DDS dds) {
 
         Runnable replicator = () -> {
-            boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
-            if (transferWasSuccessful) {
-                SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicates successfully to node: " + node.toString());
-                dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
-            } else {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
+            int successfulReplicas = 0;
+            while(nodes.hasNext() || successfulReplicas < replicationFactor) {
+                Node node = nodes.next();
+
+                if (node.isDDS()) {
+                    boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
+
+                    if (transferWasSuccessful) {
+                        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicates successfully to node: " + node.toString());
+                        dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
+                        successfulReplicas++;
+                    } else {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
+                    }
+                }
             }
+
         };
 
         return replicator;
     }
 
-    public static boolean TransferManifestRequest(Manifest manifest, Node node) {
+    private static boolean TransferManifestRequest(Manifest manifest, Node node) {
 
         try {
             URL url = SOSEP.DDS_POST_MANIFEST(node);

@@ -70,7 +70,7 @@ public class DataReplication {
         return () -> {
 
             int successfulReplicas = 0;
-            while (nodes.hasNext() || successfulReplicas == replicationFactor) {
+            while (nodes.hasNext() || successfulReplicas < replicationFactor) {
 
                 Node node = nodes.next();
                 if (node.isStorage()) {

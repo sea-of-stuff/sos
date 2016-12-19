@@ -18,7 +18,7 @@ import java.util.Set;
  * The SOSNDS represents a basic NDS implementation.
  * It provides naive methods to register new nodes in the sos and get known nodes.
  *
- * TODO - methods with limit params
+ * TODO - methods with limit params?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -63,6 +63,10 @@ public class SOSNDS implements NDS {
     @Override
     public Set<Node> getDDSNodes(int limit) {
         return nodeDiscovery.getDDSNodes(limit);
+    }
+
+    public Iterator<Node> getDDSNodesIterator() {
+        return nodeDiscovery.getDDSNodesIterator();
     }
 
     @Override

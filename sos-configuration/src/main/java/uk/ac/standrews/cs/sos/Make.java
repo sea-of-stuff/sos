@@ -28,7 +28,6 @@ public class Make {
                     "    }\n" +
                     "\n" +
                     "    \"db\" : {\n" +
-                    "        \"type\" : \"sqlite\"\n" +
                     "        \"path\" : \"~/sos/db/dump.db\"\n" +
                     "        \"hostname\" : \n" +
                     "        \"username\" :\n" +
@@ -54,8 +53,8 @@ public class Make {
                     "            \"factor\" : 0\n" +
                     "        }\n" +
                     "        \"manifest\" : {\n" +
-                    "            \"locally\" : true\n" +
-                    "            \"remotely\" : false\n" +
+                    "            \"local\" : true\n" +
+                    "            \"remote\" : false\n" +
                     "            \"replication\" : 0\n" +
                     "        }\n" +
                     "    }\n" +

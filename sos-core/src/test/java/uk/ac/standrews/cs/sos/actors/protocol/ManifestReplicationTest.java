@@ -94,7 +94,7 @@ public class ManifestReplicationTest {
 
         DDS ddsMock = mock(DDS.class);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, ddsMock);
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, ddsMock);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -119,7 +119,7 @@ public class ManifestReplicationTest {
 
         DDS ddsMock = mock(DDS.class);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, ddsMock);
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, ddsMock);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -143,7 +143,7 @@ public class ManifestReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, null);
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, null);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -164,7 +164,7 @@ public class ManifestReplicationTest {
 
         DDS ddsMock = mock(DDS.class);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes, ddsMock);
+        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, ddsMock);
 
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);

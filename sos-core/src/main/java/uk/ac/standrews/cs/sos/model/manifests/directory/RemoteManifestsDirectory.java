@@ -2,21 +2,21 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.util.Set;
+import java.util.Iterator;
 
 /**
  * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
@@ -27,30 +27,26 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private ManifestPolicy manifestPolicy;
     private NDS nds;
-    private DDSIndex ddsIndex;
+    private DDS dds;
 
-    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, NDS nds, DDSIndex ddsIndex) {
+    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, NDS nds, DDS dds) {
         this.manifestPolicy = manifestPolicy;
         this.nds = nds;
-        this.ddsIndex = ddsIndex;
+        this.dds = dds;
     }
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
-        int replicationFactor = manifestPolicy.getReplicationFactor();
-        if (replicationFactor > 0) {
-            Set<Node> ddsNodes = nds.getDDSNodes(replicationFactor);
+        boolean replicate = manifestPolicy.storeManifestsRemotely();
+        if (replicate) {
+            Iterator<Node> nodes = nds.getStorageNodesIterator();
+            int replicationFactor = manifestPolicy.getReplicationFactor();
 
-            for(Node ddsNode:ddsNodes) {
-                SOS_LOG.log(LEVEL.INFO, "Attempting to replicate manifest " + manifest.getContentGUID() +
-                        " to node " + ddsNode.getNodeGUID().toString());
-
-                boolean replicationIsSuccessful = ManifestReplication.TransferManifestRequest(manifest, ddsNode);
-                if (replicationIsSuccessful) {
-                    SOS_LOG.log(LEVEL.WARN, "ddsindex is " + ddsIndex);
-                    ddsIndex.addEntry(manifest.guid(), ddsNode.getNodeGUID());
-                }
+            try {
+                ManifestReplication.Replicate(manifest, nodes, replicationFactor, dds);
+            } catch (SOSProtocolException e) {
+                throw new ManifestPersistException("Unable to persist node to remote nodes");
             }
         }
 
