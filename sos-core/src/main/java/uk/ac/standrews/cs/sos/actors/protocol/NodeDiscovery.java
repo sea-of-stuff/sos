@@ -143,7 +143,7 @@ public class NodeDiscovery {
 
         Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
         for(Node ndsNode:ndsNodes) {
-            URL url = SOSEP.NDS_GET_NODE(ndsNode, nodeGUID);
+            URL url = SOSURL.NDS_GET_NODE(ndsNode, nodeGUID);
 
             SyncRequest request = new SyncRequest(Method.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);

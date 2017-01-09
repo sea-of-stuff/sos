@@ -36,14 +36,14 @@ public class LocalNodesDirectoryTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        when(configurationMock.getDBPath()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
+        when(configurationMock.getDBFilename()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
 
         // Make sure that the DB path is clean
-        HelperTest.DeletePath(configurationMock.getDBPath());
+        HelperTest.DeletePath(configurationMock.getDBFilename());
 
         NodesDatabase nodesDatabase;
         try {
-            nodesDatabase = new SQLiteDB(configurationMock.getDBPath());
+            nodesDatabase = new SQLiteDB(configurationMock.getDBFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }

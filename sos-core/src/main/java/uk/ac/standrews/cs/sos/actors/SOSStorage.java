@@ -188,7 +188,7 @@ public class SOSStorage implements Storage {
             if (ddsNotificationInfo.useDefaultDDSNodes()) {
                 int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
                 SOS_LOG.log(LEVEL.DEBUG,"GET MAX " + noDDSNodes + " ddsnodes");
-                retval = nds.getDDSNodes(noDDSNodes);
+                retval = nds.getDDSNodes(noDDSNodes); // TODO - use nds.getDDSIterator?
                 SOS_LOG.log(LEVEL.DEBUG,"nodes retrieved: " + retval.size());
             }
         }

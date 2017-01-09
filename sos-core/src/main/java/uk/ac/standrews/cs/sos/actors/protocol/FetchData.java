@@ -40,7 +40,7 @@ public class FetchData {
 
         SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
 
-        URL url = SOSEP.STORAGE_GET_DATA(node, entityId);
+        URL url = SOSURL.STORAGE_GET_DATA(node, entityId);
         SyncRequest request = new SyncRequest(Method.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 

@@ -92,9 +92,8 @@ public class SOSConfiguration {
         return configuration.getBoolean(PropertyKeys.NODE_IS_MCS);
     }
 
-    public String getDBPath() {
-        String path = configuration.getString(PropertyKeys.DB_PATH);
-        return absolutePath(path);
+    public String getDBFilename() {
+        return configuration.getString(PropertyKeys.DB_FILENAME);
     }
 
     public StorageType getStorageType() {
@@ -231,7 +230,7 @@ public class SOSConfiguration {
         static final String NODE_IS_NDS = "node.is.nds";
         static final String NODE_IS_MCS = "node.is.mcs";
 
-        static final String DB_PATH = "db.path";
+        static final String DB_FILENAME = "db.filename";
 
         static final String STORAGE_TYPE = "storage.type";
         static final String STORAGE_HOSTNAME = "storage.hostname";

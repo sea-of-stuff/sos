@@ -38,7 +38,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         loadOrCreateCache();
         loadOrCreateDDSIndex();
 
-        local = new LocalManifestsDirectory(localStorage);
+        local = new LocalManifestsDirectory(manifestPolicy, localStorage);
         remote = new RemoteManifestsDirectory(manifestPolicy, nds, dds);
     }
 

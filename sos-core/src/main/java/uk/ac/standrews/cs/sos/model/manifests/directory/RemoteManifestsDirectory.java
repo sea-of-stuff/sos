@@ -64,7 +64,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
         // Contact knwon DDS nodes
         // Ask such nodes about manifest with given guid
-        // TODO - write new protocol
+        // TODO - write protocol to find manifests
 
         throw new ManifestNotFoundException("remote directory - findManifest not implemented yet");
     }

@@ -9,13 +9,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * SOS End Points
+ * SOS URL End Points
  *
  * This is a helper class that should be used to get the SOS rest URL end-points
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSEP {
+public class SOSURL {
 
     private static final String HTTP_SCHEME = "http://";
 

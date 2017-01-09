@@ -51,14 +51,4 @@ public interface NDS extends SeaOfStuff {
     Set<Node> getStorageNodes();
     Iterator<Node> getStorageNodesIterator();
 
-    /**
-     * Return a set of storage nodes. This method will return maximum the number of nodes specified
-     * by the limit parameter.
-     * This method may return less nodes than specified by the limit if there are not enough nodes.
-     *
-     * @param limit
-     * @return
-     */
-    Set<Node> getStorageNodes(int limit);
-
 }

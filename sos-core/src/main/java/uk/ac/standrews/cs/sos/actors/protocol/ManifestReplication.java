@@ -67,7 +67,7 @@ public class ManifestReplication {
     private static boolean TransferManifestRequest(Manifest manifest, Node node) {
 
         try {
-            URL url = SOSEP.DDS_POST_MANIFEST(node);
+            URL url = SOSURL.DDS_POST_MANIFEST(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setJSONBody(manifest.toString());
 

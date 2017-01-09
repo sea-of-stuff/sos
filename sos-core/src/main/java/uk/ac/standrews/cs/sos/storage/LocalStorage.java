@@ -20,6 +20,7 @@ public class LocalStorage {
     private static final String HEADS_DIRECTORY_NAME = "heads";
     private static final String META_DIRECTORY_NAME = "metadata";
     private static final String CACHES_DIRECTORY_NAME = "caches";
+    private static final String DB_DIRECTORY_NAME = "db";
 
     private IStorage storage;
 
@@ -101,6 +102,19 @@ public class LocalStorage {
     }
 
     /**
+     * Return the directory used to store the db
+     * @return db directory
+     * @throws DataStorageException
+     */
+    public Directory getDBDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(DB_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
+    }
+
+    /**
      * Create an arbitrary file in a given directory
      * @param parent
      * @param filename
@@ -145,6 +159,7 @@ public class LocalStorage {
             remove(HEADS_DIRECTORY_NAME);
             remove(META_DIRECTORY_NAME);
             remove(CACHES_DIRECTORY_NAME);
+            remove(DB_DIRECTORY_NAME);
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
         }
@@ -158,12 +173,12 @@ public class LocalStorage {
 
     private void createSOSDirectories() throws DataStorageException {
         try {
-            // TODO - db directory, keys?
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
             storage.createDirectory(HEADS_DIRECTORY_NAME).persist();
             storage.createDirectory(META_DIRECTORY_NAME).persist();
             storage.createDirectory(CACHES_DIRECTORY_NAME).persist();
+            storage.createDirectory(DB_DIRECTORY_NAME).persist();
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }

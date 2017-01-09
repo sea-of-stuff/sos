@@ -57,7 +57,7 @@ public class NodeRegistration {
         SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.toString() + " to NDS: " + ndsNode.toString());
 
         try {
-            URL url = SOSEP.NDS_REGISTER_NODE(ndsNode);
+            URL url = SOSURL.NDS_REGISTER_NODE(ndsNode);
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);

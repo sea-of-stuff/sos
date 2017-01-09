@@ -63,7 +63,6 @@ public class DataReplication {
         return executor;
     }
 
-
     private static Runnable PerformReplications(final ByteArrayOutputStream baos, Iterator<Node> nodes, int replicationFactor,
                                                 LocationsIndex index, NDS nds, DDS dds) {
 
@@ -141,7 +140,7 @@ public class DataReplication {
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
 
         try {
-            URL url = SOSEP.STORAGE_POST_DATA(node);
+            URL url = SOSURL.STORAGE_POST_DATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setBody(data);
 

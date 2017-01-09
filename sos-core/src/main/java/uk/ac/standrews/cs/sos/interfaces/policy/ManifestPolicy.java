@@ -12,7 +12,7 @@ public interface ManifestPolicy extends Policy {
      *
      * @return
      */
-    boolean storeManifestsLocally(); // TODO - make use of this
+    boolean storeManifestsLocally();
 
     /**
      * Defines whether the node applying this policy has to store the manifests

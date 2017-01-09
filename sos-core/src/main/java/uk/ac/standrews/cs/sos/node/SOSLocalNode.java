@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -23,7 +22,6 @@ import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
-import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
@@ -61,9 +59,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private PolicyManager policyManager;
     private NodesDatabase nodesDatabase;
     private Identity identity;
-    private MetadataDirectory metadataDirectory;
 
-    private ScheduledExecutorService garbageCollectorService;
+    private ScheduledExecutorService cacheFlusherService;
 
     // Node roles
     // All roles will share storage, node directory, manifests directory, etc.
@@ -87,14 +84,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         policyManager = Builder.policyManager;
 
         try {
-            String databasePath = configuration.getDBPath();
-            File dbDir = new File(databasePath);
-            if (!dbDir.exists()) {
-                new File(dbDir.getParent()).mkdir();
-                dbDir.createNewFile();
-            }
+            String dbFilename = configuration.getDBFilename();
+            File file = localStorage.createFile(localStorage.getDBDirectory(), dbFilename).toFile();
 
-            nodesDatabase = new SQLiteDB(databasePath);
+            nodesDatabase = new SQLiteDB(file.getPath());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         } catch (IOException e) {
@@ -106,10 +99,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         registerNode(configuration.getNodePort());
 
         initIdentity();
-        initMetadataManager();
 
         initSOSInstances();
-        garbageCollector();
+        cacheFlusher();
 
         SOS_LOG.log(LEVEL.INFO, "Node initialised");
     }
@@ -148,7 +140,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dds.flush();
         storage.flush();
 
-        garbageCollectorService.shutdown();
+        cacheFlusherService.shutdown();
 
         RequestsManager.getInstance().shutdown();
     }
@@ -183,12 +175,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     }
 
-    private void initMetadataManager() {
-        MetadataEngine metadataEngine = new TikaMetadataEngine();
-        MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
-        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy); // TODO - do it in MCS
-    }
-
     private void initNDS() throws SOSException {
         try {
             SOSURLProtocol.getInstance().register(localStorage);
@@ -202,20 +188,23 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initSOSInstances() {
         ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
         ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
+        MetadataEngine metadataEngine = new TikaMetadataEngine();
+        MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
 
         dds = new SOSDDS(localStorage, manifestPolicy, nds);
         storage = new SOSStorage(this, localStorage, replicationPolicy, nds, dds);
-        mcs = new SOSMCS(metadataDirectory);
+
+        mcs = new SOSMCS(localStorage, metadataEngine, metadataPolicy);
         agent = new SOSAgent(storage, dds, mcs, identity);
     }
 
-    private void garbageCollector() {
-        SOS_LOG.log(LEVEL.INFO, "Garbage collector started");
+    private void cacheFlusher() {
+        SOS_LOG.log(LEVEL.INFO, "Cache Flusher started");
 
         CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
 
-        garbageCollectorService = Executors.newScheduledThreadPool(1);
-        garbageCollectorService.scheduleAtFixedRate(cacheFlusher, 0, CacheFlusher.PERIOD, CacheFlusher.TIME_UNIT);
+        cacheFlusherService = Executors.newScheduledThreadPool(1);
+        cacheFlusherService.scheduleAtFixedRate(cacheFlusher, 0, CacheFlusher.PERIOD, CacheFlusher.TIME_UNIT);
 
     }
 

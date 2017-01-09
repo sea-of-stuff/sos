@@ -52,7 +52,7 @@ public class SOSConfigurationTest {
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         SOSConfiguration configuration = new SOSConfiguration(file);
-        configuration.getDBPath();
+        configuration.getDBFilename();
     }
 
     @Test

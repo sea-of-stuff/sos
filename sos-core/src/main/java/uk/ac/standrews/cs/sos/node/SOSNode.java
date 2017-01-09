@@ -86,7 +86,6 @@ public class SOSNode implements Node {
 
         if (nodeGUID == null) {
             try {
-                // TODO - assuming that DB_nodeid exists
                 nodeGUID = GUIDFactory.recreateGUID(DB_nodeid);
             } catch (GUIDGenerationException e) {
                 e.printStackTrace();
@@ -101,8 +100,6 @@ public class SOSNode implements Node {
     public InetSocketAddress getHostAddress() {
 
         if (hostAddress == null) {
-            // TODO - assuming that DB_hostname, DB_port exist
-            // deal with cases when there is not enoug information
             hostAddress = new InetSocketAddress(DB_hostname, DB_port);
         }
 

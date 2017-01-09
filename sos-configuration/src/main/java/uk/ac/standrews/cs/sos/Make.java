@@ -75,7 +75,7 @@ public class Make {
             "node.is.mcs= \t # true/false\n" +
             "node.is.nds= \t # true/false\n" +
             "\n" +
-            "db.path=~/sos/db/dump.db\n" +
+            "db.filename=dump.db\n" +
             "db.password=\n" +
             "db.username=\n" +
             "db.hostname=\n" +

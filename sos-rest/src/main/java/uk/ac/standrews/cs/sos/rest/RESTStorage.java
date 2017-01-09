@@ -108,7 +108,7 @@ public class RESTStorage {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
             tuple = storage.addAtom(builder, true, new DDSNotificationInfo()
                     .setNotifyDDSNodes(true)
-                    .setUseDefaultDDSNodes(true)); // TODO - must be configurable
+                    .setUseDefaultDDSNodes(true)); // TODO - must be configurable from config file
 
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();

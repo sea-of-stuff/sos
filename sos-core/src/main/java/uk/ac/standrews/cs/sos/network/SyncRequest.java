@@ -87,6 +87,7 @@ public class SyncRequest extends Request {
     }
 
     private Response postData(OkHttpClient client) throws IOException {
+
         // FIXME - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
         RequestBody body = RequestBody.create(MULTIPART, bytes);

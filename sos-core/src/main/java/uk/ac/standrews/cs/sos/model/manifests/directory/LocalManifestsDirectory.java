@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -34,6 +35,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
 
+    private ManifestPolicy manifestPolicy;
     final private LocalStorage localStorage;
 
     /**
@@ -43,7 +45,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
      *
      * @param localStorage
      */
-    public LocalManifestsDirectory(LocalStorage localStorage) {
+    public LocalManifestsDirectory(ManifestPolicy manifestPolicy, LocalStorage localStorage) {
+        this.manifestPolicy = manifestPolicy;
         this.localStorage = localStorage;
     }
 
@@ -54,14 +57,18 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
      */
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
-        if (manifest.isValid()) {
-            try {
-                saveManifest(manifest);
-            } catch (ManifestsDirectoryException e) {
-                e.printStackTrace();
+
+        boolean addManifest = manifestPolicy.storeManifestsLocally();
+        if (addManifest) {
+            if (manifest.isValid()) {
+                try {
+                    saveManifest(manifest);
+                } catch (ManifestsDirectoryException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                throw new ManifestPersistException("Manifest not valid");
             }
-        } else {
-            throw new ManifestPersistException("Manifest not valid");
         }
     }
 
