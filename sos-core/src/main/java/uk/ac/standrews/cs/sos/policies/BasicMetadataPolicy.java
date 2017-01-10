@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.policy;
+package uk.ac.standrews.cs.sos.policies;
 
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 
@@ -7,18 +7,14 @@ import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
  */
 public class BasicMetadataPolicy implements MetadataPolicy {
 
-    @Override
-    public boolean computeMetadataOnBehalfOfClient() {
-        return false;
-    }
+    private int replicationFactor;
 
-    @Override
-    public String metadataEngine() {
-        return null;
+    public BasicMetadataPolicy(int replicationFactor) {
+        this.replicationFactor = replicationFactor >= 0 ? replicationFactor : 0;
     }
 
     @Override
     public int replicationFactor() {
-        return 0;
+        return replicationFactor;
     }
 }

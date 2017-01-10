@@ -16,16 +16,4 @@ public interface ReplicationPolicy extends Policy {
      */
     int getReplicationFactor();
 
-    /**
-     * Replication is strong is data is replicated in at least n nodes (where n is the replication factor)
-     *
-     * @return true if the replication is strong
-     */
-    boolean isReplicationStrong();
-
-    /**
-     * Return the maximum replication factor that this policy can accept
-     * @return
-     */
-    int getMaximumAllowedReplicationFactor();
 }

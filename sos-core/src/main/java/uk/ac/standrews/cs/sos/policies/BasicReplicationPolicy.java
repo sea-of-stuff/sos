@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.policy;
+package uk.ac.standrews.cs.sos.policies;
 
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 
@@ -23,13 +23,4 @@ public class BasicReplicationPolicy implements ReplicationPolicy {
         return replicationFactor;
     }
 
-    @Override
-    public boolean isReplicationStrong() {
-        return false;
-    }
-
-    @Override
-    public int getMaximumAllowedReplicationFactor() {
-        return 0;
-    }
 }

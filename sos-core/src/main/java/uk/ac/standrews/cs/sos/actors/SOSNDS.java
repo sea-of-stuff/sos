@@ -43,7 +43,6 @@ public class SOSNDS implements NDS {
         return nodeDiscovery.getLocalNode();
     }
 
-
     @Override
     public Node getNode(IGUID guid) throws NodeNotFoundException {
         return nodeDiscovery.findNode(guid);

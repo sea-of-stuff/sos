@@ -5,10 +5,12 @@ package uk.ac.standrews.cs.sos.interfaces.policy;
  */
 public interface MetadataPolicy {
 
-    boolean computeMetadataOnBehalfOfClient();
-
-    String metadataEngine();
-
+    /**
+     * Replication factor for metadata manifest.
+     * Metadata will be replicated to DDS nodes.
+     *
+     * @return
+     */
     int replicationFactor();
 
 }

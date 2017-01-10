@@ -211,7 +211,7 @@ public class DataReplication {
 
             // TODO - what if there is already an entry for this node, but different roles?
             // FIXME - Do not hard code this bit
-            // need a way to merge roles
+            // need a way to merge roles or override node?
             Node node = new SOSNode(nodeGUID, hostname, port, false, false, true, false, false);
             ddsNodes.add(node);
         }

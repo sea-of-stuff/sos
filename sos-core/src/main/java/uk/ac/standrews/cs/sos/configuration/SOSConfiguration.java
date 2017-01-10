@@ -15,10 +15,10 @@ import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.policy.BasicManifestPolicy;
-import uk.ac.standrews.cs.sos.policy.BasicMetadataPolicy;
-import uk.ac.standrews.cs.sos.policy.BasicReplicationPolicy;
-import uk.ac.standrews.cs.sos.policy.PolicyManagerImpl;
+import uk.ac.standrews.cs.sos.policies.BasicManifestPolicy;
+import uk.ac.standrews.cs.sos.policies.BasicMetadataPolicy;
+import uk.ac.standrews.cs.sos.policies.BasicReplicationPolicy;
+import uk.ac.standrews.cs.sos.policies.PolicyManagerImpl;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageType;
 
@@ -143,7 +143,8 @@ public class SOSConfiguration {
     }
 
     private MetadataPolicy createMetadataPolicy() {
-        MetadataPolicy metadataPolicy = new BasicMetadataPolicy();
+        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_METADATA_REPLICATION);
+        MetadataPolicy metadataPolicy = new BasicMetadataPolicy(replicationFactor);
 
         return metadataPolicy;
     }
@@ -246,6 +247,7 @@ public class SOSConfiguration {
         static final String POLICY_MANIFEST_LOCAL = "policy.manifest.local";
         static final String POLICY_MANIFEST_REMOTE = "policy.manifest.remote";
         static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
+        static final String POLICY_METADATA_REPLICATION = "policy.metadata.replication";
 
         static final String BOOTSTRAP_NODES = "bootstrap";
         static final String BOOTSTRAP_NODE_GUID = "guid";

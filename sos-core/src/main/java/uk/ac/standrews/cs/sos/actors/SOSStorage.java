@@ -65,7 +65,6 @@ public class SOSStorage implements Storage {
         Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo);
 
         // Run asynchronously
-
         try {
             replicateData(manifest);
             notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
@@ -73,6 +72,7 @@ public class SOSStorage implements Storage {
             SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
         }
 
+        // This may return before data is replicated and the DDS nodes are notified
         return new Tuple<>(manifest, defaultDDSNodes);
     }
 
@@ -171,7 +171,7 @@ public class SOSStorage implements Storage {
             try (InputStream data = getAtomContent(atom)) {
 
                 // FIXME - check if data is already replicated.
-                // Note: instruct other storage node to replicate on behalf of this node
+                // Note: could also have requests, such that we instruct another node (a storage node) to replicate the data on behalf of this node
 
                 Iterator<Node> storageNodes = nds.getStorageNodesIterator();
                 atomStorage.replicate(data, storageNodes, replicationFactor, nds, dds);

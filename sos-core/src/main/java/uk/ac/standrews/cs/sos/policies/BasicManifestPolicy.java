@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.policy;
+package uk.ac.standrews.cs.sos.policies;
 
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 

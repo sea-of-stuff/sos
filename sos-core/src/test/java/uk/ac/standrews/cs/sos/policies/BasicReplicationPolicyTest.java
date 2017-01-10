@@ -1,11 +1,10 @@
-package uk.ac.standrews.cs.sos.policy;
+package uk.ac.standrews.cs.sos.policies;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -31,13 +30,6 @@ public class BasicReplicationPolicyTest extends CommonTest {
         ReplicationPolicy replicationPolicy = new BasicReplicationPolicy(-1);
 
         assertEquals(replicationPolicy.getReplicationFactor(), 0);
-    }
-
-    @Test
-    public void testIsReplicationStrong() throws Exception {
-        ReplicationPolicy replicationPolicy = new BasicReplicationPolicy(0);
-
-        assertFalse(replicationPolicy.isReplicationStrong());
     }
 
 }
