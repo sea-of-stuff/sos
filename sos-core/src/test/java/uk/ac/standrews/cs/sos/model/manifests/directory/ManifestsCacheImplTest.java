@@ -12,12 +12,14 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
+import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
+import uk.ac.standrews.cs.sos.policies.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
@@ -99,7 +101,8 @@ public class ManifestsCacheImplTest extends CommonTest {
         Directory manifestsDir = localStorage.getManifestDirectory();
         Directory cachesDir = localStorage.getCachesDirectory();
 
-        LocalManifestsDirectory localManifestsManager = new LocalManifestsDirectory(localStorage);
+        ManifestPolicy policy = new BasicManifestPolicy(true, false, 0);
+        LocalManifestsDirectory localManifestsManager = new LocalManifestsDirectory(policy, localStorage);
         ManifestsCache cache = new ManifestsCacheImpl();
 
         Manifest manifest = getValidManifest();

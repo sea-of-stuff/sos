@@ -10,8 +10,13 @@ import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
+import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsDirectoryImpl;
+import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 
 /**
@@ -20,9 +25,11 @@ import uk.ac.standrews.cs.sos.storage.LocalStorage;
 public class SOSDDS implements DDS {
 
     private ManifestsDirectory manifestsDirectory;
+    private MetadataDirectory metadataDirectory;
 
-    public SOSDDS(LocalStorage localStorage, ManifestPolicy manifestPolicy, NDS nds) {
+    public SOSDDS(LocalStorage localStorage, MetadataEngine metadataEngine, ManifestPolicy manifestPolicy, MetadataPolicy metadataPolicy, NDS nds) {
         manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nds, this);
+        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy);
     }
 
     @Override
@@ -38,6 +45,17 @@ public class SOSDDS implements DDS {
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
         return manifestsDirectory.findManifest(guid);
+    }
+
+    @Override
+    public void addMetadata(SOSMetadata metadata) {
+        metadataDirectory.addMetadata(metadata);
+    }
+
+    @Override
+    public SOSMetadata getMetadata(IGUID guid) {
+        SOSMetadata metadata = metadataDirectory.getMetadata(guid);
+        return metadata;
     }
 
     @Override

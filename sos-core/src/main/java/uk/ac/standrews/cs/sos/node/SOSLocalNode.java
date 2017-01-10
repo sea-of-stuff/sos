@@ -191,10 +191,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
         MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
 
-        dds = new SOSDDS(localStorage, manifestPolicy, nds);
+        dds = new SOSDDS(localStorage, metadataEngine, manifestPolicy, metadataPolicy, nds);
         storage = new SOSStorage(this, localStorage, replicationPolicy, nds, dds);
+        mcs = new SOSMCS(metadataEngine);
 
-        mcs = new SOSMCS(localStorage, metadataEngine, metadataPolicy);
         agent = new SOSAgent(storage, dds, mcs, identity);
     }
 

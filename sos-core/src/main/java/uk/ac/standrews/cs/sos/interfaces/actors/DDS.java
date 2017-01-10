@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,7 +28,8 @@ public interface DDS extends SeaOfStuff {
     void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
 
     /**
-     *
+     * Map the GUID of a manifest with the GUID of a dds node.
+     * This mapping will be used when trying to get the manifest via #getManifest(guid)
      * @param manifest
      * @param ddsNode
      */
@@ -43,6 +45,10 @@ public interface DDS extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+
+    void addMetadata(SOSMetadata metadata);
+
+    SOSMetadata getMetadata(IGUID guid); // TODO - Metadata Not Found Exception
 
     /**
      * Return the latest version of a given asset

@@ -105,7 +105,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
 
     private void replicate(SOSMetadata metadata) {
         if (policy.replicationFactor() > 0) {
-            replicate(metadata, null); // TODO
+            replicate(metadata, null); // TODO - replicate metadata to DDS node?
         }
     }
 

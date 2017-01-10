@@ -143,7 +143,7 @@ public class SOSConfiguration {
     }
 
     private MetadataPolicy createMetadataPolicy() {
-        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_METADATA_REPLICATION);
+        int replicationFactor = 0; // configuration.getInt(PropertyKeys.POLICY_METADATA_REPLICATION);
         MetadataPolicy metadataPolicy = new BasicMetadataPolicy(replicationFactor);
 
         return metadataPolicy;

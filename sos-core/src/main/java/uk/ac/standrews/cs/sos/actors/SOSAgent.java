@@ -119,13 +119,15 @@ public class SOSAgent implements Agent {
     public SOSMetadata addMetadata(Atom atom) throws SOSMetadataException {
 
         InputStream data = atom.getData();
-        SOSMetadata metadata = mcs.addMetadata(data);
+        SOSMetadata metadata = mcs.processMetadata(data);
+        dds.addMetadata(metadata);
+
         return metadata;
     }
 
     @Override
     public SOSMetadata getMetadata(IGUID guid) {
-        SOSMetadata metadata = mcs.getMetadata(guid);
+        SOSMetadata metadata = dds.getMetadata(guid);
         return metadata;
     }
 

@@ -28,10 +28,7 @@ public class Make {
                     "    }\n" +
                     "\n" +
                     "    \"db\" : {\n" +
-                    "        \"path\" : \"~/sos/db/dump.db\"\n" +
-                    "        \"hostname\" : \n" +
-                    "        \"username\" :\n" +
-                    "        \"password\" :\n" +
+                    "        \"filename\" : \"~/sos/db/dump.db\"\n" +
                     "    }\n" +
                     "\n" +
                     "    \"storage\" : {\n" +

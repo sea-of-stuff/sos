@@ -50,7 +50,7 @@ public class ClientReplicationTest extends SetUpTest {
                     "    }\n" +
                     "\n" +
                     "    \"db\" : {\n" +
-                    "        \"path\" : \"~/sos/db/dump.db\"\n" +
+                    "        \"filename\" : \"~/sos/db/dump.db\"\n" +
                     "    }\n" +
                     "\n" +
                     "    \"storage\" : {\n" +
