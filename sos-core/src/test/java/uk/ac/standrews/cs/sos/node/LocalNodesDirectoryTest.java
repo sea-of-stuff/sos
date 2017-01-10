@@ -36,7 +36,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        when(configurationMock.getDBFilename()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
+        when(configurationMock.getDBFilename()).thenReturn("dump.db");
 
         // Make sure that the DB path is clean
         HelperTest.DeletePath(configurationMock.getDBFilename());

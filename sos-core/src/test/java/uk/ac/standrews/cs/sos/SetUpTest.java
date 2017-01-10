@@ -45,7 +45,7 @@ public class SetUpTest extends CommonTest {
                     "    }\n" +
                     "\n" +
                     "    \"db\" : {\n" +
-                    "        \"filename\" : \"~/sos/db/dump.db\"\n" +
+                    "        \"filename\" : \"dump.db\"\n" +
                     "    }\n" +
                     "\n" +
                     "    \"storage\" : {\n" +

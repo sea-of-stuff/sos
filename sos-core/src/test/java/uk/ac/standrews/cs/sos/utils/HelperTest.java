@@ -73,10 +73,12 @@ public class HelperTest {
     public static void DeletePath(String path) throws IOException {
         java.io.File dir = new java.io.File(path);
 
-        if (dir.isFile() && dir.getParentFile().exists()) {
+        if (dir.isFile() && dir.getParentFile() != null && dir.getParentFile().exists()) {
             FileUtils.cleanDirectory(dir.getParentFile());
         } else if (dir.isDirectory() && dir.exists()) {
             FileUtils.cleanDirectory(dir);
+        } else if (dir.isFile()) {
+            dir.delete();
         }
     }
 
