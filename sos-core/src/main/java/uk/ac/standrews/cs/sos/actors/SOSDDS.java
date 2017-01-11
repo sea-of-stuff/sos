@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
@@ -53,9 +54,8 @@ public class SOSDDS implements DDS {
     }
 
     @Override
-    public SOSMetadata getMetadata(IGUID guid) {
-        SOSMetadata metadata = metadataDirectory.getMetadata(guid);
-        return metadata;
+    public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
+        return metadataDirectory.getMetadata(guid);
     }
 
     @Override

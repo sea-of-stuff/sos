@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -143,9 +143,9 @@ public interface Agent {
      *
      * @param atom used to generate the metadata
      * @return the metadata generated
-     * @throws SOSMetadataException if the metadata could not be generated
+     * @throws MetadataException if the metadata could not be generated
      */
-    SOSMetadata addMetadata(Atom atom) throws SOSMetadataException;
+    SOSMetadata addMetadata(Atom atom) throws MetadataException;
 
     /**
      * Get the metadata mapped to the specified guid

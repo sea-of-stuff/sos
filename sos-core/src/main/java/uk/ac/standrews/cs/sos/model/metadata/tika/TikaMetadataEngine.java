@@ -5,7 +5,7 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadataEngine;
 import uk.ac.standrews.cs.storage.data.Data;
 
@@ -18,7 +18,7 @@ import java.io.InputStream;
 public class TikaMetadataEngine extends AbstractMetadataEngine {
 
     @Override
-    public TikaMetadata processData(Data data) throws SOSMetadataException {
+    public TikaMetadata processData(Data data) throws MetadataException {
 
         AutoDetectParser parser = new AutoDetectParser();
         BodyContentHandler handler = new BodyContentHandler();
@@ -34,7 +34,7 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
             meta.addProperty("Timestamp", Long.toString(unixTime));
             return meta;
         } catch (IOException | TikaException | SAXException e) {
-            throw new SOSMetadataException("Unable to parse metadata from given data", e);
+            throw new MetadataException("Unable to parse metadata from given data", e);
         }
 
     }

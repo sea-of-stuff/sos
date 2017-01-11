@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.sos.interfaces.metadata;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface MetadataDirectory {
 
-    SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException;
+    SOSMetadata processMetadata(InputStream inputStream) throws MetadataException;
 
     /**
      * cache and store metadata
@@ -24,7 +25,7 @@ public interface MetadataDirectory {
      * @param guid
      * @return
      */
-    SOSMetadata getMetadata(IGUID guid);
+    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
     /**
      * Get all versions that match the given attribute and value

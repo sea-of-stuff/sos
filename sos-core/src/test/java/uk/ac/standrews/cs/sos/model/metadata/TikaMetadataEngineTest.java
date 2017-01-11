@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.metadata;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.CommonTest;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadata;
@@ -22,7 +22,7 @@ import static org.testng.Assert.*;
 public class TikaMetadataEngineTest extends CommonTest {
 
     @Test
-    public void basicMetadataTest() throws SOSMetadataException {
+    public void basicMetadataTest() throws MetadataException {
 
         TikaMetadataEngine test = new TikaMetadataEngine();
 
@@ -37,7 +37,7 @@ public class TikaMetadataEngineTest extends CommonTest {
     }
 
     @Test
-    public void ignorePropertiesTest() throws SOSMetadataException {
+    public void ignorePropertiesTest() throws MetadataException {
 
         TikaMetadataEngine test = new TikaMetadataEngine();
 
@@ -49,7 +49,7 @@ public class TikaMetadataEngineTest extends CommonTest {
     }
 
     @Test
-    public void parseImageTest() throws SOSMetadataException, URISyntaxException, IOException {
+    public void parseImageTest() throws MetadataException, URISyntaxException, IOException {
 
         TikaMetadataEngine test = new TikaMetadataEngine();
 
@@ -67,7 +67,7 @@ public class TikaMetadataEngineTest extends CommonTest {
 
     // TODO - download data first
     @Test (enabled = false)
-    public void parseLocalImageTest() throws SOSMetadataException, URISyntaxException, IOException {
+    public void parseLocalImageTest() throws MetadataException, URISyntaxException, IOException {
 
         TikaMetadataEngine test = new TikaMetadataEngine();
 
@@ -85,7 +85,7 @@ public class TikaMetadataEngineTest extends CommonTest {
 
     // TODO - download data first
     @Test (enabled = false)
-    public void parseLocalImagenoextTest() throws SOSMetadataException, URISyntaxException, IOException {
+    public void parseLocalImagenoextTest() throws MetadataException, URISyntaxException, IOException {
 
         TikaMetadataEngine test = new TikaMetadataEngine();
 

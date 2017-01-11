@@ -5,17 +5,17 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSMetadataException extends SOSException {
+public class MetadataException extends SOSException {
 
-    public SOSMetadataException(Throwable throwable) {
+    public MetadataException(Throwable throwable) {
         super(throwable);
     }
 
-    public SOSMetadataException(String message, Throwable throwable) {
+    public MetadataException(String message, Throwable throwable) {
         super(message, throwable);
     }
 
-    public SOSMetadataException(String message) {
+    public MetadataException(String message) {
         super(message);
     }
 }

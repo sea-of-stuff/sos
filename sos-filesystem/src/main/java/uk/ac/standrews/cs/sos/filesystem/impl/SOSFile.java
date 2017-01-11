@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.sos.filesystem.Helper;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
@@ -61,7 +61,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (ManifestNotMadeException | SOSMetadataException e) {
+        } catch (ManifestNotMadeException | MetadataException e) {
             e.printStackTrace();
         }
 
@@ -126,7 +126,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (ManifestNotMadeException | SOSMetadataException e) {
+        } catch (ManifestNotMadeException | MetadataException e) {
             e.printStackTrace();
         }
 

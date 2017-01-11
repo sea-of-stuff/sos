@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.io.InputStream;
@@ -12,5 +12,5 @@ import java.io.InputStream;
  */
 public interface MCS extends SeaOfStuff {
 
-    SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException;
+    SOSMetadata processMetadata(InputStream inputStream) throws MetadataException;
 }

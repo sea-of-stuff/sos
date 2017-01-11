@@ -16,10 +16,10 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
+import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
-import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
@@ -186,13 +186,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initSOSInstances() {
-        ReplicationPolicy replicationPolicy = policyManager.getReplicationPolicy();
+        DataReplicationPolicy dataReplicationPolicy = policyManager.getDataReplicationPolicy();
         ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
         MetadataEngine metadataEngine = new TikaMetadataEngine();
         MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
 
         dds = new SOSDDS(localStorage, metadataEngine, manifestPolicy, metadataPolicy, nds);
-        storage = new SOSStorage(this, localStorage, replicationPolicy, nds, dds);
+        storage = new SOSStorage(this, localStorage, dataReplicationPolicy, nds, dds);
         mcs = new SOSMCS(metadataEngine);
 
         agent = new SOSAgent(storage, dds, mcs, identity);
@@ -205,7 +205,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         cacheFlusherService = Executors.newScheduledThreadPool(1);
         cacheFlusherService.scheduleAtFixedRate(cacheFlusher, 0, CacheFlusher.PERIOD, CacheFlusher.TIME_UNIT);
-
     }
 
     /**

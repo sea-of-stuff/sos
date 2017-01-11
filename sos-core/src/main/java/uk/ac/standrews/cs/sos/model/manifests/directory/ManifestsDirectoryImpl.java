@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
@@ -11,6 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
@@ -70,6 +72,14 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         }
         if (manifest == null) {
             throw new ManifestNotFoundException("Unable to find manifest in cache, local, remote. GUID: " + guid.toString());
+        }
+
+        // Make sure manifest is cached and saved locally
+        cache.addManifest(manifest);
+        try {
+            local.addManifest(manifest);
+        } catch (ManifestPersistException e) {
+            SOS_LOG.log(LEVEL.WARN, "ManifestsDirectory :: Unable to save manifest to local directory");
         }
 
         return manifest;

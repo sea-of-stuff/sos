@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.IGUID;
 import java.util.Set;
 
 /**
- * A Version Manifest represents a particular snapshot for some given data.
+ * An Asset Manifest represents a particular snapshot for some given data.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

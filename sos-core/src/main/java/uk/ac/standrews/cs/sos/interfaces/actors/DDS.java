@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
@@ -20,7 +21,7 @@ public interface DDS extends SeaOfStuff {
      * assuming that such manifests are available and reachable.
      * This operation will be performed recursively.
      *
-     * @param manifest to add to the NodeManager
+     * @param manifest to add to the sea of stuff
      * @param recursive if true adds the references manifests and data recursively.
      * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
      * @throws ManifestPersistException
@@ -46,9 +47,20 @@ public interface DDS extends SeaOfStuff {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
+    /**
+     * Add the given metadata to the sea of stuff
+     * @param metadata to be added to the sea of stuff
+     */
     void addMetadata(SOSMetadata metadata);
 
-    SOSMetadata getMetadata(IGUID guid); // TODO - Metadata Not Found Exception
+    /**
+     * Get the metadata that matches the given GUID.
+     *
+     * @param guid of the metadata
+     * @return metadata associated with the GUID
+     * @throws MetadataNotFoundException
+     */
+    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
     /**
      * Return the latest version of a given asset
@@ -59,8 +71,17 @@ public interface DDS extends SeaOfStuff {
      */
     Asset getHEAD(IGUID guid) throws HEADNotFoundException;
 
+    /**
+     * Set the specified version to be the head for the asset it is associated with
+     *
+     * @param version of the asset to be set to head
+     * @throws HEADNotSetException
+     */
     void setHEAD(IGUID version) throws HEADNotSetException;
 
+    /**
+     * Flushes any in-memory information into disk
+     */
     void flush();
 
 }

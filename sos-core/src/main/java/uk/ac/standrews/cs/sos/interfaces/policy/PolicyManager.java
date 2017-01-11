@@ -5,13 +5,13 @@ package uk.ac.standrews.cs.sos.interfaces.policy;
  */
 public interface PolicyManager {
 
-    void setReplicationPolicy(ReplicationPolicy policy);
+    void setDataReplicationPolicy(DataReplicationPolicy policy);
 
     void setMetadataPolicy(MetadataPolicy policy);
 
     void setManifestPolicy(ManifestPolicy policy);
 
-    ReplicationPolicy getReplicationPolicy();
+    DataReplicationPolicy getDataReplicationPolicy();
 
     MetadataPolicy getMetadataPolicy();
 

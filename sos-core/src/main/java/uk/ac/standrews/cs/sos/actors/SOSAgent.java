@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
@@ -116,7 +116,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public SOSMetadata addMetadata(Atom atom) throws SOSMetadataException {
+    public SOSMetadata addMetadata(Atom atom) throws MetadataException {
 
         InputStream data = atom.getData();
         SOSMetadata metadata = mcs.processMetadata(data);

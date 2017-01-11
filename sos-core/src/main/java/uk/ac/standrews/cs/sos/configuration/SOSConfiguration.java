@@ -10,14 +10,14 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
-import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.policies.BasicDataReplicationPolicy;
 import uk.ac.standrews.cs.sos.policies.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.policies.BasicMetadataPolicy;
-import uk.ac.standrews.cs.sos.policies.BasicReplicationPolicy;
 import uk.ac.standrews.cs.sos.policies.PolicyManagerImpl;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageType;
@@ -112,24 +112,24 @@ public class SOSConfiguration {
 
     public PolicyManager getPolicyManager() {
 
-        ReplicationPolicy replicationPolicy = createReplicationPolicy();
+        DataReplicationPolicy dataReplicationPolicy = createReplicationPolicy();
         ManifestPolicy manifestPolicy = createManifestPolicy();
         MetadataPolicy metadataPolicy = createMetadataPolicy();
 
         PolicyManager policyManager = new PolicyManagerImpl();
-        policyManager.setReplicationPolicy(replicationPolicy);
+        policyManager.setDataReplicationPolicy(dataReplicationPolicy);
         policyManager.setManifestPolicy(manifestPolicy);
         policyManager.setMetadataPolicy(metadataPolicy);
 
         return policyManager;
     }
 
-    private ReplicationPolicy createReplicationPolicy() {
+    private DataReplicationPolicy createReplicationPolicy() {
 
         int replicationFactor = configuration.getInt(PropertyKeys.POLICY_REPLICATION_FACTOR);
 
-        ReplicationPolicy replicationPolicy = new BasicReplicationPolicy(replicationFactor);
-        return replicationPolicy;
+        DataReplicationPolicy dataReplicationPolicy = new BasicDataReplicationPolicy(replicationFactor);
+        return dataReplicationPolicy;
     }
 
     private ManifestPolicy createManifestPolicy() {

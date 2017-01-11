@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.sos.interfaces.policy;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ReplicationPolicy extends Policy {
+public interface DataReplicationPolicy extends Policy {
 
     /**
      * This is an integer from 0 to n indicating how many times the data should be replicated.

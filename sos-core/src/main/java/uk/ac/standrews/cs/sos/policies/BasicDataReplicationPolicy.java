@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.sos.policies;
 
-import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
+import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class BasicReplicationPolicy implements ReplicationPolicy {
+public class BasicDataReplicationPolicy implements DataReplicationPolicy {
 
     private int replicationFactor;
 
@@ -14,7 +14,7 @@ public class BasicReplicationPolicy implements ReplicationPolicy {
      *
      * @param replicationFactor (zeroed if negative)
      */
-    public BasicReplicationPolicy(int replicationFactor) {
+    public BasicDataReplicationPolicy(int replicationFactor) {
         this.replicationFactor = replicationFactor > 0 ? replicationFactor : 0;
     }
 

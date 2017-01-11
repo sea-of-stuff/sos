@@ -44,7 +44,7 @@ public class CacheFlusher implements Runnable {
         try {
             Directory datDir = localStorage.getDataDirectory();
             long dataSize = datDir.getSize();
-            SOS_LOG.log(LEVEL.INFO, "Cache: size is: " + dataSize);
+            SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Data Directory size is: " + dataSize);
 
             return dataSize > DATA_SIZE_LIMIT;
         } catch (DataStorageException e) {
@@ -57,6 +57,10 @@ public class CacheFlusher implements Runnable {
     private void flush() {
         SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Work in progress");
 
+
+        // Remove files that are replicated in at least N places.
+
+        // OLD NOTES
         // Remove unnecessary files - least used files or bigger files
         // Check caches and indices
         // check that data is replicated

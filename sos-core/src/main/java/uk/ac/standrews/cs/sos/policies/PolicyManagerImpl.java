@@ -1,22 +1,21 @@
 package uk.ac.standrews.cs.sos.policies;
 
+import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
-import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class PolicyManagerImpl implements PolicyManager {
 
-    private ReplicationPolicy replicationPolicy;
+    private DataReplicationPolicy dataReplicationPolicy;
     private ManifestPolicy manifestPolicy;
     private MetadataPolicy metadataPolicy;
 
-    @Override
-    public void setReplicationPolicy(ReplicationPolicy policy) {
-        this.replicationPolicy = policy;
+    public void setDataReplicationPolicy(DataReplicationPolicy policy) {
+        this.dataReplicationPolicy = policy;
     }
 
     @Override
@@ -29,9 +28,8 @@ public class PolicyManagerImpl implements PolicyManager {
         this.manifestPolicy = policy;
     }
 
-    @Override
-    public ReplicationPolicy getReplicationPolicy() {
-        return replicationPolicy;
+    public DataReplicationPolicy getDataReplicationPolicy() {
+        return dataReplicationPolicy;
     }
 
     @Override

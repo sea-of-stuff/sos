@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.ReplicationPolicy;
+import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
@@ -38,15 +38,15 @@ import java.util.*;
  */
 public class SOSStorage implements Storage {
 
-    private ReplicationPolicy replicationPolicy;
+    private DataReplicationPolicy dataReplicationPolicy;
 
     private NDS nds;
     private DDS dds;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalStorage storage, ReplicationPolicy replicationPolicy, NDS nds, DDS dds) {
-        this.replicationPolicy = replicationPolicy;
+    public SOSStorage(Node node, LocalStorage storage, DataReplicationPolicy dataReplicationPolicy, NDS nds, DDS dds) {
+        this.dataReplicationPolicy = dataReplicationPolicy;
         this.nds = nds;
         this.dds = dds;
 
@@ -165,7 +165,7 @@ public class SOSStorage implements Storage {
 
     private void replicateData(Atom atom) throws SOSProtocolException, IOException {
 
-        int replicationFactor = replicationPolicy.getReplicationFactor();
+        int replicationFactor = dataReplicationPolicy.getReplicationFactor();
         if (replicationFactor > 0) {
 
             try (InputStream data = getAtomContent(atom)) {
@@ -186,9 +186,7 @@ public class SOSStorage implements Storage {
         if (ddsNotificationInfo.notifyDDSNodes()) {
 
             if (ddsNotificationInfo.useDefaultDDSNodes()) {
-                int noDDSNodes = ddsNotificationInfo.getMaxDefaultDDSNodes();
-                SOS_LOG.log(LEVEL.DEBUG,"GET MAX " + noDDSNodes + " ddsnodes");
-                retval = nds.getDDSNodes(noDDSNodes); // TODO - use nds.getDDSIterator?
+                retval = nds.getDDSNodes();
                 SOS_LOG.log(LEVEL.DEBUG,"nodes retrieved: " + retval.size());
             }
         }
@@ -217,7 +215,7 @@ public class SOSStorage implements Storage {
                 ddsNodes.addAll(suggestedNodes);
             }
 
-            ManifestReplication.Replicate(manifest, ddsNodes.iterator(), ddsNodes.size(), dds);
+            ManifestReplication.Replicate(manifest, ddsNodes.iterator(), ddsNotificationInfo.getMaxDefaultDDSNodes(), dds);
         }
     }
 

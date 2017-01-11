@@ -2,7 +2,8 @@ package uk.ac.standrews.cs.sos.model.metadata;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.SOSMetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * FIXME - pass either atom or directory (compound data). in the case of compound data, the streams should be chained
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class MetadataDirectoryImpl implements MetadataDirectory {
@@ -33,7 +33,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     private MetadataEngine engine;
     private MetadataPolicy policy;
 
-    private List<SOSMetadata> naiveCache = new CopyOnWriteArrayList<>(); // TODO - make it faster using hashtable
+    private List<SOSMetadata> naiveCache = new CopyOnWriteArrayList<>(); // NOTE - can make it faster using hashtable?
 
     public MetadataDirectoryImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy) {
         this.localStorage = localStorage;
@@ -42,12 +42,10 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     }
 
     @Override
-    public SOSMetadata processMetadata(InputStream inputStream) throws SOSMetadataException {
+    public SOSMetadata processMetadata(InputStream inputStream) throws MetadataException {
 
         InputStreamData data = new InputStreamData(inputStream);
-        SOSMetadata metadata = engine.processData(data);
-
-        return metadata;
+        return engine.processData(data);
     }
 
     @Override
@@ -58,20 +56,17 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     }
 
     @Override
-    public SOSMetadata getMetadata(IGUID guid) {
-        // Look for metadata and return it
-        // NOT FOUND EXCEPTION
-
-        // check cache
-        // if cache miss, then get it from disk
-        // fill cache and return
-        // if cannot get from disk, then try to get
-        // from another node
-        // fill the cache and return
+    public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
 
         SOSMetadata metadata = findMetadataFromCache(guid);
         if (metadata == null) {
             metadata = findMetadataLocal(guid);
+            // TODO - fill cache
+        }
+        // TODO - get metadata from other nodes
+
+        if (metadata == null) {
+            throw new MetadataNotFoundException("Unable to find metadata for GUID: " + guid);
         }
 
         return metadata;
@@ -80,7 +75,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     @Override
     public List<IGUID> getVersions(String attribute, String value) {
         // cache is fundamental here, otherwise we need to look at the disk which is not great
-        // triplestore
+        // use triplestore?
         return null;
     }
 
@@ -105,12 +100,12 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
 
     private void replicate(SOSMetadata metadata) {
         if (policy.replicationFactor() > 0) {
-            replicate(metadata, null); // TODO - replicate metadata to DDS node?
+            replicate(metadata, null); // TODO - replicate metadata to DDS node
         }
     }
 
     private void replicate(SOSMetadata metadata, Node node) {
-        // TODO - use network layer for this
+        // TODO - use network layer for this, see code for replicating manifests and data
     }
 
     private SOSMetadata findMetadataFromCache(IGUID guid) {
