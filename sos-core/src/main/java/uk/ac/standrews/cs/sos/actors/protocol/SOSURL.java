@@ -26,6 +26,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL DDS_POST_METADATA(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "/dds/metadata";
+
+        return makeURL(url);
+    }
+
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "/storage/data/guid/" +

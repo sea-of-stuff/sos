@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -83,6 +84,23 @@ public class RESTDDS {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }
     }
+
+    @POST
+    @Path("/metadata")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response postMetadata(String json) throws IOException {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/metadata");
+
+        // TODO - finish implement this
+        SOSMetadata metadata = null;
+
+        DDS dds = RESTConfig.sos.getDDS();
+        dds.addMetadata(metadata);
+
+        return HTTPResponses.CREATED(metadata.toString());
+    }
+
 
     private Manifest getManifest(ManifestType type, String json) throws IOException {
         Manifest manifest;

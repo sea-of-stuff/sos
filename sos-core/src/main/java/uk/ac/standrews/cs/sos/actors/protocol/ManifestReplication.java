@@ -78,7 +78,7 @@ public class ManifestReplication {
 
             return transferWasSuccessful;
         } catch (IOException | SOSURLException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "TransferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.toString());
         }
 
         return false;
