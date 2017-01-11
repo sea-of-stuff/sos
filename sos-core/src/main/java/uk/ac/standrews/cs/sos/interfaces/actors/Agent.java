@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -153,5 +154,5 @@ public interface Agent {
      * @param guid for the metadata
      * @return SOSMetadata mapped with the guid
      */
-    SOSMetadata getMetadata(IGUID guid);
+    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 }

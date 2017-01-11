@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
@@ -126,7 +127,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public SOSMetadata getMetadata(IGUID guid) {
+    public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         SOSMetadata metadata = dds.getMetadata(guid);
         return metadata;
     }

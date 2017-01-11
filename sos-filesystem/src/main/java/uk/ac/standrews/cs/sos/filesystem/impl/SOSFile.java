@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.sos.filesystem.Helper;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
@@ -87,7 +88,11 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         Set<IGUID> meta = asset.getMetadata();
         if (meta != null && !meta.isEmpty()) {
             IGUID metaGUID = (IGUID) meta.toArray()[0];
-            this.metadata = sos.getMetadata(metaGUID);
+            try {
+                this.metadata = sos.getMetadata(metaGUID);
+            } catch (MetadataNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get metadata for GUID " + metaGUID);
+            }
         }
 
         this.guid = asset.guid();
