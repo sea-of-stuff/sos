@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
@@ -92,8 +93,8 @@ public class RESTDDS {
     public Response postMetadata(String json) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/metadata");
 
-        // TODO - finish implement this
-        SOSMetadata metadata = null;
+        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(json);
+        SOSMetadata metadata = null; // TODO - use BasicMetadata
 
         DDS dds = RESTConfig.sos.getDDS();
         dds.addMetadata(metadata);
@@ -101,6 +102,32 @@ public class RESTDDS {
         return HTTPResponses.CREATED(metadata.toString());
     }
 
+    @GET
+    @Path("/metadata/guid/{guid}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response getMetadata(@PathParam("guid") String guid) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /dds/metadata/guid/{guid}");
+
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        IGUID metadataGUID;
+        try {
+            metadataGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        DDS dds = RESTConfig.sos.getDDS();
+
+        try {
+            SOSMetadata metadata = dds.getMetadata(metadataGUID);
+            return HTTPResponses.OK(metadata.tabularFormat());
+        } catch (MetadataNotFoundException e) {
+            return HTTPResponses.BAD_REQUEST("Invalid Input");
+        }
+    }
 
     private Manifest getManifest(ManifestType type, String json) throws IOException {
         Manifest manifest;
