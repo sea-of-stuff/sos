@@ -34,6 +34,19 @@ public class ManifestsUtils {
 
     }
 
+    public static Manifest ManifestFromJson(String json) throws ManifestNotFoundException {
+
+        try {
+            JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
+            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
+
+            return constructManifestFromJson(type, json);
+        } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
+            throw new ManifestNotFoundException("Unable to construct manifest from JSON" + json, e);
+        }
+
+    }
+
     private static Manifest constructManifestFromJson(ManifestType type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
@@ -52,6 +65,29 @@ public class ManifestsUtils {
             }
         } catch (IOException e) {
             throw new ManifestNotMadeException("Unable to create a manifest from file at " + manifestData.getPathname());
+        }
+
+        return manifest;
+    }
+
+    private static Manifest constructManifestFromJson(ManifestType type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+        Manifest manifest;
+        try {
+            switch (type) {
+                case ATOM:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, AtomManifest.class);
+                    break;
+                case COMPOUND:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, CompoundManifest.class);
+                    break;
+                case ASSET:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, AssetManifest.class);
+                    break;
+                default:
+                    throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
+            }
+        } catch (IOException e) {
+            throw new ManifestNotMadeException("Unable to create a manifest from json " + manifestData);
         }
 
         return manifest;

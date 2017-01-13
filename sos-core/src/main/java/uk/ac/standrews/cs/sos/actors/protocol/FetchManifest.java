@@ -2,17 +2,21 @@ package uk.ac.standrews.cs.sos.actors.protocol;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsUtils;
 import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -50,8 +54,14 @@ public class FetchManifest {
             SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
         }
 
-        // return response.getBody();
-        // parse result into manifest
-        return null;
+        Manifest manifest;
+        try(InputStream inputStream = response.getBody();) {
+            String responseBody = IO.InputStreamToString(inputStream);
+            manifest = ManifestsUtils.ManifestFromJson(responseBody);
+        } catch (ManifestNotFoundException e) {
+            throw new IOException("Unable to parse manifest with GUID " + manifestId);
+        }
+
+        return manifest;
     }
 }
