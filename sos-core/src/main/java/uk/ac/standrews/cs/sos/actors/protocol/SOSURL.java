@@ -21,7 +21,14 @@ public class SOSURL {
 
     public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/dds/guid/" + guid.toString();
+                "/dds/manifest/guid/" + guid.toString();
+
+        return makeURL(url);
+    }
+
+    public static URL DDS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "/dds/metadata/guid/" + guid.toString();
 
         return makeURL(url);
     }
