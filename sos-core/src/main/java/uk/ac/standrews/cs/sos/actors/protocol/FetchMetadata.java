@@ -31,23 +31,23 @@ public class FetchMetadata {
      */
     public static SOSMetadata Fetch(Node node, IGUID metadataId) throws IOException, SOSURLException {
         if (!node.isDDS()) {
-            throw new IOException("Attempting to fetch manifest from non-DDS node");
+            throw new IOException("Attempting to fetch metadata from non-DDS node");
         }
 
         if (metadataId == null || metadataId.isInvalid()) {
-            throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
+            throw new IOException("Attempting to fetch metadata, but you have given an invalid GUID");
         }
 
-        SOS_LOG.log(LEVEL.INFO, "Manifest will be fetched from node " + node.getNodeGUID());
+        SOS_LOG.log(LEVEL.INFO, "Metadata will be fetched from node " + node.getNodeGUID());
 
         URL url = SOSURL.DDS_GET_MANIFEST(node, metadataId);
         SyncRequest request = new SyncRequest(Method.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         if (response.getCode() == HTTPStatus.OK) {
-            SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
+            SOS_LOG.log(LEVEL.INFO, "Metadata fetched successfully from node " + node.getNodeGUID());
         } else {
-            SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
+            SOS_LOG.log(LEVEL.WARN, "Metadata was not fetched successfully from node " + node.getNodeGUID());
         }
 
         // Get body and parse to metadata

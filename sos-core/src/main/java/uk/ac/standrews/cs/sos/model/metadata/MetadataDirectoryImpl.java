@@ -121,7 +121,6 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
                 e.printStackTrace();
                 //throw new ManifestPersistException("Unable to replicate metadata");
             }
-
         }
     }
 
@@ -153,12 +152,15 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
             e.printStackTrace();
         }
 
-
         return null;
     }
 
     private SOSMetadata findMetadataRemote(IGUID guid) {
         // TODO - not implemented yet
+
+        // Iterate over nodes
+        // Return as soon as metadata is fetched
+        // FetchMetadata.Fetch(null, guid);
         return null;
     }
 

@@ -71,7 +71,11 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
         Manifest retval = null;
 
-        Set<IGUID> guids = ddsIndex.getDDSRefs(guid);
+        Set<IGUID> guids = ddsIndex.getDDSRefs(guid); // TODO - attempt other nodes too?
+        if (guids == null) {
+            throw new ManifestNotFoundException("Unable to find manifest because there are no known DDS nodes");
+        }
+
         for(IGUID g:guids) {
             try {
                 Node node = nds.getNode(g);
