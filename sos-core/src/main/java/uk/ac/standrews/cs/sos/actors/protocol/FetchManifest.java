@@ -35,19 +35,19 @@ public class FetchManifest {
         }
 
         if (manifestId == null || manifestId.isInvalid()) {
-            throw new IOException("Attempting to fetch data, but you have given an invalid GUID");
+            throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
         }
 
-        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
+        SOS_LOG.log(LEVEL.INFO, "Manifest will be fetched from node " + node.getNodeGUID());
 
         URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
         SyncRequest request = new SyncRequest(Method.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         if (response.getCode() == HTTPStatus.OK) {
-            SOS_LOG.log(LEVEL.INFO, "Data fetched successfully from node " + node.getNodeGUID());
+            SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
         } else {
-            SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.getNodeGUID());
+            SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
         }
 
         // return response.getBody();

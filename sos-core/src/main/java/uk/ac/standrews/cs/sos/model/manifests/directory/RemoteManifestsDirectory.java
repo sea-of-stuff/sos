@@ -2,12 +2,16 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.actors.protocol.FetchManifest;
 import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
@@ -15,7 +19,9 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -63,14 +69,28 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
-        Set<IGUID> nodes = ddsIndex.getDDSRefs(guid);
-        // See if we know dds nodes already (using ddsIndex)
+        Manifest retval = null;
 
-        // Contact knwon DDS nodes
-        // Ask such nodes about manifest with given guid
-        // TODO - write protocol to find manifests
+        Set<IGUID> guids = ddsIndex.getDDSRefs(guid);
+        for(IGUID g:guids) {
+            try {
+                Node node = nds.getNode(g);
+                retval = FetchManifest.Fetch(node, guid);
 
-        throw new ManifestNotFoundException("remote directory - findManifest not implemented yet");
+                if (retval != null) {
+                    break;
+                }
+            } catch (NodeNotFoundException | SOSURLException | IOException e) {
+                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid + " from Node with GUID " + g);
+            }
+
+        }
+        
+        if (retval == null) {
+            throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");    
+        }
+        
+        return retval;
     }
 
     @Override
