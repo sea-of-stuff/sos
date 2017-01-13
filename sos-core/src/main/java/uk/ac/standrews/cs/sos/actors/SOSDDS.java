@@ -30,7 +30,7 @@ public class SOSDDS implements DDS {
 
     public SOSDDS(LocalStorage localStorage, MetadataEngine metadataEngine, ManifestPolicy manifestPolicy, MetadataPolicy metadataPolicy, NDS nds) {
         manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nds, this);
-        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy);
+        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy, nds);
     }
 
     @Override

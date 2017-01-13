@@ -48,11 +48,11 @@ public class MetadataReplication {
                         boolean transferWasSuccessful = TransferMetadataRequest(metadata, node);
 
                         if (transferWasSuccessful) {
-                            SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + metadata.guid() + " replicates successfully to node: " + node.toString());
+                            SOS_LOG.log(LEVEL.INFO, "Metadata with GUID " + metadata.guid() + " replicated successfully to node: " + node.toString());
                             // dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
                             successfulReplicas++;
                         } else {
-                            SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + metadata.guid() + " to node: " + node.toString());
+                            SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Metadata with GUID " + metadata.guid() + " to node: " + node.toString());
                         }
                     } catch (GUIDGenerationException e) {
                         SOS_LOG.log(LEVEL.WARN, "Unable to generate GUID for metadata");
@@ -63,7 +63,6 @@ public class MetadataReplication {
         };
 
         return replicator;
-
     }
 
     private static boolean TransferMetadataRequest(SOSMetadata metadata, Node node) throws GUIDGenerationException {
@@ -71,7 +70,7 @@ public class MetadataReplication {
         try {
             URL url = SOSURL.DDS_POST_METADATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
-            request.setJSONBody(metadata.toString());
+            request.setJSONBody(metadata.toString()); // FIXME - toJson?
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;

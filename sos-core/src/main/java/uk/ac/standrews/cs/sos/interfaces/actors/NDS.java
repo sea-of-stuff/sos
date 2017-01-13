@@ -44,7 +44,7 @@ public interface NDS extends SeaOfStuff {
     Set<Node> getNDSNodes();
 
     Set<Node> getDDSNodes();
-    Set<Node> getDDSNodes(int limit);
+    Iterator<Node> getDDSNodesIterator();
 
     Set<Node> getMCSNodes();
 

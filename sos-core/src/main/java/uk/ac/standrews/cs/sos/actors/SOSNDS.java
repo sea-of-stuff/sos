@@ -59,8 +59,8 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public Set<Node> getDDSNodes(int limit) {
-        return nodeDiscovery.getDDSNodes(limit);
+    public Iterator<Node> getDDSNodesIterator() {
+        return nodeDiscovery.getDDSNodesIterator();
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ManifestReplication {
                     boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
                     if (transferWasSuccessful) {
-                        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicates successfully to node: " + node.toString());
+                        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.toString());
                         dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
                         successfulReplicas++;
                     } else {

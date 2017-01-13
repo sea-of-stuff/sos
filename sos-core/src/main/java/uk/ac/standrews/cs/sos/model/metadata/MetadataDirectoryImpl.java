@@ -2,9 +2,12 @@ package uk.ac.standrews.cs.sos.model.metadata;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.protocol.MetadataReplication;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
@@ -21,6 +24,7 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -35,10 +39,14 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
 
     private List<SOSMetadata> naiveCache = new CopyOnWriteArrayList<>(); // NOTE - can make it faster using hashtable?
 
-    public MetadataDirectoryImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy) {
+    private NDS nds;
+
+    public MetadataDirectoryImpl(LocalStorage localStorage, MetadataEngine engine, MetadataPolicy policy, NDS nds) {
         this.localStorage = localStorage;
         this.engine = engine;
         this.policy = policy;
+
+        this.nds = nds;
     }
 
     @Override
@@ -49,7 +57,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     }
 
     @Override
-    public void addMetadata(SOSMetadata metadata) {
+    public void addMetadata(SOSMetadata metadata) { // TODO - throw persist exception
         save(metadata);
         cache(metadata);
         replicate(metadata);
@@ -61,13 +69,19 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
         SOSMetadata metadata = findMetadataFromCache(guid);
         if (metadata == null) {
             metadata = findMetadataLocal(guid);
-            // TODO - fill cache
         }
-        // TODO - get metadata from other nodes
+
+        if (metadata == null) {
+            metadata = findMetadataRemote(guid);
+        }
 
         if (metadata == null) {
             throw new MetadataNotFoundException("Unable to find metadata for GUID: " + guid);
         }
+
+        // Make sure that metadata is saved locally and cached for further usage
+        save(metadata);
+        cache(metadata);
 
         return metadata;
     }
@@ -100,12 +114,15 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
 
     private void replicate(SOSMetadata metadata) {
         if (policy.replicationFactor() > 0) {
-            replicate(metadata, null); // TODO - replicate metadata to DDS node
-        }
-    }
+            try {
+                Iterator<Node> nodes = nds.getDDSNodesIterator();
+                MetadataReplication.Replicate(metadata, nodes, policy.replicationFactor());
+            } catch (SOSProtocolException e) {
+                e.printStackTrace();
+                //throw new ManifestPersistException("Unable to replicate metadata");
+            }
 
-    private void replicate(SOSMetadata metadata, Node node) {
-        // TODO - use network layer for this, see code for replicating manifests and data
+        }
     }
 
     private SOSMetadata findMetadataFromCache(IGUID guid) {
@@ -140,5 +157,9 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
         return null;
     }
 
+    private SOSMetadata findMetadataRemote(IGUID guid) {
+        // TODO - not implemented yet
+        return null;
+    }
 
 }
