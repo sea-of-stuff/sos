@@ -49,6 +49,7 @@ public class MetadataReplication {
 
                         if (transferWasSuccessful) {
                             SOS_LOG.log(LEVEL.INFO, "Metadata with GUID " + metadata.guid() + " replicated successfully to node: " + node.toString());
+                            // TODO - inform dds that replication to particular node was successful
                             // dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
                             successfulReplicas++;
                         } else {

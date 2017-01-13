@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.actors.protocol;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.network.HTTPStatus;
@@ -12,35 +13,34 @@ import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FetchData {
+public class FetchManifest {
 
     /**
-     * Fetch data that matches the entityId from a specified node
+     * Fetch manifest that matches the manifestId from a specified node
      *
      * @param node - storage node where to fetch the data from
-     * @param entityId - guid of the data
+     * @param manifestId - guid of the data
      * @return InputStream of the data
      * @throws IOException
      * @throws SOSURLException
      */
-    public static InputStream Fetch(Node node, IGUID entityId) throws IOException, SOSURLException {
-        if (!node.isStorage()) {
-            throw new IOException("Attempting to fetch data from non-Storage node");
+    public static Manifest Fetch(Node node, IGUID manifestId) throws IOException, SOSURLException {
+        if (!node.isDDS()) {
+            throw new IOException("Attempting to fetch manifest from non-DDS node");
         }
 
-        if (entityId == null || entityId.isInvalid()) {
+        if (manifestId == null || manifestId.isInvalid()) {
             throw new IOException("Attempting to fetch data, but you have given an invalid GUID");
         }
 
         SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
 
-        URL url = SOSURL.STORAGE_GET_DATA(node, entityId);
+        URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
         SyncRequest request = new SyncRequest(Method.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
@@ -50,6 +50,8 @@ public class FetchData {
             SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.getNodeGUID());
         }
 
-        return response.getBody();
+        // return response.getBody();
+        // parse result into manifest
+        return null;
     }
 }

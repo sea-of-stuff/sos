@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
@@ -26,11 +27,13 @@ import java.util.Iterator;
 public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private ManifestPolicy manifestPolicy;
+    private DDSIndex ddsIndex;
     private NDS nds;
     private DDS dds;
 
-    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, NDS nds, DDS dds) {
+    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, DDSIndex ddsIndex, NDS nds, DDS dds) {
         this.manifestPolicy = manifestPolicy;
+        this.ddsIndex = ddsIndex;
         this.nds = nds;
         this.dds = dds;
     }
@@ -60,6 +63,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
+        Set<IGUID> nodes = ddsIndex.getDDSRefs(guid);
         // See if we know dds nodes already (using ddsIndex)
 
         // Contact knwon DDS nodes

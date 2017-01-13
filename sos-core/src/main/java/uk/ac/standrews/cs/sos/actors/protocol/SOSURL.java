@@ -19,6 +19,13 @@ public class SOSURL {
 
     private static final String HTTP_SCHEME = "http://";
 
+    public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "/dds/guid/" + guid.toString();
+
+        return makeURL(url);
+    }
+
     public static URL DDS_POST_MANIFEST(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "/dds/manifest";
@@ -35,8 +42,7 @@ public class SOSURL {
 
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/storage/data/guid/" +
-                guid.toString();
+                "/storage/data/guid/" + guid.toString();
 
         return makeURL(url);
     }
@@ -57,16 +63,14 @@ public class SOSURL {
 
     public static URL NDS_GET_NODE(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/guid/" +
-                guid.toString();
+                "/nds/guid/" + guid.toString();
 
         return makeURL(url);
     }
 
     public static URL NDS_GET_NODE(Node node, String role) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/role/" +
-                role;
+                "/nds/role/" + role;
 
         return makeURL(url);
     }

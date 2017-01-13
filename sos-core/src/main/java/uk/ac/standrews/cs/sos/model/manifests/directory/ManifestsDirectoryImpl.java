@@ -41,7 +41,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         loadOrCreateDDSIndex();
 
         local = new LocalManifestsDirectory(manifestPolicy, localStorage);
-        remote = new RemoteManifestsDirectory(manifestPolicy, nds, dds);
+        remote = new RemoteManifestsDirectory(manifestPolicy, ddsIndex, nds, dds);
     }
 
     @Override

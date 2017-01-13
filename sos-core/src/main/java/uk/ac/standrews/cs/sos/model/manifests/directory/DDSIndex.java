@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Indexing ManifestGUID --> [DDS]
+ * The DDSIndex maps the GUID for a manifest to a set of DDS GUIDs that may have it
  *
  * TODO - limit size?
  *
