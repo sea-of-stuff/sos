@@ -6,13 +6,16 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -50,8 +53,12 @@ public class FetchMetadata {
             SOS_LOG.log(LEVEL.WARN, "Metadata was not fetched successfully from node " + node.getNodeGUID());
         }
 
-        // Get body and parse to metadata
+        SOSMetadata metadata;
+        try(InputStream inputStream = response.getBody()) {
+            String responseBody = IO.InputStreamToString(inputStream);
+            metadata = new BasicMetadata(responseBody, new String[]{});
+        }
 
-        return null;
+        return metadata;
     }
 }
