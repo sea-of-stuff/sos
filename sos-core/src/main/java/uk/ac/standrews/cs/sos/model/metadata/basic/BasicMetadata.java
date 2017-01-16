@@ -24,6 +24,11 @@ public class BasicMetadata extends AbstractMetadata implements SOSMetadata {
 
     private HashMap<String, String> metadata;
 
+    public BasicMetadata() {
+        super(new String[]{});
+    }
+
+    // TODO - use metadata deserializer
     public BasicMetadata(String json, String[] ignoreMetadata) {
         super(ignoreMetadata);
 
@@ -57,7 +62,7 @@ public class BasicMetadata extends AbstractMetadata implements SOSMetadata {
         }
     }
 
-    private void addProperty(String property, String value) {
+    public void addProperty(String property, String value) {
         metadata.put(property, value);
     }
 
