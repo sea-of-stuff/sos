@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.model.metadata.basic;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.json.MetadataDeserializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -17,6 +19,7 @@ import java.util.stream.Stream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonDeserialize(using = MetadataDeserializer.class)
 public class BasicMetadata extends AbstractMetadata implements SOSMetadata {
 
     private HashMap<String, String> metadata;
