@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.model.metadata.tika;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.tika.metadata.Metadata;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.json.TikaMetadataSerializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
 
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.Arrays;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = TikaMetadataSerializer.class)
 public class TikaMetadata extends AbstractMetadata implements SOSMetadata {
 
     private Metadata tikaMetadata;
@@ -21,7 +24,6 @@ public class TikaMetadata extends AbstractMetadata implements SOSMetadata {
     public String getProperty(String propertyName) {
 
         boolean ignore = Arrays.asList(ignoreMetadata).contains(propertyName);
-
         return ignore ? null : tikaMetadata.get(propertyName);
     }
 

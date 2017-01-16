@@ -21,8 +21,7 @@ import java.util.Set;
 public class AtomManifestDeserializer extends JsonDeserializer<AtomManifest> {
 
     @Override
-    public AtomManifest deserialize(JsonParser jsonParser,
-                                    DeserializationContext deserializationContext)
+    public AtomManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
             throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);

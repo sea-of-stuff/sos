@@ -1,9 +1,11 @@
 package uk.ac.standrews.cs.sos.model.metadata;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +50,7 @@ public abstract class AbstractMetadata implements SOSMetadata {
         return guid;
     }
 
-    // NOTE - Order matters
+    // NOTE - Order matters, order alphabetically
     // rename method
     @Override
     public String tabularFormat() {
@@ -59,5 +61,16 @@ public abstract class AbstractMetadata implements SOSMetadata {
         }
 
         return retval;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return JSONHelper.JsonObjMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
