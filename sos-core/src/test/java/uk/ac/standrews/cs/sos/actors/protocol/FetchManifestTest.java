@@ -56,7 +56,7 @@ public class FetchManifestTest {
                 )
                 .respond(
                         response()
-                                .withStatusCode(201)
+                                .withStatusCode(200)
                                 .withBody(TEST_ASSET_MANIFEST)
                 );
 

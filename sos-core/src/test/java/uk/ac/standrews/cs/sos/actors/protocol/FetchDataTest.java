@@ -46,7 +46,7 @@ public class FetchDataTest {
                 )
                 .respond(
                         response()
-                                .withStatusCode(201)
+                                .withStatusCode(200)
                                 .withBody(TEST_DATA)
                 );
 
