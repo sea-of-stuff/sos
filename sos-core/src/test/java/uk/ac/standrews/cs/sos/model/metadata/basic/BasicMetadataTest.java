@@ -5,12 +5,12 @@ import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 
+import static org.testng.Assert.assertEquals;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class BasicMetadataTest {
-
-    // TODO - test json deserialization
 
     @Test
     public void metadataDeserializationTest() throws IOException {
@@ -37,6 +37,11 @@ public class BasicMetadataTest {
                         "}";
 
         BasicMetadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, BasicMetadata.class);
-        System.out.println(metadata.toString());
+
+        assertEquals(metadata.getProperty("X-Parsed-By"), "org.apache.tika.parser.DefaultParser");
+        assertEquals(metadata.getProperty("Size"), "26");
+        assertEquals(metadata.getProperty("Content-Encoding"), "null");
+        assertEquals(metadata.getProperty("Timestamp"), "1484736105");
+        assertEquals(metadata.getProperty("Content-Type"), "text/plain; charset=ISO-8859-1");
     }
 }

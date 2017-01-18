@@ -53,7 +53,6 @@ public abstract class AbstractMetadata implements SOSMetadata {
 
     @Override
     public String metadata() {
-
         String retval = "";
         for(String meta: getAllFilteredPropertyNames()) {
             retval += meta + "::" + getProperty(meta);

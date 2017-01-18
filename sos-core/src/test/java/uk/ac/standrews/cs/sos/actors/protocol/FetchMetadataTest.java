@@ -30,10 +30,10 @@ public class FetchMetadataTest {
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10005;
 
-    private static final String GUID_METADATA = "bcc6949885b1d0db8a749c357f2ffebc167917af";
+    private static final String GUID_METADATA = "02f80108b23125787b8bccc2b80ec623e2dffcd6";
     private static final String TEST_METADATA =
             "{\n" +
-                    "  \"GUID\" : \"bcc6949885b1d0db8a749c357f2ffebc167917af\",\n" +
+                    "  \"GUID\" : \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
                     "  \"Properties\" : [ {\n" +
                     "    \"Key\" : \"X-Parsed-By\",\n" +
                     "    \"Value\" : \"org.apache.tika.parser.DefaultParser\"\n" +

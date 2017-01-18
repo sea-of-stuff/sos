@@ -20,16 +20,12 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
 
         BasicMetadata basicMetadata = new BasicMetadata();
         JsonNode properties = node.withArray("Properties");
-        if (properties.isArray()) {
 
+        for(JsonNode property:properties) {
+            String key = property.get("Key").asText();
+            String value = property.get("Value").asText();
 
-            for(JsonNode p:properties) {
-                String property = p.get("Key").asText();
-                String value = p.get("Value").asText();
-
-                basicMetadata.addProperty(property, value);
-            }
-
+            basicMetadata.addProperty(key, value);
         }
 
         return basicMetadata;
