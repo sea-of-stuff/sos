@@ -38,26 +38,25 @@ public abstract class AbstractMetadata implements SOSMetadata {
                 filteredNames.add(meta);
             }
         }
+        filteredNames.sort(String::compareTo);
 
         return filteredNames.toArray(new String[filteredNames.size()]);
     }
 
     @Override
     public IGUID guid() throws GUIDGenerationException {
-        String metadata = tabularFormat();
+        String metadata = metadata();
         IGUID guid = GUIDFactory.generateGUID(metadata);
 
         return guid;
     }
 
-    // NOTE - Order matters, order alphabetically
-    // rename method
     @Override
-    public String tabularFormat() {
+    public String metadata() {
 
         String retval = "";
         for(String meta: getAllFilteredPropertyNames()) {
-            retval += meta + ":: " + getProperty(meta) + "\n";
+            retval += meta + "::" + getProperty(meta);
         }
 
         return retval;

@@ -4,17 +4,17 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadata;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class TikaMetadataSerializer extends JsonSerializer<TikaMetadata> {
+public class MetadataSerializer extends JsonSerializer<SOSMetadata> {
 
     @Override
-    public void serialize(TikaMetadata metadata, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
+    public void serialize(SOSMetadata metadata, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
 
         jsonGenerator.writeStartObject();
 
@@ -34,13 +34,15 @@ public class TikaMetadataSerializer extends JsonSerializer<TikaMetadata> {
         jsonGenerator.writeEndObject();
     }
 
-    private void serializeElements(TikaMetadata metadata, JsonGenerator jsonGenerator) throws IOException {
+    private void serializeElements(SOSMetadata metadata, JsonGenerator jsonGenerator) throws IOException {
         String[] properties = metadata.getAllPropertyNames();
         for(String property:properties) {
             String value = metadata.getProperty(property);
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField(property, value);
+            jsonGenerator.writeStringField("Key", property);
+            jsonGenerator.writeStringField("Value", value);
             jsonGenerator.writeEndObject();
+
         }
     }
 }

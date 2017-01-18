@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
-import uk.ac.standrews.cs.sos.utils.IO;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class FetchMetadata {
 
         SOS_LOG.log(LEVEL.INFO, "Metadata will be fetched from node " + node.getNodeGUID());
 
-        URL url = SOSURL.DDS_GET_MANIFEST(node, metadataId);
+        URL url = SOSURL.DDS_GET_METADATA(node, metadataId);
         SyncRequest request = new SyncRequest(Method.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
@@ -55,8 +55,7 @@ public class FetchMetadata {
 
         SOSMetadata metadata;
         try(InputStream inputStream = response.getBody()) {
-            String responseBody = IO.InputStreamToString(inputStream);
-            metadata = new BasicMetadata(responseBody, new String[]{});
+            metadata = JSONHelper.JsonObjMapper().readValue(inputStream, BasicMetadata.class);
         }
 
         return metadata;

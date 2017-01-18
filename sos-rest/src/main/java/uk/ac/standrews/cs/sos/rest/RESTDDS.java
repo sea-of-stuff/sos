@@ -123,7 +123,7 @@ public class RESTDDS {
 
         try {
             SOSMetadata metadata = dds.getMetadata(metadataGUID);
-            return HTTPResponses.OK(metadata.tabularFormat());
+            return HTTPResponses.OK(metadata.toString());
         } catch (MetadataNotFoundException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }

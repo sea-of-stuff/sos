@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -21,14 +19,14 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         BasicMetadata basicMetadata = new BasicMetadata();
-        JsonNode properties = node.get("Properties");
+        JsonNode properties = node.withArray("Properties");
         if (properties.isArray()) {
 
-            Iterator<Map.Entry<String, JsonNode>> it = properties.fields();
-            while(it.hasNext()) {
-                Map.Entry<String, JsonNode> element = it.next();
-                String property = element.getKey();
-                String value = element.getValue().toString();
+
+            for(JsonNode p:properties) {
+                String property = p.get("Key").asText();
+                String value = p.get("Value").asText();
+
                 basicMetadata.addProperty(property, value);
             }
 

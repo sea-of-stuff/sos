@@ -30,8 +30,27 @@ public class FetchMetadataTest {
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10005;
 
-    private static final String GUID_METADATA = "28b7f98d7163d2ef91b3a418316246ba2d76b353";
-    private static final String TEST_METADATA = "TODO";
+    private static final String GUID_METADATA = "bcc6949885b1d0db8a749c357f2ffebc167917af";
+    private static final String TEST_METADATA =
+            "{\n" +
+                    "  \"GUID\" : \"bcc6949885b1d0db8a749c357f2ffebc167917af\",\n" +
+                    "  \"Properties\" : [ {\n" +
+                    "    \"Key\" : \"X-Parsed-By\",\n" +
+                    "    \"Value\" : \"org.apache.tika.parser.DefaultParser\"\n" +
+                    "  }, {\n" +
+                    "    \"Key\" : \"Size\",\n" +
+                    "    \"Value\" : \"26\"\n" +
+                    "  }, {\n" +
+                    "    \"Key\" : \"Content-Encoding\",\n" +
+                    "    \"Value\" : null\n" +
+                    "  }, {\n" +
+                    "    \"Key\" : \"Timestamp\",\n" +
+                    "    \"Value\" : \"1484736105\"\n" +
+                    "  }, {\n" +
+                    "    \"Key\" : \"Content-Type\",\n" +
+                    "    \"Value\" : \"text/plain; charset=ISO-8859-1\"\n" +
+                    "  } ]\n" +
+                    "}";
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -43,11 +62,11 @@ public class FetchMetadataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/dds/metadata/guid/" + testGUID)
+                                .withPath("/dds/metadata/guid/" + testGUID.toString())
                 )
                 .respond(
                         response()
-                                .withStatusCode(201)
+                                .withStatusCode(200)
                                 .withBody(TEST_METADATA)
                 );
 

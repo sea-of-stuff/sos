@@ -98,7 +98,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
             Directory directory = localStorage.getMetadataDirectory();
 
             File metadataFile = localStorage.createFile(directory, metadata.guid().toString());
-            StringData data = new StringData(metadata.tabularFormat());
+            StringData data = new StringData(metadata.toString());
             metadataFile.setData(data);
             metadataFile.persist();
 

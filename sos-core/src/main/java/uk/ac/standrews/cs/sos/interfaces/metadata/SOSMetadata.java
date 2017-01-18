@@ -16,7 +16,7 @@ public interface SOSMetadata {
 
     IGUID guid() throws GUIDGenerationException;
 
-    String tabularFormat();
+    String metadata();
 
     // String print();
     // List<Tuple<String, String>> getTuples()

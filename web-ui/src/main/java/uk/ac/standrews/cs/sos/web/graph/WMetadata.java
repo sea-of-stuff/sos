@@ -39,7 +39,7 @@ public class WMetadata {
             IGUID metadataGUID = (IGUID) metadataArrayList.toArray()[0];
 
             SOSMetadata metadata = agent.getMetadata(metadataGUID);
-            return metadata.tabularFormat();
+            return metadata.toString();
         } else {
             return "N/A";
         }

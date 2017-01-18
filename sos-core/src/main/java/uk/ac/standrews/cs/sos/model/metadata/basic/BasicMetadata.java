@@ -1,18 +1,16 @@
 package uk.ac.standrews.cs.sos.model.metadata.basic;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.json.MetadataDeserializer;
+import uk.ac.standrews.cs.sos.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -20,31 +18,15 @@ import java.util.stream.Stream;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @JsonDeserialize(using = MetadataDeserializer.class)
+@JsonSerialize(using = MetadataSerializer.class)
 public class BasicMetadata extends AbstractMetadata implements SOSMetadata {
 
     private HashMap<String, String> metadata;
 
     public BasicMetadata() {
         super(new String[]{});
-    }
-
-    // TODO - use metadata deserializer
-    public BasicMetadata(String json, String[] ignoreMetadata) {
-        super(ignoreMetadata);
 
         metadata = new HashMap<>();
-
-        try {
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(json);
-            Iterator<Map.Entry<String, JsonNode>> elements = jsonNode.fields();
-
-            while(elements.hasNext()) {
-                Map.Entry<String, JsonNode> element = elements.next();
-                addProperty(element.getKey(), element.getValue().toString());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public BasicMetadata(File file, String[] ignoreMetadata) {
