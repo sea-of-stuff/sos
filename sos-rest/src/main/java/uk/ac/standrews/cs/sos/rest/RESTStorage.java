@@ -52,7 +52,7 @@ public class RESTStorage {
         }
 
         Storage storage = RESTConfig.sos.getStorage();
-        InputStream inputStream = null;
+        InputStream inputStream;
         try {
             inputStream = storage.getAtomContent(atomGUID);
         } catch (AtomNotFoundException e) {

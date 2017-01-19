@@ -48,7 +48,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         cache.addManifest(manifest);
         local.addManifest(manifest);
-        remote.addManifest(manifest);
+        remote.addManifest(manifest); // async
     }
 
     @Override
@@ -72,14 +72,6 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         }
         if (manifest == null) {
             throw new ManifestNotFoundException("Unable to find manifest in cache, local, remote. GUID: " + guid.toString());
-        }
-
-        // Make sure manifest is cached and saved locally
-        cache.addManifest(manifest);
-        try {
-            local.addManifest(manifest);
-        } catch (ManifestPersistException e) {
-            SOS_LOG.log(LEVEL.WARN, "ManifestsDirectory :: Unable to save manifest to local directory");
         }
 
         return manifest;
@@ -157,9 +149,15 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         Manifest manifest = null;
         try {
             manifest = directory.findManifest(guid);
+
+            // Make sure manifest is cached and saved locally
             cache.addManifest(manifest);
+            local.addManifest(manifest);
+
         } catch (ManifestNotFoundException e) {
             System.out.println(e.getMessage());
+        } catch (ManifestPersistException e) {
+            SOS_LOG.log(LEVEL.WARN, "ManifestsDirectory :: Unable to save manifest to local directory");
         }
 
         return manifest;

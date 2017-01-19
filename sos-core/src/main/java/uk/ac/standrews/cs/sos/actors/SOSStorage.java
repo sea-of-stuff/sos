@@ -80,6 +80,8 @@ public class SOSStorage implements Storage {
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.
      *
+     * TODO - find other locations
+     *
      * @param atom describing the atom to retrieve.
      * @return data referenced by the atom
      */

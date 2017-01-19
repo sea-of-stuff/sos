@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.metadata;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 
 import java.io.InputStream;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface MetadataDirectory {
      * cache and store metadata
      * @param metadata
      */
-    void addMetadata(SOSMetadata metadata);
+    void addMetadata(SOSMetadata metadata) throws MetadataPersistException;
 
     /**
      * Get the metadata that matches the specified GUID

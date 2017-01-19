@@ -11,10 +11,12 @@ import uk.ac.standrews.cs.sos.bindings.DDSNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -93,11 +95,14 @@ public class RESTDDS {
     public Response postMetadata(String json) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/metadata");
 
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(json);
-        SOSMetadata metadata = null; // TODO - use BasicMetadata
+        SOSMetadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
 
         DDS dds = RESTConfig.sos.getDDS();
-        dds.addMetadata(metadata);
+        try {
+            dds.addMetadata(metadata);
+        } catch (MetadataPersistException e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
 
         return HTTPResponses.CREATED(metadata.toString());
     }

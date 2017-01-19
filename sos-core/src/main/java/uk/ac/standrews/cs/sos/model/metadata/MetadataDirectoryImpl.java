@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.protocol.MetadataReplication;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
@@ -57,9 +58,9 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
     }
 
     @Override
-    public void addMetadata(SOSMetadata metadata) { // TODO - throw persist exception
-        save(metadata);
+    public void addMetadata(SOSMetadata metadata) throws MetadataPersistException {
         cache(metadata);
+        save(metadata);
         replicate(metadata);
     }
 
@@ -80,8 +81,12 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
         }
 
         // Make sure that metadata is saved locally and cached for further usage
-        save(metadata);
-        cache(metadata);
+        try {
+            save(metadata);
+            cache(metadata);
+        } catch (MetadataPersistException e) {
+            e.printStackTrace();
+        }
 
         return metadata;
     }
@@ -93,7 +98,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
         return null;
     }
 
-    private void save(SOSMetadata metadata) {
+    private void save(SOSMetadata metadata) throws MetadataPersistException {
         try {
             Directory directory = localStorage.getMetadataDirectory();
 
@@ -103,7 +108,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
             metadataFile.persist();
 
         } catch (DataStorageException | PersistenceException | DataException | GUIDGenerationException e) {
-            e.printStackTrace();
+            throw new MetadataPersistException("Unable to save metadata");
         }
 
     }
@@ -112,14 +117,13 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
         naiveCache.add(metadata);
     }
 
-    private void replicate(SOSMetadata metadata) {
+    private void replicate(SOSMetadata metadata) throws MetadataPersistException {
         if (policy.replicationFactor() > 0) {
             try {
                 Iterator<Node> nodes = nds.getDDSNodesIterator();
                 MetadataReplication.Replicate(metadata, nodes, policy.replicationFactor());
             } catch (SOSProtocolException e) {
-                e.printStackTrace();
-                //throw new ManifestPersistException("Unable to replicate metadata");
+                throw new MetadataPersistException("Unable to replicate metadata");
             }
         }
     }

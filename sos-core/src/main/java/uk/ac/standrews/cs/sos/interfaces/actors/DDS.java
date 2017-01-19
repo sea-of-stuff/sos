@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
@@ -51,7 +52,7 @@ public interface DDS extends SeaOfStuff {
      * Add the given metadata to the sea of stuff
      * @param metadata to be added to the sea of stuff
      */
-    void addMetadata(SOSMetadata metadata);
+    void addMetadata(SOSMetadata metadata) throws MetadataPersistException;
 
     /**
      * Get the metadata that matches the given GUID.
