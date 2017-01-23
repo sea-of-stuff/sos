@@ -6,14 +6,16 @@ import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -59,17 +61,26 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
                 VersionBuilder builder = getVersionBuilder(contentGUID);
                 asset = sos.addVersion(builder);
 
-                sos.setHEAD(asset.getVersionGUID());
+                if (assetIsWebdavRoot(asset)) {
+                    SOSFileSystemFactory.WriteCurrentVersion(asset.getInvariantGUID(), asset.getVersionGUID());
+                }
+
                 guid = asset.getVersionGUID();
             } else {
                 // This happens if data is the same? test by having multiple of the same commands
                 // e.g. echo data > test.txt; echo data > test.txt; echo data > test.txt
                 System.out.println("WOOOOOO - some strange issue here");
             }
-        } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
+    private boolean assetIsWebdavRoot(Asset asset) {
+        File file = new File(SOSFileSystemFactory.WEBDAV_CURRENT_PATH + asset.getInvariantGUID());
+        return file.exists();
+    }
+
 
     @Override
     public Set<IGUID> getPrevious() {

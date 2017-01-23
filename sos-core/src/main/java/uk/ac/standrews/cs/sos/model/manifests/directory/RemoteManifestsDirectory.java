@@ -5,8 +5,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.protocol.FetchManifest;
 import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -14,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
@@ -95,16 +92,6 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         }
         
         return retval;
-    }
-
-    @Override
-    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setHEAD(IGUID version) throws HEADNotSetException {
-        throw new NotImplementedException();
     }
 
     @Override

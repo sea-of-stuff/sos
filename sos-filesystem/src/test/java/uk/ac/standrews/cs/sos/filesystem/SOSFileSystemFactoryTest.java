@@ -74,7 +74,8 @@ public class SOSFileSystemFactoryTest {
         when(mockRootAsset.getContentGUID()).thenReturn(contentsGUID);
 
         when(mockAgent.getManifest(contentsGUID)).thenReturn(mockRootFolder);
-        when(mockAgent.getHEAD(guid)).thenReturn(mockRootAsset);
+
+        // FIXME mock static method in fs factory - when(mockAgent.getHEAD(guid)).thenReturn(mockRootAsset);
 
         return mockAgent;
     }

@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.sos.filesystem;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemFactory;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
@@ -17,6 +18,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.*;
 import java.util.Collections;
 
 /**
@@ -24,12 +26,16 @@ import java.util.Collections;
  */
 public class SOSFileSystemFactory implements IFileSystemFactory {
 
+    public static final String WEBDAV_PATH = System.getProperty("user.home") + "/webdav/";
+    public static final String WEBDAV_CURRENT_PATH = WEBDAV_PATH + "current/";
+
     private Agent agent;
     private IGUID rootGUID;
 
     public SOSFileSystemFactory(Agent agent, IGUID rootGUID) {
+        this(rootGUID);
+
         this.agent = agent;
-        this.rootGUID = rootGUID;
     }
 
     public SOSFileSystemFactory(IGUID rootGUID) {
@@ -49,6 +55,10 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
         if (agent != null) {
+            // Create directories for Webdav info
+            File dir = new File(WEBDAV_CURRENT_PATH);
+            dir.mkdirs();
+
             Asset rootAsset = createRoot(agent);
             return new SOSFileSystem(agent, rootAsset);
         } else {
@@ -69,8 +79,9 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
                 retval = sos.addVersion(builder);
                 IGUID versionGUID = retval.getVersionGUID();
-                sos.setHEAD(versionGUID);
-            } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
+
+                WriteCurrentVersion(rootGUID, versionGUID);
+            } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -78,13 +89,20 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         return retval;
     }
 
-    private Asset getRoot(Agent sos, IGUID root) {
-        Asset retval;
+    public static Asset getRoot(Agent sos, IGUID root) {
+        Asset retval = null;
         try {
-            retval = sos.getHEAD(root);
-        } catch (HEADNotFoundException e) {
-            return null;
+            IGUID version = ReadCurrentVersion(root);
+            retval = (Asset) sos.getManifest(version);
+
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
         }
+
         return retval;
     }
 
@@ -92,4 +110,18 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         return sos.addCompound(CompoundType.COLLECTION, Collections.emptySet());
     }
 
+    public static void WriteCurrentVersion(IGUID invariant, IGUID version) throws FileNotFoundException {
+
+        try (PrintWriter out = new PrintWriter(WEBDAV_CURRENT_PATH + invariant)){
+            out.println(version.toString());
+        }
+    }
+
+    public static IGUID ReadCurrentVersion(IGUID invariant) throws IOException, GUIDGenerationException {
+
+        try(BufferedReader Buff = new BufferedReader(new FileReader(WEBDAV_CURRENT_PATH + invariant))) {
+            String text = Buff.readLine();
+            return GUIDFactory.recreateGUID(text);
+        }
+    }
 }

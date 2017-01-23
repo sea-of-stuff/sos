@@ -2,7 +2,10 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
@@ -103,22 +106,6 @@ public interface Agent {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
-
-    /**
-     * Return the latest version of a given asset
-     *
-     * @param guid asset's invariant
-     * @return latest known version of the asset
-     * @throws ManifestNotFoundException
-     */
-    Asset getHEAD(IGUID guid) throws HEADNotFoundException;
-
-    /**
-     *
-     * @param version
-     * @throws HEADNotSetException
-     */
-    void setHEAD(IGUID version) throws HEADNotSetException;
 
     /**
      * Verify the integrity of the manifest's GUID against the

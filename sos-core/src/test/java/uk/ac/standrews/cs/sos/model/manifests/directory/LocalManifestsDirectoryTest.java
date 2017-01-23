@@ -10,7 +10,9 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
@@ -37,7 +39,8 @@ import java.util.Set;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -225,58 +228,6 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);
         manifestsDirectory.addManifest(manifest);
-    }
-
-
-    @Test (expectedExceptions = HEADNotFoundException.class)
-    public void getUnsetHEAD() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
-
-        IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Asset asset = createDummyVersion(contentGUID);
-        IGUID invariant = asset.getInvariantGUID();
-
-        manifestsDirectory.getHEAD(invariant);
-    }
-
-    @Test (expectedExceptions = HEADNotFoundException.class)
-    public void getRandomVersionUnsetHEAD() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
-
-        IGUID invariant = GUIDFactory.generateRandomGUID();
-
-        manifestsDirectory.getHEAD(invariant);
-    }
-
-    @Test
-    public void getSetAndGetHEAD() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
-
-        IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Asset asset = createDummyVersion(contentGUID);
-        IGUID invariant = asset.getInvariantGUID();
-
-        manifestsDirectory.addManifest(asset);
-        manifestsDirectory.setHEAD(asset.getVersionGUID());
-        Asset retrievedAsset = manifestsDirectory.getHEAD(invariant);
-
-        assertNotNull(retrievedAsset);
-        assertEquals(retrievedAsset.toString(), asset.toString());
-    }
-
-    @Test (expectedExceptions = HEADNotSetException.class)
-    public void getReSetHEADFail() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
-
-        IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Asset asset = createDummyVersion(contentGUID);
-        IGUID invariant = asset.getInvariantGUID();
-
-        manifestsDirectory.addManifest(asset);
-        manifestsDirectory.setHEAD(asset.getVersionGUID());
-        manifestsDirectory.setHEAD(GUIDFactory.generateRandomGUID());
-
-        manifestsDirectory.getHEAD(invariant);
     }
 
     private Asset createDummyVersion(IGUID contentGUID) throws Exception {

@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 
@@ -16,10 +14,6 @@ public interface ManifestsDirectory {
     void addManifestDDSMapping(IGUID manifestGUID, IGUID ddsNodeGUID);
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
-
-    Asset getHEAD(IGUID invariant) throws HEADNotFoundException;
-
-    void setHEAD(IGUID version) throws HEADNotSetException;
 
     void flush();
 }

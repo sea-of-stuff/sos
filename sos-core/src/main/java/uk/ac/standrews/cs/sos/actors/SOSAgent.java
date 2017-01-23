@@ -3,14 +3,16 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
-import uk.ac.standrews.cs.sos.interfaces.context.Context;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -102,16 +104,6 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
-        return dds.getHEAD(invariant);
-    }
-
-    @Override
-    public void setHEAD(IGUID version) throws HEADNotSetException {
-        dds.setHEAD(version);
-    }
-
-    @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
         boolean success = manifest.verify(identity);
         return success;
@@ -131,10 +123,6 @@ public class SOSAgent implements Agent {
     public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         SOSMetadata metadata = dds.getMetadata(guid);
         return metadata;
-    }
-
-    public void addContext(Context context) {
-
     }
 
 }

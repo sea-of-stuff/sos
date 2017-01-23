@@ -1,15 +1,14 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.context.Context;
+import uk.ac.standrews.cs.sos.interfaces.context.ContextDirectory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
@@ -17,6 +16,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
+import uk.ac.standrews.cs.sos.model.context.ContextDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsDirectoryImpl;
 import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
@@ -28,10 +28,12 @@ public class SOSDDS implements DDS {
 
     private ManifestsDirectory manifestsDirectory;
     private MetadataDirectory metadataDirectory;
+    private ContextDirectory contextDirectory;
 
     public SOSDDS(LocalStorage localStorage, MetadataEngine metadataEngine, ManifestPolicy manifestPolicy, MetadataPolicy metadataPolicy, NDS nds) {
         manifestsDirectory = new ManifestsDirectoryImpl(manifestPolicy, localStorage, nds, this);
         metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy, nds);
+        contextDirectory = new ContextDirectoryImpl();
     }
 
     @Override
@@ -60,13 +62,8 @@ public class SOSDDS implements DDS {
     }
 
     @Override
-    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
-        return manifestsDirectory.getHEAD(invariant);
-    }
-
-    @Override
-    public void setHEAD(IGUID version) throws HEADNotSetException {
-        manifestsDirectory.setHEAD(version);
+    public void addContext(Context context) {
+        contextDirectory.addContext(context);
     }
 
     @Override

@@ -2,11 +2,12 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
@@ -75,16 +76,6 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
         }
 
         return manifest;
-    }
-
-    @Override
-    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
-        return local.getHEAD(invariant);
-    }
-
-    @Override
-    public void setHEAD(IGUID version) throws HEADNotSetException {
-        local.setHEAD(version);
     }
 
     @Override

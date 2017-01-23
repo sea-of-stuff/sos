@@ -1,13 +1,11 @@
 package uk.ac.standrews.cs.sos.model.manifests.directory;
 
-import org.apache.commons.io.IOUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
@@ -24,8 +22,6 @@ import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 
 /**
@@ -93,61 +89,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         return getManifestFromGUID(guid);
     }
 
-    /**
-     * Return the local HEAD for a given version
-     *
-     * TODO - deal with failure cases (e.g. invariant is wrong or file is empty)
-     * TODO - see what git/hg do
-     * @param invariant for an asset
-     * @return head version of the asset
-     */
     @Override
-    public Asset getHEAD(IGUID invariant) throws HEADNotFoundException {
-
-        try {
-            File file = getHEADFile(invariant);
-            Data data = file.getData();
-
-            if (data == null || data.getSize() == 0) {
-                throw new HEADNotFoundException("Unable to find head for asset " + invariant);
-            }
-
-            String str = IOUtils.toString(data.getInputStream(),  StandardCharsets.UTF_8);
-            IGUID versionGUID = GUIDFactory.recreateGUID(str);
-            return (Asset) getManifestFromGUID(versionGUID);
-
-        } catch (DataStorageException | GUIDGenerationException | ManifestNotFoundException | DataException | IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * Set the specified version as the head for the asset that it represents
-     *
-     * @param version
-     */
-    @Override
-    public void setHEAD(IGUID version) throws HEADNotSetException {
-
-        try {
-            Asset assetManifest = (Asset) getManifestFromGUID(version);
-            IGUID invariant = assetManifest.getInvariantGUID();
-            File file = getHEADFile(invariant);
-            file.setData(new StringData(version.toString()));
-            file.persist();
-
-        } catch (ManifestNotFoundException | DataStorageException | DataException
-                | PersistenceException e) {
-            throw new HEADNotSetException("Unable to set the head for version " + version);
-        }
-    }
-
-    @Override
-    public void flush() {
-
-    }
+    public void flush() {}
 
     private File getHEADFile(IGUID invariant) throws DataStorageException {
         Directory headsDir = localStorage.getHeadsDirectory();

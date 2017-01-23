@@ -1,13 +1,11 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.context.Context;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
@@ -64,21 +62,11 @@ public interface DDS extends SeaOfStuff {
     SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
     /**
-     * Return the latest version of a given asset
+     * Add context to this node
      *
-     * @param guid asset's invariant
-     * @return latest known version of the asset
-     * @throws ManifestNotFoundException
+     * @param context to be added
      */
-    Asset getHEAD(IGUID guid) throws HEADNotFoundException;
-
-    /**
-     * Set the specified version to be the head for the asset it is associated with
-     *
-     * @param version of the asset to be set to head
-     * @throws HEADNotSetException
-     */
-    void setHEAD(IGUID version) throws HEADNotSetException;
+    void addContext(Context context);
 
     /**
      * Flushes any in-memory information into disk
