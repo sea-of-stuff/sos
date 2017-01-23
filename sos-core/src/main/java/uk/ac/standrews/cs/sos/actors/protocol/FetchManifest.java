@@ -50,18 +50,21 @@ public class FetchManifest {
 
         if (response.getCode() == HTTPStatus.OK) {
             SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
+
+            Manifest manifest;
+            try(InputStream inputStream = response.getBody();) {
+                String responseBody = IO.InputStreamToString(inputStream);
+                manifest = ManifestsUtils.ManifestFromJson(responseBody);
+            } catch (ManifestNotFoundException e) {
+                throw new IOException("Unable to parse manifest with GUID " + manifestId);
+            }
+
+            return manifest;
+
         } else {
             SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
+            throw new IOException();
         }
 
-        Manifest manifest;
-        try(InputStream inputStream = response.getBody();) {
-            String responseBody = IO.InputStreamToString(inputStream);
-            manifest = ManifestsUtils.ManifestFromJson(responseBody);
-        } catch (ManifestNotFoundException e) {
-            throw new IOException("Unable to parse manifest with GUID " + manifestId);
-        }
-
-        return manifest;
     }
 }

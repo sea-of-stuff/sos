@@ -103,10 +103,6 @@ public class NodeDiscovery {
         return localNodesDirectory.getDDSNodes(LocalNodesDirectory.NO_LIMIT);
     }
 
-    public Set<Node> getDDSNodes(int limit) {
-        return localNodesDirectory.getDDSNodes(limit);
-    }
-
     public Iterator<Node> getDDSNodesIterator() {
         return localNodesDirectory.getDDSNodesIterator();
     }
@@ -131,10 +127,6 @@ public class NodeDiscovery {
 
     public Iterator<Node> getStorageNodesIterator() {
         return localNodesDirectory.getStorageNodesIterator();
-    }
-
-    public Set<Node> getStorageNodes(int limit) {
-        return localNodesDirectory.getStorageNodes(limit);
     }
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws IOException, SOSURLException {

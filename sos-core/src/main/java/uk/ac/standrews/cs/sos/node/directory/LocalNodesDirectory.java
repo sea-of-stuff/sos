@@ -135,6 +135,7 @@ public class LocalNodesDirectory {
 
         return knownNodes.parallelStream()
                 .filter(predicate)
+                .filter(n -> !n.getNodeGUID().equals(localNode.getNodeGUID())) // Skip any references to local node
                 .distinct()
                 .iterator();
     }

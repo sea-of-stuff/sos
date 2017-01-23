@@ -153,7 +153,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
     }
 
-    private void registerNode(int port) throws NodeRegistrationException {
+    private void registerNode(int port) {
 
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
@@ -161,7 +161,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
             nds.registerNode(this, false);
         } catch (UnknownHostException | NodeRegistrationException e) {
-            throw new NodeRegistrationException(e);
+            SOS_LOG.log(LEVEL.ERROR, e.getMessage());
         }
 
     }

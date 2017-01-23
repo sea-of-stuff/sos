@@ -49,15 +49,18 @@ public class FetchMetadata {
 
         if (response.getCode() == HTTPStatus.OK) {
             SOS_LOG.log(LEVEL.INFO, "Metadata fetched successfully from node " + node.getNodeGUID());
+
+            SOSMetadata metadata;
+            try(InputStream inputStream = response.getBody()) {
+                metadata = JSONHelper.JsonObjMapper().readValue(inputStream, BasicMetadata.class);
+            }
+
+            return metadata;
+
         } else {
             SOS_LOG.log(LEVEL.WARN, "Metadata was not fetched successfully from node " + node.getNodeGUID());
+            throw new IOException();
         }
 
-        SOSMetadata metadata;
-        try(InputStream inputStream = response.getBody()) {
-            metadata = JSONHelper.JsonObjMapper().readValue(inputStream, BasicMetadata.class);
-        }
-
-        return metadata;
     }
 }

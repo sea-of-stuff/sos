@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.model.metadata;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.protocol.MetadataReplication;
@@ -15,8 +17,8 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
-import uk.ac.standrews.cs.sos.model.metadata.tika.TikaIgnoreMetadata;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -24,6 +26,7 @@ import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -149,10 +152,16 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
             Directory directory = localStorage.getMetadataDirectory();
             File metadataFile = localStorage.createFile(directory, guid.toString());
 
-            SOSMetadata metadata = new BasicMetadata(metadataFile, TikaIgnoreMetadata.IGNORE_METADATA);
-
+            SOSMetadata metadata = JSONHelper.JsonObjMapper().readValue(metadataFile.toFile(), BasicMetadata.class);
             return metadata;
+
         } catch (DataStorageException e) {
+            e.printStackTrace();
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
