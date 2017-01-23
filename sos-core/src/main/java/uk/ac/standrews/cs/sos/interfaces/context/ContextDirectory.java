@@ -1,6 +1,9 @@
 package uk.ac.standrews.cs.sos.interfaces.context;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+
+import java.util.Iterator;
 
 /**
  * The context index defines the relationship between contexts and assets
@@ -12,18 +15,29 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 public interface ContextDirectory {
 
     /**
-     * Add a given asset under the specified context
+     * Add this context to the directory
      * @param context
+     */
+    void addContext(Context context);
+
+    /**
+     * Get context from this directory given its GUID
+     * @param contextGUID
+     * @return context matching the contextGUID
+     */
+    Context getContext(IGUID contextGUID);
+
+    /**
+     * Add a given asset under the specified context
+     * @param contextGUID
      * @param asset
      */
-    void add(Context context, Asset asset);
+    void addToContext(IGUID contextGUID, Asset asset);
 
     /**
      * Get all assets associated with the given context
-     * @param context
-     *
-     * TODO - return a list of assets
-     * Use pagination?
+     * @param contextGUID
+     * @return Iterator<IGUID> iterator of GUIDs referencing to assets in the SOS
      */
-    void getAssets(Context context);
+    Iterator<IGUID> getFromContext(IGUID contextGUID);
 }

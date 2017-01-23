@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.interfaces.context;
 
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 
+import java.util.function.Predicate;
+
 /**
  * Formally, a closure is a function that captures the state of the surrounding environment.
  * We apply the concept of closure to be a function that captures the state of the SOS and it is applied on a given asset.
@@ -44,4 +46,6 @@ public interface Closure {
      * @return
      */
     Closure OR(Closure closure);
+
+    Predicate getPredicate();
 }

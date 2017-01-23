@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
+import uk.ac.standrews.cs.sos.interfaces.context.Context;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -130,6 +131,10 @@ public class SOSAgent implements Agent {
     public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         SOSMetadata metadata = dds.getMetadata(guid);
         return metadata;
+    }
+
+    public void addContext(Context context) {
+
     }
 
 }

@@ -201,7 +201,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     protected IGUID getContentGUID() {
         IGUID retval = null;
 
-        if (! isCompoundData) {
+        if (!isCompoundData) {
             retval = atom.getContentGUID();
         } else {
             //Compound compound = addAtomsInCompound(atoms);

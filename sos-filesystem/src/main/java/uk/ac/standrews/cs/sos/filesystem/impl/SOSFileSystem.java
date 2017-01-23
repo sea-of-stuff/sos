@@ -113,9 +113,7 @@ public class SOSFileSystem implements IFileSystem {
     public void moveObject(IDirectory source_parent, String source_name, IDirectory destination_parent, String destination_name, boolean overwrite) throws BindingAbsentException, BindingPresentException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Move object " + source_name + " TO " + destination_name);
 
-
         // TODO - delete and create
-
         throw new NotImplementedException();
     }
 

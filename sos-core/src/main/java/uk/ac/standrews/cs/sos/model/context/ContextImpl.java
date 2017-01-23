@@ -15,8 +15,6 @@ public class ContextImpl implements Context {
 
     private Closure closure;
 
-    private Object[] policies;
-
     public ContextImpl(String name, Closure closure) {
         this.name = name;
         this.closure = closure;
@@ -32,16 +30,6 @@ public class ContextImpl implements Context {
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setPolicies() {
-        // TODO
-        // this.policies =
-    }
-
-    @Override
-    public void getContextPolicies() {
-        // return policies;
     }
 
     @Override
@@ -65,5 +53,10 @@ public class ContextImpl implements Context {
 
         Context newContext = new ContextImpl(newName, newClosure);
         return newContext;
+    }
+
+    @Override
+    public String toString() {
+        return "Guid: " + guid + ", Name: " + name;
     }
 }

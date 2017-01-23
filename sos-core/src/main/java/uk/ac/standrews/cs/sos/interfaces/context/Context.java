@@ -6,10 +6,7 @@ import uk.ac.standrews.cs.IGUID;
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.
  * Entities are assets belonging to the SOS.
  *
- * A context is unique and is made of policies and a closure.
- * Policies are rules that SOS instances should respect about the assets that belong to a given context.
- * A closure defines what assets belong to a context or not.
- *
+ * A context is unique and is defined by a closure, which defines what assets belong to the context or not.
  * Moreover, contexts can be combines under the boolean operators AND and OR
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,11 +24,6 @@ public interface Context {
      * @return
      */
     String getName();
-
-    /**
-     * Return a set of policies for this context
-     */
-    void getContextPolicies();
 
     /**
      * Return the closure for this context.
