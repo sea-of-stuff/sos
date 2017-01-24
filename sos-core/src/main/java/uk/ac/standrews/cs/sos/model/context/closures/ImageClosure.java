@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.context.closures;
 import uk.ac.standrews.cs.sos.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
 import java.util.function.Predicate;
 
@@ -18,11 +19,12 @@ public class ImageClosure extends ClosureImpl {
     public boolean test(Asset asset) {
 
         try {
-            agent.getMetadata(asset.getMetadata());
+            SOSMetadata metadata = agent.getMetadata(asset.getMetadata());
+            String contentType = metadata.getProperty("Content-Type");
+            return contentType.toLowerCase().startsWith("image/");
         } catch (MetadataNotFoundException e) {
             e.printStackTrace();
         }
-
 
         return false;
     }
