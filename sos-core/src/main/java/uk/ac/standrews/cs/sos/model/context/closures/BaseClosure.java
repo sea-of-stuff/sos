@@ -9,12 +9,12 @@ import java.util.function.Predicate;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ClosureImpl implements Closure {
+public class BaseClosure implements Closure {
 
     protected SOSAgent agent;
     private Predicate<Asset> predicate;
 
-    protected ClosureImpl(SOSAgent agent, Predicate<Asset> predicate) {
+    protected BaseClosure(SOSAgent agent, Predicate<Asset> predicate) {
         this.agent = agent;
         this.predicate = predicate;
     }
@@ -26,12 +26,12 @@ public class ClosureImpl implements Closure {
 
     @Override
     public Closure AND(Closure closure) {
-        return new ClosureImpl(agent, this.and(closure));
+        return new BaseClosure(agent, this.and(closure));
     }
 
     @Override
     public Closure OR(Closure closure) {
-        return new ClosureImpl(agent, this.or(closure));
+        return new BaseClosure(agent, this.or(closure));
     }
 
 }

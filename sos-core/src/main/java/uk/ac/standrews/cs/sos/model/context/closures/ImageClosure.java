@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ImageClosure extends ClosureImpl {
+public class ImageClosure extends BaseClosure {
 
     private ImageClosure(SOSAgent agent, Predicate<Asset> predicate) {
         super(agent, predicate);
