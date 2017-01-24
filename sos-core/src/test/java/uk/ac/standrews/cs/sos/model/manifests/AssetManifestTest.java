@@ -35,7 +35,7 @@ public class AssetManifestTest extends CommonTest {
     private static final String EXPECTED_JSON_METADATA_ASSET =
             "{\"Type\":\"Asset\"," +
                     "\"Signature\":\"AAAB\"," +
-                    "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+                    "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
@@ -51,7 +51,7 @@ public class AssetManifestTest extends CommonTest {
             "{\"Type\":\"Asset\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
-                    "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+                    "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
@@ -81,14 +81,12 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
-        Set<IGUID> metadata = new LinkedHashSet<>();
-        metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(null, guid, null, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(null, guid, null, metadataGUID, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
@@ -138,14 +136,12 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
-        Set<IGUID> metadata = new LinkedHashSet<>();
-        metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
@@ -169,18 +165,16 @@ public class AssetManifestTest extends CommonTest {
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
-        Set<IGUID> metadata = new LinkedHashSet<>();
-        metadata.add(metadataGUID);
 
         Identity identityMocked = mock(Identity.class);
         byte[] fakedSignature = new byte[]{0, 0, 1};
         when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadata, identityMocked);
+        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 
         assertEquals(assetManifest.getContentGUID(), guid);
         assertEquals(assetManifest.getInvariantGUID(), invariantGUID);
-        assertEquals(assetManifest.getMetadata(), metadata);
+        assertEquals(assetManifest.getMetadata(), metadataGUID);
         assertEquals(assetManifest.getPreviousVersions(), previous);
     }
 }

@@ -85,13 +85,13 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.asset = asset;
         this.atom = atom;
 
-        Set<IGUID> meta = asset.getMetadata();
-        if (meta != null && !meta.isEmpty()) {
-            IGUID metaGUID = (IGUID) meta.toArray()[0];
+        IGUID meta = asset.getMetadata();
+        if (meta != null && !meta.isInvalid()) {
+
             try {
-                this.metadata = sos.getMetadata(metaGUID);
+                this.metadata = sos.getMetadata(meta);
             } catch (MetadataNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get metadata for GUID " + metaGUID);
+                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get metadata for GUID " + meta);
             }
         }
 

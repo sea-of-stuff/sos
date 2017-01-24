@@ -47,7 +47,7 @@ public class AssetManifest extends SignedManifest implements Asset {
     final private IGUID version;
     final private IGUID invariant;
     final private Set<IGUID> prevs;
-    final private Set<IGUID> metadata;
+    final private IGUID metadata;
 
     /**
      * Creates an VersionManifest given a content, an identity, the GUIDs of the previous
@@ -61,7 +61,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @throws ManifestNotMadeException
      */
     public AssetManifest(IGUID invariant, IGUID content,
-                         Set<IGUID> prevs, Set<IGUID> metadata,
+                         Set<IGUID> prevs, IGUID metadata,
                          Identity identity)
             throws ManifestNotMadeException {
         super(identity, ManifestType.ASSET);
@@ -96,7 +96,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param signature
      */
     public AssetManifest(IGUID invariant, IGUID version, IGUID content,
-                         Set<IGUID> prevs, Set<IGUID> metadata,
+                         Set<IGUID> prevs, IGUID metadata,
                          String signature) {
         super(null, ManifestType.ASSET);
         this.invariant = invariant;
@@ -151,7 +151,7 @@ public class AssetManifest extends SignedManifest implements Asset {
      *
      */
     @Override
-    public Set<IGUID> getMetadata() {
+    public IGUID getMetadata() {
         return metadata;
     }
 
@@ -213,8 +213,8 @@ public class AssetManifest extends SignedManifest implements Asset {
 
     private String getMetadataToHashOrSign() {
         String retval = "";
-        if (metadata != null && !metadata.isEmpty()) {
-            retval = "M"  + getCollectionToHashOrSign(metadata);
+        if (metadata != null && !metadata.isInvalid()) {
+            retval = "M"  + metadata.toString();
         }
         return retval;
     }

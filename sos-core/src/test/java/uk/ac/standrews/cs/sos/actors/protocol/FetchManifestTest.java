@@ -37,7 +37,7 @@ public class FetchManifestTest {
             "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "\"Version\":\""+ GUID_VERSION+"\"," +
             "\"Signature\":\"AAAB\"," +
-            "\"Metadata\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+            "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
             "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}}";

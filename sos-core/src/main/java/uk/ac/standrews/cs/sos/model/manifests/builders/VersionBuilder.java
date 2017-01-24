@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -13,7 +12,7 @@ import java.util.Set;
 public class VersionBuilder {
 
     private IGUID content;
-    private Set<SOSMetadata> metadata;
+    private SOSMetadata metadata;
     private IGUID invariant;
     private Set<IGUID> previousCollection;
 
@@ -34,21 +33,9 @@ public class VersionBuilder {
         return this;
     }
 
-    public VersionBuilder setMetadata(Set<SOSMetadata> metadata) {
-        if (!metadataIsSet) {
-            this.metadata = metadata;
-            metadataIsSet = true;
-        }
-
-        return this;
-    }
-
     public VersionBuilder setMetadata(SOSMetadata metadata) {
-        if (!metadataIsSet) {
-            this.metadata = new LinkedHashSet<>();
-            this.metadata.add(metadata);
-            metadataIsSet = true;
-        }
+        this.metadata = metadata;
+        metadataIsSet = true;
 
         return this;
     }
@@ -78,19 +65,18 @@ public class VersionBuilder {
         return content;
     }
 
-    public Set<IGUID> getMetadataCollection() {
+    public IGUID getMetadataCollection() {
         if (metadata == null) {
             return null;
         }
 
-        Set<IGUID> retval = new LinkedHashSet<>();
-        for(SOSMetadata meta:metadata) {
-            try {
-                retval.add(meta.guid());
-            } catch (GUIDGenerationException e) {
-                e.printStackTrace();
-            }
+        IGUID retval = null;
+        try {
+            retval = metadata.guid();
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
         }
+
         return retval;
     }
 

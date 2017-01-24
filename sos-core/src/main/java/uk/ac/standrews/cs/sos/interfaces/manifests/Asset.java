@@ -34,9 +34,9 @@ public interface Asset extends Manifest {
     Set<IGUID> getPreviousVersions();
 
     /**
-     * Returns a list of GUIDs for the manifests under the metadata relationship.
+     * Returns a reference to this asset metadata
      *
-     * @return a list of GUIDs for this versions' metadata
+     * @return GUID of the metadata
      */
-    Set<IGUID> getMetadata();
+    IGUID getMetadata();
 }

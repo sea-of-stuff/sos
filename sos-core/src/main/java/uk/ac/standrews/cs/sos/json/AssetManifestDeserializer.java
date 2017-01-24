@@ -35,7 +35,11 @@ public class AssetManifestDeserializer extends JsonDeserializer<AssetManifest> {
             }
 
             Set<IGUID> prevs = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_PREVIOUS_GUID);
-            Set<IGUID> metadata = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_METADATA_GUID);
+
+            IGUID metadata = null;
+            if (node.has(ManifestConstants.KEY_METADATA_GUID)) {
+                metadata = CommonJson.GetGUID(node, ManifestConstants.KEY_METADATA_GUID);
+            }
 
             return new AssetManifest(invariant, version, content, prevs, metadata, signature);
         } catch (GUIDGenerationException e) {

@@ -13,8 +13,6 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
-import java.util.Set;
-
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -31,12 +29,10 @@ public class WMetadata {
         if (manifest.getManifestType() == ManifestType.ASSET) {
 
             Asset asset = (Asset) manifest;
-            Set<IGUID> metadataArrayList = asset.getMetadata();
-            if (metadataArrayList == null || metadataArrayList.isEmpty()) {
+            IGUID metadataGUID = asset.getMetadata();
+            if (metadataGUID == null || metadataGUID.isInvalid()) {
                 return "N/A";
             }
-
-            IGUID metadataGUID = (IGUID) metadataArrayList.toArray()[0];
 
             SOSMetadata metadata = agent.getMetadata(metadataGUID);
             return metadata.toString();

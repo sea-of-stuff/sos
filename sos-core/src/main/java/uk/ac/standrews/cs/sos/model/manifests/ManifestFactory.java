@@ -66,7 +66,7 @@ public class ManifestFactory {
     public static AssetManifest createVersionManifest(IGUID content,
                                                       IGUID invariant,
                                                       Set<IGUID> prevs,
-                                                      Set<IGUID> metadata,
+                                                      IGUID metadata,
                                                       Identity identity)
             throws ManifestNotMadeException {
 

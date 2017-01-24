@@ -65,17 +65,13 @@ public class SOSAddAssetTest extends AgentTest {
         prevs.add(GUIDFactory.recreateGUID("321"));
         prevs.add(GUIDFactory.recreateGUID("abcef"));
 
-        Set<SOSMetadata> metadata = new LinkedHashSet<>();
         SOSMetadata metaMock = mock(SOSMetadata.class);
         when(metaMock.guid()).thenReturn(GUIDFactory.recreateGUID("897"));
-
-        SOSMetadata metaMock1 = mock(SOSMetadata.class);
-        when(metaMock1.guid()).thenReturn(GUIDFactory.recreateGUID("456"));
 
         VersionBuilder builder = new VersionBuilder(compound.getContentGUID())
                 .setInvariant(invariant)
                 .setPrevious(prevs)
-                .setMetadata(metadata);
+                .setMetadata(metaMock);
         Asset manifest = agent.addVersion(builder);
         assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
@@ -85,8 +81,8 @@ public class SOSAddAssetTest extends AgentTest {
         IGUID retrievedInvariant = ((AssetManifest) retrievedManifest).getInvariantGUID();
         assertEquals(invariant, retrievedInvariant);
 
-        Set<IGUID> retrievedMetadata = ((AssetManifest) retrievedManifest).getMetadata();
-        assertTrue(retrievedMetadata.containsAll(metadata));
+        IGUID retrievedMetadata = ((AssetManifest) retrievedManifest).getMetadata();
+        assertEquals(retrievedMetadata, metaMock.guid());
 
         Set<IGUID> retrievedPrevs = ((AssetManifest) retrievedManifest).getPreviousVersions();
         assertTrue(retrievedPrevs.containsAll(prevs));
@@ -181,7 +177,7 @@ public class SOSAddAssetTest extends AgentTest {
         assertEquals(retrievedManifest.getManifestType(), ManifestType.ASSET);
 
         Asset retrievedAsset = (Asset) retrievedManifest;
-        IGUID retrievedMetadataGUID = (IGUID) retrievedAsset.getMetadata().toArray()[0];
+        IGUID retrievedMetadataGUID = retrievedAsset.getMetadata();
         assertEquals(metadata.guid(), retrievedMetadataGUID);
 
         SOSMetadata retrievedMetadata = agent.getMetadata(retrievedMetadataGUID);

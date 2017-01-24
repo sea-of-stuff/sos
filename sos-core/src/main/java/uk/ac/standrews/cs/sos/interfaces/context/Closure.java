@@ -24,14 +24,7 @@ import java.util.function.Predicate;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Closure {
-
-    /**
-     * Apply this closure to an asset
-     * @param asset
-     * @return
-     */
-    boolean apply(Asset asset);
+public interface Closure extends Predicate<Asset> {
 
     /**
      * AND this closure with another one
@@ -47,5 +40,4 @@ public interface Closure {
      */
     Closure OR(Closure closure);
 
-    Predicate getPredicate();
 }

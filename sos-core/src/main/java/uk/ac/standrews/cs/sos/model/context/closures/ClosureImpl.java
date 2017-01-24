@@ -1,5 +1,6 @@
-package uk.ac.standrews.cs.sos.model.context;
+package uk.ac.standrews.cs.sos.model.context.closures;
 
+import uk.ac.standrews.cs.sos.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.interfaces.context.Closure;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 
@@ -10,29 +11,27 @@ import java.util.function.Predicate;
  */
 public class ClosureImpl implements Closure {
 
+    protected SOSAgent agent;
     private Predicate<Asset> predicate;
 
-    public ClosureImpl(Predicate<Asset> predicate) {
+    protected ClosureImpl(SOSAgent agent, Predicate<Asset> predicate) {
+        this.agent = agent;
         this.predicate = predicate;
     }
 
     @Override
-    public boolean apply(Asset asset) {
+    public boolean test(Asset asset) {
         return predicate.test(asset);
     }
 
     @Override
     public Closure AND(Closure closure) {
-        return new ClosureImpl(predicate.and(closure.getPredicate()));
+        return new ClosureImpl(agent, this.and(closure));
     }
 
     @Override
     public Closure OR(Closure closure) {
-        return new ClosureImpl(predicate.or(closure.getPredicate()));
+        return new ClosureImpl(agent, this.or(closure));
     }
 
-    @Override
-    public Predicate getPredicate() {
-        return predicate;
-    }
 }

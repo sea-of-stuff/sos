@@ -28,17 +28,14 @@ public class AssetManifestSerializer extends JsonSerializer<AssetManifest> {
         jsonGenerator.writeStringField(ManifestConstants.KEY_INVARIANT, assetManifest.getInvariantGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_VERSION, assetManifest.getVersionGUID().toString());
 
+        if (assetManifest.getMetadata() != null) {
+            jsonGenerator.writeStringField(ManifestConstants.KEY_METADATA_GUID, assetManifest.getMetadata().toString());
+        }
+
         if (assetManifest.getPreviousVersions() != null) {
             jsonGenerator.writeFieldName(ManifestConstants.KEY_PREVIOUS_GUID);
             jsonGenerator.writeStartArray();
             serializePrevious(assetManifest, jsonGenerator);
-            jsonGenerator.writeEndArray();
-        }
-
-        if (assetManifest.getMetadata() != null) {
-            jsonGenerator.writeFieldName(ManifestConstants.KEY_METADATA_GUID);
-            jsonGenerator.writeStartArray();
-            serializeMetadata(assetManifest, jsonGenerator);
             jsonGenerator.writeEndArray();
         }
 
@@ -57,10 +54,4 @@ public class AssetManifestSerializer extends JsonSerializer<AssetManifest> {
         }
     }
 
-    private void serializeMetadata(AssetManifest assetManifest, JsonGenerator jsonGenerator) throws IOException {
-        Set<IGUID> metadata = assetManifest.getMetadata();
-        for(IGUID meta:metadata) {
-            jsonGenerator.writeString(meta.toString());
-        }
-    }
 }
