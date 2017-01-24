@@ -206,7 +206,7 @@ public class AssetManifest extends SignedManifest implements Asset {
     private String getPreviousToHashOrSign() {
         String retval = "";
         if (prevs != null && !prevs.isEmpty()) {
-            retval = "P"  + getCollectionToHashOrSign(prevs);
+            retval = "P" + getCollectionToHashOrSign(prevs);
         }
         return retval;
     }
@@ -214,7 +214,7 @@ public class AssetManifest extends SignedManifest implements Asset {
     private String getMetadataToHashOrSign() {
         String retval = "";
         if (metadata != null && !metadata.isInvalid()) {
-            retval = "M"  + metadata.toString();
+            retval = "M" + metadata.toString();
         }
         return retval;
     }
