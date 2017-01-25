@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.IOException;
@@ -67,7 +68,10 @@ public class FetchDataTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
-        InputStream fetchedData = FetchData.Fetch(node, testGUID);
+        FetchData fetchData = new FetchData(node, testGUID);
+        TasksQueue.instance().performSyncTask(fetchData);
+        InputStream fetchedData = fetchData.getBody();
+
         String fetchedDataString = IO.InputStreamToString(fetchedData);
         assertEquals(fetchedDataString, TEST_DATA);
 
@@ -83,7 +87,7 @@ public class FetchDataTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
-        FetchData.Fetch(node, testGUID);
+        FetchData fetchData = new FetchData(node, testGUID);
     }
 
     @Test (expectedExceptions = IOException.class)
@@ -93,6 +97,6 @@ public class FetchDataTest {
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
-        FetchData.Fetch(node, null);
+        FetchData fetchData = new FetchData(node, null);
     }
 }

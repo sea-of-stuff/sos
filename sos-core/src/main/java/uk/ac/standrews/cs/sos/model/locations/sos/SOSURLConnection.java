@@ -5,11 +5,11 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.protocol.FetchData;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -68,12 +68,16 @@ public class SOSURLConnection extends URLConnection {
                 inputStream = getDataLocally(entityGUID);
             } else {
                 Node nodeToContact = nds.getNode(nodeGUID);
-                inputStream = FetchData.Fetch(nodeToContact, entityGUID);
+
+                FetchData fetchData = new FetchData(nodeToContact, entityGUID);
+                TasksQueue.instance().performSyncTask(fetchData);
+
+                inputStream = fetchData.getBody();
             }
 
         } catch (GUIDGenerationException | DataException
                 | BindingAbsentException | DataStorageException
-                | NodeNotFoundException | SOSURLException e) {
+                | NodeNotFoundException e) {
             throw new IOException(e);
         }
 
