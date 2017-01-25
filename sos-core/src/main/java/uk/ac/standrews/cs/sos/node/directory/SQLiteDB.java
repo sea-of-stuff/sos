@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.sql.*;
 import java.util.HashSet;
@@ -43,6 +44,8 @@ public class SQLiteDB implements NodesDatabase {
 
     public SQLiteDB(String path) throws DatabaseException {
         this.path = path;
+
+        FileHelper.MakePath(path);
 
         try (Connection connection = getSQLiteConnection()) {
             boolean tableExists = checkSQLiteTableExists(connection);

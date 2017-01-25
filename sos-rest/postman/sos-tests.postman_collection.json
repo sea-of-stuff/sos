@@ -1,0 +1,67 @@
+{
+	"variables": [],
+	"info": {
+		"name": "sos-tests",
+		"_postman_id": "b78ba9e2-4205-e8e6-a3e0-092d9586efd3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "NDS - info",
+			"request": {
+				"url": "http://localhost:8082/info",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DDS - info",
+			"request": {
+				"url": "http://localhost:8100/info",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Storage - info",
+			"request": {
+				"url": "http://localhost:8110/info",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Agent - info",
+			"request": {
+				"url": "http://localhost:8082/info",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

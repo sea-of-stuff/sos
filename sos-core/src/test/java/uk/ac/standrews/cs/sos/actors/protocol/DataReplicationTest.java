@@ -17,15 +17,15 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.atom.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.mock;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -117,6 +117,8 @@ public class DataReplicationTest {
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
+
         mockNDS = mock(NDS.class);
         mockDDS = mock(DDS.class);
     }
@@ -140,10 +142,9 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -166,10 +167,9 @@ public class DataReplicationTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
@@ -194,10 +194,9 @@ public class DataReplicationTest {
         nodes.add(storageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -233,10 +232,9 @@ public class DataReplicationTest {
         nodes.add(anotherNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 3, index, mockNDS, mockDDS); // TODO - test with different replication factor
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 3, index, mockNDS, mockDDS); // TODO - test with different replication factor
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -258,6 +256,7 @@ public class DataReplicationTest {
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
 
+        // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
         Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false);
@@ -267,10 +266,9 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS); // TODO - rep factor 1
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS); // TODO - rep factor 1
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -301,10 +299,8 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());

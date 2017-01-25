@@ -16,15 +16,15 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.atom.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.mock;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -106,6 +106,8 @@ public class DataReplicationServerFailureTest {
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
+
         mockNDS = mock(NDS.class);
         mockDDS = mock(DDS.class);
     }
@@ -128,10 +130,9 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertFalse(it.hasNext());
@@ -150,10 +151,9 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertFalse(it.hasNext());
@@ -172,10 +172,9 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertFalse(it.hasNext());
@@ -194,10 +193,9 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertFalse(it.hasNext());
@@ -216,10 +214,9 @@ public class DataReplicationServerFailureTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertFalse(it.hasNext());

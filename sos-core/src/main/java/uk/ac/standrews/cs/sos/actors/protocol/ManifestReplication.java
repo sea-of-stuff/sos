@@ -43,7 +43,7 @@ public class ManifestReplication {
         Runnable replicator = () -> {
 
             int successfulReplicas = 0;
-            while(nodes.hasNext() || successfulReplicas < replicationFactor) {
+            while(nodes.hasNext() && successfulReplicas < replicationFactor) {
                 Node node = nodes.next();
 
                 if (node.isDDS()) {

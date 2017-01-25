@@ -20,6 +20,7 @@ import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.Task;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -34,42 +35,43 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplication {
+public class DataReplication extends Task {
 
-    public static ExecutorService Replicate(InputStream data, Iterator<Node> nodes, int replicationFactor,
-                                            LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
+    private InputStream data;
+    private Iterator<Node> nodes;
+    private int replicationFactor;
+    private LocationsIndex index;
+    private NDS nds;
+    private DDS dds;
+
+    public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor,
+                           LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
 
         if (index == null || nds == null || dds == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
-        ExecutorService executor = Executors.newCachedThreadPool();
-        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data)) {
-
-            Runnable runnable = PerformReplications(baos, nodes, replicationFactor, index, nds, dds);
-            executor.submit(runnable);
-
-        } catch (IOException e) {
-            throw new SOSProtocolException("An exception occurred while replicating data");
-        }
-
-        return executor;
+        this.data = data;
+        this.nodes = nodes;
+        this.replicationFactor = replicationFactor;
+        this.index = index;
+        this.nds = nds;
+        this.dds = dds;
     }
 
-    private static Runnable PerformReplications(final ByteArrayOutputStream baos, Iterator<Node> nodes, int replicationFactor,
-                                                LocationsIndex index, NDS nds, DDS dds) {
+    @Override
+    public void performAction() {
 
-        return () -> {
+
+        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data)) {
 
             int successfulReplicas = 0;
-            while (nodes.hasNext() || successfulReplicas < replicationFactor) {
+            while (nodes.hasNext() && successfulReplicas < replicationFactor) {
 
                 Node node = nodes.next();
                 if (node.isStorage()) {
@@ -86,7 +88,10 @@ public class DataReplication {
                 }
             }
 
-        };
+        } catch (IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
+        }
+
     }
 
     /**

@@ -28,7 +28,9 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
 
         if (index.containsKey(guid)) {
-            index.get(guid).add(locationBundle);
+            if (!index.get(guid).contains(locationBundle)) {
+                index.get(guid).add(locationBundle);
+            }
         } else {
             PriorityQueue<LocationBundle> bundles = new PriorityQueue<>(comparator());
             bundles.add(locationBundle);

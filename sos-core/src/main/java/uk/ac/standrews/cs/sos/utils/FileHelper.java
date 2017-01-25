@@ -36,4 +36,11 @@ public class FileHelper {
             e.printStackTrace();
         }
     }
+
+    public static void MakePath(String path) {
+        java.io.File file = new java.io.File(path);
+        java.io.File parent = file.getParentFile();
+        if (parent != null)
+            parent.mkdirs();
+    }
 }

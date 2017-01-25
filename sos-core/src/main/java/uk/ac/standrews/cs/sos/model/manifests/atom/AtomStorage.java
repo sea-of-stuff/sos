@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.atom.store.*;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -96,7 +97,9 @@ public class AtomStorage {
     }
 
     public void replicate(InputStream data, Iterator<Node> nodes, int replicationFactor, NDS nds, DDS dds) throws SOSProtocolException {
-        DataReplication.Replicate(data, nodes, replicationFactor, locationIndex, nds, dds);
+
+        DataReplication replicationTask = new DataReplication(data, nodes, replicationFactor, locationIndex, nds, dds);
+        TasksQueue.instance().performSyncTask(replicationTask);
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Set<LocationBundle> bundles) throws StorageException {

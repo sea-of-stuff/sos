@@ -18,7 +18,9 @@ import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.atom.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
@@ -103,6 +103,7 @@ public class DataReplicationWithDDSFeedbackTest {
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         mockNDS = mock(NDS.class);
         mockDDS = mock(DDS.class);
@@ -126,10 +127,9 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
         assertTrue(it.hasNext());
@@ -153,10 +153,8 @@ public class DataReplicationWithDDSFeedbackTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, null, mockNDS, mockDDS);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, null, mockNDS, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -171,10 +169,9 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, null, mockDDS);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, null, mockDDS);
+        TasksQueue.instance().performSyncTask(replicationTask);
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -189,9 +186,8 @@ public class DataReplicationWithDDSFeedbackTest {
         nodes.add(node);
 
         LocationsIndex index = new LocationsIndexImpl();
-        ExecutorService executorService = DataReplication.Replicate(inputStream, nodes.iterator(), 1, index, mockNDS, null);
 
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, null);
+        TasksQueue.instance().performSyncTask(replicationTask);
     }
 }
