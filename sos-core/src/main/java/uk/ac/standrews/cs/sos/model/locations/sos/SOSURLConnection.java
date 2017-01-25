@@ -71,7 +71,6 @@ public class SOSURLConnection extends URLConnection {
 
                 FetchData fetchData = new FetchData(nodeToContact, entityGUID);
                 TasksQueue.instance().performSyncTask(fetchData);
-
                 inputStream = fetchData.getBody();
             }
 
