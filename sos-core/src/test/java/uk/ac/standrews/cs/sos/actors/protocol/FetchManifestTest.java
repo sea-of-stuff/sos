@@ -9,12 +9,12 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 
 import java.io.IOException;
 
@@ -69,7 +69,7 @@ public class FetchManifestTest {
     }
 
     @Test
-    public void basicManifestFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
+    public void basicManifestFetchTest() throws IOException, GUIDGenerationException {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
@@ -77,7 +77,10 @@ public class FetchManifestTest {
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_VERSION);
 
-        Manifest manifest = FetchManifest.Fetch(node, testGUID);
+        FetchManifest fetchManifest = new FetchManifest(node, testGUID);
+        TasksQueue.instance().performSyncTask(fetchManifest);
+
+        Manifest manifest = fetchManifest.getManifest();
         assertNotNull(manifest);
         assertEquals(manifest.getManifestType(), ManifestType.ASSET);
         assertEquals(manifest.guid(), testGUID);

@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.tasks.Task;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -22,18 +23,13 @@ import java.net.URL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FetchManifest {
+public class FetchManifest extends Task {
 
-    /**
-     * Fetch manifest that matches the manifestId from a specified node
-     *
-     * @param node - dds node where to fetch the manifest from
-     * @param manifestId - guid of the manifest
-     * @return Manifest
-     * @throws IOException
-     * @throws SOSURLException
-     */
-    public static Manifest Fetch(Node node, IGUID manifestId) throws IOException, SOSURLException {
+    private Node node;
+    private IGUID manifestId;
+    private Manifest manifest;
+
+    public FetchManifest(Node node, IGUID manifestId) throws IOException {
         if (!node.isDDS()) {
             throw new IOException("Attempting to fetch manifest from non-DDS node");
         }
@@ -42,29 +38,40 @@ public class FetchManifest {
             throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
         }
 
+        this.node = node;
+        this.manifestId = manifestId;
+    }
+
+    @Override
+    public void performAction() {
+
         SOS_LOG.log(LEVEL.INFO, "Manifest will be fetched from node " + node.getNodeGUID());
 
-        URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
-        SyncRequest request = new SyncRequest(Method.GET, url);
-        Response response = RequestsManager.getInstance().playSyncRequest(request);
+        try {
+            URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
+            SyncRequest request = new SyncRequest(Method.GET, url);
+            Response response = RequestsManager.getInstance().playSyncRequest(request);
 
-        if (response.getCode() == HTTPStatus.OK) {
-            SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
+            if (response.getCode() == HTTPStatus.OK) {
+                SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
 
-            Manifest manifest;
-            try(InputStream inputStream = response.getBody();) {
-                String responseBody = IO.InputStreamToString(inputStream);
-                manifest = ManifestsUtils.ManifestFromJson(responseBody);
-            } catch (ManifestNotFoundException e) {
-                throw new IOException("Unable to parse manifest with GUID " + manifestId);
+                try (InputStream inputStream = response.getBody();) {
+                    String responseBody = IO.InputStreamToString(inputStream);
+                    this.manifest = ManifestsUtils.ManifestFromJson(responseBody);
+                } catch (ManifestNotFoundException e) {
+                    throw new IOException("Unable to parse manifest with GUID " + manifestId);
+                }
+
+            } else {
+                SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
+                throw new IOException();
             }
-
-            return manifest;
-
-        } else {
-            SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
-            throw new IOException();
+        } catch (SOSURLException | IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to fetch manifest");
         }
+    }
 
+    public Manifest getManifest() {
+        return manifest;
     }
 }

@@ -9,13 +9,13 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -76,12 +76,15 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         for(IGUID g:guids) {
             try {
                 Node node = nds.getNode(g);
-                retval = FetchManifest.Fetch(node, guid);
 
+                FetchManifest fetchManifest = new FetchManifest(node, guid);
+                TasksQueue.instance().performSyncTask(fetchManifest);
+
+                retval = fetchManifest.getManifest();
                 if (retval != null) {
                     break;
                 }
-            } catch (NodeNotFoundException | SOSURLException | IOException e) {
+            } catch (NodeNotFoundException | IOException e) {
                 SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid + " from Node with GUID " + g);
             }
 

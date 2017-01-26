@@ -58,7 +58,7 @@ public class CacheFlusher implements Runnable {
         SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Work in progress");
 
 
-        // Remove files that are replicated in at least N places.
+        // Remove files that are replicated in at least N places?
 
         // OLD NOTES
         // Remove unnecessary files - least used files or bigger files
