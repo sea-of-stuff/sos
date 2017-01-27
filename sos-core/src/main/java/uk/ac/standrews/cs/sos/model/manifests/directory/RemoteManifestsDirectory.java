@@ -50,7 +50,8 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
             int replicationFactor = manifestPolicy.getReplicationFactor();
 
             try {
-                ManifestReplication.Replicate(manifest, nodes, replicationFactor, dds);
+                ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dds);
+                TasksQueue.instance().performSyncTask(replicationTask);
             } catch (SOSProtocolException e) {
                 throw new ManifestPersistException("Unable to persist node to remote nodes");
             }

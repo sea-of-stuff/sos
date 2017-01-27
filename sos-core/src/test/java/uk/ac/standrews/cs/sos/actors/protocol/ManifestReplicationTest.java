@@ -10,12 +10,11 @@ import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -94,10 +93,8 @@ public class ManifestReplicationTest {
 
         DDS ddsMock = mock(DDS.class);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, ddsMock);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, ddsMock);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
@@ -119,10 +116,8 @@ public class ManifestReplicationTest {
 
         DDS ddsMock = mock(DDS.class);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, ddsMock);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, ddsMock);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
         verify(node, times(0)).getHostAddress();
@@ -143,10 +138,7 @@ public class ManifestReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, null);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, null);
     }
 
     @Test
@@ -164,10 +156,8 @@ public class ManifestReplicationTest {
 
         DDS ddsMock = mock(DDS.class);
 
-        ExecutorService executorService = ManifestReplication.Replicate(mockManifest, nodes.iterator(), 1, ddsMock);
-
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, ddsMock);
+        TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();

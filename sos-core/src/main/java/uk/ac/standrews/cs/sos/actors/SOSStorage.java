@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.model.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -217,7 +218,8 @@ public class SOSStorage implements Storage {
                 ddsNodes.addAll(suggestedNodes);
             }
 
-            ManifestReplication.Replicate(manifest, ddsNodes.iterator(), ddsNotificationInfo.getMaxDefaultDDSNodes(), dds);
+            ManifestReplication replicationTask = new ManifestReplication(manifest, ddsNodes.iterator(), ddsNotificationInfo.getMaxDefaultDDSNodes(), dds);
+            TasksQueue.instance().performSyncTask(replicationTask);
         }
     }
 

@@ -11,57 +11,55 @@ import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.tasks.Task;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestReplication {
+public class ManifestReplication extends Task {
 
-    public static ExecutorService Replicate(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DDS dds) throws SOSProtocolException {
+    private Manifest manifest;
+    private Iterator<Node> nodes;
+    private int replicationFactor;
+    private DDS dds;
+
+    public ManifestReplication(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DDS dds) throws SOSProtocolException {
 
         if (dds == null) {
             throw new SOSProtocolException("DDS is null. Manifest replication process is aborted.");
         }
 
-        ExecutorService executor = Executors.newCachedThreadPool();
-        Runnable runnable = transferManifest(manifest, nodes, replicationFactor, dds);
-        executor.submit(runnable);
-
-        return executor;
+        this.manifest = manifest;
+        this.nodes = nodes;
+        this.replicationFactor = replicationFactor;
+        this.dds = dds;
     }
 
-    private static Runnable transferManifest(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DDS dds) {
+    @Override
+    public void performAction() {
 
-        Runnable replicator = () -> {
+        int successfulReplicas = 0;
+        while(nodes.hasNext() && successfulReplicas < replicationFactor) {
+            Node node = nodes.next();
 
-            int successfulReplicas = 0;
-            while(nodes.hasNext() && successfulReplicas < replicationFactor) {
-                Node node = nodes.next();
+            if (node.isDDS()) {
+                boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
-                if (node.isDDS()) {
-                    boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
-
-                    if (transferWasSuccessful) {
-                        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.toString());
-                        dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
-                        successfulReplicas++;
-                    } else {
-                        SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
-                    }
+                if (transferWasSuccessful) {
+                    SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.toString());
+                    dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
+                    successfulReplicas++;
+                } else {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
                 }
             }
-
-        };
-
-        return replicator;
+        }
     }
 
     private static boolean TransferManifestRequest(Manifest manifest, Node node) {
@@ -83,5 +81,6 @@ public class ManifestReplication {
 
         return false;
     }
+
 
 }
