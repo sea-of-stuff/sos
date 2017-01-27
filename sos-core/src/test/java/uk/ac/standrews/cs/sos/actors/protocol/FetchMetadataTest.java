@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 
 import java.io.IOException;
 
@@ -87,7 +88,10 @@ public class FetchMetadataTest {
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_METADATA);
 
-        SOSMetadata metadata = FetchMetadata.Fetch(node, testGUID);
+        FetchMetadata fetchMetadata = new FetchMetadata(node, testGUID);
+        TasksQueue.instance().performSyncTask(fetchMetadata);
+
+        SOSMetadata metadata = fetchMetadata.getMetadata();
         assertNotNull(metadata);
         assertEquals(metadata.guid(), testGUID);
     }
