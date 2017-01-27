@@ -11,59 +11,54 @@ import uk.ac.standrews.cs.sos.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.network.Method;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.tasks.Task;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class MetadataReplication {
+public class MetadataReplication extends Task {
 
-    public static ExecutorService Replicate(SOSMetadata manifest, Iterator<Node> nodes, int replicationFactor) throws SOSProtocolException {
+    private SOSMetadata metadata;
+    private Iterator<Node> nodes;
+    private int replicationFactor;
 
-        ExecutorService executor = Executors.newCachedThreadPool();
-        Runnable runnable = transferMetadata(manifest, nodes, replicationFactor);
-        executor.submit(runnable);
-
-        return executor;
+    public MetadataReplication(SOSMetadata metadata, Iterator<Node> nodes, int replicationFactor) throws SOSProtocolException {
+        this.metadata = metadata;
+        this.nodes = nodes;
+        this.replicationFactor = replicationFactor;
     }
 
-    private static Runnable transferMetadata(SOSMetadata metadata, Iterator<Node> nodes, int replicationFactor) {
+    @Override
+    public void performAction() {
 
-        Runnable replicator = () -> {
+        int successfulReplicas = 0;
+        while (nodes.hasNext() && successfulReplicas < replicationFactor) {
+            Node node = nodes.next();
 
-            int successfulReplicas = 0;
-            while (nodes.hasNext() && successfulReplicas < replicationFactor) {
-                Node node = nodes.next();
+            if (node.isDDS()) {
 
-                if (node.isDDS()) {
+                try {
+                    boolean transferWasSuccessful = TransferMetadataRequest(metadata, node);
 
-                    try {
-                        boolean transferWasSuccessful = TransferMetadataRequest(metadata, node);
-
-                        if (transferWasSuccessful) {
-                            SOS_LOG.log(LEVEL.INFO, "Metadata with GUID " + metadata.guid() + " replicated successfully to node: " + node.toString());
-                            // TODO - inform dds that replication to particular node was successful
-                            // dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
-                            successfulReplicas++;
-                        } else {
-                            SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Metadata with GUID " + metadata.guid() + " to node: " + node.toString());
-                        }
-                    } catch (GUIDGenerationException e) {
-                        SOS_LOG.log(LEVEL.WARN, "Unable to generate GUID for metadata");
+                    if (transferWasSuccessful) {
+                        SOS_LOG.log(LEVEL.INFO, "Metadata with GUID " + metadata.guid() + " replicated successfully to node: " + node.toString());
+                        // TODO - inform dds that replication to particular node was successful
+                        // dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
+                        successfulReplicas++;
+                    } else {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Metadata with GUID " + metadata.guid() + " to node: " + node.toString());
                     }
-
+                } catch (GUIDGenerationException e) {
+                    SOS_LOG.log(LEVEL.WARN, "Unable to generate GUID for metadata");
                 }
             }
-        };
-
-        return replicator;
+        }
     }
 
     private static boolean TransferMetadataRequest(SOSMetadata metadata, Node node) throws GUIDGenerationException {
@@ -85,4 +80,5 @@ public class MetadataReplication {
 
         return false;
     }
+
 }

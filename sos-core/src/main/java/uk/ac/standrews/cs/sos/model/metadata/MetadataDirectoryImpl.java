@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 import uk.ac.standrews.cs.storage.data.StringData;
@@ -124,7 +125,8 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
         if (policy.replicationFactor() > 0) {
             try {
                 Iterator<Node> nodes = nds.getDDSNodesIterator();
-                MetadataReplication.Replicate(metadata, nodes, policy.replicationFactor());
+                MetadataReplication metadataReplication = new MetadataReplication(metadata, nodes, policy.replicationFactor());
+                TasksQueue.instance().performSyncTask(metadataReplication);
             } catch (SOSProtocolException e) {
                 throw new MetadataPersistException("Unable to replicate metadata");
             }
