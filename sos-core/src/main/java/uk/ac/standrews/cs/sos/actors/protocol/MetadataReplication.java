@@ -66,7 +66,7 @@ public class MetadataReplication extends Task {
         try {
             URL url = SOSURL.DDS_POST_METADATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
-            request.setJSONBody(metadata.toString()); // FIXME - toJson?
+            request.setJSONBody(metadata.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
