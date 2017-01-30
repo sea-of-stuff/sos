@@ -1,7 +1,8 @@
-package uk.ac.standrews.cs.sos.actors.protocol;
+package uk.ac.standrews.cs.sos.actors.protocol.tasks;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.actors.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;

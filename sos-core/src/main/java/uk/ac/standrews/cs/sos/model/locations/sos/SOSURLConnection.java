@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.locations.sos;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.protocol.FetchData;
+import uk.ac.standrews.cs.sos.actors.protocol.tasks.FetchData;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;

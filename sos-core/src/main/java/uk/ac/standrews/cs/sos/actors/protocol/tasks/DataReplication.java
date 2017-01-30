@@ -1,10 +1,12 @@
-package uk.ac.standrews.cs.sos.actors.protocol;
+package uk.ac.standrews.cs.sos.actors.protocol.tasks;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.protocol.SOSConstants;
+import uk.ac.standrews.cs.sos.actors.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;

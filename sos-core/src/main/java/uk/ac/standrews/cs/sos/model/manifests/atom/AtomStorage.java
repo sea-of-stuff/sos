@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.actors.protocol.DataReplication;
+import uk.ac.standrews.cs.sos.actors.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;

@@ -1,27 +1,14 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.protocol.tasks.GetNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
-import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.utils.IO;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -69,11 +56,7 @@ public class NodeDiscovery {
         Node nodeToContact = localNodesDirectory.getNode(nodeGUID);
 
         if (nodeToContact == null) {
-            try {
-                nodeToContact = findNodeViaNDS(nodeGUID);
-            } catch (IOException | SOSURLException e) {
-                throw new NodeNotFoundException(e);
-            }
+            nodeToContact = findNodeViaNDS(nodeGUID);
         }
 
         if (nodeToContact == null) {
@@ -129,49 +112,18 @@ public class NodeDiscovery {
         return localNodesDirectory.getStorageNodesIterator();
     }
 
-    private Node findNodeViaNDS(IGUID nodeGUID) throws IOException, SOSURLException {
-
-        Node retval = null;
+    private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {
 
         Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
-        for(Node ndsNode:ndsNodes) {
-            URL url = SOSURL.NDS_GET_NODE(ndsNode, nodeGUID);
+        GetNode getNode = new GetNode(nodeGUID, ndsNodes.iterator());
+        TasksQueue.instance().performSyncTask(getNode);
 
-            SyncRequest request = new SyncRequest(Method.GET, url);
-            Response response = RequestsManager.getInstance().playSyncRequest(request);
-
-            retval = parseNode(response);
-
-            if (retval != null) {
-                break;
-            }
+        Node retval = getNode.getFoundNode();
+        if (retval == null) {
+            throw new NodeNotFoundException("Unable to find node with GUID " + nodeGUID);
         }
 
         return retval;
     }
 
-    private Node parseNode(Response response) throws IOException {
-
-        if (response.getCode() != HTTPStatus.OK) {
-            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
-            return null;
-        }
-
-        Node retval;
-        
-        try (InputStream inputStream = response.getBody()){
-            String body = IO.InputStreamToString(inputStream);
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-
-            IGUID nodeGUID = GUIDFactory.recreateGUID(jsonNode.get(SOSConstants.GUID).asText());
-            String hostname = jsonNode.get(SOSConstants.HOSTNAME).asText();
-            int port = jsonNode.get(SOSConstants.PORT).asInt();
-
-            retval = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
-        } catch (GUIDGenerationException | IOException e) {
-            throw new IOException(e);
-        }
-
-        return retval;
-    }
 }

@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.protocol.DDSNotificationInfo;
-import uk.ac.standrews.cs.sos.actors.protocol.ManifestReplication;
+import uk.ac.standrews.cs.sos.actors.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
