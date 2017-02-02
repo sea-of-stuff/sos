@@ -127,8 +127,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, identityMocked);
     }

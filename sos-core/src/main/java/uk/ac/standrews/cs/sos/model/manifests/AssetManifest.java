@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -168,9 +167,7 @@ public class AssetManifest extends SignedManifest implements Asset {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        byte[] signatureBytes = this.identity.sign(toSign);
-        byte[] encodedBytes = Base64.encodeBase64(signatureBytes);
-        return new String(encodedBytes);
+        return this.identity.sign(toSign);
     }
 
     private String manifestToHash() {

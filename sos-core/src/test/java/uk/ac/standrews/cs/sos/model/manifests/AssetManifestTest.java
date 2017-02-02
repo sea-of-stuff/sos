@@ -62,8 +62,7 @@ public class AssetManifestTest extends CommonTest {
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
         AssetManifest assetManifest = new AssetManifest(null, guid, null, null, identityMocked);
 
@@ -83,8 +82,7 @@ public class AssetManifestTest extends CommonTest {
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
         AssetManifest assetManifest = new AssetManifest(null, guid, null, metadataGUID, identityMocked);
 
@@ -109,8 +107,7 @@ public class AssetManifestTest extends CommonTest {
         previous.add(previousGUID);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
         AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, null, identityMocked);
 
@@ -138,8 +135,7 @@ public class AssetManifestTest extends CommonTest {
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
         AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 
@@ -167,8 +163,7 @@ public class AssetManifestTest extends CommonTest {
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
         AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 

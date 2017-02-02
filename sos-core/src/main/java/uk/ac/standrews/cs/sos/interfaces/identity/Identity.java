@@ -19,7 +19,7 @@ public interface Identity {
      * @return
      * @throws EncryptionException
      */
-    byte[] sign(String text) throws EncryptionException ;
+    String sign(String text) throws EncryptionException ;
 
     /**
      * Verify that the given text and signature match
@@ -29,7 +29,7 @@ public interface Identity {
      * @return
      * @throws DecryptionException
      */
-    boolean verify(String text, byte[] signature) throws DecryptionException ;
+    boolean verify(String text, String signature) throws DecryptionException;
 
     /**
      * Get the public key for this identity

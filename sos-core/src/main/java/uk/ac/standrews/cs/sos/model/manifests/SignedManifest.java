@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -45,12 +44,11 @@ public abstract class SignedManifest extends BasicManifest {
      */
     @Override
     public boolean verify(Identity identity) throws ManifestVerificationException {
-        String manifestToSign = getManifestToSign();
 
-        byte[] decodedBytes = Base64.decodeBase64(signature);
         boolean success;
         try {
-            success = identity.verify(manifestToSign, decodedBytes);
+            String manifestToSign = getManifestToSign();
+            success = identity.verify(manifestToSign, signature);
         } catch (DecryptionException e) {
             throw new ManifestVerificationException("Unable to decrypt identity", e);
         }

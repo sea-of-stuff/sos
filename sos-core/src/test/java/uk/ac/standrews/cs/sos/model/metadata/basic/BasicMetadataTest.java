@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.metadata.basic;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;

@@ -117,7 +117,7 @@ public class IdentityImplKeysTest extends CommonTest {
     public void testEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
         Identity identity = new IdentityImpl();
 
-        byte[] signature = identity.sign("hello");
+        String signature = identity.sign("hello");
         assertTrue(identity.verify("hello", signature));
     }
 
@@ -125,7 +125,7 @@ public class IdentityImplKeysTest extends CommonTest {
     public void testEncryptDecryptLongData() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
         Identity identity = new IdentityImpl();
 
-        byte[] signature = identity.sign(BYTES_3K);
+        String signature = identity.sign(BYTES_3K);
         assertTrue(identity.verify(BYTES_3K, signature));
     }
 
@@ -134,7 +134,7 @@ public class IdentityImplKeysTest extends CommonTest {
         Identity identity = new IdentityImpl();
         Identity identityLoaded = new IdentityImpl();
 
-        byte[] signature = identity.sign("hello");
+        String signature = identity.sign("hello");
         assertTrue(identityLoaded.verify("hello", signature));
     }
 

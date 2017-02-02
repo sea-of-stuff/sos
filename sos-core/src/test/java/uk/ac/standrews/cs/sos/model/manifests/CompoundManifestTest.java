@@ -54,8 +54,7 @@ public class CompoundManifestTest extends CommonTest {
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
@@ -71,8 +70,7 @@ public class CompoundManifestTest extends CommonTest {
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertNotNull(compoundManifest.getContents());
@@ -87,8 +85,7 @@ public class CompoundManifestTest extends CommonTest {
         Set<Content> contents = Collections.EMPTY_SET;
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertNotNull(compoundManifest.getContents());
@@ -100,8 +97,7 @@ public class CompoundManifestTest extends CommonTest {
         Set<Content> contents = Collections.EMPTY_SET;
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
@@ -117,8 +113,7 @@ public class CompoundManifestTest extends CommonTest {
         contents.add(cat);
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertTrue(compoundManifest.isValid());
@@ -129,8 +124,7 @@ public class CompoundManifestTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
 
         Identity identityMocked = mock(Identity.class);
-        byte[] fakedSignature = new byte[]{0, 0, 1};
-        when(identityMocked.sign(any(String.class))).thenReturn(fakedSignature);
+        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
 
         assertTrue(compoundManifest.isValid());
