@@ -1,9 +1,8 @@
-package uk.ac.standrews.cs.sos.utils;
+package uk.ac.standrews.cs.sos.utils.crypto;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.utils.crypto.AESCrypto;
 
 import static org.testng.Assert.assertEquals;
 
@@ -28,11 +27,22 @@ public class AESCryptoTest {
         // Run this test many times to check that keys are always generated correctly
         for(int i = 0; i < 100; i++) {
             AESCrypto aes = new AESCrypto();
-            aes.generateKeys();
+            aes.generateKey();
 
             String encrypted = aes.encrypt64(TEST_INPUT);
             String decrypted = aes.decryptToString(encrypted);
             assertEquals(decrypted, TEST_INPUT);
+        }
+    }
+
+    @Test
+    public void keyStringTest() throws KeyGenerationException, EncryptionException {
+
+        for(int i = 0; i < 100; i++) {
+            AESCrypto aes = new AESCrypto();
+            aes.generateKey();
+
+            assertEquals(aes.getKey().length(), 24);
         }
     }
 }

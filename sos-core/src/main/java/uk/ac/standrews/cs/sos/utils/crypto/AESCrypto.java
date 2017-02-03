@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.utils.crypto;
 
-import org.apache.commons.codec.binary.Base64;
 import sun.misc.BASE64Decoder;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -10,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.security.Key;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Random;
 
 /**
@@ -19,7 +19,7 @@ public class AESCrypto {
 
     private Key key;
 
-    public void generateKeys() throws KeyGenerationException {
+    public void generateKey() throws KeyGenerationException {
         try {
             String session = random128BitString64();
             key = generateKeyFromString(session);
@@ -42,7 +42,7 @@ public class AESCrypto {
 
     public String encrypt64(String text) throws EncryptionException {
         byte[] signatureBytes = encrypt(text);
-        byte[] encodedBytes = Base64.encodeBase64(signatureBytes);
+        byte[] encodedBytes = Base64.getEncoder().encode(signatureBytes);
         return new String(encodedBytes);
     }
 
@@ -71,12 +71,17 @@ public class AESCrypto {
         Random ranGen = new SecureRandom();
         byte[] aesKey = new byte[16]; // 16 bytes = 128 bits
         ranGen.nextBytes(aesKey);
-        return new String(Base64.encodeBase64(aesKey));
+        return new String(Base64.getEncoder().encode(aesKey));
     }
 
     private Key generateKeyFromString(final String secKey) throws IOException {
-        final byte[] keyVal = new BASE64Decoder().decodeBuffer(secKey);
+
+        byte[] keyVal = Base64.getDecoder().decode(secKey);
         final Key key = new SecretKeySpec(keyVal, CRYPTOConstants.AES_ALGORITHM);
         return key;
+    }
+
+    public String getKey() {
+        return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 }

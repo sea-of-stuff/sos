@@ -17,6 +17,13 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
+ *
+ * From Wikipedia: https://en.wikipedia.org/wiki/Digital_signature
+ * A digital signature is a mathematical scheme for demonstrating the authenticity of digital messages or documents.
+ * A valid digital signature gives a recipient reason to believe that the message was created by a known sender (authentication),
+ * that the sender cannot deny having sent the message (non-repudiation), and that the message was not altered
+ * in transit (integrity).
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SignatureCrypto {

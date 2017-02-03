@@ -11,7 +11,6 @@ import static org.testng.Assert.assertEquals;
  */
 public class RSACryptoTest {
 
-
     @Test
     public void encryptStringTest() throws KeyGenerationException, EncryptionException {
 

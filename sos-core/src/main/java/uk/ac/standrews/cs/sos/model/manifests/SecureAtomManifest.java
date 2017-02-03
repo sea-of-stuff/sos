@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.crypto.AESCrypto;
+import uk.ac.standrews.cs.sos.utils.crypto.RSACrypto;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -20,6 +21,9 @@ import java.util.Set;
  */
 public class SecureAtomManifest extends AtomManifest {
 
+
+    RSACrypto rsa; // TODO - generate them only once or once per ROLE?
+
     /**
      * Creates a valid atom manifest given an atom.
      *
@@ -29,6 +33,12 @@ public class SecureAtomManifest extends AtomManifest {
     public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations) {
         super(guid, locations);
 
+        rsa = new RSACrypto();
+        try {
+            rsa.generateKeys();
+        } catch (KeyGenerationException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -41,13 +51,13 @@ public class SecureAtomManifest extends AtomManifest {
 
         try {
             AESCrypto aes = new AESCrypto();
-            aes.generateKeys();
+            aes.generateKey();
             String encryptedData = aes.encrypt64(data);
 
             // Encrypt key
+            String encryptedKey = rsa.encrypt64(aes.getKey());
 
-
-            IGUID guid = GUIDFactory.generateGUID(encryptedData);
+            IGUID encryptedDataGUID = GUIDFactory.generateGUID(encryptedData);
 
         } catch (KeyGenerationException e) {
             e.printStackTrace();
