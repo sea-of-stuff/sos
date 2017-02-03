@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.utils;
+package uk.ac.standrews.cs.sos.utils.crypto;
 
 import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
@@ -19,7 +19,7 @@ import java.security.spec.X509EncodedKeySpec;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CRYPTOSignature {
+public class SignatureCrypto {
 
     private PublicKey publicKey;
     private PrivateKey privateKey;
@@ -39,7 +39,7 @@ public class CRYPTOSignature {
         KeyPair pair;
         try {
             KeyPairGenerator keyGen = KeyPairGenerator
-                    .getInstance(CRYPTOConstants.KEYS_ALGORITHM,
+                    .getInstance(CRYPTOConstants.DSA_ALGORITHM,
                             CRYPTOConstants.PROVIDER);
             SecureRandom random = SecureRandom
                     .getInstance(CRYPTOConstants.SECURE_RANDOM_ALGORITHM,
@@ -94,7 +94,7 @@ public class CRYPTOSignature {
             keyfis.read(data);
 
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(CRYPTOConstants.KEYS_ALGORITHM);
+            KeyFactory kf = KeyFactory.getInstance(CRYPTOConstants.DSA_ALGORITHM);
             privateKey = kf.generatePrivate(keySpec);
 
         } catch (IOException e) {
@@ -115,7 +115,7 @@ public class CRYPTOSignature {
 
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(data);
             KeyFactory kf = KeyFactory
-                    .getInstance(CRYPTOConstants.KEYS_ALGORITHM,
+                    .getInstance(CRYPTOConstants.DSA_ALGORITHM,
                             CRYPTOConstants.PROVIDER);
             publicKey = kf.generatePublic(keySpec);
 

@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.utils.CRYPTOSignature;
+import uk.ac.standrews.cs.sos.utils.crypto.SignatureCrypto;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class IdentityImpl implements Identity {
     public static final String PRIVATE_KEY_FILE = "private.pem";
     public static final String PUBLIC_KEY_FILE = "public.pem";
 
-    private CRYPTOSignature signature;
+    private SignatureCrypto signature;
 
     private File privateKeyFile;
     private File publicKeyFile;
@@ -35,7 +35,7 @@ public class IdentityImpl implements Identity {
      */
     public IdentityImpl(String keysFolderName) throws KeyGenerationException, KeyLoadedException {
 
-        signature = new CRYPTOSignature();
+        signature = new SignatureCrypto();
 
         privateKeyFile = new File(keysFolderName + "/" + PRIVATE_KEY_FILE);
         publicKeyFile = new File(keysFolderName + "/" + PUBLIC_KEY_FILE);

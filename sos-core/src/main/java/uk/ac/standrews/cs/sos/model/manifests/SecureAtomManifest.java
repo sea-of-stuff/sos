@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.utils.CRYPTOSignature;
+import uk.ac.standrews.cs.sos.utils.crypto.SignatureCrypto;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class SecureAtomManifest extends AtomManifest {
 
-    private CRYPTOSignature pubKey;
+    private SignatureCrypto pubKey;
 
     /**
      * Creates a valid atom manifest given an atom.
@@ -28,7 +28,7 @@ public class SecureAtomManifest extends AtomManifest {
 
         // SEE IdentityImpl
         // Generate key pair (private + public)
-        pubKey = new CRYPTOSignature();
+        pubKey = new SignatureCrypto();
         try {
             pubKey.generateKeys();
         } catch (KeyGenerationException e) {
