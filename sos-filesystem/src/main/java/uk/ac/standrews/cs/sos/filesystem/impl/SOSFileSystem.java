@@ -29,15 +29,15 @@ public class SOSFileSystem implements IFileSystem {
     private Agent sos;
     private IGUID invariant;
 
-    public SOSFileSystem(Agent sos, Asset root) {
+    public SOSFileSystem(Agent sos, Asset rootAsset) throws FileSystemCreationException {
         this.sos = sos;
-        this.invariant = root.getInvariantGUID();
+        this.invariant = rootAsset.getInvariantGUID();
 
         try {
-            SOSDirectory root_collection = new SOSDirectory(sos, root);
-            root_collection.persist();
+            SOSDirectory root = new SOSDirectory(sos, rootAsset);
+            root.persist();
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            throw new FileSystemCreationException();
         }
 
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - File System Created");
@@ -182,20 +182,23 @@ public class SOSFileSystem implements IFileSystem {
      * @param name name of the object that changed
      * @param object object changed
      * @throws PersistenceException
-     *
-     * TODO - test with more than 2-3 recursion, test with deletion
      */
     private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject object) throws PersistenceException {
+
+        // Base case for recursion
         if (parent == null) {
             return;
         }
 
+        // Update the parent directory
         SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
         directory.persist();
 
+        // Get the parent's parent directory
         SOSDirectory parentParent = (SOSDirectory) parent.getParent();
         String parentName = parent.getName();
 
+        // Update the parent's parent directory
         updateParent(parentParent, parentName, directory);
     }
 }

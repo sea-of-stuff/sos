@@ -20,8 +20,8 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -67,13 +67,13 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Asset addVersion(VersionBuilder versionBuilder)
+    public Asset addVersion(AssetBuilder assetBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
 
-        IGUID content = versionBuilder.getContent();
-        IGUID invariant = versionBuilder.getInvariant();
-        Set<IGUID> prevs = versionBuilder.getPreviousCollection();
-        IGUID metadata = versionBuilder.getMetadataCollection(); // Metadata was already calculated
+        IGUID content = assetBuilder.getContent();
+        IGUID invariant = assetBuilder.getInvariant();
+        Set<IGUID> prevs = assetBuilder.getPreviousCollection();
+        IGUID metadata = assetBuilder.getMetadataCollection(); // Metadata was already calculated
 
         AssetManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         addManifest(manifest, false);

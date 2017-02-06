@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionBuilder {
+public class AssetBuilder {
 
     private IGUID content;
     private SOSMetadata metadata;
@@ -20,11 +20,11 @@ public class VersionBuilder {
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;
 
-    public VersionBuilder(IGUID content) {
+    public AssetBuilder(IGUID content) {
         this.content = content;
     }
 
-    public VersionBuilder setInvariant(IGUID invariant) {
+    public AssetBuilder setInvariant(IGUID invariant) {
         if (!invariantIsSet) {
             this.invariant = invariant;
             invariantIsSet = true;
@@ -33,14 +33,14 @@ public class VersionBuilder {
         return this;
     }
 
-    public VersionBuilder setMetadata(SOSMetadata metadata) {
+    public AssetBuilder setMetadata(SOSMetadata metadata) {
         this.metadata = metadata;
         metadataIsSet = true;
 
         return this;
     }
 
-    public VersionBuilder setPrevious(Set<IGUID> previousCollection) {
+    public AssetBuilder setPrevious(Set<IGUID> previousCollection) {
         if (!prevIsSet) {
             this.previousCollection = previousCollection;
             prevIsSet = true;

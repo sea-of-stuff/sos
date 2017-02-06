@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.Error;
 
@@ -79,6 +79,16 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     }
 
+    /**
+     * Create a directory object containing a named object
+     *
+     * If the directory already contains an element with the same name, then the old object will be replaced with the new one
+     *
+     * @param sos
+     * @param previous previous version of this directory
+     * @param name of the object
+     * @param object object contained in this directory
+     */
     public SOSDirectory(Agent sos, SOSDirectory previous, String name, SOSFileSystemObject object) {
         super(sos);
 
@@ -89,16 +99,16 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
             compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
-            boolean previousVersionDiffers = checkPreviousDiffers(compound.getContentGUID());
+            boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
             if (previousVersionDiffers) {
 
                 Set<IGUID> previousVersion = new LinkedHashSet<>();
                 previousVersion.add(previous.getAsset().getVersionGUID());
-                VersionBuilder versionBuilder = new VersionBuilder(compound.getContentGUID())
+                AssetBuilder assetBuilder = new AssetBuilder(compound.getContentGUID())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
 
-                asset = sos.addVersion(versionBuilder);
+                asset = sos.addVersion(assetBuilder);
 
                 this.guid = asset.guid();
                 this.previous = previous;

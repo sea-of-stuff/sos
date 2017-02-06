@@ -22,8 +22,8 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.utils.Error;
@@ -40,8 +40,18 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     private boolean isCompoundData;
     private Atom atom;
+
+    // References to multiple atoms, in case a file is de-composed in multiple atoms
     private Set<Content> atoms;
 
+    /**
+     * Create a file object inside a parent directory and with some data
+     *
+     * @param sos
+     * @param parent containing the new file
+     * @param data for the file
+     * @throws PersistenceException
+     */
     public SOSFile(Agent sos, SOSDirectory parent, IData data) throws PersistenceException {
         super(sos, data);
         this.parent = parent;
@@ -54,9 +64,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             atom = sos.addAtom(builder);
             metadata = sos.addMetadata(atom);
 
-            VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
-                    .setMetadata(metadata);
-            asset = sos.addVersion(versionBuilder);
+            AssetBuilder assetBuilder = new AssetBuilder(atom.getContentGUID()).setMetadata(metadata);
+            asset = sos.addVersion(assetBuilder);
 
             this.guid = asset.guid();
         } catch (StorageException | IOException |
@@ -109,17 +118,17 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             atom = sos.addAtom(builder);
             metadata = sos.addMetadata(atom);
 
-            boolean previousVersionDiffers = checkPreviousDiffers(atom.getContentGUID());
+            boolean previousVersionDiffers = previousAssetDiffers(atom.getContentGUID());
             if (previousVersionDiffers) {
 
                 Set<IGUID> previousVersion = new LinkedHashSet<>();
                 previousVersion.add(previous.getAsset().getVersionGUID());
-                VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
+                AssetBuilder assetBuilder = new AssetBuilder(atom.getContentGUID())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion)
                         .setMetadata(metadata);
 
-                asset = sos.addVersion(versionBuilder);
+                asset = sos.addVersion(assetBuilder);
 
                 this.guid = asset.guid();
                 this.previous = previous;

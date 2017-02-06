@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
-import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +28,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected Asset asset;
     protected SOSDirectory parent;
-    protected SOSFileSystemObject previous; // TODO - make collection (e.g. merging)
+    protected SOSFileSystemObject previous; // TODO - make collection (e.g. for merging)
     protected SOSMetadata metadata;
 
     public SOSFileSystemObject(Agent sos) {
@@ -55,13 +55,13 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     public void persist() throws PersistenceException {
         try {
             IGUID contentGUID = getContentGUID();
-            boolean previousVersionDiffers = checkPreviousDiffers(contentGUID);
+            boolean previousVersionDiffers = previousAssetDiffers(contentGUID);
 
             if (previousVersionDiffers) {
-                VersionBuilder builder = getVersionBuilder(contentGUID);
+                AssetBuilder builder = getAssetBuilder(contentGUID);
                 asset = sos.addVersion(builder);
 
-                if (assetIsWebdavRoot(asset)) {
+                if (assetIsWebDAVRoot(asset)) {
                     SOSFileSystemFactory.WriteCurrentVersion(asset.getInvariantGUID(), asset.getVersionGUID());
                 }
 
@@ -76,11 +76,10 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
         }
     }
 
-    private boolean assetIsWebdavRoot(Asset asset) {
+    private boolean assetIsWebDAVRoot(Asset asset) {
         File file = new File(SOSFileSystemFactory.WEBDAV_CURRENT_PATH + asset.getInvariantGUID());
         return file.exists();
     }
-
 
     @Override
     public Set<IGUID> getPrevious() {
@@ -99,7 +98,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     // MUST BE IMPLEMENTED by subclasses
     protected IGUID getContentGUID() { return null; }
 
-    protected boolean checkPreviousDiffers(IGUID contentGUID) {
+    protected boolean previousAssetDiffers(IGUID contentGUID) {
         if (previous != null) {
             IGUID previousContentGUID = previous.getAsset().getContentGUID();
             return !previousContentGUID.equals(contentGUID);
@@ -108,9 +107,14 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
         return true;
     }
 
-    // this is a bad way of dealing with previous references.
-    // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
-    private VersionBuilder getVersionBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
+    // Get a asset builder for an asset with the specified content GUID
+    private AssetBuilder getAssetBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
+
+        AssetBuilder builder = new AssetBuilder(contentGUID);
+
+        if (asset != null) {
+            builder.setInvariant(asset.getInvariantGUID());
+        }
 
         Set<IGUID> prevs = new LinkedHashSet<>();
         if (previous != null) {
@@ -118,12 +122,6 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
             prevs.add(versionGUID);
         } else if (asset != null && asset.getPreviousVersions() != null) {
             prevs.addAll(asset.getPreviousVersions());
-        }
-
-        VersionBuilder builder = new VersionBuilder(contentGUID);
-
-        if (asset != null) {
-            builder.setInvariant(asset.getInvariantGUID());
         }
 
         if (prevs.size() > 0) {

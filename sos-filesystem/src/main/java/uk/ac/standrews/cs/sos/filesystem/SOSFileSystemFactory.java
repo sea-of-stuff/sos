@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.*;
@@ -54,12 +54,16 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     public IFileSystem makeFileSystem(Agent agent) throws FileSystemCreationException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
-        if (agent != null) {
-            // Create directories for Webdav info
-            File dir = new File(WEBDAV_CURRENT_PATH);
-            dir.mkdirs();
+        // Create directories for Webdav info
+        File dir = new File(WEBDAV_CURRENT_PATH);
+        dir.mkdirs();
 
-            Asset rootAsset = createRoot(agent);
+        if (agent != null) {
+            Asset rootAsset = getRoot(agent, rootGUID);
+            if (rootAsset == null) {
+                rootAsset = createRoot(agent);
+            }
+
             return new SOSFileSystem(agent, rootAsset);
         } else {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
@@ -67,26 +71,23 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         }
     }
 
-    private Asset createRoot(Agent sos) {
-        Asset retval = getRoot(sos, rootGUID);
+    private Asset createRoot(Agent sos) throws FileSystemCreationException {
 
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
-        if (retval == null) {
-            try {
-                Compound compound = createRootCompound(sos);
-                IGUID compoundGUID = compound.getContentGUID();
-                VersionBuilder builder = new VersionBuilder(compoundGUID).setInvariant(rootGUID);
+        try {
+            Compound compound = createRootCompound(sos);
+            IGUID compoundGUID = compound.getContentGUID();
+            AssetBuilder builder = new AssetBuilder(compoundGUID).setInvariant(rootGUID);
 
-                retval = sos.addVersion(builder);
-                IGUID versionGUID = retval.getVersionGUID();
+            Asset retval = sos.addVersion(builder);
+            IGUID versionGUID = retval.getVersionGUID();
 
-                WriteCurrentVersion(rootGUID, versionGUID);
-            } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            WriteCurrentVersion(rootGUID, versionGUID);
+
+            return retval;
+        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
+            throw new FileSystemCreationException("WEBDAV - Unable to create Root Asset");
         }
 
-        return retval;
     }
 
     public static Asset getRoot(Agent sos, IGUID root) {
@@ -95,11 +96,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             IGUID version = ReadCurrentVersion(root);
             retval = (Asset) sos.getManifest(version);
 
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ManifestNotFoundException e) {
+        } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -117,7 +114,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         }
     }
 
-    public static IGUID ReadCurrentVersion(IGUID invariant) throws IOException, GUIDGenerationException {
+    private static IGUID ReadCurrentVersion(IGUID invariant) throws IOException, GUIDGenerationException {
 
         try(BufferedReader Buff = new BufferedReader(new FileReader(WEBDAV_CURRENT_PATH + invariant))) {
             String text = Buff.readLine();
