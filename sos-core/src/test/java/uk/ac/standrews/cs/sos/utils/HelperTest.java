@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -28,6 +29,11 @@ public class HelperTest {
 
     public static String InputStreamToString(InputStream string) throws IOException {
         return IOUtils.toString(string, StandardCharsets.UTF_8);
+    }
+
+    public static String InputStreamToString64(InputStream stream) throws IOException {
+        byte[] encodedBytes = Base64.getEncoder().encode(IOUtils.toByteArray(stream));
+        return new String(encodedBytes);
     }
 
     private static String localURItoPath(Location location) throws URISyntaxException {

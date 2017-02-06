@@ -5,8 +5,10 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -46,15 +48,28 @@ public class AESCrypto {
         return new String(encodedBytes);
     }
 
-    private byte[] decrypt(String text) {
+    public InputStream encryptStream(InputStream inputStream) {
+
+        try {
+            final Cipher cipher = Cipher.getInstance(CRYPTOConstants.AES_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            CipherInputStream cipherInputStream = new CipherInputStream(inputStream, cipher);
+            return cipherInputStream;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public byte[] decrypt(byte[] text) {
         byte[] cipherText = null;
         try {
             final Cipher cipher = Cipher.getInstance(CRYPTOConstants.AES_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, key);
 
-            final byte[] decorVal = new BASE64Decoder().decodeBuffer(text);
-
-            cipherText = cipher.doFinal(decorVal);
+            cipherText = cipher.doFinal(text);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,8 +77,24 @@ public class AESCrypto {
         return cipherText;
     }
 
-    public String decryptToString(String text) {
-        return new String(decrypt(text));
+    public String decrypt64(String text) throws IOException {
+        final byte[] decorVal = new BASE64Decoder().decodeBuffer(text);
+        return new String(decrypt(decorVal));
+    }
+
+    public InputStream decryptStream(InputStream inputStream) {
+
+        try {
+            final Cipher cipher = Cipher.getInstance(CRYPTOConstants.AES_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+
+            CipherInputStream cipherInputStream = new CipherInputStream(inputStream, cipher);
+            return cipherInputStream;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     // http://www.javamex.com/tutorials/random_numbers/securerandom.shtml
