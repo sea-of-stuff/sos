@@ -73,7 +73,7 @@ public interface Agent {
      * @throws ManifestPersistException
      *
      */
-    Asset addVersion(AssetBuilder assetBuilder) throws ManifestNotMadeException, ManifestPersistException;
+    Asset addAsset(AssetBuilder assetBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
 
     /**

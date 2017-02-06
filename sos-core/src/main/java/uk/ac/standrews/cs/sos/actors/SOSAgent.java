@@ -67,7 +67,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Asset addVersion(AssetBuilder assetBuilder)
+    public Asset addAsset(AssetBuilder assetBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
 
         IGUID content = assetBuilder.getContent();

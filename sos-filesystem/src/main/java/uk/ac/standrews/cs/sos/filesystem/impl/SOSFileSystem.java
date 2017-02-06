@@ -96,12 +96,15 @@ public class SOSFileSystem implements IFileSystem {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name);
 
         try {
+            // Create new parent object without child
             parent.remove(name);
             parent.persist();
 
+            // Parent's parent
             SOSDirectory parentParent = (SOSDirectory) parent.getParent();
             String parentName = parent.getName();
 
+            // Update tree updward
             updateParent(parentParent, parentName, (SOSDirectory) parent);
         } catch (PersistenceException e) {
             e.printStackTrace();
@@ -155,7 +158,6 @@ public class SOSFileSystem implements IFileSystem {
 
             String name = (String) iterator.next();
             object = parent.get(name);
-
             if (object == null) {
                 return null;  // No object with the current name.
             }

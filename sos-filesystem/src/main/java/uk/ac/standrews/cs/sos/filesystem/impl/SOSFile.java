@@ -54,6 +54,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      */
     public SOSFile(Agent sos, SOSDirectory parent, IData data) throws PersistenceException {
         super(sos, data);
+
         this.parent = parent;
         this.isCompoundData = false;
 
@@ -61,15 +62,14 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             InputStream stream = data.getInputStream();
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
 
-            atom = sos.addAtom(builder);
-            metadata = sos.addMetadata(atom);
+            atom = sos.addAtom(builder); // Atom is saved and manifest returned by the SOS
+            metadata = sos.addMetadata(atom); // Metadata is generated, saved and returned by the SOS
 
             AssetBuilder assetBuilder = new AssetBuilder(atom.getContentGUID()).setMetadata(metadata);
-            asset = sos.addVersion(assetBuilder);
+            asset = sos.addAsset(assetBuilder);
 
             this.guid = asset.guid();
-        } catch (StorageException | IOException |
-                ManifestPersistException e) {
+        } catch (StorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         } catch (ManifestNotMadeException | MetadataException e) {
             e.printStackTrace();
@@ -128,7 +128,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
                         .setPrevious(previousVersion)
                         .setMetadata(metadata);
 
-                asset = sos.addVersion(assetBuilder);
+                asset = sos.addAsset(assetBuilder);
 
                 this.guid = asset.guid();
                 this.previous = previous;

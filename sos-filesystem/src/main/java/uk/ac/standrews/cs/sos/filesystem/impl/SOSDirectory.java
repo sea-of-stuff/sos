@@ -108,7 +108,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
 
-                asset = sos.addVersion(assetBuilder);
+                asset = sos.addAsset(assetBuilder);
 
                 this.guid = asset.guid();
                 this.previous = previous;

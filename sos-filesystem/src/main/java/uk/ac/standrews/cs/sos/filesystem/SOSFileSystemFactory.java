@@ -78,7 +78,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             IGUID compoundGUID = compound.getContentGUID();
             AssetBuilder builder = new AssetBuilder(compoundGUID).setInvariant(rootGUID);
 
-            Asset retval = sos.addVersion(builder);
+            Asset retval = sos.addAsset(builder);
             IGUID versionGUID = retval.getVersionGUID();
 
             WriteCurrentVersion(rootGUID, versionGUID);

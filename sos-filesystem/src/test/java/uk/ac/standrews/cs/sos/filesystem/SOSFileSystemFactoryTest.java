@@ -66,7 +66,7 @@ public class SOSFileSystemFactoryTest {
         IGUID contentsGUID = GUIDFactory.generateRandomGUID();
 
         when(mockAgent.addCompound(any(), anySetOf(Content.class))).thenReturn(mockRootFolder);
-        when(mockAgent.addVersion(any())).thenReturn(mockRootAsset);
+        when(mockAgent.addAsset(any())).thenReturn(mockRootAsset);
 
         when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());
         when(mockRootAsset.getInvariantGUID()).thenReturn(guid);

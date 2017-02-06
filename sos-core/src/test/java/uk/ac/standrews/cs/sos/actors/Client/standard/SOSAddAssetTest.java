@@ -42,7 +42,7 @@ public class SOSAddAssetTest extends AgentTest {
         Compound compound = agent.addCompound(CompoundType.DATA, contents);
 
         AssetBuilder builder = new AssetBuilder(compound.getContentGUID());
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
@@ -72,7 +72,7 @@ public class SOSAddAssetTest extends AgentTest {
                 .setInvariant(invariant)
                 .setPrevious(prevs)
                 .setMetadata(metaMock);
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
@@ -99,7 +99,7 @@ public class SOSAddAssetTest extends AgentTest {
         Compound compound = agent.addCompound(CompoundType.DATA, contents);
 
         AssetBuilder builder = new AssetBuilder(compound.getContentGUID());
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
 
         assertTrue(agent.verifyManifest(localSOSNode.getIdentity(), retrievedManifest));
@@ -112,7 +112,7 @@ public class SOSAddAssetTest extends AgentTest {
         Atom atom = agent.addAtom(atomBuilder);
 
         AssetBuilder builder = new AssetBuilder(atom.guid());
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
@@ -132,7 +132,7 @@ public class SOSAddAssetTest extends AgentTest {
 
         AssetBuilder builder = new AssetBuilder(atom.guid())
                 .setMetadata(metadata);
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
@@ -151,7 +151,7 @@ public class SOSAddAssetTest extends AgentTest {
 
         AssetBuilder builder = new AssetBuilder(atom.guid())
                 .setMetadata(metadata);
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
@@ -170,7 +170,7 @@ public class SOSAddAssetTest extends AgentTest {
 
         AssetBuilder builder = new AssetBuilder(atom.guid())
                 .setMetadata(metadata);
-        Asset manifest = agent.addVersion(builder);
+        Asset manifest = agent.addAsset(builder);
         Assert.assertEquals(manifest.getManifestType(), ManifestType.ASSET);
 
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());

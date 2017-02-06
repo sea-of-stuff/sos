@@ -59,7 +59,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
             if (previousVersionDiffers) {
                 AssetBuilder builder = getAssetBuilder(contentGUID);
-                asset = sos.addVersion(builder);
+                asset = sos.addAsset(builder);
 
                 if (assetIsWebDAVRoot(asset)) {
                     SOSFileSystemFactory.WriteCurrentVersion(asset.getInvariantGUID(), asset.getVersionGUID());
