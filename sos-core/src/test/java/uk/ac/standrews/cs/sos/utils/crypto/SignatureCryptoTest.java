@@ -1,17 +1,10 @@
-package uk.ac.standrews.cs.sos.model.identity;
+package uk.ac.standrews.cs.sos.utils.crypto;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-
-import java.io.File;
-import java.lang.reflect.Method;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -19,7 +12,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class IdentityImplKeysTest extends CommonTest {
+public class SignatureCryptoTest {
 
     private final static String BYTES_3K = "c1 c3 c0 86 da 82 92 ea 9a 59 94 a1 fe a5 30 3a \n"+
             "bb 10 13 ec 8c 0e 6d f6 be bb c3 34 dd f3 de 3b \n"+
@@ -86,44 +79,38 @@ public class IdentityImplKeysTest extends CommonTest {
             "1a 48 7f ab 37 87 56 e9 c5 c0 1d c7 d6 72 ff bb \n"+
             "03 31 41 d0 4f 6a fa 26 07 01 88 6e 23 52 77 60 \n";
 
-    @BeforeMethod
-    public void setUp(Method testMethod) throws Exception {
-        super.setUp(testMethod);
-
-        deleteKeys(); // Delete any left over keys from past
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        deleteKeys();
+    @Test
+    public void testPublicKeyExists() throws KeyGenerationException, KeyLoadedException {
+        SignatureCrypto signature = new SignatureCrypto();
+        signature.generateKeys();
+        assertNotNull(signature.getPublicKey());
     }
 
     @Test
-    public void testPublicKeyLoadedExists() throws KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl();
-        assertNotNull(identity.getPublicKey());
+    public void testEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
+        SignatureCrypto signature = new SignatureCrypto();
+        signature.generateKeys();
 
-        identity = new IdentityImpl();
-        assertNotNull(identity.getPublicKey());
+        String signed = signature.sign64("hello");
+        assertTrue(signature.verify64("hello", signed));
     }
 
     @Test
-    public void testLoadedKeyEncryptDecrypt() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
-        Identity identity = new IdentityImpl();
-        Identity identityLoaded = new IdentityImpl();
+    public void testEncryptDecryptBytes() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
+        SignatureCrypto signature = new SignatureCrypto();
+        signature.generateKeys();
 
-        String signature = identity.sign("hello");
-        assertTrue(identityLoaded.verify("hello", signature));
+        byte[] signed = signature.sign("hello");
+        assertTrue(signature.verify("hello", signed));
     }
 
-    private void deleteKeys() {
-        String keysFolderPath = System.getProperty("user.home") + "/sos/keys";
+    @Test
+    public void testEncryptDecryptLongData() throws EncryptionException, DecryptionException, KeyGenerationException, KeyLoadedException {
+        SignatureCrypto signature = new SignatureCrypto();
+        signature.generateKeys();
 
-        File privKey = new File(keysFolderPath + "/" + IdentityImpl.PRIVATE_KEY_FILE);
-        File pubkey = new File(keysFolderPath + "/"  + IdentityImpl.PUBLIC_KEY_FILE);
-
-        privKey.delete();
-        pubkey.delete();
+        String signed = signature.sign64(BYTES_3K);
+        assertTrue(signature.verify64(BYTES_3K, signed));
     }
 
 }

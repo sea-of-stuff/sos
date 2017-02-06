@@ -7,6 +7,10 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
  */
 public class IdentityException extends SOSException {
 
+    public IdentityException(String message) {
+        super(message);
+    }
+
     public IdentityException(Throwable throwable) {
         super(throwable);
     }

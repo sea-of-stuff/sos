@@ -43,4 +43,12 @@ public class FileHelper {
         if (parent != null)
             parent.mkdirs();
     }
+
+    public static java.io.File MakeFile(java.io.File file) throws IOException {
+
+        MakePath(file.getPath());
+        file.createNewFile();
+
+        return file;
+    }
 }

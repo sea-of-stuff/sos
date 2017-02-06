@@ -87,29 +87,15 @@ public class IdentityImpl implements Identity {
     private void generateKeys() throws KeyGenerationException {
         signature.generateKeys();
 
-        File privateKFile = createKeyFile(privateKeyFile);
-        File publicKFile = createKeyFile(publicKeyFile);
-
-        signature.saveToFile(privateKFile, publicKFile);
+        try {
+            signature.saveToFile(privateKeyFile, publicKeyFile);
+        } catch (IOException e) {
+            throw new KeyGenerationException("Unable to save keys");
+        }
     }
 
     private void loadKeys() throws KeyLoadedException {
         signature.loadKeys(privateKeyFile, publicKeyFile);
-    }
-
-    // Create files to storeLocation public and private key
-    private File createKeyFile(File file) throws KeyGenerationException {
-
-        if (file.getParentFile() != null) {
-            file.getParentFile().mkdirs();
-        }
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new KeyGenerationException("Could not save key to file", e);
-        }
-
-        return file;
     }
 
     @Override

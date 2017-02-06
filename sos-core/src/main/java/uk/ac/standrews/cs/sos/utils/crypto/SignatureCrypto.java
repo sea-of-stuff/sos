@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,12 +46,8 @@ public class SignatureCrypto {
     private KeyPair generateKeyPair() throws KeyGenerationException {
         KeyPair pair;
         try {
-            KeyPairGenerator keyGen = KeyPairGenerator
-                    .getInstance(CRYPTOConstants.DSA_ALGORITHM,
-                            CRYPTOConstants.PROVIDER);
-            SecureRandom random = SecureRandom
-                    .getInstance(CRYPTOConstants.SECURE_RANDOM_ALGORITHM,
-                            CRYPTOConstants.SECURE_RANDOM_PROVIDER);
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(CRYPTOConstants.DSA_ALGORITHM, CRYPTOConstants.PROVIDER);
+            SecureRandom random = SecureRandom.getInstance(CRYPTOConstants.SECURE_RANDOM_ALGORITHM, CRYPTOConstants.SECURE_RANDOM_PROVIDER);
 
             keyGen.initialize(CRYPTOConstants.KEY_SIZE, random);
             pair = keyGen.generateKeyPair();
@@ -64,22 +61,24 @@ public class SignatureCrypto {
         return pair;
     }
 
-    public void saveToFile(File privateKeyFile, File publicKeyFile) {
-        saveKeyToFile(privateKeyFile,
-                new PKCS8EncodedKeySpec(
-                        privateKey.getEncoded()));
+    public void saveToFile(File privateKeyFile, File publicKeyFile) throws IOException {
 
-        saveKeyToFile(publicKeyFile,
-                new X509EncodedKeySpec(
-                        publicKey.getEncoded()));
+        if (!privateKeyFile.exists()) {
+            FileHelper.MakeFile(privateKeyFile);
+        }
+
+        if (!publicKeyFile.exists()) {
+            FileHelper.MakeFile(publicKeyFile);
+        }
+
+        saveKeyToFile(privateKeyFile, new PKCS8EncodedKeySpec(privateKey.getEncoded()));
+        saveKeyToFile(publicKeyFile, new X509EncodedKeySpec(publicKey.getEncoded()));
     }
 
     private void saveKeyToFile(File file, EncodedKeySpec key) {
 
         byte[] byteKey = key.getEncoded();
-
-        try (FileOutputStream fileOutputStream =
-                     new FileOutputStream(file)) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
 
             fileOutputStream.write(byteKey);
 
@@ -121,9 +120,7 @@ public class SignatureCrypto {
             keyfis.read(data);
 
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory
-                    .getInstance(CRYPTOConstants.DSA_ALGORITHM,
-                            CRYPTOConstants.PROVIDER);
+            KeyFactory kf = KeyFactory.getInstance(CRYPTOConstants.DSA_ALGORITHM, CRYPTOConstants.PROVIDER);
             publicKey = kf.generatePublic(keySpec);
 
         } catch (IOException e) {
@@ -146,9 +143,7 @@ public class SignatureCrypto {
     public byte[] sign(String text) throws EncryptionException {
         byte[] retval;
         try {
-            Signature signature = Signature
-                    .getInstance(CRYPTOConstants.SIGNATURE_ALGORITHM,
-                            CRYPTOConstants.PROVIDER);
+            Signature signature = Signature.getInstance(CRYPTOConstants.SIGNATURE_ALGORITHM, CRYPTOConstants.PROVIDER);
 
             signature.initSign(privateKey);
             signature.update(text.getBytes());
@@ -176,9 +171,7 @@ public class SignatureCrypto {
     public boolean verify(String text, byte[] signatureToVerify) throws DecryptionException {
         boolean isValid;
         try {
-            Signature signature = Signature
-                    .getInstance(CRYPTOConstants.SIGNATURE_ALGORITHM,
-                            CRYPTOConstants.PROVIDER);
+            Signature signature = Signature.getInstance(CRYPTOConstants.SIGNATURE_ALGORITHM, CRYPTOConstants.PROVIDER);
             signature.initVerify(publicKey);
             signature.update(text.getBytes());
             isValid = signature.verify(signatureToVerify);
@@ -193,7 +186,6 @@ public class SignatureCrypto {
     }
 
     public boolean verify64(String text, String signature) throws DecryptionException {
-
         byte[] decodedBytes = Base64.decodeBase64(signature);
         return verify(text, decodedBytes);
     }
