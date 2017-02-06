@@ -15,16 +15,33 @@ import static org.testng.Assert.assertEquals;
  */
 public class AESCryptoTest {
 
-    private final String TEST_INPUT = "\n" +
-            "02-02-2017 09:14:44 [ INFO  ] -  uk.ac.nomad.tracker.FileListener  ( 53450652 [Thread-1] ) ==> ===============================================================\n" +
-            "02-02-2017 09:14:44 [ INFO  ] -  uk.ac.nomad.tracker.FileListener  ( 53450652 [Thread-1] ) ==> File /argon/data/marcus/status/status.html.tmp was modified\n" +
-            "02-02-2017 09:14:44 [ INFO  ] -  uk.ac.nomad.tracker.FileListener  ( 53450652 [Thread-1] ) ==> File /argon/data/marcus/status/status.html.tmp won't be tracked\n" +
-            "02-02-2017 09:20:09 [ INFO  ] -  uk.ac.nomad.tracker.FileListener  ( 53774958 [Thread-1] ) ==> ===============================================================\n" +
-            "02-02-2017 09:20:09 [ INFO  ] -  uk.ac.nomad.tracker.FileListener  ( 53774958 [Thread-1] ) ==> File /argon/data/marcus/status/status.html was modified\n" +
-            "02-02-2017 09:20:09 [ INFO  ] -  uk.ac.nomad.tracker.FileListener  ( 53774958 [Thread-1] ) ==> Starting to track file /argon/data/marcus/status/status.html\n" +
-            "02-02-2017 09:20:09 [ INFO  ] -  uk.ac.nomad.tracker.parsers.STAParser  ( 53775046 [Thread-1] ) ==> Starting to read Setup Table entries\n" +
-            "02-02-2017 09:20:09 [ INFO  ] -  uk.ac.nomad.tracker.parsers.STAParser  ( 53775046 [Thread-1] ) ==> Finished to read Setup Table entries\n" +
-            "02-02-2017 09:20:09 [ INFO  ] -  uk.ac.nomad.tracker.parsers.STAParser  ( 53775046 [Thread-1] ) ==> Sta";
+    private final String TEST_INPUT = "" +
+            "It is crucial for programmers to understand how long a certain operation takes in and out of a computer. For example, fetching a word from cache, memory, disk, and from other computers.\n" +
+            "Inspired by Teach Yourself Programming in Ten Years, I would like to discuss this in a little more detail. (Most information is taken from here)\n" +
+            "\n" +
+            "The analogy is:\n" +
+            "\n" +
+            "L1 Cache - There is a sandwich in front of you.\n" +
+            "L2 Cache - Walk to the kitchen and make a sandwich\n" +
+            "RAM - Drive to the store, purchase sandwich fixings, drive home and make sandwich\n" +
+            "Hard Drive - Drive to the store. purchase seeds. grow seeds, harvest lettuce, wheat, etc. Make sandwich.\n" +
+            "To be more specific:\n" +
+            "\n" +
+            "Latency Comparisons\tNanosec\tMicrosec\tMillisec\n" +
+            "L1 cache reference\t0.5\t\t\n" +
+            "Branch mispredict\t5\t\t\n" +
+            "L2 cache reference\t7\t\t\n" +
+            "Mutex lock/unlock\t25\t\t\n" +
+            "Main memory reference\t100\t\t\n" +
+            "Compress 1K bytes with Zippy\t3,000\t3\t\n" +
+            "Send 1K bytes over 1 Gbps network\t10,000\t10\t\n" +
+            "Read 4K randomly from SSD\t150,000\t150\t\n" +
+            "Read 1 MB sequentially from memory\t250,000\t250\t\n" +
+            "Round trip within same datacenter\t500,000\t500\t\n" +
+            "Read 1 MB sequentially from SSD\t1,000,000\t1,000\t1\n" +
+            "Disk seek\t10,000,000\t10,000\t10\n" +
+            "Read 1 MB sequentially from disk\t20,000,000\t20,000\t20\n" +
+            "Send packet CA->Netherlands->CA\t150,000,000\t150,000\t150";
 
     private final String TEST_BASE = "TEST DATA";
 
