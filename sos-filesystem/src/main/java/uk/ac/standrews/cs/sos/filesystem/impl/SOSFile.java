@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
@@ -88,15 +89,28 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // this.guid = version.guid();
     }
 
-    public SOSFile(Agent sos, Asset asset, Atom atom) {
+    /**
+     * Use this constructor to make a File reference.
+     * That is, the file and the data are already in the SOS, but we need to get a handle for it.
+     *
+     * @param sos
+     * @param asset for this atom
+     */
+    public SOSFile(Agent sos, Asset asset) {
         super(sos);
+        this.isCompoundData = false;
 
         this.asset = asset;
-        this.atom = atom;
+
+        IGUID contentGUID = asset.getContentGUID();
+        try {
+            this.atom = (Atom) sos.getManifest(contentGUID);
+        } catch (ManifestNotFoundException e) {
+            SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get atom content for GUID " + contentGUID);
+        }
 
         IGUID meta = asset.getMetadata();
         if (meta != null && !meta.isInvalid()) {
-
             try {
                 this.metadata = sos.getMetadata(meta);
             } catch (MetadataNotFoundException e) {
@@ -221,6 +235,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     }
 
 
+    // NOTE: this method seems to be called a lot of times, thus slowing down a bit of everything
     // this will differ based on whether it is a single atom or a compound of atoms sos.getData(guid);
     // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
     @Override
@@ -231,7 +246,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             String s_size = metadata.getProperty("Size").trim();
             size = (int) Long.parseLong(s_size);
         }
-
 
         try (InputStream stream = sos.getAtomContent(atom)){
 

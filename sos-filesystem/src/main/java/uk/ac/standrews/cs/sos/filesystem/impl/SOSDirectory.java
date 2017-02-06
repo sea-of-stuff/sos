@@ -113,7 +113,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.guid = asset.guid();
                 this.previous = previous;
             } else {
-                System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
+                System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory?");
                 this.previous = previous.getPreviousDIR();
             }
 
@@ -226,7 +226,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             IGUID contentGUID = asset.getContentGUID();
             Manifest manifest = sos.getManifest(contentGUID);
             if (manifest instanceof Atom) {
-                return new SOSFile(sos, asset, (Atom) manifest);
+                return new SOSFile(sos, asset);
 
             } else if (manifest instanceof  Compound) {
                 return getCompoundObject(asset, (Compound) manifest);

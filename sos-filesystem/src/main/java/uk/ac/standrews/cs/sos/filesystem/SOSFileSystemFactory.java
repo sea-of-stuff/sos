@@ -96,9 +96,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             IGUID version = ReadCurrentVersion(root);
             retval = (Asset) sos.getManifest(version);
 
-        } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
+        } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) { /* Ignore */ }
 
         return retval;
     }
@@ -115,6 +113,11 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     private static IGUID ReadCurrentVersion(IGUID invariant) throws IOException, GUIDGenerationException {
+
+        File current = new File(WEBDAV_CURRENT_PATH + invariant);
+        if (!current.exists()) {
+            throw new IOException();
+        }
 
         try(BufferedReader Buff = new BufferedReader(new FileReader(WEBDAV_CURRENT_PATH + invariant))) {
             String text = Buff.readLine();
