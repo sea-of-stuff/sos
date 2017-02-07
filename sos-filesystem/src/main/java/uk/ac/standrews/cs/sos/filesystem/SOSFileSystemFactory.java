@@ -32,6 +32,8 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     private Agent agent;
     private IGUID rootGUID;
 
+    private static CurrentAsset currentAsset;
+
     public SOSFileSystemFactory(Agent agent, IGUID rootGUID) {
         this(rootGUID);
 
@@ -93,8 +95,12 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     public static Asset getRoot(Agent sos, IGUID root) {
         Asset retval = null;
         try {
-            IGUID version = ReadCurrentVersion(root);
-            retval = (Asset) sos.getManifest(version);
+            if (currentAsset == null) {
+                IGUID version = ReadCurrentVersion(root);
+                currentAsset = new CurrentAsset(root, version);
+            }
+
+            retval = (Asset) sos.getManifest(currentAsset.getVersion());
 
         } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) { /* Ignore */ }
 
@@ -106,6 +112,8 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     public static void WriteCurrentVersion(IGUID invariant, IGUID version) throws FileNotFoundException {
+
+        currentAsset = new CurrentAsset(invariant, version);
 
         try (PrintWriter out = new PrintWriter(WEBDAV_CURRENT_PATH + invariant)){
             out.println(version.toString());

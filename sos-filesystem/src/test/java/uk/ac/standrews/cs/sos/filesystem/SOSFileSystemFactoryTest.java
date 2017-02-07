@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.FileNotFoundException;
 import java.util.Collections;
 
 import static org.mockito.Matchers.any;
@@ -46,12 +47,15 @@ public class SOSFileSystemFactoryTest {
     }
 
     @Test
-    public void makeFileSystemTest() throws FileSystemCreationException, HEADNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException {
-        IGUID guid = GUIDFactory.generateRandomGUID();
+    public void makeFileSystemTest() throws FileSystemCreationException, HEADNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException {
+        IGUID invariant = GUIDFactory.generateRandomGUID();
         IGUID versionGUID = GUIDFactory.generateRandomGUID();
-        Agent mockAgent = mockAgent(guid, versionGUID);
 
-        SOSFileSystemFactory fileSystemFactory = new SOSFileSystemFactory(mockAgent, guid);
+        SOSFileSystemFactory.WriteCurrentVersion(invariant, versionGUID);
+
+        Agent mockAgent = mockAgent(invariant, versionGUID);
+
+        SOSFileSystemFactory fileSystemFactory = new SOSFileSystemFactory(mockAgent, invariant);
         IFileSystem fileSystem = fileSystemFactory.makeFileSystem();
 
         assertNotNull(fileSystem);
@@ -74,8 +78,7 @@ public class SOSFileSystemFactoryTest {
         when(mockRootAsset.getContentGUID()).thenReturn(contentsGUID);
 
         when(mockAgent.getManifest(contentsGUID)).thenReturn(mockRootFolder);
-
-        // FIXME mock static method in fs factory - when(mockAgent.getHEAD(guid)).thenReturn(mockRootAsset);
+        when(mockAgent.getManifest(versionGUID)).thenReturn(mockRootAsset);
 
         return mockAgent;
     }
