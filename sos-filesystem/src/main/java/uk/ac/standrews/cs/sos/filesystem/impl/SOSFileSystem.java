@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
@@ -147,7 +146,7 @@ public class SOSFileSystem implements IFileSystem {
     }
 
     @Override
-    public IAttributedStatefulObject resolveObject(URI uri) {
+    public IFileSystemObject resolveObject(URI uri) {
 
         Iterator iterator = UriUtil.pathElementIterator(uri);
         IDirectory parent = getRootDirectory();

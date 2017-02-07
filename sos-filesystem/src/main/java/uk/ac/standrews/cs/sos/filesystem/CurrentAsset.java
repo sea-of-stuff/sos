@@ -18,4 +18,8 @@ public class CurrentAsset {
     public IGUID getVersion() {
         return version;
     }
+
+    public IGUID getInvariant() {
+        return invariant;
+    }
 }

@@ -115,8 +115,8 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
         currentAsset = new CurrentAsset(invariant, version);
 
-        try (PrintWriter out = new PrintWriter(WEBDAV_CURRENT_PATH + invariant)){
-            out.println(version.toString());
+        try (PrintWriter out = new PrintWriter(WEBDAV_CURRENT_PATH + currentAsset.getInvariant())){
+            out.println(currentAsset.getVersion());
         }
     }
 

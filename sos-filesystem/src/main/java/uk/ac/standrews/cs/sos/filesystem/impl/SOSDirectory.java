@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -260,7 +259,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return (SOSDirectory) previous;
     }
 
-    private void addObject(String name, IAttributedStatefulObject object, IAttributes atts) throws BindingPresentException {
+    private void addObject(String name, IFileSystemObject object, IAttributes atts) throws BindingPresentException {
         if (contains(name)) {
             throw new BindingPresentException("Object already exists");
         } else {
