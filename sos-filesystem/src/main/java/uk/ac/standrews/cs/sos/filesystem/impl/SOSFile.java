@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
@@ -39,6 +38,8 @@ import java.util.Set;
  */
 public class SOSFile extends SOSFileSystemObject implements IFile {
 
+    private static final int DEFAULT_MAX_FILESIZE = 4096;
+
     private boolean isCompoundData;
     private Atom atom;
 
@@ -51,9 +52,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      * @param sos
      * @param parent containing the new file
      * @param data for the file
+     * @param previous
      * @throws PersistenceException
      */
-    public SOSFile(Agent sos, SOSDirectory parent, IData data) throws PersistenceException {
+    public SOSFile(Agent sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
         super(sos, data);
 
         this.parent = parent;
@@ -63,13 +65,30 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             InputStream stream = data.getInputStream();
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
 
-            atom = sos.addAtom(builder); // Atom is saved and manifest returned by the SOS
-            metadata = sos.addMetadata(atom); // Metadata is generated, saved and returned by the SOS
+            this.atom = sos.addAtom(builder); // Atom is saved and manifest returned by the SOS
+            this.metadata = sos.addMetadata(atom); // Metadata is generated, saved and returned by the SOS
 
             AssetBuilder assetBuilder = new AssetBuilder(atom.getContentGUID()).setMetadata(metadata);
-            asset = sos.addAsset(assetBuilder);
 
+            if (previous != null) {
+                boolean previousVersionDiffers = previousAssetDiffers(atom.getContentGUID());
+                if (previousVersionDiffers) {
+                    Set<IGUID> previousVersion = new LinkedHashSet<>();
+                    previousVersion.add(previous.getAsset().getVersionGUID());
+
+                    assetBuilder.setInvariant(previous.getInvariant())
+                            .setPrevious(previousVersion);
+
+                    this.previous = previous;
+                } else {
+                    System.out.println("WARN - This create an identical new object to previous. Can be optimised to occupy less memory");
+                    this.previous = previous.getPreviousObject();
+                }
+            }
+
+            this.asset = sos.addAsset(assetBuilder);
             this.guid = asset.guid();
+
         } catch (StorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         } catch (ManifestNotMadeException | MetadataException e) {
@@ -98,8 +117,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      */
     public SOSFile(Agent sos, Asset asset) {
         super(sos);
-        this.isCompoundData = false;
 
+        this.isCompoundData = false;
         this.asset = asset;
 
         IGUID contentGUID = asset.getContentGUID();
@@ -119,45 +138,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         }
 
         this.guid = asset.guid();
-    }
-
-    public SOSFile(Agent sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
-        super(sos, data);
-        this.parent = parent;
-        this.isCompoundData = false;
-
-        try {
-            InputStream stream = data.getInputStream();
-            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
-            atom = sos.addAtom(builder);
-            metadata = sos.addMetadata(atom);
-
-            boolean previousVersionDiffers = previousAssetDiffers(atom.getContentGUID());
-            if (previousVersionDiffers) {
-
-                Set<IGUID> previousVersion = new LinkedHashSet<>();
-                previousVersion.add(previous.getAsset().getVersionGUID());
-                AssetBuilder assetBuilder = new AssetBuilder(atom.getContentGUID())
-                        .setInvariant(previous.getInvariant())
-                        .setPrevious(previousVersion)
-                        .setMetadata(metadata);
-
-                asset = sos.addAsset(assetBuilder);
-
-                this.guid = asset.guid();
-                this.previous = previous;
-            } else {
-                System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
-                this.previous = previous.getPreviousFILE();
-            }
-
-        } catch (StorageException | IOException |
-                ManifestPersistException e) {
-            throw new PersistenceException("SOS atom could not be created");
-        } catch (ManifestNotMadeException | MetadataException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -180,7 +160,9 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     public long getCreationTime() throws AccessFailureException {
         long creationtime = 0;
 
-        if (metadata != null) {
+        // FIXME - we should probably get the timestamp of the first version, but it will be a complex operation,
+        // so for the moment we just take the timestamp of this asset version
+        if (metadata != null && metadata.hasProperty("Timestamp")) {
             String s_creationtime = metadata.getProperty("Timestamp").trim();
             creationtime = Long.parseLong(s_creationtime);
         }
@@ -192,7 +174,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     public long getModificationTime() throws AccessFailureException {
         long modtime = 0;
 
-        if (metadata != null) {
+        if (metadata != null && metadata.hasProperty("Timestamp")) {
             String s_modtime = metadata.getProperty("Timestamp").trim();
             modtime = Long.parseLong(s_modtime);
         }
@@ -200,11 +182,16 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         return Helper.UnixTimeToFileTime(modtime);
     }
 
+    /**
+     * This method is not implemented because SOS objects are immutable
+     * @param data
+     */
     @Override
     public void update(IData data) {
         throw new NotImplementedException();
     }
 
+    // TODO - add comment
     @Override
     public void append(IData data) {
         if (!isCompoundData)
@@ -241,34 +228,20 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     @Override
     public IData reify() {
 
-        int size = 0;
-        if (metadata != null) {
+        int size = DEFAULT_MAX_FILESIZE;
+        if (metadata != null && metadata.hasProperty("Size")) {
             String s_size = metadata.getProperty("Size").trim();
-            size = (int) Long.parseLong(s_size);
+            size = Integer.parseInt(s_size);
         }
 
         try (InputStream stream = sos.getAtomContent(atom)){
 
-            IData data = new InputStreamData(stream, size);
-            return data;
+            return new InputStreamData(stream, size);
         } catch (AtomNotFoundException | IOException e) {
             e.printStackTrace(); // TODO - define EmptyDATA() OBJECT
         }
 
         return null;
-    }
-
-    public SOSFile getPreviousFILE() {
-        return (SOSFile) previous;
-    }
-
-    public IDirectory getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(IDirectory parent) {
-        this.parent = (SOSDirectory) parent;
     }
 
 }

@@ -10,6 +10,8 @@ public interface SOSMetadata {
 
     String getProperty(String propertyName);
 
+    boolean hasProperty(String propertyName);
+
     String[] getAllPropertyNames();
 
     String[] getAllFilteredPropertyNames();

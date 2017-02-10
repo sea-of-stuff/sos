@@ -27,6 +27,11 @@ public class TikaMetadata extends AbstractMetadata implements SOSMetadata {
         return ignore ? null : tikaMetadata.get(propertyName);
     }
 
+    @Override
+    public boolean hasProperty(String propertyName) {
+        return getProperty(propertyName) != null;
+    }
+
     public void addProperty(String property, String value) {
         tikaMetadata.add(property, value);
     }

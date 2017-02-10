@@ -35,6 +35,11 @@ public class BasicMetadata extends AbstractMetadata implements SOSMetadata {
     }
 
     @Override
+    public boolean hasProperty(String propertyName) {
+        return metadata.containsKey(propertyName);
+    }
+
+    @Override
     public String[] getAllPropertyNames() {
         Set<String> keySet = metadata.keySet();
 

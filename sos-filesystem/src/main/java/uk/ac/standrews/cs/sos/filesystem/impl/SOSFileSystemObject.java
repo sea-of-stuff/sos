@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.filesystem.impl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
@@ -91,12 +92,23 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
         return asset.getInvariantGUID();
     }
 
+    @Override
+    public void setParent(IDirectory parent) {
+        this.parent = (SOSDirectory) parent;
+    }
+
+    public IDirectory getParent() {
+        return parent;
+    }
+
     public Asset getAsset() {
         return asset;
     }
 
     // MUST BE IMPLEMENTED by subclasses
-    protected IGUID getContentGUID() { return null; }
+    protected IGUID getContentGUID() {
+        return null;
+    }
 
     protected boolean previousAssetDiffers(IGUID contentGUID) {
         if (previous != null) {
@@ -105,6 +117,10 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
         }
 
         return true;
+    }
+
+    protected SOSFileSystemObject getPreviousObject() {
+        return previous;
     }
 
     // Get a asset builder for an asset with the specified content GUID

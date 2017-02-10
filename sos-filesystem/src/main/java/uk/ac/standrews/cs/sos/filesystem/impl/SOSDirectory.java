@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.filesystem.impl;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
@@ -52,17 +51,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     }
 
-    public SOSDirectory(Agent sos, Asset asset, Compound compound) {
-        super(sos);
-
-        contents = compound.getContents();
-        this.compound = compound;
-        this.asset = asset;
-
-        this.guid = asset.guid();
-    }
-
-    // Use this constructor for the root folder only
+    /**
+     * This constructor creates an SOSDirectory object from an already existing asset
+     *
+     * @param sos
+     * @param asset
+     */
     public SOSDirectory(Agent sos, Asset asset) {
         super(sos);
         this.asset = asset;
@@ -93,10 +87,10 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         try {
             this.name = previous.name;
-            contents = new LinkedHashSet<>(previous.getContents());
-            addOrUpdate(name, new Content(name, object.getGUID()));
+            this.contents = new LinkedHashSet<>(previous.getContents());
+            addOrUpdate(new Content(name, object.getGUID()));
 
-            compound = sos.addCompound(CompoundType.COLLECTION, contents);
+            this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
             if (previousVersionDiffers) {
@@ -107,13 +101,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
 
-                asset = sos.addAsset(assetBuilder);
-
+                this.asset = sos.addAsset(assetBuilder);
                 this.guid = asset.guid();
                 this.previous = previous;
             } else {
                 System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory?");
-                this.previous = previous.getPreviousDIR();
+                this.previous = previous.getPreviousObject();
             }
 
         } catch (ManifestNotMadeException | ManifestPersistException e) {
@@ -182,24 +175,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return contents;
     }
 
-    @Override
-    public IAttributes getAttributes() {
-        return null;
-    }
-
-    @Override
-    public void setAttributes(IAttributes attributes) {}
-
-    @Override
-    public long getCreationTime() throws AccessFailureException {
-        return 0;
-    }
-
-    @Override
-    public long getModificationTime() throws AccessFailureException {
-        return 0;
-    }
-
     private SOSFileSystemObject getObject(IGUID guid) {
         if (guid == null || guid.isInvalid())
             return null;
@@ -242,21 +217,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         if (compound.getType() == CompoundType.DATA) {
             return null; // Make compound file
         } else {
-            return new SOSDirectory(sos, asset, compound);
+            return new SOSDirectory(sos, asset);
         }
-    }
-
-    public IDirectory getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(IDirectory parent) {
-        this.parent = (SOSDirectory) parent;
-    }
-
-    private SOSDirectory getPreviousDIR() {
-        return (SOSDirectory) previous;
     }
 
     private void addObject(String name, IFileSystemObject object, IAttributes atts) throws BindingPresentException {
@@ -276,17 +238,21 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return null;
     }
 
-    private void addOrUpdate(String name, Content newContent) {
-        for(Content content:contents) {
-            if (content.getLabel().equals(name)) {
+    /**
+     * Add the new content with the given name. If there is already a content
+     * with that name, remove it and replace
+     * @param content
+     */
+    private void addOrUpdate(Content content) {
+        String name = content.getLabel();
+        for(Content c:contents) {
+            if (c.getLabel().equals(name)) {
                 contents.remove(content);
-                contents.add(newContent);
-
-                return;
+                break;
             }
         }
 
-        contents.add(newContent);
+        contents.add(content);
     }
 
     /**

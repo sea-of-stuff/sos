@@ -46,7 +46,7 @@ public class SOSFileSystem implements IFileSystem {
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
 
-        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data);
+        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, null);
         file.persist();
 
         updateParent((SOSDirectory) parent, name, file);
