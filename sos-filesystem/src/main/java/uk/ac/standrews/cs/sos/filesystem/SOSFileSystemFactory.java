@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
+import uk.ac.standrews.cs.sos.filesystem.utils.AssetObject;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
@@ -32,7 +33,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     private Agent agent;
     private IGUID rootGUID;
 
-    private static CurrentAsset currentAsset;
+    private static AssetObject assetObject;
 
     public SOSFileSystemFactory(Agent agent, IGUID rootGUID) {
         this(rootGUID);
@@ -95,12 +96,12 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     public static Asset getRoot(Agent sos, IGUID root) {
         Asset retval = null;
         try {
-            if (currentAsset == null) {
+            if (assetObject == null) {
                 IGUID version = ReadCurrentVersion(root);
-                currentAsset = new CurrentAsset(root, version);
+                assetObject = new AssetObject(root, version);
             }
 
-            retval = (Asset) sos.getManifest(currentAsset.getVersion());
+            retval = (Asset) sos.getManifest(assetObject.getVersion());
 
         } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) { /* Ignore */ }
 
@@ -113,10 +114,10 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     public static void WriteCurrentVersion(IGUID invariant, IGUID version) throws FileNotFoundException {
 
-        currentAsset = new CurrentAsset(invariant, version);
+        assetObject = new AssetObject(invariant, version);
 
-        try (PrintWriter out = new PrintWriter(WEBDAV_CURRENT_PATH + currentAsset.getInvariant())){
-            out.println(currentAsset.getVersion());
+        try (PrintWriter out = new PrintWriter(WEBDAV_CURRENT_PATH + assetObject.getInvariant())){
+            out.println(assetObject.getVersion());
         }
     }
 

@@ -1,16 +1,16 @@
-package uk.ac.standrews.cs.sos.filesystem;
+package uk.ac.standrews.cs.sos.filesystem.utils;
 
 import uk.ac.standrews.cs.IGUID;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CurrentAsset {
+public class AssetObject {
 
     private IGUID invariant;
     private IGUID version;
 
-    public CurrentAsset(IGUID invariant, IGUID version) {
+    public AssetObject(IGUID invariant, IGUID version) {
         this.invariant = invariant;
         this.version = version;
     }

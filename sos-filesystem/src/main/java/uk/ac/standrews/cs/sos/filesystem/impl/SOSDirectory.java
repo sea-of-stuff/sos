@@ -215,7 +215,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     private SOSDirectory getCompoundObject(Asset asset, Compound compound) throws GUIDGenerationException {
         // Still this might be a data compound
         if (compound.getType() == CompoundType.DATA) {
-            return null; // Make compound file
+            return null; // TODO - Make compound file
         } else {
             return new SOSDirectory(sos, asset);
         }
@@ -285,7 +285,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 return new NameAttributedPersistentObjectBinding(name, obj);
             }
         }
-
     }
 
 }

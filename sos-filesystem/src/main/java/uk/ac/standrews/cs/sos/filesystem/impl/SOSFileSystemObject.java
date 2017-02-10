@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-class SOSFileSystemObject extends FileSystemObject implements IVersionableObject, SOSVersionableObject {
+class SOSFileSystemObject extends FileSystemObject implements IVersionableObject {
 
     protected Agent sos;
 

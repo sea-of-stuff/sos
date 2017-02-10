@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.filesystem;
+package uk.ac.standrews.cs.sos.filesystem.utils;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
