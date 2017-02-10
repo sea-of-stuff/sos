@@ -42,8 +42,7 @@ public class ContextImpl implements Context {
         String newName = name + ".AND." + context.getName();
         Closure newClosure = closure.AND(context.getClosure());
 
-        Context newContext = new ContextImpl(newName, newClosure);
-        return newContext;
+        return new ContextImpl(newName, newClosure);
     }
 
     @Override
@@ -51,12 +50,11 @@ public class ContextImpl implements Context {
         String newName = name + ".OR." + context.getName();
         Closure newClosure = closure.OR(context.getClosure());
 
-        Context newContext = new ContextImpl(newName, newClosure);
-        return newContext;
+        return new ContextImpl(newName, newClosure);
     }
 
     @Override
     public String toString() {
-        return "Guid: " + guid + ", Name: " + name;
+        return "Context GUID: " + guid + ", Name: " + name;
     }
 }

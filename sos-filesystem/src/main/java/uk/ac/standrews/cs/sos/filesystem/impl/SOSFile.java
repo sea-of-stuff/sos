@@ -191,7 +191,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         throw new NotImplementedException();
     }
 
-    // TODO - add comment
+    // TODO - add comment to explain what this method does and why and how
     @Override
     public void append(IData data) {
         if (!isCompoundData)
