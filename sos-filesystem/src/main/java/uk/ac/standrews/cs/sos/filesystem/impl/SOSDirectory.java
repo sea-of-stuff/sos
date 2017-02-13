@@ -244,7 +244,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
      * @param content
      */
     private void addOrUpdate(Content content) {
-        String name = content.getLabel();
+        String name = content.getLabel(); // FIXME - this is not working correctly
         for(Content c:contents) {
             if (c.getLabel().equals(name)) {
                 contents.remove(content);

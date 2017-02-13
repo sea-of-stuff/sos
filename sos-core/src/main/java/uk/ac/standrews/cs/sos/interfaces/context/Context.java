@@ -9,6 +9,8 @@ import uk.ac.standrews.cs.IGUID;
  * A context is unique and is defined by a closure, which defines what assets belong to the context or not.
  * Moreover, contexts can be combines under the boolean operators AND and OR
  *
+ * TODO - policies, user
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Context {
