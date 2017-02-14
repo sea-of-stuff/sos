@@ -33,6 +33,9 @@ import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants.META_SIZE;
+import static uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants.META_TIMESTAMP;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -158,24 +161,17 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     @Override
     public long getCreationTime() throws AccessFailureException {
-        long creationtime = 0;
-
         // FIXME - we should probably get the timestamp of the first version, but it will be a complex operation,
         // so for the moment we just take the timestamp of this asset version
-        if (metadata != null && metadata.hasProperty("Timestamp")) {
-            String s_creationtime = metadata.getProperty("Timestamp").trim();
-            creationtime = Long.parseLong(s_creationtime);
-        }
-
-        return Helper.UnixTimeToFileTime(creationtime);
+        return getModificationTime();
     }
 
     @Override
     public long getModificationTime() throws AccessFailureException {
         long modtime = 0;
 
-        if (metadata != null && metadata.hasProperty("Timestamp")) {
-            String s_modtime = metadata.getProperty("Timestamp").trim();
+        if (metadata != null && metadata.hasProperty(META_TIMESTAMP)) {
+            String s_modtime = metadata.getProperty(META_TIMESTAMP).trim();
             modtime = Long.parseLong(s_modtime);
         }
 
@@ -224,13 +220,14 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     // NOTE: this method seems to be called a lot of times, thus slowing down a bit of everything
     // this will differ based on whether it is a single atom or a compound of atoms sos.getData(guid);
-    // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
+    //
+    // IDEA - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
     @Override
     public IData reify() {
 
         int size = DEFAULT_MAX_FILESIZE;
-        if (metadata != null && metadata.hasProperty("Size")) {
-            String s_size = metadata.getProperty("Size").trim();
+        if (metadata != null && metadata.hasProperty(META_SIZE)) {
+            String s_size = metadata.getProperty(META_SIZE).trim();
             size = Integer.parseInt(s_size);
         }
 

@@ -21,7 +21,7 @@
 
 <div class="container-fluid">
     <br>
-    <h3>Node GUID: ${node_id}</h3>
+    <h3>Node GUID (short): ${node_id.substring(0, 6)}</h3>
     <br>
     <div class="row">
         <div class="col-sm-4">

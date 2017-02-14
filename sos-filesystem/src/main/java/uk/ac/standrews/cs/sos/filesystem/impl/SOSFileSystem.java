@@ -20,6 +20,12 @@ import java.net.URI;
 import java.util.Iterator;
 
 /**
+ * The SOSFileSystem class maps the interface for the real FS operations to the SOS FS.
+ * The SOS FS is made of SOSFiles and SOSDirectories.
+ * SOSFiles are asset of atoms, while SOSDirectories are asset of compounds.
+ *
+ * The SOS FS is a FS of immutable entities, therefore all update operations (update file, remove object, etc)
+ * are actually creating new state of the SOS and linking it to the previous entities of the SOS.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -73,38 +79,44 @@ public class SOSFileSystem implements IFileSystem {
         throw new NotImplementedException();
     }
 
+    /**
+     * Creates a directory with a given name in path: parent/name
+     * @param parent
+     * @param name
+     * @return
+     * @throws BindingPresentException
+     * @throws PersistenceException
+     */
     @Override
     public IDirectory createNewDirectory(IDirectory parent, String name) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new directory " + name);
 
-        SOSDirectory directory = null;
         try {
-            directory = new SOSDirectory(sos, (SOSDirectory) parent, name);
+            SOSDirectory directory = new SOSDirectory(sos, name, (SOSDirectory) parent);
             directory.persist();
+
+            updateParent((SOSDirectory) parent, name, directory);
+
+            return directory;
         } catch (GUIDGenerationException e) {
-            e.printStackTrace();
+            throw new PersistenceException("Unable to create SOS Directory correctly");
         }
-
-        updateParent((SOSDirectory) parent, name, directory);
-
-        return directory;
     }
 
     @Override
     public void deleteObject(IDirectory parent, String name) throws BindingAbsentException {
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name);
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name + " from parent " + parent.getName());
 
         try {
-            // Create new parent object without child
-            parent.remove(name);
-            parent.persist();
+            // Create a new directory using the PARENT,
+            // where the named object is removed and the PARENT becomes the previous of this new object
+            SOSDirectory directory = new SOSDirectory(sos, (SOSDirectory) parent, name);
+            directory.persist();
 
-            // Parent's parent
+            // Get Parent's parent and update tree upward
             SOSDirectory parentParent = (SOSDirectory) parent.getParent();
             String parentName = parent.getName();
-
-            // Update tree updward
-            updateParent(parentParent, parentName, (SOSDirectory) parent);
+            updateParent(parentParent, parentName, directory);
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
@@ -180,19 +192,19 @@ public class SOSFileSystem implements IFileSystem {
     /**
      * Traverse the fs tree up recursively and update each directory that is found on the way
      * @param parent to be updated
-     * @param name name of the object that changed
-     * @param object object changed
+     * @param name name of the newObject
+     * @param newObject
      * @throws PersistenceException
      */
-    private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject object) throws PersistenceException {
+    private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject newObject) throws PersistenceException {
 
         // Base case for recursion
         if (parent == null) {
             return;
         }
 
-        // Update the parent directory
-        SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
+        // Create an updated parent directory with the new newObject
+        SOSDirectory directory = new SOSDirectory(sos, parent, name, newObject);
         directory.persist();
 
         // Get the parent's parent directory

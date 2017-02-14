@@ -30,6 +30,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
+ * SOSDirectory consists of an asset pointing to a compound of contents.
+ * The asset manifest is created when persisting the object or at the constructor level if
+ * the SOSDirectory has a previous one
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
@@ -37,7 +41,14 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     private Set<Content> contents;
     private Compound compound;
 
-    public SOSDirectory(Agent sos, SOSDirectory parent, String name) throws GUIDGenerationException {
+    /**
+     * Creates an empty SOSDirectory with a given name
+     * @param sos reference to the SOS
+     * @param name of the directory
+     * @param parent of the directory
+     * @throws GUIDGenerationException
+     */
+    public SOSDirectory(Agent sos, String name, SOSDirectory parent) throws GUIDGenerationException {
         super(sos);
         this.name = name;
         this.parent = parent;
@@ -48,7 +59,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -59,8 +69,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
      */
     public SOSDirectory(Agent sos, Asset asset) {
         super(sos);
-        this.asset = asset;
         this.name = null;
+        this.asset = asset;
         this.guid = asset.guid();
 
         try {
@@ -87,9 +97,9 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         try {
             this.name = previous.name;
+
             this.contents = new LinkedHashSet<>(previous.getContents());
             addOrUpdate(new Content(name, object.getGUID()));
-
             this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
@@ -105,7 +115,47 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.guid = asset.guid();
                 this.previous = previous;
             } else {
-                System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory?");
+                System.err.println("This create an identical new object to previous. Can be optimised to occupy less memory?");
+                this.previous = previous.getPreviousObject();
+            }
+
+        } catch (ManifestNotMadeException | ManifestPersistException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Build an SOSDirectory without the named object
+     *
+     * @param sos a reference to the SOS
+     * @param previous directory for this new directory
+     * @param name of the object to be removed from previous to make the new directory
+     */
+    public SOSDirectory(Agent sos, SOSDirectory previous, String name) {
+        super(sos);
+
+        try {
+            this.name = previous.name;
+
+            this.contents = new LinkedHashSet<>(previous.getContents());
+            removeContent(name);
+            this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
+
+            boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
+            if (previousVersionDiffers) {
+
+                Set<IGUID> previousVersion = new LinkedHashSet<>();
+                previousVersion.add(previous.getAsset().getVersionGUID());
+                AssetBuilder assetBuilder = new AssetBuilder(compound.getContentGUID())
+                        .setInvariant(previous.getInvariant())
+                        .setPrevious(previousVersion);
+
+                this.asset = sos.addAsset(assetBuilder);
+                this.guid = asset.guid();
+                this.previous = previous;
+            } else {
+                System.err.println("This create an identical new object to previous. Can be optimised to occupy less memory?");
                 this.previous = previous.getPreviousObject();
             }
 
@@ -147,18 +197,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     @Override
     public void remove(String name) throws BindingAbsentException {
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Remove object " + name + " from folder " + this.name);
-
-        Content contentToRemove = getContent(name);
-        contents.remove(contentToRemove);
-
-        try {
-            compound = sos.addCompound(CompoundType.COLLECTION, contents);
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
-            e.printStackTrace();
-        }
-
-        this.guid = getContentGUID();
+        // This method is not implemented since we do not actually remove content from a directory.
+        // Instead, we build a new directory without that content
     }
 
     protected IGUID getContentGUID() {
@@ -244,15 +284,17 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
      * @param content
      */
     private void addOrUpdate(Content content) {
-        String name = content.getLabel(); // FIXME - this is not working correctly
+        removeContent(content.getLabel());
+        contents.add(content);
+    }
+
+    private void removeContent(String name) {
         for(Content c:contents) {
             if (c.getLabel().equals(name)) {
-                contents.remove(content);
+                contents.remove(c);
                 break;
             }
         }
-
-        contents.add(content);
     }
 
     /**

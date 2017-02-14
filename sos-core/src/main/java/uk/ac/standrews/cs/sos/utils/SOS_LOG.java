@@ -22,7 +22,7 @@ public class SOS_LOG {
 
     public static void log(LEVEL level, String message) {
         if (log != null) {
-            log.log("sos", level, nodeGUID.toString(), message);
+            log.log("sos", level, nodeGUID.toString().substring(0, 5), message);
         } else {
             System.err.println("LOG has not been initialised");
         }
