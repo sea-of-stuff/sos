@@ -83,5 +83,9 @@ public class ManifestReplication extends Task {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "ManifestReplication for manifest " + manifest;
+    }
 
 }

@@ -66,4 +66,9 @@ public class FetchData extends Task {
     public InputStream getBody() {
         return body;
     }
+
+    @Override
+    public String toString() {
+        return "FetchData for guid " + entityId + " from node " + node.toString();
+    }
 }

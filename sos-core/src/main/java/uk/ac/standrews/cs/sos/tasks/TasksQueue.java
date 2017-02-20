@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
  * Singleton pattern used for this class.
  *
  * TODO - add ability to prioritise tasks
+ * TODO - ability to persist tasks
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -35,14 +36,14 @@ public class TasksQueue {
     public void performSyncTask(Task task) {
 
         try {
-            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task");
+            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task.toString());
 
             synchronized (task) {
                 executorService.submit(task);
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted");
+                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task.toString());
 
                 task.wait();
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished");
+                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task.toString());
             }
         } catch (InterruptedException e) {
             SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: " + e.getMessage());
@@ -52,8 +53,8 @@ public class TasksQueue {
 
     public void performAsyncTask(Task task) {
 
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task");
+        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task.toString());
         executorService.submit(task);
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted");
+        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task.toString());
     }
 }

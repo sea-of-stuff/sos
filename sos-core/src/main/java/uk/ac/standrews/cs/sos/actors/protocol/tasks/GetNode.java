@@ -92,4 +92,9 @@ public class GetNode extends Task {
     public Node getFoundNode() {
         return foundNode;
     }
+
+    @Override
+    public String toString() {
+        return "GetNode task for guid: " + nodeId;
+    }
 }

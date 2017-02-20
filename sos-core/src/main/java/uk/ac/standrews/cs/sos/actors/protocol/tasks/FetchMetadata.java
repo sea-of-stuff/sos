@@ -70,4 +70,9 @@ public class FetchMetadata extends Task {
     public SOSMetadata getMetadata() {
         return metadata;
     }
+
+    @Override
+    public String toString() {
+        return "FetchMetadata for guid " + metadataId + " from node " + node.toString();
+    }
 }

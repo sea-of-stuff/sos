@@ -97,4 +97,9 @@ public class VerifyData extends Task {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return "VerifyData with guid" + entity + " with challenge " + challenge;
+    }
 }

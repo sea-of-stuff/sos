@@ -227,4 +227,8 @@ public class DataReplication extends Task {
         return ddsNodes;
     }
 
+    @Override
+    public String toString() {
+        return "DataReplication. Replication " + replicationFactor;
+    }
 }

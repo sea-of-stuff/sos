@@ -51,4 +51,9 @@ public class RegisterNode extends Task {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        return "RegisterNode " + ndsNode + " to NDS node " + ndsNode;
+    }
 }

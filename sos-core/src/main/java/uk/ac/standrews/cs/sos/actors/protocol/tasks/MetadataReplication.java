@@ -82,4 +82,9 @@ public class MetadataReplication extends Task {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "MetadataReplication for metadata " + metadata;
+    }
+
 }
