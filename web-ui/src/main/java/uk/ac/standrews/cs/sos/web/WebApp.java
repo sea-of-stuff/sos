@@ -31,8 +31,18 @@ public class WebApp {
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         port(port);
 
+        staticFiles.location("/public");
+        staticFiles.expireTime(0L);
+
+        // Set up before-filters (called before each get/post)
+
+        before("*",                  Filters.handleLocaleChange);
+
         registerRoutes(sos, fileSystem);
         registerPostActionRoutes();
+
+        //Set up after-filters (called after each get/post)
+        after("*", Filters.addGzipHeader);
     }
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {

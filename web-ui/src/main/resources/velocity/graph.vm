@@ -17,6 +17,7 @@
 <body>
 
 <div class="container-fluid">
+    <div id="header"></div>
     <br>
     <div class="row">
         <div class="col-sm-8">
@@ -33,6 +34,10 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
+    $(function(){
+        $("#header").load("header.html");
+    });
+
     console.log(${nodes});
     var nodes = new vis.DataSet(${nodes});
     var edges = new vis.DataSet(${edges});

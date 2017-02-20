@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
@@ -14,6 +15,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,9 +70,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
                 guid = asset.getVersionGUID();
             } else {
-                // This happens if data is the same? test by having multiple of the same commands
-                // e.g. echo data > test.txt; echo data > test.txt; echo data > test.txt
-                System.out.println("WOOOOOO - some strange issue here");
+                SOS_LOG.log(LEVEL.WARN, "Asset has exactly the same data. Metadata, however, might have changed.");
             }
         } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
             e.printStackTrace();

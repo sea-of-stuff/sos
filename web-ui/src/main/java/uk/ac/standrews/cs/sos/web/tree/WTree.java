@@ -23,8 +23,7 @@ public class WTree {
         Map<String, Object> model = new HashMap<>();
 
         try {
-            String data = getTreeInJson(sos, fileSystem);
-            // System.out.println(data);
+            String data = getTreeInJson(fileSystem);
 
             model.put("node_id", sos.getNodeGUID().toString());
             model.put("tree", data);
@@ -35,10 +34,10 @@ public class WTree {
         return VelocityUtils.RenderTemplate("velocity/tree.vm", model);
     }
 
-    private static String getTreeInJson(SOSLocalNode sos, IFileSystem fileSystem) throws HEADNotFoundException, ManifestNotFoundException {
+    private static String getTreeInJson(IFileSystem fileSystem) throws HEADNotFoundException, ManifestNotFoundException {
 
         IGUID rootGUID = fileSystem.getRootId(); // Version ID for the root
-        String children = getChildren(sos, fileSystem.getRootDirectory(), rootGUID);
+        String children = getChildren(fileSystem.getRootDirectory(), rootGUID);
 
         String data = "'data' : [{" +
                 "id: '" + rootGUID.toString() + "', " +
@@ -51,7 +50,7 @@ public class WTree {
         return data;
     }
 
-    private static String getChildren(SOSLocalNode sos, IDirectory parent, IGUID parentGUID) throws ManifestNotFoundException {
+    private static String getChildren(IDirectory parent, IGUID parentGUID) throws ManifestNotFoundException {
         String retval = "";
 
         Iterator<NameAttributedPersistentObjectBinding> it = parent.iterator();
@@ -61,7 +60,7 @@ public class WTree {
 
             // Recursively look for children in subdirectories
             if (child.getObject() instanceof IDirectory) {
-                retval += getChildren(sos, (IDirectory) child.getObject(), child.getObject().getGUID());
+                retval += getChildren((IDirectory) child.getObject(), child.getObject().getGUID());
             }
         }
 
