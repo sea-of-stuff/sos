@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -140,6 +139,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
             this.contents = new LinkedHashSet<>(previous.getContents());
             removeContent(name);
+
+            // TODO - the code below is the same as in the other constructor for this class
             this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
@@ -183,16 +184,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     @Override
     public void addFile(String name, IFile file, String content_type) throws BindingPresentException {
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Add file " + name + " to folder " + this.name);
-
-        addObject(name, file, null);
+        // We do not add files to immutable entities
     }
 
     @Override
     public void addDirectory(String name, IDirectory directory) throws BindingPresentException {
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Add directory " + name + " to folder " + this.name);
-
-        addObject(name, directory, null);
+        // We do not add directories to immutable entities
     }
 
     @Override
@@ -255,20 +252,17 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     private SOSDirectory getCompoundObject(Asset asset, Compound compound) throws GUIDGenerationException {
         // Still this might be a data compound
         if (compound.getType() == CompoundType.DATA) {
-            return null; // TODO - Make compound file
+            return null; // TODO - Make compound file SOSFile(type compound), etc
         } else {
             return new SOSDirectory(sos, asset);
         }
     }
 
-    private void addObject(String name, IFileSystemObject object, IAttributes atts) throws BindingPresentException {
-        if (contains(name)) {
-            throw new BindingPresentException("Object already exists");
-        } else {
-            contents.add(new Content(name, object.getGUID()));
-        }
-    }
-
+    /**
+     * Get the content matching the specified name
+     * @param name
+     * @return
+     */
     private Content getContent(String name) {
         for(Content content:contents) {
             if (content.getLabel().equals(name)) {
@@ -276,6 +270,18 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             }
         }
         return null;
+    }
+
+    /**
+     * Remove the content matching the specified name
+     * @param name
+     */
+    private void removeContent(String name) {
+
+        Content content = getContent(name);
+        if (content != null) {
+            contents.remove(content);
+        }
     }
 
     /**
@@ -288,17 +294,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         contents.add(content);
     }
 
-    private void removeContent(String name) {
-        for(Content c:contents) {
-            if (c.getLabel().equals(name)) {
-                contents.remove(c);
-                break;
-            }
-        }
-    }
-
     /**
-     * Iterator for the compound. The iterator returns Contents until hasNext returns false.
+     * Iterator for the contents of the compound. The iterator returns Contents until hasNext returns false.
      */
     private class CompoundIterator implements Iterator {
 

@@ -56,7 +56,7 @@ public class FetchManifest extends Task {
             if (response.getCode() == HTTPStatus.OK) {
                 SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
 
-                try (InputStream inputStream = response.getBody();) {
+                try (InputStream inputStream = response.getBody()) {
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.manifest = ManifestsUtils.ManifestFromJson(responseBody);
                 } catch (ManifestNotFoundException e) {
