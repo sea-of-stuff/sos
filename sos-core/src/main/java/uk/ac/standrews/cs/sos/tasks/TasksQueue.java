@@ -36,14 +36,14 @@ public class TasksQueue {
     public void performSyncTask(Task task) {
 
         try {
-            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task.toString());
+            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
 
             synchronized (task) {
                 executorService.submit(task);
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task.toString());
+                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
 
                 task.wait();
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task.toString());
+                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task);
             }
         } catch (InterruptedException e) {
             SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: " + e.getMessage());
@@ -53,8 +53,8 @@ public class TasksQueue {
 
     public void performAsyncTask(Task task) {
 
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task.toString());
+        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
         executorService.submit(task);
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task.toString());
+        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
     }
 }

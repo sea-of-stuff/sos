@@ -54,6 +54,6 @@ public class RegisterNode extends Task {
 
     @Override
     public String toString() {
-        return "RegisterNode " + ndsNode + " to NDS node " + ndsNode;
+        return "RegisterNode " + ndsNode.getNodeGUID() + " to NDS node " + ndsNode.getNodeGUID();
     }
 }

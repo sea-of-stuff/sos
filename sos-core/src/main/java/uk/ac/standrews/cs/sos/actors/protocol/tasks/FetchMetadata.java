@@ -73,6 +73,6 @@ public class FetchMetadata extends Task {
 
     @Override
     public String toString() {
-        return "FetchMetadata for guid " + metadataId + " from node " + node.toString();
+        return "FetchMetadata for guid " + metadataId + " from node " + node.getNodeGUID();
     }
 }

@@ -78,6 +78,6 @@ public class FetchManifest extends Task {
 
     @Override
     public String toString() {
-        return "FetchManifest for guid " + manifestId + " from node " + node.toString();
+        return "FetchManifest for guid " + manifestId + " from node " + node.getNodeGUID();
     }
 }

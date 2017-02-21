@@ -69,6 +69,6 @@ public class FetchData extends Task {
 
     @Override
     public String toString() {
-        return "FetchData for guid " + entityId + " from node " + node.toString();
+        return "FetchData for guid " + entityId + " from node " + node.getNodeGUID();
     }
 }
