@@ -1,8 +1,6 @@
-package uk.ac.standrews.cs.sos.interfaces.manifests;
+package uk.ac.standrews.cs.sos.interfaces.model;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -32,11 +30,12 @@ public interface Manifest {
      *
      * @param identity
      * @return true if the GUID of the manifest matches the content.
-     * @throws GUIDGenerationException if the GUIDs of the manifests could not be generated
+     * @throws ManifestVerificationException if the GUIDs of the manifests could not be generated
      *                                  due to uk.ac.standrews.cs.IO, network or other issues.
-     * @throws DecryptionException
      */
-    boolean verify(Identity identity) throws ManifestVerificationException;
+    boolean verify(Identity identity) throws ManifestVerificationException; // TODO - rename to verifySignature
+
+    boolean verify(String challenge);
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class WManifest {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        uk.ac.standrews.cs.sos.interfaces.manifests.Manifest manifest = sos.getAgent().getManifest(guid);
+        Manifest manifest = sos.getAgent().getManifest(guid);
 
         ObjectMapper mapper = new ObjectMapper();
         Object json = mapper.readValue(manifest.toString(), Object.class);

@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.model.context;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.context.Context;
 import uk.ac.standrews.cs.sos.interfaces.context.ContextDirectory;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Context;
 
 import java.util.HashMap;
 import java.util.Iterator;

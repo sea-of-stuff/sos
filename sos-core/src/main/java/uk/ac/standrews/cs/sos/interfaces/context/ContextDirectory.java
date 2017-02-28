@@ -1,14 +1,13 @@
 package uk.ac.standrews.cs.sos.interfaces.context;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Context;
 
 import java.util.Iterator;
 
 /**
  * The context index defines the relationship between contexts and assets
- *
- * TODO - how can this relationship be shared? maybe we could store some little manifests recording this information?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -18,26 +17,43 @@ public interface ContextDirectory {
      * Add this context to the directory
      * @param context
      */
-    void addContext(Context context);
+    Asset add(Context context);
 
     /**
      * Get context from this directory given its GUID
-     * @param contextGUID
-     * @return context matching the contextGUID
+     * @param version
+     * @return context matching the version GUID
      */
-    Context getContext(IGUID contextGUID);
+    Context get(IGUID version);
+
+    /**
+     * Update the context with given GUID with new version
+     * @param guid
+     * @param context
+     * @return asset version pointing to new context and referring to the previous context
+     */
+    Asset update(IGUID guid, Context context);
+
+    /**
+     *
+     * @param guid
+     * @return
+     */
+    Asset remove(IGUID guid);
 
     /**
      * Add a given asset under the specified context
      * @param contextGUID
      * @param asset
      */
-    void addToContext(IGUID contextGUID, Asset asset);
+    void add(IGUID contextGUID, Asset asset);
 
     /**
      * Get all assets associated with the given context
      * @param contextGUID
      * @return Iterator<IGUID> iterator of GUIDs referencing to assets in the SOS
      */
-    Iterator<IGUID> getFromContext(IGUID contextGUID);
+    Iterator<IGUID> getContents(IGUID contextGUID);
+
+
 }

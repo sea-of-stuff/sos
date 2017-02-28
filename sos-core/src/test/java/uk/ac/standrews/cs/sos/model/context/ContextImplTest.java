@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.context;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.interfaces.context.Closure;
-import uk.ac.standrews.cs.sos.interfaces.context.Context;
+import uk.ac.standrews.cs.sos.interfaces.model.Context;
 
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;

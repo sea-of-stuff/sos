@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.context;
 
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 
 import java.util.function.Predicate;
 

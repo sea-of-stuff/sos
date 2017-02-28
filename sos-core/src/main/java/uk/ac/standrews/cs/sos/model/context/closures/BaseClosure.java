@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.context.closures;
 
 import uk.ac.standrews.cs.sos.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.interfaces.context.Closure;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 
 import java.util.function.Predicate;
 

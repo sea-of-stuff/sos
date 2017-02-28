@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.builders;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 
 import java.util.Set;
 

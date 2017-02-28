@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.model.Compound;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 

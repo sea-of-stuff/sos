@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.metadata.tika;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.tika.metadata.Metadata;
-import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 import uk.ac.standrews.cs.sos.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
 

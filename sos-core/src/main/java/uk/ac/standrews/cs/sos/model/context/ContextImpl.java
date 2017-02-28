@@ -3,7 +3,8 @@ package uk.ac.standrews.cs.sos.model.context;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.context.Closure;
-import uk.ac.standrews.cs.sos.interfaces.context.Context;
+import uk.ac.standrews.cs.sos.interfaces.context.Rule;
+import uk.ac.standrews.cs.sos.interfaces.model.Context;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -35,6 +36,11 @@ public class ContextImpl implements Context {
     @Override
     public Closure getClosure() {
         return closure;
+    }
+
+    @Override
+    public Rule[] getRules() {
+        return null;
     }
 
     @Override

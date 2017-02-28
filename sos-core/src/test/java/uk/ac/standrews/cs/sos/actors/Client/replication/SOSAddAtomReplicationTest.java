@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.actors.Client.replication;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 

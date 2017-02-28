@@ -68,6 +68,7 @@ public class SyncRequest extends Request {
 
         request = new okhttp3.Request.Builder()
                 .url(url)
+                .addHeader("Follow", "1") // TODO
                 .build();
 
         makeRequest(client);

@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
-import uk.ac.standrews.cs.sos.interfaces.metadata.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 
 import java.io.InputStream;
