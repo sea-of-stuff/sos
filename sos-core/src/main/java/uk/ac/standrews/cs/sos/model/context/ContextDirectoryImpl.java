@@ -22,22 +22,33 @@ public class ContextDirectoryImpl implements ContextDirectory {
     }
 
     @Override
-    public void addContext(Context context) {
+    public Asset add(Context context) {
         contexts.put(context.getGUID(), context);
+        return null;
     }
 
     @Override
-    public Context getContext(IGUID contextGUID) {
-        return contexts.get(contextGUID);
+    public Context get(IGUID version) {
+        return null;
     }
 
     @Override
-    public void addToContext(IGUID contextGUID, Asset asset) {
-        // TODO - run context against asset?
+    public Asset update(IGUID guid, Context context) {
+        return null;
     }
 
     @Override
-    public Iterator<IGUID> getFromContext(IGUID contextGUID) {
+    public Asset remove(IGUID guid) {
+        return null;
+    }
+
+    @Override
+    public void add(IGUID contextGUID, Asset asset) {
+
+    }
+
+    @Override
+    public Iterator<IGUID> getContents(IGUID contextGUID) {
         return null;
     }
 }

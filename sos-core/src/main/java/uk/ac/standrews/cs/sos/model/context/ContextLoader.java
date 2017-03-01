@@ -1,8 +1,8 @@
-package uk.ac.standrews.cs.sos.model.context.closures;
+package uk.ac.standrews.cs.sos.model.context;
 
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.context.ClosureLoaderException;
-import uk.ac.standrews.cs.sos.interfaces.context.Closure;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
+import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
@@ -15,11 +15,17 @@ import java.util.Arrays;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ClosureLoader {
+public class ContextLoader {
 
-    private static final String CLASS_PACKAGE = "uk.ac.standrews.cs.sos.model.context.closures.";
+    private static final String CLASS_PACKAGE = "uk.ac.standrews.cs.sos.model.context.";
 
-    public static void Load(String path, String className) throws ClosureLoaderException {
+    /**
+     * Load context class from path
+     * @param path
+     * @param className
+     * @throws ContextLoaderException
+     */
+    public static void Load(String path, String className) throws ContextLoaderException {
 
         File file = new File(path + className + ".java");
 
@@ -31,24 +37,29 @@ public class ClosureLoader {
             // Create a new class loader with the directory
             ClassLoader cl = new URLClassLoader(urls);
             Class cls = cl.loadClass(CLASS_PACKAGE + className);
-            SOS_LOG.log(LEVEL.INFO, "Loaded closure: " + cls.getName());
+            SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
         } catch (MalformedURLException | ClassNotFoundException e) {
-            throw new ClosureLoaderException("Unable to load closure for class: " + className);
+            throw new ContextLoaderException("Unable to load context for class: " + className);
         }
 
     }
 
-    public static Closure Instance(String className) throws ClosureLoaderException {
+    public static Context Instance(String className) throws ContextLoaderException {
 
         try {
             Class<?> clazz = Class.forName(CLASS_PACKAGE + className);
-            return (Closure) clazz.newInstance();
+            return (Context) clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new ClosureLoaderException("Unable to create instance for class " + className);
+            throw new ContextLoaderException("Unable to create instance for class " + className);
         }
     }
 
-    public static void Load(String path) throws ClosureLoaderException {
+    /**
+     * Load multiple contexts at path
+     * @param path
+     * @throws ContextLoaderException
+     */
+    public static void Load(String path) throws ContextLoaderException {
 
         ArrayList<String> notLoaded = new ArrayList<>();
 
@@ -65,14 +76,14 @@ public class ClosureLoader {
                 name = name.substring(0, name.length() - 5); // Ignore ".java" extension in filename
                 try {
                     Load(path, name);
-                } catch (ClosureLoaderException e) {
+                } catch (ContextLoaderException e) {
                     notLoaded.add(f.getName());
                 }
             }
         }
 
         if (!notLoaded.isEmpty()) {
-            throw new ClosureLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
+            throw new ContextLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
         }
 
     }

@@ -1,8 +1,9 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.context.Closure;
 import uk.ac.standrews.cs.sos.interfaces.context.Rule;
+
+import java.util.function.Predicate;
 
 /**
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.
@@ -25,7 +26,7 @@ import uk.ac.standrews.cs.sos.interfaces.context.Rule;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context {
+public interface Context extends Predicate<Asset> {
 
     /**
      * Return the unique identifier for this context
@@ -40,16 +41,13 @@ public interface Context {
     String getName();
 
     /**
-     * Return the closure for this context.
-     * The closure will define what data belongs to this context and what not.
-     */
-    Closure getClosure();
-
-    /**
      * Return the rules of this context
      * @return
      */
     Rule[] getRules();
+
+
+    boolean test(Asset asset);
 
     /**
      * Combine this context with another one under the AND logical operator

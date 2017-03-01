@@ -2,23 +2,36 @@ package uk.ac.standrews.cs.sos.model.context;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.context.Closure;
+import uk.ac.standrews.cs.sos.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.interfaces.context.Rule;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
+
+import java.util.function.Predicate;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+Ø
 public class ContextImpl implements Context {
+
+    protected SOSAgent agent;
 
     private final IGUID guid;
     private final String name;
+    Predicate<Asset> predicate;
 
-    private Closure closure;
-
-    public ContextImpl(String name, Closure closure) {
+    public ContextImpl(SOSAgent agent, String name) {
+        this.agent = agent;
         this.name = name;
-        this.closure = closure;
+
+        guid = GUIDFactory.generateRandomGUID();
+    }
+
+    public ContextImpl(SOSAgent agent, String name, Predicate<Asset> predicate) {
+        this.agent = agent;
+        this.name = name;
+        this.predicate = predicate;
 
         guid = GUIDFactory.generateRandomGUID();
     }
@@ -34,29 +47,26 @@ public class ContextImpl implements Context {
     }
 
     @Override
-    public Closure getClosure() {
-        return closure;
-    }
-
-    @Override
     public Rule[] getRules() {
         return null;
     }
 
     @Override
+    public boolean test(Asset asset) {
+        return predicate.test(asset);
+    }
+
+    @Override
     public Context AND(Context context) {
         String newName = name + ".AND." + context.getName();
-        Closure newClosure = closure.AND(context.getClosure());
 
-        return new ContextImpl(newName, newClosure);
+        return new ContextImpl(agent, newName, this.and(context));
     }
 
     @Override
     public Context OR(Context context) {
         String newName = name + ".OR." + context.getName();
-        Closure newClosure = closure.OR(context.getClosure());
-
-        return new ContextImpl(newName, newClosure);
+        return new ContextImpl(agent, newName, this.or(context));
     }
 
     @Override
