@@ -10,18 +10,18 @@ import java.util.HashMap;
  */
 public class RolesDirectory {
 
-    private HashMap<IGUID, Role> roles; // TODO just use db, no need to have any information in memory
+    private HashMap<IGUID, RoleImpl> roles; // TODO just use db, no need to have any information in memory
 
     public RolesDirectory() {
         // TODO - load any existing directory
         roles = new HashMap<>();
     }
 
-    private void addRole(Role role) {
+    private void addRole(RoleImpl role) {
         roles.put(role.getRoleGUID(), role);
     }
 
-    private Role getRole(IGUID roleGUID) {
+    private RoleImpl getRole(IGUID roleGUID) {
         return roles.get(roleGUID);
     }
 }

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.roles.Role;
+import uk.ac.standrews.cs.sos.interfaces.Role;
 
 /**
  * Role Management Service
