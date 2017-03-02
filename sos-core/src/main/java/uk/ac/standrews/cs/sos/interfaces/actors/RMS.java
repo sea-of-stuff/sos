@@ -13,4 +13,8 @@ public interface RMS {
     void add(Role role);
 
     Role get(IGUID guid);
+
+    Role active();
+    Role setActive(Role role);
+    Role setActive(IGUID guid);
 }
