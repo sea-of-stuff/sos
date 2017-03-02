@@ -28,16 +28,16 @@ public class SQLiteDB implements NodesDatabase {
             "`DB_is_storage`    BOOLEAN NOT NULL , " +
             "`DB_is_dds`        BOOLEAN NOT NULL , " +
             "`DB_is_nds`        BOOLEAN NOT NULL , " +
-            "`DB_is_mcs`        BOOLEAN NOT NULL , " +
+            "`DB_is_mms`        BOOLEAN NOT NULL , " +
             "PRIMARY KEY (`DB_nodeid`) )";
 
 
     // http://stackoverflow.com/questions/418898/sqlite-upsert-not-insert-or-replace/4330694#4330694
     private final static String SQL_ADD_NODE = "INSERT OR REPLACE INTO nodes " +
-            "(DB_nodeid, DB_hostname, DB_port, DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mcs) " +
+            "(DB_nodeid, DB_hostname, DB_port, DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private final static String SQL_GET_NODES = "SELECT DB_nodeid, DB_hostname, DB_port, " +
-            "DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mcs FROM nodes";
+            "DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms FROM nodes";
 
 
     private String path;

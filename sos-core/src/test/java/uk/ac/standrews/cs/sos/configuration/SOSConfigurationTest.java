@@ -28,7 +28,7 @@ public class SOSConfigurationTest {
                     "          \"storage\" : true\n" +
                     "          \"dds\" : true\n" +
                     "          \"nds\" : true\n" +
-                    "          \"mcs\" : true\n" +
+                    "          \"mms\" : true\n" +
                     "        }\n" +
                     "    }\n" +
                     "}\n";

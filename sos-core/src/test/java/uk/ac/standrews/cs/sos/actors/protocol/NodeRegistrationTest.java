@@ -53,7 +53,7 @@ public class NodeRegistrationTest {
                     "\t\t\"storage\": true,\n" +
                     "\t\t\"dds\": false,\n" +
                     "\t\t\"nds\": false,\n" +
-                    "\t\t\"mcs\": false\n" +
+                    "\t\t\"mms\": false\n" +
                     "\t}\n" +
                     "}";
 
@@ -67,7 +67,7 @@ public class NodeRegistrationTest {
                     "\t\t\"storage\": true,\n" +
                     "\t\t\"dds\": false,\n" +
                     "\t\t\"nds\": false,\n" +
-                    "\t\t\"mcs\": false\n" +
+                    "\t\t\"mms\": false\n" +
                     "\t}\n" +
                     "}";
 

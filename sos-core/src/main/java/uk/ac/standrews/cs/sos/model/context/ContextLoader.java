@@ -1,11 +1,14 @@
 package uk.ac.standrews.cs.sos.model.context;
 
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
+import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -17,7 +20,7 @@ import java.util.Arrays;
  */
 public class ContextLoader {
 
-    private static final String CLASS_PACKAGE = "uk.ac.standrews.cs.sos.model.context.";
+    private static final String CLASS_PACKAGE = "uk.ac.standrews.cs.sos.model.context.defaults.";
 
     /**
      * Load context class from path
@@ -29,6 +32,10 @@ public class ContextLoader {
 
         File file = new File(path + className + ".java");
 
+        if (!file.exists()) {
+            throw new ContextLoaderException("File for class " + className + " was not found");
+        }
+
         try {
             // Convert File to a URL
             URL url = file.toURL();
@@ -39,18 +46,24 @@ public class ContextLoader {
             Class cls = cl.loadClass(CLASS_PACKAGE + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
         } catch (MalformedURLException | ClassNotFoundException e) {
+            e.printStackTrace();
             throw new ContextLoaderException("Unable to load context for class: " + className);
         }
 
     }
 
-    // FIXME - instance with agent!
-    public static Context Instance(String className) throws ContextLoaderException {
+    public static Context Instance(Agent agent, String className) throws ContextLoaderException {
 
         try {
             Class<?> clazz = Class.forName(CLASS_PACKAGE + className);
-            return (Context) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+
+            Class[] cArg = new Class[2];
+            cArg[0] = SOSAgent.class;
+            cArg[1] = String.class;
+
+            return (Context) clazz.getDeclaredConstructor(cArg).newInstance(agent, className);
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException |
+                NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);
         }
     }

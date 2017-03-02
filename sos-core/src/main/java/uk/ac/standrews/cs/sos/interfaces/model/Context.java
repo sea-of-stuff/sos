@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.context.Rule;
 
 import java.util.function.Predicate;
@@ -27,13 +26,7 @@ import java.util.function.Predicate;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context extends Predicate<Asset> {
-
-    /**
-     * Return the unique identifier for this context
-     * @return
-     */
-    IGUID getGUID();
+public interface Context extends Predicate<Asset>, Manifest {
 
     /**
      * Return a human-readable name for the context

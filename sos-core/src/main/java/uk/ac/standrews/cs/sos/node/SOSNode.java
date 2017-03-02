@@ -146,7 +146,7 @@ public class SOSNode implements Node {
                 json += "\"storage\" : " + isStorage() + ", ";
                 json += "\"dds\" : " + isDDS() + ", ";
                 json += "\"nds\" : " + isNDS() + ", ";
-                json += "\"mcs\" : " + isMMS();
+                json += "\"mms\" : " + isMMS();
             }
             json += "}";
         }

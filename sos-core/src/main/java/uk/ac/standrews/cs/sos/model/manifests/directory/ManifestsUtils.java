@@ -1,14 +1,17 @@
 package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
@@ -60,6 +63,12 @@ public class ManifestsUtils {
                 case ASSET:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AssetManifest.class);
                     break;
+                case METADATA:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
+                    break;
+                case CONTEXT:
+                    SOS_LOG.log(LEVEL.WARN, "CONTEXT MANIFEST LOADER NOT IMPLEMENTED YET");
+                    throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
             }
@@ -82,6 +91,9 @@ public class ManifestsUtils {
                     break;
                 case ASSET:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, AssetManifest.class);
+                    break;
+                case METADATA:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, BasicMetadata.class);
                     break;
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");

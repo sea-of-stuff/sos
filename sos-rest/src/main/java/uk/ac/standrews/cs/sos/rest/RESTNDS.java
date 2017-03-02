@@ -101,7 +101,7 @@ public class RESTNDS {
             case "dds":
                 nodes = nds.getDDSNodes();
                 break;
-            case "mcs":
+            case "mms":
                 nodes = nds.getMCSNodes();
                 break;
             case "agent":

@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.model.context.ContextDirectoryImpl;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,8 +28,11 @@ public class SOSCMS implements CMS {
     public Asset addContext(Context context) throws Exception {
 
         try {
-            Asset asset = contextDirectory.add(context);
+            Asset asset = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
+
+            dds.addManifest(context, false);
             dds.addManifest(asset, false);
+
             return asset;
         } catch (ManifestPersistException e) {
             throw new ContextException(e);

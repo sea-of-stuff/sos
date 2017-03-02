@@ -23,7 +23,7 @@ public class Make {
                     "            \"storage\" : false\n" +
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
-                    "            \"mcs\" : false\n" +
+                    "            \"mms\" : false\n" +
                     "        }\n" +
                     "    }\n" +
                     "\n" +
@@ -69,7 +69,7 @@ public class Make {
             "node.is.agent= \t # true/false\n" +
             "node.is.storage= \t # true/false\n" +
             "node.is.dds= \t # true/false\n" +
-            "node.is.mcs= \t # true/false\n" +
+            "node.is.mms= \t # true/false\n" +
             "node.is.nds= \t # true/false\n" +
             "\n" +
             "db.filename=dump.db\n" +

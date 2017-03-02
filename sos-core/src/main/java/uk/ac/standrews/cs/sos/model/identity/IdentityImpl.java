@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.model.identity;
 
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
@@ -60,16 +59,6 @@ public class IdentityImpl implements Identity {
     @Override
     public Key getPublicKey() {
         return this.signature.getPublicKey();
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public IGUID getID() {
-        return null;
     }
 
     /**

@@ -31,11 +31,11 @@ public class ContextDirectoryImpl implements ContextDirectory {
 
     @Override
     public Asset add(Context context) throws ContextException {
-        contexts.put(context.getGUID(), context);
+        contexts.put(context.guid(), context);
 
 
         try {
-            Asset asset = ManifestFactory.createVersionManifest(context.getGUID(), null, null, null, identity);
+            Asset asset = ManifestFactory.createVersionManifest(context.guid(), null, null, null, identity);
             return asset;
 
         } catch (ManifestNotMadeException e) {

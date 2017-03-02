@@ -8,4 +8,8 @@ public class MetadataPersistException extends MetadataException {
     public MetadataPersistException(String message) {
         super(message);
     }
+
+    public MetadataPersistException(Throwable throwable) {
+        super(throwable);
+    }
 }

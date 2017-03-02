@@ -18,7 +18,7 @@ public class RolesDirectory {
     }
 
     private void addRole(RoleImpl role) {
-        roles.put(role.getRoleGUID(), role);
+        roles.put(role.guid(), role);
     }
 
     private RoleImpl getRole(IGUID roleGUID) {

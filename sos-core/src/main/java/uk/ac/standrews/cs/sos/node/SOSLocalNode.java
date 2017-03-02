@@ -205,7 +205,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         dds = new SOSDDS(localStorage, manifestPolicy, nds);
         storage = new SOSStorage(this, localStorage, dataReplicationPolicy, nds, dds);
-        mms = new SOSMMS(localStorage, metadataEngine, metadataPolicy, nds);
+        mms = new SOSMMS(dds, metadataEngine);
         cms = new SOSCMS(dds, identity);
         // TODO - rms
 

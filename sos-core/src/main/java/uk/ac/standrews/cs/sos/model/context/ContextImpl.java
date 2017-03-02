@@ -2,10 +2,13 @@ package uk.ac.standrews.cs.sos.model.context;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.context.Rule;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.util.function.Predicate;
 
@@ -33,11 +36,6 @@ public class ContextImpl implements Context {
         this.predicate = predicate;
 
         guid = GUIDFactory.generateRandomGUID();
-    }
-
-    @Override
-    public IGUID getGUID() {
-        return guid;
     }
 
     @Override
@@ -71,5 +69,30 @@ public class ContextImpl implements Context {
     @Override
     public String toString() {
         return "Context GUID: " + guid + ", Name: " + name;
+    }
+
+    @Override
+    public boolean verify(Identity identity) throws ManifestVerificationException {
+        return false;
+    }
+
+    @Override
+    public boolean check(String challenge) {
+        return false;
+    }
+
+    @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
+    public ManifestType getType() {
+        return ManifestType.CONTEXT;
+    }
+
+    @Override
+    public IGUID guid() {
+        return guid;
     }
 }

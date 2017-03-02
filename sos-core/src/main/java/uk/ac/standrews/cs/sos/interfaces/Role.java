@@ -34,10 +34,10 @@ public interface Role {
      * Verify that the given text and signature match
      *
      * @param text
-     * @param signature
+     * @param signatureToVerify
      * @return
      * @throws DecryptionException
      */
-    boolean verify(String text, String signature) throws DecryptionException;
+    boolean verify(String text, String signatureToVerify) throws DecryptionException;
 
 }

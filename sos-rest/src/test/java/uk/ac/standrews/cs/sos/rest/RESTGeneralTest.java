@@ -22,7 +22,7 @@ public class RESTGeneralTest extends CommonRESTTest {
             "    \"storage\": true,\n" +
             "    \"dds\": true,\n" +
             "    \"nds\": true,\n" +
-            "    \"mcs\": false\n" +
+            "    \"mms\": false\n" +
             "  }\n" +
             "}";
 

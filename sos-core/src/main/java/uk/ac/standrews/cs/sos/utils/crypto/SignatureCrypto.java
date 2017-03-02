@@ -32,6 +32,9 @@ public class SignatureCrypto {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
+    public SignatureCrypto() {}
+    public SignatureCrypto(PublicKey publicKey) { this.publicKey = publicKey; }
+
     /**
      * Generate key which contains a pair of private and public key.
      * Store the set of keys in appropriate files based on the specified configuration.

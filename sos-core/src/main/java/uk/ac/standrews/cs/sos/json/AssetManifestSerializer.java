@@ -17,9 +17,7 @@ import java.util.Set;
 public class AssetManifestSerializer extends JsonSerializer<AssetManifest> {
 
     @Override
-    public void serialize(AssetManifest assetManifest,
-                          JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-            throws IOException {
+    public void serialize(AssetManifest assetManifest, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 

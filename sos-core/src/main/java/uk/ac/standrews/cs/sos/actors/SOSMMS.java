@@ -1,17 +1,15 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
+import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.MMS;
-import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
-import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataDirectory;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
-import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
-import uk.ac.standrews.cs.sos.model.metadata.MetadataDirectoryImpl;
-import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 
 import java.io.InputStream;
@@ -21,24 +19,32 @@ import java.io.InputStream;
  */
 public class SOSMMS implements MMS {
 
+    private DDS dds;
     private MetadataEngine engine;
-    private MetadataDirectory metadataDirectory;
 
-    public SOSMMS(LocalStorage localStorage, MetadataEngine metadataEngine, MetadataPolicy metadataPolicy, NDS nds) {
-
+    public SOSMMS(DDS dds, MetadataEngine metadataEngine) {
+        this.dds = dds;
         this.engine = metadataEngine;
-        metadataDirectory = new MetadataDirectoryImpl(localStorage, metadataEngine, metadataPolicy, nds);
     }
 
 
     @Override
     public void addMetadata(SOSMetadata metadata) throws MetadataPersistException {
-        metadataDirectory.addMetadata(metadata);
+        try {
+            dds.addManifest(metadata, false);
+        } catch (ManifestPersistException e) {
+            throw new MetadataPersistException(e);
+        }
     }
 
     @Override
     public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
-        return metadataDirectory.getMetadata(guid);
+        try {
+            return (SOSMetadata) dds.getManifest(guid);
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+            throw new MetadataNotFoundException("unable to find metadata");
+        }
     }
 
     @Override

@@ -40,7 +40,7 @@ public class SetUpTest extends CommonTest {
                     "            \"storage\" : false\n" +
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
-                    "            \"mcs\" : false\n" +
+                    "            \"mms\" : false\n" +
                     "        }\n" +
                     "    }\n" +
                     "\n" +

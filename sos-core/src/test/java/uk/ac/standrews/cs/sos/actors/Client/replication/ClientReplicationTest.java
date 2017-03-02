@@ -45,7 +45,7 @@ public class ClientReplicationTest extends SetUpTest {
                     "            \"storage\" : false\n" +
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
-                    "            \"mcs\" : false\n" +
+                    "            \"mms\" : false\n" +
                     "        }\n" +
                     "    }\n" +
                     "\n" +
@@ -83,7 +83,7 @@ public class ClientReplicationTest extends SetUpTest {
                     "                \"storage\" : true\n" +
                     "                \"dds\" : false\n" +
                     "                \"nds\" : false\n" +
-                    "                \"mcs\" : false\n" +
+                    "                \"mms\" : false\n" +
                     "            }\n" +
                     "        }\n" +
                     "    ]\n" +
