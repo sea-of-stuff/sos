@@ -37,12 +37,12 @@ public class WData {
 
     private static String getData(SOSLocalNode sos, Manifest manifest) throws IOException, ManifestNotFoundException {
 
-        if (manifest.getManifestType() == ManifestType.ASSET) {
-            Manifest contentManifest = sos.getAgent().getManifest(manifest.getContentGUID());
+        if (manifest.getType() == ManifestType.ASSET) {
+            Manifest contentManifest = sos.getAgent().getManifest(manifest.guid());
             return getData(sos, contentManifest);
         }
 
-        if (manifest.getManifestType() == ManifestType.ATOM) {
+        if (manifest.getType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
             InputStream atomContent = null;

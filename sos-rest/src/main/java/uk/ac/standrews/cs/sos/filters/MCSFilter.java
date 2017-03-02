@@ -20,7 +20,7 @@ public class MCSFilter implements ContainerRequestFilter {
 
  @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        if (!RESTConfig.sos.isMCS()) {
+        if (!RESTConfig.sos.isMMS()) {
             Response response = HTTPResponses.BAD_REQUEST("I am not an NDS node");
             throw new WebApplicationException(response);
         }

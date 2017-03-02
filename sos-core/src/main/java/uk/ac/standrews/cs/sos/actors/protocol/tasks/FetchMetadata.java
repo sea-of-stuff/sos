@@ -30,8 +30,8 @@ public class FetchMetadata extends Task {
     private SOSMetadata metadata;
 
     public FetchMetadata(Node node, IGUID metadataId) throws IOException {
-        if (!node.isDDS()) {
-            throw new IOException("Attempting to fetch metadata from non-DDS node");
+        if (!node.isMMS()) {
+            throw new IOException("Attempting to fetch metadata from non-MMS node");
         }
 
         if (metadataId == null || metadataId.isInvalid()) {
@@ -47,7 +47,7 @@ public class FetchMetadata extends Task {
         SOS_LOG.log(LEVEL.INFO, "Metadata will be fetched from node " + node.getNodeGUID());
 
         try {
-            URL url = SOSURL.DDS_GET_METADATA(node, metadataId);
+            URL url = SOSURL.MMS_GET_METADATA(node, metadataId);
             SyncRequest request = new SyncRequest(Method.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 

@@ -26,9 +26,9 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL DDS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
+    public static URL MMS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/dds/metadata/guid/" + guid.toString();
+                "/mms/metadata/guid/" + guid.toString();
 
         return makeURL(url);
     }
@@ -40,9 +40,9 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL DDS_POST_METADATA(Node node) throws SOSURLException {
+    public static URL MMS_POST_METADATA(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/dds/metadata";
+                "/mms/metadata";
 
         return makeURL(url);
     }

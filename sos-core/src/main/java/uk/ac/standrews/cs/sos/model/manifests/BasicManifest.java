@@ -43,18 +43,8 @@ public abstract class BasicManifest implements Manifest {
      * @return the type of this manifest.
      */
     @Override
-    public ManifestType getManifestType() {
+    public ManifestType getType() {
         return this.manifestType;
-    }
-
-    /**
-     * Gets the GUID of the content referenced by this manifest.
-     *
-     * @return guid of the content.
-     */
-    @Override
-    public IGUID getContentGUID() {
-        return this.contentGUID;
     }
 
     /**

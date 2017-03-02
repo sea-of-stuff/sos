@@ -52,9 +52,9 @@ public interface Node {
     boolean isNDS();
 
     /**
-     * Returns true if this is a MCS node
+     * Returns true if this is a MMS node
      * @return
      */
-    boolean isMCS();
+    boolean isMMS();
 
 }

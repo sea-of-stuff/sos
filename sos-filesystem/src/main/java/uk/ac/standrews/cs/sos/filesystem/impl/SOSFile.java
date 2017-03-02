@@ -71,10 +71,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             this.atom = sos.addAtom(builder); // Atom is saved and manifest returned by the SOS
             this.metadata = sos.addMetadata(atom); // Metadata is generated, saved and returned by the SOS
 
-            AssetBuilder assetBuilder = new AssetBuilder(atom.getContentGUID()).setMetadata(metadata);
+            AssetBuilder assetBuilder = new AssetBuilder(atom.guid()).setMetadata(metadata);
 
             if (previous != null) {
-                boolean previousVersionDiffers = previousAssetDiffers(atom.getContentGUID());
+                boolean previousVersionDiffers = previousAssetDiffers(atom.guid());
                 if (previousVersionDiffers) {
                     Set<IGUID> previousVersion = new LinkedHashSet<>();
                     previousVersion.add(previous.getAsset().getVersionGUID());
@@ -195,7 +195,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         try {
             Atom atom = sos.addAtom(new AtomBuilder().setInputStream(data.getInputStream()));
-            IGUID guid = atom.getContentGUID();
+            IGUID guid = atom.guid();
             Content content = new Content(guid);
             atoms.add(content);
 
@@ -208,7 +208,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         IGUID retval = null;
 
         if (!isCompoundData) {
-            retval = atom.getContentGUID();
+            retval = atom.guid();
         } else {
             //Compound compound = addAtomsInCompound(atoms);
             //builder = new VersionBuilder(compound.getContentGUID());

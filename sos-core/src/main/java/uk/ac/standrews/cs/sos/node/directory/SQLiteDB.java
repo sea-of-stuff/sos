@@ -91,7 +91,7 @@ public class SQLiteDB implements NodesDatabase {
             preparedStatement.setBoolean(5, node.isStorage());
             preparedStatement.setBoolean(6, node.isDDS());
             preparedStatement.setBoolean(7, node.isNDS());
-            preparedStatement.setBoolean(8, node.isMCS());
+            preparedStatement.setBoolean(8, node.isMMS());
 
             preparedStatement.execute();
         } catch (SQLException e) {

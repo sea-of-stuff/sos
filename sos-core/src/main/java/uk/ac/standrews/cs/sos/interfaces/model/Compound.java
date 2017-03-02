@@ -13,7 +13,7 @@ import java.util.Set;
  * {
  *  "Type" : "Compound",
  *  "Compound_Type" : "COLLECTION",
- *  "ContentGUID" : "cba74f828335fa96298f5efb3b2bf669ddc91031",
+ *  "GUID" : "cba74f828335fa96298f5efb3b2bf669ddc91031",
  *  "Content" : [
  *      {
  *          "Label" : "folder",
@@ -44,5 +44,5 @@ public interface Compound extends Manifest {
      *
      * @return the compound type
      */
-    CompoundType getType();
+    CompoundType getCompoundType();
 }

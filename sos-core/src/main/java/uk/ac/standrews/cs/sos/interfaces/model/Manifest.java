@@ -19,13 +19,6 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 public interface Manifest {
 
     /**
-     * Gets the GUID of the content referenced by this manifest.
-     *
-     * @return guid of the content.
-     */
-    IGUID getContentGUID();
-
-    /**
      * Verify this manifest's GUID against its content.
      *
      * @param identity
@@ -52,7 +45,7 @@ public interface Manifest {
      *
      * @return type of manifest as a string.
      */
-    ManifestType getManifestType();
+    ManifestType getType();
 
     /**
      * GUID representing this manifest

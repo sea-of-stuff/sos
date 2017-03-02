@@ -5,6 +5,7 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadataEngine;
 import uk.ac.standrews.cs.storage.data.Data;
@@ -33,8 +34,8 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
             long unixTime = System.currentTimeMillis() / 1000L;
             meta.addProperty("Timestamp", Long.toString(unixTime));
             return meta;
-        } catch (IOException | TikaException | SAXException e) {
-            throw new MetadataException("Unable to parse metadata from given data", e);
+        } catch (IOException | TikaException | SAXException | GUIDGenerationException e) {
+            throw new MetadataException("Unable to generate metadata from given data", e);
         }
 
     }

@@ -69,7 +69,7 @@ public class SOSAgent implements Agent {
         IGUID content = assetBuilder.getContent();
         IGUID invariant = assetBuilder.getInvariant();
         Set<IGUID> prevs = assetBuilder.getPreviousCollection();
-        IGUID metadata = assetBuilder.getMetadataCollection(); // Metadata was already calculated
+        IGUID metadata = assetBuilder.getMetadataCollection();
 
         AssetManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         addManifest(manifest, false);

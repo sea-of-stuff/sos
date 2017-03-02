@@ -12,14 +12,14 @@ public class ManifestConstants {
 
     // Manifest keys
     public static final String KEY_TYPE = "Type";
+    public static final String KEY_GUID = "GUID";
     public static final String KEY_TIMESTAMP = "Timestamp";
     public static final String KEY_SIGNATURE ="Signature";
     public static final String KEY_LOCATIONS = "Locations";
-    public static final String KEY_CONTENT_GUID = "ContentGUID";
     public static final String KEY_COMPOUND_TYPE = "Compound_Type";
+    public static final String KEY_CONTENT_GUID = "ContentGUID";
     public static final String KEY_CONTENTS = "Content";
     public static final String KEY_INVARIANT = "Invariant";
-    public static final String KEY_VERSION = "Version";
     public static final String KEY_PREVIOUS_GUID = "Previous";
     public static final String KEY_METADATA_GUID = "Metadata";
 
@@ -30,5 +30,8 @@ public class ManifestConstants {
     // Location bundle keys
     public static final String BUNDLE_TYPE = "Type";
     public static final String BUNDLE_LOCATION = "Location";
+
+    // Metadata
+    public static final String KEY_META_PROPERTIES = "Properties";
 
 }

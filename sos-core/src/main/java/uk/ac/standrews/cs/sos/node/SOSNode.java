@@ -30,14 +30,14 @@ public class SOSNode implements Node {
     protected boolean DB_is_storage;
     protected boolean DB_is_dds;
     protected boolean DB_is_nds;
-    protected boolean DB_is_mcs;
+    protected boolean DB_is_mms;
 
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
 
     public SOSNode(IGUID guid, String hostname, int port,
                    boolean isAgent, boolean isStorage, boolean isDDS,
-                   boolean isNDS, boolean isMCS) {
+                   boolean isNDS, boolean isMMS) {
         this.nodeGUID = guid;
         this.hostAddress = new InetSocketAddress(hostname, port);
 
@@ -48,7 +48,7 @@ public class SOSNode implements Node {
         this.DB_is_storage = isStorage;
         this.DB_is_dds = isDDS;
         this.DB_is_nds = isNDS;
-        this.DB_is_mcs = isMCS;
+        this.DB_is_mms = isMMS;
     }
 
     public SOSNode(SOSConfiguration configuration) throws NodeException {
@@ -68,7 +68,7 @@ public class SOSNode implements Node {
             this.DB_is_storage = configuration.nodeIsStorage();
             this.DB_is_dds = configuration.nodeIsDDS();
             this.DB_is_nds = configuration.nodeIsNDS();
-            this.DB_is_mcs = configuration.nodeIsMCS();
+            this.DB_is_mms = configuration.nodeIsMMS();
         } catch (GUIDGenerationException | IOException e) {
             throw new NodeException(e);
         }
@@ -78,7 +78,7 @@ public class SOSNode implements Node {
     public SOSNode(Node node) {
         this(node.getNodeGUID(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
                 node.isAgent(), node.isStorage(), node.isDDS(),
-                node.isNDS(), node.isMCS());
+                node.isNDS(), node.isMMS());
     }
 
     @Override
@@ -127,8 +127,8 @@ public class SOSNode implements Node {
     }
 
     @Override
-    public boolean isMCS() {
-        return DB_is_mcs;
+    public boolean isMMS() {
+        return DB_is_mms;
     }
 
     @Override
@@ -146,7 +146,7 @@ public class SOSNode implements Node {
                 json += "\"storage\" : " + isStorage() + ", ";
                 json += "\"dds\" : " + isDDS() + ", ";
                 json += "\"nds\" : " + isNDS() + ", ";
-                json += "\"mcs\" : " + isMCS();
+                json += "\"mcs\" : " + isMMS();
             }
             json += "}";
         }

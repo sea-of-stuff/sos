@@ -98,7 +98,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
     }
 
     @Override
-    public CompoundType getType() {
+    public CompoundType getCompoundType() {
         return type;
     }
 
@@ -137,9 +137,9 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
     @Override
     protected String getManifestToSign() {
-        String toSign = getManifestType() +
-                "T" + getType() +
-                "C" + getContentGUID();
+        String toSign = getType() +
+                "T" + getCompoundType() +
+                "C" + guid();
 
         return toSign;
     }

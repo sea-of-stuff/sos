@@ -158,9 +158,9 @@ public class ManifestsCacheImplTest extends CommonTest {
         Manifest manifest = mock(Manifest.class);
         IGUID guid = GUIDFactory.generateRandomGUID();
         when(manifest.guid()).thenReturn(guid);
-        when(manifest.getContentGUID()).thenReturn(guid);
+        when(manifest.guid()).thenReturn(guid);
         when(manifest.isValid()).thenReturn(true);
-        when(manifest.getManifestType()).thenReturn(ManifestType.ATOM);
+        when(manifest.getType()).thenReturn(ManifestType.ATOM);
 
         return manifest;
     }

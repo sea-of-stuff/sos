@@ -176,7 +176,7 @@ public class AssetManifest extends SignedManifest implements Asset {
     }
 
     private String manifestToHash() {
-        String toHash = getManifestType() +
+        String toHash = getType() +
                 "I" + getInvariantGUID() +
                 "C" + getContentGUID();
 
@@ -188,7 +188,7 @@ public class AssetManifest extends SignedManifest implements Asset {
 
     @Override
     protected String getManifestToSign() {
-        String toSign = getManifestType() +
+        String toSign = getType() +
                 "C" + getContentGUID();
 
         toSign += getPreviousToHashOrSign();

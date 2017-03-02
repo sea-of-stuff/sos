@@ -34,25 +34,16 @@ public class FetchMetadataTest {
 
     private static final String GUID_METADATA = "02f80108b23125787b8bccc2b80ec623e2dffcd6";
     private static final String TEST_METADATA =
-            "{\n" +
-                    "  \"GUID\" : \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
-                    "  \"Properties\" : [ {\n" +
-                    "    \"Key\" : \"X-Parsed-By\",\n" +
-                    "    \"Value\" : \"org.apache.tika.parser.DefaultParser\"\n" +
-                    "  }, {\n" +
-                    "    \"Key\" : \"Size\",\n" +
-                    "    \"Value\" : \"26\"\n" +
-                    "  }, {\n" +
-                    "    \"Key\" : \"Content-Encoding\",\n" +
-                    "    \"Value\" : null\n" +
-                    "  }, {\n" +
-                    "    \"Key\" : \"Timestamp\",\n" +
-                    "    \"Value\" : \"1484736105\"\n" +
-                    "  }, {\n" +
-                    "    \"Key\" : \"Content-Type\",\n" +
-                    "    \"Value\" : \"text/plain; charset=ISO-8859-1\"\n" +
-                    "  } ]\n" +
-                    "}";
+            " {\n" +
+                    " \t\"GUID\": \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
+                    " \t\"Properties\": {\n" +
+                    " \t\t\"X-Parsed-By\": \"org.apache.tika.parser.DefaultParser\",\n" +
+                    " \t\t\"Content-Encoding\": \"null\",\n" +
+                    " \t\t\"Size\": \"26\",\n" +
+                    " \t\t\"Timestamp\": \"1484736105\",\n" +
+                    " \t\t\"Content-Type\": \"text/plain; charset=ISO-8859-1\"\n" +
+                    " \t}\n" +
+                    " }";
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -64,7 +55,7 @@ public class FetchMetadataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/dds/metadata/guid/" + testGUID.toString())
+                                .withPath("/mms/metadata/guid/" + testGUID.toString())
                 )
                 .respond(
                         response()
@@ -85,7 +76,7 @@ public class FetchMetadataTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, true, false, false);
+                false, false, false, false, true);
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_METADATA);
 

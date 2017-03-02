@@ -31,7 +31,7 @@ public class SOSAddAtomTest extends StorageTest {
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
         try (InputStream inputStream = storage.getAtomContent(manifest)) {
             assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
@@ -44,7 +44,7 @@ public class SOSAddAtomTest extends StorageTest {
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
         Iterator<LocationBundle> bundles = retrievedLocations.iterator();
@@ -64,7 +64,7 @@ public class SOSAddAtomTest extends StorageTest {
 
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
         Iterator<LocationBundle> bundles = retrievedLocations.iterator();
@@ -80,7 +80,7 @@ public class SOSAddAtomTest extends StorageTest {
 
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = storage.addAtom(builder, true, new DDSNotificationInfo().setNotifyDDSNodes(false)).x;
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
         Iterator<LocationBundle> bundles = retrievedLocations.iterator();

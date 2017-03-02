@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.metadata.tika;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.tika.metadata.Metadata;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 import uk.ac.standrews.cs.sos.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
@@ -16,9 +17,10 @@ public class TikaMetadata extends AbstractMetadata implements SOSMetadata {
 
     private Metadata tikaMetadata;
 
-    public TikaMetadata(Metadata metadata, String[] ignoreMetadata) {
+    public TikaMetadata(Metadata metadata, String[] ignoreMetadata) throws GUIDGenerationException {
         super(ignoreMetadata);
         this.tikaMetadata = metadata;
+        this.guid = generateGUID();
     }
 
     public String getProperty(String propertyName) {

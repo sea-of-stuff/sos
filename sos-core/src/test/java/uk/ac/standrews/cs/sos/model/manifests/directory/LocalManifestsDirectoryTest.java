@@ -80,13 +80,13 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
-        IGUID guid = atomManifest.getContentGUID();
+        IGUID guid = atomManifest.guid();
         try {
             manifestsDirectory.addManifest(atomManifest);
             Manifest manifest = manifestsDirectory.findManifest(guid);
 
-            Assert.assertEquals(manifest.getManifestType(), ManifestType.ATOM);
-            assertEquals(manifest.getContentGUID(), guid);
+            Assert.assertEquals(manifest.getType(), ManifestType.ATOM);
+            assertEquals(manifest.guid(), guid);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException |ManifestNotFoundException e) {
             throw new Exception(e);
@@ -103,14 +103,14 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         contents.add(content);
 
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, identity);
-        IGUID guid = compoundManifest.getContentGUID();
+        IGUID guid = compoundManifest.guid();
         try {
             manifestsDirectory.addManifest(compoundManifest);
             Manifest manifest = manifestsDirectory.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestType.COMPOUND);
+            assertEquals(manifest.getType(), ManifestType.COMPOUND);
             assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
-            assertEquals(manifest.getContentGUID(), guid);
+            assertEquals(manifest.guid(), guid);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException | ManifestNotFoundException e) {
             throw new Exception(e);
@@ -142,10 +142,9 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         IGUID guid = assetManifest.getVersionGUID();
         try {
             manifestsDirectory.addManifest(assetManifest);
-            Manifest manifest = manifestsDirectory.findManifest(guid);
+            Asset manifest = (Asset) manifestsDirectory.findManifest(guid);
 
-            assertEquals(manifest.getManifestType(), ManifestType.ASSET);
-            assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
+            assertEquals(manifest.getType(), ManifestType.ASSET);
             assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException | ManifestNotFoundException e) {
@@ -168,12 +167,12 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
-        IGUID guid = atomManifest.getContentGUID();
+        IGUID guid = atomManifest.guid();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
-        IGUID anotherGUID = anotherManifest.getContentGUID();
+        IGUID anotherGUID = anotherManifest.guid();
 
         assertEquals(guid, anotherGUID);
 
@@ -198,12 +197,12 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
-        IGUID guid = atomManifest.getContentGUID();
+        IGUID guid = atomManifest.guid();
 
         AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
                 GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
-        IGUID anotherGUID = anotherManifest.getContentGUID();
+        IGUID anotherGUID = anotherManifest.guid();
 
         assertEquals(guid, anotherGUID);
 

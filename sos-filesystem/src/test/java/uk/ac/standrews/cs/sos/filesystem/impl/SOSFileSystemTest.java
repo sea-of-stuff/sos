@@ -66,7 +66,7 @@ public class SOSFileSystemTest {
         when(mockAgent.addAsset(any())).thenReturn(mockRootAsset);
 
         when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());
-        when(mockRootFolder.getContentGUID()).thenReturn(rootGUID);
+        when(mockRootFolder.guid()).thenReturn(rootGUID);
 
         when(mockRootAsset.getInvariantGUID()).thenReturn(guid);
         when(mockRootAsset.getVersionGUID()).thenReturn(versionGUID);

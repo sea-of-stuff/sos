@@ -26,7 +26,7 @@ public class WMetadata {
         Agent agent = sos.getAgent();
 
         Manifest manifest = agent.getManifest(guid);
-        if (manifest.getManifestType() == ManifestType.ASSET) {
+        if (manifest.getType() == ManifestType.ASSET) {
 
             Asset asset = (Asset) manifest;
             IGUID metadataGUID = asset.getMetadata();

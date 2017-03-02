@@ -36,7 +36,7 @@ public class FetchManifestTest {
     private static final String GUID_VERSION = "28b7f98d7163d2ef91b3a418316246ba2d76b353";
     private static final String TEST_ASSET_MANIFEST = "{\"Type\":\"Asset\"," +
             "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-            "\"Version\":\""+ GUID_VERSION+"\"," +
+            "\"GUID\":\""+ GUID_VERSION+"\"," +
             "\"Signature\":\"AAAB\"," +
             "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
@@ -83,7 +83,7 @@ public class FetchManifestTest {
 
         Manifest manifest = fetchManifest.getManifest();
         assertNotNull(manifest);
-        assertEquals(manifest.getManifestType(), ManifestType.ASSET);
+        assertEquals(manifest.getType(), ManifestType.ASSET);
         assertEquals(manifest.guid(), testGUID);
     }
 

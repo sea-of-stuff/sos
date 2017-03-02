@@ -8,6 +8,8 @@ import java.io.IOException;
 import static org.testng.Assert.assertEquals;
 
 /**
+ * Testing the metadata serialiser/desearialiser
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class BasicMetadataTest {
@@ -16,25 +18,16 @@ public class BasicMetadataTest {
     public void metadataDeserializationTest() throws IOException {
 
         String testMetadata =
-                "{\n" +
-                        "  \"GUID\" : \"a7fe358986a3757dc9e5222ba8024fa80f43e4dd\",\n" +
-                        "  \"Properties\" : [ {\n" +
-                        "    \"Key\" : \"X-Parsed-By\",\n" +
-                        "    \"Value\" : \"org.apache.tika.parser.DefaultParser\"\n" +
-                        "  }, {\n" +
-                        "    \"Key\" : \"Size\",\n" +
-                        "    \"Value\" : \"26\"\n" +
-                        "  }, {\n" +
-                        "    \"Key\" : \"Content-Encoding\",\n" +
-                        "    \"Value\" : null\n" +
-                        "  }, {\n" +
-                        "    \"Key\" : \"Timestamp\",\n" +
-                        "    \"Value\" : \"1484736105\"\n" +
-                        "  }, {\n" +
-                        "    \"Key\" : \"Content-Type\",\n" +
-                        "    \"Value\" : \"text/plain; charset=ISO-8859-1\"\n" +
-                        "  } ]\n" +
-                        "}";
+                " {\n" +
+                        " \t\"GUID\": \"3f845edc76b7e892ddca1f6e290750fe805e7f00\",\n" +
+                        " \t\"Properties\": {\n" +
+                        " \t\t\"X-Parsed-By\": \"org.apache.tika.parser.DefaultParser\",\n" +
+                        " \t\t\"Content-Encoding\": \"null\",\n" +
+                        " \t\t\"Size\": \"26\",\n" +
+                        " \t\t\"Timestamp\": \"1484736105\",\n" +
+                        " \t\t\"Content-Type\": \"text/plain; charset=ISO-8859-1\"\n" +
+                        " \t}\n" +
+                        " }";
 
         BasicMetadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, BasicMetadata.class);
 

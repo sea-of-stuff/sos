@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface MetadataDirectory {
+public interface MetadataDirectory { // TODO - metadata manifests stored same as other manifests!!!!
 
     SOSMetadata processMetadata(InputStream inputStream) throws MetadataException;
 

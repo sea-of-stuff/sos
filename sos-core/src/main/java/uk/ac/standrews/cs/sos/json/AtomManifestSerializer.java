@@ -24,7 +24,7 @@ public class AtomManifestSerializer extends JsonSerializer<AtomManifest> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.ATOM.toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, atomManifest.getContentGUID().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, atomManifest.guid().toString());
 
         jsonGenerator.writeFieldName(ManifestConstants.KEY_LOCATIONS);
         jsonGenerator.writeStartArray();

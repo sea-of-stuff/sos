@@ -27,7 +27,7 @@ public class AtomManifestDeserializer extends JsonDeserializer<AtomManifest> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         try {
-            IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_CONTENT_GUID);
+            IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_GUID);
 
             JsonNode bundlesNode = node.get(ManifestConstants.KEY_LOCATIONS);
             Set<LocationBundle> bundles = new LinkedHashSet<>();

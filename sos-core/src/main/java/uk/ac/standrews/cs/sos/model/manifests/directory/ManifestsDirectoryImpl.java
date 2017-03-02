@@ -20,6 +20,8 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 import java.io.IOException;
 
 /**
+ * TODO - make this generic enough, rather than doing it for manifests only????
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ManifestsDirectoryImpl implements ManifestsDirectory {
@@ -49,7 +51,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         cache.addManifest(manifest);
         local.addManifest(manifest);
-        remote.addManifest(manifest); // async
+        remote.addManifest(manifest); // will run in async mode
     }
 
     @Override

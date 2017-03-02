@@ -27,7 +27,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ContentGUID\":\"44ebfc76e2671daf7f1e1b02c9538e5fe1e44995\"," +
+                    "\"GUID\":\"44ebfc76e2671daf7f1e1b02c9538e5fe1e44995\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
@@ -38,7 +38,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"ContentGUID\":\"32096c2e0eff33d844ee6d675407ace18289357d\"," +
+                    "\"GUID\":\"32096c2e0eff33d844ee6d675407ace18289357d\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
@@ -77,7 +77,7 @@ public class CompoundManifestTest extends CommonTest {
         assertEquals(compoundManifest.getContents().size(), 1);
         Iterator<Content> iterator = compoundManifest.getContents().iterator();
         assertEquals(iterator.next(), cat);
-        assertNotNull(compoundManifest.getContentGUID());
+        assertNotNull(compoundManifest.guid());
     }
 
     @Test

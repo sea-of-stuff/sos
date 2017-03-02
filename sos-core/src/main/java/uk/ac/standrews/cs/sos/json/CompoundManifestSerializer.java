@@ -24,8 +24,8 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.COMPOUND.toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_COMPOUND_TYPE, compoundManifest.getType().toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, compoundManifest.getContentGUID().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_COMPOUND_TYPE, compoundManifest.getCompoundType().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, compoundManifest.guid().toString());
 
         jsonGenerator.writeFieldName(ManifestConstants.KEY_CONTENTS);
         jsonGenerator.writeStartArray();

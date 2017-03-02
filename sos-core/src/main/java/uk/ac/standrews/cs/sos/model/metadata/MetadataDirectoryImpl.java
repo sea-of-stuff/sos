@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.model.metadata;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.protocol.tasks.MetadataReplication;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
@@ -111,7 +110,7 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
             metadataFile.setData(data);
             metadataFile.persist();
 
-        } catch (DataStorageException | PersistenceException | DataException | GUIDGenerationException e) {
+        } catch (DataStorageException | PersistenceException | DataException e) {
             throw new MetadataPersistException("Unable to save metadata");
         }
 
@@ -135,17 +134,10 @@ public class MetadataDirectoryImpl implements MetadataDirectory {
 
     private SOSMetadata findMetadataFromCache(IGUID guid) {
 
-        for(SOSMetadata metadata:naiveCache) {
-            try {
-                if (metadata.guid().equals(guid)) {
-                    return metadata;
-                }
-            } catch (GUIDGenerationException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
+        return naiveCache.stream().
+                filter(m -> m.guid().equals(guid)).
+                findFirst().
+                get();
     }
 
     private SOSMetadata findMetadataLocal(IGUID guid) {

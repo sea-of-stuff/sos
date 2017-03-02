@@ -65,7 +65,7 @@ public class MetadataReplication extends Task {
     private static boolean TransferMetadataRequest(SOSMetadata metadata, Node node) throws GUIDGenerationException {
 
         try {
-            URL url = SOSURL.DDS_POST_METADATA(node);
+            URL url = SOSURL.MMS_POST_METADATA(node);
             SyncRequest request = new SyncRequest(Method.POST, url);
             request.setJSONBody(metadata.toString());
 

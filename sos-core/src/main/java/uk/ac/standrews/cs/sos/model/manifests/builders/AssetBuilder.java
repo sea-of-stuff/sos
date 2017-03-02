@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests.builders;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 
 import java.util.Set;
@@ -70,14 +69,7 @@ public class AssetBuilder {
             return null;
         }
 
-        IGUID retval = null;
-        try {
-            retval = metadata.guid();
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-        }
-
-        return retval;
+        return metadata.guid();
     }
 
     public IGUID getInvariant() {

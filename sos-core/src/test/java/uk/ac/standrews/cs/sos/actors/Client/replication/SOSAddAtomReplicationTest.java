@@ -24,7 +24,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         Thread.sleep(1000); // Let replication happen
 
-        assertNotNull(manifest.getContentGUID());
+        assertNotNull(manifest.guid());
         assertEquals(1, manifest.getLocations().size());
 
         // Delete atom and atom manifest
@@ -49,7 +49,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         Thread.sleep(1000); // Let replication happen
 
-        assertNotNull(manifest.getContentGUID());
+        assertNotNull(manifest.guid());
         assertEquals(1, manifest.getLocations().size());
 
         // Delete atom ONLY

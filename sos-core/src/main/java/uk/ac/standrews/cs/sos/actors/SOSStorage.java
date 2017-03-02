@@ -110,7 +110,7 @@ public class SOSStorage implements Storage {
         try {
             Manifest manifest = dds.getManifest(guid);
 
-            if (manifest.getManifestType() == ManifestType.ATOM) {
+            if (manifest.getType() == ManifestType.ATOM) {
                 Atom atom = (Atom) manifest;
                 return getAtomContent(atom);
             }

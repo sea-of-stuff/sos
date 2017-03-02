@@ -39,10 +39,10 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestType.ATOM, retrievedManifest.getManifestType());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
+        assertEquals(ManifestType.ATOM, retrievedManifest.getType());
         Set<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         assertEquals(2, retrievedLocations.size());
 
@@ -54,9 +54,9 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
         try (InputStream inputStream = agent.getAtomContent((AtomManifest) retrievedManifest)) {
             assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
         }
@@ -67,9 +67,9 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
         assertTrue(retrievedManifest.verify(null));
     }
 
@@ -78,9 +78,9 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
         Set<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
         LocationBundle cachedLocation = retrievedLocations.iterator().next();
 
@@ -93,12 +93,12 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = new URILocation("http://www.eastcottvets.co.uk/uploads/Animals/gingerkitten.jpg");
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestType.ATOM, retrievedManifest.getManifestType());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
+        assertEquals(ManifestType.ATOM, retrievedManifest.getType());
 
-        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -106,12 +106,12 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = new URILocation("https://i.ytimg.com/vi/NtgtMQwr3Ko/maxresdefault.jpg");
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestType.ATOM, retrievedManifest.getManifestType());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
+        assertEquals(ManifestType.ATOM, retrievedManifest.getType());
 
-        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -119,12 +119,12 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = new URILocation("https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf");
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestType.ATOM, retrievedManifest.getManifestType());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
+        assertEquals(ManifestType.ATOM, retrievedManifest.getType());
 
-        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -132,12 +132,12 @@ public class SOSAddAtomTest extends AgentTest {
         Location location = new URILocation("http://www.umich.edu/~umfandsf/other/ebooks/alice30.txt");
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
-        assertEquals(manifest.getManifestType(), ManifestType.ATOM);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        assertEquals(ManifestType.ATOM, retrievedManifest.getManifestType());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
+        assertEquals(ManifestType.ATOM, retrievedManifest.getType());
 
-        System.out.println("SOSAddAtomTest: " + manifest.getContentGUID());
+        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     // NOTE: this test fails if using mutable internal storage
@@ -150,8 +150,8 @@ public class SOSAddAtomTest extends AgentTest {
         Directory dataDir = localStorage.getDataDirectory();
         Directory manifestsDir = localStorage.getManifestDirectory();
 
-        File file = localStorage.createFile(dataDir, manifest.getContentGUID().toString());
-        File manifestFile = localStorage.createFile(manifestsDir, manifest.getContentGUID() + ".json");
+        File file = localStorage.createFile(dataDir, manifest.guid().toString());
+        File manifestFile = localStorage.createFile(manifestsDir, manifest.guid() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -161,10 +161,10 @@ public class SOSAddAtomTest extends AgentTest {
         AtomBuilder secondBuilder = new AtomBuilder().setLocation(newLocation);
         Atom newManifest = agent.addAtom(secondBuilder);
 
-        assertEquals(manifest.getContentGUID(), newManifest.getContentGUID());
+        assertEquals(manifest.guid(), newManifest.guid());
 
-        File newFile = localStorage.createFile(dataDir, newManifest.getContentGUID().toString());
-        File newManifestFile = localStorage.createFile(manifestsDir, newManifest.getContentGUID() + ".json");
+        File newFile = localStorage.createFile(dataDir, newManifest.guid().toString());
+        File newManifestFile = localStorage.createFile(manifestsDir, newManifest.guid() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 
@@ -178,7 +178,7 @@ public class SOSAddAtomTest extends AgentTest {
         InputStream stream = HelperTest.StringToInputStream(testString);
         AtomBuilder builder = new AtomBuilder().setInputStream(stream);
         Atom manifest = agent.addAtom(builder);
-        assertNotNull(manifest.getContentGUID());
+        assertNotNull(manifest.guid());
         assertEquals(manifest.getLocations().size(), 1);
 
         InputStream inputStream = agent.getAtomContent(manifest);
@@ -199,7 +199,7 @@ public class SOSAddAtomTest extends AgentTest {
         try (InputStream stream = HelperTest.StringToInputStream(bigString)) {
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
             Atom manifest = agent.addAtom(builder);
-            assertNotNull(manifest.getContentGUID());
+            assertNotNull(manifest.guid());
         }
 
         System.out.println("1 atoms of 100mb uploaded in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
@@ -258,7 +258,7 @@ public class SOSAddAtomTest extends AgentTest {
 
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
             Atom manifest = agent.addAtom(builder);
-            assertNotNull(manifest.getContentGUID());
+            assertNotNull(manifest.guid());
 
         } catch (Exception e) {
             e.printStackTrace();

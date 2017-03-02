@@ -104,7 +104,7 @@ public class LocalNodesDirectory {
      * @return MCS nodes
      */
     public Set<Node> getMCSNodes(int limit) {
-        return getNodes(Node::isMCS, limit);
+        return getNodes(Node::isMMS, limit);
     }
 
     public Set<Node> getStorageNodes(int limit) {

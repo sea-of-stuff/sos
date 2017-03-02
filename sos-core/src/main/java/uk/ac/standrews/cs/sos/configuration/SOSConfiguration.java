@@ -88,8 +88,8 @@ public class SOSConfiguration {
         return configuration.getBoolean(PropertyKeys.NODE_IS_NDS);
     }
 
-    public boolean nodeIsMCS() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_MCS);
+    public boolean nodeIsMMS() {
+        return configuration.getBoolean(PropertyKeys.NODE_IS_MMS);
     }
 
     public String getDBFilename() {
@@ -229,7 +229,7 @@ public class SOSConfiguration {
         static final String NODE_IS_STORAGE = "node.is.storage";
         static final String NODE_IS_DDS = "node.is.dds";
         static final String NODE_IS_NDS = "node.is.nds";
-        static final String NODE_IS_MCS = "node.is.mcs";
+        static final String NODE_IS_MMS = "node.is.mcs";
 
         static final String DB_FILENAME = "db.filename";
 
@@ -257,7 +257,7 @@ public class SOSConfiguration {
         static final String BOOTSTRAP_NODE_IS_STORAGE = "is.storage";
         static final String BOOTSTRAP_NODE_IS_DDS = "is.dds";
         static final String BOOTSTRAP_NODE_IS_NDS = "is.nds";
-        static final String BOOTSTRAP_NODE_IS_MCS = "is.mcs";
+        static final String BOOTSTRAP_NODE_IS_MCS = "is.mms";
 
         static final String WEBDAV_PORT = "webdav.port";
         static final String WEBAPP_PORT = "webapp.port";

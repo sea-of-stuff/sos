@@ -92,13 +92,6 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     @Override
     public void flush() {}
 
-    private File getHEADFile(IGUID invariant) throws DataStorageException {
-        Directory headsDir = localStorage.getHeadsDirectory();
-        File file = localStorage.createFile(headsDir, invariant.toString());
-
-        return file;
-    }
-
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
         File manifestFile = getManifestFile(guid);
         Manifest manifest = ManifestsUtils.ManifestFromFile(manifestFile);
@@ -111,7 +104,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         try {
             IGUID manifestFileGUID = manifest.guid();
 
-            boolean isAtomManifest = manifest.getManifestType().equals(ManifestType.ATOM);
+            boolean isAtomManifest = manifest.getType().equals(ManifestType.ATOM);
             boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
 
             if (isAtomManifest && manifestExists) {
@@ -129,7 +122,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     private void saveExistingAtomManifest(Manifest manifest) throws ManifestNotFoundException, ManifestsDirectoryException {
-        IGUID guid = manifest.getContentGUID();
+        IGUID guid = manifest.guid();
         Manifest existingManifest = getManifestFromGUID(guid);
         mergeAtomManifestAndSave(existingManifest, manifest);
     }
@@ -145,7 +138,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestsDirectoryException {
-        IGUID guid = manifest.getContentGUID();
+        IGUID guid = manifest.guid();
 
         try {
             File manifestFile = getManifestFile(guid);
@@ -160,8 +153,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             FileHelper.DeleteFile(backupFile);
         } catch (ManifestNotFoundException e) {
-            throw new ManifestsDirectoryException("Manifests " + existingManifest.getContentGUID().toString()
-                    + " and " + manifest.getContentGUID().toString() + "could not be merged", e);
+            throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toString()
+                    + " and " + manifest.guid().toString() + "could not be merged", e);
         }
 
     }

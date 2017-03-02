@@ -58,7 +58,7 @@ public class NodeModel implements Node {
     }
 
     @Override
-    public boolean isMCS() {
+    public boolean isMMS() {
         return roles.isMCS();
     }
 

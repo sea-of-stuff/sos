@@ -24,9 +24,9 @@ public class AssetManifestSerializer extends JsonSerializer<AssetManifest> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.ASSET.toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, assetManifest.getContentGUID().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, assetManifest.getVersionGUID().toString());
         jsonGenerator.writeStringField(ManifestConstants.KEY_INVARIANT, assetManifest.getInvariantGUID().toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_VERSION, assetManifest.getVersionGUID().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, assetManifest.getContentGUID().toString());
 
         if (assetManifest.getMetadata() != null) {
             jsonGenerator.writeStringField(ManifestConstants.KEY_METADATA_GUID, assetManifest.getMetadata().toString());

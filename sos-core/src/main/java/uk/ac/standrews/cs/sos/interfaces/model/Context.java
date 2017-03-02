@@ -18,6 +18,7 @@ import java.util.function.Predicate;
  * Example:
  *
  * {
+ *     "Type" : "Context",
  *     "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *     "Name" : "Simone's replication context",
  *     "Closure" : CODE
@@ -45,7 +46,6 @@ public interface Context extends Predicate<Asset> {
      * @return
      */
     Rule[] getRules();
-
 
     boolean test(Asset asset);
 

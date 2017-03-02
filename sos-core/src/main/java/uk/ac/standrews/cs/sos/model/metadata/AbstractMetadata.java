@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.List;
 public abstract class AbstractMetadata implements SOSMetadata {
 
     protected String[] ignoreMetadata;
+    protected IGUID guid;
 
     public AbstractMetadata(String[] ignoreMetadata) {
         this.ignoreMetadata = ignoreMetadata;
@@ -43,11 +47,13 @@ public abstract class AbstractMetadata implements SOSMetadata {
         return filteredNames.toArray(new String[filteredNames.size()]);
     }
 
-    @Override
-    public IGUID guid() throws GUIDGenerationException {
+    public IGUID generateGUID() throws GUIDGenerationException {
         String metadata = metadata();
-        IGUID guid = GUIDFactory.generateGUID(metadata);
+        return GUIDFactory.generateGUID(metadata);
+    }
 
+    @Override
+    public IGUID guid() {
         return guid;
     }
 
@@ -70,5 +76,25 @@ public abstract class AbstractMetadata implements SOSMetadata {
         }
 
         return null;
+    }
+
+    @Override
+    public ManifestType getType() {
+        return ManifestType.METADATA;
+    }
+
+    @Override
+    public boolean verify(Identity identity) throws ManifestVerificationException {
+        return false;
+    }
+
+    @Override
+    public boolean check(String challenge) {
+        return false;
+    }
+
+    @Override
+    public boolean isValid() {
+        return false;
     }
 }

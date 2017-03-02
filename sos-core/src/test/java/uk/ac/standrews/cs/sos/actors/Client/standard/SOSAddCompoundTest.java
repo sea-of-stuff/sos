@@ -30,10 +30,10 @@ public class SOSAddCompoundTest extends AgentTest {
         contents.add(cat);
 
         Compound manifest = agent.addCompound(CompoundType.DATA, contents);
-        Assert.assertEquals(manifest.getManifestType(), ManifestType.COMPOUND);
+        Assert.assertEquals(manifest.getType(), ManifestType.COMPOUND);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
-        assertEquals(retrievedManifest.getManifestType(), ManifestType.COMPOUND);
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
+        assertEquals(retrievedManifest.getType(), ManifestType.COMPOUND);
 
         Set<Content> retrievedContents = ((CompoundManifest) retrievedManifest).getContents();
         Iterator<Content> iterator = retrievedContents.iterator();
@@ -49,7 +49,7 @@ public class SOSAddCompoundTest extends AgentTest {
         contents.add(cat);
 
         Compound manifest = agent.addCompound(CompoundType.DATA, contents);
-        Manifest retrievedManifest = agent.getManifest(manifest.getContentGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.guid());
 
         boolean isVerified = agent.verifyManifest(localSOSNode.getIdentity(), retrievedManifest);
         assertTrue(isVerified);

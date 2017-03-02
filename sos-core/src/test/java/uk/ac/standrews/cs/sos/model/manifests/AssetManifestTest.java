@@ -67,7 +67,7 @@ public class AssetManifestTest extends CommonTest {
         AssetManifest assetManifest = new AssetManifest(null, guid, null, null, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_BASIC_ASSET, assetManifest.toString(), false);
@@ -87,7 +87,7 @@ public class AssetManifestTest extends CommonTest {
         AssetManifest assetManifest = new AssetManifest(null, guid, null, metadataGUID, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_METADATA_ASSET, assetManifest.toString(), false);
@@ -112,7 +112,7 @@ public class AssetManifestTest extends CommonTest {
         AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, null, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_PREVIOUS_ASSET, assetManifest.toString(), false);
@@ -140,7 +140,7 @@ public class AssetManifestTest extends CommonTest {
         AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_VERSION));
+        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET, assetManifest.toString(), false);

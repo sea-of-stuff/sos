@@ -30,7 +30,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         try {
-            IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_CONTENT_GUID);
+            IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_GUID);
             String signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
 
             String compoundTypeString = node.get(ManifestConstants.KEY_COMPOUND_TYPE).textValue();

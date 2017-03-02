@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.io.IOException;
 
@@ -18,18 +18,12 @@ public class MetadataSerializer extends JsonSerializer<SOSMetadata> {
 
         jsonGenerator.writeStartObject();
 
-        // TODO - avoid magic constants
-        try {
-            jsonGenerator.writeStringField("GUID", metadata.guid().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, metadata.guid().toString());
 
-            jsonGenerator.writeFieldName("Properties");
-            jsonGenerator.writeStartArray();
-            serializeElements(metadata, jsonGenerator);
-            jsonGenerator.writeEndArray();
-
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-        }
+        jsonGenerator.writeFieldName(ManifestConstants.KEY_META_PROPERTIES);
+        jsonGenerator.writeStartArray();
+        serializeElements(metadata, jsonGenerator);
+        jsonGenerator.writeEndArray();
 
         jsonGenerator.writeEndObject();
     }
@@ -39,8 +33,7 @@ public class MetadataSerializer extends JsonSerializer<SOSMetadata> {
         for(String property:properties) {
             String value = metadata.getProperty(property);
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("Key", property);
-            jsonGenerator.writeStringField("Value", value);
+            jsonGenerator.writeStringField(property, value);
             jsonGenerator.writeEndObject();
 
         }

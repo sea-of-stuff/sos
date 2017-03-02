@@ -47,7 +47,7 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        if (manifest.getManifestType() == ManifestType.ASSET) {
+        if (manifest.getType() == ManifestType.ASSET) {
             Asset asset = (Asset) manifest;
 
             ObjectNode node = ManifestNode(asset, asset.getInvariantGUID().toString());
@@ -69,7 +69,7 @@ public class WGraph {
                 }
             }
 
-        } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
+        } else if (manifest.getType() == ManifestType.COMPOUND) {
             ObjectNode node = ManifestNode(manifest);
             arrayNode.add(node);
 
@@ -84,7 +84,7 @@ public class WGraph {
             ObjectNode node = ManifestNode(manifest);
             arrayNode.add(node);
 
-            ObjectNode dataNode = DataNode(manifest.getContentGUID());
+            ObjectNode dataNode = DataNode(manifest.guid());
             arrayNode.add(dataNode);
         }
 
@@ -96,7 +96,7 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        if (manifest.getManifestType() == ManifestType.ASSET) {
+        if (manifest.getType() == ManifestType.ASSET) {
             Asset asset = (Asset) manifest;
 
             ObjectNode objectNode = MakeEdge(asset.guid(), asset.getContentGUID());
@@ -111,7 +111,7 @@ public class WGraph {
                 }
             }
 
-        } else if (manifest.getManifestType() == ManifestType.COMPOUND) {
+        } else if (manifest.getType() == ManifestType.COMPOUND) {
             Compound compound = (Compound) manifest;
             Set<Content> contents = compound.getContents();
             for(Content content:contents) {
@@ -119,7 +119,7 @@ public class WGraph {
                 arrayNode.add(objectNode);
             }
         } else { // ATOM
-            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.getContentGUID(), "DATA-");
+            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.guid(), "DATA-");
             arrayNode.add(objectNode);
         }
 
@@ -131,8 +131,8 @@ public class WGraph {
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toString());
-        objectNode.put("label", "Type: " + manifest.getManifestType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
-        objectNode.put("group", manifest.getManifestType().toString());
+        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
+        objectNode.put("group", manifest.getType().toString());
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
 
@@ -144,7 +144,7 @@ public class WGraph {
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toString());
-        objectNode.put("label", "Type: " + manifest.getManifestType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
+        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
         objectNode.put("group", group);
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));

@@ -101,12 +101,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             addOrUpdate(new Content(name, object.getGUID()));
             this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
-            boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
+            boolean previousVersionDiffers = previousAssetDiffers(compound.guid());
             if (previousVersionDiffers) {
 
                 Set<IGUID> previousVersion = new LinkedHashSet<>();
                 previousVersion.add(previous.getAsset().getVersionGUID());
-                AssetBuilder assetBuilder = new AssetBuilder(compound.getContentGUID())
+                AssetBuilder assetBuilder = new AssetBuilder(compound.guid())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
 
@@ -143,12 +143,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             // TODO - the code below is the same as in the other constructor for this class
             this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
-            boolean previousVersionDiffers = previousAssetDiffers(compound.getContentGUID());
+            boolean previousVersionDiffers = previousAssetDiffers(compound.guid());
             if (previousVersionDiffers) {
 
                 Set<IGUID> previousVersion = new LinkedHashSet<>();
                 previousVersion.add(previous.getAsset().getVersionGUID());
-                AssetBuilder assetBuilder = new AssetBuilder(compound.getContentGUID())
+                AssetBuilder assetBuilder = new AssetBuilder(compound.guid())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
 
@@ -199,7 +199,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     }
 
     protected IGUID getContentGUID() {
-        return compound.getContentGUID();
+        return compound.guid();
     }
 
     @Override
@@ -222,7 +222,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 return getObject((Asset) manifest);
             } else {
                 SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type. " +
-                        "GUID: " + guid + " Type: " + manifest.getManifestType());
+                        "GUID: " + guid + " Type: " + manifest.getType());
             }
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
@@ -251,7 +251,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     private SOSDirectory getCompoundObject(Asset asset, Compound compound) throws GUIDGenerationException {
         // Still this might be a data compound
-        if (compound.getType() == CompoundType.DATA) {
+        if (compound.getCompoundType() == CompoundType.DATA) {
             return null; // TODO - Make compound file SOSFile(type compound), etc
         } else {
             return new SOSDirectory(sos, asset);

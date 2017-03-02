@@ -26,7 +26,7 @@ public class AssetManifestDeserializer extends JsonDeserializer<AssetManifest> {
 
         try {
             IGUID invariant = CommonJson.GetGUID(node, ManifestConstants.KEY_INVARIANT);
-            IGUID version = CommonJson.GetGUID(node, ManifestConstants.KEY_VERSION);
+            IGUID version = CommonJson.GetGUID(node, ManifestConstants.KEY_GUID);
             IGUID content = CommonJson.GetGUID(node, ManifestConstants.KEY_CONTENT_GUID);
 
             String signature = null;

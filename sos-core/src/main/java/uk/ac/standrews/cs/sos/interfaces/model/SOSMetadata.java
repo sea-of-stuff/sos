@@ -1,33 +1,21 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-
 /**
  * Example:
  *
  * {
  *  "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
- *  "Properties" : [
- *      {
- *          "Key" : "Author",
- *          "Value" : "simone"
- *      }, {
- *          "Key" : "Size",
- *          "Value" : "105"
- *      }, {
- *          "Key" : "Timestamp",
- *          "Value" : "1487606187"
- *      }, {
- *          "Key" : "Content-Type",
- *          "Value" : "application/octet-stream"
+ *  "Properties" : {
+ *          "Author" : "Simone",
+ *          "Size" : "105",
+ *          "Timestamp" : "1487606187",
+ *          "Content-type" : "application/octet-stream"
  *      }
- *  ]
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SOSMetadata {
+public interface SOSMetadata extends Manifest {
 
     String getProperty(String propertyName);
 
@@ -36,8 +24,6 @@ public interface SOSMetadata {
     String[] getAllPropertyNames();
 
     String[] getAllFilteredPropertyNames();
-
-    IGUID guid() throws GUIDGenerationException;
 
     String metadata();
 }
