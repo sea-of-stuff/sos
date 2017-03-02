@@ -12,7 +12,7 @@
 The sos-core module contains the code to:
 - create and manage manifests
 - manage metadata and contexts
-- manage the SOS Roles (agent, storage, nds, dds, mcs)
+- manage the SOS Roles (agent, storage, nds, dds, mms)
 
 
 ## sos-rest

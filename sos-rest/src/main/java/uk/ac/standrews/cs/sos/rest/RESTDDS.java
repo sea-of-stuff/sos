@@ -10,13 +10,9 @@ import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -84,52 +80,6 @@ public class RESTDDS {
             Manifest manifest = dds.getManifest(manifestGUID);
             return HTTPResponses.OK(manifest.toString());
         } catch (ManifestNotFoundException e) {
-            return HTTPResponses.BAD_REQUEST("Invalid Input");
-        }
-    }
-
-    @POST
-    @Path("/metadata")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response postMetadata(String json) throws IOException {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/metadata");
-
-        SOSMetadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
-
-        DDS dds = RESTConfig.sos.getDDS();
-        try {
-            dds.addMetadata(metadata);
-        } catch (MetadataPersistException e) {
-            return HTTPResponses.INTERNAL_SERVER();
-        }
-
-        return HTTPResponses.CREATED(metadata.toString());
-    }
-
-    @GET
-    @Path("/metadata/guid/{guid}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response getMetadata(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /dds/metadata/guid/{guid}");
-
-        if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
-        }
-
-        IGUID metadataGUID;
-        try {
-            metadataGUID = GUIDFactory.recreateGUID(guid);
-        } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
-        }
-
-        DDS dds = RESTConfig.sos.getDDS();
-
-        try {
-            SOSMetadata metadata = dds.getMetadata(metadataGUID);
-            return HTTPResponses.OK(metadata.toString());
-        } catch (MetadataNotFoundException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }
     }

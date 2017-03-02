@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
-import uk.ac.standrews.cs.sos.interfaces.actors.MCS;
+import uk.ac.standrews.cs.sos.interfaces.actors.MMS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
@@ -36,12 +36,12 @@ public class SOSAgent implements Agent {
 
     private Storage storage;
     private DDS dds;
-    private MCS mcs;
+    private MMS mms;
 
-    public SOSAgent(Storage storage, DDS dds, MCS mcs, Identity identity) {
+    public SOSAgent(Storage storage, DDS dds, MMS mms, Identity identity) {
         this.storage = storage;
         this.dds = dds;
-        this.mcs = mcs;
+        this.mms = mms;
 
         this.identity = identity; // FIXME - role should be dynamic and not fixed to the SOSAgent
     }
@@ -109,15 +109,15 @@ public class SOSAgent implements Agent {
     public SOSMetadata addMetadata(Atom atom) throws MetadataException {
 
         InputStream data = atom.getData();
-        SOSMetadata metadata = mcs.processMetadata(data);
-        dds.addMetadata(metadata);
+        SOSMetadata metadata = mms.processMetadata(data);
+        mms.addMetadata(metadata);
 
         return metadata;
     }
 
     @Override
     public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
-        SOSMetadata metadata = dds.getMetadata(guid);
+        SOSMetadata metadata = mms.getMetadata(guid);
         return metadata;
     }
 

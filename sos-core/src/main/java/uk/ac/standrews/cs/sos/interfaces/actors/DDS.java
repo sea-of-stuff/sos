@@ -3,10 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 
 /**
  * Data Discovery Service
@@ -46,21 +43,6 @@ public interface DDS extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
-
-    /**
-     * Add the given metadata to the sea of stuff
-     * @param metadata to be added to the sea of stuff
-     */
-    void addMetadata(SOSMetadata metadata) throws MetadataPersistException;
-
-    /**
-     * Get the metadata that matches the given GUID.
-     *
-     * @param guid of the metadata
-     * @return metadata associated with the GUID
-     * @throws MetadataNotFoundException
-     */
-    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
     /**
      * Flushes any in-memory information into disk

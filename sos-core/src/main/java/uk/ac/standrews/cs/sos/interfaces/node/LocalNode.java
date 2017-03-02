@@ -16,7 +16,7 @@ public interface LocalNode extends Node {
 
     NDS getNDS();
 
-    MCS getMCS();
+    MMS getMMS();
 
     CMS getCMS();
 

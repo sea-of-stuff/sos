@@ -68,7 +68,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private Storage storage;
     private DDS dds;
     private NDS nds;
-    private MCS mcs;
+    private MMS mms;
     private CMS cms;
     private RMS rms;
 
@@ -128,8 +128,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public MCS getMCS() {
-        return mcs;
+    public MMS getMMS() {
+        return mms;
     }
 
     @Override
@@ -203,13 +203,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
         MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
 
-        dds = new SOSDDS(localStorage, metadataEngine, manifestPolicy, metadataPolicy, nds);
+        dds = new SOSDDS(localStorage, manifestPolicy, nds);
         storage = new SOSStorage(this, localStorage, dataReplicationPolicy, nds, dds);
-        mcs = new SOSMCS(metadataEngine);
+        mms = new SOSMMS(localStorage, metadataEngine, metadataPolicy, nds);
         cms = new SOSCMS(dds, identity);
         // TODO - rms
 
-        agent = new SOSAgent(storage, dds, mcs, identity);
+        agent = new SOSAgent(storage, dds, mms, identity);
     }
 
     private void cacheFlusher() {
