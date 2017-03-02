@@ -35,7 +35,7 @@ public interface Manifest {
      */
     boolean verify(Identity identity) throws ManifestVerificationException; // TODO - rename to verifySignature
 
-    boolean verify(String challenge);
+    boolean check(String challenge);
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

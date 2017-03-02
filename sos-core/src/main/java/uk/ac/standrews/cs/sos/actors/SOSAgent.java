@@ -43,7 +43,7 @@ public class SOSAgent implements Agent {
         this.dds = dds;
         this.mcs = mcs;
 
-        this.identity = identity;
+        this.identity = identity; // FIXME - role should be dynamic and not fixed to the SOSAgent
     }
 
     @Override

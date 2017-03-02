@@ -2,15 +2,17 @@ package uk.ac.standrews.cs.sos.model.context.closures;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
-import uk.ac.standrews.cs.sos.interfaces.context.Context;
+import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.model.context.ContextLoader;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextLoaderTest {
 
-    private static final String TEST_CLOSURES_RESOURCES_PATH = "src/test/resources/closures/";
+    private static final String TEST_CLOSURES_RESOURCES_PATH = "src/test/resources/contexts/";
 
     @Test
     public void basicClosureLoaderTest() throws ContextLoaderException {

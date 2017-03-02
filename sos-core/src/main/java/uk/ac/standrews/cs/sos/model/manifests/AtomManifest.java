@@ -104,6 +104,11 @@ public class AtomManifest extends BasicManifest implements Atom {
         return true;
     }
 
+    @Override
+    public boolean check(String challenge) {
+        return false;
+    }
+
     private boolean verifyStream(InputStream inputStream) throws GUIDGenerationException {
         return inputStream != null &&
                 contentGUID.equals(GUIDFactory.generateGUID(inputStream));

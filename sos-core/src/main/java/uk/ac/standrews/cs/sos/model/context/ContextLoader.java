@@ -44,6 +44,7 @@ public class ContextLoader {
 
     }
 
+    // FIXME - instance with agent!
     public static Context Instance(String className) throws ContextLoaderException {
 
         try {

@@ -18,7 +18,11 @@ public interface LocalNode extends Node {
 
     MCS getMCS();
 
-    Identity getIdentity();
+    CMS getCMS();
+
+    RMS getRMS();
+
+    Identity getIdentity(); // TODO - remove
 
     void kill();
 }

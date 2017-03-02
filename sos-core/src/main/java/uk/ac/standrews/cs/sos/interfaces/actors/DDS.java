@@ -5,11 +5,12 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
-import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 
 /**
+ * Data Discovery Service
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface DDS extends SeaOfStuff {
@@ -60,13 +61,6 @@ public interface DDS extends SeaOfStuff {
      * @throws MetadataNotFoundException
      */
     SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
-
-    /**
-     * Add context to this node
-     *
-     * @param context to be added
-     */
-    void addContext(Context context);
 
     /**
      * Flushes any in-memory information into disk

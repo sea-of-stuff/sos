@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.identity;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 
@@ -10,7 +11,11 @@ import java.security.Key;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Identity {
+public interface Identity { // FIXME - rename to Role (will be managed by Role Service Manager)
+
+    String getName();
+    IGUID getID();
+    // TODO - json description of role too
 
     /**
      * Sign the given text and return a byte array representing the signature
@@ -19,7 +24,7 @@ public interface Identity {
      * @return
      * @throws EncryptionException
      */
-    String sign(String text) throws EncryptionException ;
+    String sign(String text) throws EncryptionException;
 
     /**
      * Verify that the given text and signature match

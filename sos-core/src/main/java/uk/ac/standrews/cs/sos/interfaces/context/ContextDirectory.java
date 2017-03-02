@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.context;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 
@@ -17,7 +18,7 @@ public interface ContextDirectory {
      * Add this context to the directory
      * @param context
      */
-    Asset add(Context context);
+    Asset add(Context context) throws ContextException;
 
     /**
      * Get context from this directory given its GUID

@@ -69,12 +69,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private DDS dds;
     private NDS nds;
     private MCS mcs;
+    private CMS cms;
+    private RMS rms;
 
     // Each node will have its own log and it will be used to log errors as well
     // as useful information about the node itself.
     private SOS_LOG SOS_LOG = new SOS_LOG(getNodeGUID());
 
-    public SOSLocalNode(Builder builder) throws SOSException, GUIDGenerationException {
+    public SOSLocalNode() throws SOSException, GUIDGenerationException {
         super(Builder.configuration);
 
         SOS_LOG.log(LEVEL.INFO, "Starting up node ");
@@ -128,6 +130,16 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     @Override
     public MCS getMCS() {
         return mcs;
+    }
+
+    @Override
+    public CMS getCMS() {
+        return cms;
+    }
+
+    @Override
+    public RMS getRMS() {
+        return rms;
     }
 
     @Override
@@ -194,6 +206,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dds = new SOSDDS(localStorage, metadataEngine, manifestPolicy, metadataPolicy, nds);
         storage = new SOSStorage(this, localStorage, dataReplicationPolicy, nds, dds);
         mcs = new SOSMCS(metadataEngine);
+        cms = new SOSCMS(dds, identity);
+        // TODO - rms
 
         agent = new SOSAgent(storage, dds, mcs, identity);
     }
@@ -237,7 +251,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
 
         public SOSLocalNode build() throws SOSException, GUIDGenerationException {
-            return new SOSLocalNode(this);
+            return new SOSLocalNode();
         }
     }
 
