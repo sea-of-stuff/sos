@@ -82,4 +82,9 @@ public class SOSCMS implements CMS {
     public Iterator<IGUID> getContents(IGUID version) {
         return null;
     }
+
+    @Override
+    public boolean verify(IGUID context, IGUID version) {
+        return false;
+    }
 }
