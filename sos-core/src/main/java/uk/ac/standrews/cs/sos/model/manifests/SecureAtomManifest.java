@@ -1,10 +1,14 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
+import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.utils.crypto.AESCrypto;
 import uk.ac.standrews.cs.sos.utils.crypto.RSACrypto;
@@ -19,10 +23,11 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = SecureAtomManifestSerializer.class)
+@JsonDeserialize(using = SecureAtomManifestDeserializer.class)
 public class SecureAtomManifest extends AtomManifest {
 
-
-    RSACrypto rsa; // TODO - generate them only once or once per ROLE?
+    private RSACrypto rsa; // TODO - generate them only once or once per ROLE?
 
     /**
      * Creates a valid atom manifest given an atom.
@@ -68,4 +73,6 @@ public class SecureAtomManifest extends AtomManifest {
         }
 
     }
+
+
 }

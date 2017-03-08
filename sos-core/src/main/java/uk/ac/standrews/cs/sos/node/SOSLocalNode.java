@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
@@ -201,13 +200,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         DataReplicationPolicy dataReplicationPolicy = policyManager.getDataReplicationPolicy();
         ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
         MetadataEngine metadataEngine = new TikaMetadataEngine();
-        MetadataPolicy metadataPolicy = policyManager.getMetadataPolicy();
 
         dds = new SOSDDS(localStorage, manifestPolicy, nds);
         storage = new SOSStorage(this, localStorage, dataReplicationPolicy, nds, dds);
         mms = new SOSMMS(dds, metadataEngine);
-        cms = new SOSCMS(dds, identity);
-        // TODO - rms
+        cms = new SOSCMS(dds);
+        rms = new SOSRMS();
 
         agent = new SOSAgent(storage, dds, mms, identity);
     }

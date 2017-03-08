@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -25,6 +27,8 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 import java.util.HashSet;
 
 /**
+ * Directory for the manifests stored locally to this node
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocalManifestsDirectory implements ManifestsDirectory {
@@ -60,7 +64,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
                 try {
                     saveManifest(manifest);
                 } catch (ManifestsDirectoryException e) {
-                    e.printStackTrace();
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to save manifest " + manifest);
                 }
             } else {
                 throw new ManifestPersistException("Manifest not valid");

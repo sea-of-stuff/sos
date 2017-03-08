@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests.directory;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
@@ -9,6 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
@@ -158,10 +160,11 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         int lruSize = in.readInt();
         lru = new ConcurrentLinkedQueue<>();
         for(int i = 0; i < lruSize; i++) {
+            String guid = in.readUTF();
             try {
-                lru.add(GUIDFactory.recreateGUID(in.readUTF()));
+                lru.add(GUIDFactory.recreateGUID(guid));
             } catch (GUIDGenerationException e) {
-                e.printStackTrace();
+                SOS_LOG.log(LEVEL.WARN, "Manifest cache loading - unable to created GUID for entry: " + guid);
             }
         }
 

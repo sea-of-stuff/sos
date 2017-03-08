@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
+import uk.ac.standrews.cs.sos.interfaces.Role;
 import uk.ac.standrews.cs.sos.interfaces.context.Rule;
 
 import java.util.function.Predicate;
@@ -11,7 +12,6 @@ import java.util.function.Predicate;
  * A context is unique and is defined by a closure, which defines what assets belong to the context or not.
  * Moreover, contexts can be combines under the boolean operators AND and OR
  *
- * TODO - rules
  * TODO - json serialise/deserialiser
  *
  * Example:
@@ -20,8 +20,9 @@ import java.util.function.Predicate;
  *     "Type" : "Context",
  *     "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *     "Name" : "Simone's replication context",
- *     "Closure" : CODE
- *     "Rules" : CODE
+ *     "Closure" : CODE,
+ *     "Rules" : CODE,
+ *     "Owner" : "01af5edc76b7e892ddca1e9e290750fe805e7fba"
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -40,8 +41,6 @@ public interface Context extends Predicate<Asset>, Manifest {
      */
     Rule[] getRules();
 
-    boolean test(Asset asset);
-
     /**
      * Combine this context with another one under the AND logical operator
      * @param context to AND
@@ -55,4 +54,6 @@ public interface Context extends Predicate<Asset>, Manifest {
      * @return a new context
      */
     Context OR(Context context);
+
+    Role getOwner();
 }

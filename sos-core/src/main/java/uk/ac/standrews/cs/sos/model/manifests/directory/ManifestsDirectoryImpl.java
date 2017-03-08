@@ -92,7 +92,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
             ddsIndex.persist(ddsIndexFile);
 
         } catch (DataStorageException | IOException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the DDS cache and/or index");
         }
     }
 
@@ -104,7 +104,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
                 cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestDirectory());
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS cache");
         }
 
         if (cache == null) {
@@ -120,7 +120,7 @@ public class ManifestsDirectoryImpl implements ManifestsDirectory {
                 ddsIndex = DDSIndex.load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS index");
         }
 
         if (ddsIndex == null) {

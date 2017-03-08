@@ -44,6 +44,9 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
+        // FIXME - metadata and context should be replicated at different end-points
+        // TODO - Policy based on context?
+
         boolean replicate = manifestPolicy.storeManifestsRemotely();
         if (replicate) {
             Iterator<Node> nodes = nds.getStorageNodesIterator();
@@ -78,7 +81,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
             try {
                 Node node = nds.getNode(g);
 
-                FetchManifest fetchManifest = new FetchManifest(node, guid);
+                FetchManifest fetchManifest = new FetchManifest(node, guid); // FIXME - use different end-points for context, metadata, etc
                 TasksQueue.instance().performSyncTask(fetchManifest);
 
                 retval = fetchManifest.getManifest();

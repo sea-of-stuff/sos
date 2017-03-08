@@ -1,7 +1,10 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
+
+import java.util.Iterator;
 
 /**
  * Context Management Service
@@ -11,4 +14,20 @@ import uk.ac.standrews.cs.sos.interfaces.model.Context;
 public interface CMS extends SeaOfStuff {
 
     Asset addContext(Context context) throws Exception;
+
+    Context getContext(IGUID version);
+
+    Asset update(IGUID version, Context context);
+
+    Asset remove(IGUID guid);
+
+    Iterator<IGUID> getContents(IGUID version);
+
+    /**
+     * Verify if the given version should belong to the specified context
+     * @param context
+     * @param version
+     * @return
+     */
+    boolean verify(IGUID context, IGUID version);
 }

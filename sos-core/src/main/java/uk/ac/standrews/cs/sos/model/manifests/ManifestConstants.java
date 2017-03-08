@@ -34,4 +34,7 @@ public class ManifestConstants {
     // Metadata
     public static final String KEY_META_PROPERTIES = "Properties";
 
+    // Protection
+    public static final String KEY_KEYS = "Keys";
+
 }

@@ -1,27 +1,27 @@
 package uk.ac.standrews.cs.sos.actors;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.CMS;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
-import uk.ac.standrews.cs.sos.interfaces.context.ContextDirectory;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
-import uk.ac.standrews.cs.sos.model.context.ContextDirectoryImpl;
+import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
+
+import java.util.Iterator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSCMS implements CMS {
 
-    private ContextDirectory contextDirectory;
     private DDS dds;
 
-    public SOSCMS(DDS dds, Identity identity) {
+    public SOSCMS(DDS dds) {
         this.dds = dds;
-        contextDirectory = new ContextDirectoryImpl(identity);
     }
 
     @Override
@@ -37,5 +37,49 @@ public class SOSCMS implements CMS {
         } catch (ManifestPersistException e) {
             throw new ContextException(e);
         }
+    }
+
+    @Override
+    public Context getContext(IGUID version) {
+
+        try {
+            Manifest manifest = dds.getManifest(version);
+            return (Context) dds.getManifest(((Asset) manifest).getContentGUID());
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Asset update(IGUID version, Context context) {
+
+
+        // Create new version with version as previous
+//        try {
+//            Asset asset = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
+//
+//            dds.addManifest(context, false);
+//            dds.addManifest(asset, false);
+//
+//            return asset;
+//        } catch (ManifestPersistException e) {
+//            throw new ContextException(e);
+//        }
+
+        return null;
+    }
+
+    @Override
+    public Asset remove(IGUID guid) {
+        // Create new version without context
+
+        return null;
+    }
+
+    @Override
+    public Iterator<IGUID> getContents(IGUID version) {
+        return null;
     }
 }
