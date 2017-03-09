@@ -42,7 +42,6 @@ public class LocalStorageTest extends CommonTest {
         assertNotNull(localStorage.getDataDirectory());
         assertNotNull(localStorage.getManifestDirectory());
         assertNotNull(localStorage.getHeadsDirectory());
-        assertNotNull(localStorage.getMetadataDirectory());
     }
 
     @Test

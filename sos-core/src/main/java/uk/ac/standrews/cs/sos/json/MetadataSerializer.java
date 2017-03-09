@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ public class MetadataSerializer extends JsonSerializer<SOSMetadata> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, metadata.guid().toString());
+        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.METADATA.toString());
 
         jsonGenerator.writeFieldName(ManifestConstants.KEY_META_PROPERTIES);
         jsonGenerator.writeStartArray();

@@ -45,7 +45,7 @@ public class WData {
         if (manifest.getType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
-            InputStream atomContent = null;
+            InputStream atomContent;
             try {
                 atomContent = sos.getAgent().getAtomContent(atom);
             } catch (AtomNotFoundException e) {

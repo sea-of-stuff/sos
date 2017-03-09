@@ -18,7 +18,6 @@ public class LocalStorage {
     private static final String DATA_DIRECTORY_NAME = "data";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String HEADS_DIRECTORY_NAME = "heads";
-    private static final String META_DIRECTORY_NAME = "metadata";
     private static final String CACHES_DIRECTORY_NAME = "caches";
     private static final String DB_DIRECTORY_NAME = "db";
 
@@ -70,19 +69,6 @@ public class LocalStorage {
     public Directory getHeadsDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(HEADS_DIRECTORY_NAME);
-        } catch (StorageException e) {
-            throw new DataStorageException(e);
-        }
-    }
-
-    /**
-     * Return the directory used to store the metadata relevant to the data in this node
-     * @return metadata directory
-     * @throws DataStorageException
-     */
-    public Directory getMetadataDirectory() throws DataStorageException {
-        try {
-            return storage.createDirectory(META_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
@@ -157,7 +143,6 @@ public class LocalStorage {
             remove(DATA_DIRECTORY_NAME);
             remove(MANIFESTS_DIRECTORY_NAME);
             remove(HEADS_DIRECTORY_NAME);
-            remove(META_DIRECTORY_NAME);
             remove(CACHES_DIRECTORY_NAME);
             remove(DB_DIRECTORY_NAME);
         } catch (BindingAbsentException e) {
@@ -176,7 +161,6 @@ public class LocalStorage {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
             storage.createDirectory(HEADS_DIRECTORY_NAME).persist();
-            storage.createDirectory(META_DIRECTORY_NAME).persist();
             storage.createDirectory(CACHES_DIRECTORY_NAME).persist();
             storage.createDirectory(DB_DIRECTORY_NAME).persist();
         } catch (StorageException e) {
