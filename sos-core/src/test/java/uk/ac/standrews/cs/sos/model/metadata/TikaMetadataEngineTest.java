@@ -44,7 +44,7 @@ public class TikaMetadataEngineTest extends CommonTest {
         Data data = new StringData("just some text in a string");
         TikaMetadata output = test.processData(data);
 
-        String contentEncoding = output.getProperty("Content-Encoding");
+        String contentEncoding = output.getPropertyAsString("Content-Encoding");
         assertNull(contentEncoding);
     }
 

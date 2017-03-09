@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
@@ -25,10 +26,17 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         BasicMetadata basicMetadata = new BasicMetadata();
 
         JsonNode properties = node.get(ManifestConstants.KEY_META_PROPERTIES);
-        Iterator<Map.Entry<String, JsonNode>> it = properties.fields();
+
+        Iterator<JsonNode> it = properties.elements();
         while(it.hasNext()) {
-            Map.Entry<String, JsonNode> e = it.next();
-            basicMetadata.addProperty(e.getKey(), e.getValue().asText()); // TODO - can also parse different types!
+            JsonNode n = it.next();
+
+            Iterator<Map.Entry<String, JsonNode>> property = n.fields();
+            if (property.hasNext()) {
+                Map.Entry<String, JsonNode> p = property.next();
+                basicMetadata.addProperty(p.getKey(), p.getValue().getNodeType() == JsonNodeType.NUMBER ?
+                                p.getValue().asInt() : p.getValue().asText());
+            }
         }
 
         try {

@@ -21,6 +21,9 @@ public interface Metadata extends Manifest {
 
     Object getProperty(String propertyName);
 
+    String getPropertyAsString(String propertyName);
+    Integer getPropertyAsInteger(String propertyName);
+
     boolean hasProperty(String propertyName);
 
     String[] getAllPropertyNames();

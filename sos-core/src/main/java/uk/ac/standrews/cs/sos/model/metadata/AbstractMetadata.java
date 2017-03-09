@@ -29,6 +29,14 @@ public abstract class AbstractMetadata implements Metadata {
     @Override
     public abstract Object getProperty(String propertyName);
 
+    public String getPropertyAsString(String propertyName) {
+        return (String) getProperty(propertyName);
+    }
+
+    public Integer getPropertyAsInteger(String propertyName) {
+        return (Integer) getProperty(propertyName);
+    }
+
     @Override
     public abstract String[] getAllPropertyNames();
 

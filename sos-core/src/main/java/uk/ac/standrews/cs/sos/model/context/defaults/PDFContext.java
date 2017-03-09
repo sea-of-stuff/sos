@@ -20,7 +20,7 @@ public class PDFContext extends ContextImpl {
 
         try {
             Metadata metadata = agent.getMetadata(asset.getMetadata());
-            String contentType = metadata.getProperty("Content-Type");
+            String contentType = metadata.getPropertyAsString("Content-Type");
             return contentType.toLowerCase().equals("application/pdf");
         } catch (MetadataNotFoundException e) {
             e.printStackTrace();

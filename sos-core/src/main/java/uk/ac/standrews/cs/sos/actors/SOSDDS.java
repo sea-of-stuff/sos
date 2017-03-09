@@ -135,7 +135,7 @@ public class SOSDDS implements DDS {
         try {
             manifest = cache.getManifest(guid);
         } catch (ManifestsCacheMissException e) {
-            System.out.println(e.getMessage());
+            SOS_LOG.log(LEVEL.WARN, e.getMessage());
         }
         return manifest;
     }
@@ -145,12 +145,11 @@ public class SOSDDS implements DDS {
         try {
             manifest = directory.findManifest(guid);
 
-            // Make sure manifest is cached and saved locally
             cache.addManifest(manifest);
             local.addManifest(manifest);
 
         } catch (ManifestNotFoundException e) {
-            System.out.println(e.getMessage());
+            SOS_LOG.log(LEVEL.WARN, e.getMessage());
         } catch (ManifestPersistException e) {
             SOS_LOG.log(LEVEL.WARN, "ManifestsDirectory :: Unable to save manifest to local directory");
         }

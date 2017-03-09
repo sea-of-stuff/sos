@@ -12,6 +12,9 @@ import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 
 import java.util.Iterator;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -96,5 +99,14 @@ public class SOSCMS implements CMS {
     @Override
     public void setContext(Context context, boolean active) {
 
+    }
+
+    @Override
+    public void process() {
+
+        ScheduledExecutorService service = new ScheduledThreadPoolExecutor(1);
+        service.scheduleWithFixedDelay(() -> {
+            // execute contexts on assets
+        }, 0, 1, TimeUnit.MINUTES);
     }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 @JsonSerialize(using = MetadataSerializer.class)
 public class BasicMetadata extends AbstractMetadata implements Metadata {
 
-    private HashMap<String, String> metadata;
+    private HashMap<String, Object> metadata;
 
     public BasicMetadata() {
         super(new String[]{});
@@ -30,17 +30,13 @@ public class BasicMetadata extends AbstractMetadata implements Metadata {
         guid = generateGUID();
     }
 
-    public void addProperty(String property, String value) {
+    public void addProperty(String property, Object value) {
         metadata.put(property, value);
     }
 
     @Override
     public Object getProperty(String propertyName) {
-        String p = metadata.get(propertyName);
-        if (isInteger(p)) {
-            return Integer.parseInt(p);
-        }
-
+        Object p = metadata.get(propertyName);
         return p;
     }
 

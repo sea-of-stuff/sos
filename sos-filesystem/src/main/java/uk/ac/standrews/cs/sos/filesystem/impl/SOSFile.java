@@ -171,8 +171,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         long modtime = 0;
 
         if (metadata != null && metadata.hasProperty(META_TIMESTAMP)) {
-            String s_modtime = metadata.getProperty(META_TIMESTAMP).trim();
-            modtime = Long.parseLong(s_modtime);
+            modtime = metadata.getPropertyAsInteger(META_TIMESTAMP);
         }
 
         return Helper.UnixTimeToFileTime(modtime);
@@ -227,8 +226,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         int size = DEFAULT_MAX_FILESIZE;
         if (metadata != null && metadata.hasProperty(META_SIZE)) {
-            String s_size = metadata.getProperty(META_SIZE).trim();
-            size = Integer.parseInt(s_size);
+            size = metadata.getPropertyAsInteger(META_SIZE);
         }
 
         try (InputStream stream = sos.getAtomContent(atom)){

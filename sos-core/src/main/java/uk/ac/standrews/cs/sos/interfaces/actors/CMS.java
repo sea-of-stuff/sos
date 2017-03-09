@@ -35,4 +35,10 @@ public interface CMS extends SeaOfStuff {
 
     void getActiveContexts();
     void setContext(Context context, boolean active);
+
+    /**
+     * Run the all active contexts against the available assets
+     * This method should be run periodically to avoid spending too much time on it
+     */
+    void process();
 }

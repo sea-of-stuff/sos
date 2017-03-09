@@ -134,9 +134,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     private static Manifest loadManifest(LocalStorage storage, Directory manifestsDir, IGUID guid) {
         try {
             File file = ManifestsUtils.ManifestFile(storage, manifestsDir, guid.toString());
-            Manifest manifest = ManifestsUtils.ManifestFromFile(file);
-
-            return  manifest;
+            return ManifestsUtils.ManifestFromFile(file);
         } catch (DataStorageException | ManifestNotFoundException e) {
             return null;
         }
