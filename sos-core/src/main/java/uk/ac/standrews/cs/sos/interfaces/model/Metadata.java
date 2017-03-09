@@ -6,6 +6,7 @@ package uk.ac.standrews.cs.sos.interfaces.model;
  *
  * {
  *  "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
+ *  "Type" : "Metadata",
  *  "Properties" : {
  *          "Author" : "Simone",
  *          "Size" : "105",
@@ -18,7 +19,7 @@ package uk.ac.standrews.cs.sos.interfaces.model;
  */
 public interface Metadata extends Manifest {
 
-    String getProperty(String propertyName);
+    Object getProperty(String propertyName);
 
     boolean hasProperty(String propertyName);
 

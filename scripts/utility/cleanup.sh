@@ -16,6 +16,4 @@ rm -f heads/*
 echo 'Cleaning up the manifests'
 rm -f manifests/* 
 
-echo 'Cleaning up the metadata'
-rm -f metadata/*
 

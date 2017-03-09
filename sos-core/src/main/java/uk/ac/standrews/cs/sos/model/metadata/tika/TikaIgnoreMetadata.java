@@ -7,7 +7,7 @@ public class TikaIgnoreMetadata {
 
     public static String[] IGNORE_METADATA = new String[]
             {
-                "Content-Encoding",
-                "File Name"
+                    "Content-Encoding",
+                    "File Name"
             };
 }

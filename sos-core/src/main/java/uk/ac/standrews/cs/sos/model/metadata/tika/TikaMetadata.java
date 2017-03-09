@@ -22,10 +22,20 @@ public class TikaMetadata extends AbstractMetadata implements Metadata {
         this.guid = generateGUID();
     }
 
-    public String getProperty(String propertyName) {
-
+    public Object getProperty(String propertyName) {
         boolean ignore = Arrays.asList(ignoreMetadata).contains(propertyName);
-        return ignore ? null : tikaMetadata.get(propertyName);
+
+
+        if (ignore) {
+            return null;
+        } else {
+            String p = tikaMetadata.get(propertyName);
+            if (isInteger(p)) {
+                return Integer.parseInt(p);
+            }
+
+            return p;
+        }
     }
 
     @Override
@@ -41,6 +51,5 @@ public class TikaMetadata extends AbstractMetadata implements Metadata {
     public String[] getAllPropertyNames() {
         return tikaMetadata.names();
     }
-
 
 }
