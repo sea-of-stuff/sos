@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.manifests.directory;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.protocol.tasks.FetchManifest;
@@ -60,11 +59,6 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
             }
         }
 
-    }
-
-    @Override
-    public void addManifestDDSMapping(IGUID manifestGUID, IGUID ddsNodeGUID) {
-        throw new NotImplementedException();
     }
 
     @Override

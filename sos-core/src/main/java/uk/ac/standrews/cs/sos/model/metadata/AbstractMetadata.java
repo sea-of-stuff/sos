@@ -95,6 +95,6 @@ public abstract class AbstractMetadata implements SOSMetadata {
 
     @Override
     public boolean isValid() {
-        return false;
+        return true;
     }
 }

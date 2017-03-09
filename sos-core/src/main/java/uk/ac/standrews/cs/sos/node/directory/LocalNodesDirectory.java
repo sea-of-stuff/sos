@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
 /**
- * This is the node directory for this node, which keeps track of the known nodes.
+ * The nodes directory which keeps track of the known nodes at this given node
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

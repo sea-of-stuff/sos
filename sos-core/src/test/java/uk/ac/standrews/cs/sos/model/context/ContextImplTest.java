@@ -15,7 +15,7 @@ public class ContextImplTest extends SetUpTest {
     public void guidIsNotNull() {
         uk.ac.standrews.cs.sos.interfaces.model.Context context = new ContextImpl(localSOSNode.getAgent(), "test", null);
 
-        assertNotNull(context.getGUID());
+        assertNotNull(context.guid());
     }
 
     @Test

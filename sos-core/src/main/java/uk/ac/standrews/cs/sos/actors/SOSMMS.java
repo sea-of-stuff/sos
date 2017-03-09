@@ -51,9 +51,7 @@ public class SOSMMS implements MMS {
     public SOSMetadata processMetadata(InputStream inputStream) throws MetadataException {
 
         InputStreamData data = new InputStreamData(inputStream);
-        SOSMetadata metadata = engine.processData(data);
-
-        return metadata;
+        return engine.processData(data);
     }
 
 }

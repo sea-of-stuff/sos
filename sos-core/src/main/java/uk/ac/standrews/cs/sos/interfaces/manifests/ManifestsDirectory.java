@@ -12,8 +12,6 @@ public interface ManifestsDirectory {
 
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
-    void addManifestDDSMapping(IGUID manifestGUID, IGUID ddsNodeGUID);
-
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
     void flush();

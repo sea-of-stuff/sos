@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model.manifests.directory;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -70,11 +69,6 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
                 throw new ManifestPersistException("Manifest not valid");
             }
         }
-    }
-
-    @Override
-    public void addManifestDDSMapping(IGUID manifestGUID, IGUID ddsNodeGUID) {
-        throw new NotImplementedException();
     }
 
     /**

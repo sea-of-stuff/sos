@@ -87,4 +87,14 @@ public class SOSCMS implements CMS {
     public boolean verify(IGUID context, IGUID version) {
         return false;
     }
+
+    @Override
+    public void getActiveContexts() {
+
+    }
+
+    @Override
+    public void setContext(Context context, boolean active) {
+
+    }
 }

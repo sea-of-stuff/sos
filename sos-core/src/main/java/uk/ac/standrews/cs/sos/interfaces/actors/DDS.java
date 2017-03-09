@@ -8,6 +8,10 @@ import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 /**
  * Data Discovery Service
  *
+ * The DDS takes care of:
+ * - managing the manifests in the SOS
+ * - track where the data is and help nodes to find the data
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface DDS extends SeaOfStuff {

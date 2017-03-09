@@ -8,10 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.sos.web.graph.WData;
-import uk.ac.standrews.cs.sos.web.graph.WGraph;
-import uk.ac.standrews.cs.sos.web.graph.WManifest;
-import uk.ac.standrews.cs.sos.web.graph.WMetadata;
+import uk.ac.standrews.cs.sos.web.graph.*;
 import uk.ac.standrews.cs.sos.web.home.WHome;
 import uk.ac.standrews.cs.sos.web.tree.WTree;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -54,6 +51,7 @@ public class WebApp {
         get("/graph/data/:id", (req, res) -> WData.Render(req, sos));
         get("/graph/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
+        get("/verify/:id", (req, res) -> WVerify.Render(req, sos));
 
         post("/data", (req, res) -> postData(req, sos));
     }

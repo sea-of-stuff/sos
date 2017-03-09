@@ -9,6 +9,8 @@ import java.util.Iterator;
 /**
  * Context Management Service
  *
+ * TODO - have methods to set active/inactive contexts
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface CMS extends SeaOfStuff {
@@ -30,4 +32,7 @@ public interface CMS extends SeaOfStuff {
      * @return
      */
     boolean verify(IGUID context, IGUID version);
+
+    void getActiveContexts();
+    void setContext(Context context, boolean active);
 }

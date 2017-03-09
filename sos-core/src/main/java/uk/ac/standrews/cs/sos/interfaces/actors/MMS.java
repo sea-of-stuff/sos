@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
 import java.io.InputStream;
 
 /**
- * Metadata Management Service
+ * Metadata Management Service TODO -> metadata discovery service
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

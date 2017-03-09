@@ -18,7 +18,6 @@ import java.util.Set;
  * The SOSNDS represents a basic NDS implementation.
  * It provides naive methods to register new nodes in the sos and get known nodes.
  *
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSNDS implements NDS {

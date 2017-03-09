@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * Singleton pattern used for this class.
  *
  * TODO - add ability to prioritise tasks
- * TODO - ability to persist tasks
+ * TODO - ability to persist tasks -- tasks must be "describable"
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

@@ -9,6 +9,9 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * The Cache Flusher deletes all data and manifests that are safe to delete (e.g. content is replicated elsewhere)
+ * The Cache Flusher can be run as a periodic scheduled thread
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class CacheFlusher implements Runnable {
