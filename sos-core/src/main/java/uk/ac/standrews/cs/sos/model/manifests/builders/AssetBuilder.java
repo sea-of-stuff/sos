@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests.builders;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 
 import java.util.Set;
 
@@ -11,7 +11,7 @@ import java.util.Set;
 public class AssetBuilder {
 
     private IGUID content;
-    private SOSMetadata metadata;
+    private Metadata metadata;
     private IGUID invariant;
     private Set<IGUID> previousCollection;
 
@@ -32,7 +32,7 @@ public class AssetBuilder {
         return this;
     }
 
-    public AssetBuilder setMetadata(SOSMetadata metadata) {
+    public AssetBuilder setMetadata(Metadata metadata) {
         this.metadata = metadata;
         metadataIsSet = true;
 

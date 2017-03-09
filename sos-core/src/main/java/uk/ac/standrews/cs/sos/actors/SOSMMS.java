@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.MMS;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.storage.data.InputStreamData;
 
 import java.io.InputStream;
@@ -29,7 +29,7 @@ public class SOSMMS implements MMS {
 
 
     @Override
-    public void addMetadata(SOSMetadata metadata) throws MetadataPersistException {
+    public void addMetadata(Metadata metadata) throws MetadataPersistException {
         try {
             dds.addManifest(metadata, false);
         } catch (ManifestPersistException e) {
@@ -38,9 +38,9 @@ public class SOSMMS implements MMS {
     }
 
     @Override
-    public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
+    public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         try {
-            return (SOSMetadata) dds.getManifest(guid);
+            return (Metadata) dds.getManifest(guid);
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
             throw new MetadataNotFoundException("unable to find metadata");
@@ -48,7 +48,7 @@ public class SOSMMS implements MMS {
     }
 
     @Override
-    public SOSMetadata processMetadata(InputStream inputStream) throws MetadataException {
+    public Metadata processMetadata(InputStream inputStream) throws MetadataException {
 
         InputStreamData data = new InputStreamData(inputStream);
         return engine.processData(data);

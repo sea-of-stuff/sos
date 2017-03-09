@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -32,7 +32,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     protected Asset asset;
     protected SOSDirectory parent;
     protected SOSFileSystemObject previous; // TODO - make collection (e.g. for merging)
-    protected SOSMetadata metadata;
+    protected Metadata metadata;
 
     public SOSFileSystemObject(Agent sos) {
         super(null);

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.metadata;
 
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.storage.data.Data;
 
 /**
@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.storage.data.Data;
  */
 public interface MetadataEngine {
 
-    SOSMetadata processData(Data data) throws MetadataException;
+    Metadata processData(Data data) throws MetadataException;
 
     // NOTES
     // save metadata

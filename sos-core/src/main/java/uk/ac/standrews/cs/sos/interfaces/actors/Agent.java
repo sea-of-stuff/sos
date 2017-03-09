@@ -129,7 +129,7 @@ public interface Agent {
      * @return the metadata generated
      * @throws MetadataException if the metadata could not be generated
      */
-    SOSMetadata addMetadata(Atom atom) throws MetadataException;
+    Metadata addMetadata(Atom atom) throws MetadataException;
 
     /**
      * Get the metadata mapped to the specified guid
@@ -137,5 +137,5 @@ public interface Agent {
      * @param guid for the metadata
      * @return SOSMetadata mapped with the guid
      */
-    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+    Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 }

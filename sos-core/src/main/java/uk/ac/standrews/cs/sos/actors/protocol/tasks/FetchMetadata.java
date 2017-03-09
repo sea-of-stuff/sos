@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
@@ -27,7 +27,7 @@ public class FetchMetadata extends Task {
 
     private Node node;
     private IGUID metadataId;
-    private SOSMetadata metadata;
+    private Metadata metadata;
 
     public FetchMetadata(Node node, IGUID metadataId) throws IOException {
         if (!node.isMMS()) {
@@ -67,7 +67,7 @@ public class FetchMetadata extends Task {
         }
     }
 
-    public SOSMetadata getMetadata() {
+    public Metadata getMetadata() {
         return metadata;
     }
 

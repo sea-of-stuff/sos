@@ -106,18 +106,18 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public SOSMetadata addMetadata(Atom atom) throws MetadataException {
+    public Metadata addMetadata(Atom atom) throws MetadataException {
 
         InputStream data = atom.getData();
-        SOSMetadata metadata = mms.processMetadata(data);
+        Metadata metadata = mms.processMetadata(data);
         mms.addMetadata(metadata);
 
         return metadata;
     }
 
     @Override
-    public SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException {
-        SOSMetadata metadata = mms.getMetadata(guid);
+    public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
+        Metadata metadata = mms.getMetadata(guid);
         return metadata;
     }
 

@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 
 import java.io.InputStream;
 
@@ -19,7 +19,7 @@ public interface MMS extends SeaOfStuff {
      * Add the given metadata to the sea of stuff
      * @param metadata to be added to the sea of stuff
      */
-    void addMetadata(SOSMetadata metadata) throws MetadataPersistException;
+    void addMetadata(Metadata metadata) throws MetadataPersistException;
 
     /**
      * Get the metadata that matches the given GUID.
@@ -28,7 +28,7 @@ public interface MMS extends SeaOfStuff {
      * @return metadata associated with the GUID
      * @throws MetadataNotFoundException
      */
-    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+    Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
-    SOSMetadata processMetadata(InputStream inputStream) throws MetadataException;
+    Metadata processMetadata(InputStream inputStream) throws MetadataException;
 }

@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.context.defaults;
 import uk.ac.standrews.cs.sos.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.model.context.ContextImpl;
 
 /**
@@ -19,7 +19,7 @@ public class PDFContext extends ContextImpl {
     public boolean test(Asset asset) {
 
         try {
-            SOSMetadata metadata = agent.getMetadata(asset.getMetadata());
+            Metadata metadata = agent.getMetadata(asset.getMetadata());
             String contentType = metadata.getProperty("Content-Type");
             return contentType.toLowerCase().equals("application/pdf");
         } catch (MetadataNotFoundException e) {

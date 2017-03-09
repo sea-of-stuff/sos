@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.network.HTTPStatus;
@@ -25,11 +25,11 @@ import java.util.Iterator;
  */
 public class MetadataReplication extends Task {
 
-    private SOSMetadata metadata;
+    private Metadata metadata;
     private Iterator<Node> nodes;
     private int replicationFactor;
 
-    public MetadataReplication(SOSMetadata metadata, Iterator<Node> nodes, int replicationFactor) throws SOSProtocolException {
+    public MetadataReplication(Metadata metadata, Iterator<Node> nodes, int replicationFactor) throws SOSProtocolException {
         this.metadata = metadata;
         this.nodes = nodes;
         this.replicationFactor = replicationFactor;
@@ -62,7 +62,7 @@ public class MetadataReplication extends Task {
         }
     }
 
-    private static boolean TransferMetadataRequest(SOSMetadata metadata, Node node) throws GUIDGenerationException {
+    private static boolean TransferMetadataRequest(Metadata metadata, Node node) throws GUIDGenerationException {
 
         try {
             URL url = SOSURL.MMS_POST_METADATA(node);

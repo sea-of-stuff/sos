@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class AbstractMetadata implements SOSMetadata {
+public abstract class AbstractMetadata implements Metadata {
 
     protected String[] ignoreMetadata;
     protected IGUID guid;

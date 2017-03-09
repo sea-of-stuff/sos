@@ -1,9 +1,8 @@
 package uk.ac.standrews.cs.sos.model.metadata.tika;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.apache.tika.metadata.Metadata;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
 
@@ -13,11 +12,11 @@ import java.util.Arrays;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @JsonSerialize(using = MetadataSerializer.class)
-public class TikaMetadata extends AbstractMetadata implements SOSMetadata {
+public class TikaMetadata extends AbstractMetadata implements Metadata {
 
-    private Metadata tikaMetadata;
+    private org.apache.tika.metadata.Metadata tikaMetadata;
 
-    public TikaMetadata(Metadata metadata, String[] ignoreMetadata) throws GUIDGenerationException {
+    public TikaMetadata(org.apache.tika.metadata.Metadata metadata, String[] ignoreMetadata) throws GUIDGenerationException {
         super(ignoreMetadata);
         this.tikaMetadata = metadata;
         this.guid = generateGUID();

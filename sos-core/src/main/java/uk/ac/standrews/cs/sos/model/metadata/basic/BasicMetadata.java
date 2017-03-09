@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.metadata.basic;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.json.MetadataDeserializer;
 import uk.ac.standrews.cs.sos.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.model.metadata.AbstractMetadata;
@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @JsonDeserialize(using = MetadataDeserializer.class)
 @JsonSerialize(using = MetadataSerializer.class)
-public class BasicMetadata extends AbstractMetadata implements SOSMetadata {
+public class BasicMetadata extends AbstractMetadata implements Metadata {
 
     private HashMap<String, String> metadata;
 

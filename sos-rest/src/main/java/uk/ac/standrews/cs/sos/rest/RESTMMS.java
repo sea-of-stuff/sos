@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.MMS;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -36,7 +36,7 @@ public class RESTMMS {
     public Response postMetadata(String json) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/metadata");
 
-        SOSMetadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
+        Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
 
         MMS mms = RESTConfig.sos.getMMS();
         try {
@@ -67,7 +67,7 @@ public class RESTMMS {
 
         MMS mms = RESTConfig.sos.getMMS();
         try {
-            SOSMetadata metadata = mms.getMetadata(metadataGUID);
+            Metadata metadata = mms.getMetadata(metadataGUID);
             return HTTPResponses.OK(metadata.toString());
         } catch (MetadataNotFoundException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
@@ -83,7 +83,7 @@ public class RESTMMS {
 
         MMS MMS = RESTConfig.sos.getMMS();
 
-        SOSMetadata metadata;
+        Metadata metadata;
         try {
             metadata = MMS.processMetadata(inputStream);
         } catch (MetadataException e) {

@@ -34,7 +34,6 @@ public class ManifestsUtils {
         } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
             throw new ManifestNotFoundException("Unable to find manifest given file " + file.getPathname(), e);
         }
-
     }
 
     public static Manifest ManifestFromJson(String json) throws ManifestNotFoundException {
@@ -47,7 +46,6 @@ public class ManifestsUtils {
         } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
             throw new ManifestNotFoundException("Unable to construct manifest from JSON" + json, e);
         }
-
     }
 
     private static Manifest constructManifestFromJson(ManifestType type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {

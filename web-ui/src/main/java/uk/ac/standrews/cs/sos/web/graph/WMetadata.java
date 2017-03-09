@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
@@ -34,7 +34,7 @@ public class WMetadata {
                 return "N/A";
             }
 
-            SOSMetadata metadata = agent.getMetadata(metadataGUID);
+            Metadata metadata = agent.getMetadata(metadataGUID);
             return metadata.toString();
         } else {
             return "N/A";

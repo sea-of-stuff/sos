@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.interfaces.model.Compound;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -82,7 +82,7 @@ public class SOSFileSystemTest {
         Atom mockAtom = mock(Atom.class);
         when(mockAgent.addAtom(anyObject())).thenReturn(mockAtom);
 
-        SOSMetadata mockMeta = mock(SOSMetadata.class);
+        Metadata mockMeta = mock(Metadata.class);
         when(mockAgent.addMetadata(mockAtom)).thenReturn(mockMeta);
 
         return mockAgent;

@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSMetadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 
 import java.io.InputStream;
 import java.util.List;
@@ -14,20 +14,20 @@ import java.util.List;
  */
 public interface MetadataDirectory { // TODO - metadata manifests stored same as other manifests!!!!
 
-    SOSMetadata processMetadata(InputStream inputStream) throws MetadataException;
+    Metadata processMetadata(InputStream inputStream) throws MetadataException;
 
     /**
      * cache and store metadata
      * @param metadata
      */
-    void addMetadata(SOSMetadata metadata) throws MetadataPersistException;
+    void addMetadata(Metadata metadata) throws MetadataPersistException;
 
     /**
      * Get the metadata that matches the specified GUID
      * @param guid
      * @return
      */
-    SOSMetadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+    Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
     /**
      * Get all versions that match the given attribute and value

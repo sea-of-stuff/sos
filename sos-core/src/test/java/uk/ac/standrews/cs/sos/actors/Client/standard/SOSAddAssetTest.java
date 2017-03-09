@@ -61,7 +61,7 @@ public class SOSAddAssetTest extends AgentTest {
         prevs.add(GUIDFactory.recreateGUID("321"));
         prevs.add(GUIDFactory.recreateGUID("abcef"));
 
-        SOSMetadata metaMock = mock(SOSMetadata.class);
+        Metadata metaMock = mock(Metadata.class);
         when(metaMock.guid()).thenReturn(GUIDFactory.recreateGUID("897"));
 
         AssetBuilder builder = new AssetBuilder(compound.guid())
@@ -124,7 +124,7 @@ public class SOSAddAssetTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        SOSMetadata metadata = agent.addMetadata(atom);
+        Metadata metadata = agent.addMetadata(atom);
 
         AssetBuilder builder = new AssetBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -143,7 +143,7 @@ public class SOSAddAssetTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        SOSMetadata metadata = agent.addMetadata(atom);
+        Metadata metadata = agent.addMetadata(atom);
 
         AssetBuilder builder = new AssetBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -162,7 +162,7 @@ public class SOSAddAssetTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        SOSMetadata metadata = agent.addMetadata(atom);
+        Metadata metadata = agent.addMetadata(atom);
 
         AssetBuilder builder = new AssetBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -176,7 +176,7 @@ public class SOSAddAssetTest extends AgentTest {
         IGUID retrievedMetadataGUID = retrievedAsset.getMetadata();
         assertEquals(metadata.guid(), retrievedMetadataGUID);
 
-        SOSMetadata retrievedMetadata = agent.getMetadata(retrievedMetadataGUID);
+        Metadata retrievedMetadata = agent.getMetadata(retrievedMetadataGUID);
         assertEquals(metadata.guid(), retrievedMetadata.guid());
     }
 
