@@ -103,11 +103,6 @@ public class CompoundManifest extends SignedManifest implements Compound {
     }
 
     @Override
-    public boolean check(String challenge) {
-        return false;
-    }
-
-    @Override
     public boolean isValid() {
         return super.isValid() &&
                 type != null &&

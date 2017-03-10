@@ -26,9 +26,7 @@ public interface Manifest {
      * @throws ManifestVerificationException if the GUIDs of the manifests could not be generated
      *                                  due to uk.ac.standrews.cs.IO, network or other issues.
      */
-    boolean verify(Identity identity) throws ManifestVerificationException; // TODO - rename to verifySignature
-
-    boolean check(String challenge);
+    boolean verifySignature(Identity identity) throws ManifestVerificationException; // TODO - rename to verifySignature
 
     /**
      * Check that the key-value pairs contained in the manifest comply to

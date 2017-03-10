@@ -114,7 +114,7 @@ public interface Agent {
      * in false positives, but the likelihood of collisions is
      * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
      *
-     * @param identity                      used to verify the manifest
+     * @param identity                      used to verifySignature the manifest
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.

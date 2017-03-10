@@ -168,7 +168,7 @@ public class SignatureCrypto {
 
     /**
      * Decrypt the given encrypted text using the private key of this identity.
-     * @param text to verify.
+     * @param text to verifySignature.
      * @return the plain text. Null if the input could not be decrypted.
      */
     public boolean verify(String text, byte[] signatureToVerify) throws DecryptionException {

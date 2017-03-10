@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -13,7 +14,6 @@ import uk.ac.standrews.cs.sos.json.AtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Set;
@@ -86,27 +86,8 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public boolean verify(Identity identity) throws ManifestVerificationException {
-        if (contentGUID == null || contentGUID.isInvalid())
-            return false;
-
-        for(LocationBundle location:locations) {
-            try (InputStream dataStream =
-                         LocationUtility.getInputStreamFromLocation(location.getLocation())) {
-                if (!verifyStream(dataStream)) {
-                    return false;
-                }
-            } catch (GUIDGenerationException| IOException e) {
-                throw new ManifestVerificationException("Unable to verify Atom Manifest", e);
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean check(String challenge) {
-        return false;
+    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
+        throw new NotImplementedException();
     }
 
     private boolean verifyStream(InputStream inputStream) throws GUIDGenerationException {

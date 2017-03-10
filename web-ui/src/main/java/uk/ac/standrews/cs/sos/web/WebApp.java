@@ -51,7 +51,7 @@ public class WebApp {
         get("/graph/data/:id", (req, res) -> WData.Render(req, sos));
         get("/graph/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
-        get("/verify/:id", (req, res) -> WVerify.Render(req, sos));
+        get("/verifySignature/:id", (req, res) -> WVerify.Render(req, sos));
 
         post("/data", (req, res) -> postData(req, sos));
     }

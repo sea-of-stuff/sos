@@ -43,7 +43,7 @@ public abstract class SignedManifest extends BasicManifest {
      * @throws DecryptionException
      */
     @Override
-    public boolean verify(Identity identity) throws ManifestVerificationException {
+    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
 
         boolean success;
         try {

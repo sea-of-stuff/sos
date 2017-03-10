@@ -92,12 +92,7 @@ public abstract class AbstractMetadata implements Metadata {
     }
 
     @Override
-    public boolean verify(Identity identity) throws ManifestVerificationException {
-        return false;
-    }
-
-    @Override
-    public boolean check(String challenge) {
+    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
         return false;
     }
 

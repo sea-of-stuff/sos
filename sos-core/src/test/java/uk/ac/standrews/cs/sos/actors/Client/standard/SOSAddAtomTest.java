@@ -70,7 +70,7 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
-        assertTrue(retrievedManifest.verify(null));
+        assertTrue(retrievedManifest.verifySignature(null));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SOSAddAtomTest extends AgentTest {
         LocationBundle cachedLocation = retrievedLocations.iterator().next();
 
         HelperTest.appendToFile(cachedLocation.getLocation(), "Data has changed");
-        assertFalse(retrievedManifest.verify(null));
+        assertFalse(retrievedManifest.verifySignature(null));
     }
 
     @Test (timeOut = TEST_TIMEOUT)

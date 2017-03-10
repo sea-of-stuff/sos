@@ -142,11 +142,6 @@ public class AssetManifest extends SignedManifest implements Asset {
         return contentGUID;
     }
 
-    @Override
-    public boolean check(String challenge) {
-        return false;
-    }
-
     /**
      * Get the metadata's GUID associated with an asset's manifest
      *

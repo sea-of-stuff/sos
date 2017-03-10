@@ -28,8 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * challenge another node to verify the data
- * GET /verify?guid=GUID&challenge=Random string
+ * challenge another node to verifySignature the data
+ * GET /verifySignature?guid=GUID&challenge=Random string
  * Other node should return hash(data + random string)
  * Other node can return the right hash only if it really has the data
  *
@@ -76,7 +76,7 @@ public class VerifyData extends Task {
                     SOS_LOG.log(LEVEL.WARN, "Data with GUID " + entity + " failed to be verified against node " + node);
                 }
             } catch (SOSURLException | IOException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to verify data with GUID " + entity + " against node " + node);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to verifySignature data with GUID " + entity + " against node " + node);
             }
         }
     }

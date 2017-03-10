@@ -156,13 +156,13 @@
 
     });
 
-    $( "#verify" ).click(function() {
+    $( "#verifySignature" ).click(function() {
         var instance = $('#jstree').jstree(true);
         var id = instance.get_selected(true)[0].id;
         console.log(id);
 
-        $.get("/verify/" + id , function(data) {
-            $('#verify-result').html(data);
+        $.get("/verifySignature/" + id , function(data) {
+            $('#verifySignature-result').html(data);
         })
     });
 </script>

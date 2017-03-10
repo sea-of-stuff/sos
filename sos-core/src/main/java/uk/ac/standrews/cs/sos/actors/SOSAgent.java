@@ -101,7 +101,7 @@ public class SOSAgent implements Agent {
 
     @Override
     public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
-        boolean success = manifest.verify(identity);
+        boolean success = manifest.verifySignature(identity);
         return success;
     }
 

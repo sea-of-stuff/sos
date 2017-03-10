@@ -55,7 +55,7 @@ public abstract class BasicManifest implements Manifest {
      * @throws DecryptionException
      */
     @Override
-    public abstract boolean verify(Identity identity) throws ManifestVerificationException;
+    public abstract boolean verifySignature(Identity identity) throws ManifestVerificationException;
 
     /**
      * Checks whether this manifest contains valid key-value entries.
