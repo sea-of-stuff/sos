@@ -29,6 +29,8 @@ public class SOSConfigurationTest {
                     "          \"dds\" : true\n" +
                     "          \"nds\" : true\n" +
                     "          \"mms\" : true\n" +
+                    "          \"cms\" : true\n" +
+                    "          \"rms\" : true\n" +
                     "        }\n" +
                     "    }\n" +
                     "}\n";

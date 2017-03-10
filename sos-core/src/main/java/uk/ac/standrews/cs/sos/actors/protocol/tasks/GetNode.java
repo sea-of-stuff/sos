@@ -81,7 +81,8 @@ public class GetNode extends Task {
             String hostname = jsonNode.get(SOSConstants.HOSTNAME).asText();
             int port = jsonNode.get(SOSConstants.PORT).asInt();
 
-            retval = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false);
+            // TODO - roles are not managed correctly
+            retval = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false, false, false);
         } catch (GUIDGenerationException | IOException e) {
             throw new IOException(e);
         }

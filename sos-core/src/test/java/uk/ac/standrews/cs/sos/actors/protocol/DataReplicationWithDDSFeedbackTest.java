@@ -122,7 +122,7 @@ public class DataReplicationWithDDSFeedbackTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -149,7 +149,7 @@ public class DataReplicationWithDDSFeedbackTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -164,7 +164,7 @@ public class DataReplicationWithDDSFeedbackTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -181,7 +181,7 @@ public class DataReplicationWithDDSFeedbackTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);

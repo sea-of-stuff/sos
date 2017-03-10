@@ -7,18 +7,18 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.SOSNDS;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
+import uk.ac.standrews.cs.sos.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class NodeRegistrationTest {
 
-    private LocalNodesDirectory localNodesDirectory;
+    private SOSNDS nds;
     private SOSConfiguration configurationMock = mock(SOSConfiguration.class);
     private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
 
@@ -53,7 +53,9 @@ public class NodeRegistrationTest {
                     "\t\t\"storage\": true,\n" +
                     "\t\t\"dds\": false,\n" +
                     "\t\t\"nds\": false,\n" +
-                    "\t\t\"mms\": false\n" +
+                    "\t\t\"mms\": false,\n" +
+                    "\t\t\"cms\": false,\n" +
+                    "\t\t\"rms\": false\n" +
                     "\t}\n" +
                     "}";
 
@@ -67,7 +69,9 @@ public class NodeRegistrationTest {
                     "\t\t\"storage\": true,\n" +
                     "\t\t\"dds\": false,\n" +
                     "\t\t\"nds\": false,\n" +
-                    "\t\t\"mms\": false\n" +
+                    "\t\t\"mms\": false,\n" +
+                    "\t\t\"cms\": false,\n" +
+                    "\t\t\"rms\": false\n" +
                     "\t}\n" +
                     "}";
 
@@ -116,41 +120,39 @@ public class NodeRegistrationTest {
         // Make sure that the DB path is clean
         HelperTest.DeletePath(configurationMock.getDBFilename());
 
-        NodesDatabase nodesDatabase;
+        Database database;
         try {
-            nodesDatabase = new SQLiteDB(configurationMock.getDBFilename());
+            database = new DatabaseImpl(configurationMock.getDBFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
 
         Node localNode = mock(SOSLocalNode.class);
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
-        localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
+
+        nds = new SOSNDS(localNode, database);
     }
 
     @Test
     public void basicRegistrationTest() throws NodeRegistrationException {
-        NodeRegistration nodeRegistration = new NodeRegistration(localNodesDirectory);
 
         Node nodeMock = makeMockNode();
-        Node registeredNode = nodeRegistration.registerNode(nodeMock, true);
+        Node registeredNode = nds.registerNode(nodeMock, true);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
 
     @Test (expectedExceptions = NodeRegistrationException.class)
     public void registrationFailsTest() throws NodeRegistrationException {
-        NodeRegistration nodeRegistration = new NodeRegistration(localNodesDirectory);
 
-        nodeRegistration.registerNode(null, true);
+        nds.registerNode(null, true);
     }
 
     @Test
     public void registerToNDSTest() throws NodeRegistrationException {
-        NodeRegistration nodeRegistration = new NodeRegistration(localNodesDirectory);
 
-        Node nodeMock = new SOSNode(localNodeGUID, "localhost", 8080, true, true, false, false, false);
-        Node registeredNode = nodeRegistration.registerNode(nodeMock, false);
+        Node nodeMock = new SOSNode(localNodeGUID, "localhost", 8080, true, true, false, false, false, false, false);
+        Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
@@ -161,15 +163,14 @@ public class NodeRegistrationTest {
      */
     @Test
     public void registerToNDSFailsTest() throws NodeRegistrationException {
-        NodeRegistration nodeRegistration = new NodeRegistration(localNodesDirectory);
 
-        Node nodeMock = new SOSNode(localNodeGUID, "localhost", 8081, true, true, false, false, false);
-        Node registeredNode = nodeRegistration.registerNode(nodeMock, false);
+        Node nodeMock = new SOSNode(localNodeGUID, "localhost", 8081, true, true, false, false, false, false, false);
+        Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
 
     private Node makeMockNode() {
-        return new SOSNode(GUIDFactory.generateRandomGUID(), "localhost", 8090, true, true, true, true, true);
+        return new SOSNode(GUIDFactory.generateRandomGUID(), "localhost", 8090, true, true, true, true, true, true, true);
     }
 }

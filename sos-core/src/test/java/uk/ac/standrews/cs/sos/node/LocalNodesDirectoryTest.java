@@ -10,10 +10,10 @@ import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
+import uk.ac.standrews.cs.sos.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.lang.reflect.Method;
@@ -41,15 +41,15 @@ public class LocalNodesDirectoryTest extends CommonTest {
         // Make sure that the DB path is clean
         HelperTest.DeletePath(configurationMock.getDBFilename());
 
-        NodesDatabase nodesDatabase;
+        Database database;
         try {
-            nodesDatabase = new SQLiteDB(configurationMock.getDBFilename());
+            database = new DatabaseImpl(configurationMock.getDBFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
 
         testNode = mock(SOSLocalNode.class);
-        localNodesDirectory = new LocalNodesDirectory(testNode, nodesDatabase);
+        localNodesDirectory = new LocalNodesDirectory(testNode, database);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void basicAddGetNodeTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
         localNodesDirectory.addNode(node);
         Node retrievedNode = localNodesDirectory.getNode(guid);
@@ -75,29 +75,29 @@ public class LocalNodesDirectoryTest extends CommonTest {
         assertEquals(nodes.size(), 0);
 
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
-        addNode(true, false, false, false, false);
-        addNode(false, true, false, false, false);
-        addNode(false, false, true, false, false);
-        addNode(false, false, false, true, false);
-        addNode(false, false, false, false, true);
-        addNode(true, true, false, false, false);
-        addNode(true, true, true, true, true);
+        addNode(true, false, false, false, false, false, false);
+        addNode(false, true, false, false, false, false, false);
+        addNode(false, false, true, false, false, false, false);
+        addNode(false, false, false, true, false, false, false);
+        addNode(false, false, false, false, true, false, false);
+        addNode(true, true, false, false, false, false, false);
+        addNode(true, true, true, true, true, false, false);
 
         assertEquals(localNodesDirectory.getKnownNodes().size(), 8);
         assertEquals(localNodesDirectory.getNode(guid), node);
         assertEquals(localNodesDirectory.getStorageNodes(LocalNodesDirectory.NO_LIMIT).size(), 3);
         assertEquals(localNodesDirectory.getDDSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
         assertEquals(localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
-        assertEquals(localNodesDirectory.getMCSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getMMSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
     }
 
     @Test
     public void persistTest() throws GUIDGenerationException, NodesDirectoryException {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
         assertEquals(localNodesDirectory.getKnownNodes().size(), 0);
 
@@ -111,16 +111,16 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesWithLimitTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
-        addNode(true, false, false, false, false);
-        addNode(false, true, false, false, false);
-        addNode(false, false, true, false, false);
-        addNode(false, false, false, true, false);
-        addNode(false, false, false, false, true);
-        addNode(true, true, false, false, false);
-        addNode(true, true, true, true, true);
+        addNode(true, false, false, false, false, false, false);
+        addNode(false, true, false, false, false, false, false);
+        addNode(false, false, true, false, false, false, false);
+        addNode(false, false, false, true, false, false, false);
+        addNode(false, false, false, false, true, false, false);
+        addNode(true, true, false, false, false, false, false);
+        addNode(true, true, true, true, true, false, false);
 
         Set<Node> storageNodes = localNodesDirectory.getStorageNodes(3);
         assertEquals(storageNodes.size(), 3);
@@ -129,16 +129,16 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesWithLimitCapTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
-        addNode(true, false, false, false, false);
-        addNode(false, true, false, false, false);
-        addNode(false, false, true, false, false);
-        addNode(false, false, false, true, false);
-        addNode(false, false, false, false, true);
-        addNode(true, true, false, false, false);
-        addNode(true, true, true, true, true);
+        addNode(true, false, false, false, false, false, false);
+        addNode(false, true, false, false, false, false, false);
+        addNode(false, false, true, false, false, false, false);
+        addNode(false, false, false, true, false, false, false);
+        addNode(false, false, false, false, true, false, false);
+        addNode(true, true, false, false, false, false, false);
+        addNode(true, true, true, true, true, false, false);
 
         Set<Node> storageNodes = localNodesDirectory.getStorageNodes(2);
         assertEquals(storageNodes.size(), 2);
@@ -147,16 +147,16 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesWithLimitInExcessTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
-        addNode(true, false, false, false, false);
-        addNode(false, true, false, false, false);
-        addNode(false, false, true, false, false);
-        addNode(false, false, false, true, false);
-        addNode(false, false, false, false, true);
-        addNode(true, true, false, false, false);
-        addNode(true, true, true, true, true);
+        addNode(true, false, false, false, false, false, false);
+        addNode(false, true, false, false, false, false, false);
+        addNode(false, false, true, false, false, false, false);
+        addNode(false, false, false, true, false, false, false);
+        addNode(false, false, false, false, true, false, false);
+        addNode(true, true, false, false, false, false, false);
+        addNode(true, true, true, true, true, false, false);
 
         Set<Node> storageNodes = localNodesDirectory.getStorageNodes(10);
         assertEquals(storageNodes.size(), 3);
@@ -165,16 +165,16 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesIgnoreNegativeLimitTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
-        addNode(true, false, false, false, false);
-        addNode(false, true, false, false, false);
-        addNode(false, false, true, false, false);
-        addNode(false, false, false, true, false);
-        addNode(false, false, false, false, true);
-        addNode(true, true, false, false, false);
-        addNode(true, true, true, true, true);
+        addNode(true, false, false, false, false, false, false);
+        addNode(false, true, false, false, false, false, false);
+        addNode(false, false, true, false, false, false, false);
+        addNode(false, false, false, true, false, false, false);
+        addNode(false, false, false, false, true, false, false);
+        addNode(true, true, false, false, false, false, false);
+        addNode(true, true, true, true, true, false, false);
 
         Set<Node> storageNodes = localNodesDirectory.getStorageNodes(-1);
         assertEquals(storageNodes.size(), 3);
@@ -183,14 +183,14 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void nodeIsUpdatedTest() throws NodesDirectoryException {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false);
+        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
         localNodesDirectory.addNode(node);
         Node retrievedNode = localNodesDirectory.getNode(guid);
         assertEquals(retrievedNode, node);
 
         // Now isStorage node too
-        Node updatedNode = new SOSNode(guid, "example.com", 8080, true, true, false, false, false);
+        Node updatedNode = new SOSNode(guid, "example.com", 8080, true, true, false, false, false, false, false);
         localNodesDirectory.addNode(updatedNode);
 
         Node retrievedUpdatedNode = localNodesDirectory.getNode(guid);
@@ -198,14 +198,14 @@ public class LocalNodesDirectoryTest extends CommonTest {
         assertEquals(retrievedUpdatedNode.isStorage(), true);
     }
 
-    private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
+    private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS) {
         localNodesDirectory.addNode(new SOSNode(guid, "example.com", 8080,
                 isClient, isStorage, isDDS,
-                isNDS, isMCS));
+                isNDS, isMCS, isCMS, isRMS));
     }
 
-    private void addNode(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS) {
+    private void addNode(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS) {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        addNode(guid, isClient, isStorage, isDDS, isNDS, isMCS);
+        addNode(guid, isClient, isStorage, isDDS, isNDS, isMCS, isCMS, isRMS);
     }
 }

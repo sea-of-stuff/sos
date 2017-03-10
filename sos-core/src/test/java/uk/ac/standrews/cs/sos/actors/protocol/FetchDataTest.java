@@ -65,7 +65,7 @@ public class FetchDataTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
@@ -84,7 +84,7 @@ public class FetchDataTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
+                false, false, false, false, false, false, false);
 
         IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
 
@@ -96,7 +96,7 @@ public class FetchDataTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         FetchData fetchData = new FetchData(node, null);
     }

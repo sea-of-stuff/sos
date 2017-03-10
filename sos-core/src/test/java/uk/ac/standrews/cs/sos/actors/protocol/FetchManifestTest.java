@@ -74,7 +74,7 @@ public class FetchManifestTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, true, false, false);
+                false, false, true, false, false, false, false);
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_VERSION);
 

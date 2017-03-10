@@ -92,6 +92,14 @@ public class SOSConfiguration {
         return configuration.getBoolean(PropertyKeys.NODE_IS_MMS);
     }
 
+    public boolean nodeIsCMS() {
+        return configuration.getBoolean(PropertyKeys.NODE_IS_CMS);
+    }
+
+    public boolean nodeIsRMS() {
+        return configuration.getBoolean(PropertyKeys.NODE_IS_RMS);
+    }
+
     public String getDBFilename() {
         return configuration.getString(PropertyKeys.DB_FILENAME);
     }
@@ -173,10 +181,11 @@ public class SOSConfiguration {
         boolean isStorage = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_STORAGE);
         boolean isDDS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_DDS);
         boolean isNDS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_NDS);
-        boolean isMCS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
+        boolean isMMS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
+        boolean isCMS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
+        boolean isRMS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
 
-        Node node = new SOSNode(guid, hostname, port, isAgent, isStorage, isDDS, isNDS, isMCS);
-        return node;
+        return new SOSNode(guid, hostname, port, isAgent, isStorage, isDDS, isNDS, isMMS, isCMS, isRMS);
     }
 
     public int getWebDAVPort() {
@@ -230,6 +239,8 @@ public class SOSConfiguration {
         static final String NODE_IS_DDS = "node.is.dds";
         static final String NODE_IS_NDS = "node.is.nds";
         static final String NODE_IS_MMS = "node.is.mms";
+        static final String NODE_IS_CMS = "node.is.cms";
+        static final String NODE_IS_RMS = "node.is.rms";
 
         static final String DB_FILENAME = "db.filename";
 
@@ -258,6 +269,8 @@ public class SOSConfiguration {
         static final String BOOTSTRAP_NODE_IS_DDS = "is.dds";
         static final String BOOTSTRAP_NODE_IS_NDS = "is.nds";
         static final String BOOTSTRAP_NODE_IS_MMS = "is.mms";
+        static final String BOOTSTRAP_NODE_IS_CMS = "is.cms";
+        static final String BOOTSTRAP_NODE_IS_RMS = "is.rms";
 
         static final String WEBDAV_PORT = "webdav.port";
         static final String WEBAPP_PORT = "webapp.port";

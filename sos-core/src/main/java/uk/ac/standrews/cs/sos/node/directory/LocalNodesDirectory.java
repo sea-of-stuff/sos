@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.node.directory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.util.*;
@@ -23,13 +23,13 @@ public class LocalNodesDirectory {
     public static final int NO_LIMIT = 0;
 
     private Node localNode;
-    private NodesDatabase nodesDatabase;
+    private Database database;
 
     private Set<Node> knownNodes;
 
-    public LocalNodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
+    public LocalNodesDirectory(Node localNode, Database database) throws NodesDirectoryException {
         this.localNode = localNode;
-        this.nodesDatabase = nodesDatabase;
+        this.database = database;
 
         this.knownNodes = new HashSet<>(); // Order not preserved
         loadNodesFromDB();
@@ -103,8 +103,16 @@ public class LocalNodesDirectory {
      *
      * @return MCS nodes
      */
-    public Set<Node> getMCSNodes(int limit) {
+    public Set<Node> getMMSNodes(int limit) {
         return getNodes(Node::isMMS, limit);
+    }
+
+    public Set<Node> getCMSNodes(int limit) {
+        return getNodes(Node::isCMS, limit);
+    }
+
+    public Set<Node> getRMSNodes(int limit) {
+        return getNodes(Node::isRMS, limit);
     }
 
     public Set<Node> getStorageNodes(int limit) {
@@ -156,7 +164,7 @@ public class LocalNodesDirectory {
     public void persistNodesTable() throws NodesDirectoryException {
         try {
             for (Node knownNode : knownNodes) {
-                nodesDatabase.addNode(knownNode);
+                database.addNode(knownNode);
             }
         } catch (DatabaseConnectionException e) {
             throw new NodesDirectoryException(e);
@@ -169,7 +177,7 @@ public class LocalNodesDirectory {
      */
     private void loadNodesFromDB() throws NodesDirectoryException {
         try {
-            Set<SOSNode> nodes = nodesDatabase.getNodes();
+            Set<SOSNode> nodes = database.getNodes();
             knownNodes.addAll(nodes);
         } catch (DatabaseConnectionException e) {
             throw new NodesDirectoryException(e);

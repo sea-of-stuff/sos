@@ -6,17 +6,18 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.SOSNDS;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
+import uk.ac.standrews.cs.sos.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.lang.reflect.Method;
@@ -35,7 +36,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class NodeDiscoveryTest {
 
-    private LocalNodesDirectory localNodesDirectory;
+    private SOSNDS nds;
     private SOSConfiguration configurationMock = mock(SOSConfiguration.class);
     private Node localNode;
     private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
@@ -56,16 +57,16 @@ public class NodeDiscoveryTest {
         // Make sure that the DB path is clean
         HelperTest.DeletePath(configurationMock.getDBFilename());
 
-        NodesDatabase nodesDatabase;
+        Database database;
         try {
-            nodesDatabase = new SQLiteDB(configurationMock.getDBFilename());
+            database = new DatabaseImpl(configurationMock.getDBFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
 
         localNode = mock(SOSLocalNode.class);
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
-        localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
+        nds = new SOSNDS(localNode, database);
 
         // MOCK SERVER SETUP
         nodeFound = GUIDFactory.generateRandomGUID();
@@ -112,49 +113,46 @@ public class NodeDiscoveryTest {
 
     @Test
     public void basicNodeDiscoveryTest() throws NodeNotFoundException {
-        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
 
-        Node node = nodeDiscovery.findNode(localNodeGUID);
+        Node node = nds.getNode(localNodeGUID);
         assertEquals(node, localNode);
     }
 
     @Test (expectedExceptions = NodeNotFoundException.class)
     public void findNullNodeTest() throws NodeNotFoundException {
-        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
-        nodeDiscovery.findNode(null);
+
+        nds.getNode(null);
     }
 
     @Test (expectedExceptions = NodeNotFoundException.class)
     public void findUnknownNodeTest() throws NodeNotFoundException {
-        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
-        nodeDiscovery.findNode(GUIDFactory.generateRandomGUID());
+
+        nds.getNode(GUIDFactory.generateRandomGUID());
     }
 
     @Test
-    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException {
+    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
 
         Node ndsMock = mock(Node.class);
         when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
-        localNodesDirectory.addNode(ndsMock);
+        nds.registerNode(ndsMock, true);
 
-        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
-        Node node = nodeDiscovery.findNode(nodeFound);
+        Node node = nds.getNode(nodeFound);
 
         assertNotNull(node);
     }
 
     @Test (expectedExceptions = NodeNotFoundException.class)
-    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException {
+    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
 
         Node ndsMock = mock(Node.class);
         when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
-        localNodesDirectory.addNode(ndsMock);
+        nds.registerNode(ndsMock, true);
 
-        NodeDiscovery nodeDiscovery = new NodeDiscovery(localNodesDirectory);
-        nodeDiscovery.findNode(nodeNotFound);
+        nds.getNode(nodeNotFound);
     }
 }

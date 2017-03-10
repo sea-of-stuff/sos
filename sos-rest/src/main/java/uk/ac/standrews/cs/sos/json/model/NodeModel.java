@@ -59,7 +59,17 @@ public class NodeModel implements Node {
 
     @Override
     public boolean isMMS() {
-        return roles.isMCS();
+        return roles.isMMS();
+    }
+
+    @Override
+    public boolean isCMS() {
+        return roles.isCMS();
+    }
+
+    @Override
+    public boolean isRMS() {
+        return roles.isRMS();
     }
 
     public String getHostname() {

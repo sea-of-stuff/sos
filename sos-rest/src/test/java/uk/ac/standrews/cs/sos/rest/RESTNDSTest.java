@@ -16,7 +16,18 @@ import static org.testng.Assert.assertEquals;
  */
 public class RESTNDSTest extends CommonRESTTest {
 
-    private final static String TEST_NODE_INFO = "{ \"guid\" : \"00000ccc6adc7e831ee563a8d0daa230690c296a\", \"hostname\" : \"234:234:20:2\", \"port\" : 8081, \"roles\" : {\"agent\" : false, \"storage\" : true, \"dds\" : true, \"nds\" : true, \"mms\" : false} }";
+    private final static String TEST_NODE_INFO = "{ \"guid\" : \"00000ccc6adc7e831ee563a8d0daa230690c296a\", " +
+            "\"hostname\" : \"234:234:20:2\", " +
+            "\"port\" : 8081, " +
+            "\"roles\" : " +
+                "{\"agent\" : false, " +
+                "\"storage\" : true, " +
+                "\"dds\" : true, " +
+                "\"nds\" : true, " +
+                "\"mms\" : false, " +
+                "\"cms\" : false, " +
+                "\"rms\" : false} " +
+            "}";
 
     @Override
     protected Application configure() {
@@ -35,6 +46,8 @@ public class RESTNDSTest extends CommonRESTTest {
                 "\t\"NDS\": true,\n" +
                 "\t\"DDS\": true,\n" +
                 "\t\"MMS\": false\n" +
+                "\t\"CMS\": false\n" +
+                "\t\"RMS\": false\n" +
                 "}";
 
         Response response = target("/nds/register")

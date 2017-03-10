@@ -102,7 +102,13 @@ public class RESTNDS {
                 nodes = nds.getDDSNodes();
                 break;
             case "mms":
-                nodes = nds.getMCSNodes();
+                nodes = nds.getMMSNodes();
+                break;
+            case "cms":
+                nodes = nds.getCMSNodes();
+                break;
+            case "rms":
+                nodes = nds.getRMSNodes();
                 break;
             case "agent":
             default:

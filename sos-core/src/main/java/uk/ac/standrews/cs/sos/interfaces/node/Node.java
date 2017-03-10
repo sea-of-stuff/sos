@@ -57,4 +57,8 @@ public interface Node {
      */
     boolean isMMS();
 
+    boolean isCMS();
+
+    boolean isRMS();
+
 }

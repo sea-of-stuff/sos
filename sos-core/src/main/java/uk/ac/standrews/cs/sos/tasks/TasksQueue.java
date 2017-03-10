@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TasksQueue {
 
-    private static final int NUMBER_OF_THREADS = 8;
+    private static final int NUMBER_OF_THREADS = 3;
 
     private ScheduledExecutorService executorService;
 
@@ -38,16 +38,8 @@ public class TasksQueue {
     public void performSyncTask(Task task) {
 
         try {
-            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
-
             synchronized (task) {
-                final Future handler = executorService.submit(task);
-                executorService.schedule(() -> {
-                    handler.cancel(true);
-                    task.notify();
-                }, 5, TimeUnit.MINUTES);
-
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
+                performAsyncTask(task);
 
                 task.wait();
                 SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task);
@@ -61,7 +53,13 @@ public class TasksQueue {
     public void performAsyncTask(Task task) {
 
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
-        executorService.submit(task);
+
+        final Future handler = executorService.submit(task);
+        executorService.schedule(() -> {
+            handler.cancel(true);
+            task.notify();
+        }, 2, TimeUnit.MINUTES);
+
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
     }
 }

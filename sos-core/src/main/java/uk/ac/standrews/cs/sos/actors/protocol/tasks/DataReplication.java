@@ -70,7 +70,6 @@ public class DataReplication extends Task {
     @Override
     public void performAction() {
 
-
         try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data)) {
 
             int successfulReplicas = 0;
@@ -94,7 +93,6 @@ public class DataReplication extends Task {
         } catch (IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
         }
-
     }
 
     /**
@@ -220,7 +218,7 @@ public class DataReplication extends Task {
             // TODO - what if there is already an entry for this node, but different roles?
             // FIXME - Do not hard code this bit
             // need a way to merge roles or override node?
-            Node node = new SOSNode(nodeGUID, hostname, port, false, false, true, false, false);
+            Node node = new SOSNode(nodeGUID, hostname, port, false, false, true, false, false, false, false);
             ddsNodes.add(node);
         }
 

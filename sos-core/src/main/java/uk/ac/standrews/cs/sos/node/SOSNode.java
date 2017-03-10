@@ -31,13 +31,15 @@ public class SOSNode implements Node {
     protected boolean DB_is_dds;
     protected boolean DB_is_nds;
     protected boolean DB_is_mms;
+    protected boolean DB_is_cms;
+    protected boolean DB_is_rms;
 
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
 
     public SOSNode(IGUID guid, String hostname, int port,
                    boolean isAgent, boolean isStorage, boolean isDDS,
-                   boolean isNDS, boolean isMMS) {
+                   boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS) {
         this.nodeGUID = guid;
         this.hostAddress = new InetSocketAddress(hostname, port);
 
@@ -49,6 +51,8 @@ public class SOSNode implements Node {
         this.DB_is_dds = isDDS;
         this.DB_is_nds = isNDS;
         this.DB_is_mms = isMMS;
+        this.DB_is_cms = isCMS;
+        this.DB_is_rms = isRMS;
     }
 
     public SOSNode(SOSConfiguration configuration) throws NodeException {
@@ -69,6 +73,8 @@ public class SOSNode implements Node {
             this.DB_is_dds = configuration.nodeIsDDS();
             this.DB_is_nds = configuration.nodeIsNDS();
             this.DB_is_mms = configuration.nodeIsMMS();
+            this.DB_is_cms = configuration.nodeIsCMS();
+            this.DB_is_rms = configuration.nodeIsRMS();
         } catch (GUIDGenerationException | IOException e) {
             throw new NodeException(e);
         }
@@ -78,7 +84,7 @@ public class SOSNode implements Node {
     public SOSNode(Node node) {
         this(node.getNodeGUID(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
                 node.isAgent(), node.isStorage(), node.isDDS(),
-                node.isNDS(), node.isMMS());
+                node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
     }
 
     @Override
@@ -132,6 +138,16 @@ public class SOSNode implements Node {
     }
 
     @Override
+    public boolean isCMS() {
+        return DB_is_cms;
+    }
+
+    @Override
+    public boolean isRMS() {
+        return DB_is_rms;
+    }
+
+    @Override
     public String toString() {
         String json = "{ ";
         {
@@ -146,7 +162,9 @@ public class SOSNode implements Node {
                 json += "\"storage\" : " + isStorage() + ", ";
                 json += "\"dds\" : " + isDDS() + ", ";
                 json += "\"nds\" : " + isNDS() + ", ";
-                json += "\"mms\" : " + isMMS();
+                json += "\"mms\" : " + isMMS() + ", ";
+                json += "\"cms\" : " + isCMS() + ", ";
+                json += "\"rms\" : " + isRMS();
             }
             json += "}";
         }

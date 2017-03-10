@@ -13,9 +13,9 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
+import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.node.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.node.directory.SQLiteDB;
+import uk.ac.standrews.cs.sos.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -56,7 +56,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private LocalStorage localStorage;
     private PolicyManager policyManager;
-    private NodesDatabase nodesDatabase;
+    private Database database;
     private Identity identity;
 
     private ScheduledExecutorService cacheFlusherService;
@@ -88,7 +88,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             String dbFilename = configuration.getDBFilename();
             File file = localStorage.createFile(localStorage.getDBDirectory(), dbFilename).toFile();
 
-            nodesDatabase = new SQLiteDB(file.getPath());
+            database = new DatabaseImpl(file.getPath());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         } catch (IOException e) {
@@ -189,7 +189,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initNDS() throws SOSException {
         try {
             SOSURLProtocol.getInstance().register(localStorage);
-            nds = new SOSNDS(this, nodesDatabase);
+            nds = new SOSNDS(this, database);
             SOSURLProtocol.getInstance().setNDS(nds);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);

@@ -125,7 +125,7 @@ public class DataReplicationServerFailureTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -146,7 +146,7 @@ public class DataReplicationServerFailureTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_MORE_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -167,7 +167,7 @@ public class DataReplicationServerFailureTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_EMPTY_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -188,7 +188,7 @@ public class DataReplicationServerFailureTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_NO_RESPONSE_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -209,7 +209,7 @@ public class DataReplicationServerFailureTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_RANDOM_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "badhostname", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);

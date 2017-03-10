@@ -137,7 +137,7 @@ public class DataReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -162,7 +162,7 @@ public class DataReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false);
+                false, false, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -183,12 +183,12 @@ public class DataReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false); // Won't replicate to non-storage
+                false, false, false, false, false, false, false); // Won't replicate to non-storage
 
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -216,16 +216,16 @@ public class DataReplicationTest {
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false); // Won't replicate to non-storage
+                false, false, false, false, false, false, false); // Won't replicate to non-storage
 
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                true, false, true, true, true); // Won't replicate to non-storage
+                true, false, true, true, true, false, false); // Won't replicate to non-storage
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
@@ -255,12 +255,12 @@ public class DataReplicationTest {
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
         Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(storageNode);
@@ -289,11 +289,11 @@ public class DataReplicationTest {
 
         Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID),
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID),
                 "localhost", MOCK_TWIN_SERVER_PORT,
-                false, true, false, false, false);
+                false, true, false, false, false, false, false);
 
         Set<Node> nodes = new HashSet<>();
         nodes.add(storageNode);

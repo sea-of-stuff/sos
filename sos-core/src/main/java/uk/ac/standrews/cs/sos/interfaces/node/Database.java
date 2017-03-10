@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface NodesDatabase {
+public interface Database {
 
     /**
      * Add a given node to the database

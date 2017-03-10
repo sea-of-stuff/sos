@@ -24,6 +24,8 @@ public class Make {
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
                     "            \"mms\" : false\n" +
+                    "            \"cms\" : false\n" +
+                    "            \"rms\" : false\n" +
                     "        }\n" +
                     "    }\n" +
                     "\n" +

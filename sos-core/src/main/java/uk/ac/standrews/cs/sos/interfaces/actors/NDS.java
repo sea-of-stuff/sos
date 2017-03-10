@@ -46,9 +46,13 @@ public interface NDS extends SeaOfStuff {
     Set<Node> getDDSNodes();
     Iterator<Node> getDDSNodesIterator();
 
-    Set<Node> getMCSNodes();
+    Set<Node> getMMSNodes();
 
     Set<Node> getStorageNodes();
     Iterator<Node> getStorageNodesIterator();
+
+    Set<Node> getCMSNodes();
+
+    Set<Node> getRMSNodes();
 
 }

@@ -9,7 +9,9 @@ public class RolesModel {
     private boolean isStorage;
     private boolean isDDS;
     private boolean isNDS;
-    private boolean isMCS;
+    private boolean isMMS;
+    private boolean isCMS;
+    private boolean isRMS;
 
     public boolean isAgent() {
         return isAgent;
@@ -43,11 +45,28 @@ public class RolesModel {
         isNDS = NDS;
     }
 
-    public boolean isMCS() {
-        return isMCS;
+    public boolean isMMS() {
+        return isMMS;
     }
 
-    public void setMCS(boolean MCS) {
-        isMCS = MCS;
+    public void setMMS(boolean MMS) {
+        isMMS = MMS;
     }
+
+    public boolean isCMS() {
+        return isCMS;
+    }
+
+    public void setCMS(boolean CMS) {
+        isCMS = CMS;
+    }
+
+    public boolean isRMS() {
+        return isRMS;
+    }
+
+    public void setRMS(boolean RMS) {
+        isRMS = RMS;
+    }
+
 }

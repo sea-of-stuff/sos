@@ -31,6 +31,8 @@ public class StorageTest extends SetUpTest {
                     "            \"dds\" : false\n" +
                     "            \"nds\" : false\n" +
                     "            \"mms\" : false\n" +
+                    "            \"cms\" : false\n" +
+                    "            \"rms\" : false\n" +
                     "        }\n" +
                     "    }\n" +
                     "\n" +
@@ -69,6 +71,8 @@ public class StorageTest extends SetUpTest {
                     "                \"dds\" : false\n" +
                     "                \"nds\" : false\n" +
                     "                \"mms\" : false\n" +
+                    "                \"cms\" : false\n" +
+                    "                \"rms\" : false\n" +
                     "            }\n" +
                     "        }\n" +
                     "    ]\n" +
