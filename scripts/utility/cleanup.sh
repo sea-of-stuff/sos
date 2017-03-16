@@ -10,9 +10,6 @@ rm -f data/*
 echo 'Cleaning up the db'
 rm -f db/* 
 
-echo 'Cleaning up the heads'
-rm -f heads/* 
-
 echo 'Cleaning up the manifests'
 rm -f manifests/* 
 

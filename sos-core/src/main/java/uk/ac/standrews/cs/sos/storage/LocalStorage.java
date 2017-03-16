@@ -17,7 +17,6 @@ public class LocalStorage {
 
     private static final String DATA_DIRECTORY_NAME = "data";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
-    private static final String HEADS_DIRECTORY_NAME = "heads";
     private static final String CACHES_DIRECTORY_NAME = "caches";
     private static final String DB_DIRECTORY_NAME = "db";
 
@@ -56,19 +55,6 @@ public class LocalStorage {
     public Directory getManifestDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
-        } catch (StorageException e) {
-            throw new DataStorageException(e);
-        }
-    }
-
-    /**
-     * Return the directory used to store the HEAD versions for all assets
-     * @return heads directory
-     * @throws DataStorageException
-     */
-    public Directory getHeadsDirectory() throws DataStorageException {
-        try {
-            return storage.createDirectory(HEADS_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
@@ -142,7 +128,6 @@ public class LocalStorage {
         try {
             remove(DATA_DIRECTORY_NAME);
             remove(MANIFESTS_DIRECTORY_NAME);
-            remove(HEADS_DIRECTORY_NAME);
             remove(CACHES_DIRECTORY_NAME);
             remove(DB_DIRECTORY_NAME);
         } catch (BindingAbsentException e) {
@@ -160,7 +145,6 @@ public class LocalStorage {
         try {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
-            storage.createDirectory(HEADS_DIRECTORY_NAME).persist();
             storage.createDirectory(CACHES_DIRECTORY_NAME).persist();
             storage.createDirectory(DB_DIRECTORY_NAME).persist();
         } catch (StorageException e) {

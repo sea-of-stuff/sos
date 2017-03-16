@@ -1,6 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.context;
-
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+package uk.ac.standrews.cs.sos.interfaces.model;
 
 /**
  * A rule is a task that must be run by a context.
@@ -11,11 +9,11 @@ import uk.ac.standrews.cs.sos.interfaces.model.Asset;
  * - replicate data to nodes [X]
  * - replicate data at least N times
  * - protect data
- * - send notifications to nodes/users
+ * ////////// - send notifications to nodes/users
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Rule {
+public interface Policy {
 
     /**
      * Run this rule over this asset

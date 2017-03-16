@@ -13,7 +13,6 @@ import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -28,13 +27,11 @@ import java.util.Set;
  */
 public class RemoteManifestsDirectory implements ManifestsDirectory {
 
-    private ManifestPolicy manifestPolicy;
     private DDSIndex ddsIndex;
     private NDS nds;
     private DDS dds;
 
-    public RemoteManifestsDirectory(ManifestPolicy manifestPolicy, DDSIndex ddsIndex, NDS nds, DDS dds) {
-        this.manifestPolicy = manifestPolicy;
+    public RemoteManifestsDirectory(DDSIndex ddsIndex, NDS nds, DDS dds) {
         this.ddsIndex = ddsIndex;
         this.nds = nds;
         this.dds = dds;
@@ -46,17 +43,14 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // FIXME - metadata and context should be replicated at different end-points
         // TODO - Policy based on context?
 
-        boolean replicate = manifestPolicy.storeManifestsRemotely();
-        if (replicate) {
-            Iterator<Node> nodes = nds.getStorageNodesIterator();
-            int replicationFactor = manifestPolicy.getReplicationFactor();
+        Iterator<Node> nodes = nds.getStorageNodesIterator();
+        int replicationFactor = 3; // FIXME - do not hardcode replic-factor. use context
 
-            try {
-                ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dds);
-                TasksQueue.instance().performSyncTask(replicationTask);
-            } catch (SOSProtocolException e) {
-                throw new ManifestPersistException("Unable to persist node to remote nodes");
-            }
+        try {
+            ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dds);
+            TasksQueue.instance().performSyncTask(replicationTask);
+        } catch (SOSProtocolException e) {
+            throw new ManifestPersistException("Unable to persist node to remote nodes");
         }
 
     }
@@ -87,11 +81,11 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
             }
 
         }
-        
+
         if (retval == null) {
-            throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");    
+            throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");
         }
-        
+
         return retval;
     }
 

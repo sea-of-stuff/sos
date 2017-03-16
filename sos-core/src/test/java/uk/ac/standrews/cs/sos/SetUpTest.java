@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -94,15 +93,11 @@ public class SetUpTest extends CommonTest {
             throw new SOSException(e);
         }
 
-
-        PolicyManager policyManager = configuration.getPolicyManager();
-
         List<Node> bootstrapNodes = configuration.getBootstrapNodes();
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         localSOSNode = builder.configuration(configuration)
                                 .internalStorage(localStorage)
-                                .policies(policyManager)
                                 .bootstrapNodes(bootstrapNodes)
                                 .build();
     }

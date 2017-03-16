@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.locations;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

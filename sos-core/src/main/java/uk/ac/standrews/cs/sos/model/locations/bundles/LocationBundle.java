@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.locations.bundles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 import uk.ac.standrews.cs.sos.json.LocationBundleDeserializer;
 import uk.ac.standrews.cs.sos.json.LocationBundleSerializer;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;

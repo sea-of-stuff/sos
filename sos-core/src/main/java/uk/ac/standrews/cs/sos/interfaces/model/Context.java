@@ -1,8 +1,5 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
-import uk.ac.standrews.cs.sos.interfaces.Role;
-import uk.ac.standrews.cs.sos.interfaces.context.Rule;
-
 import java.util.function.Predicate;
 
 /**
@@ -20,9 +17,8 @@ import java.util.function.Predicate;
  *     "Type" : "Context",
  *     "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *     "Name" : "Simone's replication context",
- *     "Closure" : CODE,
- *     "Rules" : CODE,
- *     "Owner" : "01af5edc76b7e892ddca1e9e290750fe805e7fba"
+ *     "Predicate" : CODE,
+ *     "Policies" : CODE
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -36,10 +32,10 @@ public interface Context extends Predicate<Asset>, Manifest {
     String getName();
 
     /**
-     * Return the rules of this context
+     * Return the policies of this context
      * @return
      */
-    Rule[] getRules();
+    Policy[] getPolicies();
 
     /**
      * Combine this context with another one under the AND logical operator
@@ -55,5 +51,4 @@ public interface Context extends Predicate<Asset>, Manifest {
      */
     Context OR(Context context);
 
-    Role getOwner();
 }

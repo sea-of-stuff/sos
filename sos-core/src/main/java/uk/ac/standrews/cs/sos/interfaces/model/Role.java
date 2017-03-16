@@ -1,25 +1,37 @@
-package uk.ac.standrews.cs.sos.interfaces;
+package uk.ac.standrews.cs.sos.interfaces.model;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 
-import java.security.Key;
+import java.security.PublicKey;
 
 /**
+ *
+ * {
+ *      "GUID": "a243",
+ *      "Name": "Simone's work",
+ *      "User": "2321aaa3",
+ *      "Email": "sic2@st-andrews.ac.uk",
+ *      "PubKey": "1342242234",
+ *      "Signature": "MQ17983827se="
+ * }
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Role {
+public interface Role extends User {
 
     IGUID guid(); // random GUID
 
-    String getName(); // e.g. Simone's work
+    IGUID getUser(); // e.g. guid for user Simone
 
-    String getAuthorName(); // e.g. Simone Ivan Conte
+    String getName(); // e.g. Simone's work
 
     String getEmail(); // sic2@st-andrews.ac.uk
 
-    Key getPubkey();
+    PublicKey getPubkey();
+
+    String getSignature(); // signed using the user public key
 
     /**
      * Sign the given text and return a byte array representing the signature

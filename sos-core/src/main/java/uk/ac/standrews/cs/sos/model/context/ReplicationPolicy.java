@@ -1,16 +1,16 @@
 package uk.ac.standrews.cs.sos.model.context;
 
-import uk.ac.standrews.cs.sos.interfaces.context.Rule;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Policy;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ReplicationRule implements Rule {
+public class ReplicationPolicy implements Policy {
 
     private int factor;
 
-    public ReplicationRule(int factor) {
+    public ReplicationPolicy(int factor) {
         this.factor = factor;
     }
 

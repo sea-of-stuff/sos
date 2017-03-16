@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests.builders;
 
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 
 import java.io.InputStream;
 

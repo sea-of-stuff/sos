@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.storage.data.Data;

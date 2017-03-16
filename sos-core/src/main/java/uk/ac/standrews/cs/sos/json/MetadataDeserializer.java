@@ -4,14 +4,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -31,12 +29,11 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         while(it.hasNext()) {
             JsonNode n = it.next();
 
-            Iterator<Map.Entry<String, JsonNode>> property = n.fields();
-            if (property.hasNext()) {
-                Map.Entry<String, JsonNode> p = property.next();
-                basicMetadata.addProperty(p.getKey(), p.getValue().getNodeType() == JsonNodeType.NUMBER ?
-                                p.getValue().asInt() : p.getValue().asText());
-            }
+            String key = n.get(ManifestConstants.KEY_META_KEY).asText();
+            String type = n.get(ManifestConstants.KEY_META_TYPE).asText();
+            Object value = getObject(n.get(ManifestConstants.KEY_META_VALUE), type);
+
+            basicMetadata.addProperty(key, value);
         }
 
         try {
@@ -46,5 +43,17 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         }
 
         return basicMetadata;
+    }
+
+    private Object getObject(JsonNode element, String type) {
+
+        switch(type) {
+            case "INT":
+                return element.asInt();
+            case "STRING":
+                return element.asText();
+        }
+
+        return null;
     }
 }

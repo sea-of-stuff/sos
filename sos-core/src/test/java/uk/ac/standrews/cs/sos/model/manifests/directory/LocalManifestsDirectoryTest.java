@@ -14,17 +14,15 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.*;
-import uk.ac.standrews.cs.sos.policies.BasicManifestPolicy;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.storage.StorageFactory;
@@ -48,7 +46,6 @@ import static org.testng.Assert.assertFalse;
 public class LocalManifestsDirectoryTest extends CommonTest {
 
     private LocalStorage storage;
-    private ManifestPolicy policy;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
@@ -61,8 +58,6 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         storage = new LocalStorage(StorageFactory
                 .createStorage(configurationMock.getStorageType(),
                         configurationMock.getStorageLocation()));
-
-        policy = new BasicManifestPolicy(true, false, 0);
     }
 
     @AfterMethod
@@ -72,7 +67,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void addAtomManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -95,7 +90,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void addCompoundManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Identity identity = new IdentityImpl();
         Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
@@ -134,7 +129,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void addAssetManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
         Asset assetManifest = createDummyVersion(contentGUID);
@@ -159,7 +154,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void updateAtomManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -189,7 +184,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test
     public void deletePrevAtomWhileNewIsAddedTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
@@ -221,7 +216,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestPersistException.class)
     public void addNullManifestTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(policy, storage);
+        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         BasicManifest manifest = mock(BasicManifest.class, Mockito.CALLS_REAL_METHODS);
         when(manifest.isValid()).thenReturn(false);

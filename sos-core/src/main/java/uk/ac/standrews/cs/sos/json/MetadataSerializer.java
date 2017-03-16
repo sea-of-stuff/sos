@@ -36,14 +36,35 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
             jsonGenerator.writeStartObject();
 
             Object value = metadata.getProperty(property);
-            if (value instanceof Integer) {
-                jsonGenerator.writeNumberField(property, (Integer) value);
-            } else {
-                jsonGenerator.writeStringField(property, (String) value);
-            }
+            String type = getType(value);
+
+            jsonGenerator.writeStringField(ManifestConstants.KEY_META_KEY, property);
+            jsonGenerator.writeStringField(ManifestConstants.KEY_META_TYPE, type);
+            writeValue(jsonGenerator, type, value);
 
             jsonGenerator.writeEndObject();
 
         }
     }
+
+    // FIXME - type could also be REF/GUID
+    public String getType(Object value) {
+        if (value instanceof Integer) {
+            return "INT";
+        } else {
+            return "STRING";
+        }
+    }
+
+    private void writeValue(JsonGenerator jsonGenerator, String type, Object value) throws IOException {
+        switch(type) {
+            case "INT":
+                jsonGenerator.writeNumberField(ManifestConstants.KEY_META_VALUE, (Integer) value);
+                break;
+            case "STRING":
+                jsonGenerator.writeStringField(ManifestConstants.KEY_META_VALUE, (String) value);
+                break;
+        }
+    }
+
 }

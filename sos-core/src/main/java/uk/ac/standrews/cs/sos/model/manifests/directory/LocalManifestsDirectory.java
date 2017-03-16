@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
@@ -34,7 +33,6 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
 
-    private ManifestPolicy manifestPolicy;
     final private LocalStorage localStorage;
 
     /**
@@ -44,8 +42,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
      *
      * @param localStorage
      */
-    public LocalManifestsDirectory(ManifestPolicy manifestPolicy, LocalStorage localStorage) {
-        this.manifestPolicy = manifestPolicy;
+    public LocalManifestsDirectory(LocalStorage localStorage) {
         this.localStorage = localStorage;
     }
 
@@ -57,18 +54,16 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
-        boolean addManifest = manifestPolicy.storeManifestsLocally();
-        if (addManifest) {
-            if (manifest.isValid()) {
-                try {
-                    saveManifest(manifest);
-                } catch (ManifestsDirectoryException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to save manifest " + manifest);
-                }
-            } else {
-                throw new ManifestPersistException("Manifest not valid");
+        if (manifest.isValid()) {
+            try {
+                saveManifest(manifest);
+            } catch (ManifestsDirectoryException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to save manifest " + manifest);
             }
+        } else {
+            throw new ManifestPersistException("Manifest not valid");
         }
+
     }
 
     /**

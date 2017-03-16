@@ -16,9 +16,6 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
-import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
@@ -55,7 +52,6 @@ import java.util.concurrent.ScheduledExecutorService;
 public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private LocalStorage localStorage;
-    private PolicyManager policyManager;
     private Database database;
     private Identity identity;
 
@@ -82,7 +78,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         SOSConfiguration configuration = Builder.configuration;
         localStorage = Builder.localStorage;
-        policyManager = Builder.policyManager;
 
         try {
             String dbFilename = configuration.getDBFilename();
@@ -197,12 +192,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     private void initSOSInstances() {
-        DataReplicationPolicy dataReplicationPolicy = policyManager.getDataReplicationPolicy();
-        ManifestPolicy manifestPolicy = policyManager.getManifestPolicy();
         MetadataEngine metadataEngine = new TikaMetadataEngine();
 
-        dds = new SOSDDS(localStorage, manifestPolicy, nds);
-        storage = new SOSStorage(this, localStorage, dataReplicationPolicy, nds, dds);
+        dds = new SOSDDS(localStorage, nds);
+        storage = new SOSStorage(this, localStorage, nds, dds);
         mms = new SOSMMS(dds, metadataEngine);
         cms = new SOSCMS(dds);
         rms = new SOSRMS();
@@ -225,7 +218,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public static class Builder {
         private static SOSConfiguration configuration;
         private static LocalStorage localStorage;
-        private static PolicyManager policyManager;
         private static List<Node> bootstrapNodes;
 
         public Builder configuration(SOSConfiguration configuration) {
@@ -235,11 +227,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         public Builder internalStorage(LocalStorage localStorage) {
             Builder.localStorage = localStorage;
-            return this;
-        }
-
-        public Builder policies(PolicyManager policyManager) {
-            Builder.policyManager = policyManager;
             return this;
         }
 

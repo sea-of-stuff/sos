@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.Role;
 import uk.ac.standrews.cs.sos.interfaces.actors.RMS;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

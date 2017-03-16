@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
 import uk.ac.standrews.cs.sos.model.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.model.manifests.directory.LocalManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsCacheImpl;
@@ -38,14 +37,14 @@ public class SOSDDS implements DDS {
 
     private DDSIndex ddsIndex;
 
-    public SOSDDS(LocalStorage localStorage, ManifestPolicy manifestPolicy, NDS nds) {
+    public SOSDDS(LocalStorage localStorage, NDS nds) {
         this.localStorage = localStorage;
 
         loadOrCreateCache();
         loadOrCreateDDSIndex();
 
-        local = new LocalManifestsDirectory(manifestPolicy, localStorage);
-        remote = new RemoteManifestsDirectory(manifestPolicy, ddsIndex, nds, this);
+        local = new LocalManifestsDirectory(localStorage);
+        remote = new RemoteManifestsDirectory(ddsIndex, nds, this);
     }
 
     @Override

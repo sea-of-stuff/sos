@@ -8,14 +8,13 @@ import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.interfaces.Role;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.utils.crypto.SignatureCrypto;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Key;
 import java.security.PublicKey;
 
 /**
@@ -27,10 +26,9 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
 
     private IGUID roleGUID;
     private String name;
-    private String authorName;
     private String email;
 
-    private Key pubkey;
+    private PublicKey pubkey;
     private SignatureCrypto signature;
     private File privateKeyFile;
     private File publicKeyFile;
@@ -41,15 +39,13 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
      *
      * @param guid
      * @param name
-     * @param authorName
      * @param email
      * @throws KeyGenerationException
      * @throws KeyLoadedException
      */
-    public RoleImpl(IGUID guid, String name, String authorName, String email) throws KeyGenerationException, KeyLoadedException {
+    public RoleImpl(IGUID guid, String name, String email) throws KeyGenerationException, KeyLoadedException {
         this.pubkey = pubkey;
         this.name = name;
-        this.authorName = authorName;
         this.email = email;
         this.roleGUID = guid;
 
@@ -70,13 +66,11 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
      *
      * @param pubkey
      * @param name
-     * @param authorName
      * @param email
      */
-    public RoleImpl(PublicKey pubkey, String name, String authorName, String email) {
+    public RoleImpl(PublicKey pubkey, String name, String email) {
         this.pubkey = pubkey;
         this.name = name;
-        this.authorName = authorName;
         this.email = email;
 
         roleGUID = GUIDFactory.generateRandomGUID();
@@ -94,17 +88,12 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     }
 
     @Override
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    @Override
     public String getEmail() {
         return email;
     }
 
     @Override
-    public Key getPubkey() {
+    public PublicKey getPubkey() {
         return signature.getPublicKey();
     }
 

@@ -10,15 +10,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
-import uk.ac.standrews.cs.sos.interfaces.policy.ManifestPolicy;
-import uk.ac.standrews.cs.sos.interfaces.policy.MetadataPolicy;
-import uk.ac.standrews.cs.sos.interfaces.policy.PolicyManager;
 import uk.ac.standrews.cs.sos.node.SOSNode;
-import uk.ac.standrews.cs.sos.policies.BasicDataReplicationPolicy;
-import uk.ac.standrews.cs.sos.policies.BasicManifestPolicy;
-import uk.ac.standrews.cs.sos.policies.BasicMetadataPolicy;
-import uk.ac.standrews.cs.sos.policies.PolicyManagerImpl;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageType;
 
@@ -118,45 +110,6 @@ public class SOSConfiguration {
         return absolutePath(path);
     }
 
-    public PolicyManager getPolicyManager() {
-
-        DataReplicationPolicy dataReplicationPolicy = createReplicationPolicy();
-        ManifestPolicy manifestPolicy = createManifestPolicy();
-        MetadataPolicy metadataPolicy = createMetadataPolicy();
-
-        PolicyManager policyManager = new PolicyManagerImpl();
-        policyManager.setDataReplicationPolicy(dataReplicationPolicy);
-        policyManager.setManifestPolicy(manifestPolicy);
-        policyManager.setMetadataPolicy(metadataPolicy);
-
-        return policyManager;
-    }
-
-    private DataReplicationPolicy createReplicationPolicy() {
-
-        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_REPLICATION_FACTOR);
-
-        DataReplicationPolicy dataReplicationPolicy = new BasicDataReplicationPolicy(replicationFactor);
-        return dataReplicationPolicy;
-    }
-
-    private ManifestPolicy createManifestPolicy() {
-
-        boolean storeLocally = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_LOCAL);
-        boolean storeRemotely = configuration.getBoolean(PropertyKeys.POLICY_MANIFEST_REMOTE);
-        int replicationFactor = configuration.getInt(PropertyKeys.POLICY_MANIFEST_REPLICATION);
-
-        ManifestPolicy manifestPolicy = new BasicManifestPolicy(storeLocally, storeRemotely, replicationFactor);
-        return manifestPolicy;
-    }
-
-    private MetadataPolicy createMetadataPolicy() {
-        int replicationFactor = 0; // configuration.getInt(PropertyKeys.POLICY_METADATA_REPLICATION);
-        MetadataPolicy metadataPolicy = new BasicMetadataPolicy(replicationFactor);
-
-        return metadataPolicy;
-    }
-
     public List<Node> getBootstrapNodes() throws GUIDGenerationException {
 
         List<? extends Config> bootstrap = configuration.getConfigList(PropertyKeys.BOOTSTRAP_NODES);
@@ -253,12 +206,6 @@ public class SOSConfiguration {
         static final String STORAGE_SECRET_KEY = "storage.secret.key";
 
         static final String KEYS_FOLDER = "keys.folder";
-
-        static final String POLICY_REPLICATION_FACTOR = "policy.replication.factor";
-        static final String POLICY_MANIFEST_LOCAL = "policy.manifest.local";
-        static final String POLICY_MANIFEST_REMOTE = "policy.manifest.remote";
-        static final String POLICY_MANIFEST_REPLICATION = "policy.manifest.replication";
-        static final String POLICY_METADATA_REPLICATION = "policy.metadata.replication";
 
         static final String BOOTSTRAP_NODES = "bootstrap";
         static final String BOOTSTRAP_NODE_GUID = "guid";

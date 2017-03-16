@@ -41,7 +41,6 @@ public class LocalStorageTest extends CommonTest {
     public void defaultDirectoriesExistTest() throws DataStorageException {
         assertNotNull(localStorage.getDataDirectory());
         assertNotNull(localStorage.getManifestDirectory());
-        assertNotNull(localStorage.getHeadsDirectory());
     }
 
     @Test

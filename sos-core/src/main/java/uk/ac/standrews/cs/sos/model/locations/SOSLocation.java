@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.locations;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 
 import java.io.IOException;
 import java.io.InputStream;

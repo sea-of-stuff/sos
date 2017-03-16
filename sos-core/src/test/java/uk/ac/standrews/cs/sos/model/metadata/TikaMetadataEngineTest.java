@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.metadata;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadata;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;

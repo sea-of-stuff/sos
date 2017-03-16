@@ -11,11 +11,10 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
-import uk.ac.standrews.cs.sos.interfaces.locations.Location;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
+import uk.ac.standrews.cs.sos.interfaces.model.Location;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.interfaces.policy.DataReplicationPolicy;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.ProvenanceLocationBundle;
@@ -39,15 +38,12 @@ import java.util.*;
  */
 public class SOSStorage implements Storage {
 
-    private DataReplicationPolicy dataReplicationPolicy;
-
     private NDS nds;
     private DDS dds;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalStorage storage, DataReplicationPolicy dataReplicationPolicy, NDS nds, DDS dds) {
-        this.dataReplicationPolicy = dataReplicationPolicy;
+    public SOSStorage(Node node, LocalStorage storage, NDS nds, DDS dds) {
         this.nds = nds;
         this.dds = dds;
 
@@ -168,7 +164,7 @@ public class SOSStorage implements Storage {
 
     private void replicateData(Atom atom) throws SOSProtocolException, IOException {
 
-        int replicationFactor = dataReplicationPolicy.getReplicationFactor();
+        int replicationFactor = 3; // FIXME - this should not be hardcoded and should come from the context
         if (replicationFactor > 0) {
 
             try (InputStream data = getAtomContent(atom)) {
