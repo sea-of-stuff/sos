@@ -7,9 +7,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
+import uk.ac.standrews.cs.sos.interfaces.model.Content;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -40,7 +41,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
             Set<Content> contents = new LinkedHashSet<>();
             if (contentsNode.isArray()) {
                 for(final JsonNode contentNode:contentsNode) {
-                    Content content = JSONHelper.JsonObjMapper().convertValue(contentNode, Content.class);
+                    ContentImpl content = JSONHelper.JsonObjMapper().convertValue(contentNode, ContentImpl.class);
                     contents.add(content);
                 }
             }

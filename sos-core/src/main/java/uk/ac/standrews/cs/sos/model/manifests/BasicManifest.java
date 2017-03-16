@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.regex.Matcher;

@@ -8,11 +8,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.StringData;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
-import uk.ac.standrews.cs.sos.interfaces.model.Atom;
-import uk.ac.standrews.cs.sos.interfaces.model.Compound;
-import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Collections;

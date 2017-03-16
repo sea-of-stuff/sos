@@ -21,4 +21,6 @@ public interface Policy {
      * @param asset
      */
     void run(Asset asset);
+
+
 }

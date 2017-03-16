@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.interfaces.model;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by

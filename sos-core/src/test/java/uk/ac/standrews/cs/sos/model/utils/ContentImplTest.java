@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.impl.keys.KeyImpl;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -18,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContentTest extends CommonTest {
+public class ContentImplTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENT_GUID = "{\"GUID\":\""+
             Hashes.TEST_STRING_HASHED+"\"}";
@@ -31,7 +31,7 @@ public class ContentTest extends CommonTest {
     @Test
     public void testConstructorAndGetter() {
         IGUID mockedGUID = mock(KeyImpl.class);
-        Content content = new Content(mockedGUID);
+        ContentImpl content = new ContentImpl(mockedGUID);
 
         assertEquals(mockedGUID, content.getGUID());
     }
@@ -39,7 +39,7 @@ public class ContentTest extends CommonTest {
     @Test
     public void testOtherConstructorAndGetters() {
         IGUID mockedGUID = mock(KeyImpl.class);
-        Content content = new Content("testlabel", mockedGUID);
+        ContentImpl content = new ContentImpl("testlabel", mockedGUID);
 
         assertEquals("testlabel", content.getLabel());
         assertEquals(mockedGUID, content.getGUID());
@@ -50,7 +50,7 @@ public class ContentTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content content = new Content(guid);
+        ContentImpl content = new ContentImpl(guid);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENT_GUID, content.toString(), true);
     }
@@ -60,7 +60,7 @@ public class ContentTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content content = new Content("cat", guid);
+        ContentImpl content = new ContentImpl("cat", guid);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENT_TYPE_VAL, content.toString(), true);
     }
@@ -70,7 +70,7 @@ public class ContentTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content content = new Content("", guid);
+        ContentImpl content = new ContentImpl("", guid);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENT_GUID, content.toString(), true);
     }
@@ -80,7 +80,7 @@ public class ContentTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content content = new Content(null, guid);
+        ContentImpl content = new ContentImpl(null, guid);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENT_GUID, content.toString(), true);
     }

@@ -1,8 +1,5 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
-
 import java.util.Set;
 
 /**

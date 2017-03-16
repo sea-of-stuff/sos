@@ -8,9 +8,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -30,7 +28,7 @@ public class SOSAddAssetTest extends AgentTest {
 
     @Test
     public void testAddAsset() throws Exception {
-        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
+        Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -50,7 +48,7 @@ public class SOSAddAssetTest extends AgentTest {
     public void testRetrieveAssetFromFileWithPrevsAndMeta() throws Exception {
         IGUID invariant = GUIDFactory.recreateGUID("1a2b3c");
 
-        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
+        Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -87,7 +85,7 @@ public class SOSAddAssetTest extends AgentTest {
 
     @Test
     public void testAddAssetAndVerify() throws Exception {
-        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
+        Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

@@ -12,7 +12,11 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.model.manifests.*;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
+import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

@@ -14,9 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
-import uk.ac.standrews.cs.sos.interfaces.model.Location;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
@@ -93,7 +91,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Identity identity = new IdentityImpl();
-        Content content = new Content("Cat", GUIDFactory.recreateGUID("123"));
+        Content content = new ContentImpl("Cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
@@ -117,7 +115,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content cat = new Content("cat", guid);
+        Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

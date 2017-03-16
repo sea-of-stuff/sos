@@ -4,12 +4,9 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.sos.interfaces.model.Compound;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -25,7 +22,7 @@ public class SOSAddCompoundTest extends AgentTest {
 
     @Test
     public void testAddCompound() throws Exception {
-        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
+        Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -44,7 +41,7 @@ public class SOSAddCompoundTest extends AgentTest {
 
     @Test
     public void testAddCompoundAndVerify() throws Exception {
-        Content cat = new Content("cat", GUIDFactory.recreateGUID("123"));
+        Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

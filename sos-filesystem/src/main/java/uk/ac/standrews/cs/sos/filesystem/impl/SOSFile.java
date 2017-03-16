@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.filesystem.utils.Helper;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -47,7 +47,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     private Atom atom;
 
     // References to multiple atoms, in case a file is de-composed in multiple atoms
-    private Set<Content> atoms;
+    private Set<ContentImpl> atoms;
 
     /**
      * Create a file object inside a parent directory and with some data
@@ -195,7 +195,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         try {
             Atom atom = sos.addAtom(new AtomBuilder().setInputStream(data.getInputStream()));
             IGUID guid = atom.guid();
-            Content content = new Content(guid);
+            ContentImpl content = new ContentImpl(guid);
             atoms.add(content);
 
         } catch (ManifestPersistException | IOException | StorageException e) {

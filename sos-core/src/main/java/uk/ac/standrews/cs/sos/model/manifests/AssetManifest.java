@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.json.AssetManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.AssetManifestSerializer;
 

@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.interfaces.model.Policy;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 
 import java.util.function.Predicate;
 

@@ -83,6 +83,11 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     }
 
     @Override
+    public IGUID getUser() {
+        return null;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -95,6 +100,11 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     @Override
     public PublicKey getPubkey() {
         return signature.getPublicKey();
+    }
+
+    @Override
+    public String getSignature() {
+        return null;
     }
 
     @Override

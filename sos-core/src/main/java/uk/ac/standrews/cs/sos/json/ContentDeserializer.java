@@ -6,21 +6,21 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.io.IOException;
 
-public class ContentDeserializer extends JsonDeserializer<Content> {
+public class ContentDeserializer extends JsonDeserializer<ContentImpl> {
 
     @Override
-    public Content deserialize(JsonParser jsonParser,
-                               DeserializationContext deserializationContext)
+    public ContentImpl deserialize(JsonParser jsonParser,
+                                   DeserializationContext deserializationContext)
             throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        Content ret;
+        ContentImpl ret;
         IGUID guid;
         try {
             guid = CommonJson.GetGUID(node, ManifestConstants.CONTENT_KEY_GUID);
@@ -31,9 +31,9 @@ public class ContentDeserializer extends JsonDeserializer<Content> {
         boolean hasLabel = node.has(ManifestConstants.CONTENT_KEY_LABEL);
         if (hasLabel) {
             String label = node.get(ManifestConstants.CONTENT_KEY_LABEL).textValue();
-            ret = new Content(label, guid);
+            ret = new ContentImpl(label, guid);
         } else {
-            ret = new Content(guid);
+            ret = new ContentImpl(guid);
         }
 
 

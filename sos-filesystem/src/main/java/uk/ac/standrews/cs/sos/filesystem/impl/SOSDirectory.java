@@ -13,12 +13,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
-import uk.ac.standrews.cs.sos.interfaces.model.Atom;
-import uk.ac.standrews.cs.sos.interfaces.model.Compound;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.Error;
@@ -98,7 +94,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             this.name = previous.name;
 
             this.contents = new LinkedHashSet<>(previous.getContents());
-            addOrUpdate(new Content(name, object.getGUID()));
+            addOrUpdate(new ContentImpl(name, object.getGUID()));
             this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.guid());
@@ -289,7 +285,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
      * with that name, remove it and replace
      * @param content
      */
-    private void addOrUpdate(Content content) {
+    private void addOrUpdate(ContentImpl content) {
         removeContent(content.getLabel());
         contents.add(content);
     }

@@ -9,6 +9,9 @@ import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Compound;
+import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
+import uk.ac.standrews.cs.sos.interfaces.model.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 

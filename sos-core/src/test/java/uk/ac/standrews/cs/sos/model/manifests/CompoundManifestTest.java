@@ -7,6 +7,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
+import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
+import uk.ac.standrews.cs.sos.interfaces.model.Content;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -49,7 +51,7 @@ public class CompoundManifestTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content cat = new Content("cat", guid);
+        Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -65,7 +67,7 @@ public class CompoundManifestTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content cat = new Content("cat", guid);
+        Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -108,7 +110,7 @@ public class CompoundManifestTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        Content cat = new Content("cat", guid);
+        Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

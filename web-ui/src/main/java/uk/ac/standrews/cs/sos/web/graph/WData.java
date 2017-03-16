@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.Utils;
 

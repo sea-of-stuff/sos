@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 
 import java.io.IOException;
@@ -12,10 +12,10 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContentSerializer extends JsonSerializer<Content> {
+public class ContentSerializer extends JsonSerializer<ContentImpl> {
 
     @Override
-    public void serialize(Content content, JsonGenerator jsonGenerator,
+    public void serialize(ContentImpl content, JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider)
             throws IOException {
 

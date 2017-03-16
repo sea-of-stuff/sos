@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.sos.actors.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestType;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.tasks.TasksQueue;
 
