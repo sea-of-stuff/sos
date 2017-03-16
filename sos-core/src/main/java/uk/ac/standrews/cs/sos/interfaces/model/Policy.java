@@ -22,5 +22,16 @@ public interface Policy {
      */
     void run(Asset asset);
 
+    /**
+     * If true, the policy will run as soon as there is an update in the context
+     * @return
+     */
+    default boolean runOnUpdate(){ return true; }
+
+    /**
+     * Interval time, in seconds, between background runs of the policy?
+     * @return
+     */
+    default int intervalTime() { return 60; }
 
 }

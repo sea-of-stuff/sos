@@ -7,13 +7,31 @@ package uk.ac.standrews.cs.sos.interfaces.model;
  * {
  *  "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *  "Type" : "Metadata",
- *  "Properties" : {
- *          "Author" : "Simone",
- *          "Size" : "105",
- *          "Timestamp" : "1487606187",
- *          "Content-type" : "application/octet-stream"
+ *  "Properties" : [
+ *      {
+ *          "Key" : "Owner",
+ *          "Type" : "GUID",
+ *          "Value" : "abb134200a"
+ *      },
+ *      {
+ *          "Key" : "Size",
+ *          "Type" : "INT",
+ *          "Value" : 105
+ *      },
+ *      {
+ *          "Key" : "Timestamp",
+ *          "Type" : INT,
+ *          "Value" : 1487606187
+ *      },
+ *      {
+ *          "Key" : "Content-Type",
+ *          "Type" : STRING,
+ *          "Value" : "application/octet-stream"
  *      }
+ *   ]
  * }
+ *
+ *
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

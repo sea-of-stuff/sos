@@ -101,12 +101,14 @@ public class SOSCMS implements CMS {
 
     }
 
+    // TODO -  schedule contexts? have priority over what contexts to run first?
     @Override
     public void process() {
 
         ScheduledExecutorService service = new ScheduledThreadPoolExecutor(1);
         service.scheduleWithFixedDelay(() -> {
             // execute contexts on assets
+
         }, 0, 1, TimeUnit.MINUTES);
     }
 }
