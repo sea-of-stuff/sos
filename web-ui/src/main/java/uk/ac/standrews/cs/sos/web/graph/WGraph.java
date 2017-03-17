@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
@@ -19,7 +20,7 @@ import java.util.Set;
  */
 public class WGraph {
 
-    public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
+    public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException {
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
@@ -39,7 +40,7 @@ public class WGraph {
     }
 
     // TODO - must refactor
-    private static ArrayNode ManifestNodeGraph(Agent agent, Manifest manifest) throws ManifestNotFoundException {
+    private static ArrayNode ManifestNodeGraph(Agent agent, Manifest manifest) throws ManifestNotFoundException, MetadataNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
@@ -64,6 +65,11 @@ public class WGraph {
                     arrayNode.add(prevNode);
                 }
             }
+
+            // Metadata
+            Metadata metadata = agent.getMetadata(asset.getMetadata());
+            ObjectNode metadataNode = ManifestNode(metadata);
+            arrayNode.add(metadataNode);
 
         } else if (manifest.getType() == ManifestType.COMPOUND) {
             ObjectNode node = ManifestNode(manifest);
@@ -106,6 +112,10 @@ public class WGraph {
                     arrayNode.add(prevNode);
                 }
             }
+
+            // Metadata
+            ObjectNode metadataNode = MakeEdge(asset.guid(), asset.getMetadata());
+            arrayNode.add(metadataNode);
 
         } else if (manifest.getType() == ManifestType.COMPOUND) {
             Compound compound = (Compound) manifest;

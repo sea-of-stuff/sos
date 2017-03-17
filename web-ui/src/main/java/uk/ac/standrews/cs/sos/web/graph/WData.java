@@ -1,45 +1,67 @@
 package uk.ac.standrews.cs.sos.web.graph;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.xmlbeans.impl.util.Base64;
 import spark.Request;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.model.Atom;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.sos.web.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class WData {
 
-    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, IOException {
+    private final static String DEFAULT_TYPE = "Raw";
+
+    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, IOException, MetadataNotFoundException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
         Manifest manifest = sos.getAgent().getManifest(guid);
 
-        String data = getData(sos, manifest);
+        Tuple<String, String> data = getData(sos, manifest, DEFAULT_TYPE);
 
-        if (data.isEmpty()) {
-            data = " ";
+        if (data.y.isEmpty()) {
+            return " ";
         }
 
-        return data.length() > 140 ? data.substring(0, 140) + ".... OTHER DATA FOLLOWING" : data;
+        switch(data.x) {
+            case "Raw":
+            case "application/octet-stream":
+            case "text/plain":
+            case "text/plain; charset=ISO-8859-1":
+                return "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">" +
+                        (data.y.length() > 140 ? data.y.substring(0, 140) + ".... OTHER DATA FOLLOWING" : data.y) +
+                        "</pre>";
+            case "image/png":
+            case "image/jpeg":
+            case "image/jpg":
+                return "<img src=\"data:" + data.x + ";base64," + data.y + "\">";
+        }
+
+        return "Unable to render data";
     }
 
-    private static String getData(SOSLocalNode sos, Manifest manifest) throws IOException, ManifestNotFoundException {
+    private static Tuple<String, String> getData(SOSLocalNode sos, Manifest manifest, String type) throws IOException, ManifestNotFoundException, MetadataNotFoundException {
 
         if (manifest.getType() == ManifestType.ASSET) {
-            Manifest contentManifest = sos.getAgent().getManifest(manifest.guid());
-            return getData(sos, contentManifest);
+            Asset asset = (Asset) manifest;
+            Manifest contentManifest = sos.getAgent().getManifest(asset.getContentGUID());
+            Metadata metadata = sos.getAgent().getMetadata(asset.getMetadata());
+            type = metadata.getPropertyAsString("Content-Type");
+            return getData(sos, contentManifest, type);
         }
 
         if (manifest.getType() == ManifestType.ATOM) {
@@ -49,12 +71,25 @@ public class WData {
             try {
                 atomContent = sos.getAgent().getAtomContent(atom);
             } catch (AtomNotFoundException e) {
-                return "ATOM NOT FOUND";
+                return new Tuple(type, "ATOM NOT FOUND");
             }
-            String retval = Utils.InputStreamToString(atomContent);
-            return retval;
+
+            String retval;
+            switch(type) {
+                case "image/png":
+                case "image/jpeg":
+                case "image/jpg":
+                    byte b[] = IOUtils.toByteArray(atomContent);
+                    byte[] encodeBase64 = Base64.encode(b);
+                    retval = new String(encodeBase64 , StandardCharsets.UTF_8);
+                    break;
+                default:
+                    retval = Utils.InputStreamToString(atomContent);
+            }
+
+            return new Tuple(type, retval);
         }
 
-        return "N/A";
+        return new Tuple(type, "N/A");
     }
 }

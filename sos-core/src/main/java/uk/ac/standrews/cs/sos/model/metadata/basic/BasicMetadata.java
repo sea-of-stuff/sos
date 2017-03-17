@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model.metadata.basic;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.json.MetadataDeserializer;
 import uk.ac.standrews.cs.sos.json.MetadataSerializer;
@@ -26,8 +26,8 @@ public class BasicMetadata extends AbstractMetadata implements Metadata {
         metadata = new HashMap<>();
     }
 
-    public void build() throws GUIDGenerationException {
-        guid = generateGUID();
+    public void setGUID(IGUID guid) {
+        this.guid = guid;
     }
 
     public void addProperty(String property, Object value) {

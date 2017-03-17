@@ -44,7 +44,7 @@
         </div>
         <div class="col-sm-4">
             <h2>Data</h2>
-            <pre id="data" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+            <div id="data"></div>
         </div>
         <div class="col-sm-4">
             <h2>Metadata</h2>

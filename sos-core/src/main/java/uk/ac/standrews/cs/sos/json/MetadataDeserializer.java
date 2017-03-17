@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
@@ -22,9 +23,14 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         BasicMetadata basicMetadata = new BasicMetadata();
+        try {
+            // TODO - should not trust this GUID. Better to recreate it?
+            basicMetadata.setGUID(GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_GUID).asText()));
+        } catch (GUIDGenerationException e) {
+            throw new IOException(e);
+        }
 
         JsonNode properties = node.get(ManifestConstants.KEY_META_PROPERTIES);
-
         Iterator<JsonNode> it = properties.elements();
         while(it.hasNext()) {
             JsonNode n = it.next();
@@ -34,12 +40,6 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
             Object value = getObject(n.get(ManifestConstants.KEY_META_VALUE), type);
 
             basicMetadata.addProperty(key, value);
-        }
-
-        try {
-            basicMetadata.build();
-        } catch (GUIDGenerationException e) {
-            throw new IOException(e);
         }
 
         return basicMetadata;
