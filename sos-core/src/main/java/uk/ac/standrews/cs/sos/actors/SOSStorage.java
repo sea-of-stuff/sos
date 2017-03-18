@@ -55,6 +55,9 @@ public class SOSStorage implements Storage {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);
+        if (guid == null || guid.isInvalid()) {
+            throw new StorageException();
+        }
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest, false);
