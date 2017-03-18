@@ -21,6 +21,8 @@ import uk.ac.standrews.cs.sos.filesystem.utils.Helper;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
+import uk.ac.standrews.cs.sos.interfaces.model.Compound;
+import uk.ac.standrews.cs.sos.interfaces.model.Content;
 import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
@@ -47,7 +49,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     private Atom atom;
 
     // References to multiple atoms, in case a file is de-composed in multiple atoms
-    private Set<ContentImpl> atoms;
+    private Set<Content> atoms;
+    private Compound compound;
 
     /**
      * Create a file object inside a parent directory and with some data
@@ -106,9 +109,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         this.isCompoundData = true;
         this.atoms = new LinkedHashSet<>();
-        // TODO - set version
-
-        // this.guid = version.guid();
     }
 
     /**
@@ -193,9 +193,9 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             return;
 
         try {
-            Atom atom = sos.addAtom(new AtomBuilder().setInputStream(data.getInputStream()));
-            IGUID guid = atom.guid();
-            ContentImpl content = new ContentImpl(guid);
+            AtomBuilder builder = new AtomBuilder().setInputStream(data.getInputStream());
+            Atom atom = sos.addAtom(builder);
+            Content content = new ContentImpl(atom.guid());
             atoms.add(content);
 
         } catch (ManifestPersistException | IOException | StorageException e) {
@@ -209,8 +209,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         if (!isCompoundData) {
             retval = atom.guid();
         } else {
-            //Compound compound = addAtomsInCompound(atoms);
-            //builder = new VersionBuilder(compound.getContentGUID());
+            // TODO - guid of compound
         }
 
         return retval;
@@ -227,6 +226,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         int size = DEFAULT_MAX_FILESIZE;
         if (metadata != null && metadata.hasProperty(META_SIZE)) {
             size = metadata.getPropertyAsInteger(META_SIZE);
+            System.err.println("File " + this.getName() + " size " + size);
         }
 
         try (InputStream stream = sos.getAtomContent(atom)){

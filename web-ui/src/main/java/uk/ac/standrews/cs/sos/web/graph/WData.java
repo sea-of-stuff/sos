@@ -48,7 +48,7 @@ public class WData {
             case "image/png":
             case "image/jpeg":
             case "image/jpg":
-                return "<img src=\"data:" + data.x + ";base64," + data.y + "\">";
+                return "<img style=\"max-width:500px;\" src=\"data:" + data.x + ";base64," + data.y + "\">";
         }
 
         return "Unable to render data";

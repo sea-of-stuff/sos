@@ -17,6 +17,7 @@
         <module>sos-configuration</module>
         <module>sos-app</module>
         <module>sos-filesystem</module>
+        <module>sos-web-archive</module>
     </modules>
 
     <properties>

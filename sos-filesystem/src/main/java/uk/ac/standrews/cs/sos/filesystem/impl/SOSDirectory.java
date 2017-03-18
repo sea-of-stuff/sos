@@ -9,9 +9,12 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
+import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
@@ -160,6 +163,13 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public IAttributes getAttributes() {
+
+        IAttributes dummyAttributes = new Attributes(FileSystemConstants.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR);
+        return dummyAttributes;
     }
 
     @Override

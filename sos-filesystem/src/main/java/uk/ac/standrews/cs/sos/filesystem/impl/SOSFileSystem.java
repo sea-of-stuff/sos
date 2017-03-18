@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.UriUtil;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -34,6 +35,8 @@ public class SOSFileSystem implements IFileSystem {
     private Agent sos;
     private IGUID invariant;
 
+    private HashMap<String, SOSFile> pendingFiles;
+
     public SOSFileSystem(Agent sos, Asset rootAsset) throws FileSystemCreationException {
         this.sos = sos;
         this.invariant = rootAsset.getInvariantGUID();
@@ -45,6 +48,8 @@ public class SOSFileSystem implements IFileSystem {
             throw new FileSystemCreationException();
         }
 
+
+        pendingFiles = new HashMap<>();
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - File System Created");
     }
 
@@ -52,31 +57,51 @@ public class SOSFileSystem implements IFileSystem {
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
 
-        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, null);
-        file.persist();
+        // TODO - check if file exists already. it is often the case with the DS store files at start?
 
-        updateParent((SOSDirectory) parent, name, file);
 
-        return file;
+        if (data.getSize() != 0) {
+            SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, null);
+            file.persist();
+
+            updateParent((SOSDirectory) parent, name, file);
+
+            return file;
+        } else {
+            SOSFile file = new SOSFile(sos);
+            pendingFiles.put(parent.getGUID() + "/" + name, file);
+            return file;
+        }
+
     }
 
     @Override
     public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Update file " + name);
 
-        SOSFile previous = (SOSFile) parent.get(name);
-        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, previous);
-        file.persist();
+        long size = data.getSize();
 
-        updateParent((SOSDirectory) parent, name, file);
+        boolean compoundFile = pendingFiles.containsKey(parent.getGUID() + "/" + name);
+        if (compoundFile) {
+            SOSFile file = pendingFiles.get(parent.getGUID() + "/" + name);
+            file.append(data);
+        } else {
+            SOSFile previous = (SOSFile) parent.get(name);
+            SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, previous);
+            file.persist();
+
+            updateParent((SOSDirectory) parent, name, file);
+        }
     }
 
     @Override
     public synchronized void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Append to file " + name);
 
-        // TODO - this is necessary for big files (> a few kb)
-        throw new NotImplementedException();
+        long size = data.getSize();
+
+        SOSFile file = pendingFiles.get(parent.getGUID() + "/" + name);
+        file.append(data);
     }
 
     /**

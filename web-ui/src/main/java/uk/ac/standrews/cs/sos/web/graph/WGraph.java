@@ -40,7 +40,7 @@ public class WGraph {
     }
 
     // TODO - must refactor
-    private static ArrayNode ManifestNodeGraph(Agent agent, Manifest manifest) throws ManifestNotFoundException, MetadataNotFoundException {
+    private static ArrayNode ManifestNodeGraph(Agent agent, Manifest manifest) throws ManifestNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
@@ -67,9 +67,13 @@ public class WGraph {
             }
 
             // Metadata
-            Metadata metadata = agent.getMetadata(asset.getMetadata());
-            ObjectNode metadataNode = ManifestNode(metadata);
-            arrayNode.add(metadataNode);
+            try {
+                Metadata metadata = agent.getMetadata(asset.getMetadata());
+                ObjectNode metadataNode = ManifestNode(metadata);
+                arrayNode.add(metadataNode);
+            } catch (MetadataNotFoundException e) {
+                System.err.println(e.getMessage());
+            }
 
         } else if (manifest.getType() == ManifestType.COMPOUND) {
             ObjectNode node = ManifestNode(manifest);
@@ -114,8 +118,11 @@ public class WGraph {
             }
 
             // Metadata
-            ObjectNode metadataNode = MakeEdge(asset.guid(), asset.getMetadata());
-            arrayNode.add(metadataNode);
+            IGUID metaGUID = asset.getMetadata();
+            if (!metaGUID.isInvalid()) {
+                ObjectNode metadataNode = MakeEdge(asset.guid(), metaGUID);
+                arrayNode.add(metadataNode);
+            }
 
         } else if (manifest.getType() == ManifestType.COMPOUND) {
             Compound compound = (Compound) manifest;
