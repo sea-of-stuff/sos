@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -26,6 +28,8 @@ import java.util.Queue;
  */
 public class ArchivalApp {
 
+    private static HashMap<String, Long> visitedSites;
+
     public static void main(String[] args) throws SOSConfigurationException {
 
         File configFile = new File(args[0]);
@@ -33,12 +37,12 @@ public class ArchivalApp {
 
         SOSLocalNode sos = ServerState.init(configuration);
 
+        visitedSites = new LinkedHashMap<>();
         Queue<String> endPoints = new LinkedList<>();
         String endPoint = "https://sic2.github.io/";
 
         endPoints.add(endPoint);
 
-        // TODO - build index of crawled resources to avoid crawling them again
         while(!endPoints.isEmpty()) {
             try {
                 crawl(sos, endPoints);
@@ -52,6 +56,7 @@ public class ArchivalApp {
 
         String uriToCrawl = endPoints.poll();
         System.err.println("Crawling " + uriToCrawl);
+        visitedSites.put(uriToCrawl, System.nanoTime());
 
         boolean isHTTPFamily = uriToCrawl.startsWith("http://") || uriToCrawl.startsWith("https://");
         if (isHTTPFamily) {
@@ -81,10 +86,14 @@ public class ArchivalApp {
 
         for(Element link:links) {
             String linkURI = link.attr("abs:href");
-            endPoints.add(linkURI);
+
+            if (!visitedSites.containsKey(linkURI)) { // TODO - expire key after X time
+                endPoints.add(linkURI);
+            }
         }
     }
 
+    // TODO - create asset!
     private static void addData(SOSLocalNode sos, String uri) throws URISyntaxException, ManifestPersistException, StorageException {
         AtomBuilder builder = new AtomBuilder().setLocation(new URILocation(uri));
         Atom atom = sos.getAgent().addAtom(builder);
