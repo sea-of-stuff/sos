@@ -8,7 +8,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
@@ -17,7 +19,9 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -88,6 +92,15 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     @Override
     public ConcurrentLinkedQueue<IGUID> getLRU() {
         return lru;
+    }
+
+    @Override
+    public List<Asset> getAllAsset() {
+        return cache.values()
+                .stream()
+                .filter(m -> m.getType() == ManifestType.ASSET)
+                .map(m -> (Asset) m)
+                .collect(Collectors.toList());
     }
 
     public static ManifestsCache load(LocalStorage storage, File file, Directory manifestsDir) throws IOException, ClassNotFoundException {

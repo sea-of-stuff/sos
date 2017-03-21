@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.model.manifests.directory.LocalManifestsDirectory;
@@ -21,6 +22,7 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -78,6 +80,12 @@ public class SOSDDS implements DDS {
         }
 
         return manifest;
+    }
+
+    @Override
+    public List<Asset> getAllAssets() {
+        // TODO - return only the ones from the cache for the moment, but should be able to differentiate
+        return cache.getAllAsset();
     }
 
     @Override

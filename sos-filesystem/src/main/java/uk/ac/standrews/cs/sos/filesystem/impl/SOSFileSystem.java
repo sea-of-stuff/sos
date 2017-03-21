@@ -58,20 +58,20 @@ public class SOSFileSystem implements IFileSystem {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
 
         // TODO - check if file exists already. it is often the case with the DS store files at start?
+        long size = data.getSize();
 
-
-        if (data.getSize() != 0) {
+//        if (data.getSize() != 0) {
             SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, null);
             file.persist();
 
             updateParent((SOSDirectory) parent, name, file);
 
             return file;
-        } else {
-            SOSFile file = new SOSFile(sos);
-            pendingFiles.put(parent.getGUID() + "/" + name, file);
-            return file;
-        }
+//        } else {
+//            SOSFile file = new SOSFile(sos);
+//            pendingFiles.put(parent.getGUID() + "/" + name, file);
+//            return file;
+//        }
 
     }
 

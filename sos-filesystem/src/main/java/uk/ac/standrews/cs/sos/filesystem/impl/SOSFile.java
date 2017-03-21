@@ -226,7 +226,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         int size = DEFAULT_MAX_FILESIZE;
         if (metadata != null && metadata.hasProperty(META_SIZE)) {
             size = metadata.getPropertyAsInteger(META_SIZE);
-            System.err.println("File " + this.getName() + " size " + size);
         }
 
         try (InputStream stream = sos.getAtomContent(atom)){

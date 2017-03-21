@@ -2,10 +2,12 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
+import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -20,4 +22,6 @@ public interface ManifestsCache {
     void persist(File file) throws IOException;
 
     ConcurrentLinkedQueue<IGUID> getLRU();
+
+    List<Asset> getAllAsset();
 }

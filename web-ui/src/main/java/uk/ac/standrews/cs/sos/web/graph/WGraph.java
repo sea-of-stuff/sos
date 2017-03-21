@@ -67,12 +67,15 @@ public class WGraph {
             }
 
             // Metadata
-            try {
-                Metadata metadata = agent.getMetadata(asset.getMetadata());
-                ObjectNode metadataNode = ManifestNode(metadata);
-                arrayNode.add(metadataNode);
-            } catch (MetadataNotFoundException e) {
-                System.err.println(e.getMessage());
+            IGUID metaGUID = asset.getMetadata();
+            if (metaGUID != null && !metaGUID.isInvalid()) {
+                try {
+                    Metadata metadata = agent.getMetadata(metaGUID);
+                    ObjectNode metadataNode = ManifestNode(metadata);
+                    arrayNode.add(metadataNode);
+                } catch (MetadataNotFoundException e) {
+                    System.err.println(e.getMessage());
+                }
             }
 
         } else if (manifest.getType() == ManifestType.COMPOUND) {
@@ -119,7 +122,7 @@ public class WGraph {
 
             // Metadata
             IGUID metaGUID = asset.getMetadata();
-            if (!metaGUID.isInvalid()) {
+            if (metaGUID != null && !metaGUID.isInvalid()) {
                 ObjectNode metadataNode = MakeEdge(asset.guid(), metaGUID);
                 arrayNode.add(metadataNode);
             }

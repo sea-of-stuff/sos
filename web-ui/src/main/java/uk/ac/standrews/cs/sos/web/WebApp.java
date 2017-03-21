@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static spark.Spark.*;
+import static uk.ac.standrews.cs.sos.RESTConfig.sos;
 
 public class WebApp {
 
@@ -43,7 +44,7 @@ public class WebApp {
     }
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
-        get("/", (req, res) -> WHome.Render());
+        get("/", (req, res) -> WHome.Render(sos));
 
         get("/tree", (req, res) -> WTree.Render(sos, fileSystem));
 
@@ -59,7 +60,7 @@ public class WebApp {
     private static void registerPostActionRoutes() {
         after((req, res) -> {
             if (res.body() == null) { // if the route didn't return anything
-                res.body(WHome.Render());
+                res.body(WHome.Render(sos));
             }
         });
     }

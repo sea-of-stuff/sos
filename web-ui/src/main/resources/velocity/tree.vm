@@ -4,7 +4,7 @@
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default/style.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
@@ -25,13 +25,13 @@
 <div id="header"></div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-4">
             <h4>Node GUID (short): ${node_id.substring(0, 6)}</h4>
         </div>
-        <div class="col-sm-2">
+        <div class="col-2">
             <button id="verify" type="button" class="btn btn-primary">Verify</button>
         </div>
-        <div class="col-sm-2">
+        <div class="col-2">
             <pre id="verify-result" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
         </div>
     </div>
@@ -39,14 +39,14 @@
     <hr>
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-4">
             <div id="jstree"></div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-4">
             <h2>Data</h2>
             <div id="data"></div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-4">
             <h2>Metadata</h2>
             <pre id="metadata" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
         </div>
@@ -56,12 +56,12 @@
     <hr>
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-5">
             <h2>Manifest</h2>
             <pre id="manifest" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
         </div>
 
-        <div class="col-sm-7">
+        <div class="col-7">
             <div id="sos-graph"></div>
         </div>
     </div>
@@ -69,7 +69,7 @@
     <hr>
 
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-5">
             <h2>Data Stored</h2>
             here list of other nodes where this entity is stored
         </div>
@@ -78,7 +78,7 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/jstree.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
 

@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -100,6 +101,8 @@ public interface Agent {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+
+    List<Asset> getAllAssets();
 
     /**
      * Verify the integrity of the manifest's GUID against the

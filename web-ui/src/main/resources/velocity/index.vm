@@ -17,10 +17,35 @@
     </form>
 
     <br>
-    SOS operations
+    <h2>SOS operations</h2>
+
+    <br>
+    <h2>All Assets</h2>
+
+    <div class="card-columns">
+        #foreach($a in $asset)
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Version: $a.VersionGUID.toString().substring(0, 5)</h4>
+                    <p class="card-text">
+                        <ul>
+                            <li>
+                                <strong>Invariant</strong> $a.InvariantGUID.toString().substring(0, 5)
+                            </li>
+                            <li>
+                                <strong>Content</strong> $a.ContentGUID.toString().substring(0, 5)
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        #end
+    </div>
+
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
     $(function(){
