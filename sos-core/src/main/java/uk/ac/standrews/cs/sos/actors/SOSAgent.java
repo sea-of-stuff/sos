@@ -23,7 +23,6 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -100,11 +99,6 @@ public class SOSAgent implements Agent {
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
         return dds.getManifest(guid);
-    }
-
-    @Override
-    public List<Asset> getAllAssets() {
-        return dds.getAllAssets();
     }
 
     @Override

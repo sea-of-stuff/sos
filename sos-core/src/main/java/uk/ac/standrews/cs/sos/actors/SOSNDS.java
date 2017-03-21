@@ -112,6 +112,11 @@ public class SOSNDS implements NDS {
     }
 
     @Override
+    public Set<Node> getAllNodes() {
+        return localNodesDirectory.getKnownNodes();
+    }
+
+    @Override
     public Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException {
         if (node == null) {
             throw new NodeRegistrationException("Invalid node");

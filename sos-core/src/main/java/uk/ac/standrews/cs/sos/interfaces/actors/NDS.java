@@ -55,4 +55,6 @@ public interface NDS extends SeaOfStuff {
 
     Set<Node> getRMSNodes();
 
+    Set<Node> getAllNodes();
+
 }
