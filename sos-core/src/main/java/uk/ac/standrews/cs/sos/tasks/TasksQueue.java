@@ -57,8 +57,10 @@ public class TasksQueue {
         final Future handler = executorService.submit(task);
         executorService.schedule(() -> {
             handler.cancel(true);
+            SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
+
             task.notify();
-        }, 2, TimeUnit.MINUTES);
+        }, 30, TimeUnit.SECONDS);
 
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
     }

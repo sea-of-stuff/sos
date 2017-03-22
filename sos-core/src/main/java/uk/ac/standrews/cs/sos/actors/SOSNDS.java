@@ -135,7 +135,7 @@ public class SOSNDS implements NDS {
             Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
             ndsNodes.forEach(n -> {
                 RegisterNode registerNode = new RegisterNode(node, n);
-                TasksQueue.instance().performSyncTask(registerNode);
+                TasksQueue.instance().performAsyncTask(registerNode);
             });
         }
 
