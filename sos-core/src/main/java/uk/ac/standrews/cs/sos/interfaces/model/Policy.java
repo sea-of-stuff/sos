@@ -1,37 +1,30 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
 /**
- * A rule is a task that must be run by a context.
+ * A policy is a task that must be run by a context.
  *
- * Rules are used to enforce control over data within a context
+ * Policies are used to enforce control over data within a context
  *
  * Examples:
  * - replicate data to nodes [X]
  * - replicate data at least N times
  * - protect data
- * ////////// - send notifications to nodes/users
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Policy {
 
     /**
-     * Run this rule over this asset
+     * Run this policy over a manifest
      *
-     * @param version
+     * @param manifest
      */
-    void run(Version version);
+    void run(Manifest manifest);
 
     /**
-     * If true, the policy will run as soon as there is an update in the context
-     * @return
+     * Check that the policy is satisfied
+     *
+     * @return true if the policy is satisfied
      */
-    default boolean runOnUpdate(){ return true; }
-
-    /**
-     * Interval time, in seconds, between background runs of the policy?
-     * @return
-     */
-    default int intervalTime() { return 60; }
-
+    boolean check();
 }

@@ -32,6 +32,12 @@ public interface Context extends Predicate<Version>, Manifest {
     String getName();
 
     /**
+     * Defines when the predicate of the context should be run
+     * @return
+     */
+    PredicateComputationType predicateComputationType();
+
+    /**
      * Return the policies of this context
      * @return
      */
