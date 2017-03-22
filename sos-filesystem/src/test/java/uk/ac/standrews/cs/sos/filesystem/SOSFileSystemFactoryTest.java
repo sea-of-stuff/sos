@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Compound;
 import uk.ac.standrews.cs.sos.interfaces.model.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.FileNotFoundException;
@@ -65,20 +65,20 @@ public class SOSFileSystemFactoryTest {
     private Agent mockAgent(IGUID guid, IGUID versionGUID) throws ManifestPersistException, ManifestNotMadeException, ManifestNotFoundException, HEADNotFoundException  {
         Agent mockAgent = mock(Agent.class);
         Compound mockRootFolder = mock(Compound.class);
-        Asset mockRootAsset = mock(Asset.class);
+        Version mockRootVersion = mock(Version.class);
 
         IGUID contentsGUID = GUIDFactory.generateRandomGUID();
 
         when(mockAgent.addCompound(any(), anySetOf(Content.class))).thenReturn(mockRootFolder);
-        when(mockAgent.addAsset(any())).thenReturn(mockRootAsset);
+        when(mockAgent.addVersion(any())).thenReturn(mockRootVersion);
 
         when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());
-        when(mockRootAsset.getInvariantGUID()).thenReturn(guid);
-        when(mockRootAsset.getVersionGUID()).thenReturn(versionGUID);
-        when(mockRootAsset.getContentGUID()).thenReturn(contentsGUID);
+        when(mockRootVersion.getInvariantGUID()).thenReturn(guid);
+        when(mockRootVersion.getVersionGUID()).thenReturn(versionGUID);
+        when(mockRootVersion.getContentGUID()).thenReturn(contentsGUID);
 
         when(mockAgent.getManifest(contentsGUID)).thenReturn(mockRootFolder);
-        when(mockAgent.getManifest(versionGUID)).thenReturn(mockRootAsset);
+        when(mockAgent.getManifest(versionGUID)).thenReturn(mockRootVersion);
 
         return mockAgent;
     }

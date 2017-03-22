@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetBuilder {
+public class VersionBuilder {
 
     private IGUID content;
     private Metadata metadata;
@@ -19,11 +19,11 @@ public class AssetBuilder {
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;
 
-    public AssetBuilder(IGUID content) {
+    public VersionBuilder(IGUID content) {
         this.content = content;
     }
 
-    public AssetBuilder setInvariant(IGUID invariant) {
+    public VersionBuilder setInvariant(IGUID invariant) {
         if (!invariantIsSet) {
             this.invariant = invariant;
             invariantIsSet = true;
@@ -32,14 +32,14 @@ public class AssetBuilder {
         return this;
     }
 
-    public AssetBuilder setMetadata(Metadata metadata) {
+    public VersionBuilder setMetadata(Metadata metadata) {
         this.metadata = metadata;
         metadataIsSet = true;
 
         return this;
     }
 
-    public AssetBuilder setPrevious(Set<IGUID> previousCollection) {
+    public VersionBuilder setPrevious(Set<IGUID> previousCollection) {
         if (!prevIsSet) {
             this.previousCollection = previousCollection;
             prevIsSet = true;

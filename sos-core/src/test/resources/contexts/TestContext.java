@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.context.defaults;
 
 import uk.ac.standrews.cs.sos.actors.SOSAgent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.context.ContextImpl;
 
 import java.util.function.Predicate;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  */
 public class TestContext extends ContextImpl {
 
-    public TestContext(SOSAgent agent, Predicate<Asset> predicate) {
+    public TestContext(SOSAgent agent, Predicate<Version> predicate) {
         super(agent, predicate);
     }
 

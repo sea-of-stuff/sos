@@ -13,10 +13,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
 import uk.ac.standrews.cs.sos.filesystem.utils.AssetObject;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Compound;
 import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
-import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.*;
@@ -62,26 +62,26 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         dir.mkdirs();
 
         if (agent != null) {
-            Asset rootAsset = getRoot(agent, rootGUID);
-            if (rootAsset == null) {
-                rootAsset = createRoot(agent);
+            Version rootVersion = getRoot(agent, rootGUID);
+            if (rootVersion == null) {
+                rootVersion = createRoot(agent);
             }
 
-            return new SOSFileSystem(agent, rootAsset);
+            return new SOSFileSystem(agent, rootVersion);
         } else {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
             return null;
         }
     }
 
-    private Asset createRoot(Agent sos) throws FileSystemCreationException {
+    private Version createRoot(Agent sos) throws FileSystemCreationException {
 
         try {
             Compound compound = createRootCompound(sos);
             IGUID compoundGUID = compound.guid();
-            AssetBuilder builder = new AssetBuilder(compoundGUID).setInvariant(rootGUID);
+            VersionBuilder builder = new VersionBuilder(compoundGUID).setInvariant(rootGUID);
 
-            Asset retval = sos.addAsset(builder);
+            Version retval = sos.addVersion(builder);
             IGUID versionGUID = retval.getVersionGUID();
 
             WriteCurrentVersion(rootGUID, versionGUID);
@@ -93,15 +93,15 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     }
 
-    public static Asset getRoot(Agent sos, IGUID root) {
-        Asset retval = null;
+    public static Version getRoot(Agent sos, IGUID root) {
+        Version retval = null;
         try {
             if (assetObject == null) {
                 IGUID version = ReadCurrentVersion(root);
                 assetObject = new AssetObject(root, version);
             }
 
-            retval = (Asset) sos.getManifest(assetObject.getVersion());
+            retval = (Version) sos.getManifest(assetObject.getVersion());
 
         } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) { /* Ignore */ }
 

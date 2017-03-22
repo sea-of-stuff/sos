@@ -34,7 +34,7 @@ public class FetchManifestTest {
     private static final int MOCK_SERVER_PORT = 10005;
 
     private static final String GUID_VERSION = "28b7f98d7163d2ef91b3a418316246ba2d76b353";
-    private static final String TEST_ASSET_MANIFEST = "{\"Type\":\"Asset\"," +
+    private static final String TEST_VERSION_MANIFEST = "{\"Type\":\"Version\"," +
             "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "\"GUID\":\""+ GUID_VERSION+"\"," +
             "\"Signature\":\"AAAB\"," +
@@ -58,7 +58,7 @@ public class FetchManifestTest {
                 .respond(
                         response()
                                 .withStatusCode(200)
-                                .withBody(TEST_ASSET_MANIFEST)
+                                .withBody(TEST_VERSION_MANIFEST)
                 );
 
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
@@ -83,7 +83,7 @@ public class FetchManifestTest {
 
         Manifest manifest = fetchManifest.getManifest();
         assertNotNull(manifest);
-        assertEquals(manifest.getType(), ManifestType.ASSET);
+        assertEquals(manifest.getType(), ManifestType.VERSION);
         assertEquals(manifest.guid(), testGUID);
     }
 

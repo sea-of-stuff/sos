@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 
 import java.util.Iterator;
 
@@ -15,13 +15,13 @@ import java.util.Iterator;
  */
 public interface CMS extends SeaOfStuff {
 
-    Asset addContext(Context context) throws Exception;
+    Version addContext(Context context) throws Exception;
 
     Context getContext(IGUID version);
 
-    Asset update(IGUID version, Context context);
+    Version update(IGUID version, Context context);
 
-    Asset remove(IGUID guid);
+    Version remove(IGUID guid);
 
     Iterator<IGUID> getContents(IGUID version);
 

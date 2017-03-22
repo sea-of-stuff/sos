@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
-import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -61,13 +61,13 @@ public interface Agent {
     /**
      * Adds a version of an asset to the Sea of Stuff.
      *
-     * @param assetBuilder for this version
+     * @param versionBuilder for this version
      * @return Version for the added asset.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
      */
-    Asset addAsset(AssetBuilder assetBuilder) throws ManifestNotMadeException, ManifestPersistException;
+    Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
 
     /**

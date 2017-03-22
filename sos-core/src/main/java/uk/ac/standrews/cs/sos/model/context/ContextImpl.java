@@ -5,10 +5,10 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.interfaces.model.Policy;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 
 import java.util.function.Predicate;
 
@@ -21,7 +21,7 @@ public class ContextImpl implements Context {
 
     private final IGUID guid;
     private final String name;
-    private Predicate<Asset> predicate;
+    private Predicate<Version> predicate;
 
     public ContextImpl(Agent agent, String name) {
         this.agent = agent;
@@ -30,7 +30,7 @@ public class ContextImpl implements Context {
         guid = GUIDFactory.generateRandomGUID();
     }
 
-    public ContextImpl(Agent agent, String name, Predicate<Asset> predicate) {
+    public ContextImpl(Agent agent, String name, Predicate<Version> predicate) {
         this.agent = agent;
         this.name = name;
         this.predicate = predicate;
@@ -49,8 +49,8 @@ public class ContextImpl implements Context {
     }
 
     @Override
-    public boolean test(Asset asset) {
-        return predicate.test(asset);
+    public boolean test(Version version) {
+        return predicate.test(version);
     }
 
     @Override

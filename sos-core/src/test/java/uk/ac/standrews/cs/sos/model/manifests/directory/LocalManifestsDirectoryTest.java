@@ -126,18 +126,18 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     }
 
     @Test
-    public void addAssetManifestTest() throws Exception {
+    public void addVersionManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Asset assetManifest = createDummyVersion(contentGUID);
+        Version versionManifest = createDummyVersion(contentGUID);
 
-        IGUID guid = assetManifest.getVersionGUID();
+        IGUID guid = versionManifest.getVersionGUID();
         try {
-            manifestsDirectory.addManifest(assetManifest);
-            Asset manifest = (Asset) manifestsDirectory.findManifest(guid);
+            manifestsDirectory.addManifest(versionManifest);
+            Version manifest = (Version) manifestsDirectory.findManifest(guid);
 
-            assertEquals(manifest.getType(), ManifestType.ASSET);
+            assertEquals(manifest.getType(), ManifestType.VERSION);
             assertEquals(manifest.getContentGUID(), contentGUID);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException | ManifestNotFoundException e) {
@@ -146,8 +146,8 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     }
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
-    public void testAddAssetManifestNullContent() throws Exception {
-        Asset assetManifest = createDummyVersion(null);
+    public void testAddVersionManifestNullContent() throws Exception {
+        Version versionManifest = createDummyVersion(null);
     }
 
     @Test
@@ -221,10 +221,10 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         manifestsDirectory.addManifest(manifest);
     }
 
-    private Asset createDummyVersion(IGUID contentGUID) throws Exception {
+    private Version createDummyVersion(IGUID contentGUID) throws Exception {
         Identity identity = new IdentityImpl();
-        Asset asset = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
+        Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
 
-        return asset;
+        return version;
     }
 }

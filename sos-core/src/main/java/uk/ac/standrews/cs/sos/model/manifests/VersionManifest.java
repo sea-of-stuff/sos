@@ -8,10 +8,10 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
-import uk.ac.standrews.cs.sos.json.AssetManifestDeserializer;
-import uk.ac.standrews.cs.sos.json.AssetManifestSerializer;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
+import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
+import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
 
 import java.util.Set;
 
@@ -31,7 +31,7 @@ import java.util.Set;
  * <p>
  * Version - GUID <br>
  * Invariant - GUID <br>
- * ManifestType - ASSET <br>
+ * ManifestType - VERSION <br>
  * Signature - ? <br>
  * Previous Assets - GUID <br>
  * Content - GUID <br>
@@ -40,9 +40,9 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = AssetManifestSerializer.class)
-@JsonDeserialize(using = AssetManifestDeserializer.class)
-public class AssetManifest extends SignedManifest implements Asset {
+@JsonSerialize(using = VersionManifestSerializer.class)
+@JsonDeserialize(using = VersionManifestDeserializer.class)
+public class VersionManifest extends SignedManifest implements Version {
 
     final private IGUID version;
     final private IGUID invariant;
@@ -60,11 +60,11 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param identity
      * @throws ManifestNotMadeException
      */
-    public AssetManifest(IGUID invariant, IGUID content,
-                         Set<IGUID> prevs, IGUID metadata,
-                         Identity identity)
+    public VersionManifest(IGUID invariant, IGUID content,
+                           Set<IGUID> prevs, IGUID metadata,
+                           Identity identity)
             throws ManifestNotMadeException {
-        super(identity, ManifestType.ASSET);
+        super(identity, ManifestType.VERSION);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -95,10 +95,10 @@ public class AssetManifest extends SignedManifest implements Asset {
      * @param metadata
      * @param signature
      */
-    public AssetManifest(IGUID invariant, IGUID version, IGUID content,
-                         Set<IGUID> prevs, IGUID metadata,
-                         String signature) {
-        super(null, ManifestType.ASSET);
+    public VersionManifest(IGUID invariant, IGUID version, IGUID content,
+                           Set<IGUID> prevs, IGUID metadata,
+                           String signature) {
+        super(null, ManifestType.VERSION);
         this.invariant = invariant;
         this.version = version;
         this.contentGUID = content;

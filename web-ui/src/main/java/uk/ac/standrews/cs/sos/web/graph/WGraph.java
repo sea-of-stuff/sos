@@ -44,30 +44,30 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        if (manifest.getType() == ManifestType.ASSET) {
-            Asset asset = (Asset) manifest;
+        if (manifest.getType() == ManifestType.VERSION) {
+            Version version = (Version) manifest;
 
-            ObjectNode node = ManifestNode(asset, asset.getInvariantGUID().toString());
+            ObjectNode node = ManifestNode(version, version.getInvariantGUID().toString());
             arrayNode.add(node);
 
             // Content
-            Manifest contentManifest = agent.getManifest(asset.getContentGUID());
+            Manifest contentManifest = agent.getManifest(version.getContentGUID());
             ObjectNode contentNode = ManifestNode(contentManifest);
             arrayNode.add(contentNode);
 
             // Previous
-            Set<IGUID> prevs = asset.getPreviousVersions();
+            Set<IGUID> prevs = version.getPreviousVersions();
 
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
                     Manifest previousManifest = agent.getManifest(prev);
-                    ObjectNode prevNode = ManifestNode(previousManifest, asset.getInvariantGUID().toString());
+                    ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toString());
                     arrayNode.add(prevNode);
                 }
             }
 
             // Metadata
-            IGUID metaGUID = asset.getMetadata();
+            IGUID metaGUID = version.getMetadata();
             if (metaGUID != null && !metaGUID.isInvalid()) {
                 try {
                     Metadata metadata = agent.getMetadata(metaGUID);
@@ -105,25 +105,25 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
-        if (manifest.getType() == ManifestType.ASSET) {
-            Asset asset = (Asset) manifest;
+        if (manifest.getType() == ManifestType.VERSION) {
+            Version version = (Version) manifest;
 
-            ObjectNode objectNode = MakeEdge(asset.guid(), asset.getContentGUID());
+            ObjectNode objectNode = MakeEdge(version.guid(), version.getContentGUID());
             arrayNode.add(objectNode);
 
             // Previous
-            Set<IGUID> prevs = asset.getPreviousVersions();
+            Set<IGUID> prevs = version.getPreviousVersions();
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
-                    ObjectNode prevNode = MakeEdge(asset.guid(), prev, "", "Previous");
+                    ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
                     arrayNode.add(prevNode);
                 }
             }
 
             // Metadata
-            IGUID metaGUID = asset.getMetadata();
+            IGUID metaGUID = version.getMetadata();
             if (metaGUID != null && !metaGUID.isInvalid()) {
-                ObjectNode metadataNode = MakeEdge(asset.guid(), metaGUID);
+                ObjectNode metadataNode = MakeEdge(version.guid(), metaGUID);
                 arrayNode.add(metadataNode);
             }
 

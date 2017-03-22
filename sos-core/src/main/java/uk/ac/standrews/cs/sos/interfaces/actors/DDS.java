@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public interface DDS extends SeaOfStuff {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
-    List<Asset> getAllAssets();
+    List<Version> getAllAssets();
 
     /**
      * Flushes any in-memory information into disk

@@ -24,31 +24,31 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifestTest extends CommonTest {
+public class VersionManifestTest extends CommonTest {
 
-    private static final String EXPECTED_JSON_BASIC_ASSET =
-            "{\"Type\":\"Asset\"," +
+    private static final String EXPECTED_JSON_BASIC_VERSION =
+            "{\"Type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
-    private static final String EXPECTED_JSON_METADATA_ASSET =
-            "{\"Type\":\"Asset\"," +
+    private static final String EXPECTED_JSON_METADATA_VERSION =
+            "{\"Type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
-    private static final String EXPECTED_JSON_PREVIOUS_ASSET =
-            "{\"Type\":\"Asset\"," +
+    private static final String EXPECTED_JSON_PREVIOUS_VERSION =
+            "{\"Type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
-    private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET =
-            "{\"Type\":\"Asset\"," +
+    private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION =
+            "{\"Type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
@@ -57,24 +57,24 @@ public class AssetManifestTest extends CommonTest {
                     "}}";
 
     @Test
-    public void testBasicAssetConstructor() throws Exception {
+    public void testBasicConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
         Identity identityMocked = mock(Identity.class);
         when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
-        AssetManifest assetManifest = new AssetManifest(null, guid, null, null, identityMocked);
+        VersionManifest versionManifest = new VersionManifest(null, guid, null, null, identityMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
-        JSONAssert.assertEquals(EXPECTED_JSON_BASIC_ASSET, assetManifest.toString(), false);
+        JSONAssert.assertEquals(EXPECTED_JSON_BASIC_VERSION, versionManifest.toString(), false);
     }
 
     @Test
-    public void testMetadataAssetConstructor() throws Exception {
+    public void testMetadataConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
@@ -84,17 +84,17 @@ public class AssetManifestTest extends CommonTest {
         Identity identityMocked = mock(Identity.class);
         when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
-        AssetManifest assetManifest = new AssetManifest(null, guid, null, metadataGUID, identityMocked);
+        VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, identityMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
-        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_ASSET, assetManifest.toString(), false);
+        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_VERSION, versionManifest.toString(), false);
     }
 
     @Test
-    public void testPreviousAssetConstructor() throws Exception {
+    public void testPreviousVersionConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
@@ -109,17 +109,17 @@ public class AssetManifestTest extends CommonTest {
         Identity identityMocked = mock(Identity.class);
         when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, null, identityMocked);
+        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, null, identityMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
-        JSONAssert.assertEquals(EXPECTED_JSON_PREVIOUS_ASSET, assetManifest.toString(), false);
+        JSONAssert.assertEquals(EXPECTED_JSON_PREVIOUS_VERSION, versionManifest.toString(), false);
     }
 
     @Test
-    public void testMetadataAndPreviousAssetConstructor() throws Exception {
+    public void testMetadataAndPreviousVersionConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
@@ -137,13 +137,13 @@ public class AssetManifestTest extends CommonTest {
         Identity identityMocked = mock(Identity.class);
         when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
+        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(assetManifest.toString());
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
         Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
 
-        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_AND_PREVIOUS_ASSET, assetManifest.toString(), false);
+        JSONAssert.assertEquals(EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION, versionManifest.toString(), false);
     }
 
     @Test
@@ -165,11 +165,11 @@ public class AssetManifestTest extends CommonTest {
         Identity identityMocked = mock(Identity.class);
         when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
 
-        AssetManifest assetManifest = new AssetManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
+        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, identityMocked);
 
-        assertEquals(assetManifest.getContentGUID(), guid);
-        assertEquals(assetManifest.getInvariantGUID(), invariantGUID);
-        assertEquals(assetManifest.getMetadata(), metadataGUID);
-        assertEquals(assetManifest.getPreviousVersions(), previous);
+        assertEquals(versionManifest.getContentGUID(), guid);
+        assertEquals(versionManifest.getInvariantGUID(), invariantGUID);
+        assertEquals(versionManifest.getMetadata(), metadataGUID);
+        assertEquals(versionManifest.getPreviousVersions(), previous);
     }
 }

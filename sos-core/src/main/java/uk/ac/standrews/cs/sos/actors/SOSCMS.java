@@ -6,9 +6,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.CMS;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 
 import java.util.Iterator;
@@ -28,15 +28,15 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Asset addContext(Context context) throws Exception {
+    public Version addContext(Context context) throws Exception {
 
         try {
-            Asset asset = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
+            Version version = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
 
             dds.addManifest(context, false);
-            dds.addManifest(asset, false);
+            dds.addManifest(version, false);
 
-            return asset;
+            return version;
         } catch (ManifestPersistException e) {
             throw new ContextException(e);
         }
@@ -47,7 +47,7 @@ public class SOSCMS implements CMS {
 
         try {
             Manifest manifest = dds.getManifest(version);
-            return (Context) dds.getManifest(((Asset) manifest).getContentGUID());
+            return (Context) dds.getManifest(((Version) manifest).getContentGUID());
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Asset update(IGUID version, Context context) {
+    public Version update(IGUID version, Context context) {
 
 
         // Create new version with version as previous
@@ -75,7 +75,7 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Asset remove(IGUID guid) {
+    public Version remove(IGUID guid) {
         // Create new version without context
 
         return null;

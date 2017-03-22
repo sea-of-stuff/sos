@@ -18,9 +18,9 @@ public interface Policy {
     /**
      * Run this rule over this asset
      *
-     * @param asset
+     * @param version
      */
-    void run(Asset asset);
+    void run(Version version);
 
     /**
      * If true, the policy will run as soon as there is an update in the context

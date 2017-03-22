@@ -56,10 +56,10 @@ public class WData {
 
     private static Tuple<String, String> getData(SOSLocalNode sos, Manifest manifest, String type) throws IOException, ManifestNotFoundException, MetadataNotFoundException {
 
-        if (manifest.getType() == ManifestType.ASSET) {
-            Asset asset = (Asset) manifest;
-            Manifest contentManifest = sos.getAgent().getManifest(asset.getContentGUID());
-            Metadata metadata = sos.getAgent().getMetadata(asset.getMetadata());
+        if (manifest.getType() == ManifestType.VERSION) {
+            Version version = (Version) manifest;
+            Manifest contentManifest = sos.getAgent().getManifest(version.getContentGUID());
+            Metadata metadata = sos.getAgent().getMetadata(version.getMetadata());
             type = metadata.getPropertyAsString("Content-Type");
             return getData(sos, contentManifest, type);
         }

@@ -75,7 +75,7 @@ public class SOSFindTest extends AgentTest {
 //        Compound compound = client.addCompound(CompoundType.DATA, contents);
 //
 //        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
-//        Version manifest = client.addAsset(builder);
+//        Version manifest = client.addVersion(builder);
 //
 //        Content feline = new Content("feline", GUIDFactory.recreateGUID("456"));
 //        Set<Content> newContents = new ArrayList<>();
@@ -88,7 +88,7 @@ public class SOSFindTest extends AgentTest {
 //        VersionBuilder newBuilder = new VersionBuilder(newCompound.getContentGUID())
 //                .setInvariant(manifest.getInvariantGUID())
 //                .setPrevious(prevs);
-//        Version newManifest = client.addAsset(newBuilder);
+//        Version newManifest = client.addVersion(newBuilder);
 //
 //        Set<IGUID> versions = client.findVersions(manifest.getInvariantGUID());
 //        assertEquals(versions.size(), 2);

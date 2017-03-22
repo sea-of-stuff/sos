@@ -23,7 +23,7 @@ import java.util.function.Predicate;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context extends Predicate<Asset>, Manifest {
+public interface Context extends Predicate<Version>, Manifest {
 
     /**
      * Return a human-readable name for the context

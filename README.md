@@ -27,8 +27,8 @@ The sos-filesystem is a very basic example of how the SOS model can be mapped to
 
 The mapping used is the following:
 
-- file :: asset manifest -> atom manifest -> atom data
-- folder :: asset manifest -> compound manifest
+- file :: version manifest -> atom manifest -> atom data
+- folder :: version manifest -> compound manifest
 
 
 The sos-fs is used in the sos-app. Here, the filesystem is passed to a WebDAV server (https://github.com/quicksilver-sta/WebDAV-server) and the WebUI project.

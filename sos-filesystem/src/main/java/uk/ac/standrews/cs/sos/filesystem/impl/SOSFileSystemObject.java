@@ -12,9 +12,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
-import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
@@ -29,7 +29,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected Agent sos;
 
-    protected Asset asset;
+    protected Version version;
     protected SOSDirectory parent;
     protected SOSFileSystemObject previous; // TODO - make collection (e.g. for merging)
     protected Metadata metadata;
@@ -61,35 +61,35 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
             boolean previousVersionDiffers = previousAssetDiffers(contentGUID);
 
             if (previousVersionDiffers) {
-                AssetBuilder builder = getAssetBuilder(contentGUID);
-                asset = sos.addAsset(builder);
+                VersionBuilder builder = getVersionBuilder(contentGUID);
+                version = sos.addVersion(builder);
 
-                if (assetIsWebDAVRoot(asset)) {
-                    SOSFileSystemFactory.WriteCurrentVersion(asset.getInvariantGUID(), asset.getVersionGUID());
+                if (assetIsWebDAVRoot(version)) {
+                    SOSFileSystemFactory.WriteCurrentVersion(version.getInvariantGUID(), version.getVersionGUID());
                 }
 
-                guid = asset.getVersionGUID();
+                guid = version.getVersionGUID();
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Asset has exactly the same data. Metadata, however, might have changed.");
+                SOS_LOG.log(LEVEL.WARN, "Version has exactly the same data. Metadata, however, might have changed.");
             }
         } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private boolean assetIsWebDAVRoot(Asset asset) {
-        File file = new File(SOSFileSystemFactory.WEBDAV_CURRENT_PATH + asset.getInvariantGUID());
+    private boolean assetIsWebDAVRoot(Version version) {
+        File file = new File(SOSFileSystemFactory.WEBDAV_CURRENT_PATH + version.getInvariantGUID());
         return file.exists();
     }
 
     @Override
     public Set<IGUID> getPrevious() {
-        return asset.getPreviousVersions();
+        return version.getPreviousVersions();
     }
 
     @Override
     public IGUID getInvariant() {
-        return asset.getInvariantGUID();
+        return version.getInvariantGUID();
     }
 
     @Override
@@ -101,8 +101,8 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
         return parent;
     }
 
-    public Asset getAsset() {
-        return asset;
+    public Version getVersion() {
+        return version;
     }
 
     // MUST BE IMPLEMENTED by subclasses
@@ -112,7 +112,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected boolean previousAssetDiffers(IGUID contentGUID) {
         if (previous != null) {
-            IGUID previousContentGUID = previous.getAsset().getContentGUID();
+            IGUID previousContentGUID = previous.getVersion().getContentGUID();
             return !previousContentGUID.equals(contentGUID);
         }
 
@@ -124,20 +124,20 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     }
 
     // Get a asset builder for an asset with the specified content GUID
-    private AssetBuilder getAssetBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
+    private VersionBuilder getVersionBuilder(IGUID contentGUID) throws ManifestPersistException, ManifestNotMadeException {
 
-        AssetBuilder builder = new AssetBuilder(contentGUID);
+        VersionBuilder builder = new VersionBuilder(contentGUID);
 
-        if (asset != null) {
-            builder.setInvariant(asset.getInvariantGUID());
+        if (version != null) {
+            builder.setInvariant(version.getInvariantGUID());
         }
 
         Set<IGUID> prevs = new LinkedHashSet<>();
         if (previous != null) {
-            IGUID versionGUID = previous.getAsset().getVersionGUID();
+            IGUID versionGUID = previous.getVersion().getVersionGUID();
             prevs.add(versionGUID);
-        } else if (asset != null && asset.getPreviousVersions() != null) {
-            prevs.addAll(asset.getPreviousVersions());
+        } else if (version != null && version.getPreviousVersions() != null) {
+            prevs.addAll(version.getPreviousVersions());
         }
 
         if (prevs.size() > 0) {

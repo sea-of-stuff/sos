@@ -7,10 +7,10 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 
 /**
@@ -26,10 +26,10 @@ public class WMetadata {
         Agent agent = sos.getAgent();
 
         Manifest manifest = agent.getManifest(guid);
-        if (manifest.getType() == ManifestType.ASSET) {
+        if (manifest.getType() == ManifestType.VERSION) {
 
-            Asset asset = (Asset) manifest;
-            IGUID metadataGUID = asset.getMetadata();
+            Version version = (Version) manifest;
+            IGUID metadataGUID = version.getMetadata();
             if (metadataGUID == null || metadataGUID.isInvalid()) {
                 return "N/A";
             }

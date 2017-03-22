@@ -8,10 +8,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -62,8 +62,8 @@ public class ManifestsUtils {
                 case COMPOUND:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
                     break;
-                case ASSET:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AssetManifest.class);
+                case VERSION:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
                     break;
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
@@ -91,8 +91,8 @@ public class ManifestsUtils {
                 case COMPOUND:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, CompoundManifest.class);
                     break;
-                case ASSET:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, AssetManifest.class);
+                case VERSION:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, VersionManifest.class);
                     break;
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, BasicMetadata.class);

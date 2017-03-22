@@ -19,13 +19,13 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.filesystem.utils.Helper;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.interfaces.model.Compound;
 import uk.ac.standrews.cs.sos.interfaces.model.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
-import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.utils.Error;
@@ -74,15 +74,15 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             this.atom = sos.addAtom(builder); // Atom is saved and manifest returned by the SOS
             this.metadata = sos.addMetadata(atom); // Metadata is generated, saved and returned by the SOS
 
-            AssetBuilder assetBuilder = new AssetBuilder(atom.guid()).setMetadata(metadata);
+            VersionBuilder versionBuilder = new VersionBuilder(atom.guid()).setMetadata(metadata);
 
             if (previous != null) {
                 boolean previousVersionDiffers = previousAssetDiffers(atom.guid());
                 if (previousVersionDiffers) {
                     Set<IGUID> previousVersion = new LinkedHashSet<>();
-                    previousVersion.add(previous.getAsset().getVersionGUID());
+                    previousVersion.add(previous.getVersion().getVersionGUID());
 
-                    assetBuilder.setInvariant(previous.getInvariant())
+                    versionBuilder.setInvariant(previous.getInvariant())
                             .setPrevious(previousVersion);
 
                     this.previous = previous;
@@ -92,8 +92,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
                 }
             }
 
-            this.asset = sos.addAsset(assetBuilder);
-            this.guid = asset.guid();
+            this.version = sos.addVersion(versionBuilder);
+            this.guid = version.guid();
 
         } catch (StorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
@@ -116,22 +116,22 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      * That is, the file and the data are already in the SOS, but we need to get a handle for it.
      *
      * @param sos
-     * @param asset for this atom
+     * @param version for this atom
      */
-    public SOSFile(Agent sos, Asset asset) {
+    public SOSFile(Agent sos, Version version) {
         super(sos);
 
         this.isCompoundData = false;
-        this.asset = asset;
+        this.version = version;
 
-        IGUID contentGUID = asset.getContentGUID();
+        IGUID contentGUID = version.getContentGUID();
         try {
             this.atom = (Atom) sos.getManifest(contentGUID);
         } catch (ManifestNotFoundException e) {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get atom content for GUID " + contentGUID);
         }
 
-        IGUID meta = asset.getMetadata();
+        IGUID meta = version.getMetadata();
         if (meta != null && !meta.isInvalid()) {
             try {
                 this.metadata = sos.getMetadata(meta);
@@ -140,7 +140,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             }
         }
 
-        this.guid = asset.guid();
+        this.guid = version.guid();
     }
 
     @Override

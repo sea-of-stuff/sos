@@ -13,10 +13,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -97,7 +97,7 @@ public class RESTDDS {
             case COMPOUND:
                 manifest = getCompoundManifest(json);
                 break;
-            case ASSET:
+            case VERSION:
                 manifest = getVersionManifest(json);
                 break;
             default:
@@ -115,7 +115,7 @@ public class RESTDDS {
         return JSONHelper.JsonObjMapper().readValue(json, CompoundManifest.class);
     }
 
-    private AssetManifest getVersionManifest(String json) throws IOException {
-        return JSONHelper.JsonObjMapper().readValue(json, AssetManifest.class);
+    private VersionManifest getVersionManifest(String json) throws IOException {
+        return JSONHelper.JsonObjMapper().readValue(json, VersionManifest.class);
     }
 }

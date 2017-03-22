@@ -35,8 +35,7 @@ public class WebApp {
         staticFiles.expireTime(0L);
 
         // Set up before-filters (called before each get/post)
-
-        before("*",                  Filters.handleLocaleChange);
+        before("*", Filters.handleLocaleChange);
 
         registerRoutes(sos, fileSystem);
         registerPostActionRoutes();

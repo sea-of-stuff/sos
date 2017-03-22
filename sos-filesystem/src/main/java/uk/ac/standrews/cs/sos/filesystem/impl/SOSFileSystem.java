@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.UriUtil;
 
@@ -37,12 +37,12 @@ public class SOSFileSystem implements IFileSystem {
 
     private HashMap<String, SOSFile> pendingFiles;
 
-    public SOSFileSystem(Agent sos, Asset rootAsset) throws FileSystemCreationException {
+    public SOSFileSystem(Agent sos, Version rootVersion) throws FileSystemCreationException {
         this.sos = sos;
-        this.invariant = rootAsset.getInvariantGUID();
+        this.invariant = rootVersion.getInvariantGUID();
 
         try {
-            SOSDirectory root = new SOSDirectory(sos, rootAsset);
+            SOSDirectory root = new SOSDirectory(sos, rootVersion);
             root.persist();
         } catch (PersistenceException e) {
             throw new FileSystemCreationException();
@@ -172,14 +172,14 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IDirectory getRootDirectory() {
-        Asset head = SOSFileSystemFactory.getRoot(sos, invariant);
+        Version head = SOSFileSystemFactory.getRoot(sos, invariant);
         return new SOSDirectory(sos, head);
     }
 
     @Override
     public IGUID getRootId() {
-        Asset asset = SOSFileSystemFactory.getRoot(sos, invariant);
-        return asset.getVersionGUID();
+        Version version = SOSFileSystemFactory.getRoot(sos, invariant);
+        return version.getVersionGUID();
     }
 
     @Override

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 
 import java.io.IOException;
 import java.util.Set;
@@ -15,11 +15,11 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AssetManifestDeserializer extends JsonDeserializer<AssetManifest> {
+public class VersionManifestDeserializer extends JsonDeserializer<VersionManifest> {
 
     @Override
-    public AssetManifest deserialize(JsonParser jsonParser,
-                                     DeserializationContext deserializationContext)
+    public VersionManifest deserialize(JsonParser jsonParser,
+                                       DeserializationContext deserializationContext)
             throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
@@ -41,7 +41,7 @@ public class AssetManifestDeserializer extends JsonDeserializer<AssetManifest> {
                 metadata = CommonJson.GetGUID(node, ManifestConstants.KEY_METADATA_GUID);
             }
 
-            return new AssetManifest(invariant, version, content, prevs, metadata, signature);
+            return new VersionManifest(invariant, version, content, prevs, metadata, signature);
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         }

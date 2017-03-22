@@ -8,9 +8,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
@@ -95,11 +95,11 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public List<Asset> getAllAsset() {
+    public List<Version> getAllAsset() {
         return cache.values()
                 .stream()
-                .filter(m -> m.getType() == ManifestType.ASSET)
-                .map(m -> (Asset) m)
+                .filter(m -> m.getType() == ManifestType.VERSION)
+                .map(m -> (Version) m)
                 .collect(Collectors.toList());
     }
 

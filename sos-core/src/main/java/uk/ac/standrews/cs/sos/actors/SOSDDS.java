@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.actors.NDS;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.interfaces.model.Asset;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.model.manifests.directory.LocalManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.manifests.directory.ManifestsCacheImpl;
@@ -83,7 +83,7 @@ public class SOSDDS implements DDS {
     }
 
     @Override
-    public List<Asset> getAllAssets() {
+    public List<Version> getAllAssets() {
         // TODO - return only the ones from the cache for the moment, but should be able to differentiate
         return cache.getAllAsset();
     }

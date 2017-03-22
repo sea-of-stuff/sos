@@ -22,17 +22,17 @@
     <h2>All Assets</h2>
 
     <div class="card-columns">
-        #foreach($asset in $assets)
+        #foreach($version in $assets)
             <div class="card">
                 <div class="card-block">
-                    <h4 class="card-title">Version: $asset.VersionGUID.toString().substring(0, 5)</h4>
+                    <h4 class="card-title">Version: $version.VersionGUID.toString().substring(0, 5)</h4>
                     <p class="card-text">
                         <ul>
                             <li>
-                                <strong>Invariant</strong> $asset.InvariantGUID.toString().substring(0, 5)
+                                <strong>Invariant</strong> $version.InvariantGUID.toString().substring(0, 5)
                             </li>
                             <li>
-                                <strong>Content</strong> $asset.ContentGUID.toString().substring(0, 5)
+                                <strong>Content</strong> $version.ContentGUID.toString().substring(0, 5)
                             </li>
                         </ul>
                     </p>

@@ -32,7 +32,7 @@ public class ManifestReplicationTest {
 
     private static final String TEST_MANIFEST =
             "{\n" +
-            "  \"Type\" : \"Asset\",\n" +
+            "  \"Type\" : \"Version\",\n" +
             "  \"ContentGUID\" : \"27c5a764bb09f0d737fbce4daaedb4f8b8d4ade0\",\n" +
             "  \"Invariant\" : \"5f6953558817f20a99194fde4d8d5365cef30225\",\n" +
             "  \"GUID\" : \"2dcfc250dda1df3e50fac249af6df531d486e7e3\",\n" +

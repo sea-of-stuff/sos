@@ -15,11 +15,11 @@ import uk.ac.standrews.cs.sos.interfaces.actors.MMS;
 import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
-import uk.ac.standrews.cs.sos.model.manifests.AssetManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
-import uk.ac.standrews.cs.sos.model.manifests.builders.AssetBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
@@ -65,15 +65,15 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Asset addAsset(AssetBuilder assetBuilder)
+    public Version addVersion(VersionBuilder versionBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
 
-        IGUID content = assetBuilder.getContent();
-        IGUID invariant = assetBuilder.getInvariant();
-        Set<IGUID> prevs = assetBuilder.getPreviousCollection();
-        IGUID metadata = assetBuilder.getMetadataCollection();
+        IGUID content = versionBuilder.getContent();
+        IGUID invariant = versionBuilder.getInvariant();
+        Set<IGUID> prevs = versionBuilder.getPreviousCollection();
+        IGUID metadata = versionBuilder.getMetadataCollection();
 
-        AssetManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
+        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         addManifest(manifest, false);
 
         return manifest;
