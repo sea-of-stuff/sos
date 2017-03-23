@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.interfaces.model.PredicateComputationType;
 import uk.ac.standrews.cs.sos.interfaces.model.Version;
@@ -24,7 +25,7 @@ public interface CMS extends SeaOfStuff {
     // TODO - use context builder
     Version addContext(Context context) throws Exception;
 
-    Context getContext(IGUID version);
+    Context getContext(IGUID version) throws ContextNotFoundException;
 
     Iterator<IGUID> getContexts(PredicateComputationType type);
 

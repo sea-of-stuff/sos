@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.CMS;
@@ -38,7 +39,6 @@ public class SOSCMS implements CMS {
         contexts.put(PredicateComputationType.BEFORE_READING, new LinkedList<>());
         contexts.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
 
-
         mappings = new HashMap<>();
 
         process();
@@ -62,16 +62,14 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Context getContext(IGUID version) {
+    public Context getContext(IGUID version) throws ContextNotFoundException {
 
         try {
             Manifest manifest = dds.getManifest(version);
             return (Context) dds.getManifest(((Version) manifest).getContentGUID());
         } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
+            throw new ContextNotFoundException(e);
         }
-
-        return null;
     }
 
     @Override
@@ -100,10 +98,16 @@ public class SOSCMS implements CMS {
 
             Iterator<IGUID> it = getContexts(PredicateComputationType.PERIODICALLY);
             while (it.hasNext()) {
-                IGUID c = it.next();
-                Context context = getContext(c);
+                IGUID version = it.next();
 
-                // TODO - run context against all assets. Check if assets has already been run against this context!
+                try {
+                    Context context = getContext(version);
+                    // TODO - run context against all assets. Check if assets has already been run against this context!
+
+                } catch (ContextNotFoundException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + version);
+                }
+
             }
 
         }, 1, 1, TimeUnit.MINUTES);
