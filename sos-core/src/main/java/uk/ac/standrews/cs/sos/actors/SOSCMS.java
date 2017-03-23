@@ -88,8 +88,8 @@ public class SOSCMS implements CMS {
             try {
                 Context context = getContext(v);
 
-                boolean alreadyProcedded = mappings.get(v).contains(version.guid());
-                if (!alreadyProcedded) {
+                boolean alreadyProcessed = mappings.get(v).contains(version.guid());
+                if (!alreadyProcessed) {
 
                     boolean passed = context.test(version);
                     if (passed) {
