@@ -29,7 +29,14 @@ public interface CMS extends SeaOfStuff {
 
     Iterator<IGUID> getContexts(PredicateComputationType type);
 
-    void add(PredicateComputationType type, Version version);
+    /**
+     * Run all predicates of contexts that match the specified computation type
+     * The predicates will be run over the given version
+     *
+     * @param type
+     * @param version
+     */
+    void runPredicates(PredicateComputationType type, Version version);
 
     Iterator<IGUID> getContents(IGUID context);
 

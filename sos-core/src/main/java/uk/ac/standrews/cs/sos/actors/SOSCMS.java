@@ -26,22 +26,22 @@ import java.util.concurrent.TimeUnit;
 public class SOSCMS implements CMS {
 
     private DDS dds;
-    private HashMap<PredicateComputationType, List<IGUID>> contexts;
+    private HashMap<PredicateComputationType, List<IGUID>> contextsByPredicateType;
     private HashMap<IGUID, List<IGUID>> mappings;
 
     public SOSCMS(DDS dds) {
         this.dds = dds;
 
-        contexts = new HashMap<>();
-        contexts.put(PredicateComputationType.BEFORE_STORING, new LinkedList<>());
-        contexts.put(PredicateComputationType.AFTER_STORING, new LinkedList<>());
-        contexts.put(PredicateComputationType.PERIODICALLY, new LinkedList<>());
-        contexts.put(PredicateComputationType.BEFORE_READING, new LinkedList<>());
-        contexts.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
+        contextsByPredicateType = new HashMap<>();
+        contextsByPredicateType.put(PredicateComputationType.BEFORE_STORING, new LinkedList<>());
+        contextsByPredicateType.put(PredicateComputationType.AFTER_STORING, new LinkedList<>());
+        contextsByPredicateType.put(PredicateComputationType.PERIODICALLY, new LinkedList<>());
+        contextsByPredicateType.put(PredicateComputationType.BEFORE_READING, new LinkedList<>());
+        contextsByPredicateType.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
 
         mappings = new HashMap<>();
 
-        process();
+        runPredicates();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SOSCMS implements CMS {
             dds.addManifest(context, false);
             dds.addManifest(version, false);
 
-            contexts.get(context.predicateComputationType()).add(version.guid());
+            contextsByPredicateType.get(context.predicateComputationType()).add(version.guid());
 
             return version;
         } catch (ManifestPersistException e) {
@@ -75,11 +75,11 @@ public class SOSCMS implements CMS {
     @Override
     public Iterator<IGUID> getContexts(PredicateComputationType type) {
 
-        return contexts.get(type).iterator();
+        return contextsByPredicateType.get(type).iterator();
     }
 
     @Override
-    public void add(PredicateComputationType type, Version version) {
+    public void runPredicates(PredicateComputationType type, Version version) {
 
         Iterator<IGUID> it = getContexts(type);
         while (it.hasNext()) {
@@ -90,7 +90,7 @@ public class SOSCMS implements CMS {
                 runPredicate(v, context, version);
 
             } catch (ContextNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + version);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
             }
 
         }
@@ -108,11 +108,11 @@ public class SOSCMS implements CMS {
 
     }
 
-    private void process() {
+    private void runPredicates() {
 
         ScheduledExecutorService service = new ScheduledThreadPoolExecutor(1);
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running background contexts");
+            SOS_LOG.log(LEVEL.INFO, "Running background context predicates");
 
             Iterator<IGUID> it = getContexts(PredicateComputationType.PERIODICALLY);
             while (it.hasNext()) {
