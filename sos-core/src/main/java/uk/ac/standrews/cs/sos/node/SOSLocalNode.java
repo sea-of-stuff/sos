@@ -200,7 +200,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cms = new SOSCMS(dds);
         rms = new SOSRMS();
 
-        agent = new SOSAgent(storage, dds, mms, identity);
+        agent = new SOSAgent(storage, dds, mms, cms, identity);
     }
 
     private void cacheFlusher() {

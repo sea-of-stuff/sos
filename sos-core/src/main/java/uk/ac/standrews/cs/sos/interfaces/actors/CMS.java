@@ -29,6 +29,8 @@ public interface CMS extends SeaOfStuff {
 
     Iterator<IGUID> getContexts(PredicateComputationType type);
 
+    void add(PredicateComputationType type, Version version);
+
     Iterator<IGUID> getContents(IGUID context);
 
 }

@@ -79,6 +79,32 @@ public class SOSCMS implements CMS {
     }
 
     @Override
+    public void add(PredicateComputationType type, Version version) {
+
+        Iterator<IGUID> it = getContexts(type);
+        while (it.hasNext()) {
+            IGUID v = it.next();
+
+            try {
+                Context context = getContext(v);
+
+                boolean alreadyProcedded = mappings.get(v).contains(version.guid());
+                if (!alreadyProcedded) {
+
+                    boolean passed = context.test(version);
+                    if (passed) {
+                        mappings.get(v).add(version.guid());
+                    }
+                }
+
+            } catch (ContextNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + version);
+            }
+
+        }
+    }
+
+    @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
         List<IGUID> contents = mappings.get(context);

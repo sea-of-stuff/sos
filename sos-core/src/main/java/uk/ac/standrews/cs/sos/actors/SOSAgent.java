@@ -9,10 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
-import uk.ac.standrews.cs.sos.interfaces.actors.MMS;
-import uk.ac.standrews.cs.sos.interfaces.actors.Storage;
+import uk.ac.standrews.cs.sos.interfaces.actors.*;
 import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
@@ -39,11 +36,13 @@ public class SOSAgent implements Agent {
     private Storage storage;
     private DDS dds;
     private MMS mms;
+    private CMS cms;
 
-    public SOSAgent(Storage storage, DDS dds, MMS mms, Identity identity) {
+    public SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms, Identity identity) {
         this.storage = storage;
         this.dds = dds;
         this.mms = mms;
+        this.cms = cms;
 
         this.identity = identity; // FIXME - role should be dynamic and not fixed to the SOSAgent
     }
@@ -75,6 +74,8 @@ public class SOSAgent implements Agent {
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         addManifest(manifest, false);
+
+        cms.add(PredicateComputationType.AFTER_STORING, manifest);
 
         return manifest;
     }
