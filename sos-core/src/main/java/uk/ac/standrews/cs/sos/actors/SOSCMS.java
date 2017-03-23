@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.CMS;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
 import uk.ac.standrews.cs.sos.interfaces.model.Context;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.PredicateComputationType;
 import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 
@@ -25,6 +26,13 @@ public class SOSCMS implements CMS {
 
     public SOSCMS(DDS dds) {
         this.dds = dds;
+
+        process();
+    }
+
+    @Override
+    public Iterator<Context> getContexts(PredicateComputationType type) {
+        return null;
     }
 
     @Override
@@ -56,44 +64,13 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Version update(IGUID version, Context context) {
-
-
-        // Create new version with version as previous
-//        try {
-//            Asset asset = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
-//
-//            dds.addManifest(context, false);
-//            dds.addManifest(asset, false);
-//
-//            return asset;
-//        } catch (ManifestPersistException e) {
-//            throw new ContextException(e);
-//        }
-
-        return null;
-    }
-
-    @Override
-    public Version remove(IGUID guid) {
-        // Create new version without context
-
-        return null;
-    }
-
-    @Override
     public Iterator<IGUID> getContents(IGUID version) {
         return null;
     }
 
     @Override
-    public boolean verify(IGUID context, IGUID version) {
-        return false;
-    }
-
-    @Override
-    public void getActiveContexts() {
-
+    public Iterator<Context> getActiveContexts() {
+        return null;
     }
 
     @Override
@@ -102,13 +79,11 @@ public class SOSCMS implements CMS {
     }
 
     // TODO -  schedule contexts? have priority over what contexts to run first?
-    @Override
-    public void process() {
+    private void process() {
 
         ScheduledExecutorService service = new ScheduledThreadPoolExecutor(1);
         service.scheduleWithFixedDelay(() -> {
-            // execute contexts on assets
-
-        }, 0, 1, TimeUnit.MINUTES);
+            // execute periodic context tasks
+        }, 1, 1, TimeUnit.MINUTES);
     }
 }
