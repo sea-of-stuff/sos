@@ -25,13 +25,20 @@ import java.util.concurrent.TimeUnit;
 public class SOSCMS implements CMS {
 
     private DDS dds;
-    private List<IGUID> contexts;
+    private HashMap<PredicateComputationType, List<IGUID>> contexts;
     private HashMap<IGUID, List<IGUID>> mappings;
 
     public SOSCMS(DDS dds) {
         this.dds = dds;
 
-        contexts = new LinkedList<>();
+        contexts = new HashMap<>();
+        contexts.put(PredicateComputationType.BEFORE_STORING, new LinkedList<>());
+        contexts.put(PredicateComputationType.AFTER_STORING, new LinkedList<>());
+        contexts.put(PredicateComputationType.PERIODICALLY, new LinkedList<>());
+        contexts.put(PredicateComputationType.BEFORE_READING, new LinkedList<>());
+        contexts.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
+
+
         mappings = new HashMap<>();
 
         process();
@@ -46,7 +53,7 @@ public class SOSCMS implements CMS {
             dds.addManifest(context, false);
             dds.addManifest(version, false);
 
-            contexts.add(version.guid());
+            contexts.get(context.predicateComputationType()).add(version.guid());
 
             return version;
         } catch (ManifestPersistException e) {
@@ -70,7 +77,7 @@ public class SOSCMS implements CMS {
     @Override
     public Iterator<IGUID> getContexts(PredicateComputationType type) {
 
-        return contexts.iterator();
+        return contexts.get(type).iterator();
     }
 
     @Override
