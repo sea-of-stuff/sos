@@ -87,15 +87,7 @@ public class SOSCMS implements CMS {
 
             try {
                 Context context = getContext(v);
-
-                boolean alreadyProcessed = mappings.get(v).contains(version.guid());
-                if (!alreadyProcessed) {
-
-                    boolean passed = context.test(version);
-                    if (passed) {
-                        mappings.get(v).add(version.guid());
-                    }
-                }
+                runPredicate(v, context, version);
 
             } catch (ContextNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + version);
@@ -124,18 +116,32 @@ public class SOSCMS implements CMS {
 
             Iterator<IGUID> it = getContexts(PredicateComputationType.PERIODICALLY);
             while (it.hasNext()) {
-                IGUID version = it.next();
+                IGUID v = it.next();
 
                 try {
-                    Context context = getContext(version);
-                    // TODO - run context against all assets. Check if assets has already been run against this context!
+                    Context context = getContext(v);
+                    for(Version version : dds.getAllAssets()) { // TODO - get only CURRENT VERSIONS?
+                        runPredicate(v, context, version);
+                    }
 
                 } catch (ContextNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + version);
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
                 }
 
             }
 
         }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    private void runPredicate(IGUID contextVersion, Context context, Version version) {
+
+        boolean alreadyProcessed = mappings.get(contextVersion).contains(version.guid());
+        if (!alreadyProcessed) {
+
+            boolean passed = context.test(version);
+            if (passed) {
+                mappings.get(contextVersion).add(version.guid());
+            }
+        }
     }
 }
