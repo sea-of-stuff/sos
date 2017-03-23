@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -11,8 +12,9 @@ import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.PredicateComputationType;
 import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -23,16 +25,16 @@ import java.util.concurrent.TimeUnit;
 public class SOSCMS implements CMS {
 
     private DDS dds;
+    private List<IGUID> contexts;
+    private HashMap<IGUID, List<IGUID>> mappings;
 
     public SOSCMS(DDS dds) {
         this.dds = dds;
 
-        process();
-    }
+        contexts = new LinkedList<>();
+        mappings = new HashMap<>();
 
-    @Override
-    public Iterator<Context> getContexts(PredicateComputationType type) {
-        return null;
+        process();
     }
 
     @Override
@@ -43,6 +45,8 @@ public class SOSCMS implements CMS {
 
             dds.addManifest(context, false);
             dds.addManifest(version, false);
+
+            contexts.add(version.guid());
 
             return version;
         } catch (ManifestPersistException e) {
@@ -64,26 +68,37 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Iterator<IGUID> getContents(IGUID version) {
-        return null;
+    public Iterator<IGUID> getContexts(PredicateComputationType type) {
+
+        return contexts.iterator();
     }
 
     @Override
-    public Iterator<Context> getActiveContexts() {
-        return null;
+    public Iterator<IGUID> getContents(IGUID context) {
+
+        List<IGUID> contents = mappings.get(context);
+        if (contents == null) {
+            return Collections.emptyIterator();
+        } else {
+            return contents.iterator();
+        }
+
     }
 
-    @Override
-    public void setContext(Context context, boolean active) {
-
-    }
-
-    // TODO -  schedule contexts? have priority over what contexts to run first?
     private void process() {
 
         ScheduledExecutorService service = new ScheduledThreadPoolExecutor(1);
         service.scheduleWithFixedDelay(() -> {
-            // execute periodic context tasks
+            SOS_LOG.log(LEVEL.INFO, "Running background contexts");
+
+            Iterator<IGUID> it = getContexts(PredicateComputationType.PERIODICALLY);
+            while (it.hasNext()) {
+                IGUID c = it.next();
+                Context context = getContext(c);
+
+                // TODO - run context against all assets. Check if assets has already been run against this context!
+            }
+
         }, 1, 1, TimeUnit.MINUTES);
     }
 }

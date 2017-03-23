@@ -14,8 +14,6 @@ import java.util.Iterator;
  */
 public interface CMS extends SeaOfStuff {
 
-    // TODO - use context builder
-
     /**
      *
      * The context is automatically set as active
@@ -23,16 +21,13 @@ public interface CMS extends SeaOfStuff {
      * @return
      * @throws Exception
      */
+    // TODO - use context builder
     Version addContext(Context context) throws Exception;
-
-    void setContext(Context context, boolean active);
 
     Context getContext(IGUID version);
 
-    Iterator<Context> getContexts(PredicateComputationType type);
+    Iterator<IGUID> getContexts(PredicateComputationType type);
 
-    Iterator<Context> getActiveContexts();
-
-    Iterator<IGUID> getContents(IGUID version);
+    Iterator<IGUID> getContents(IGUID context);
 
 }
