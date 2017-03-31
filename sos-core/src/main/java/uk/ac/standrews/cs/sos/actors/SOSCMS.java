@@ -36,7 +36,6 @@ public class SOSCMS implements CMS {
         contextsByPredicateType.put(PredicateComputationType.BEFORE_STORING, new LinkedList<>());
         contextsByPredicateType.put(PredicateComputationType.AFTER_STORING, new LinkedList<>());
         contextsByPredicateType.put(PredicateComputationType.PERIODICALLY, new LinkedList<>());
-        contextsByPredicateType.put(PredicateComputationType.BEFORE_READING, new LinkedList<>());
         contextsByPredicateType.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
 
         mappings = new HashMap<>();
@@ -53,7 +52,7 @@ public class SOSCMS implements CMS {
             dds.addManifest(context, false);
             dds.addManifest(version, false);
 
-            contextsByPredicateType.get(context.predicateComputationType()).add(version.guid());
+            contextsByPredicateType.get(context.predicate().predicateComputationType()).add(version.guid());
 
             return version;
         } catch (ManifestPersistException e) {
@@ -138,7 +137,7 @@ public class SOSCMS implements CMS {
         boolean alreadyProcessed = mappings.get(contextVersion).contains(version.guid());
         if (!alreadyProcessed) {
 
-            boolean passed = context.test(version);
+            boolean passed = context.predicate().test(version.guid()); // FIXME
             if (passed) {
                 mappings.get(contextVersion).add(version.guid());
             }

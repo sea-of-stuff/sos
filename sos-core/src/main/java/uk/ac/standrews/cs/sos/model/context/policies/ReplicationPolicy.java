@@ -41,4 +41,9 @@ public class ReplicationPolicy implements Policy {
 
         return false;
     }
+
+    @Override
+    public int computationType() {
+        return 0;
+    }
 }

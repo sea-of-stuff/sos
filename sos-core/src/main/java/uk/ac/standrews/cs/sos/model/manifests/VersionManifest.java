@@ -173,7 +173,7 @@ public class VersionManifest extends SignedManifest implements Version {
 
     private String manifestToHash() {
         String toHash = getType() +
-                "I" + getInvariantGUID() +
+                "I" + getInvariantGUID() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
                 "C" + getContentGUID();
 
         toHash += getPreviousToHashOrSign();

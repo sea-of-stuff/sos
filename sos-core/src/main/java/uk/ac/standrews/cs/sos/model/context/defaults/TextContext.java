@@ -1,11 +1,13 @@
 package uk.ac.standrews.cs.sos.model.context.defaults;
 
 import uk.ac.standrews.cs.sos.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
 import uk.ac.standrews.cs.sos.interfaces.model.Policy;
 import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.context.ContextImpl;
+import uk.ac.standrews.cs.sos.model.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.model.context.policies.ReplicationPolicy;
 
 /**
@@ -15,20 +17,19 @@ public class TextContext extends ContextImpl {
 
     public TextContext(SOSAgent agent, String name) {
         super(agent, name);
-    }
 
-    @Override
-    public boolean test(Version version) {
+        predicate = new SOSPredicateImpl(p -> {
+            try {
+                Version version = (Version) agent.getManifest(p);
+                Metadata metadata = agent.getMetadata(version.getMetadata());
+                String contentType = metadata.getPropertyAsString("Content-Type");
+                return isText(contentType);
+            } catch (ManifestNotFoundException | MetadataNotFoundException e) {
+                e.printStackTrace();
+            }
 
-        try {
-            Metadata metadata = agent.getMetadata(version.getMetadata());
-            String contentType = metadata.getPropertyAsString("Content-Type");
-            return isText(contentType);
-        } catch (MetadataNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+            return false;
+        });
     }
 
     private boolean isText(String contentType) {

@@ -10,6 +10,8 @@ package uk.ac.standrews.cs.sos.interfaces.model;
  * - replicate data at least N times
  * - protect data
  *
+ * TODO - how to ensure that it works within a given scope?
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Policy {
@@ -27,4 +29,15 @@ public interface Policy {
      * @return true if the policy is satisfied
      */
     boolean check();
+
+    /**
+     * Define when to run the policy
+     * Types are:
+     * - periodically
+     * - just after predicate
+     *
+     * @return TODO - type should be changed to enum?
+     */
+    int computationType();
+
 }

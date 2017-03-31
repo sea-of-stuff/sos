@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
-import java.util.function.Predicate;
+import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 /**
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.
@@ -23,7 +23,7 @@ import java.util.function.Predicate;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context extends Predicate<Version>, Manifest {
+public interface Context extends Manifest {
 
     /**
      * Return a human-readable name for the context
@@ -31,17 +31,34 @@ public interface Context extends Predicate<Version>, Manifest {
      */
     String getName();
 
+
     /**
-     * Defines when the predicate of the context should be run
+     * Where to get the data from.
+     *
+     * @param nodes
+     */
+    void setSources(Node[] nodes);
+
+    /**
+     * Predicate to run against data.
+     * This will define whether data belongs to this context or not
+     *
      * @return
      */
-    PredicateComputationType predicateComputationType();
+    SOSPredicate predicate();
 
     /**
      * Return the policies of this context
      * @return
      */
     Policy[] getPolicies();
+
+    /**
+     * Nodes where to run this context
+     *
+     * @return
+     */
+    Node[] whereToRun();
 
     /**
      * Combine this context with another one under the AND logical operator

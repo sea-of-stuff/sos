@@ -8,6 +8,5 @@ public enum PredicateComputationType {
     BEFORE_STORING,
     AFTER_STORING,
     PERIODICALLY,
-    BEFORE_READING,
     AFTER_READING
 }

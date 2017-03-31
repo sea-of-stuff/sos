@@ -75,7 +75,7 @@ public class SOSAgent implements Agent {
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
         addManifest(manifest, false);
 
-        cms.add(PredicateComputationType.AFTER_STORING, manifest);
+        cms.runPredicates(PredicateComputationType.AFTER_STORING, manifest);
 
         return manifest;
     }
