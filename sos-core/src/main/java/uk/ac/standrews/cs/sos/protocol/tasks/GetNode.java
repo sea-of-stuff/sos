@@ -34,6 +34,8 @@ public class GetNode extends Task {
     private Iterator<Node> knownNDSNodes;
     private Node foundNode;
 
+    private static int NUMBER_OF_TRIALS = 3;
+
     public GetNode(IGUID nodeGUID, Iterator<Node> knownNDSNodes) {
         // TODO - perform checks
 
@@ -44,9 +46,12 @@ public class GetNode extends Task {
     @Override
     public void performAction() {
 
-        while(knownNDSNodes.hasNext()) {
+        int trial = 0;
+        while(knownNDSNodes.hasNext() && trial < NUMBER_OF_TRIALS) {
 
             Node node = knownNDSNodes.next();
+            trial++;
+
             try {
                 URL url = SOSURL.NDS_GET_NODE(node, nodeId);
 

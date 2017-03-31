@@ -99,7 +99,7 @@ public class AtomStorage {
     public void replicate(InputStream data, Iterator<Node> nodes, int replicationFactor, NDS nds, DDS dds) throws SOSProtocolException {
 
         DataReplication replicationTask = new DataReplication(data, nodes, replicationFactor, locationIndex, nds, dds);
-        TasksQueue.instance().performSyncTask(replicationTask);
+        TasksQueue.instance().performSyncTask(replicationTask); // TODO - NOT SURE IF THIS CAN BE CHANGED TO ASYNC FOR THE MOMENT, since we may risk to close the stream before using it
     }
 
     private IGUID storeAtomAndUpdateLocationBundles(Store store, Set<LocationBundle> bundles) throws StorageException {

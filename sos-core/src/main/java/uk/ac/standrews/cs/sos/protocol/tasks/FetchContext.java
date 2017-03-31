@@ -9,6 +9,6 @@ public class FetchContext extends Task {
 
     @Override
     public void performAction() {
-
+        // Fetch context definition from CMS
     }
 }

@@ -167,7 +167,7 @@ public class SOSStorage implements Storage {
 
     private void replicateData(Atom atom) throws SOSProtocolException, IOException {
 
-        int replicationFactor = 3; // FIXME - this should not be hardcoded and should come from the context
+        int replicationFactor = 1; // FIXME - this should not be hardcoded and should come from the context
         if (replicationFactor > 0) {
 
             try (InputStream data = getAtomContent(atom)) {

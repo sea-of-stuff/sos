@@ -39,8 +39,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * TODO - separate tasks from protocol. Do the same with all other tasks.
- * TODO - see how it is done with the NodeDiscovery service and the GetNode task
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class DataReplication extends Task {
