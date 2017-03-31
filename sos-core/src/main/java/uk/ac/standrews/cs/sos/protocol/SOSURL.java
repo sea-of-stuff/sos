@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.actors.protocol;
+package uk.ac.standrews.cs.sos.protocol;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;

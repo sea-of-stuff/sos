@@ -1,11 +1,11 @@
 package uk.ac.standrews.cs.sos.model.context.policies;
 
-import uk.ac.standrews.cs.sos.actors.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.Policy;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.tasks.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 
 import java.util.Iterator;
 

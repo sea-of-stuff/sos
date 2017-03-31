@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.tasks;
+package uk.ac.standrews.cs.sos.protocol;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;

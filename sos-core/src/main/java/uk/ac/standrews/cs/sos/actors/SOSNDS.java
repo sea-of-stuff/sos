@@ -2,8 +2,6 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.protocol.tasks.GetNode;
-import uk.ac.standrews.cs.sos.actors.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
@@ -12,7 +10,9 @@ import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 import uk.ac.standrews.cs.sos.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.tasks.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.tasks.GetNode;
+import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Iterator;
