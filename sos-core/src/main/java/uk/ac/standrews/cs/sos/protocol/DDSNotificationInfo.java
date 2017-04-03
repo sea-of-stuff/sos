@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Global settings about DDS
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class DDSNotificationInfo {

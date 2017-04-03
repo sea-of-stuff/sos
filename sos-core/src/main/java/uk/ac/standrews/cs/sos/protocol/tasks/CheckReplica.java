@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.protocol;
+package uk.ac.standrews.cs.sos.protocol.tasks;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

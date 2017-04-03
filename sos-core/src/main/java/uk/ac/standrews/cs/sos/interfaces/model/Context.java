@@ -25,19 +25,28 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
  */
 public interface Context extends Manifest {
 
+    Context setName(String name);
+
     /**
      * Return a human-readable name for the context
      * @return
      */
     String getName();
 
-
     /**
      * Where to get the data from.
      *
      * @param nodes
      */
-    void setSources(Node[] nodes);
+    Context setSources(Node[] nodes);
+
+    /**
+     * Build the definition of the context.
+     * If the context is not build, then the predicate and policies method will fail to work
+     *
+     * @return
+     */
+    Context build();
 
     /**
      * Predicate to run against data.
@@ -51,7 +60,7 @@ public interface Context extends Manifest {
      * Return the policies of this context
      * @return
      */
-    Policy[] getPolicies();
+    Policy[] policies();
 
     /**
      * Nodes where to run this context
@@ -59,19 +68,5 @@ public interface Context extends Manifest {
      * @return
      */
     Node[] whereToRun();
-
-    /**
-     * Combine this context with another one under the AND logical operator
-     * @param context to AND
-     * @return a new context
-     */
-    Context AND(Context context);
-
-    /**
-     * * Combine this context with another one under the OR logical operator
-     * @param context to OR
-     * @return a new context
-     */
-    Context OR(Context context);
 
 }

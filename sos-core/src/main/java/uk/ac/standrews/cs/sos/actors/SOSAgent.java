@@ -38,13 +38,26 @@ public class SOSAgent implements Agent {
     private MMS mms;
     private CMS cms;
 
-    public SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms, Identity identity) {
+    private SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms, Identity identity) {
         this.storage = storage;
         this.dds = dds;
         this.mms = mms;
         this.cms = cms;
 
         this.identity = identity; // FIXME - role should be dynamic and not fixed to the SOSAgent
+    }
+
+    private static SOSAgent instance;
+    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, CMS cms, Identity identity) {
+        if (instance == null) {
+            instance = new SOSAgent(storage, dds, mms, cms, identity);
+        }
+
+        return instance;
+    }
+
+    public static SOSAgent instance() {
+        return instance;
     }
 
     @Override
