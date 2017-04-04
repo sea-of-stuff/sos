@@ -7,9 +7,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.Atom;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.AtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.locations.LocationUtility;
@@ -87,7 +87,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
+    public boolean verifySignature(Role role) throws ManifestVerificationException {
         throw new NotImplementedException();
     }
 

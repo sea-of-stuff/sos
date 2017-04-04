@@ -5,9 +5,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
 import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public abstract class AbstractMetadata implements Metadata {
     }
 
     @Override
-    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
+    public boolean verifySignature(Role role) throws ManifestVerificationException {
         return false;
     }
 

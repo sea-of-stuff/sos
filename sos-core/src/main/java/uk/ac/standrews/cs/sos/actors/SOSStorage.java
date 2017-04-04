@@ -64,12 +64,14 @@ public class SOSStorage implements Storage {
 
         Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo);
 
-        // Run asynchronously
-        try {
-            replicateData(manifest);
-            notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
-        } catch (SOSProtocolException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
+        // This block of code should run asynchronously
+        {
+            try {
+                replicateData(manifest);
+                notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
+            } catch (SOSProtocolException | IOException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
+            }
         }
 
         // This may return before data is replicated and the DDS nodes are notified

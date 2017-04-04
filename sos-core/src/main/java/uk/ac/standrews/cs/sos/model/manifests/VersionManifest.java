@@ -168,7 +168,7 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        return this.identity.sign(toSign);
+        return this.role.sign(toSign);
     }
 
     private String manifestToHash() {

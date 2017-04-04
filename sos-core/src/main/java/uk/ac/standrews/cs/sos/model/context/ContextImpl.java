@@ -3,11 +3,7 @@ package uk.ac.standrews.cs.sos.model.context;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.model.Context;
-import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
-import uk.ac.standrews.cs.sos.interfaces.model.Policy;
-import uk.ac.standrews.cs.sos.interfaces.model.SOSPredicate;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 /**
@@ -69,7 +65,7 @@ public abstract class ContextImpl implements Context {
     }
 
     @Override
-    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
+    public boolean verifySignature(Role role) throws ManifestVerificationException {
         return false;
     }
 

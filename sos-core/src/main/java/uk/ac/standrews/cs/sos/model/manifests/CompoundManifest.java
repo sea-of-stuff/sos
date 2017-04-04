@@ -120,7 +120,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        return this.identity.sign(toSign);
+        return this.role.sign(toSign);
     }
 
     private IGUID makeContentGUID() throws ManifestNotMadeException {

@@ -112,7 +112,7 @@ public class SOSAgent implements Agent {
 
     @Override
     public boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException {
-        boolean success = manifest.verifySignature(identity);
+        boolean success = manifest.verifySignature(role);
         return success;
     }
 
