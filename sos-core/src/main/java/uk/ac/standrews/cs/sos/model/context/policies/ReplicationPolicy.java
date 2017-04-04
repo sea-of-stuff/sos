@@ -1,12 +1,14 @@
 package uk.ac.standrews.cs.sos.model.context.policies;
 
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.model.Node;
 import uk.ac.standrews.cs.sos.interfaces.model.Policy;
 import uk.ac.standrews.cs.sos.interfaces.model.PolicyComputationType;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Iterator;
 
@@ -32,7 +34,10 @@ public class ReplicationPolicy implements Policy {
             ManifestReplication replication = new ManifestReplication(manifest, nodes, factor, null);
             TasksQueue.instance().performAsyncTask(replication);
 
-            // TODO - replicate data too
+            if (!manifestOnly) {
+                // TODO - replicate data too
+                SOS_LOG.log(LEVEL.INFO, "TODO - SHOULD REPLICATE DATA");
+            }
         } catch (SOSProtocolException e) {
             e.printStackTrace();
         }

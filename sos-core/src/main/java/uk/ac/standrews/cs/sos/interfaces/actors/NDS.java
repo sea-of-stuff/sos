@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.model.Node;
 
 import java.util.Iterator;
 import java.util.Set;

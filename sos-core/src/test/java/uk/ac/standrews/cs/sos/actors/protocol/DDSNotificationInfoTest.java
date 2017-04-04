@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.actors.protocol;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
+import uk.ac.standrews.cs.sos.interfaces.model.Node;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 
 import java.util.HashSet;

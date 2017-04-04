@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.interfaces.node;
+package uk.ac.standrews.cs.sos.interfaces.model;
 
 import uk.ac.standrews.cs.IGUID;
 

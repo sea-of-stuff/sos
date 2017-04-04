@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.node.directory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.interfaces.model.Node;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.util.*;

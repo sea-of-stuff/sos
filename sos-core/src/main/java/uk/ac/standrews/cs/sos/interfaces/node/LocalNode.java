@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.node;
 
 import uk.ac.standrews.cs.sos.interfaces.actors.*;
+import uk.ac.standrews.cs.sos.interfaces.model.Node;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

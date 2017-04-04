@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
-
 /**
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.
  * Entities are assets belonging to the SOS.

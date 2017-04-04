@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
+import uk.ac.standrews.cs.storage.data.Data;
+
 /**
  * A policy is a task that must be run by a context.
  *
@@ -22,6 +24,8 @@ public interface Policy {
      * @param manifest
      */
     void run(Manifest manifest);
+
+    void run(Data data);
 
     /**
      * Check that the policy is satisfied

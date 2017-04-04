@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
-import uk.ac.standrews.cs.sos.interfaces.node.Node;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

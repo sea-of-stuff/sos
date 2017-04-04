@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.node;
 
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
+import uk.ac.standrews.cs.sos.interfaces.model.Node;
 import uk.ac.standrews.cs.sos.node.SOSNode;
 
 import java.util.Set;
