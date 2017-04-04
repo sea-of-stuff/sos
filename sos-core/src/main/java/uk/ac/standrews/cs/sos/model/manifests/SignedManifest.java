@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;

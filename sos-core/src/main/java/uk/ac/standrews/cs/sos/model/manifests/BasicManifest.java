@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.model.manifests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;

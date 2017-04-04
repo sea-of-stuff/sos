@@ -52,5 +52,4 @@ public class SOSAddCompoundTest extends AgentTest {
         assertTrue(isVerified);
     }
 
-
 }

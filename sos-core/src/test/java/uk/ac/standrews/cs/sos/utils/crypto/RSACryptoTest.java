@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.utils.crypto;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
 
 import static org.testng.Assert.assertEquals;
 

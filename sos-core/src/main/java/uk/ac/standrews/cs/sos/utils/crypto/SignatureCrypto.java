@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.utils.crypto;
 
 import org.apache.commons.codec.binary.Base64;
-import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.File;

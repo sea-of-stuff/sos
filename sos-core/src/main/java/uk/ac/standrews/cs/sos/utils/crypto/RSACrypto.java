@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.utils.crypto;
 
 import org.apache.commons.codec.binary.Base64;
 import sun.misc.BASE64Decoder;
-import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
 
 import javax.crypto.Cipher;
 import java.security.*;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
