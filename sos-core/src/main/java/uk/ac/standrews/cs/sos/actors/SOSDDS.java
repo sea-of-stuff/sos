@@ -50,7 +50,7 @@ public class SOSDDS implements DDS {
     }
 
     @Override
-    public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
+    public void addManifest(Manifest manifest) throws ManifestPersistException {
         cache.addManifest(manifest);
         local.addManifest(manifest);
         remote.addManifest(manifest); // will run in async mode

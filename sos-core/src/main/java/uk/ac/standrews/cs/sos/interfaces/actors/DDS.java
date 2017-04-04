@@ -21,16 +21,12 @@ public interface DDS extends SeaOfStuff {
 
     /**
      * Add a manifest to the sea of stuff.
-     * If {@code recursive} is true, then manifests referenced from the specified one will also be added,
-     * assuming that such manifests are available and reachable.
-     * This operation will be performed recursively.
      *
      * @param manifest to add to the sea of stuff
-     * @param recursive if true adds the references manifests and data recursively.
      * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
      * @throws ManifestPersistException
      */
-    void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
+    void addManifest(Manifest manifest) throws ManifestPersistException;
 
     /**
      * Map the GUID of a manifest with the GUID of a dds node.

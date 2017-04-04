@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
@@ -72,14 +71,11 @@ public interface Agent {
 
     /**
      * Add a manifest to the sea of stuff.
-     * If {@code recursive} is true, then manifests referenced from the one specified will also be added,
-     * assuming that such manifests are available and reachable.
      *
      * @param manifest to add to the NodeManager
-     * @param recursive if true adds the references manifests and data recursively.
      * @throws ManifestPersistException
      */
-    void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException;
+    void addManifest(Manifest manifest) throws ManifestPersistException;
 
     /**
      * Get the data of an Atom.
@@ -112,13 +108,13 @@ public interface Agent {
      * in false positives, but the likelihood of collisions is
      * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
      *
-     * @param identity                      used to verifySignature the manifest
+     * @param role                          used to verifySignature the manifest
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
      * @throws ManifestVerificationException if the manifest could not be verified
      */
-    boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException;
+    boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException;
 
     /**
      * Generate and add metadata for this atom

@@ -6,17 +6,13 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.actors.*;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
-import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.model.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
@@ -53,7 +49,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private LocalStorage localStorage;
     private Database database;
-    private Identity identity;
 
     private ScheduledExecutorService cacheFlusherService;
 
@@ -93,8 +88,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initNDS();
         loadBootstrapNodes(Builder.bootstrapNodes);
         registerNode(configuration.getNodePort());
-
-        initIdentity();
 
         initSOSInstances();
         cacheFlusher();
@@ -137,11 +130,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public Identity getIdentity() {
-        return identity;
-    }
-
-    @Override
     public void kill() {
         dds.flush();
         storage.flush();
@@ -172,15 +160,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     }
 
-    private void initIdentity() throws SOSException {
-        try {
-            identity = new IdentityImpl();
-        } catch (KeyGenerationException | KeyLoadedException e) {
-            throw new SOSException(e);
-        }
-
-    }
-
     private void initNDS() throws SOSException {
         try {
             SOSURLProtocol.getInstance().register(localStorage);
@@ -200,7 +179,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cms = new SOSCMS(dds);
         rms = new SOSRMS();
 
-        agent = SOSAgent.instance(storage, dds, mms, cms, identity);
+        agent = SOSAgent.instance(storage, dds, mms, cms);
     }
 
     private void cacheFlusher() {

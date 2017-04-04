@@ -31,7 +31,7 @@ public class SOSMMS implements MMS {
     @Override
     public void addMetadata(Metadata metadata) throws MetadataPersistException {
         try {
-            dds.addManifest(metadata, false);
+            dds.addManifest(metadata);
         } catch (ManifestPersistException e) {
             throw new MetadataPersistException(e);
         }

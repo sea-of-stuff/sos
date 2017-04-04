@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.actors.*;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
@@ -31,26 +30,22 @@ import java.util.Set;
  */
 public class SOSAgent implements Agent {
 
-    private Identity identity;
-
     private Storage storage;
     private DDS dds;
     private MMS mms;
     private CMS cms;
 
-    private SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms, Identity identity) {
+    private SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms) {
         this.storage = storage;
         this.dds = dds;
         this.mms = mms;
         this.cms = cms;
-
-        this.identity = identity; // FIXME - role should be dynamic and not fixed to the SOSAgent
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, CMS cms, Identity identity) {
+    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, CMS cms) {
         if (instance == null) {
-            instance = new SOSAgent(storage, dds, mms, cms, identity);
+            instance = new SOSAgent(storage, dds, mms, cms);
         }
 
         return instance;
@@ -71,7 +66,7 @@ public class SOSAgent implements Agent {
             throws ManifestNotMadeException, ManifestPersistException {
 
         CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
-        addManifest(manifest, false);
+        addManifest(manifest);
 
         return manifest;
     }
@@ -86,7 +81,7 @@ public class SOSAgent implements Agent {
         IGUID metadata = versionBuilder.getMetadataCollection();
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
-        addManifest(manifest, false);
+        addManifest(manifest);
 
         cms.runPredicates(PredicateComputationType.AFTER_STORING, manifest);
 
@@ -106,8 +101,8 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public void addManifest(Manifest manifest, boolean recursive) throws ManifestPersistException {
-        dds.addManifest(manifest, recursive);
+    public void addManifest(Manifest manifest) throws ManifestPersistException {
+        dds.addManifest(manifest);
     }
 
     @Override
@@ -116,7 +111,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public boolean verifyManifest(Identity identity, Manifest manifest) throws ManifestVerificationException {
+    public boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException {
         boolean success = manifest.verifySignature(identity);
         return success;
     }

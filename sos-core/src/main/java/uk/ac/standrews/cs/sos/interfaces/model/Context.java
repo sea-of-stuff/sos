@@ -25,6 +25,11 @@ import uk.ac.standrews.cs.sos.interfaces.node.Node;
  */
 public interface Context extends Manifest {
 
+    /**
+     * Set the name for the context
+     * @param name
+     * @return
+     */
     Context setName(String name);
 
     /**
@@ -43,6 +48,8 @@ public interface Context extends Manifest {
     /**
      * Build the definition of the context.
      * If the context is not build, then the predicate and policies method will fail to work
+     *
+     * Prior to building the context, make sure that the name and the sources are set.
      *
      * @return
      */
@@ -64,6 +71,7 @@ public interface Context extends Manifest {
 
     /**
      * Nodes where to run this context
+     * This information will be used to spawn the context to such nodes
      *
      * @return
      */

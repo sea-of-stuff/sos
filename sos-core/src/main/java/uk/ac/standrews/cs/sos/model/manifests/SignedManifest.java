@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.sos.exceptions.identity.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 
 /**
  * Abstract class for all manifests that support signatures.
@@ -14,18 +14,18 @@ import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
  */
 public abstract class SignedManifest extends BasicManifest {
 
-    final protected Identity identity;
+    final protected Role role;
     protected String signature;
 
     /**
      * Constructor for a signed manifest.
      *
-     * @param identity
+     * @param role
      * @param manifestType
      */
-    protected SignedManifest(Identity identity, ManifestType manifestType) {
+    protected SignedManifest(Role role, ManifestType manifestType) {
         super(manifestType);
-        this.identity = identity;
+        this.role = role;
     }
 
     /**
@@ -39,17 +39,17 @@ public abstract class SignedManifest extends BasicManifest {
 
     /**
      * Verify this manifest against the given identity
-     * @param identity
+     * @param role
      * @return
      * @throws DecryptionException
      */
     @Override
-    public boolean verifySignature(Identity identity) throws ManifestVerificationException {
+    public boolean verifySignature(Role role) throws ManifestVerificationException {
 
         boolean success;
         try {
             String manifestToSign = getManifestToSign();
-            success = identity.verify(manifestToSign, signature);
+            success = role.verify(manifestToSign, signature);
         } catch (DecryptionException e) {
             throw new ManifestVerificationException("Unable to decrypt identity", e);
         }

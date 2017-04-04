@@ -54,7 +54,7 @@ public class RESTDDS {
 
         DDS dds = RESTConfig.sos.getDDS();
         try {
-            dds.addManifest(manifest, false);
+            dds.addManifest(manifest);
         } catch (ManifestPersistException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }

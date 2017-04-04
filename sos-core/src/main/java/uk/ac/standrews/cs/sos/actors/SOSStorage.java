@@ -60,7 +60,7 @@ public class SOSStorage implements Storage {
         }
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        dds.addManifest(manifest, false);
+        dds.addManifest(manifest);
 
         Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo);
 

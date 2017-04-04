@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class SOSCMS implements CMS {
 
+    private static final int SCHEDULER_POOL_SIZE = 1;
+
     private DDS dds;
     private HashMap<PredicateComputationType, List<IGUID>> contextsByPredicateType;
     private HashMap<IGUID, List<IGUID>> mappings;
@@ -49,8 +51,8 @@ public class SOSCMS implements CMS {
         try {
             Version version = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
 
-            dds.addManifest(context, false);
-            dds.addManifest(version, false);
+            dds.addManifest(context);
+            dds.addManifest(version);
 
             contextsByPredicateType.get(context.predicate().predicateComputationType()).add(version.guid());
 
@@ -107,11 +109,14 @@ public class SOSCMS implements CMS {
 
     }
 
+    /**
+     * Run PERIODIC predicates
+     */
     private void runPredicates() {
 
-        ScheduledExecutorService service = new ScheduledThreadPoolExecutor(1);
+        ScheduledExecutorService service = new ScheduledThreadPoolExecutor(SCHEDULER_POOL_SIZE);
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running background context predicates");
+            SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
 
             Iterator<IGUID> it = getContexts(PredicateComputationType.PERIODICALLY);
             while (it.hasNext()) {
