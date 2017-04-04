@@ -57,8 +57,17 @@ public interface Node {
      */
     boolean isMMS();
 
+    /**
+     * Returns true if this is a CMS node
+     *
+     * @return
+     */
     boolean isCMS();
 
+    /**
+     * Returns true if this is a RMS node
+     * @return
+     */
     boolean isRMS();
 
 }
