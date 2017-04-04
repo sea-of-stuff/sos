@@ -8,10 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.actors.CMS;
 import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
-import uk.ac.standrews.cs.sos.interfaces.model.Context;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.PredicateComputationType;
-import uk.ac.standrews.cs.sos.interfaces.model.Version;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -90,7 +87,11 @@ public class SOSCMS implements CMS {
                 Context context = getContext(v);
                 runPredicate(v, context, version);
 
-                // TODO - run policy if JUST_AFTER_PREDICATE type
+                for(Policy policy:context.policies()) {
+                    if (policy.computationType() == PolicyComputationType.AFTER_PREDICATE) {
+                        policy.run(version);
+                    }
+                }
 
             } catch (ContextNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
@@ -144,7 +145,7 @@ public class SOSCMS implements CMS {
         boolean alreadyProcessed = mappings.get(contextVersion).contains(version.guid());
         if (!alreadyProcessed) {
 
-            boolean passed = context.predicate().test(version.guid()); // FIXME
+            boolean passed = context.predicate().test(version.guid()); // FIXME?
             if (passed) {
                 mappings.get(contextVersion).add(version.guid());
             }

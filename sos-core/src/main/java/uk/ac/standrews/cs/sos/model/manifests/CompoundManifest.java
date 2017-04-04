@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
@@ -53,18 +54,18 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * identity to sign the manifest.
      *
      * @param contents
-     * @param role
+     * @param signer
      * @throws ManifestNotMadeException
      */
-    public CompoundManifest(CompoundType type, Set<Content> contents, Role role)
+    public CompoundManifest(CompoundType type, Set<Content> contents, IGUID signer)
             throws ManifestNotMadeException {
-        super(role, ManifestType.COMPOUND);
+        super(signer, ManifestType.COMPOUND);
 
         this.type = type;
         this.contents = contents;
         this.contentGUID = makeContentGUID();
 
-        if (role != null) {
+        if (signer != null) {
             this.signature = makeSignature();
         }
     }
@@ -116,7 +117,8 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        return this.role.sign(toSign);
+        Role role = SOSRMS.instance().get(signer);
+        return role.sign(toSign);
     }
 
     private IGUID makeContentGUID() throws ManifestNotMadeException {

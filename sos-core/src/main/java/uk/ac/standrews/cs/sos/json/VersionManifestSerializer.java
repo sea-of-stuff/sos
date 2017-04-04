@@ -39,7 +39,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
 
         String signature = versionManifest.getSignature();
         if (signature != null && !signature.isEmpty()) {
-            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, versionManifest.getRole().guid().toString());
+            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, versionManifest.getSigner().toString());
             jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNATURE, signature);
         }
 

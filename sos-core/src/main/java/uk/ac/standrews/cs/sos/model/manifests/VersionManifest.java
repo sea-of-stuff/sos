@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
@@ -57,14 +58,14 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param content
      * @param prevs
      * @param metadata
-     * @param role
+     * @param signer
      * @throws ManifestNotMadeException
      */
     public VersionManifest(IGUID invariant, IGUID content,
                            Set<IGUID> prevs, IGUID metadata,
-                           Role role)
+                           IGUID signer)
             throws ManifestNotMadeException {
-        super(role, ManifestType.VERSION);
+        super(signer, ManifestType.VERSION);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -81,7 +82,7 @@ public class VersionManifest extends SignedManifest implements Version {
             throw new ManifestNotMadeException("Failed to generate version GUID");
         }
 
-        if (role != null) {
+        if (signer != null) {
             this.signature = makeSignature();
         }
     }
@@ -168,7 +169,8 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        return this.role.sign(toSign);
+        Role role = SOSRMS.instance().get(signer);
+        return role.sign(toSign);
     }
 
     private String manifestToHash() {

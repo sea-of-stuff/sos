@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model.manifests;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -14,22 +15,22 @@ import uk.ac.standrews.cs.sos.interfaces.model.Role;
  */
 public abstract class SignedManifest extends BasicManifest {
 
-    final protected Role role;
+    final protected IGUID signer;
     protected String signature;
 
     /**
      * Constructor for a signed manifest.
      *
-     * @param role
+     * @param signer
      * @param manifestType
      */
-    protected SignedManifest(Role role, ManifestType manifestType) {
+    protected SignedManifest(IGUID signer, ManifestType manifestType) {
         super(manifestType);
-        this.role = role;
+        this.signer = signer;
     }
 
-    public Role getRole() {
-        return this.role;
+    public IGUID getSigner() {
+        return this.signer;
     }
 
     /**

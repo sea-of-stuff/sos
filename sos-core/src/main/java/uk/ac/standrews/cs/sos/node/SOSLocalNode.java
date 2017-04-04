@@ -177,7 +177,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         storage = new SOSStorage(this, localStorage, nds, dds);
         mms = new SOSMMS(dds, metadataEngine);
         cms = new SOSCMS(dds);
-        rms = new SOSRMS();
+        rms = SOSRMS.instance();
 
         agent = SOSAgent.instance(storage, dds, mms, cms, rms);
     }
