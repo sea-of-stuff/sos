@@ -94,12 +94,14 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param content
      * @param prevs
      * @param metadata
+     * @param signer
      * @param signature
      */
     public VersionManifest(IGUID invariant, IGUID version, IGUID content,
                            Set<IGUID> prevs, IGUID metadata,
+                           IGUID signer,
                            String signature) {
-        super(null, ManifestType.VERSION);
+        super(signer, ManifestType.VERSION);
         this.invariant = invariant;
         this.version = version;
         this.contentGUID = content;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -32,7 +33,13 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
 
         try {
             IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_GUID);
-            String signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
+
+            String signature = null;
+            IGUID signer = null;
+            if (node.has(ManifestConstants.KEY_SIGNATURE) && node.has(ManifestConstants.KEY_SIGNER)) {
+                signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
+                signer = GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_SIGNER).textValue());
+            }
 
             String compoundTypeString = node.get(ManifestConstants.KEY_COMPOUND_TYPE).textValue();
             CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
@@ -46,7 +53,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
                 }
             }
 
-            return new CompoundManifest(compoundType, contentGUID, contents, signature);
+            return new CompoundManifest(compoundType, contentGUID, contents, signer, signature);
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         } catch (ManifestNotMadeException e) {

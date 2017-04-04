@@ -76,8 +76,8 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param contents
      * @param signature
      */
-    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, String signature) throws ManifestNotMadeException {
-        super(null, ManifestType.COMPOUND);
+    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, IGUID signer, String signature) throws ManifestNotMadeException {
+        super(signer, ManifestType.COMPOUND);
 
         assert(type != null);
 

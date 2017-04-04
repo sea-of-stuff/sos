@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
@@ -30,8 +31,10 @@ public class VersionManifestDeserializer extends JsonDeserializer<VersionManifes
             IGUID content = CommonJson.GetGUID(node, ManifestConstants.KEY_CONTENT_GUID);
 
             String signature = null;
-            if (node.has(ManifestConstants.KEY_SIGNATURE)) {
+            IGUID signer = null;
+            if (node.has(ManifestConstants.KEY_SIGNATURE) && node.has(ManifestConstants.KEY_SIGNER)) {
                 signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
+                signer = GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_SIGNER).textValue());
             }
 
             Set<IGUID> prevs = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_PREVIOUS_GUID);
@@ -41,7 +44,7 @@ public class VersionManifestDeserializer extends JsonDeserializer<VersionManifes
                 metadata = CommonJson.GetGUID(node, ManifestConstants.KEY_METADATA_GUID);
             }
 
-            return new VersionManifest(invariant, version, content, prevs, metadata, signature);
+            return new VersionManifest(invariant, version, content, prevs, metadata, signer, signature);
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         }

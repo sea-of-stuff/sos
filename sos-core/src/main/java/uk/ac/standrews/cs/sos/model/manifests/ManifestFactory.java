@@ -49,7 +49,7 @@ public class ManifestFactory {
             throw new ManifestNotMadeException("No compound type specified");
         }
 
-        return new CompoundManifest(type, contents, role);
+        return new CompoundManifest(type, contents, role.guid());
     }
 
     /**
@@ -76,7 +76,7 @@ public class ManifestFactory {
             throw new ManifestNotMadeException("Content parameters missing or null");
         }
 
-        return new VersionManifest(invariant, content, prevs, metadata, role);
+        return new VersionManifest(invariant, content, prevs, metadata, role.guid());
     }
 
 }
