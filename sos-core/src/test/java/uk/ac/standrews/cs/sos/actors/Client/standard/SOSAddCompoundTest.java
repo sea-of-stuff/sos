@@ -48,7 +48,7 @@ public class SOSAddCompoundTest extends AgentTest {
         Compound manifest = agent.addCompound(CompoundType.DATA, contents);
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
 
-        boolean isVerified = agent.verifyManifest(localSOSNode.getIdentity(), retrievedManifest);
+        boolean isVerified = agent.verifyManifest(localSOSNode.getRMS().active(), retrievedManifest);
         assertTrue(isVerified);
     }
 

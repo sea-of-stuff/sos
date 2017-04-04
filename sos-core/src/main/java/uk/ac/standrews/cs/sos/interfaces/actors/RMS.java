@@ -10,11 +10,33 @@ import uk.ac.standrews.cs.sos.interfaces.model.Role;
  */
 public interface RMS {
 
+    /**
+     * Add the specified role to the directory of roles
+     *
+     * @param role
+     */
     void add(Role role);
 
+    /**
+     * Get the role with the specified GUID
+     *
+     * @param guid
+     * @return
+     */
     Role get(IGUID guid);
 
+    /**
+     * Returns the active role for this node
+     *
+     * @return
+     */
     Role active();
+
+    /**
+     * Sets the active role for this node
+     *
+     * @param role
+     * @return
+     */
     Role setActive(Role role);
-    Role setActive(IGUID guid);
 }

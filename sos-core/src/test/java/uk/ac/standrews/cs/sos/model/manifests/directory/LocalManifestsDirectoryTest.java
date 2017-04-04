@@ -13,9 +13,7 @@ import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
-import uk.ac.standrews.cs.sos.model.identity.IdentityImpl;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
@@ -90,12 +88,13 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void addCompoundManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
-        Identity identity = new IdentityImpl();
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
         Content content = new ContentImpl("Cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
-        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, identity);
+        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, roleMocked);
         IGUID guid = compoundManifest.guid();
         try {
             manifestsDirectory.addManifest(compoundManifest);
@@ -119,10 +118,10 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
 
-        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, identityMocked);
+        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, roleMocked);
     }
 
     @Test
@@ -222,8 +221,9 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     }
 
     private Version createDummyVersion(IGUID contentGUID) throws Exception {
-        Identity identity = new IdentityImpl();
-        Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, identity);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, roleMocked);
 
         return version;
     }

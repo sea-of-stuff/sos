@@ -44,7 +44,6 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
      * @throws KeyLoadedException
      */
     public RoleImpl(IGUID guid, String name, String email) throws KeyGenerationException, KeyLoadedException {
-        this.pubkey = pubkey;
         this.name = name;
         this.email = email;
         this.roleGUID = guid;
@@ -58,6 +57,8 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
         } else {
             loadKeys();
         }
+
+        this.pubkey = signature.getPublicKey();
     }
 
     /**
@@ -99,7 +100,7 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
 
     @Override
     public PublicKey getPubkey() {
-        return signature.getPublicKey();
+        return pubkey;
     }
 
     @Override

@@ -6,9 +6,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
 import uk.ac.standrews.cs.sos.interfaces.model.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -55,9 +55,9 @@ public class CompoundManifestTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
-        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
     }
@@ -71,9 +71,9 @@ public class CompoundManifestTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
-        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         assertNotNull(compoundManifest.getContents());
         assertEquals(compoundManifest.getContents().size(), 1);
@@ -86,9 +86,9 @@ public class CompoundManifestTest extends CommonTest {
     public void testGetNoContents() throws Exception {
         Set<Content> contents = Collections.EMPTY_SET;
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
-        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         assertNotNull(compoundManifest.getContents());
         assertEquals(compoundManifest.getContents().size(), 0);
@@ -98,9 +98,9 @@ public class CompoundManifestTest extends CommonTest {
     public void testToStringNoContents() throws Exception {
         Set<Content> contents = Collections.EMPTY_SET;
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
-        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_NO_CONTENTS, compoundManifest.toString(), true);
     }
@@ -114,9 +114,9 @@ public class CompoundManifestTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
-        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         assertTrue(compoundManifest.isValid());
     }
@@ -125,9 +125,9 @@ public class CompoundManifestTest extends CommonTest {
     public void testIsNotValidManifest() throws Exception {
         Set<Content> contents = new LinkedHashSet<>();
 
-        Identity identityMocked = mock(Identity.class);
-        when(identityMocked.sign(any(String.class))).thenReturn("AAAB");
-        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, identityMocked);
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         assertTrue(compoundManifest.isValid());
     }
