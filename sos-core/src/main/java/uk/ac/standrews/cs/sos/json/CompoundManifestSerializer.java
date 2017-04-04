@@ -34,6 +34,7 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
 
         String signature = compoundManifest.getSignature();
         if (signature != null && !signature.isEmpty()) {
+            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, compoundManifest.getRole().guid().toString());
             jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNATURE, signature);
         }
 

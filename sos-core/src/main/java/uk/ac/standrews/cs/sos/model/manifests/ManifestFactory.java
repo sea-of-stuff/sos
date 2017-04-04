@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.sos.model.manifests;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
 import uk.ac.standrews.cs.sos.interfaces.model.Content;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
 
 import java.util.Set;
@@ -36,20 +36,20 @@ public class ManifestFactory {
      *
      * @param type
      * @param contents
-     * @param identity
+     * @param role
      * @return a compound manifest
      * @throws ManifestNotMadeException
      */
     public static CompoundManifest createCompoundManifest(CompoundType type,
                                                           Set<Content> contents,
-                                                          Identity identity)
+                                                          Role role)
             throws ManifestNotMadeException {
 
         if (type == null) {
             throw new ManifestNotMadeException("No compound type specified");
         }
 
-        return new CompoundManifest(type, contents, identity);
+        return new CompoundManifest(type, contents, role);
     }
 
     /**
@@ -61,7 +61,7 @@ public class ManifestFactory {
      * @param invariant
      * @param prevs
      * @param metadata
-     * @param identity
+     * @param role
      * @return an asset manifest
      * @throws ManifestNotMadeException
      */
@@ -69,14 +69,14 @@ public class ManifestFactory {
                                                         IGUID invariant,
                                                         Set<IGUID> prevs,
                                                         IGUID metadata,
-                                                        Identity identity)
+                                                        Role role)
             throws ManifestNotMadeException {
 
         if (content == null) {
             throw new ManifestNotMadeException("Content parameters missing or null");
         }
 
-        return new VersionManifest(invariant, content, prevs, metadata, identity);
+        return new VersionManifest(invariant, content, prevs, metadata, role);
     }
 
 }

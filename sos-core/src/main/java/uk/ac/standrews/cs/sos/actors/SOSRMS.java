@@ -21,7 +21,7 @@ public class SOSRMS implements RMS {
 
     @Override
     public Role active() {
-        return null;
+        return null; // TODO - must have default role
     }
 
     @Override

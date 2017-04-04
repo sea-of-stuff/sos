@@ -7,11 +7,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
-import uk.ac.standrews.cs.sos.interfaces.model.Compound;
-import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
-import uk.ac.standrews.cs.sos.interfaces.model.Content;
-import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 
@@ -57,18 +53,18 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * identity to sign the manifest.
      *
      * @param contents
-     * @param identity
+     * @param role
      * @throws ManifestNotMadeException
      */
-    public CompoundManifest(CompoundType type, Set<Content> contents, Identity identity)
+    public CompoundManifest(CompoundType type, Set<Content> contents, Role role)
             throws ManifestNotMadeException {
-        super(identity, ManifestType.COMPOUND);
+        super(role, ManifestType.COMPOUND);
 
         this.type = type;
         this.contents = contents;
         this.contentGUID = makeContentGUID();
 
-        if (identity != null) {
+        if (role != null) {
             this.signature = makeSignature();
         }
     }

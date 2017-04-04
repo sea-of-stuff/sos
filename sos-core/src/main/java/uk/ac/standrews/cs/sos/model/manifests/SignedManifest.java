@@ -28,6 +28,10 @@ public abstract class SignedManifest extends BasicManifest {
         this.role = role;
     }
 
+    public Role getRole() {
+        return this.role;
+    }
+
     /**
      * Gets the signature of this manifest.
      *

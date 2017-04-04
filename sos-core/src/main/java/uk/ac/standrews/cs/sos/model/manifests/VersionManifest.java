@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.identity.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.interfaces.identity.Identity;
 import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
+import uk.ac.standrews.cs.sos.interfaces.model.Role;
 import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
@@ -57,14 +57,14 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param content
      * @param prevs
      * @param metadata
-     * @param identity
+     * @param role
      * @throws ManifestNotMadeException
      */
     public VersionManifest(IGUID invariant, IGUID content,
                            Set<IGUID> prevs, IGUID metadata,
-                           Identity identity)
+                           Role role)
             throws ManifestNotMadeException {
-        super(identity, ManifestType.VERSION);
+        super(role, ManifestType.VERSION);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -81,7 +81,7 @@ public class VersionManifest extends SignedManifest implements Version {
             throw new ManifestNotMadeException("Failed to generate version GUID");
         }
 
-        if (identity != null) {
+        if (role != null) {
             this.signature = makeSignature();
         }
     }

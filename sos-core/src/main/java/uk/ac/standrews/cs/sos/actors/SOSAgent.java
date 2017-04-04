@@ -34,18 +34,20 @@ public class SOSAgent implements Agent {
     private DDS dds;
     private MMS mms;
     private CMS cms;
+    private RMS rms;
 
-    private SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms) {
+    private SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms, RMS rms) {
         this.storage = storage;
         this.dds = dds;
         this.mms = mms;
         this.cms = cms;
+        this.rms = rms;
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, CMS cms) {
+    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, CMS cms, RMS rms) {
         if (instance == null) {
-            instance = new SOSAgent(storage, dds, mms, cms);
+            instance = new SOSAgent(storage, dds, mms, cms, rms);
         }
 
         return instance;
@@ -65,7 +67,7 @@ public class SOSAgent implements Agent {
     public Compound addCompound(CompoundType type, Set<Content> contents)
             throws ManifestNotMadeException, ManifestPersistException {
 
-        CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, identity);
+        CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, rms.active());
         addManifest(manifest);
 
         return manifest;
@@ -80,7 +82,7 @@ public class SOSAgent implements Agent {
         Set<IGUID> prevs = versionBuilder.getPreviousCollection();
         IGUID metadata = versionBuilder.getMetadataCollection();
 
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, identity);
+        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, rms.active());
         addManifest(manifest);
 
         cms.runPredicates(PredicateComputationType.AFTER_STORING, manifest);

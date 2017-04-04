@@ -179,7 +179,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cms = new SOSCMS(dds);
         rms = new SOSRMS();
 
-        agent = SOSAgent.instance(storage, dds, mms, cms);
+        agent = SOSAgent.instance(storage, dds, mms, cms, rms);
     }
 
     private void cacheFlusher() {
