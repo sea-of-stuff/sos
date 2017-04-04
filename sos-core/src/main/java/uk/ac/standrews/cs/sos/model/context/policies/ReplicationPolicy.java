@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model.context.policies;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
 import uk.ac.standrews.cs.sos.interfaces.model.Policy;
+import uk.ac.standrews.cs.sos.interfaces.model.PolicyComputationType;
 import uk.ac.standrews.cs.sos.interfaces.node.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
@@ -15,9 +16,11 @@ import java.util.Iterator;
 public class ReplicationPolicy implements Policy {
 
     private int factor;
+    private boolean manifestOnly;
 
-    public ReplicationPolicy(int factor) {
+    public ReplicationPolicy(int factor, boolean manifestOnly) {
         this.factor = factor;
+        this.manifestOnly = manifestOnly;
     }
 
     @Override
@@ -28,6 +31,8 @@ public class ReplicationPolicy implements Policy {
 
             ManifestReplication replication = new ManifestReplication(manifest, nodes, factor, null);
             TasksQueue.instance().performAsyncTask(replication);
+
+            // TODO - replicate data too
         } catch (SOSProtocolException e) {
             e.printStackTrace();
         }
@@ -43,7 +48,7 @@ public class ReplicationPolicy implements Policy {
     }
 
     @Override
-    public int computationType() {
-        return 0;
+    public PolicyComputationType computationType() {
+        return PolicyComputationType.PERIODICALLY;
     }
 }

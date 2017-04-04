@@ -13,7 +13,6 @@ public class ManifestConstants {
     // Manifest keys
     public static final String KEY_TYPE = "Type";
     public static final String KEY_GUID = "GUID";
-    public static final String KEY_TIMESTAMP = "Timestamp";
     public static final String KEY_SIGNER = "Signer";
     public static final String KEY_SIGNATURE = "Signature";
     public static final String KEY_LOCATIONS = "Locations";

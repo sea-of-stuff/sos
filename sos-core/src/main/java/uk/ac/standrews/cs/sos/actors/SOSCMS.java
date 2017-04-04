@@ -90,6 +90,8 @@ public class SOSCMS implements CMS {
                 Context context = getContext(v);
                 runPredicate(v, context, version);
 
+                // TODO - run policy if JUST_AFTER_PREDICATE type
+
             } catch (ContextNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
             }

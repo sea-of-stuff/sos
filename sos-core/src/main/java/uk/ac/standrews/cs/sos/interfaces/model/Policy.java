@@ -32,12 +32,9 @@ public interface Policy {
 
     /**
      * Define when to run the policy
-     * Types are:
-     * - periodically
-     * - just after predicate
      *
-     * @return TODO - type should be changed to enum?
+     * @return
      */
-    int computationType();
+    PolicyComputationType computationType();
 
 }

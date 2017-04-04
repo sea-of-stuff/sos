@@ -10,21 +10,29 @@ import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.context.ContextImpl;
 import uk.ac.standrews.cs.sos.model.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.model.context.policies.ReplicationPolicy;
+import uk.ac.standrews.cs.sos.model.metadata.MetadataConstants;
 
 /**
+ * This is a simple context that categorises all textual content and replicates it at least two times
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class TextContext extends ContextImpl {
 
     @Override
     public SOSPredicate predicate() {
+
+        // Get this node's agent
         SOSAgent agent = SOSAgent.instance();
+
         return new SOSPredicateImpl(p -> {
             try {
                 Version version = (Version) agent.getManifest(p);
+
                 Metadata metadata = agent.getMetadata(version.getMetadata());
-                String contentType = metadata.getPropertyAsString("Content-Type");
+                String contentType = metadata.getPropertyAsString(MetadataConstants.CONTENT_TYPE);
                 return isText(contentType);
+
             } catch (ManifestNotFoundException | MetadataNotFoundException e) {
                 e.printStackTrace();
             }
@@ -36,7 +44,7 @@ public class TextContext extends ContextImpl {
     @Override
     public Policy[] policies() {
         return new Policy[]{
-                new ReplicationPolicy(2)
+                new ReplicationPolicy(2, false)
         };
     }
 
@@ -44,6 +52,9 @@ public class TextContext extends ContextImpl {
         switch(contentType.toLowerCase()) {
             case "text":
             case "text/plain":
+            case "text/richtext":
+            case "text/enriched":
+            case "text/html":
                 return true;
             default:
                 return false;
