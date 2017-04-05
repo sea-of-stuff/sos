@@ -7,9 +7,10 @@ import org.jsoup.select.Elements;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.model.Atom;
+import uk.ac.standrews.cs.sos.interfaces.model.Version;
 import uk.ac.standrews.cs.sos.model.locations.URILocation;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
@@ -39,9 +40,10 @@ public class ArchivalApp {
 
         visitedSites = new LinkedHashMap<>();
         Queue<String> endPoints = new LinkedList<>();
-        String endPoint = "https://sic2.github.io/";
 
-        endPoints.add(endPoint);
+        endPoints.add("https://sic2.github.io/");
+        endPoints.add("https://en.wikipedia.org/wiki/Main_Page");
+        endPoints.add("http://dmoztools.net/");
 
         while(!endPoints.isEmpty()) {
             try {
@@ -93,11 +95,15 @@ public class ArchivalApp {
         }
     }
 
-    // TODO - create asset!
     private static void addData(SOSLocalNode sos, String uri) throws URISyntaxException, ManifestPersistException, StorageException {
-        AtomBuilder builder = new AtomBuilder().setLocation(new URILocation(uri));
-        Atom atom = sos.getAgent().addAtom(builder);
+        AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(uri));
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder);
 
-        System.err.println("Added atom " + atom);
+        // TODO - should check if there is already a version for this URI and append version to already existing asset
+
+        Version version = sos.getAgent().addData(versionBuilder);
+
+        System.err.println("Added version-atom " + version);
     }
 }
