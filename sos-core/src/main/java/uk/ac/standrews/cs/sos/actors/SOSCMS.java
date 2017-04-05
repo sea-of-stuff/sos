@@ -18,6 +18,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * TODO - manage scope too
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSCMS implements CMS {
@@ -40,6 +42,7 @@ public class SOSCMS implements CMS {
         mappings = new HashMap<>();
 
         runPredicates();
+        // TODO - replicate context to nodes within scope periodically
     }
 
     @Override

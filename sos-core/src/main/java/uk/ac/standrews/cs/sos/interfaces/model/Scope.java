@@ -1,9 +1,18 @@
 package uk.ac.standrews.cs.sos.interfaces.model;
 
+import uk.ac.standrews.cs.IGUID;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Scope {
+
+    /**
+     * Random GUID used to identify this scope
+     *
+     * @return
+     */
+    IGUID guid();
 
     /**
      * Returns the nodes available from within this scope

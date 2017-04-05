@@ -90,6 +90,42 @@ public class SOSAgent implements Agent {
         return manifest;
     }
 
+    @Override
+    public Version addData(VersionBuilder versionBuilder) {
+
+
+        try {
+            Atom atom = storage.addAtom(versionBuilder.getAtomBuilder(), false, new DDSNotificationInfo().setNotifyDDSNodes(true)).x;
+
+            IGUID invariant = versionBuilder.getInvariant();
+            Set<IGUID> prevs = versionBuilder.getPreviousCollection();
+            IGUID metadata = versionBuilder.getMetadataCollection();
+
+            VersionManifest manifest = ManifestFactory.createVersionManifest(atom.guid(), invariant, prevs, metadata, rms.active());
+
+            return manifest;
+        } catch (StorageException e) {
+            e.printStackTrace();
+        } catch (ManifestPersistException e) {
+            e.printStackTrace();
+        } catch (ManifestNotMadeException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+    @Override
+    public InputStream getData(Version version) {
+        return null;
+    }
+
+    @Override
+    public Version addCollection() {
+        return null;
+    }
+
     /**
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.

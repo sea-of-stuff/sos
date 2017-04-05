@@ -69,6 +69,10 @@ public interface Agent {
     Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
 
+    Version addData(VersionBuilder versionBuilder);
+    InputStream getData(Version version);
+    Version addCollection();
+
     /**
      * Add a manifest to the sea of stuff.
      *

@@ -14,7 +14,10 @@ public class VersionBuilder {
     private Metadata metadata;
     private IGUID invariant;
     private Set<IGUID> previousCollection;
+    private AtomBuilder atomBuilder;
+    private CompoundBuilder compoundBuilder;
 
+    private boolean isAtom = false;
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;
@@ -33,8 +36,10 @@ public class VersionBuilder {
     }
 
     public VersionBuilder setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-        metadataIsSet = true;
+        if (!metadataIsSet) {
+            this.metadata = metadata;
+            metadataIsSet = true;
+        }
 
         return this;
     }
@@ -48,16 +53,18 @@ public class VersionBuilder {
         return this;
     }
 
-    public boolean hasInvariant() {
-        return invariantIsSet;
+    public VersionBuilder setAtomBuilder(AtomBuilder atomBuilder) {
+        this.atomBuilder = atomBuilder;
+        isAtom = true;
+
+        return this;
     }
 
-    public boolean hasMetadata() {
-        return metadataIsSet;
-    }
+    public VersionBuilder setCompoundBuilder(CompoundBuilder compoundBuilder) {
+        this.compoundBuilder = compoundBuilder;
+        isAtom = false;
 
-    public boolean hasPrevious() {
-        return prevIsSet;
+        return this;
     }
 
     public IGUID getContent() {
@@ -80,4 +87,11 @@ public class VersionBuilder {
         return previousCollection;
     }
 
+    public AtomBuilder getAtomBuilder() {
+        return atomBuilder;
+    }
+
+    public CompoundBuilder getCompoundBuilder() {
+        return compoundBuilder;
+    }
 }
