@@ -98,6 +98,8 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) {
 
         try {
+            // TODO - pre_store predicate with any policy
+
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());
 

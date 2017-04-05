@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.Compound;
 import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
 import uk.ac.standrews.cs.sos.interfaces.model.Version;
+import uk.ac.standrews.cs.sos.model.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -109,7 +110,10 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     private Compound createRootCompound(Agent sos) throws ManifestPersistException, ManifestNotMadeException {
-        return sos.addCompound(CompoundType.COLLECTION, Collections.emptySet());
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.COLLECTION)
+                .setContents(Collections.emptySet());
+        return sos.addCompound(compoundBuilder);
     }
 
     public static void WriteCurrentVersion(IGUID invariant, IGUID version) throws FileNotFoundException {
