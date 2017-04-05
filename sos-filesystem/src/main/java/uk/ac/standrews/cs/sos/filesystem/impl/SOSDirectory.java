@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
+import uk.ac.standrews.cs.sos.model.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utils.Error;
@@ -52,11 +53,14 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         this.parent = parent;
         contents = new HashSet<>();
 
-        try {
-            compound = sos.addCompound(CompoundType.COLLECTION, contents);
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
-            e.printStackTrace();
-        }
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.COLLECTION)
+                .setContents(contents);
+
+
+        // FIXME - previous, and metadata
+        VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
+        sos.addCollection(versionBuilder);
     }
 
     /**
@@ -98,7 +102,10 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
             this.contents = new LinkedHashSet<>(previous.getContents());
             addOrUpdate(new ContentImpl(name, object.getGUID()));
-            this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
+            CompoundBuilder compoundBuilder = new CompoundBuilder()
+                    .setType(CompoundType.COLLECTION)
+                    .setContents(contents);
+            this.compound = sos.addCompound(compoundBuilder);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.guid());
             if (previousVersionDiffers) {
@@ -140,7 +147,10 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             removeContent(name);
 
             // TODO - the code below is the same as in the other constructor for this class
-            this.compound = sos.addCompound(CompoundType.COLLECTION, contents);
+            CompoundBuilder compoundBuilder = new CompoundBuilder()
+                    .setType(CompoundType.COLLECTION)
+                    .setContents(contents);
+            this.compound = sos.addCompound(compoundBuilder);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.guid());
             if (previousVersionDiffers) {

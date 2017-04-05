@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
@@ -69,12 +68,12 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         try {
             InputStream stream = data.getInputStream();
-            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            AtomBuilder atomBuilder = new AtomBuilder().setInputStream(stream);
+            this.metadata = sos.addMetadata(stream); // Metadata is generated, saved and returned by the SOS
 
-            this.atom = sos.addAtom(builder); // Atom is saved and manifest returned by the SOS
-            this.metadata = sos.addMetadata(atom); // Metadata is generated, saved and returned by the SOS
-
-            VersionBuilder versionBuilder = new VersionBuilder(atom.guid()).setMetadata(metadata);
+            VersionBuilder versionBuilder = new VersionBuilder()
+                    .setAtomBuilder(atomBuilder)
+                    .setMetadata(metadata);
 
             if (previous != null) {
                 boolean previousVersionDiffers = previousAssetDiffers(atom.guid());
@@ -92,12 +91,12 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
                 }
             }
 
-            this.version = sos.addVersion(versionBuilder);
+            this.version = sos.addData(versionBuilder);
             this.guid = version.guid();
 
-        } catch (StorageException | IOException | ManifestPersistException e) {
+        } catch (IOException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (ManifestNotMadeException | MetadataException e) {
+        } catch (MetadataException e) {
             e.printStackTrace();
         }
 

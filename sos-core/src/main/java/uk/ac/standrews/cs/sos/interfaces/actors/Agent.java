@@ -10,11 +10,11 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.model.*;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
-import java.util.Set;
 
 /**
  * The Client is one of the node roles within the Sea of Stuff.
@@ -38,24 +38,24 @@ public interface Agent {
      * @return the added atom
      * @throws StorageException
      * @throws ManifestPersistException
+     *
+     * @apiNote the data will not processed through contexts
      */
-    Atom addAtom(AtomBuilder atomBuilder)
-            throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException;
 
     /**
      * Adds a Compound to the Sea of Stuff.
      *
-     * @param contents of this compound.
+     * @param compoundBuilder for this compound.
      * @return the added compound.
      * @throws ManifestNotMadeException
      * @throws ManifestPersistException
      *
      * @see Manifest
      *
-     * TODO - use CompoundBuilder
+     * @deprecated - use addCollection(VersionBuilder)
      */
-    Compound addCompound(CompoundType type, Set<Content> contents)
-            throws ManifestNotMadeException, ManifestPersistException;
+    Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
     /**
      * Adds a version of an asset to the Sea of Stuff.
@@ -68,10 +68,9 @@ public interface Agent {
      */
     Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
 
-
-    Version addData(VersionBuilder versionBuilder);
+    Version addData(VersionBuilder versionBuilder); // TODO - exceptions
     InputStream getData(Version version) throws AtomNotFoundException;
-    Version addCollection(VersionBuilder versionBuilder);
+    Version addCollection(VersionBuilder versionBuilder); // TODO - exceptions
 
     /**
      * Add a manifest to the sea of stuff.
@@ -123,11 +122,11 @@ public interface Agent {
     /**
      * Generate and add metadata for this atom
      *
-     * @param atom used to generate the metadata
+     * @param inputStream used to generate the metadata
      * @return the metadata generated
      * @throws MetadataException if the metadata could not be generated
      */
-    Metadata addMetadata(Atom atom) throws MetadataException;
+    Metadata addMetadata(InputStream inputStream) throws MetadataException;
 
     /**
      * Get the metadata mapped to the specified guid

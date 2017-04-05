@@ -21,6 +21,8 @@ public class VersionBuilder {
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;
 
+    public VersionBuilder() {}
+
     public VersionBuilder(IGUID content) {
         this.content = content;
     }
@@ -60,6 +62,12 @@ public class VersionBuilder {
 
     public VersionBuilder setCompoundBuilder(CompoundBuilder compoundBuilder) {
         this.compoundBuilder = compoundBuilder;
+
+        return this;
+    }
+
+    public VersionBuilder setContent(IGUID content) {
+        this.content = content;
 
         return this;
     }

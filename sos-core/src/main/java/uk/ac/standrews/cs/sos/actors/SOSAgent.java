@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -64,13 +65,16 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Compound addCompound(CompoundType type, Set<Content> contents)
+    public Compound addCompound(CompoundBuilder compoundBuilder)
             throws ManifestNotMadeException, ManifestPersistException {
 
-        CompoundManifest manifest = ManifestFactory.createCompoundManifest(type, contents, rms.active());
-        addManifest(manifest);
+        CompoundType type = compoundBuilder.getType();
+        Set<Content> contents = compoundBuilder.getContents();
+        CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, rms.active());
 
-        return manifest;
+        addManifest(compound);
+
+        return compound;
     }
 
     @Override
@@ -94,13 +98,10 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) {
 
         try {
-            Atom atom = storage.addAtom(versionBuilder.getAtomBuilder(), false, new DDSNotificationInfo().setNotifyDDSNodes(true)).x;
+            Atom atom = addAtom(versionBuilder.getAtomBuilder());
+            versionBuilder.setContent(atom.guid());
 
-            IGUID invariant = versionBuilder.getInvariant();
-            Set<IGUID> prevs = versionBuilder.getPreviousCollection();
-            IGUID metadata = versionBuilder.getMetadataCollection();
-
-            VersionManifest manifest = ManifestFactory.createVersionManifest(atom.guid(), invariant, prevs, metadata, rms.active());
+            Version manifest = addVersion(versionBuilder);
 
             return manifest;
         } catch (StorageException e) {
@@ -110,7 +111,6 @@ public class SOSAgent implements Agent {
         } catch (ManifestNotMadeException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }
@@ -126,18 +126,15 @@ public class SOSAgent implements Agent {
     public Version addCollection(VersionBuilder versionBuilder) {
 
         try {
-            CompoundType type = versionBuilder.getCompoundBuilder().getType();
-            Set<Content> contents = versionBuilder.getCompoundBuilder().getContents();
-            CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, rms.active());
+            Compound compound = addCompound(versionBuilder.getCompoundBuilder());
+            versionBuilder.setContent(compound.guid());
 
-            IGUID invariant = versionBuilder.getInvariant();
-            Set<IGUID> prevs = versionBuilder.getPreviousCollection();
-            IGUID metadata = versionBuilder.getMetadataCollection();
-
-            VersionManifest manifest = ManifestFactory.createVersionManifest(compound.guid(), invariant, prevs, metadata, rms.active());
+            Version manifest = addVersion(versionBuilder);
 
             return manifest;
         } catch (ManifestNotMadeException e) {
+            e.printStackTrace();
+        } catch (ManifestPersistException e) {
             e.printStackTrace();
         }
 
@@ -173,10 +170,9 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Metadata addMetadata(Atom atom) throws MetadataException {
+    public Metadata addMetadata(InputStream inputStream) throws MetadataException {
 
-        InputStream data = atom.getData();
-        Metadata metadata = mms.processMetadata(data);
+        Metadata metadata = mms.processMetadata(inputStream);
         mms.addMetadata(metadata);
 
         return metadata;
