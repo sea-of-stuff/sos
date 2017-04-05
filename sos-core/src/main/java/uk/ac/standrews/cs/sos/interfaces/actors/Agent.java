@@ -70,8 +70,8 @@ public interface Agent {
 
 
     Version addData(VersionBuilder versionBuilder);
-    InputStream getData(Version version);
-    Version addCollection();
+    InputStream getData(Version version) throws AtomNotFoundException;
+    Version addCollection(VersionBuilder versionBuilder);
 
     /**
      * Add a manifest to the sea of stuff.

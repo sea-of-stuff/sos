@@ -17,7 +17,6 @@ public class VersionBuilder {
     private AtomBuilder atomBuilder;
     private CompoundBuilder compoundBuilder;
 
-    private boolean isAtom = false;
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;
@@ -55,14 +54,12 @@ public class VersionBuilder {
 
     public VersionBuilder setAtomBuilder(AtomBuilder atomBuilder) {
         this.atomBuilder = atomBuilder;
-        isAtom = true;
 
         return this;
     }
 
     public VersionBuilder setCompoundBuilder(CompoundBuilder compoundBuilder) {
         this.compoundBuilder = compoundBuilder;
-        isAtom = false;
 
         return this;
     }

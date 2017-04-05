@@ -93,7 +93,6 @@ public class SOSAgent implements Agent {
     @Override
     public Version addData(VersionBuilder versionBuilder) {
 
-
         try {
             Atom atom = storage.addAtom(versionBuilder.getAtomBuilder(), false, new DDSNotificationInfo().setNotifyDDSNodes(true)).x;
 
@@ -117,12 +116,31 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public InputStream getData(Version version) {
-        return null;
+    public InputStream getData(Version version) throws AtomNotFoundException {
+
+        IGUID content = version.getContentGUID();
+        return storage.getAtomContent(content);
     }
 
     @Override
-    public Version addCollection() {
+    public Version addCollection(VersionBuilder versionBuilder) {
+
+        try {
+            CompoundType type = versionBuilder.getCompoundBuilder().getType();
+            Set<Content> contents = versionBuilder.getCompoundBuilder().getContents();
+            CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, rms.active());
+
+            IGUID invariant = versionBuilder.getInvariant();
+            Set<IGUID> prevs = versionBuilder.getPreviousCollection();
+            IGUID metadata = versionBuilder.getMetadataCollection();
+
+            VersionManifest manifest = ManifestFactory.createVersionManifest(compound.guid(), invariant, prevs, metadata, rms.active());
+
+            return manifest;
+        } catch (ManifestNotMadeException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

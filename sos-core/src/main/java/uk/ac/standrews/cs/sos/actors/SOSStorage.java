@@ -79,6 +79,7 @@ public class SOSStorage implements Storage {
      * The caller should ensure that the stream is closed.
      *
      * TODO - find other locations
+     * FIXME - use GUID as param
      *
      * @param atom describing the atom to retrieve.
      * @return data referenced by the atom
