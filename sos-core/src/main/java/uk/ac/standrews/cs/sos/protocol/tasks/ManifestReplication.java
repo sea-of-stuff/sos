@@ -1,16 +1,16 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.interfaces.actors.DDS;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.Node;
+import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
+import uk.ac.standrews.cs.sos.impl.network.Method;
+import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
+import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
-import uk.ac.standrews.cs.sos.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.network.Method;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;

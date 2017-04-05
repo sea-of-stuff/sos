@@ -1,0 +1,60 @@
+package uk.ac.standrews.cs.sos.impl.actors;
+
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.RMS;
+import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
+import uk.ac.standrews.cs.sos.model.Role;
+
+import java.security.PublicKey;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+/**
+ * @author Simone I. Conte "sic2@st-andrews.ac.uk"
+ */
+public class SOSRMS implements RMS {
+
+    private HashMap<IGUID, Role> roles;
+    private Role activeRole;
+
+    private SOSRMS() {
+        roles = new LinkedHashMap<>();
+
+        // FIXME Create new active role by default, if none exists
+        activeRole = new RoleImpl((PublicKey) null, "simone", "sic2@st-andrews.ac.uk");
+        roles.put(activeRole.guid(), activeRole);
+    }
+
+    private static SOSRMS instance;
+    public static SOSRMS instance() {
+        if (instance == null) {
+            instance = new SOSRMS();
+        }
+
+        return instance;
+    }
+
+    @Override
+    public void add(Role role) {
+        roles.put(role.guid(), role);
+    }
+
+    @Override
+    public Role get(IGUID guid) {
+
+        // TODO - cache, local, remote
+
+        return roles.get(guid);
+    }
+
+    @Override
+    public Role active() {
+        return activeRole;
+    }
+
+    @Override
+    public Role setActive(Role role) {
+        return activeRole = role;
+    }
+
+}

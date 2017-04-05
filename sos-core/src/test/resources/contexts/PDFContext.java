@@ -1,10 +1,10 @@
-package uk.ac.standrews.cs.sos.model.context.defaults;
+package uk.ac.standrews.cs.sos.impl.context.defaults;
 
-import uk.ac.standrews.cs.sos.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.interfaces.model.Version;
-import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
-import uk.ac.standrews.cs.sos.model.context.ContextImpl;
+import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.impl.context.ContextImpl;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

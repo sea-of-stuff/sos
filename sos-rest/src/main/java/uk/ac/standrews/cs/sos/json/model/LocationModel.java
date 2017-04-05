@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.json.model;
 
-import uk.ac.standrews.cs.sos.interfaces.model.Location;
-import uk.ac.standrews.cs.sos.model.locations.LocationFactory;
+import uk.ac.standrews.cs.sos.impl.locations.LocationFactory;
+import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.IOException;
 

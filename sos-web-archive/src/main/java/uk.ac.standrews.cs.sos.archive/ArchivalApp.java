@@ -7,11 +7,11 @@ import org.jsoup.select.Elements;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.model.Version;
-import uk.ac.standrews.cs.sos.model.locations.URILocation;
-import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.File;

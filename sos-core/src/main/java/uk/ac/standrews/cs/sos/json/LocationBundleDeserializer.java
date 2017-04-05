@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.sos.interfaces.model.Location;
-import uk.ac.standrews.cs.sos.model.locations.LocationFactory;
-import uk.ac.standrews.cs.sos.model.locations.bundles.*;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.impl.locations.LocationFactory;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.*;
+import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.IOException;
 

@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.rest;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.GET;

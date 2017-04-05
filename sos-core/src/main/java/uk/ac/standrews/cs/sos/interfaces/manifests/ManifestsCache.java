@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
-import uk.ac.standrews.cs.sos.interfaces.model.Manifest;
-import uk.ac.standrews.cs.sos.interfaces.model.Version;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;

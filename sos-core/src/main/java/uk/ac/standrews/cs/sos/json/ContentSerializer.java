@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 
 import java.io.IOException;
 

@@ -6,7 +6,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Logger;
 import org.glassfish.jersey.servlet.ServletContainer;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

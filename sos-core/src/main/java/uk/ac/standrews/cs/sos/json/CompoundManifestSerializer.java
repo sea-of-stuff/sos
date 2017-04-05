@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.sos.interfaces.model.Content;
-import uk.ac.standrews.cs.sos.interfaces.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.model.Content;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 
 import java.io.IOException;
 import java.util.Set;

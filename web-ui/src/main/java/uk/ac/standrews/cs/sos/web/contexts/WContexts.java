@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.web.contexts;
 
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 /**

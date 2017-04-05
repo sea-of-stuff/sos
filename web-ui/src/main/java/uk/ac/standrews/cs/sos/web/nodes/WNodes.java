@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.web.nodes;
 
-import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 import java.util.HashMap;

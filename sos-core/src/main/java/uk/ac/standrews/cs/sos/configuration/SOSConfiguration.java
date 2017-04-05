@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.interfaces.model.Node;
-import uk.ac.standrews.cs.sos.node.SOSNode;
+import uk.ac.standrews.cs.sos.impl.node.SOSNode;
+import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.StorageType;
 

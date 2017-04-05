@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.metadata;
 
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
-import uk.ac.standrews.cs.sos.interfaces.model.Metadata;
+import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.storage.data.Data;
 
 /**

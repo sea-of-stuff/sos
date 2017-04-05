@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol;
 
-import uk.ac.standrews.cs.sos.interfaces.model.Node;
+import uk.ac.standrews.cs.sos.model.Node;
 
 import java.util.HashSet;
 import java.util.Set;

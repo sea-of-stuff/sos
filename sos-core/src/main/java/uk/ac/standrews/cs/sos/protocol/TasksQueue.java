@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Singleton pattern used for this class.
  *
- * TODO - add ability to prioritise tasks
  * TODO - ability to persist tasks -- tasks must be "describable"
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -24,6 +23,9 @@ public class TasksQueue {
     private static TasksQueue instance;
     private TasksQueue() {
         executorService = Executors.newScheduledThreadPool(Threads.TASKS_SCHEDULER_PS);
+
+        // TODO - load tasks from db
+        // for each task, submit it to the executorService
     }
 
     public static TasksQueue instance() {
@@ -52,6 +54,7 @@ public class TasksQueue {
     public void performAsyncTask(Task task) {
 
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
+        persist(task);
 
         final Future handler = executorService.submit(task);
         executorService.schedule(() -> {
@@ -62,5 +65,10 @@ public class TasksQueue {
         }, 30, TimeUnit.SECONDS);
 
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
+    }
+
+    private void persist(Task task) {
+        // TODO - add task to db
+        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: WIP - task should be persisted " + task);
     }
 }

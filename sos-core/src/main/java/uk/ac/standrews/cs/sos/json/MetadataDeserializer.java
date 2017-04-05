@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
-import uk.ac.standrews.cs.sos.model.metadata.basic.BasicMetadata;
+import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 
 import java.io.IOException;
 import java.util.Iterator;

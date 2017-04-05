@@ -6,9 +6,9 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.StringData;
+import uk.ac.standrews.cs.sos.actors.Agent;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
-import uk.ac.standrews.cs.sos.interfaces.actors.Agent;
-import uk.ac.standrews.cs.sos.interfaces.model.*;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Collections;

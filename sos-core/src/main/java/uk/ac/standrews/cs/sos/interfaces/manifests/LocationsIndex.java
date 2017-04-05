@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;

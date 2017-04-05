@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.sos.model.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 
 import java.io.IOException;
 

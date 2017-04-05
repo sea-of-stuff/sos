@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.interfaces.model.CompoundType;
-import uk.ac.standrews.cs.sos.interfaces.model.Content;
-import uk.ac.standrews.cs.sos.model.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.manifests.ContentImpl;
-import uk.ac.standrews.cs.sos.model.manifests.ManifestConstants;
+import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
+import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
+import uk.ac.standrews.cs.sos.model.CompoundType;
+import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
