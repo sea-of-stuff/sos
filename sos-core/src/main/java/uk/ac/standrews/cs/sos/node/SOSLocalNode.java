@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -187,7 +188,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
 
-        cacheFlusherService = Executors.newScheduledThreadPool(1);
+        cacheFlusherService = Executors.newScheduledThreadPool(Threads.CACHE_FLUSHER_PS);
         cacheFlusherService.scheduleAtFixedRate(cacheFlusher, 0, CacheFlusher.PERIOD, CacheFlusher.TIME_UNIT);
     }
 

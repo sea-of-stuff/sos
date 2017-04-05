@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -19,15 +20,16 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * TODO - manage scope too
+ * TODO - add concept of persistence
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSCMS implements CMS {
 
-    private static final int SCHEDULER_POOL_SIZE = 1;
-
     private DDS dds;
     private HashMap<PredicateComputationType, List<IGUID>> contextsByPredicateType;
+
+    // Maps the context to the versions belonging to it
     private HashMap<IGUID, List<IGUID>> mappings;
 
     public SOSCMS(DDS dds) {
@@ -120,7 +122,7 @@ public class SOSCMS implements CMS {
      */
     private void runPredicates() {
 
-        ScheduledExecutorService service = new ScheduledThreadPoolExecutor(SCHEDULER_POOL_SIZE);
+        ScheduledExecutorService service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
 
@@ -148,7 +150,7 @@ public class SOSCMS implements CMS {
         boolean alreadyProcessed = mappings.get(contextVersion).contains(version.guid());
         if (!alreadyProcessed) {
 
-            boolean passed = context.predicate().test(version.guid()); // FIXME?
+            boolean passed = context.predicate().test(version.guid());
             if (passed) {
                 mappings.get(contextVersion).add(version.guid());
             }

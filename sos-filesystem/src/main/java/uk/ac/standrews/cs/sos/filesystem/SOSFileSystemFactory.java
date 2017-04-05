@@ -113,6 +113,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         CompoundBuilder compoundBuilder = new CompoundBuilder()
                 .setType(CompoundType.COLLECTION)
                 .setContents(Collections.emptySet());
+
         return sos.addCompound(compoundBuilder);
     }
 

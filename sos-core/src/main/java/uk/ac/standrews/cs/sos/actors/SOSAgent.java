@@ -98,7 +98,7 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) {
 
         try {
-            // TODO - pre_store predicate with any policy
+            cms.runPredicates(PredicateComputationType.BEFORE_STORING, null); // TODO - what should this run against?
 
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());

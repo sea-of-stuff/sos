@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.protocol;
 
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.concurrent.Executors;
@@ -18,13 +19,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class TasksQueue {
 
-    private static final int NUMBER_OF_THREADS = 3;
-
     private ScheduledExecutorService executorService;
 
     private static TasksQueue instance;
     private TasksQueue() {
-        executorService = Executors.newScheduledThreadPool(NUMBER_OF_THREADS);
+        executorService = Executors.newScheduledThreadPool(Threads.TASKS_SCHEDULER_PS);
     }
 
     public static TasksQueue instance() {
