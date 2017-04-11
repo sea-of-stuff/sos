@@ -22,15 +22,16 @@ import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
+import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSDDS implements DDS {
-
-    private static final String CACHE_FILE = "manifests.cache";
-    private static final String DDS_INDEX_FILE = "dds.index";
 
     private ManifestsCache cache;
     private LocalManifestsDirectory local;
@@ -83,9 +84,9 @@ public class SOSDDS implements DDS {
     }
 
     @Override
-    public List<Version> getAllAssets() {
+    public Set<Version> getAllVersions() {
         // TODO - return only the ones from the cache for the moment, but should be able to differentiate
-        return cache.getAllAsset();
+        return new HashSet<>(cache.getAllAsset());
     }
 
     @Override

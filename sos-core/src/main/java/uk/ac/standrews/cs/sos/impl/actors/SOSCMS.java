@@ -43,8 +43,10 @@ public class SOSCMS implements CMS {
 
         mappings = new HashMap<>();
 
+        // TODO - load contexts
+
         runPredicates();
-        // TODO - replicate context to nodes within scope periodically
+        replicateContexts();
     }
 
     @Override
@@ -79,6 +81,11 @@ public class SOSCMS implements CMS {
     public Iterator<IGUID> getContexts(PredicateComputationType type) {
 
         return contextsByPredicateType.get(type).iterator();
+    }
+
+    @Override
+    public void addMapping(IGUID context, IGUID version) {
+        mappings.get(context).add(version);
     }
 
     @Override
@@ -132,7 +139,7 @@ public class SOSCMS implements CMS {
 
                 try {
                     Context context = getContext(v);
-                    for(Version version : dds.getAllAssets()) { // TODO - get only CURRENT VERSIONS?
+                    for(Version version : dds.getAllVersions()) { // TODO - get only CURRENT VERSIONS?
                         runPredicate(v, context, version);
                     }
 
@@ -147,13 +154,19 @@ public class SOSCMS implements CMS {
 
     private void runPredicate(IGUID contextVersion, Context context, Version version) {
 
-        boolean alreadyProcessed = mappings.get(contextVersion).contains(version.guid());
+        IGUID versionGUID = version.guid();
+
+        boolean alreadyProcessed = mappings.get(contextVersion).contains(versionGUID);
         if (!alreadyProcessed) {
 
-            boolean passed = context.predicate().test(version.guid());
+            boolean passed = context.predicate().test(versionGUID);
             if (passed) {
-                mappings.get(contextVersion).add(version.guid());
+                addMapping(contextVersion, versionGUID);
             }
         }
+    }
+
+    private void replicateContexts() {
+        // TODO - replicate context to nodes within scope periodically
     }
 }

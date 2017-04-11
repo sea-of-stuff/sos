@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Version;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Data Discovery Service
@@ -29,8 +29,9 @@ public interface DDS extends SeaOfStuff {
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
     /**
-     * Map the GUID of a manifest with the GUID of a dds node.
+     * Map the GUID of a manifest with the GUID of a DDS node.
      * This mapping will be used when trying to get the manifest via #getManifest(guid)
+     *
      * @param manifest
      * @param ddsNode
      */
@@ -47,7 +48,12 @@ public interface DDS extends SeaOfStuff {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
-    List<Version> getAllAssets();
+    /**
+     * Get all known versions to this DDS node
+     *
+     * @return list of DDS versions
+     */
+    Set<Version> getAllVersions();
 
     /**
      * Flushes any in-memory information into disk
