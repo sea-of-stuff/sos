@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
+ * JSON Helper (it uses Jackson)
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class JSONHelper {

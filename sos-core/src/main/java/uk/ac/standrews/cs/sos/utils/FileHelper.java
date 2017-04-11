@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.storage.interfaces.File;
 import java.io.IOException;
 
 /**
+ * Helper for file system operations
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class FileHelper {

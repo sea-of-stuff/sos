@@ -6,6 +6,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * IO Utility methods
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class IO {
