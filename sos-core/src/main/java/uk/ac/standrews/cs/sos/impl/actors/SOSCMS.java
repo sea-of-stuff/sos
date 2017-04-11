@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -89,7 +90,9 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public void runPredicates(PredicateComputationType type, Version version) {
+    public Set<IGUID> runPredicates(PredicateComputationType type, Version version) {
+
+        Set<IGUID> contexts = new HashSet<>();
 
         Iterator<IGUID> it = getContexts(type);
         while (it.hasNext()) {
@@ -98,6 +101,8 @@ public class SOSCMS implements CMS {
             try {
                 Context context = getContext(v);
                 runPredicate(v, context, version);
+
+                contexts.add(context.guid()); // FIXME - version of context?
 
                 for(Policy policy:context.policies()) {
                     if (policy.computationType() == PolicyComputationType.AFTER_PREDICATE) {
@@ -110,6 +115,16 @@ public class SOSCMS implements CMS {
             }
 
         }
+
+        return contexts;
+    }
+
+    @Override
+    public Set<IGUID> runPredicates(PredicateComputationType type, InputStream data) {
+
+        Set<IGUID> contexts = new HashSet<>();
+
+        return contexts;
     }
 
     @Override
@@ -152,18 +167,23 @@ public class SOSCMS implements CMS {
         }, 1, 1, TimeUnit.MINUTES);
     }
 
-    private void runPredicate(IGUID contextVersion, Context context, Version version) {
+    private boolean runPredicate(IGUID contextVersion, Context context, Version version) {
+        boolean retval = false;
 
         IGUID versionGUID = version.guid();
 
         boolean alreadyProcessed = mappings.get(contextVersion).contains(versionGUID);
+        retval = alreadyProcessed;
         if (!alreadyProcessed) {
 
             boolean passed = context.predicate().test(versionGUID);
+            retval = passed;
             if (passed) {
                 addMapping(contextVersion, versionGUID);
             }
         }
+
+        return retval;
     }
 
     private void replicateContexts() {

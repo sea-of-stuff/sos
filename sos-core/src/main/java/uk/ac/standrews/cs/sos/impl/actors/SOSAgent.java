@@ -98,14 +98,17 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) {
 
         try {
-            cms.runPredicates(PredicateComputationType.BEFORE_STORING, null); // TODO - run predicate against data and return list of contexts (AAAA)
+            // FIXME - we are consuming the inputstream before even storing the data
+            Set<IGUID> contexts = cms.runPredicates(PredicateComputationType.BEFORE_STORING, versionBuilder.getAtomBuilder().getInputStream());
 
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());
 
             Version manifest = addVersion(versionBuilder);
 
-            // TODO - (AAAA) - associate contexts with this version
+            for(IGUID context:contexts) {
+                cms.addMapping(context, manifest.guid());
+            }
 
             return manifest;
         } catch (StorageException e) {

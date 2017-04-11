@@ -6,7 +6,9 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.PredicateComputationType;
 import uk.ac.standrews.cs.sos.model.Version;
 
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Context Management Service
@@ -38,8 +40,22 @@ public interface CMS extends SeaOfStuff {
      * @param type
      * @param version
      */
-    void runPredicates(PredicateComputationType type, Version version);
+    Set<IGUID> runPredicates(PredicateComputationType type, Version version);
 
+    /**
+     *
+     * @param type
+     * @param data
+     * @return the set of contexts that this version belongs to
+     */
+    Set<IGUID> runPredicates(PredicateComputationType type, InputStream data);
+
+    /**
+     * Get an iterator for all versions belonging to the specified context
+     *
+     * @param context
+     * @return
+     */
     Iterator<IGUID> getContents(IGUID context);
 
 }

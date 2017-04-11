@@ -85,6 +85,7 @@ public class SOSDDS implements DDS {
 
     @Override
     public Set<Version> getAllVersions() {
+
         // TODO - return only the ones from the cache for the moment, but should be able to differentiate
         return new HashSet<>(cache.getAllAsset());
     }
