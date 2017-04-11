@@ -26,8 +26,7 @@ public class RSACrypto {
     private KeyPair generateKeyPair() throws KeyGenerationException {
         KeyPair pair;
         try {
-            KeyPairGenerator keyGen = KeyPairGenerator
-                    .getInstance(CRYPTOConstants.RSA_ALGORITHM);
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(CRYPTOConstants.RSA_ALGORITHM);
 
             keyGen.initialize(CRYPTOConstants.KEY_SIZE);
             pair = keyGen.generateKeyPair();

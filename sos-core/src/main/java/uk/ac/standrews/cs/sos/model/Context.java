@@ -16,7 +16,8 @@ package uk.ac.standrews.cs.sos.model;
  *     "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *     "Name" : "Simone's replication context",
  *     "Predicate" : CODE,
- *     "Policies" : CODE
+ *     "Policies" : CODE,
+ *     "Where" : [ List of nodes where to spawn and run this context ]
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -69,7 +70,7 @@ public interface Context extends Manifest {
 
     /**
      * Nodes where to run this context
-     * This information will be used to spawn the context to such nodes
+     * This information will be used to spawn the context to such nodes.
      *
      * @return
      */

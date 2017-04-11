@@ -29,11 +29,6 @@ public class SOSPredicateImpl implements SOSPredicate {
     }
 
     @Override
-    public int predicateFrequency() {
-        return 0;
-    }
-
-    @Override
     public SOSPredicate and(SOSPredicate other) {
         Objects.requireNonNull(other);
         return new SOSPredicateImpl(predicate.and(other.predicate()));

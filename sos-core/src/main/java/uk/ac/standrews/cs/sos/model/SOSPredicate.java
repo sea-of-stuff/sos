@@ -15,15 +15,6 @@ public interface SOSPredicate {
      */
     PredicateComputationType predicateComputationType();
 
-    /**
-     * How often the predicate should be run.
-     * This is valid only if predicateComputationType()
-     * returns a PERIODIC type
-     *
-     * @return
-     */
-    int predicateFrequency();
-
     boolean test(IGUID guid);
     SOSPredicate and(SOSPredicate other);
     SOSPredicate or(SOSPredicate other);
