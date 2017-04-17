@@ -12,7 +12,6 @@ import java.security.PublicKey;
  *      "GUID": "a243",
  *      "Name": "Simone's work",
  *      "User": "2321aaa3",
- *      "Email": "sic2@st-andrews.ac.uk",
  *      "PubKey": "1342242234",
  *      "Signature": "MQ17983827se="
  * }
@@ -26,8 +25,6 @@ public interface Role extends User {
     IGUID getUser(); // e.g. guid for user Simone
 
     String getName(); // e.g. Simone's work
-
-    String getEmail(); // sic2@st-andrews.ac.uk
 
     PublicKey getPubkey();
 

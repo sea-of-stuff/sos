@@ -94,11 +94,6 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     }
 
     @Override
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
     public PublicKey getPubkey() {
         return pubkey;
     }

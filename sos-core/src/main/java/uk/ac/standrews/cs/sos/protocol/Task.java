@@ -8,7 +8,7 @@ public abstract class Task implements Runnable {
     @Override
     public synchronized void run() {
         performAction();
-        notify(); // Needed for Sync tasks only
+        notify(); // Awake the SYNC tasks from their wait state
     }
 
     public abstract void performAction();

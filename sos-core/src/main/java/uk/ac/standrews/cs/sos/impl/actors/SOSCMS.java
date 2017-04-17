@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * TODO - manage scope too
  * TODO - add concept of persistence
+ * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -32,6 +33,8 @@ public class SOSCMS implements CMS {
 
     // Maps the context to the versions belonging to it
     private HashMap<IGUID, List<IGUID>> mappings;
+
+    private ScheduledExecutorService service;
 
     public SOSCMS(DDS dds) {
         this.dds = dds;
@@ -46,8 +49,12 @@ public class SOSCMS implements CMS {
 
         // TODO - load contexts
 
+        service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
+
+        getData();
+        spawnContexts();
         runPredicates();
-        replicateContexts();
+        checkPolicies();
     }
 
     @Override
@@ -140,11 +147,38 @@ public class SOSCMS implements CMS {
     }
 
     /**
+     * Periodically get data (or references?) from other nodes
+     * as specified by the sources of a context
+     *
+     * It should be possible to "remove" content that is not relevant anymore?
+     *
+     */
+    private void getData() {
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Get data from other nodes");
+
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Periodically spawn/replicate contexts to other nodes
+     */
+    private void spawnContexts() {
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Spawn contexts to other nodes");
+
+            // Get contexts that have to be spawned
+            // spawn contexts
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
      * Run PERIODIC predicates
      */
     private void runPredicates() {
 
-        ScheduledExecutorService service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
 
@@ -186,7 +220,8 @@ public class SOSCMS implements CMS {
         return retval;
     }
 
-    private void replicateContexts() {
-        // TODO - replicate context to nodes within scope periodically
+    private void checkPolicies() {
+
+        // TODO - check policies are satisfied. if not, attempt to re-satisfy them
     }
 }
