@@ -27,7 +27,7 @@ import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -155,7 +155,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     public void setAttributes(IAttributes attributes) {
         // This will allow to explitly set new attributes, resulting in a new version of the data
         // or we could have the data pointing an version, so the file does not need to change as the metadata does
-        Error.hardError("unimplemented method");
+        ErrorHandling.hardError("unimplemented method");
     }
 
     @Override

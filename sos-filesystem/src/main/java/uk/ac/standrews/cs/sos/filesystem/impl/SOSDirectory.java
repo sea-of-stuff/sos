@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -322,7 +322,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         }
 
         public void remove() {
-            Error.hardError("unimplemented method");
+            ErrorHandling.hardError("unimplemented method");
         }
 
         public boolean hasNext() {
