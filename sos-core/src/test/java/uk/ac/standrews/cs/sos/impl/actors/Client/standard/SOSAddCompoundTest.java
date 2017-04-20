@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 
 import java.util.Iterator;
@@ -26,7 +27,10 @@ public class SOSAddCompoundTest extends AgentTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Compound manifest = agent.addCompound(CompoundType.DATA, contents);
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.DATA)
+                .setContents(contents);
+        Compound manifest = agent.addCompound(compoundBuilder);
         Assert.assertEquals(manifest.getType(), ManifestType.COMPOUND);
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
@@ -45,7 +49,10 @@ public class SOSAddCompoundTest extends AgentTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Compound manifest = agent.addCompound(CompoundType.DATA, contents);
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.DATA)
+                .setContents(contents);
+        Compound manifest = agent.addCompound(compoundBuilder);
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
 
         boolean isVerified = agent.verifyManifest(localSOSNode.getRMS().active(), retrievedManifest);

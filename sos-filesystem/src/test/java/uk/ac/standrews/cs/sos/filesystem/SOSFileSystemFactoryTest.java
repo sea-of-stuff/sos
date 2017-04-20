@@ -11,8 +11,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.Compound;
-import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -20,7 +20,6 @@ import java.io.FileNotFoundException;
 import java.util.Collections;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anySetOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -69,7 +68,7 @@ public class SOSFileSystemFactoryTest {
 
         IGUID contentsGUID = GUIDFactory.generateRandomGUID();
 
-        when(mockAgent.addCompound(any(), anySetOf(Content.class))).thenReturn(mockRootFolder);
+        when(mockAgent.addCompound(any(CompoundBuilder.class))).thenReturn(mockRootFolder);
         when(mockAgent.addVersion(any())).thenReturn(mockRootVersion);
 
         when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());

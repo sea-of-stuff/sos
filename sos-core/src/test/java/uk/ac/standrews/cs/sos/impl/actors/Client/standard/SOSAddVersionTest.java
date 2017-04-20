@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -32,7 +33,10 @@ public class SOSAddVersionTest extends AgentTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Compound compound = agent.addCompound(CompoundType.DATA, contents);
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.DATA)
+                .setContents(contents);
+        Compound compound = agent.addCompound(compoundBuilder);
 
         VersionBuilder builder = new VersionBuilder(compound.guid());
         Version manifest = agent.addVersion(builder);
@@ -52,7 +56,10 @@ public class SOSAddVersionTest extends AgentTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Compound compound = agent.addCompound(CompoundType.DATA, contents);
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.DATA)
+                .setContents(contents);
+        Compound compound = agent.addCompound(compoundBuilder);
 
         Set<IGUID> prevs = new LinkedHashSet<>();
         prevs.add(GUIDFactory.recreateGUID("321"));
@@ -89,7 +96,10 @@ public class SOSAddVersionTest extends AgentTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Compound compound = agent.addCompound(CompoundType.DATA, contents);
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.DATA)
+                .setContents(contents);
+        Compound compound = agent.addCompound(compoundBuilder);
 
         VersionBuilder builder = new VersionBuilder(compound.guid());
         Version manifest = agent.addVersion(builder);
@@ -121,7 +131,7 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom);
+        Metadata metadata = agent.addMetadata(atom.getData());
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -140,7 +150,7 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom);
+        Metadata metadata = agent.addMetadata(atom.getData());
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -159,7 +169,7 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom);
+        Metadata metadata = agent.addMetadata(atom.getData());
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);

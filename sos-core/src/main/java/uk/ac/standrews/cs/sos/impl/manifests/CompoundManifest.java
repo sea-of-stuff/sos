@@ -118,7 +118,12 @@ public class CompoundManifest extends SignedManifest implements Compound {
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
         Role role = SOSRMS.instance().get(signer);
-        return role.sign(toSign);
+
+        if (role == null) {
+            return "";
+        } else {
+            return role.sign(toSign);
+        }
     }
 
     private IGUID makeContentGUID() throws ManifestNotMadeException {

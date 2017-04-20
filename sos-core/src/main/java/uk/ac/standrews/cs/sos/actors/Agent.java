@@ -53,7 +53,7 @@ public interface Agent {
      *
      * @see Manifest
      *
-     * @deprecated - use addCollection(VersionBuilder)
+     * @deprecated - use addCollection(VersionBuilder)?
      */
     Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException;
 

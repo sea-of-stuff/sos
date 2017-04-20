@@ -13,20 +13,30 @@ import java.util.Set;
 /**
  * Context Management Service
  *
+ * On creation, the CMS will load the persisted contexts
+ * Contexts will be referenced through versions
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface CMS extends SeaOfStuff {
 
     /**
-     *
+     * Adds a context to this CMS and return a version for it.
      * The context is automatically set as active
+     *
      * @param context
      * @return
      * @throws Exception
      */
-    // TODO - use context builder
     Version addContext(Context context) throws Exception;
 
+    /**
+     * Get the context for a specific version
+     *
+     * @param version
+     * @return
+     * @throws ContextNotFoundException
+     */
     Context getContext(IGUID version) throws ContextNotFoundException;
 
     Iterator<IGUID> getContexts(PredicateComputationType type);
