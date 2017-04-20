@@ -5,8 +5,8 @@ package uk.ac.standrews.cs.sos.model;
  */
 public enum PredicateComputationType {
 
-    BEFORE_STORING,
-    AFTER_STORING,
-    PERIODICALLY,
-    AFTER_READING
+    BEFORE_STORING, // Predicate is run before the data is stored
+    AFTER_STORING, // Predicate is run just after the data is stored
+    PERIODICALLY, // Predicate is run on background
+    AFTER_READING // Predicate is run just before reading the data
 }

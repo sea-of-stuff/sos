@@ -34,11 +34,33 @@ public class SOSCMS implements CMS {
     // Maps the context to the versions belonging to it
     private HashMap<IGUID, List<IGUID>> mappings;
 
+    // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
 
+    /**
+     * Build a CMS instance.
+     * The DDS is passed as parameter and it is needed to update the node about manifest-related information
+     *
+     * @param dds
+     */
     public SOSCMS(DDS dds) {
         this.dds = dds;
 
+        initialiseMappings();
+
+        // TODO - load contexts
+        // TODO - load mappings
+
+        service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
+
+        // Start background processes
+        getData();
+        spawnContexts();
+        runPredicates();
+        checkPolicies();
+    }
+
+    private void initialiseMappings() {
         contextsByPredicateType = new HashMap<>();
         contextsByPredicateType.put(PredicateComputationType.BEFORE_STORING, new LinkedList<>());
         contextsByPredicateType.put(PredicateComputationType.AFTER_STORING, new LinkedList<>());
@@ -46,15 +68,6 @@ public class SOSCMS implements CMS {
         contextsByPredicateType.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
 
         mappings = new HashMap<>();
-
-        // TODO - load contexts
-
-        service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
-
-        getData();
-        spawnContexts();
-        runPredicates();
-        checkPolicies();
     }
 
     @Override
@@ -94,6 +107,8 @@ public class SOSCMS implements CMS {
     @Override
     public void addMapping(IGUID context, IGUID version) {
         mappings.get(context).add(version);
+
+        // TODO - persist
     }
 
     @Override
@@ -145,6 +160,10 @@ public class SOSCMS implements CMS {
         }
 
     }
+
+    ////////////////////
+    // PERIODIC TASKS //
+    ////////////////////
 
     /**
      * Periodically get data (or references?) from other nodes
@@ -202,12 +221,11 @@ public class SOSCMS implements CMS {
     }
 
     private boolean runPredicate(IGUID contextVersion, Context context, Version version) {
-        boolean retval = false;
 
         IGUID versionGUID = version.guid();
 
         boolean alreadyProcessed = mappings.get(contextVersion).contains(versionGUID);
-        retval = alreadyProcessed;
+        boolean retval = alreadyProcessed;
         if (!alreadyProcessed) {
 
             boolean passed = context.predicate().test(versionGUID);

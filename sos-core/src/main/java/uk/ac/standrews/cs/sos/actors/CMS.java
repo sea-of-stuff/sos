@@ -39,8 +39,20 @@ public interface CMS extends SeaOfStuff {
      */
     Context getContext(IGUID version) throws ContextNotFoundException;
 
+    /**
+     * Return all contexts that match the computation type specified
+     *
+     * @param type
+     * @return
+     */
     Iterator<IGUID> getContexts(PredicateComputationType type);
 
+    /**
+     * Instruct the CMS to map the given context with the specified version
+     *
+     * @param context
+     * @param version
+     */
     void addMapping(IGUID context, IGUID version);
 
     /**
