@@ -43,7 +43,7 @@ public interface Storage extends SeaOfStuff {
      * @param atom describing the atom to retrieve.
      * @return InputStream
      */
-    InputStream getAtomContent(Atom atom);
+    InputStream getAtomContent(Atom atom); // TODO - return Data?
 
     /**
      * Get the data for the atom with the specified GUID
