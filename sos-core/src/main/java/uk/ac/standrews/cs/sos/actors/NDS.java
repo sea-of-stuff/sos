@@ -17,30 +17,30 @@ import java.util.Set;
  */
 public interface NDS extends SeaOfStuff {
 
+    /**
+     * Get a node object for the local node
+     *
+     * @return
+     */
     Node getThisNode();
 
     /**
      * Registers a node to the SOS
+     *
      * @param node
-     * @param localOnly
+     * @param localOnly if false, the node will be registered to other known NDS nodes
      * @return
      */
     Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException;
 
     /**
-     * Get a known node to this Sea Of Stuff.
-     * Client and IStorage will not support this call.
+     * Get a known node to this Sea Of Stuff
      *
      * @param guid
-     * @return
+     * @return the noda with the given guid
      */
     Node getNode(IGUID guid) throws NodeNotFoundException;
 
-    /**
-     * Return all matching NDS nodes
-     *
-     * @return an empty collection if there are not matching nodes
-     */
     Set<Node> getNDSNodes();
 
     Set<Node> getDDSNodes();

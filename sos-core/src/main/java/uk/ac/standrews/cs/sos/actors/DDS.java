@@ -29,15 +29,6 @@ public interface DDS extends SeaOfStuff {
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
     /**
-     * Map the GUID of a manifest with the GUID of a DDS node.
-     * This mapping will be used when trying to get the manifest via #getManifest(guid)
-     *
-     * @param manifest
-     * @param ddsNode
-     */
-    void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
-
-    /**
      * Get the manifest that matches a given GUID.
      *
      * @param guid                  of the manifest.
@@ -47,6 +38,15 @@ public interface DDS extends SeaOfStuff {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+
+    /**
+     * Map the GUID of a manifest with the GUID of a DDS node.
+     * This mapping will be used when trying to get the manifest via #getManifest(guid)
+     *
+     * @param manifest
+     * @param ddsNode
+     */
+    void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
 
     /**
      * Get all known versions to this DDS node

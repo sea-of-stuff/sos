@@ -161,11 +161,6 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public void addManifest(Manifest manifest) throws ManifestPersistException {
-        dds.addManifest(manifest);
-    }
-
-    @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
         return dds.getManifest(guid);
     }
@@ -189,6 +184,10 @@ public class SOSAgent implements Agent {
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         Metadata metadata = mms.getMetadata(guid);
         return metadata;
+    }
+
+    private void addManifest(Manifest manifest) throws ManifestPersistException {
+        dds.addManifest(manifest);
     }
 
 }

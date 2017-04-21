@@ -53,8 +53,8 @@ public class SOSRMS implements RMS {
     }
 
     @Override
-    public Role setActive(Role role) {
-        return activeRole = role;
+    public void setActive(Role role) {
+        this.activeRole = role;
     }
 
 }

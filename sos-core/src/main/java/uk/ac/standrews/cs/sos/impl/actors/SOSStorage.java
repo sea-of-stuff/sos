@@ -58,17 +58,19 @@ public class SOSStorage implements Storage {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest);
 
-        Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo);
+        Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo); // TODO - this method will not be necessary
 
-        // This block of code should run asynchronously
-        {
-            try {
-                replicateData(manifest);
-                notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
-            } catch (SOSProtocolException | IOException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
-            }
-        }
+        // NOTE - This block of code run asynchronously
+        // TODO - This block of code is old, because replication is now managed by contexts
+        // TODO - It should be removed altogether
+//        {
+//            try {
+//                replicateData(manifest);
+//                notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
+//            } catch (SOSProtocolException | IOException e) {
+//                SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
+//            }
+//        }
 
         // This may return before data is replicated and the DDS nodes are notified
         return new Tuple<>(manifest, defaultDDSNodes);

@@ -31,6 +31,7 @@ public interface Storage extends SeaOfStuff {
      * @return Tuple<Atom, Set<Node>>
      *      - The generated atom manifest. This will contain the locations known to this node prior to any replication.
      *      - A set of DDS nodes
+     *
      * @throws StorageException
      * @throws ManifestPersistException
      */

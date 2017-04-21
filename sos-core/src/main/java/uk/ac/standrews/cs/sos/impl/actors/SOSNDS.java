@@ -45,6 +45,32 @@ public class SOSNDS implements NDS {
     }
 
     @Override
+    public Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException {
+        if (node == null) {
+            throw new NodeRegistrationException("Invalid node");
+        }
+
+        Node nodeToRegister = new SOSNode(node);
+
+        try {
+            localNodesDirectory.addNode(nodeToRegister);
+            localNodesDirectory.persistNodesTable();
+        } catch (NodesDirectoryException e) {
+            throw new NodeRegistrationException("Unable to register node", e);
+        }
+
+        if (!localOnly) {
+            Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
+            ndsNodes.forEach(n -> {
+                RegisterNode registerNode = new RegisterNode(node, n);
+                TasksQueue.instance().performAsyncTask(registerNode);
+            });
+        }
+
+        return nodeToRegister;
+    }
+
+    @Override
     public Node getNode(IGUID guid) throws NodeNotFoundException {
 
         if (guid == null || guid.isInvalid()) {
@@ -114,32 +140,6 @@ public class SOSNDS implements NDS {
     @Override
     public Set<Node> getAllNodes() {
         return localNodesDirectory.getKnownNodes();
-    }
-
-    @Override
-    public Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException {
-        if (node == null) {
-            throw new NodeRegistrationException("Invalid node");
-        }
-
-        Node nodeToRegister = new SOSNode(node);
-
-        try {
-            localNodesDirectory.addNode(nodeToRegister);
-            localNodesDirectory.persistNodesTable();
-        } catch (NodesDirectoryException e) {
-            throw new NodeRegistrationException("Unable to register node", e);
-        }
-
-        if (!localOnly) {
-            Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
-            ndsNodes.forEach(n -> {
-                RegisterNode registerNode = new RegisterNode(node, n);
-                TasksQueue.instance().performAsyncTask(registerNode);
-            });
-        }
-
-        return nodeToRegister;
     }
 
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {

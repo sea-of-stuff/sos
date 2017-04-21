@@ -17,14 +17,14 @@ import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import java.io.InputStream;
 
 /**
- * The Client is one of the node roles within the Sea of Stuff.
+ * The Agent is one of the node roles within the Sea of Stuff.
  *
- * The Client supports the following operations:
+ * End-users interact with the SOS via the Agent.
+ *
+ * The Agent supports the following operations:
  * - pushing data/manifests to the SOS
  * - get data/manifests from the SOS
  * - find data in the SOS
- *
- * The behaviour of these operations depends on the policy used by this SOS instance.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -32,7 +32,6 @@ public interface Agent {
 
     /**
      * Adds data to the Sea of Stuff as an atom.
-     * The atom is cached locally and replicated according to the policy used by this instance.
      *
      * @param atomBuilder for this atom
      * @return the added atom
@@ -73,14 +72,6 @@ public interface Agent {
     Version addCollection(VersionBuilder versionBuilder); // TODO - exceptions
 
     /**
-     * Add a manifest to the sea of stuff.
-     *
-     * @param manifest to add to the NodeManager
-     * @throws ManifestPersistException
-     */
-    void addManifest(Manifest manifest) throws ManifestPersistException;
-
-    /**
      * Get the data of an Atom.
      *
      * @param atom describing the atom to retrieve.
@@ -101,25 +92,6 @@ public interface Agent {
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
     /**
-     * Verify the integrity of the manifest's GUID against the
-     * content of the manifest.
-     *
-     * Hash-based verification ensures that a file has not been corrupted by
-     * comparing the data's hash value to a previously calculated value.
-     * If these values match, the data is presumed to be unmodified.
-     * Due to the nature of hash functions, hash collisions may result
-     * in false positives, but the likelihood of collisions is
-     * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
-     *
-     * @param role                          used to verifySignature the manifest
-     * @param manifest                      to be verified
-     * @return <code>true</code>            if the GUID of the manifest matches
-     *                                      the content referred by the manifest.
-     * @throws ManifestVerificationException if the manifest could not be verified
-     */
-    boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException;
-
-    /**
      * Generate and add metadata for this atom
      *
      * @param inputStream used to generate the metadata
@@ -135,4 +107,25 @@ public interface Agent {
      * @return SOSMetadata mapped with the guid
      */
     Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+
+    /**
+     * Verify the integrity of the manifest's GUID against the
+     * content of the manifest.
+     *
+     * Hash-based verification ensures that a file has not been corrupted by
+     * comparing the data's hash value to a previously calculated value.
+     * If these values match, the data is presumed to be unmodified.
+     * Due to the nature of hash functions, hash collisions may result
+     * in false positives, but the likelihood of collisions is
+     * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
+     *
+     * @param role                          used to verify the manifest
+     * @param manifest                      to be verified
+     * @return <code>true</code>            if the GUID of the manifest matches
+     *                                      the content referred by the manifest.
+     * @throws ManifestVerificationException if the manifest could not be verified
+     */
+    boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException;
+
+    // TODO - methods to interact with contexts and Roles
 }

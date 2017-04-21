@@ -28,7 +28,7 @@ public interface RMS {
     /**
      * Returns the active role for this node
      *
-     * @return
+     * @return the active role
      */
     Role active();
 
@@ -36,7 +36,6 @@ public interface RMS {
      * Sets the active role for this node
      *
      * @param role
-     * @return
      */
-    Role setActive(Role role);
+    void setActive(Role role);
 }
