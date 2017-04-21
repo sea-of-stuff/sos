@@ -96,8 +96,8 @@ public class ManifestsCacheImplTest extends CommonTest {
 
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
 
-        Directory manifestsDir = localStorage.getManifestDirectory();
-        Directory cachesDir = localStorage.getCachesDirectory();
+        Directory manifestsDir = localStorage.getManifestsDirectory();
+        Directory cachesDir = localStorage.getNodeDirectory();
 
         LocalManifestsDirectory localManifestsManager = new LocalManifestsDirectory(localStorage);
         ManifestsCache cache = new ManifestsCacheImpl();
@@ -123,8 +123,8 @@ public class ManifestsCacheImplTest extends CommonTest {
 
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
 
-        Directory manifestsDir = localStorage.getManifestDirectory();
-        Directory cachesDir = localStorage.getCachesDirectory();
+        Directory manifestsDir = localStorage.getManifestsDirectory();
+        Directory cachesDir = localStorage.getNodeDirectory();
 
         ManifestsCache cache = new ManifestsCacheImpl();
 

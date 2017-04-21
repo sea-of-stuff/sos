@@ -200,7 +200,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         try {
             manifestsDirectory.addManifest(atomManifest);
-            storage.getManifestDirectory().remove(guid.toString() + ".json");
+            storage.getManifestsDirectory().remove(guid.toString() + ".json");
 
             manifestsDirectory.addManifest(anotherManifest);
             AtomManifest manifest = (AtomManifest) manifestsDirectory.findManifest(guid);

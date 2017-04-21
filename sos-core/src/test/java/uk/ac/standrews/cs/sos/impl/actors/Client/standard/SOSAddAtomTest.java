@@ -148,7 +148,7 @@ public class SOSAddAtomTest extends AgentTest {
         Atom manifest = agent.addAtom(builder);
 
         Directory dataDir = localStorage.getDataDirectory();
-        Directory manifestsDir = localStorage.getManifestDirectory();
+        Directory manifestsDir = localStorage.getManifestsDirectory();
 
         File file = localStorage.createFile(dataDir, manifest.guid().toString());
         File manifestFile = localStorage.createFile(manifestsDir, manifest.guid() + ".json");

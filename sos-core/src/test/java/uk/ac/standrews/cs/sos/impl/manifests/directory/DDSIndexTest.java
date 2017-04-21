@@ -63,7 +63,7 @@ public class DDSIndexTest {
     public void persistIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException {
 
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
-        Directory cachesDir = localStorage.getCachesDirectory();
+        Directory cachesDir = localStorage.getNodeDirectory();
 
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
@@ -87,7 +87,7 @@ public class DDSIndexTest {
     public void persistEmptyIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException {
 
         LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
-        Directory cachesDir = localStorage.getCachesDirectory();
+        Directory cachesDir = localStorage.getNodeDirectory();
 
         DDSIndex ddsIndex = new DDSIndex();
 

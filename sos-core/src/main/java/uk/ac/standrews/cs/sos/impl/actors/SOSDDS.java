@@ -54,6 +54,8 @@ public class SOSDDS implements DDS {
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         cache.addManifest(manifest);
         local.addManifest(manifest);
+
+        // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
         remote.addManifest(manifest); // will run in async mode
     }
 
@@ -94,7 +96,7 @@ public class SOSDDS implements DDS {
     public void flush() {
 
         try {
-            Directory cacheDir = localStorage.getCachesDirectory();
+            Directory cacheDir = localStorage.getNodeDirectory();
 
             File cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
             cache.persist(cacheFile);
@@ -109,10 +111,10 @@ public class SOSDDS implements DDS {
 
     private void loadOrCreateCache() {
         try {
-            Directory cacheDir = localStorage.getCachesDirectory();
+            Directory cacheDir = localStorage.getNodeDirectory();
             File file = localStorage.createFile(cacheDir, CACHE_FILE);
             if (file.exists()) {
-                cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestDirectory());
+                cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS cache");
@@ -125,7 +127,7 @@ public class SOSDDS implements DDS {
 
     private void loadOrCreateDDSIndex() {
         try {
-            Directory cacheDir = localStorage.getCachesDirectory();
+            Directory cacheDir = localStorage.getNodeDirectory();
             File file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             if (file.exists()) {
                 ddsIndex = DDSIndex.load(file);

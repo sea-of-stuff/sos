@@ -44,7 +44,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // TODO - Policy based on context?
 
         Iterator<Node> nodes = nds.getStorageNodesIterator();
-        int replicationFactor = 3; // FIXME - do not hardcode replic-factor. use context
+        int replicationFactor = 1; // FIXME - do not hardcode replic-factor. use context
 
         try {
             ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dds);
@@ -60,7 +60,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
         Manifest retval = null;
 
-        Set<IGUID> guids = ddsIndex.getDDSRefs(guid); // TODO - attempt other nodes too?
+        Set<IGUID> guids = ddsIndex.getDDSRefs(guid); // TODO - do not just use nodes in the index, since it may not be sufficient
         if (guids == null) {
             throw new ManifestNotFoundException("Unable to find manifest because there are no known DDS nodes");
         }

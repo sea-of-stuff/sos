@@ -17,8 +17,7 @@ public class LocalStorage {
 
     private static final String DATA_DIRECTORY_NAME = "data";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
-    private static final String CACHES_DIRECTORY_NAME = "caches";
-    private static final String DB_DIRECTORY_NAME = "db";
+    private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
 
     private IStorage storage;
 
@@ -52,7 +51,7 @@ public class LocalStorage {
      * @return manifest directory
      * @throws DataStorageException
      */
-    public Directory getManifestDirectory() throws DataStorageException {
+    public Directory getManifestsDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
         } catch (StorageException e) {
@@ -65,22 +64,9 @@ public class LocalStorage {
      * @return caches directory
      * @throws DataStorageException
      */
-    public Directory getCachesDirectory() throws DataStorageException {
+    public Directory getNodeDirectory() throws DataStorageException {
         try {
-            return storage.createDirectory(CACHES_DIRECTORY_NAME);
-        } catch (StorageException e) {
-            throw new DataStorageException(e);
-        }
-    }
-
-    /**
-     * Return the directory used to store the db
-     * @return db directory
-     * @throws DataStorageException
-     */
-    public Directory getDBDirectory() throws DataStorageException {
-        try {
-            return storage.createDirectory(DB_DIRECTORY_NAME);
+            return storage.createDirectory(NODE_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
@@ -128,8 +114,7 @@ public class LocalStorage {
         try {
             remove(DATA_DIRECTORY_NAME);
             remove(MANIFESTS_DIRECTORY_NAME);
-            remove(CACHES_DIRECTORY_NAME);
-            remove(DB_DIRECTORY_NAME);
+            remove(NODE_DIRECTORY_NAME);
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
         }
@@ -145,8 +130,7 @@ public class LocalStorage {
         try {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
-            storage.createDirectory(CACHES_DIRECTORY_NAME).persist();
-            storage.createDirectory(DB_DIRECTORY_NAME).persist();
+            storage.createDirectory(NODE_DIRECTORY_NAME).persist();
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }

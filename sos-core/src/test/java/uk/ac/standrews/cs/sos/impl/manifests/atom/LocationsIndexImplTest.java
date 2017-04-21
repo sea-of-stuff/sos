@@ -64,7 +64,7 @@ public class LocationsIndexImplTest {
 
         locationsIndex.addLocation(guid, locationBundle);
 
-        Directory cachesDir = localStorage.getCachesDirectory();
+        Directory cachesDir = localStorage.getNodeDirectory();
         File file = localStorage.createFile(cachesDir, "locations.index");
         locationsIndex.persist(file);
 

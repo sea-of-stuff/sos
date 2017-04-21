@@ -38,7 +38,7 @@ public class AtomStorage {
 
 
         try {
-            Directory cacheDir = storage.getCachesDirectory();
+            Directory cacheDir = storage.getNodeDirectory();
             File file = storage.createFile(cacheDir, "locations.index");
             if (file.exists()) {
                 locationIndex = LocationsIndexImpl.load(file);
@@ -55,7 +55,7 @@ public class AtomStorage {
 
     public void flush() {
         try {
-            Directory cacheDir = storage.getCachesDirectory();
+            Directory cacheDir = storage.getNodeDirectory();
             File file = storage.createFile(cacheDir, "locations.index");
             locationIndex.persist(file);
         } catch (IOException | DataStorageException e) {

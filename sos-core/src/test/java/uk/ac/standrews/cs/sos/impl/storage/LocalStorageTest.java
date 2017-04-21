@@ -40,17 +40,17 @@ public class LocalStorageTest extends CommonTest {
     @Test
     public void defaultDirectoriesExistTest() throws DataStorageException {
         assertNotNull(localStorage.getDataDirectory());
-        assertNotNull(localStorage.getManifestDirectory());
+        assertNotNull(localStorage.getManifestsDirectory());
     }
 
     @Test
     public void createFileTest() throws DataStorageException, BindingAbsentException,
             PersistenceException, DataException {
 
-        localStorage.createFile(localStorage.getManifestDirectory(),
+        localStorage.createFile(localStorage.getManifestsDirectory(),
                 "test.txt").persist();
 
-        File file = (File) localStorage.getManifestDirectory().get("test.txt");
+        File file = (File) localStorage.getManifestsDirectory().get("test.txt");
         assertNotNull(file);
 
         assertEquals(file.getData().getSize(), 0);
@@ -60,10 +60,10 @@ public class LocalStorageTest extends CommonTest {
     public void createFileWithDataTest() throws DataStorageException, BindingAbsentException,
             PersistenceException, DataException {
 
-        localStorage.createFile(localStorage.getManifestDirectory(),
+        localStorage.createFile(localStorage.getManifestsDirectory(),
                 "test.txt", new StringData("test-data")).persist();
 
-        File file = (File) localStorage.getManifestDirectory().get("test.txt");
+        File file = (File) localStorage.getManifestsDirectory().get("test.txt");
         assertNotNull(file);
 
         assertEquals(file.getData().getSize(), 9);

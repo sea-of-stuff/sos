@@ -28,7 +28,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         assertEquals(1, manifest.getLocations().size());
 
         // Delete atom and atom manifest
-        localStorage.getManifestDirectory().remove(manifest.guid() + ".json");
+        localStorage.getManifestsDirectory().remove(manifest.guid() + ".json");
         localStorage.getDataDirectory().remove(manifest.guid().toString());
 
         // Look at locationIndex in atomStorage

@@ -158,7 +158,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             IGUID manifestGUID = manifest.guid();
             File manifestFileToBackup = getManifestFile(manifestGUID);
 
-            Directory manifestsDirectory = localStorage.getManifestDirectory();
+            Directory manifestsDirectory = localStorage.getManifestsDirectory();
             File backupManifest = localStorage.createFile(manifestsDirectory,
                     manifestFileToBackup.getName() + BACKUP_EXTENSION,
                     manifestFileToBackup.getData());
@@ -197,14 +197,14 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     private File getManifestFile(String guid) throws DataStorageException {
-        Directory manifestsDir = localStorage.getManifestDirectory();
+        Directory manifestsDir = localStorage.getManifestsDirectory();
         File file = ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
 
         return file;
     }
 
     private File getManifestTempFile(String guid) throws DataStorageException {
-        Directory manifestsDir = localStorage.getManifestDirectory();
+        Directory manifestsDir = localStorage.getManifestsDirectory();
         File file = ManifestsUtils.ManifestTempFile(localStorage, manifestsDir, guid);
 
         return file;

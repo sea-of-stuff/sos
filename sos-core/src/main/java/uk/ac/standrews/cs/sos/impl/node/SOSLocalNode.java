@@ -76,7 +76,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try {
             String dbFilename = configuration.getDBFilename();
-            File file = localStorage.createFile(localStorage.getDBDirectory(), dbFilename).toFile();
+            File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
 
             database = new DatabaseImpl(file.getPath());
         } catch (DatabaseException e) {
