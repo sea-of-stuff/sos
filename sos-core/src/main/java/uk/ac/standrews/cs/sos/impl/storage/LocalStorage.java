@@ -19,6 +19,7 @@ public class LocalStorage {
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
 
+    // The actual storage used by this node
     private IStorage storage;
 
     /**

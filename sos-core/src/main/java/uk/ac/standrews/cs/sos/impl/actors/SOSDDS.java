@@ -156,6 +156,7 @@ public class SOSDDS implements DDS {
         try {
             manifest = directory.findManifest(guid);
 
+            // Manifest is cached and saved to local disk for faster access in the future
             cache.addManifest(manifest);
             local.addManifest(manifest);
 

@@ -35,6 +35,7 @@ public class SOSNDS implements NDS {
 
         } catch (NodesDirectoryException e) {
             e.printStackTrace();
+            // TODO - throw exception
         }
 
     }

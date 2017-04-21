@@ -58,7 +58,7 @@ public class SOSStorage implements Storage {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest);
 
-        Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo); // TODO - this method will not be necessary
+        Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo); // TODO - this method will not be necessary (see comments below)
 
         // NOTE - This block of code run asynchronously
         // TODO - This block of code is old, because replication is now managed by contexts

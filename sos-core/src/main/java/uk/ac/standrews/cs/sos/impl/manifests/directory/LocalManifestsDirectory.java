@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
@@ -14,7 +13,6 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.data.Data;
 import uk.ac.standrews.cs.storage.data.StringData;
 import uk.ac.standrews.cs.storage.exceptions.DataException;
@@ -40,7 +38,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
      * a policy for the sea of stuff. The configuration object is need to know the
      * locations for the manifests.
      *
-     * @param localStorage
+     * @param localStorage local storage used by this node
      */
     public LocalManifestsDirectory(LocalStorage localStorage) {
         this.localStorage = localStorage;
@@ -54,16 +52,15 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
-        if (manifest.isValid()) {
-            try {
+        try {
+            if (manifest.isValid()) {
                 saveManifest(manifest);
-            } catch (ManifestsDirectoryException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to save manifest " + manifest);
+            } else {
+                throw new ManifestPersistException("Manifest not valid");
             }
-        } else {
-            throw new ManifestPersistException("Manifest not valid");
+        } catch (ManifestsDirectoryException e) {
+            throw new ManifestPersistException("Unable to save manifest " + manifest);
         }
-
     }
 
     /**
@@ -87,9 +84,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
         File manifestFile = getManifestFile(guid);
-        Manifest manifest = ManifestsUtils.ManifestFromFile(manifestFile);
 
-        return manifest;
+        return ManifestsUtils.ManifestFromFile(manifestFile);
     }
 
     private void saveManifest(Manifest manifest) throws ManifestsDirectoryException {
@@ -198,16 +194,14 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
     private File getManifestFile(String guid) throws DataStorageException {
         Directory manifestsDir = localStorage.getManifestsDirectory();
-        File file = ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
 
-        return file;
+        return ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
     }
 
     private File getManifestTempFile(String guid) throws DataStorageException {
         Directory manifestsDir = localStorage.getManifestsDirectory();
-        File file = ManifestsUtils.ManifestTempFile(localStorage, manifestsDir, guid);
 
-        return file;
+        return ManifestsUtils.ManifestTempFile(localStorage, manifestsDir, guid);
     }
 
 

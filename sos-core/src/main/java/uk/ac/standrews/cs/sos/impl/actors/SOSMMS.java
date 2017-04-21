@@ -27,6 +27,12 @@ public class SOSMMS implements MMS {
         this.engine = metadataEngine;
     }
 
+    @Override
+    public Metadata processMetadata(InputStream inputStream) throws MetadataException {
+
+        InputStreamData data = new InputStreamData(inputStream);
+        return engine.processData(data);
+    }
 
     @Override
     public void addMetadata(Metadata metadata) throws MetadataPersistException {
@@ -44,13 +50,6 @@ public class SOSMMS implements MMS {
         } catch (ManifestNotFoundException e) {
             throw new MetadataNotFoundException("unable to find metadata");
         }
-    }
-
-    @Override
-    public Metadata processMetadata(InputStream inputStream) throws MetadataException {
-
-        InputStreamData data = new InputStreamData(inputStream);
-        return engine.processData(data);
     }
 
 }
