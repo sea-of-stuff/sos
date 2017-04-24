@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
+import static uk.ac.standrews.cs.sos.constants.LocationSchemes.SOS_SCHEME;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -14,7 +16,7 @@ public class LocationFactory {
     public static Location makeLocation(String uri) throws IOException {
         Location location;
         try {
-            if (uri.startsWith("sos")) {
+            if (uri.startsWith(SOS_SCHEME)) {
                 location = new SOSLocation(uri);
             } else {
                 location = new URILocation(uri);

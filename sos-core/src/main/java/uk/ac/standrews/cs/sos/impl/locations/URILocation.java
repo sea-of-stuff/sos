@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
+import static uk.ac.standrews.cs.sos.constants.LocationSchemes.*;
 import static uk.ac.standrews.cs.sos.constants.SOSConstants.USER_AGENT;
 
 /**
@@ -23,7 +24,7 @@ public class URILocation implements Location {
 
     public URILocation(String location) throws URISyntaxException {
         if (location.startsWith("/")) // assume this to be a local path
-            location = "file://" + location;
+            location = FILE_SCHEME + "://" + location;
         uri = new URI(location);
     }
 
@@ -36,11 +37,11 @@ public class URILocation implements Location {
         String scheme = uri.getScheme();
 
         switch(scheme) {
-            case "file":
+            case FILE_SCHEME:
                 return getFileSource();
-            case "http":
+            case HTTP_SCHEME:
                 return getHTTPSource();
-            case "https":
+            case HTTPS_SCHEME:
                 return getHTTPSSource();
             default:
                 throw new IOException("Scheme " + scheme + " not supported");

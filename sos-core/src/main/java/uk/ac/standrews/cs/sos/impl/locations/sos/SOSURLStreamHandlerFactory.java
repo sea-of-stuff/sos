@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
+import static uk.ac.standrews.cs.sos.constants.LocationSchemes.SOS_SCHEME;
+
 /**
  * This factory is used to add the sos:// scheme in the URL Stream Handler protocol.
  * All requests on sos:// will be handled by @see SOSURLConnection
@@ -13,7 +15,6 @@ import java.net.URLStreamHandlerFactory;
  */
 public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
-    private final static String SOS_PROTOCOL_SCHEME = "sos";
     protected static boolean URLStreamHandlerFactoryIsSet = false;
     private SOSURLStreamHandler sosurlStreamHandler;
 
@@ -27,7 +28,7 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        if (protocol.equals(SOS_PROTOCOL_SCHEME)) {
+        if (protocol.equals(SOS_SCHEME)) {
             return sosurlStreamHandler;
         }
 
