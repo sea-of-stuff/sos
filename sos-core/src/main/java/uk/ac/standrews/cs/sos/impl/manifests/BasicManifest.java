@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
@@ -9,6 +10,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -91,10 +93,10 @@ public abstract class BasicManifest implements Manifest {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for manifest object " + this);
+            return "";
         }
 
-        return null;
     }
 
 }

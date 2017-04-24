@@ -26,8 +26,7 @@ public class ManifestFactory {
      * @param locations where the atom resides.
      * @return the manifest for the atom
      */
-    public static AtomManifest createAtomManifest(IGUID guid,
-                                                  Set<LocationBundle> locations) {
+    public static AtomManifest createAtomManifest(IGUID guid, Set<LocationBundle> locations) {
 
         return new AtomManifest(guid, locations);
     }
@@ -42,8 +41,7 @@ public class ManifestFactory {
      */
     public static CompoundManifest createCompoundManifest(CompoundType type,
                                                           Set<Content> contents,
-                                                          Role role)
-            throws ManifestNotMadeException {
+                                                          Role role) throws ManifestNotMadeException {
 
         if (type == null) {
             throw new ManifestNotMadeException("No compound type specified");
@@ -69,8 +67,7 @@ public class ManifestFactory {
                                                         IGUID invariant,
                                                         Set<IGUID> prevs,
                                                         IGUID metadata,
-                                                        Role role)
-            throws ManifestNotMadeException {
+                                                        Role role) throws ManifestNotMadeException {
 
         if (content == null) {
             throw new ManifestNotMadeException("Content parameters missing or null");

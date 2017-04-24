@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.json.ContentDeserializer;
 import uk.ac.standrews.cs.sos.json.ContentSerializer;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Objects;
 
@@ -59,10 +61,10 @@ public class ContentImpl implements Content {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for content object " + this);
+            return "";
         }
 
-        return "";
     }
 
     @Override

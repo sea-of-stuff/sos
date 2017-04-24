@@ -227,11 +227,11 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     private String getCollectionToHashOrSign(Set<?> collection) {
-        String toHash = "";
+        StringBuilder toHash = new StringBuilder();
         for(Object obj:collection) {
-            toHash += obj.toString() + ".";
+            toHash.append(obj.toString()).append(".");
         }
-        return toHash;
+        return toHash.toString();
     }
 
 }

@@ -146,12 +146,12 @@ public class CompoundManifest extends SignedManifest implements Compound {
     }
 
     private IGUID generateContentGUID() throws GUIDGenerationException {
-        String toHash = "C";
+        StringBuilder toHash = new StringBuilder("C");
         for(Content content:contents) {
-            toHash += content.toString();
+            toHash.append(content.toString());
         }
 
-        return GUIDFactory.generateGUID(toHash);
+        return GUIDFactory.generateGUID(toHash.toString());
     }
 
 }
