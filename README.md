@@ -82,3 +82,12 @@ $ docker run -d -p 24224:24224 -v /tmp/data:/fluentd/log fluent/fluentd
 You can bootstrap multiple nodes using the `experiments.sh` bash script (see script folder)
 
 You can also find other useful bash scripts in the script folder.
+
+## Ideas
+
+- can get geo-location using the service ipinfo.io
+example:
+curl ipinfo.io
+curl ipinfo.io/138.250.10.10
+
+more here: https://ipinfo.io/developers

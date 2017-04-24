@@ -5,9 +5,9 @@ package uk.ac.standrews.cs.sos.model;
  */
 public enum ManifestType {
 
-    ATOM("Atom"),
-    COMPOUND("Compound"),
-    VERSION("Version"),
+    ATOM("Atom"), ATOM_PROTECTED("AtomP"),
+    COMPOUND("Compound"), COMPOUND_PROTECTED("CompoundP"),
+    VERSION("Version"), VERSION_PROTECTED("VersionP"),
     METADATA("Metadata"),
     CONTEXT("Context");
 

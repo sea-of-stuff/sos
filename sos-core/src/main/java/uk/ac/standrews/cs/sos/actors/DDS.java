@@ -55,6 +55,8 @@ public interface DDS extends SeaOfStuff {
      */
     Set<Version> getAllVersions();
 
+    // TODO - get heads OR current versions? - see notes at page 31
+
     /**
      * Flushes any in-memory information into disk
      */

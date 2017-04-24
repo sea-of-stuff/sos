@@ -9,15 +9,21 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.storage.interfaces.Directory;
+import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
 /**
  * TODO - manage scope too
@@ -28,11 +34,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class SOSCMS implements CMS {
 
+    private LocalStorage localStorage;
     private DDS dds;
     private HashMap<PredicateComputationType, List<IGUID>> contextsByPredicateType;
 
     // Maps the context to the versions belonging to it
     private HashMap<IGUID, List<IGUID>> mappings;
+    // TODO - map of versions that failed to pass tests. Needed to avoid calculating the predicate again
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
@@ -43,12 +51,13 @@ public class SOSCMS implements CMS {
      *
      * @param dds
      */
-    public SOSCMS(DDS dds) {
+    public SOSCMS(LocalStorage localStorage, DDS dds) {
+        this.localStorage = localStorage;
         this.dds = dds;
 
         initialiseMappings();
 
-        // TODO - load contexts
+        // TODO - load contexts (use reflection?)
         // TODO - load mappings
 
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
@@ -57,6 +66,7 @@ public class SOSCMS implements CMS {
         getData();
         spawnContexts();
         runPredicates();
+        runPolicies();
         checkPolicies();
     }
 
@@ -161,6 +171,20 @@ public class SOSCMS implements CMS {
 
     }
 
+    @Override
+    public void flush() {
+
+        try {
+            Directory cacheDir = localStorage.getNodeDirectory();
+
+            File cacheFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+            // TODO - cache.persist(cacheFile);
+
+        } catch (DataStorageException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
+        }
+    }
+
     ////////////////////
     // PERIODIC TASKS //
     ////////////////////
@@ -225,6 +249,7 @@ public class SOSCMS implements CMS {
         IGUID versionGUID = version.guid();
 
         boolean alreadyProcessed = mappings.get(contextVersion).contains(versionGUID);
+        // TODO - check against MAX-AGE attribute
         boolean retval = alreadyProcessed;
         if (!alreadyProcessed) {
 
@@ -238,8 +263,17 @@ public class SOSCMS implements CMS {
         return retval;
     }
 
+    private void runPolicies() {
+        // TODO - how does this differ from checkPolicies() ?
+    }
+
     private void checkPolicies() {
 
-        // TODO - check policies are satisfied. if not, attempt to re-satisfy them
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Checking that policies are satisfied. Otherwise, invalidate and re-run the policies");
+            // TODO - check policies are satisfied. if not, attempt to re-satisfy them
+
+        }, 1, 10, TimeUnit.MINUTES);
+
     }
 }

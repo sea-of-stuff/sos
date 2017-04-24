@@ -15,10 +15,32 @@ public interface SOSPredicate {
      */
     PredicateComputationType predicateComputationType();
 
+    /**
+     * Test the entity matching this GUID with the predicate
+     *
+     * @param guid
+     * @return
+     */
     boolean test(IGUID guid);
+
+    /**
+     * AND this predicate with another one
+     * @param other
+     * @return
+     */
     SOSPredicate and(SOSPredicate other);
+
+    /**
+     * OR this predicate with another one
+     * @param other
+     * @return
+     */
     SOSPredicate or(SOSPredicate other);
 
+    /**
+     * Get the actual predicate. This is needed to implement the AND/OR methods
+     * @return
+     */
     Predicate predicate();
 
 }

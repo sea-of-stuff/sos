@@ -28,16 +28,8 @@ public class SOSNDS implements NDS {
 
     private LocalNodesDirectory localNodesDirectory;
 
-    public SOSNDS(Node localNode, Database database) {
-
-        try {
-            localNodesDirectory = new LocalNodesDirectory(localNode, database);
-
-        } catch (NodesDirectoryException e) {
-            e.printStackTrace();
-            // TODO - throw exception
-        }
-
+    public SOSNDS(Node localNode, Database database) throws NodesDirectoryException {
+        localNodesDirectory = new LocalNodesDirectory(localNode, database);
     }
 
     @Override
@@ -60,6 +52,7 @@ public class SOSNDS implements NDS {
             throw new NodeRegistrationException("Unable to register node", e);
         }
 
+        // Register the node to other NDS nodes
         if (!localOnly) {
             Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
             ndsNodes.forEach(n -> {
@@ -143,6 +136,9 @@ public class SOSNDS implements NDS {
         return localNodesDirectory.getKnownNodes();
     }
 
+    /**
+     * Find a matching node for the given GUID through other known NDS nodes
+     */
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {
 
         Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);

@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
-import uk.ac.standrews.cs.sos.impl.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
@@ -29,6 +28,9 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_PERIOD;
+import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -176,7 +178,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dds = new SOSDDS(localStorage, nds);
         storage = new SOSStorage(this, localStorage, nds, dds);
         mms = new SOSMMS(dds, metadataEngine);
-        cms = new SOSCMS(dds);
+        cms = new SOSCMS(localStorage, dds);
         rms = SOSRMS.instance();
 
         agent = SOSAgent.instance(storage, dds, mms, cms, rms);
@@ -188,7 +190,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
 
         cacheFlusherService = Executors.newScheduledThreadPool(Threads.CACHE_FLUSHER_PS);
-        cacheFlusherService.scheduleAtFixedRate(cacheFlusher, 0, CacheFlusher.PERIOD, CacheFlusher.TIME_UNIT);
+        cacheFlusherService.scheduleAtFixedRate(cacheFlusher, 0, CACHE_FLUSHER_PERIOD, CACHE_FLUSHER_TIME_UNIT);
     }
 
     /**

@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -97,9 +98,10 @@ public class SOSAgent implements Agent {
     @Override
     public Version addData(VersionBuilder versionBuilder) {
 
-        try {
-            // FIXME - we are consuming the inputstream before even storing the data
-            Set<IGUID> contexts = cms.runPredicates(PredicateComputationType.BEFORE_STORING, versionBuilder.getAtomBuilder().getInputStream());
+        // FIXME - we are consuming the inputstream before storing the data. Can we then reuse the stream?
+        try (InputStream stream = versionBuilder.getAtomBuilder().getInputStream()) {
+
+            Set<IGUID> contexts = cms.runPredicates(PredicateComputationType.BEFORE_STORING, stream);
 
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());
@@ -117,6 +119,8 @@ public class SOSAgent implements Agent {
             e.printStackTrace();
         } catch (ManifestNotMadeException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace(); // TODO - throw proper exception
         }
 
         return null;
@@ -139,10 +143,9 @@ public class SOSAgent implements Agent {
             Version manifest = addVersion(versionBuilder);
 
             return manifest;
-        } catch (ManifestNotMadeException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
-        } catch (ManifestPersistException e) {
-            e.printStackTrace();
+            // TODO - throw proper exception
         }
 
         return null;

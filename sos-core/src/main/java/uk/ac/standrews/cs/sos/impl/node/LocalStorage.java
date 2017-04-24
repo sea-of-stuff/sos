@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.storage;
+package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.storage.data.Data;

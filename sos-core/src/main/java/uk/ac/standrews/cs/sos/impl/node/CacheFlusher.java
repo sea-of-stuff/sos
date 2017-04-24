@@ -2,11 +2,10 @@ package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.storage.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 
-import java.util.concurrent.TimeUnit;
+import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_DATA_SIZE_LIMIT;
 
 /**
  * The Cache Flusher deletes all data and manifests that are safe to delete (e.g. content is replicated elsewhere)
@@ -15,13 +14,6 @@ import java.util.concurrent.TimeUnit;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class CacheFlusher implements Runnable {
-
-    protected static final int PERIOD = 600; // 10 minutes
-    protected static final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
-
-    private static final long ONE_KB = 1024L;
-    private static final long ONE_MB = ONE_KB * ONE_KB;
-    private static final long DATA_SIZE_LIMIT = 1L * ONE_MB;
 
     private LocalStorage localStorage;
 
@@ -49,7 +41,7 @@ public class CacheFlusher implements Runnable {
             long dataSize = datDir.getSize();
             SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Data Directory size is: " + dataSize);
 
-            return dataSize > DATA_SIZE_LIMIT;
+            return dataSize > CACHE_DATA_SIZE_LIMIT;
         } catch (DataStorageException e) {
             e.printStackTrace();
         }

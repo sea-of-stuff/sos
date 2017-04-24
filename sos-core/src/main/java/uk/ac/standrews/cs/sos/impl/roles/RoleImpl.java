@@ -34,6 +34,9 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     private File publicKeyFile;
     private final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/";
 
+    // TODO - use RSA to encrypt content?
+
+
     /**
      * keys are either created and persisted, or loaded
      *

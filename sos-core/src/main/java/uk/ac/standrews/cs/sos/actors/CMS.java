@@ -80,4 +80,9 @@ public interface CMS extends SeaOfStuff {
      */
     Iterator<IGUID> getContents(IGUID context);
 
+    /**
+     * Flushes any in-memory information into disk
+     */
+    void flush();
+
 }

@@ -10,14 +10,10 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
+import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.crypto.AESCrypto;
-import uk.ac.standrews.cs.sos.utils.crypto.RSACrypto;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
 /**
@@ -25,44 +21,41 @@ import java.util.Set;
  */
 @JsonSerialize(using = SecureAtomManifestSerializer.class)
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
-public class SecureAtomManifest extends AtomManifest {
+public class SecureAtomManifest extends AtomManifest { // TODO - have interface for this new type of manifest
 
-    private RSACrypto rsa; // TODO - generate them only once or once per ROLE?
+    // TODO - generate them only once or once per ROLE?
+    private Role role;
+    private String encryptedKey;
 
     /**
      * Creates a valid atom manifest given an atom.
      *
+     * TODO - is the data already stored at the specified locations?
+     *
      * @param guid
      * @param locations
      */
-    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations) {
+    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) {
         super(guid, locations);
+        this.manifestType = ManifestType.ATOM_PROTECTED;
+        this.role = role;
 
-        rsa = new RSACrypto();
-        try {
-            rsa.generateKeys();
-        } catch (KeyGenerationException e) {
-            e.printStackTrace();
-        }
-
+        encrypt("TODO");
     }
 
     // TODO - use file and inputstream for data
-    // Generate random key K
-    // encrypt data with K --> d'
-    // encrypt k with pubkey --> (k', pubkey)
-    // guid = hash(d')
-    private void encrypt(String data) throws NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
+    // 1. Generate random key K
+    // 2. encrypt data with K --> d'
+    // 3. encrypt k with pubkey --> (k', pubkey)
+    // 4. guid = hash(d')
+    private void encrypt(String data){
 
         try {
             AESCrypto aes = new AESCrypto();
-            aes.generateKey();
-            String encryptedData = aes.encrypt64(data);
-
-            // Encrypt key
-            String encryptedKey = rsa.encrypt64(aes.getKey());
-
-            IGUID encryptedDataGUID = GUIDFactory.generateGUID(encryptedData);
+            aes.generateKey(); // 1
+            String encryptedData = aes.encrypt64(data); // 2
+            this.encryptedKey = role.sign(aes.getKey()); // 3
+            this.contentGUID = GUIDFactory.generateGUID(encryptedData); // 4
 
         } catch (KeyGenerationException e) {
             e.printStackTrace();
@@ -73,6 +66,5 @@ public class SecureAtomManifest extends AtomManifest {
         }
 
     }
-
 
 }

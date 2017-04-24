@@ -24,16 +24,18 @@ public interface PolicyLanguage {
 
     Manifest getManifest(IGUID guid);
 
-    void protect(Manifest manifest, Role role);
+    void protect(Data data, Role role);
 
     void unprotect(Manifest manifest, Role role);
 
-    void compress(Manifest manifest);
+    void compress(Data data);
 
     void decompress(Manifest manifest);
 
     Node getNode(IGUID guid);
 
-    Set<Node> getNodes();
+    Set<Node> getNodes(int type);
+
+    Role getRole(IGUID guid);
 
 }

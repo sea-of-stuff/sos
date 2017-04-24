@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocalManifestsDirectory;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.ManifestsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.RemoteManifestsDirectory;
-import uk.ac.standrews.cs.sos.impl.storage.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Manifest;
