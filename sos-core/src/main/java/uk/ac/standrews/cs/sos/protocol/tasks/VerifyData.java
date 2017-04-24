@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.impl.network.Method;
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
@@ -84,7 +84,7 @@ public class VerifyData extends Task {
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
         URL url = SOSURL.CHALLENGE(node, entity, challenge);
-        SyncRequest request = new SyncRequest(Method.GET, url);
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         try (InputStream inputStream = response.getBody()) {

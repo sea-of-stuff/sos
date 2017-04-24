@@ -34,7 +34,7 @@ public class SyncRequestTest extends CommonTest {
 
     @Test
     public void testGet() throws Exception {
-        SyncRequest request = new SyncRequest(Method.GET, new URL("https://httpbin.org/range/10"));
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/range/10"));
         RequestsManager.getInstance().playSyncRequest(request);
 
         Response response = request.getResponse();
@@ -48,7 +48,7 @@ public class SyncRequestTest extends CommonTest {
     public void testGetOKAYRespondeCode() throws Exception {
         int testCode = 418;
 
-        SyncRequest request = new SyncRequest(Method.GET, new URL("https://httpbin.org/status/" + testCode));
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/status/" + testCode));
         RequestsManager.getInstance().playSyncRequest(request);
 
         int code = request.getRespondeCode();
@@ -57,7 +57,7 @@ public class SyncRequestTest extends CommonTest {
 
     @Test (expectedExceptions = IOException.class)
     public void testPostNull() throws Exception {
-        SyncRequest request = new SyncRequest(Method.POST, new URL("http://httpbin.org/post"));
+        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
         request.setJSONBody(null);
         RequestsManager.getInstance().playSyncRequest(request);
     }
@@ -67,7 +67,7 @@ public class SyncRequestTest extends CommonTest {
         int testCode = 200;
         String dataToPost = "test-data";
 
-        SyncRequest request = new SyncRequest(Method.POST, new URL("http://httpbin.org/post"));
+        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
         request.setJSONBody(dataToPost);
         RequestsManager.getInstance().playSyncRequest(request);
 
@@ -88,7 +88,7 @@ public class SyncRequestTest extends CommonTest {
 
     @Test (expectedExceptions = IOException.class)
     public void testPutNull() throws Exception {
-        SyncRequest request = new SyncRequest(Method.PUT, new URL("http://httpbin.org/post"));
+        SyncRequest request = new SyncRequest(HTTPMethod.PUT, new URL("http://httpbin.org/post"));
         request.setJSONBody(null);
         RequestsManager.getInstance().playSyncRequest(request);
     }
@@ -98,7 +98,7 @@ public class SyncRequestTest extends CommonTest {
         int testCode = 200;
         String dataToPut = "test-data";
 
-        SyncRequest request = new SyncRequest(Method.PUT, new URL("http://httpbin.org/put"));
+        SyncRequest request = new SyncRequest(HTTPMethod.PUT, new URL("http://httpbin.org/put"));
         request.setJSONBody(dataToPut);
         RequestsManager.getInstance().playSyncRequest(request);
 
@@ -124,7 +124,7 @@ public class SyncRequestTest extends CommonTest {
 
         Runnable r = () -> {
             try {
-                SyncRequest request = new SyncRequest(Method.GET, new URL("https://httpbin.org/status/" + testCode));
+                SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/status/" + testCode));
                 RequestsManager.getInstance().playSyncRequest(request);
 
                 int code = request.getRespondeCode();
@@ -148,7 +148,7 @@ public class SyncRequestTest extends CommonTest {
         int testCode = 200;
         String dataToPost = "test-data";
 
-        SyncRequest request = new SyncRequest(Method.POST, new URL("http://httpbin.org/post"));
+        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
         InputStream dataStream = HelperTest.StringToInputStream(dataToPost);
         request.setBody(dataStream);
         RequestsManager.getInstance().playSyncRequest(request);

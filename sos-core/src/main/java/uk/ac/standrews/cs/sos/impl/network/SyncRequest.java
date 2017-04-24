@@ -18,7 +18,7 @@ public class SyncRequest extends Request {
 
     private Response response;
 
-    public SyncRequest(Method method, URL url) {
+    public SyncRequest(HTTPMethod method, URL url) {
         super(method, url);
     }
 

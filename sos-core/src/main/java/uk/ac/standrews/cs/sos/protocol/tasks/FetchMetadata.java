@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.Method;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
@@ -48,7 +48,7 @@ public class FetchMetadata extends Task {
 
         try {
             URL url = SOSURL.MMS_GET_METADATA(node, metadataId);
-            SyncRequest request = new SyncRequest(Method.GET, url);
+            SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {

@@ -13,8 +13,8 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.Method;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -145,7 +145,7 @@ public class DataReplication extends Task {
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
-            SyncRequest request = new SyncRequest(Method.POST, url);
+            SyncRequest request = new SyncRequest(HTTPMethod.POST, url);
             request.setBody(data);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

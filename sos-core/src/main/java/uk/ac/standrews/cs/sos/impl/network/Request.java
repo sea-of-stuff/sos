@@ -16,12 +16,12 @@ public abstract class Request {
     protected static final MediaType MULTIPART = MediaType.parse("multipart/form-data data; charset=utf-8");
 
     protected okhttp3.Request request;
-    protected Method method;
+    protected HTTPMethod method;
     protected URL url;
     protected String json_body;
     protected InputStream inputStream;
 
-    public Request(Method method, URL url) {
+    public Request(HTTPMethod method, URL url) {
         this.method = method;
         this.url = url;
     }

@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.Method;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
@@ -66,7 +66,7 @@ public class MetadataReplication extends Task {
 
         try {
             URL url = SOSURL.MMS_POST_METADATA(node);
-            SyncRequest request = new SyncRequest(Method.POST, url);
+            SyncRequest request = new SyncRequest(HTTPMethod.POST, url);
             request.setJSONBody(metadata.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

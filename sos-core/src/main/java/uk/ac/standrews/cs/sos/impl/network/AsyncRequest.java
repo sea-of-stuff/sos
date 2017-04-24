@@ -15,7 +15,7 @@ public class AsyncRequest extends Request {
 
     private ResponseCallback callback;
 
-    public AsyncRequest(Method method, URL url, ResponseCallback callback) {
+    public AsyncRequest(HTTPMethod method, URL url, ResponseCallback callback) {
         super(method, url);
         this.callback = callback;
     }

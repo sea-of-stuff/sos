@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.Method;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -55,7 +55,7 @@ public class GetNode extends Task {
             try {
                 URL url = SOSURL.NDS_GET_NODE(node, nodeId);
 
-                SyncRequest request = new SyncRequest(Method.GET, url);
+                SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
                 Response response = RequestsManager.getInstance().playSyncRequest(request);
 
                 foundNode = parseNode(response);

@@ -5,8 +5,8 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.ManifestsUtils;
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.Method;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
@@ -50,7 +50,7 @@ public class FetchManifest extends Task {
 
         try {
             URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
-            SyncRequest request = new SyncRequest(Method.GET, url);
+            SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
