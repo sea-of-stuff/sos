@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
+import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.IOException;
@@ -22,7 +23,11 @@ public class LocationUtility {
         try {
             stream = location.getSource();
         } catch (IOException e) {
-            return null;
+            return new NullInputStream(0);
+        }
+
+        if (stream == null) {
+            return new NullInputStream(0);
         }
 
         return stream;

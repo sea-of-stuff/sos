@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.actors;
 
+import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.DDS;
@@ -97,7 +98,7 @@ public class SOSStorage implements Storage {
             Location location = locationBundle.getLocation();
             dataStream = LocationUtility.getInputStreamFromLocation(location);
 
-            if (dataStream != null) {
+            if (!(dataStream instanceof NullInputStream)) {
                 break;
             }
         }
@@ -118,7 +119,7 @@ public class SOSStorage implements Storage {
             throw new AtomNotFoundException();
         }
 
-        return null;
+        return new NullInputStream(0);
     }
 
     @Override

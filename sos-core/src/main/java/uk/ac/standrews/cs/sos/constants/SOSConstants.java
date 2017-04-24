@@ -10,4 +10,6 @@ public class SOSConstants {
     public static final String GUID = "GUID";
     public static final String HOSTNAME = "Hostname";
     public static final String PORT = "Port";
+
+    public static final String USER_AGENT = "sos-core/0.1";
 }

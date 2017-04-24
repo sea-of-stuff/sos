@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.atom.store;
 
+import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -41,9 +42,8 @@ public abstract class CommonLocalStore implements Store {
 
     protected IGUID generateGUID(Location location) throws GUIDGenerationException, SourceLocationException {
         IGUID retval = null;
-        try (InputStream dataStream =
-                     LocationUtility.getInputStreamFromLocation(location)) {
-            if (dataStream != null) {
+        try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location)) {
+            if (!(dataStream instanceof NullInputStream)) {
                 retval = generateGUID(dataStream);
             }
         } catch (IOException e) {

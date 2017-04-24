@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.commons.io.input.NullInputStream;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
@@ -66,7 +67,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
             dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
 
-            if (dataStream != null) {
+            if (!(dataStream instanceof NullInputStream)) {
                 break;
             }
         }

@@ -50,6 +50,19 @@ public class DataReplication extends Task {
     private NDS nds;
     private DDS dds;
 
+    /**
+     * Construct the data replication task.
+     * The data, nodes and replication factor paramters are needed to carry out the task
+     * The index, nds and dds are needed to promptly update this node about the new replicated content
+     *
+     * @param data
+     * @param nodes
+     * @param replicationFactor
+     * @param index
+     * @param nds
+     * @param dds
+     * @throws SOSProtocolException
+     */
     public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor,
                            LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
 

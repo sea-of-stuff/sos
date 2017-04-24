@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
+import static uk.ac.standrews.cs.sos.constants.SOSConstants.USER_AGENT;
+
 /**
  * supported schemes: http, https, file, ftp, etc
  *
@@ -48,14 +50,14 @@ public class URILocation implements Location {
 
     private InputStream getHTTPSource() throws IOException {
         HttpURLConnection httpcon = (HttpURLConnection) uri.toURL().openConnection();
-        httpcon.addRequestProperty("User-Agent", "sos-core/0.1");
+        httpcon.addRequestProperty("User-Agent", USER_AGENT);
 
         return httpcon.getInputStream();
     }
 
     private InputStream getHTTPSSource() throws IOException {
         HttpsURLConnection httpcon = (HttpsURLConnection) uri.toURL().openConnection();
-        httpcon.addRequestProperty("User-Agent", "sos-core/0.1");
+        httpcon.addRequestProperty("User-Agent", USER_AGENT);
 
         return httpcon.getInputStream();
     }
