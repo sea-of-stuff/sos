@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.AtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.CompressionAlgorithms;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 
@@ -73,6 +74,11 @@ public class AtomManifest extends BasicManifest implements Atom {
         }
 
         return dataStream;
+    }
+
+    @Override
+    public CompressionAlgorithms getCompressionAlgorithm() {
+        return CompressionAlgorithms.NONE;
     }
 
     @Override

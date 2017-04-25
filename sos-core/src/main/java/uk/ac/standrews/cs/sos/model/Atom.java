@@ -38,4 +38,6 @@ public interface Atom extends Manifest {
      * @return
      */
     InputStream getData();
+
+    CompressionAlgorithms getCompressionAlgorithm();
 }

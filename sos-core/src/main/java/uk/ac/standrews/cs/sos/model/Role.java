@@ -16,8 +16,6 @@ import java.security.PublicKey;
  *      "Signature": "MQ17983827se="
  * }
  *
- * TODO - is this same key used for signing and for RSA encryption?
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Role extends User {
@@ -27,6 +25,9 @@ public interface Role extends User {
     IGUID getUser(); // e.g. guid for user Simone
 
     String getName(); // e.g. Simone's work
+
+    // TODO - is this same key used for signing and for RSA encryption?
+    String algorithm(); // TODO - algorithm used for key
 
     PublicKey getPubkey();
 

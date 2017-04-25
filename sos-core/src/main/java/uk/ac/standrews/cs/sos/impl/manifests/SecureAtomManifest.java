@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.crypto.AESCrypto;
 
 import java.util.Set;
@@ -21,7 +22,7 @@ import java.util.Set;
  */
 @JsonSerialize(using = SecureAtomManifestSerializer.class)
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
-public class SecureAtomManifest extends AtomManifest { // TODO - have interface for this new type of manifest
+public class SecureAtomManifest extends AtomManifest implements SecureAtom {
 
     // TODO - generate them only once or once per ROLE?
     private Role role;
