@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
@@ -20,15 +20,14 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
-import uk.ac.standrews.cs.sos.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -59,22 +58,8 @@ public class SOSStorage implements Storage {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest);
 
-        Set<Node> defaultDDSNodes = getDefaultDDSNodesForReplication(ddsNotificationInfo); // TODO - this method will not be necessary (see comments below)
-
-        // NOTE - This block of code run asynchronously
-        // TODO - This block of code is old, because replication is now managed by contexts
-        // TODO - It should be removed altogether
-//        {
-//            try {
-//                replicateData(manifest);
-//                notifyDDS(ddsNotificationInfo, defaultDDSNodes, manifest);
-//            } catch (SOSProtocolException | IOException e) {
-//                SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data/notify DDS nodes correctly: " + e.getMessage());
-//            }
-//        }
-
-        // This may return before data is replicated and the DDS nodes are notified
-        return new Tuple<>(manifest, defaultDDSNodes);
+        // Y is supposed to be the list of DDS nodes that know about this new atom
+        return new Tuple<>(manifest, null);
     }
 
     /**
@@ -124,7 +109,12 @@ public class SOSStorage implements Storage {
 
     @Override
     public void flush() {
-        atomStorage.flush();
+
+        try {
+            atomStorage.flush();
+        } catch (DataStorageException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to flush the node internal storage");
+        }
     }
 
     private IGUID addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
@@ -166,62 +156,4 @@ public class SOSStorage implements Storage {
             return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
         }
     }
-
-    private void replicateData(Atom atom) throws SOSProtocolException, IOException {
-
-        int replicationFactor = 1; // FIXME - this should not be hardcoded and should come from the context
-        if (replicationFactor > 0) {
-
-            try (InputStream data = getAtomContent(atom)) {
-
-                // FIXME - check if data is already replicated.
-                // Note: could also have requests, such that we instruct another node (a storage node) to replicate the data on behalf of this node
-
-                Iterator<Node> storageNodes = nds.getStorageNodesIterator();
-                atomStorage.replicate(data, storageNodes, replicationFactor, nds, dds);
-            }
-        }
-    }
-
-    private Set<Node> getDefaultDDSNodesForReplication(DDSNotificationInfo ddsNotificationInfo) {
-
-        Set<Node> retval = Collections.EMPTY_SET;
-
-        if (ddsNotificationInfo.notifyDDSNodes()) {
-
-            if (ddsNotificationInfo.useDefaultDDSNodes()) {
-                retval = nds.getDDSNodes();
-                SOS_LOG.log(LEVEL.DEBUG,"nodes retrieved: " + retval.size());
-            }
-        }
-
-        return retval;
-    }
-
-    /**
-     * Send manifest to DDS nodes
-     *
-     * TODO - see manifest replication info
-     * - embed dds notif info in configuration policies
-     * - set a limit on the number of dds nodes
-     * @param ddsNotificationInfo
-     * @param manifest
-     */
-    private void notifyDDS(DDSNotificationInfo ddsNotificationInfo, Set<Node> defaultDDSNodes, AtomManifest manifest) throws SOSProtocolException {
-
-        if (ddsNotificationInfo.notifyDDSNodes()) {
-
-            Set<Node> ddsNodes = new HashSet<>(); // Remember that HashSet does not preserve order
-            ddsNodes.addAll(defaultDDSNodes);
-
-            if (ddsNotificationInfo.useSuggestedDDSNodes()) {
-                Set<Node> suggestedNodes = ddsNotificationInfo.getSuggestedDDSNodes();
-                ddsNodes.addAll(suggestedNodes);
-            }
-
-            ManifestReplication replicationTask = new ManifestReplication(manifest, ddsNodes.iterator(), ddsNotificationInfo.getMaxDefaultDDSNodes(), dds);
-            TasksQueue.instance().performSyncTask(replicationTask);
-        }
-    }
-
 }

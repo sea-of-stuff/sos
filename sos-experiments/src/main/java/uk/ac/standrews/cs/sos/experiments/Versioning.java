@@ -24,6 +24,10 @@ public class Versioning {
      * @return
      */
     public RepoStats version(Object source, String type, Node[] nodes, boolean shard, int granularity) {
+
+
+        // Could you JGit for interact with git?
+
         return null;
     }
 

@@ -57,8 +57,8 @@ public class SOSCMS implements CMS {
 
         initialiseMappings();
 
-        // TODO - load contexts (use reflection?)
-        // TODO - load mappings
+        // TODO - load existing contexts into memory via reflection
+        // TODO - load mappings/indices
 
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
 

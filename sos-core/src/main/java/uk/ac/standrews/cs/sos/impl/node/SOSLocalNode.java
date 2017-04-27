@@ -135,7 +135,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public void kill() {
         dds.flush();
         storage.flush();
-
         cacheFlusherService.shutdown();
 
         RequestsManager.getInstance().shutdown();

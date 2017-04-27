@@ -97,6 +97,11 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     }
 
     @Override
+    public String algorithm() {
+        return null;
+    }
+
+    @Override
     public PublicKey getPubkey() {
         return pubkey;
     }
