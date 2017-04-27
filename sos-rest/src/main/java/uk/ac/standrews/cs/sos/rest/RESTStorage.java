@@ -123,18 +123,22 @@ public class RESTStorage {
 
         retval += "\"Manifest\" : " + tuple.x.toString() + ",\n";
 
-        retval += "\"DDS\" : [";
-        for(Node node:tuple.y) {
-            retval += "{";
-            retval += "\"GUID\" : \"" + node.getNodeGUID().toString() + "\", ";
-            retval += "\"Hostname\" : \"" + node.getHostAddress().getHostName() + "\", ";
-            retval += "\"Port\" : " + node.getHostAddress().getPort();
-            retval += "},";
+        if (tuple.y != null) {
+
+            retval += "\"DDS\" : [";
+            for (Node node : tuple.y) {
+                retval += "{";
+                retval += "\"GUID\" : \"" + node.getNodeGUID().toString() + "\", ";
+                retval += "\"Hostname\" : \"" + node.getHostAddress().getHostName() + "\", ";
+                retval += "\"Port\" : " + node.getHostAddress().getPort();
+                retval += "},";
+            }
+            if (tuple.y.size() > 0) {
+                retval = retval.substring(0, retval.length() - 1); // removing last comma
+            }
+            retval += "]";
+
         }
-        if (tuple.y.size() > 0) {
-            retval = retval.substring(0, retval.length() - 1); // removing last comma
-        }
-        retval += "]";
 
         retval += "}";
 

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- * TODO - persistence
+ * TODO - persistence -> cache, local, remote
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -37,9 +37,6 @@ public class SOSRMS implements RMS {
 
     @Override
     public Role get(IGUID guid) {
-
-        // TODO - cache, local, remote
-
         return roles.get(guid);
     }
 

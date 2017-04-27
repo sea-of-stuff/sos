@@ -56,6 +56,7 @@ public class SOSDDS implements DDS {
         local.addManifest(manifest);
 
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
+        // TODO - should this be dealt (1) within a scope and (2) by contexts?
         remote.addManifest(manifest); // will run in async mode
     }
 
@@ -88,7 +89,7 @@ public class SOSDDS implements DDS {
     @Override
     public Set<Version> getAllVersions() {
 
-        // TODO - return only the ones from the cache for the moment, but should be able to differentiate
+        // TODO - returning only the ones from the cache for the moment
         return new HashSet<>(cache.getAllAsset());
     }
 

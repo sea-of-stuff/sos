@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.crypto.SignatureCrypto;
 
 import java.io.File;
@@ -26,7 +27,6 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
 
     private IGUID roleGUID;
     private String name;
-    private String email;
 
     private PublicKey pubkey;
     private SignatureCrypto signature;
@@ -38,17 +38,17 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
 
 
     /**
+     * TODO - create role starting from the user
+     *
      * keys are either created and persisted, or loaded
      *
      * @param guid
      * @param name
-     * @param email
      * @throws KeyGenerationException
      * @throws KeyLoadedException
      */
-    public RoleImpl(IGUID guid, String name, String email) throws KeyGenerationException, KeyLoadedException {
+    public RoleImpl(User user, IGUID guid, String name) throws KeyGenerationException, KeyLoadedException {
         this.name = name;
-        this.email = email;
         this.roleGUID = guid;
 
         signature = new SignatureCrypto();
@@ -65,17 +65,17 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
     }
 
     /**
+     * TODO - is this constructor needed?
+     *
      * Role with given public key is created.
      * The role is not persisted into memory.
      *
      * @param pubkey
      * @param name
-     * @param email
      */
-    public RoleImpl(PublicKey pubkey, String name, String email) {
+    public RoleImpl(PublicKey pubkey, String name) {
         this.pubkey = pubkey;
         this.name = name;
-        this.email = email;
 
         roleGUID = GUIDFactory.generateRandomGUID();
         signature = new SignatureCrypto(pubkey);
