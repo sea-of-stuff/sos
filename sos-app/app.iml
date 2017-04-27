@@ -177,7 +177,6 @@
     <orderEntry type="library" name="Maven: org.apache.velocity:velocity:1.7" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:fs-sta:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: uk.ac.standrews.cs:utils-sta:1.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="sos-filesystem" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:utilities:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.github.mpkorstanje:simmetrics-core:4.1.1" level="project" />

@@ -11,8 +11,13 @@
         <module name="filesystem" />
         <module name="rest" />
         <module name="rest-jetty" />
+        <module name="sos-app" />
         <module name="sos-configuration" />
+        <module name="sos-core" />
+        <module name="sos-experiments" />
         <module name="sos-filesystem" />
+        <module name="sos-rest" />
+        <module name="sos-rest-jetty" />
         <module name="sos-web-archive" />
         <module name="web-ui" />
       </profile>
@@ -24,8 +29,13 @@
       <module name="rest" target="1.8" />
       <module name="rest-jetty" target="1.8" />
       <module name="sos" target="1.8" />
+      <module name="sos-app" target="1.8" />
       <module name="sos-configuration" target="1.8" />
+      <module name="sos-core" target="1.8" />
+      <module name="sos-experiments" target="1.8" />
       <module name="sos-filesystem" target="1.8" />
+      <module name="sos-rest" target="1.8" />
+      <module name="sos-rest-jetty" target="1.8" />
       <module name="sos-web-archive" target="1.8" />
       <module name="web-ui" target="1.8" />
     </bytecodeTargetLevel>
