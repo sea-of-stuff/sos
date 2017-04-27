@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.sos.actors.RMS;
 import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Set;
 
 /**
  * TODO - persistence -> cache, local, remote
@@ -15,10 +15,12 @@ import java.util.LinkedHashMap;
 public class SOSRMS implements RMS {
 
     private HashMap<IGUID, Role> roles;
+    private HashMap<IGUID, Set<IGUID>> usersToRoles;
     private Role activeRole;
 
     private SOSRMS() {
-        roles = new LinkedHashMap<>();
+        roles = new HashMap<>();
+        usersToRoles = new HashMap<>();
     }
 
     private static SOSRMS instance;
@@ -31,13 +33,18 @@ public class SOSRMS implements RMS {
     }
 
     @Override
-    public void add(Role role) {
+    public void addRole(Role role) {
         roles.put(role.guid(), role);
     }
 
     @Override
-    public Role get(IGUID guid) {
-        return roles.get(guid);
+    public Role getRole(IGUID roleGUID) {
+        return roles.get(roleGUID);
+    }
+
+    @Override
+    public Role[] getRoles(IGUID userGUID) {
+        return new Role[0];
     }
 
     @Override

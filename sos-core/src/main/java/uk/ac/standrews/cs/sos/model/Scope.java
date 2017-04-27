@@ -18,6 +18,8 @@ public interface Scope {
      * Returns the nodes available from within this scope
      * if the type is RESTRICTED
      *
+     * NOTE: will use the NDS to actually find the nodes
+     *
      * @return
      */
     Node[] nodes();

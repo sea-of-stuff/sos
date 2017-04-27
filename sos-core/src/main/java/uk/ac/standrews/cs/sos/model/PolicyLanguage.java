@@ -32,7 +32,7 @@ public interface PolicyLanguage {
 
     void decompress(Manifest manifest);
 
-    Node getNode(IGUID guid);
+    Node getNode(IGUID guid); // NOTE - Limited by the scope
 
     Set<Node> getNodes(int type);
 

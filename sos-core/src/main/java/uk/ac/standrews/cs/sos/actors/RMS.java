@@ -15,15 +15,22 @@ public interface RMS {
      *
      * @param role
      */
-    void add(Role role);
+    void addRole(Role role);
 
     /**
      * Get the role with the specified GUID
      *
-     * @param guid
+     * @param roleGUID
      * @return
      */
-    Role get(IGUID guid);
+    Role getRole(IGUID roleGUID);
+
+    /**
+     *
+     * @param userGUID
+     * @return
+     */
+    Role[] getRoles(IGUID userGUID);
 
     /**
      * Returns the active role for this node

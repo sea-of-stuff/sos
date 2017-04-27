@@ -27,6 +27,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
 /**
  * TODO - manage scope too
+ * TODO - should have a default scope
  * TODO - add concept of persistence
  * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
  *
@@ -40,6 +41,8 @@ public class SOSCMS implements CMS {
 
     // Maps the context to the versions belonging to it
     private HashMap<IGUID, List<IGUID>> mappings;
+    // Assign a context to a scope
+    private HashMap<IGUID, IGUID> contextsToScopes;
     // TODO - map of versions that failed to pass tests. Needed to avoid calculating the predicate again
 
     // This executor service will be used to schedule any background tasks
@@ -78,6 +81,7 @@ public class SOSCMS implements CMS {
         contextsByPredicateType.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
 
         mappings = new HashMap<>();
+        contextsToScopes = new HashMap<>();
     }
 
     @Override
