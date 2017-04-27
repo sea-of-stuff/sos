@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
@@ -25,6 +24,7 @@ import java.security.PublicKey;
 @JsonDeserialize(using = RoleDeserializer.class)
 public class RoleImpl implements Role { // TODO - this will take over the identity class
 
+    private IGUID userGUID;
     private IGUID roleGUID;
     private String name;
 
@@ -48,8 +48,9 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
      * @throws KeyLoadedException
      */
     public RoleImpl(User user, IGUID guid, String name) throws KeyGenerationException, KeyLoadedException {
-        this.name = name;
+        this.userGUID = user.guid();
         this.roleGUID = guid;
+        this.name = name;
 
         signature = new SignatureCrypto();
 
@@ -62,23 +63,8 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
         }
 
         this.pubkey = signature.getPublicKey();
-    }
 
-    /**
-     * TODO - is this constructor needed?
-     *
-     * Role with given public key is created.
-     * The role is not persisted into memory.
-     *
-     * @param pubkey
-     * @param name
-     */
-    public RoleImpl(PublicKey pubkey, String name) {
-        this.pubkey = pubkey;
-        this.name = name;
-
-        roleGUID = GUIDFactory.generateRandomGUID();
-        signature = new SignatureCrypto(pubkey);
+        // TODO - generate SIGNATURE for this role using the user
     }
 
     @Override
