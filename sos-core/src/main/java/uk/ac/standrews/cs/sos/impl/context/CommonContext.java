@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.model.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class ContextImpl implements Context {
+public abstract class CommonContext implements Context {
 
     private IGUID guid;
     private String name;

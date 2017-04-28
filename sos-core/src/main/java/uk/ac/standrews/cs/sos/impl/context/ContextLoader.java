@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * TODO - change the context loader to
+ * 1- create the java class for the context from the json
+ * 2- load any maven dependencies
+ * 3- load the class
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextLoader {
@@ -45,6 +50,7 @@ public class ContextLoader {
             ClassLoader cl = new URLClassLoader(urls);
             Class cls = cl.loadClass(CLASS_PACKAGE + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
+
         } catch (MalformedURLException | ClassNotFoundException e) {
             e.printStackTrace();
             throw new ContextLoaderException("Unable to load context for class: " + className);

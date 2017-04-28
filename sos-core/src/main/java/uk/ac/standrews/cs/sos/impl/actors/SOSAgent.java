@@ -113,24 +113,11 @@ public class SOSAgent implements Agent {
             }
 
             return manifest;
-        } catch (StorageException e) {
+        } catch (StorageException | ManifestPersistException | IOException | ManifestNotMadeException e) {
             e.printStackTrace();
-        } catch (ManifestPersistException e) {
-            e.printStackTrace();
-        } catch (ManifestNotMadeException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace(); // TODO - throw proper exception
         }
 
         return null;
-    }
-
-    @Override
-    public InputStream getData(Version version) throws AtomNotFoundException {
-
-        IGUID content = version.getContentGUID();
-        return storage.getAtomContent(content);
     }
 
     @Override
@@ -149,6 +136,13 @@ public class SOSAgent implements Agent {
         }
 
         return null;
+    }
+
+    @Override
+    public InputStream getData(Version version) throws AtomNotFoundException {
+
+        IGUID content = version.getContentGUID();
+        return storage.getAtomContent(content);
     }
 
     /**

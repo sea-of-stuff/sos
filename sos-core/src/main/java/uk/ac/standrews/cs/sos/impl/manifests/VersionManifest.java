@@ -171,7 +171,7 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        Role role = SOSRMS.instance().get(signer);
+        Role role = SOSRMS.instance().getRole(signer);
 
         if (role == null) {
             return "";
