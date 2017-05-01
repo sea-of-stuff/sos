@@ -37,6 +37,11 @@ public class ContextLoaderTest extends SetUpTest {
 
     }
 
+    @Test
+    public void contextWithPredicate() {
+        // TODO
+    }
+
 //    @Test
 //    public void basicClosureLoaderTest() throws ContextLoaderException {
 //

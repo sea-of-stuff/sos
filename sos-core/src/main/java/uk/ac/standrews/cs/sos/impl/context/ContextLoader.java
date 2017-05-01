@@ -18,6 +18,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -30,6 +32,42 @@ public class ContextLoader {
     private static final String TEST_RESOURCES_PATH = "src/test/resources/contexts/";
     private static final String TEST_TARGET_PATH = "target/classes/";
 
+    /**
+     * Load multiple contexts at path
+     *
+     * @param path
+     * @throws ContextLoaderException
+     */
+    public static void Load(String path) throws ContextLoaderException {
+
+        ArrayList<String> notLoaded = new ArrayList<>();
+
+        File folder = new File(path);
+        File[] files = folder.listFiles();
+        for(File f: files != null ? files : new File[0]) {
+            if (f.isFile()) {
+
+                try {
+                    Load(path);
+                } catch (ContextLoaderException e) {
+                    notLoaded.add(f.getName());
+                }
+
+            }
+        }
+
+        if (!notLoaded.isEmpty()) {
+            throw new ContextLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
+        }
+
+    }
+
+    /**
+     * Load the context at the given path
+     *
+     * @param path
+     * @throws ContextLoaderException
+     */
     public static void LoadContext(String path) throws ContextLoaderException {
 
         try {
@@ -43,6 +81,12 @@ public class ContextLoader {
         }
     }
 
+    /**
+     * Load a context given a context JSON structure
+     *
+     * @param node
+     * @throws ContextLoaderException
+     */
     public static void LoadContext(JsonNode node) throws ContextLoaderException {
 
         try {
@@ -77,9 +121,7 @@ public class ContextLoader {
             } else {
 
                 for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-                    System.out.format("Error on line %d in %s%n",
-                            diagnostic.getLineNumber(),
-                            diagnostic.getSource().toUri());
+                    SOS_LOG.log(LEVEL.ERROR, "Error on line " + diagnostic.getLineNumber() + " in " + diagnostic.getSource().toUri());
                 }
             }
 
@@ -118,6 +160,13 @@ public class ContextLoader {
 
     }
 
+    /**
+     * Creates context instance
+     *
+     * @param className
+     * @return
+     * @throws ContextLoaderException
+     */
     public static Context Instance(String className) throws ContextLoaderException {
 
         try {
@@ -131,63 +180,26 @@ public class ContextLoader {
     }
 
     /**
-     * @deprecated
+     * Creates Context instance with constructor params
      *
      * @param agent
      * @param className
      * @return
      * @throws ContextLoaderException
      */
-    public static Context Instance(Agent agent, String className) throws ContextLoaderException {
+    public static Context Instance(String className, Agent agent) throws ContextLoaderException {
 
         try {
             Class<?> clazz = Class.forName(ContextBuilder.PACKAGE + "." + className);
 
-            Class[] cArg = new Class[2];
+            Class[] cArg = new Class[1];
             cArg[0] = SOSAgent.class;
-            cArg[1] = String.class;
 
-            return (Context) clazz.getDeclaredConstructor(cArg).newInstance(agent, className);
+            return (Context) clazz.getDeclaredConstructor(cArg).newInstance(agent);
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException |
                 NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);
         }
     }
 
-//    /**
-//     *
-//     * @deprecated
-//     *
-//     * Load multiple contexts at path
-//     * @param path
-//     * @throws ContextLoaderException
-//     */
-//    public static void Load(String path) throws ContextLoaderException {
-//
-//        ArrayList<String> notLoaded = new ArrayList<>();
-//
-//        File folder = new File(path);
-//        File[] files = folder.listFiles();
-//        for(File f:files) {
-//            if (f.isFile()) {
-//                String name = f.getName();
-//                if (name.length() <= 5) {
-//                    notLoaded.add(name);
-//                    continue;
-//                }
-//
-//                name = name.substring(0, name.length() - 5); // Ignore ".java" extension in filename
-//                try {
-//                    Load(path, name);
-//                } catch (ContextLoaderException e) {
-//                    notLoaded.add(f.getName());
-//                }
-//            }
-//        }
-//
-//        if (!notLoaded.isEmpty()) {
-//            throw new ContextLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
-//        }
-//
-//    }
 }
