@@ -90,7 +90,7 @@ public class ContextLoader {
     public static void LoadContext(JsonNode node) throws ContextLoaderException {
 
         try {
-            String clazzString = ContextBuilder.ConstructClass(node);
+            String clazzString = ContextClassBuilder.ConstructClass(node);
 
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
@@ -114,7 +114,7 @@ public class ContextLoader {
 
             if (task.call()) {
 
-                String path = TEST_TARGET_PATH + ContextBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
+                String path = TEST_TARGET_PATH + ContextClassBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
                 File dir = new File(path).getParentFile();
                 Load(dir, clazzName);
 
@@ -151,7 +151,7 @@ public class ContextLoader {
 
             // Create a new class loader with the directory
             ClassLoader cl = new URLClassLoader(urls);
-            Class cls = cl.loadClass(ContextBuilder.PACKAGE + "." + className);
+            Class cls = cl.loadClass(ContextClassBuilder.PACKAGE + "." + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
 
         } catch (MalformedURLException | ClassNotFoundException e) {
@@ -170,7 +170,7 @@ public class ContextLoader {
     public static Context Instance(String className) throws ContextLoaderException {
 
         try {
-            Class<?> clazz = Class.forName(ContextBuilder.PACKAGE + "." + className);
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
 
             Context context = (Context) clazz.newInstance();
             return context.build();
@@ -190,7 +190,7 @@ public class ContextLoader {
     public static Context Instance(String className, Agent agent) throws ContextLoaderException {
 
         try {
-            Class<?> clazz = Class.forName(ContextBuilder.PACKAGE + "." + className);
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
 
             Class[] cArg = new Class[1];
             cArg[0] = SOSAgent.class;

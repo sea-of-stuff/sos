@@ -11,7 +11,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextBuilderTest {
+public class ContextClassBuilderTest {
 
     @Test
     public void basicClassConstruction() throws IOException {
@@ -23,7 +23,7 @@ public class ContextBuilderTest {
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-        String clazzString = ContextBuilder.ConstructClass(node);
+        String clazzString = ContextClassBuilder.ConstructClass(node);
 
         String MATCHING_CLAZZ =
                 "package uk.ac.standrews.cs.sos.impl.context\n" +
