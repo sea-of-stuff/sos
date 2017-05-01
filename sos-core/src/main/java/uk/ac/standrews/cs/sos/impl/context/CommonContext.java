@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.model.*;
 public abstract class CommonContext implements Context {
 
     private IGUID guid;
-    private String name;
+    protected String name;
     protected SOSPredicate predicate;
     protected Node[] sources;
 

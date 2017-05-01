@@ -10,4 +10,8 @@ public class ContextLoaderException extends SOSException {
     public ContextLoaderException(String message) {
         super(message);
     }
+
+    public ContextLoaderException(Throwable throwable) {
+        super(throwable);
+    }
 }

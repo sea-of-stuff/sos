@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-app/app.iml" filepath="$PROJECT_DIR$/sos-app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-configuration/sos-configuration.iml" filepath="$PROJECT_DIR$/sos-configuration/sos-configuration.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-core/core.iml" filepath="$PROJECT_DIR$/sos-core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-experiments/sos-experiments.iml" filepath="$PROJECT_DIR$/sos-experiments/sos-experiments.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-filesystem/sos-filesystem.iml" filepath="$PROJECT_DIR$/sos-filesystem/sos-filesystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-rest/rest.iml" filepath="$PROJECT_DIR$/sos-rest/rest.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" filepath="$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-configuration/sos-configuration.iml" filepath="$PROJECT_DIR$/sos-configuration/sos-configuration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-experiments/sos-experiments.iml" filepath="$PROJECT_DIR$/sos-experiments/sos-experiments.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sos-filesystem/sos-filesystem.iml" filepath="$PROJECT_DIR$/sos-filesystem/sos-filesystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-web-archive/sos-web-archive.iml" filepath="$PROJECT_DIR$/sos-web-archive/sos-web-archive.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-ui/web-ui.iml" filepath="$PROJECT_DIR$/web-ui/web-ui.iml" />
     </modules>
