@@ -35,21 +35,19 @@ public class SOSAgent implements Agent {
     private Storage storage;
     private DDS dds;
     private MMS mms;
-    private CMS cms;
     private RMS rms;
 
-    private SOSAgent(Storage storage, DDS dds, MMS mms, CMS cms, RMS rms) {
+    private SOSAgent(Storage storage, DDS dds, MMS mms, RMS rms) {
         this.storage = storage;
         this.dds = dds;
         this.mms = mms;
-        this.cms = cms;
         this.rms = rms;
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, CMS cms, RMS rms) {
+    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, RMS rms) {
         if (instance == null) {
-            instance = new SOSAgent(storage, dds, mms, cms, rms);
+            instance = new SOSAgent(storage, dds, mms, rms);
         }
 
         return instance;
@@ -90,8 +88,6 @@ public class SOSAgent implements Agent {
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, rms.active());
         addManifest(manifest);
 
-        cms.runPredicates(PredicateComputationType.AFTER_STORING, manifest);
-
         return manifest;
     }
 
@@ -101,16 +97,10 @@ public class SOSAgent implements Agent {
         // FIXME - we are consuming the inputstream before storing the data. Can we then reuse the stream?
         try (InputStream stream = versionBuilder.getAtomBuilder().getInputStream()) {
 
-            Set<IGUID> contexts = cms.runPredicates(PredicateComputationType.BEFORE_STORING, stream);
-
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());
 
             Version manifest = addVersion(versionBuilder);
-
-            for(IGUID context:contexts) {
-                cms.addMapping(context, manifest.guid());
-            }
 
             return manifest;
         } catch (StorageException | ManifestPersistException | IOException | ManifestNotMadeException e) {

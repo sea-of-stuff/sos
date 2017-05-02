@@ -90,7 +90,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initNDS();
         loadBootstrapNodes(Builder.bootstrapNodes);
         registerNode(configuration.getNodePort());
-
         initSOSInstances();
         cacheFlusher();
 
@@ -180,7 +179,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cms = new SOSCMS(localStorage, dds);
         rms = SOSRMS.instance();
 
-        agent = SOSAgent.instance(storage, dds, mms, cms, rms);
+        agent = SOSAgent.instance(storage, dds, mms, rms);
     }
 
     private void cacheFlusher() {

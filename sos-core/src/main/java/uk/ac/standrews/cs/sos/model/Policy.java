@@ -33,11 +33,4 @@ public interface Policy {
      */
     boolean check();
 
-    /**
-     * Define when to run the policy
-     *
-     * @return
-     */
-    PolicyComputationType computationType();
-
 }

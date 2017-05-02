@@ -12,16 +12,23 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Scope;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.storage.interfaces.Directory;
 import uk.ac.standrews.cs.storage.interfaces.File;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
@@ -33,17 +40,31 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSCMS implements CMS {
+public class SOSCMS implements CMS, Serializable {
 
-    private LocalStorage localStorage;
-    private DDS dds;
-    private HashMap<PredicateComputationType, List<IGUID>> contextsByPredicateType;
+    private transient LocalStorage localStorage;
+    private transient DDS dds;
+
+    // TODO - separate Data structures from CMS
+
+    // GUID --> Context
+    private transient HashMap<IGUID, Context> contexts;
+
+    // GUID --> Scope
+    private transient HashMap<IGUID, Scope> scopes;
+
+    // Assign a context to a scope
+    // Context GUID --> Scope GUID
+    private transient HashMap<IGUID, IGUID> contextsToScopes;
 
     // Maps the context to the versions belonging to it
-    private HashMap<IGUID, List<IGUID>> mappings;
-    // Assign a context to a scope
-    private HashMap<IGUID, IGUID> contextsToScopes;
-    // TODO - map of versions that failed to pass tests. Needed to avoid calculating the predicate again
+    private transient HashMap<IGUID, List<CMSRow>> mappings;
+    private class CMSRow {
+        IGUID content;
+        boolean predicateResult;
+        long timestamp; // Time when the predicate was run for this content
+        boolean policySatisfied; // Whether the policy has been satisfied or not
+    }
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
@@ -74,14 +95,11 @@ public class SOSCMS implements CMS {
     }
 
     private void initialiseMappings() {
-        contextsByPredicateType = new HashMap<>();
-        contextsByPredicateType.put(PredicateComputationType.BEFORE_STORING, new LinkedList<>());
-        contextsByPredicateType.put(PredicateComputationType.AFTER_STORING, new LinkedList<>());
-        contextsByPredicateType.put(PredicateComputationType.PERIODICALLY, new LinkedList<>());
-        contextsByPredicateType.put(PredicateComputationType.AFTER_READING, new LinkedList<>());
 
-        mappings = new HashMap<>();
+        contexts = new HashMap<>();
+        scopes = new HashMap<>();
         contextsToScopes = new HashMap<>();
+        mappings = new HashMap<>();
     }
 
     @Override
@@ -92,8 +110,6 @@ public class SOSCMS implements CMS {
 
             dds.addManifest(context);
             dds.addManifest(version);
-
-            contextsByPredicateType.get(context.predicate().predicateComputationType()).add(version.guid());
 
             return version;
         } catch (ManifestPersistException e) {
@@ -112,25 +128,22 @@ public class SOSCMS implements CMS {
         }
     }
 
-    @Override
-    public Iterator<IGUID> getContexts(PredicateComputationType type) {
-
-        return contextsByPredicateType.get(type).iterator();
+    private Iterator<IGUID> getContexts() {
+        return contexts.keySet().iterator();
     }
 
-    @Override
     public void addMapping(IGUID context, IGUID version) {
-        mappings.get(context).add(version);
-
-        // TODO - persist
+        CMSRow content = new CMSRow();
+        content.content = version;
+        mappings.get(context).add(content);
     }
 
-    @Override
-    public Set<IGUID> runPredicates(PredicateComputationType type, Version version) {
+
+    public Set<IGUID> runPredicates(Version version) {
 
         Set<IGUID> contexts = new HashSet<>();
 
-        Iterator<IGUID> it = getContexts(type);
+        Iterator<IGUID> it = getContexts();
         while (it.hasNext()) {
             IGUID v = it.next();
 
@@ -139,12 +152,6 @@ public class SOSCMS implements CMS {
                 runPredicate(v, context, version);
 
                 contexts.add(context.guid()); // FIXME - version of context?
-
-                for(Policy policy:context.policies()) {
-                    if (policy.computationType() == PolicyComputationType.AFTER_PREDICATE) {
-                        policy.run(version);
-                    }
-                }
 
             } catch (ContextNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
@@ -156,21 +163,17 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Set<IGUID> runPredicates(PredicateComputationType type, InputStream data) {
-
-        Set<IGUID> contexts = new HashSet<>();
-
-        return contexts;
-    }
-
-    @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
-        List<IGUID> contents = mappings.get(context);
+        List<CMSRow> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptyIterator();
         } else {
-            return contents.iterator();
+            // Remap the list of CMSRow items to an iterator of IGUID
+            return contents.stream()
+                    .map(c -> c.content)
+                    .collect(Collectors.toList())
+                    .iterator();
         }
 
     }
@@ -229,7 +232,7 @@ public class SOSCMS implements CMS {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
 
-            Iterator<IGUID> it = getContexts(PredicateComputationType.PERIODICALLY);
+            Iterator<IGUID> it = getContexts();
             while (it.hasNext()) {
                 IGUID v = it.next();
 
@@ -280,4 +283,34 @@ public class SOSCMS implements CMS {
         }, 1, 10, TimeUnit.MINUTES);
 
     }
+
+    ///////////////////
+    // Serialization //
+    ///////////////////
+
+    private void persist(File file) throws IOException {
+        // TODO
+    }
+
+    public static SOSCMS load(File file) throws IOException, ClassNotFoundException {
+
+        // TODO
+
+        return null;
+    }
+
+    // This method defines how the cache is serialised
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+
+        // TODO
+    }
+
+    // This method defines how the cache is de-serialised
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        // TODO
+    }
+
 }

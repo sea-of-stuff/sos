@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.PredicateComputationType;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
 
 import java.util.Objects;
@@ -16,11 +15,6 @@ public class SOSPredicateImpl implements SOSPredicate {
 
     public SOSPredicateImpl(Predicate<IGUID> predicate) {
         this.predicate = predicate;
-    }
-
-    @Override
-    public PredicateComputationType predicateComputationType() {
-        return PredicateComputationType.AFTER_STORING;
     }
 
     @Override

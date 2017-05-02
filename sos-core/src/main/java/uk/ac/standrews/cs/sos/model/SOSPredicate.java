@@ -10,12 +10,6 @@ import java.util.function.Predicate;
 public interface SOSPredicate {
 
     /**
-     * Defines when the predicate of the context should be run
-     * @return
-     */
-    PredicateComputationType predicateComputationType();
-
-    /**
      * Test the entity matching this GUID with the predicate
      *
      * @param guid

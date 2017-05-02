@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Policy;
-import uk.ac.standrews.cs.sos.model.PolicyComputationType;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -52,8 +51,4 @@ public class ReplicationPolicy implements Policy {
         return false;
     }
 
-    @Override
-    public PolicyComputationType computationType() {
-        return PolicyComputationType.PERIODICALLY;
-    }
 }

@@ -24,9 +24,9 @@ public interface Scope {
      */
     Node[] nodes();
 
-    TYPES type();
+    TYPE type();
 
-    enum TYPES {
+    enum TYPE {
         ANY, RESTRICTED
     }
 }
