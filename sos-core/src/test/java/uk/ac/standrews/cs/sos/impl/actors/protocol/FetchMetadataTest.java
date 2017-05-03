@@ -34,16 +34,36 @@ public class FetchMetadataTest {
 
     private static final String GUID_METADATA = "02f80108b23125787b8bccc2b80ec623e2dffcd6";
     private static final String TEST_METADATA =
-            " {\n" +
-                    "   \"GUID\": \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
-                    "   \"Properties\": [\n" +
-                    "     { \"X-Parsed-By\": \"org.apache.tika.parser.DefaultParser\" },\n" +
-                    "     { \"Content-Encoding\": \"null\" },\n" +
-                    "     { \"Size\": 26 },\n" +
-                    "     { \"Timestamp\": 1484736105 },\n" +
-                    "     { \"Content-Type\": \"text/plain; charset=ISO-8859-1\" }\n" +
-                    "   ]\n" +
-                    " }";
+            "{\n" +
+                    "    \"GUID\": \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
+                    "    \"Properties\": [\n" +
+                    "        {\n" +
+                    "            \"Key\": \"X-Parsed-By\",\n" +
+                    "            \"Type\": \"String\",\n" +
+                    "            \"Value\": \"org.apache.tika.parser.DefaultParser\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"Key\": \"Content-Encoding\",\n" +
+                    "            \"Type\": \"String\",\n" +
+                    "            \"Value\": \"null\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"Key\": \"Size\",\n" +
+                    "            \"Type\": \"int\",\n" +
+                    "            \"Value\": 26\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"Key\": \"Timestamp\",\n" +
+                    "            \"Type\": \"int\",\n" +
+                    "            \"Value\": 1484736105\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"Key\": \"Content-Type\",\n" +
+                    "            \"Type\": \"String\",\n" +
+                    "            \"Value\": \"text/plain; charset=ISO-8859-1\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}";
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -71,7 +91,7 @@ public class FetchMetadataTest {
         mockServer.stop();
     }
 
-    @Test
+    @Test(timeOut = 10000)
     public void basicMetadataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),

@@ -26,12 +26,18 @@ public class ContextClassBuilderTest {
         String clazzString = ContextClassBuilder.ConstructClass(node);
 
         String MATCHING_CLAZZ =
-                "package uk.ac.standrews.cs.sos.impl.context\n" +
+                "package uk.ac.standrews.cs.sos.impl.context;\n" +
                         "\n" +
                         "import uk.ac.standrews.cs.sos.model.*;\n" +
+                        "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
+                        "import uk.ac.standrews.cs.LEVEL;\n" +
+                        "import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;\n" +
+                        "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
                         "\n" +
                         "public class Test extends CommonContext {\n" +
-                        "public Test () {\n" +
+                        "\n" +
+                        "public Test ( ) {  \n" +
+                        "name = \"Test\";\n" +
                         "}\n" +
                         "\n" +
                         "@Override\n" +
@@ -41,7 +47,7 @@ public class ContextClassBuilderTest {
                         "\n" +
                         "    return new SOSPredicateImpl(p -> {\n" +
                         "        try {\n" +
-                        "            _PREDICATE_TAG_\n" +
+                        "            \n" +
                         "        } catch (Exception e) {\n" +
                         "            SOS_LOG.log(LEVEL.ERROR, \"Predicate could not be run\");\n" +
                         "        }\n" +
@@ -52,7 +58,7 @@ public class ContextClassBuilderTest {
                         "\n" +
                         "@Override\n" +
                         "public Policy[] policies() {\n" +
-                        "        return new Policy[]{ _POLICIES_ }\n" +
+                        "        return new Policy[]{  };\n" +
                         "}\n" +
                         "\n" +
                         "}\n";

@@ -47,11 +47,17 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
 
     private Object getObject(JsonNode element, String type) {
 
-        switch(type) {
+        switch(type.toUpperCase()) {
             case "INT":
                 return element.asInt();
             case "STRING":
                 return element.asText();
+            case "GUID":
+                try {
+                    return GUIDFactory.recreateGUID(element.asText());
+                } catch (GUIDGenerationException e) {
+                    return null;
+                }
         }
 
         return null;
