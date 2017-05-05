@@ -125,7 +125,7 @@ public class LocalNodesDirectory {
 
     private Set<Node> getNodes(Predicate<Node> predicate, int limit) {
 
-        Stream<Node> nodesStream = knownNodes.parallelStream()
+        Stream<Node> nodesStream = knownNodes.stream()
                 .filter(predicate)
                 .distinct();
 
@@ -141,7 +141,7 @@ public class LocalNodesDirectory {
 
     private Iterator<Node> getNodesIterator(Predicate<Node> predicate) {
 
-        return knownNodes.parallelStream()
+        return knownNodes.stream()
                 .filter(predicate)
                 .filter(n -> !n.getNodeGUID().equals(localNode.getNodeGUID())) // Skip any references to local node
                 .distinct()

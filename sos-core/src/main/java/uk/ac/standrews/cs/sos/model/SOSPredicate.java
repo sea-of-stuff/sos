@@ -9,6 +9,8 @@ import java.util.function.Predicate;
  */
 public interface SOSPredicate {
 
+    long max_age();
+
     /**
      * Test the entity matching this GUID with the predicate
      *

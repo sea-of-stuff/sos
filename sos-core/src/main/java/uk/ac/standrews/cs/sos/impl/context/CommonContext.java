@@ -13,7 +13,7 @@ public abstract class CommonContext implements Context {
     private IGUID guid;
     protected String name;
     protected SOSPredicate predicate;
-    protected Node[] sources;
+    protected Node[] nodes;
 
     private static int EMPTY_ARRAY = 0;
 
@@ -40,7 +40,7 @@ public abstract class CommonContext implements Context {
 
     @Override
     public Context setSources(Node[] nodes) {
-        sources = nodes;
+        this.nodes = nodes;
         return this;
     }
 

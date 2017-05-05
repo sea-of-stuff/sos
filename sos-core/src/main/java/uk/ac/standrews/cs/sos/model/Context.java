@@ -17,6 +17,7 @@ package uk.ac.standrews.cs.sos.model;
  *     "Name" : "Simone's replication context",
  *     "Predicate" : CODE,
  *     "Policies" : CODE,
+ *     "Sources" : [ Where to get the data from ]
  *     "Where" : [ List of nodes where to spawn and run this context ]
  * }
  *

@@ -2,6 +2,9 @@ package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
+
+import java.util.Set;
 
 /**
  * Role Management Service
@@ -9,6 +12,10 @@ import uk.ac.standrews.cs.sos.model.Role;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface RMS {
+
+    void addUser(User user);
+
+    User getUser(IGUID userGUID);
 
     /**
      * Add the specified role to the directory of roles
@@ -30,7 +37,7 @@ public interface RMS {
      * @param userGUID
      * @return
      */
-    Role[] getRoles(IGUID userGUID);
+    Set<Role> getRoles(IGUID userGUID);
 
     /**
      * Returns the active role for this node

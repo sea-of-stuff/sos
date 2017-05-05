@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
@@ -58,9 +57,8 @@ public class SOSCMS implements CMS, Serializable {
     private transient HashMap<IGUID, IGUID> contextsToScopes;
 
     // Maps the context to the versions belonging to it
-    private transient HashMap<IGUID, List<CMSRow>> mappings;
+    private transient HashMap<IGUID, HashMap<IGUID, CMSRow>> mappings;
     private class CMSRow {
-        IGUID content;
         boolean predicateResult;
         long timestamp; // Time when the predicate was run for this content
         boolean policySatisfied; // Whether the policy has been satisfied or not
@@ -133,11 +131,13 @@ public class SOSCMS implements CMS, Serializable {
     }
 
     public void addMapping(IGUID context, IGUID version) {
-        CMSRow content = new CMSRow();
-        content.content = version;
-        mappings.get(context).add(content);
-    }
 
+        if (!mappings.containsKey(context)) {
+            mappings.put(context, new HashMap<>());
+        }
+
+        mappings.get(context).put(version, new CMSRow());
+    }
 
     public Set<IGUID> runPredicates(Version version) {
 
@@ -165,15 +165,11 @@ public class SOSCMS implements CMS, Serializable {
     @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
-        List<CMSRow> contents = mappings.get(context);
+        HashMap<IGUID, CMSRow> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptyIterator();
         } else {
-            // Remap the list of CMSRow items to an iterator of IGUID
-            return contents.stream()
-                    .map(c -> c.content)
-                    .collect(Collectors.toList())
-                    .iterator();
+            return contents.keySet().iterator();
         }
 
     }
@@ -200,13 +196,14 @@ public class SOSCMS implements CMS, Serializable {
      * Periodically get data (or references?) from other nodes
      * as specified by the sources of a context
      *
-     * It should be possible to "remove" content that is not relevant anymore?
-     *
      */
     private void getData() {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Get data from other nodes");
+
+            // TODO - iterate over context
+            // TODO - for each context, context sources
 
         }, 1, 1, TimeUnit.MINUTES);
     }
@@ -221,6 +218,7 @@ public class SOSCMS implements CMS, Serializable {
 
             // Get contexts that have to be spawned
             // spawn contexts
+
         }, 1, 1, TimeUnit.MINUTES);
     }
 
@@ -234,16 +232,16 @@ public class SOSCMS implements CMS, Serializable {
 
             Iterator<IGUID> it = getContexts();
             while (it.hasNext()) {
-                IGUID v = it.next();
+                IGUID contextVersion = it.next();
 
                 try {
-                    Context context = getContext(v);
-                    for(Version version : dds.getAllVersions()) { // TODO - get only CURRENT VERSIONS?
-                        runPredicate(v, context, version);
+                    Context context = getContext(contextVersion);
+                    for(Version version : dds.getAllVersions()) {
+                        runPredicate(contextVersion, context, version);
                     }
 
                 } catch (ContextNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + contextVersion);
                 }
 
             }
@@ -255,8 +253,14 @@ public class SOSCMS implements CMS, Serializable {
 
         IGUID versionGUID = version.guid();
 
-        boolean alreadyProcessed = mappings.get(contextVersion).contains(versionGUID);
-        // TODO - check against MAX-AGE attribute
+        boolean alreadyProcessed = mappings.get(contextVersion).containsKey(versionGUID);
+        if (alreadyProcessed) {
+            CMSRow row = mappings.get(contextVersion).get(versionGUID);
+            long maxage = context.predicate().max_age();
+
+            // TODO - diff timetamp, maxage, now
+        }
+
         boolean retval = alreadyProcessed;
         if (!alreadyProcessed) {
 
