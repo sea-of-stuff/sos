@@ -37,6 +37,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  * TODO - add concept of persistence
  * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
  *
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSCMS implements CMS, Serializable {
@@ -89,7 +90,6 @@ public class SOSCMS implements CMS, Serializable {
         spawnContexts();
         runPredicates();
         runPolicies();
-        checkPolicies();
     }
 
     private void initialiseMappings() {
@@ -247,22 +247,26 @@ public class SOSCMS implements CMS, Serializable {
             }
 
         }, 1, 1, TimeUnit.MINUTES);
+
     }
 
     private boolean runPredicate(IGUID contextVersion, Context context, Version version) {
 
         IGUID versionGUID = version.guid();
 
-        boolean alreadyProcessed = mappings.get(contextVersion).containsKey(versionGUID);
-        if (alreadyProcessed) {
+        boolean retval = false;
+        boolean alreadyRun = mappings.get(contextVersion).containsKey(versionGUID);
+
+        if (alreadyRun) {
             CMSRow row = mappings.get(contextVersion).get(versionGUID);
+            retval = row.predicateResult;
+
             long maxage = context.predicate().max_age();
 
             // TODO - diff timetamp, maxage, now
         }
 
-        boolean retval = alreadyProcessed;
-        if (!alreadyProcessed) {
+        if (!alreadyRun /* and over maxage */ ) {
 
             boolean passed = context.predicate().test(versionGUID);
             retval = passed;
@@ -275,17 +279,11 @@ public class SOSCMS implements CMS, Serializable {
     }
 
     private void runPolicies() {
-        // TODO - how does this differ from checkPolicies() ?
-    }
-
-    private void checkPolicies() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Checking that policies are satisfied. Otherwise, invalidate and re-run the policies");
-            // TODO - check policies are satisfied. if not, attempt to re-satisfy them
+            SOS_LOG.log(LEVEL.INFO, "Running policies");
 
         }, 1, 10, TimeUnit.MINUTES);
-
     }
 
     ///////////////////

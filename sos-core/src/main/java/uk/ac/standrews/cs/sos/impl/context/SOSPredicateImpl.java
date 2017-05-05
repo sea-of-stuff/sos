@@ -18,6 +18,11 @@ public class SOSPredicateImpl implements SOSPredicate {
     }
 
     @Override
+    public long max_age() {
+        return 0;
+    }
+
+    @Override
     public boolean test(IGUID guid) {
         return predicate.test(guid);
     }
