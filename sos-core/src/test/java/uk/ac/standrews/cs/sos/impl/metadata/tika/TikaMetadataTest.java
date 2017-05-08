@@ -2,10 +2,10 @@ package uk.ac.standrews.cs.sos.impl.metadata.tika;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.data.StringData;
 
 import java.io.IOException;
 

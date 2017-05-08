@@ -2,13 +2,13 @@ package uk.ac.standrews.cs.sos.impl.manifests.atom;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.util.*;
@@ -102,7 +102,7 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
     }
 
     @Override
-    public void persist(File file) throws IOException {
+    public void persist(IFile file) throws IOException {
         if (!file.exists()) {
             try {
                 file.persist();
@@ -119,7 +119,7 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         ostream.close();
     }
 
-    public static LocationsIndex load(File file) throws IOException, ClassNotFoundException {
+    public static LocationsIndex load(IFile file) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
         BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));

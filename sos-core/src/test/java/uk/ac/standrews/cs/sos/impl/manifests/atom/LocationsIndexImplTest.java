@@ -3,6 +3,13 @@ package uk.ac.standrews.cs.sos.impl.manifests.atom;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
@@ -10,11 +17,6 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -55,7 +57,14 @@ public class LocationsIndexImplTest {
 
     @Test
     public void persistLocationsIndexTest() throws StorageException, DataStorageException, URISyntaxException, IOException, ClassNotFoundException {
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
+
+        String root = System.getProperty("user.home") + "/sos/";
+
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+        LocalStorage localStorage = new LocalStorage(stor);
 
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
@@ -64,8 +73,8 @@ public class LocationsIndexImplTest {
 
         locationsIndex.addLocation(guid, locationBundle);
 
-        Directory cachesDir = localStorage.getNodeDirectory();
-        File file = localStorage.createFile(cachesDir, "locations.index");
+        IDirectory cachesDir = localStorage.getNodeDirectory();
+        IFile file = localStorage.createFile(cachesDir, "locations.index");
         locationsIndex.persist(file);
 
         LocationsIndex locationsIndexPersisted = LocationsIndexImpl.load(file);

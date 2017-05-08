@@ -1,6 +1,12 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.castore.exceptions.DataException;
+import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
@@ -13,17 +19,11 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.data.StringData;
-import uk.ac.standrews.cs.storage.exceptions.DataException;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.util.HashSet;
 
 /**
- * Directory for the manifests stored locally to this node
+ * IDirectory for the manifests stored locally to this node
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -83,7 +83,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     public void flush() {}
 
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
-        File manifestFile = getManifestFile(guid);
+        IFile manifestFile = getManifestFile(guid);
 
         return ManifestsUtils.ManifestFromFile(manifestFile);
     }
@@ -117,8 +117,8 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws ManifestsDirectoryException, ManifestNotFoundException {
-        File manifestFile = getManifestFile(manifestFileGUID);
-        File backupFile = backupManifest(manifest);
+        IFile manifestFile = getManifestFile(manifestFileGUID);
+        IFile backupFile = backupManifest(manifest);
         FileHelper.DeleteFile(manifestFile);
 
         saveToFile(manifest);
@@ -130,9 +130,9 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         IGUID guid = manifest.guid();
 
         try {
-            File manifestFile = getManifestFile(guid);
+            IFile manifestFile = getManifestFile(guid);
 
-            File backupFile = backupManifest(existingManifest);
+            IFile backupFile = backupManifest(existingManifest);
 
             if (!existingManifest.equals(manifest)) {
                 manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
@@ -148,14 +148,14 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
     }
 
-    private File backupManifest(Manifest manifest) throws ManifestsDirectoryException {
+    private IFile backupManifest(Manifest manifest) throws ManifestsDirectoryException {
 
         try {
             IGUID manifestGUID = manifest.guid();
-            File manifestFileToBackup = getManifestFile(manifestGUID);
+            IFile manifestFileToBackup = getManifestFile(manifestGUID);
 
-            Directory manifestsDirectory = localStorage.getManifestsDirectory();
-            File backupManifest = localStorage.createFile(manifestsDirectory,
+            IDirectory manifestsDirectory = localStorage.getManifestsDirectory();
+            IFile backupManifest = localStorage.createFile(manifestsDirectory,
                     manifestFileToBackup.getName() + BACKUP_EXTENSION,
                     manifestFileToBackup.getData());
             backupManifest.persist();
@@ -171,20 +171,20 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
         try {
             String manifestGUID = manifest.guid().toString();
-            File manifestTempFile = getManifestTempFile(manifestGUID);
+            IFile manifestTempFile = getManifestTempFile(manifestGUID);
 
             Data manifestData = new StringData(manifest.toString());
             manifestTempFile.setData(manifestData);
             manifestTempFile.persist();
 
-            File manifestFile = getManifestFile(manifestGUID);
+            IFile manifestFile = getManifestFile(manifestGUID);
             FileHelper.RenameFile(manifestTempFile, manifestFile);
         } catch (PersistenceException | DataException | DataStorageException e) {
             throw new ManifestsDirectoryException(e);
         }
     }
 
-    private File getManifestFile(IGUID guid) throws ManifestNotFoundException {
+    private IFile getManifestFile(IGUID guid) throws ManifestNotFoundException {
         try {
             return getManifestFile(guid.toString());
         } catch (DataStorageException e) {
@@ -192,14 +192,14 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         }
     }
 
-    private File getManifestFile(String guid) throws DataStorageException {
-        Directory manifestsDir = localStorage.getManifestsDirectory();
+    private IFile getManifestFile(String guid) throws DataStorageException {
+        IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
         return ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
     }
 
-    private File getManifestTempFile(String guid) throws DataStorageException {
-        Directory manifestsDir = localStorage.getManifestsDirectory();
+    private IFile getManifestTempFile(String guid) throws DataStorageException {
+        IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
         return ManifestsUtils.ManifestTempFile(localStorage, manifestsDir, guid);
     }
@@ -214,7 +214,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     private boolean manifestExistsInStorage(IGUID guid) throws ManifestNotFoundException {
-        File manifest = getManifestFile(guid);
+        IFile manifest = getManifestFile(guid);
         return manifest.exists();
     }
 }

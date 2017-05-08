@@ -7,12 +7,13 @@ import com.typesafe.config.ConfigValueFactory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.StorageType;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,8 +97,13 @@ public class SOSConfiguration {
         return configuration.getString(PropertyKeys.DB_FILENAME);
     }
 
-    public StorageType getStorageType() {
-        return StorageType.getEnum(configuration.getString(PropertyKeys.STORAGE_TYPE));
+    public CastoreBuilder getCastoreBuilder() {
+
+        CastoreType storageType = CastoreType.getEnum(configuration.getString(PropertyKeys.STORAGE_TYPE));
+        String root = getStorageLocation();
+        return new CastoreBuilder()
+                .setType(storageType)
+                .setRoot(root);
     }
 
     public String getStorageLocation() {

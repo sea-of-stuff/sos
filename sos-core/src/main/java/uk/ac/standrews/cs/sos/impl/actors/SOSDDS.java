@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -18,8 +20,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -97,12 +97,12 @@ public class SOSDDS implements DDS {
     public void flush() {
 
         try {
-            Directory cacheDir = localStorage.getNodeDirectory();
+            IDirectory cacheDir = localStorage.getNodeDirectory();
 
-            File cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
+            IFile cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
             cache.persist(cacheFile);
 
-            File ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
+            IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             ddsIndex.persist(ddsIndexFile);
 
         } catch (DataStorageException | IOException e) {
@@ -112,8 +112,8 @@ public class SOSDDS implements DDS {
 
     private void loadOrCreateCache() {
         try {
-            Directory cacheDir = localStorage.getNodeDirectory();
-            File file = localStorage.createFile(cacheDir, CACHE_FILE);
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            IFile file = localStorage.createFile(cacheDir, CACHE_FILE);
             if (file.exists()) {
                 cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
             }
@@ -128,8 +128,8 @@ public class SOSDDS implements DDS {
 
     private void loadOrCreateDDSIndex() {
         try {
-            Directory cacheDir = localStorage.getNodeDirectory();
-            File file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            IFile file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             if (file.exists()) {
                 ddsIndex = DDSIndex.load(file);
             }

@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_DATA_SIZE_LIMIT;
 
@@ -37,7 +37,7 @@ public class CacheFlusher implements Runnable {
     private boolean checkCache() {
 
         try {
-            Directory datDir = localStorage.getDataDirectory();
+            IDirectory datDir = localStorage.getDataDirectory();
             long dataSize = datDir.getSize();
             SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Data Directory size is: " + dataSize);
 

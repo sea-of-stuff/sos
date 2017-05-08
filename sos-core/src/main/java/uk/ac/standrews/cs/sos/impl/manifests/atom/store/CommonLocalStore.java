@@ -3,6 +3,10 @@ package uk.ac.standrews.cs.sos.impl.manifests.atom.store;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -11,10 +15,6 @@ import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,14 +65,14 @@ public abstract class CommonLocalStore implements Store {
 
     protected abstract LocationBundle getBundle(Location location);
 
-    protected File getAtomLocation(IGUID guid) throws DataStorageException {
-        Directory dataDirectory = storage.getDataDirectory();
+    protected IFile getAtomLocation(IGUID guid) throws DataStorageException {
+        IDirectory dataDirectory = storage.getDataDirectory();
         return storage.createFile(dataDirectory, guid.toString());
     }
 
     protected void storeData(IGUID guid, Data data) throws DataStorageException {
-        Directory dataDirectory = storage.getDataDirectory();
-        File file = storage.createFile(dataDirectory, guid.toString(), data);
+        IDirectory dataDirectory = storage.getDataDirectory();
+        IFile file = storage.createFile(dataDirectory, guid.toString(), data);
 
         try {
             file.persist();

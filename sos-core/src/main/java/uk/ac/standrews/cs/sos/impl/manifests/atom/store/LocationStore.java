@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.manifests.atom.store;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -8,8 +10,6 @@ import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.storage.data.InputStreamData;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.IOException;
 import java.io.InputStream;

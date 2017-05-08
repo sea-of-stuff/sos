@@ -1,15 +1,15 @@
 package uk.ac.standrews.cs.sos.impl.manifests.atom;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.atom.store.*;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +32,8 @@ public class AtomStorage {
 
 
         try {
-            Directory cacheDir = storage.getNodeDirectory();
-            File file = storage.createFile(cacheDir, "locations.index");
+            IDirectory cacheDir = storage.getNodeDirectory();
+            IFile file = storage.createFile(cacheDir, "locations.index");
             if (file.exists()) {
                 locationIndex = LocationsIndexImpl.load(file);
             }
@@ -49,8 +49,8 @@ public class AtomStorage {
 
     public void flush() throws DataStorageException {
         try {
-            Directory cacheDir = storage.getNodeDirectory();
-            File file = storage.createFile(cacheDir, "locations.index");
+            IDirectory cacheDir = storage.getNodeDirectory();
+            IFile file = storage.createFile(cacheDir, "locations.index");
             locationIndex.persist(file);
         } catch (IOException | DataStorageException e) {
             throw new DataStorageException(e);

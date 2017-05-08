@@ -2,6 +2,11 @@ package uk.ac.standrews.cs.sos.impl.locations.sos;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.castore.exceptions.DataException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -10,11 +15,6 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchData;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.storage.exceptions.DataException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,9 +95,9 @@ public class SOSURLConnection extends URLConnection {
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
             BindingAbsentException, DataException, IOException {
 
-        Directory directory = localStorage.getDataDirectory();
+        IDirectory directory = localStorage.getDataDirectory();
         String filename = entityGUID.toString();
-        File file = (File) directory.get(filename);
+        IFile file = (IFile) directory.get(filename);
         Data data = file.getData();
 
         return data.getInputStream();

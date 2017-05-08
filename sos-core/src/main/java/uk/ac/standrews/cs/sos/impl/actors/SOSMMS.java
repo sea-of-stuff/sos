@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.MMS;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -10,7 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.model.Metadata;
-import uk.ac.standrews.cs.storage.data.InputStreamData;
 
 import java.io.InputStream;
 

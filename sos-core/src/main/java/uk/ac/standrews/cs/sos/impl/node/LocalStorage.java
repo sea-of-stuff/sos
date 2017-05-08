@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
-import uk.ac.standrews.cs.storage.interfaces.IStorage;
 
 /**
  * This is a SOS specific wrapper on the IStorage module.
@@ -39,7 +39,7 @@ public class LocalStorage {
      * @return data directory
      * @throws DataStorageException
      */
-    public Directory getDataDirectory() throws DataStorageException {
+    public IDirectory getDataDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(DATA_DIRECTORY_NAME);
         } catch (StorageException e) {
@@ -52,7 +52,7 @@ public class LocalStorage {
      * @return manifest directory
      * @throws DataStorageException
      */
-    public Directory getManifestsDirectory() throws DataStorageException {
+    public IDirectory getManifestsDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
         } catch (StorageException e) {
@@ -65,7 +65,7 @@ public class LocalStorage {
      * @return caches directory
      * @throws DataStorageException
      */
-    public Directory getNodeDirectory() throws DataStorageException {
+    public IDirectory getNodeDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(NODE_DIRECTORY_NAME);
         } catch (StorageException e) {
@@ -80,7 +80,7 @@ public class LocalStorage {
      * @return file being created
      * @throws DataStorageException
      */
-    public File createFile(Directory parent, String filename) throws DataStorageException {
+    public IFile createFile(IDirectory parent, String filename) throws DataStorageException {
         try {
             return storage.createFile(parent, filename);
         } catch (StorageException e) {
@@ -96,7 +96,7 @@ public class LocalStorage {
      * @return file being created
      * @throws DataStorageException
      */
-    public File createFile(Directory parent, String filename, Data data) throws DataStorageException {
+    public IFile createFile(IDirectory parent, String filename, Data data) throws DataStorageException {
         try {
             return storage.createFile(parent, filename, data);
         } catch (StorageException e) {

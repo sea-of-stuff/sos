@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
@@ -12,7 +13,6 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;

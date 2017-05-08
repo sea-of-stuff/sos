@@ -2,6 +2,9 @@ package uk.ac.standrews.cs.sos.impl.manifests.atom.store;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -10,9 +13,6 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
-import uk.ac.standrews.cs.storage.data.InputStreamData;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -42,10 +42,10 @@ public abstract class StreamStore extends CommonLocalStore {
                 IGUID tmpGUID = GUIDFactory.generateRandomGUID();
                 storeData(tmpGUID, new InputStreamData(inputStream));
 
-                File tmpCachedLocation = getAtomLocation(tmpGUID);
+                IFile tmpCachedLocation = getAtomLocation(tmpGUID);
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
 
-                File cachedLocation = getAtomLocation(guid);
+                IFile cachedLocation = getAtomLocation(guid);
 
                 // FIXME - use internal storage api !!!!!
                 FileHelper.RenameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());

@@ -3,6 +3,9 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
@@ -13,9 +16,6 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public void persist(File file) throws IOException {
+    public void persist(IFile file) throws IOException {
         if (!file.exists()) {
             try {
                 file.persist();
@@ -103,7 +103,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
                 .collect(Collectors.toList());
     }
 
-    public static ManifestsCache load(LocalStorage storage, File file, Directory manifestsDir) throws IOException, ClassNotFoundException {
+    public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
         BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
@@ -144,9 +144,9 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         lru.add(guid);
     }
 
-    private static Manifest loadManifest(LocalStorage storage, Directory manifestsDir, IGUID guid) {
+    private static Manifest loadManifest(LocalStorage storage, IDirectory manifestsDir, IGUID guid) {
         try {
-            File file = ManifestsUtils.ManifestFile(storage, manifestsDir, guid.toString());
+            IFile file = ManifestsUtils.ManifestFile(storage, manifestsDir, guid.toString());
             return ManifestsUtils.ManifestFromFile(file);
         } catch (DataStorageException | ManifestNotFoundException e) {
             return null;

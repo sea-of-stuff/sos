@@ -3,16 +3,18 @@ package uk.ac.standrews.cs.sos.impl.storage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.castore.exceptions.DataException;
+import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.data.StringData;
-import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.storage.exceptions.DataException;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.lang.reflect.Method;
 
@@ -30,7 +32,13 @@ public class LocalStorageTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
+        String root = System.getProperty("user.home") + "/sos/";
+
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+        localStorage = new LocalStorage(stor);
     }
 
     @AfterMethod
@@ -51,7 +59,7 @@ public class LocalStorageTest extends CommonTest {
         localStorage.createFile(localStorage.getManifestsDirectory(),
                 "test.txt").persist();
 
-        File file = (File) localStorage.getManifestsDirectory().get("test.txt");
+        IFile file = (IFile) localStorage.getManifestsDirectory().get("test.txt");
         assertNotNull(file);
 
         assertEquals(file.getData().getSize(), 0);
@@ -64,7 +72,7 @@ public class LocalStorageTest extends CommonTest {
         localStorage.createFile(localStorage.getManifestsDirectory(),
                 "test.txt", new StringData("test-data")).persist();
 
-        File file = (File) localStorage.getManifestsDirectory().get("test.txt");
+        IFile file = (IFile) localStorage.getManifestsDirectory().get("test.txt");
         assertNotNull(file);
 
         assertEquals(file.getData().getSize(), 9);

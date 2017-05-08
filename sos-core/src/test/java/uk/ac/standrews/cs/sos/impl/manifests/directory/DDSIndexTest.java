@@ -3,13 +3,15 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.util.Set;
@@ -62,8 +64,15 @@ public class DDSIndexTest {
     @Test
     public void persistIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException {
 
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
-        Directory cachesDir = localStorage.getNodeDirectory();
+        String root = System.getProperty("user.home") + "/sos/";
+
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+
+        LocalStorage localStorage = new LocalStorage(stor);
+        IDirectory cachesDir = localStorage.getNodeDirectory();
 
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
@@ -71,7 +80,7 @@ public class DDSIndexTest {
         DDSIndex ddsIndex = new DDSIndex();
         ddsIndex.addEntry(manifestGUID, nodeGUID);
 
-        File file = localStorage.createFile(cachesDir, "dds.index");
+        IFile file = localStorage.createFile(cachesDir, "dds.index");
         ddsIndex.persist(file);
 
         DDSIndex persistedIndex = DDSIndex.load(file);
@@ -86,12 +95,19 @@ public class DDSIndexTest {
     @Test
     public void persistEmptyIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException {
 
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
-        Directory cachesDir = localStorage.getNodeDirectory();
+        String root = System.getProperty("user.home") + "/sos/";
+
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+
+        LocalStorage localStorage = new LocalStorage(stor);
+        IDirectory cachesDir = localStorage.getNodeDirectory();
 
         DDSIndex ddsIndex = new DDSIndex();
 
-        File file = localStorage.createFile(cachesDir, "dds.index");
+        IFile file = localStorage.createFile(cachesDir, "dds.index");
         ddsIndex.persist(file);
 
         DDSIndex persistedIndex = DDSIndex.load(file);

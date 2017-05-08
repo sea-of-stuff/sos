@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -16,8 +18,6 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class ManifestsUtils {
 
     private final static String JSON_EXTENSION = ".json";
 
-    public static Manifest ManifestFromFile(File file) throws ManifestNotFoundException {
+    public static Manifest ManifestFromFile(IFile file) throws ManifestNotFoundException {
 
         try {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(file.toFile());
@@ -52,7 +52,7 @@ public class ManifestsUtils {
         }
     }
 
-    private static Manifest constructManifestFromJson(ManifestType type, File manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+    private static Manifest constructManifestFromJson(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
             switch (type) {
@@ -107,11 +107,11 @@ public class ManifestsUtils {
         return manifest;
     }
 
-    public static File ManifestFile(LocalStorage storage, Directory directory, String guid) throws DataStorageException {
+    public static IFile ManifestFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
         return storage.createFile(directory, normaliseGUID(guid));
     }
 
-    public static File ManifestTempFile(LocalStorage storage, Directory directory, String guid) throws DataStorageException {
+    public static IFile ManifestTempFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
         return storage.createFile(directory, normaliseGUID(guid) + "-TEMP");
     }
 

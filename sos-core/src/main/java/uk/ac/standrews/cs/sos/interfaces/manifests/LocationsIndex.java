@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -18,6 +18,6 @@ public interface LocationsIndex {
 
     Iterator<LocationBundle> findLocations(IGUID guid);
 
-    void persist(File file) throws IOException;
+    void persist(IFile file) throws IOException;
 
 }

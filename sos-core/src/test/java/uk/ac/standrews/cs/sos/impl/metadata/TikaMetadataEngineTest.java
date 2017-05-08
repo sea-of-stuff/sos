@@ -1,15 +1,15 @@
 package uk.ac.standrews.cs.sos.impl.metadata;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadata;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.data.InputStreamData;
-import uk.ac.standrews.cs.storage.data.StringData;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

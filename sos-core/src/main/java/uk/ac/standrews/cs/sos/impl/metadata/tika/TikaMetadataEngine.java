@@ -5,10 +5,10 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.impl.metadata.AbstractMetadataEngine;
-import uk.ac.standrews.cs.storage.data.Data;
 
 import java.io.IOException;
 import java.io.InputStream;

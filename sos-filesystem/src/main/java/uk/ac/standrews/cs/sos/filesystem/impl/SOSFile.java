@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.filesystem.impl;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
@@ -26,7 +27,6 @@ import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.IOException;

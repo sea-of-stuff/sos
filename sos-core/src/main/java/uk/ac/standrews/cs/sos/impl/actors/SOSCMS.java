@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.CMS;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.constants.Threads;
@@ -17,8 +19,6 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Scope;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -178,9 +178,9 @@ public class SOSCMS implements CMS, Serializable {
     public void flush() {
 
         try {
-            Directory cacheDir = localStorage.getNodeDirectory();
+            IDirectory cacheDir = localStorage.getNodeDirectory();
 
-            File cacheFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+            IFile cacheFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
             // TODO - cache.persist(cacheFile);
 
         } catch (DataStorageException e) {
@@ -290,11 +290,11 @@ public class SOSCMS implements CMS, Serializable {
     // Serialization //
     ///////////////////
 
-    private void persist(File file) throws IOException {
+    private void persist(IFile file) throws IOException {
         // TODO
     }
 
-    public static SOSCMS load(File file) throws IOException, ClassNotFoundException {
+    public static SOSCMS load(IFile file) throws IOException, ClassNotFoundException {
 
         // TODO
 

@@ -7,8 +7,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.CommonTest;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -21,8 +24,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.*;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -47,13 +48,13 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        SOSConfiguration configurationMock = mock(SOSConfiguration.class);
-        when(configurationMock.getStorageType()).thenReturn(StorageType.LOCAL);
-        when(configurationMock.getStorageLocation()).thenReturn(System.getProperty("user.home") + "/sos/");
+        String root = System.getProperty("user.home") + "/sos/";
 
-        storage = new LocalStorage(StorageFactory
-                .createStorage(configurationMock.getStorageType(),
-                        configurationMock.getStorageLocation()));
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+        storage = new LocalStorage(stor);
     }
 
     @AfterMethod

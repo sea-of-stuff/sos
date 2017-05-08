@@ -1,5 +1,9 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -7,9 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.File;
 import java.util.List;
@@ -47,13 +48,9 @@ public class ServerState {
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         try {
-
-            StorageType storageType = configuration.getStorageType();
-            String root = configuration.getStorageLocation();
-
-            localStorage =
-                    new LocalStorage(StorageFactory
-                            .createStorage(storageType, root));
+            CastoreBuilder castoreBuilder = configuration.getCastoreBuilder();
+            IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+            localStorage = new LocalStorage(stor);
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }

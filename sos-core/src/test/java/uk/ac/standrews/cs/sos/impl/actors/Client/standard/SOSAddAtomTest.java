@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -14,8 +16,6 @@ import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.InputStream;
 import java.util.Set;
@@ -147,11 +147,11 @@ public class SOSAddAtomTest extends AgentTest {
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
 
-        Directory dataDir = localStorage.getDataDirectory();
-        Directory manifestsDir = localStorage.getManifestsDirectory();
+        IDirectory dataDir = localStorage.getDataDirectory();
+        IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        File file = localStorage.createFile(dataDir, manifest.guid().toString());
-        File manifestFile = localStorage.createFile(manifestsDir, manifest.guid() + ".json");
+        IFile file = localStorage.createFile(dataDir, manifest.guid().toString());
+        IFile manifestFile = localStorage.createFile(manifestsDir, manifest.guid() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
 
@@ -163,8 +163,8 @@ public class SOSAddAtomTest extends AgentTest {
 
         assertEquals(manifest.guid(), newManifest.guid());
 
-        File newFile = localStorage.createFile(dataDir, newManifest.guid().toString());
-        File newManifestFile = localStorage.createFile(manifestsDir, newManifest.guid() + ".json");
+        IFile newFile = localStorage.createFile(dataDir, newManifest.guid().toString());
+        IFile newManifestFile = localStorage.createFile(manifestsDir, newManifest.guid() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();
 

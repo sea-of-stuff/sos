@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.rest;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
@@ -18,7 +19,6 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

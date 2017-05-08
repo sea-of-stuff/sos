@@ -2,16 +2,16 @@ package uk.ac.standrews.cs.sos.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.implementations.filesystem.FileBasedFile;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.storage.data.Data;
-import uk.ac.standrews.cs.storage.data.StringData;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.implementations.filesystem.FileBasedFile;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -46,14 +46,14 @@ public class HelperTest {
 
     public static Location createDummyDataFile(LocalStorage storage, String filename)
             throws URISyntaxException, StorageException, DataStorageException {
-        Directory testDir = storage.getDataDirectory();
+        IDirectory testDir = storage.getDataDirectory();
         return createDummyDataFile(testDir, filename);
     }
 
-    private static Location createDummyDataFile(Directory sosParent, String filename) throws URISyntaxException, StorageException {
+    private static Location createDummyDataFile(IDirectory sosParent, String filename) throws URISyntaxException, StorageException {
 
         Data data = new StringData("The first line\nThe second line");
-        File sosFile = new FileBasedFile(sosParent, filename, data);
+        IFile sosFile = new FileBasedFile(sosParent, filename, data);
         sosFile.persist();
 
         return new URILocation("file://" + sosFile.getPathname());
@@ -68,7 +68,7 @@ public class HelperTest {
         }
     }
 
-    public static void DeletePath(Directory directory) throws IOException {
+    public static void DeletePath(IDirectory directory) throws IOException {
         java.io.File dir = new java.io.File(directory.getPathname());
 
         if (dir.exists()) {

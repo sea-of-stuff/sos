@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.actors.RMS;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -8,7 +9,6 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Scope;
-import uk.ac.standrews.cs.storage.data.Data;
 
 import java.util.Set;
 

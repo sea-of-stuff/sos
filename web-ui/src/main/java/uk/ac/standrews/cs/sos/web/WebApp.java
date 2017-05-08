@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.web;
 
 import spark.Request;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -13,7 +14,6 @@ import uk.ac.standrews.cs.sos.web.graph.*;
 import uk.ac.standrews.cs.sos.web.home.WHome;
 import uk.ac.standrews.cs.sos.web.nodes.WNodes;
 import uk.ac.standrews.cs.sos.web.tree.WTree;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;

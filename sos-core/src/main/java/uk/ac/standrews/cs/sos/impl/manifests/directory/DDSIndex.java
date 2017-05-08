@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.storage.exceptions.PersistenceException;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.*;
 import java.util.HashMap;
@@ -47,7 +47,7 @@ public class DDSIndex implements Serializable {
         return index.get(manifestGUID);
     }
 
-    public void persist(File file) throws IOException {
+    public void persist(IFile file) throws IOException {
         if (!file.exists()) {
             try {
                 file.persist();
@@ -64,7 +64,7 @@ public class DDSIndex implements Serializable {
         ostream.close();
     }
 
-    public static DDSIndex load(File file) throws IOException, ClassNotFoundException {
+    public static DDSIndex load(IFile file) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
         BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));

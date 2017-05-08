@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -8,7 +9,6 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.utils.Tuple;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Set;

@@ -3,6 +3,13 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
@@ -19,11 +26,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -94,10 +96,16 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void persistCacheTest() throws IOException, ClassNotFoundException, ManifestsCacheMissException, StorageException,
             DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException {
 
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
+        String root = System.getProperty("user.home") + "/sos/";
 
-        Directory manifestsDir = localStorage.getManifestsDirectory();
-        Directory cachesDir = localStorage.getNodeDirectory();
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+        LocalStorage localStorage = new LocalStorage(stor);
+
+        IDirectory manifestsDir = localStorage.getManifestsDirectory();
+        IDirectory cachesDir = localStorage.getNodeDirectory();
 
         LocalManifestsDirectory localManifestsManager = new LocalManifestsDirectory(localStorage);
         ManifestsCache cache = new ManifestsCacheImpl();
@@ -109,7 +117,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         localManifestsManager.addManifest(manifest);
         cache.addManifest(manifest);
 
-        File file = localStorage.createFile(cachesDir, "manifests.cache");
+        IFile file = localStorage.createFile(cachesDir, "manifests.cache");
         cache.persist(file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
@@ -121,10 +129,16 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
             ManifestsCacheMissException, StorageException, DataStorageException {
 
-        LocalStorage localStorage = new LocalStorage(StorageFactory.createStorage(StorageType.LOCAL, System.getProperty("user.home") + "/sos/"));
+        String root = System.getProperty("user.home") + "/sos/";
 
-        Directory manifestsDir = localStorage.getManifestsDirectory();
-        Directory cachesDir = localStorage.getNodeDirectory();
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+        LocalStorage localStorage = new LocalStorage(stor);
+
+        IDirectory manifestsDir = localStorage.getManifestsDirectory();
+        IDirectory cachesDir = localStorage.getNodeDirectory();
 
         ManifestsCache cache = new ManifestsCacheImpl();
 
@@ -132,7 +146,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         IGUID guid = manifest.guid();
         cache.addManifest(manifest);
 
-        File file = localStorage.createFile(cachesDir, "manifests.cache");
+        IFile file = localStorage.createFile(cachesDir, "manifests.cache");
         cache.persist(file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);

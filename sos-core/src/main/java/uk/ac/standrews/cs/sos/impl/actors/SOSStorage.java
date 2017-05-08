@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.actors;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.actors.Storage;
@@ -22,7 +23,6 @@ import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.utils.Tuple;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.io.InputStream;
 import java.util.Iterator;

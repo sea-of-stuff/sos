@@ -120,7 +120,7 @@
         <!-- St Andrews DEPENDENCIES -->
         <dependency>
             <groupId>uk.ac.standrews.cs</groupId>
-            <artifactId>storage-sta</artifactId>
+            <artifactId>castore</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

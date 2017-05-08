@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.utils;
 
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
-import uk.ac.standrews.cs.storage.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.storage.interfaces.Directory;
-import uk.ac.standrews.cs.storage.interfaces.File;
 
 import java.io.IOException;
 
@@ -14,8 +14,8 @@ import java.io.IOException;
  */
 public class FileHelper {
 
-    public static void DeleteFile(File file) throws ManifestsDirectoryException {
-        Directory parent = file.getParent();
+    public static void DeleteFile(IFile file) throws ManifestsDirectoryException {
+        IDirectory parent = file.getLogicalParent();
         try {
             parent.remove(file.getName());
         } catch (BindingAbsentException e) {
@@ -29,7 +29,7 @@ public class FileHelper {
         oldfile.renameTo(newfile);
     }
 
-    public static void RenameFile(File oldFile, File newFile) {
+    public static void RenameFile(IFile oldFile, IFile newFile) {
         try {
             java.io.File oldfile =  oldFile.toFile();
             java.io.File newfile = newFile.toFile();

@@ -6,6 +6,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
@@ -20,9 +25,6 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
-import uk.ac.standrews.cs.storage.StorageFactory;
-import uk.ac.standrews.cs.storage.StorageType;
-import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
@@ -44,10 +46,14 @@ public class AtomManifestTest extends CommonTest {
         super.setUp(testMethod);
 
         try {
-            String location = System.getProperty("user.home") + "/sos";
-            localStorage =
-                    new LocalStorage(StorageFactory
-                            .createStorage(StorageType.LOCAL, location));
+            String root = System.getProperty("user.home") + "/sos/";
+
+            CastoreBuilder castoreBuilder = new CastoreBuilder()
+                    .setType(CastoreType.LOCAL)
+                    .setRoot(root);
+            IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+            localStorage = new LocalStorage(stor);
+
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
