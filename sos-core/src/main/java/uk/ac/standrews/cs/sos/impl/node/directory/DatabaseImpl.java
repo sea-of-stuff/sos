@@ -44,7 +44,6 @@ public class DatabaseImpl implements Database {
     private final static String SQL_GET_NODES = "SELECT DB_nodeid, DB_hostname, DB_port, " +
             "DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms FROM nodes";
 
-
     private final static String SQL_CHECK_TASKS_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'tasks\'";
     private final static String SQL_CREATE_TASKS_TABLE = "CREATE TABLE `tasks` " +
             "(`DB_taskid`       INTEGER , " +
@@ -55,7 +54,7 @@ public class DatabaseImpl implements Database {
 
         FileHelper.MakePath(path);
 
-        try (Connection connection = CP.instance().getConnection()) {
+        try (Connection connection = CP.instance().connection()) {
             boolean tableExists = checkSQLiteTableExists(connection, SQL_CHECK_NODES_TABLE_EXISTS);
             if (!tableExists) {
                 createNodesTable(connection, SQL_CREATE_NODES_TABLE);
@@ -92,8 +91,8 @@ public class DatabaseImpl implements Database {
     @Override
     public void addNode(Node node) throws DatabaseConnectionException {
 
-        try (Connection connection = CP.instance().getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_NODE)) {
+        try (Connection connection = CP.instance().connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_NODE)) {
 
             preparedStatement.setString(1, node.getNodeGUID().toString());
             preparedStatement.setString(2, node.getHostAddress().getHostName());
@@ -116,9 +115,9 @@ public class DatabaseImpl implements Database {
     public Set<SOSNode> getNodes() throws DatabaseConnectionException {
         Set<SOSNode> retval = new HashSet<>();
 
-        try (Connection connection = CP.instance().getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NODES);
-                ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (Connection connection = CP.instance().connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NODES);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while(resultSet.next()) {
                 IGUID guid = GUIDFactory.recreateGUID(resultSet.getString(1));

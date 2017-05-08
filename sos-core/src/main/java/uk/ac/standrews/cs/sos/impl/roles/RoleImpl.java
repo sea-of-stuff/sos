@@ -22,7 +22,7 @@ import java.security.PublicKey;
  */
 @JsonSerialize(using = RoleSerializer.class)
 @JsonDeserialize(using = RoleDeserializer.class)
-public class RoleImpl implements Role { // TODO - this will take over the identity class
+public class RoleImpl implements Role {
 
     private IGUID userGUID;
     private IGUID roleGUID;
@@ -38,7 +38,6 @@ public class RoleImpl implements Role { // TODO - this will take over the identi
 
 
     /**
-     * TODO - create role starting from the user
      *
      * keys are either created and persisted, or loaded
      *

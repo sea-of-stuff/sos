@@ -24,9 +24,15 @@ public interface Scope {
      */
     Node[] nodes();
 
+    /**
+     * Get the type of scope.
+     *
+     * @return
+     */
     TYPE type();
 
     enum TYPE {
-        ANY, RESTRICTED
+        ANY, // The Scope is unlimited
+        RESTRICTED // The scope is limited to the specified nodes
     }
 }

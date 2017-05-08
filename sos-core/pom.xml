@@ -40,7 +40,6 @@
         <tika.version>1.14</tika.version>
         <rdf4j.version>2.0.2</rdf4j.version>
 
-        <sqlite.jdbc.version>3.15.1</sqlite.jdbc.version>
         <hikari-cp.version>2.6.0</hikari-cp.version>
     </properties>
 
@@ -126,12 +125,6 @@
         </dependency>
 
         <!-- DATABASE DEPENDENCIES -->
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>${sqlite.jdbc.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>

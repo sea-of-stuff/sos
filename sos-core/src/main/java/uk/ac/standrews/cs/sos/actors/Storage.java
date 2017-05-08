@@ -41,9 +41,9 @@ public interface Storage extends SeaOfStuff {
      * Get an atom's data given an AtomManifest.
      *
      * @param atom describing the atom to retrieve.
-     * @return InputStream
+     * @return InputStream // TODO - return Data - see Castore
      */
-    InputStream getAtomContent(Atom atom); // TODO - return Data?
+    InputStream getAtomContent(Atom atom);
 
     /**
      * Get the data for the atom with the specified GUID

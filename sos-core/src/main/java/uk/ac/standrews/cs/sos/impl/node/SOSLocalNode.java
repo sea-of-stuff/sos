@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.impl.actors.*;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
+import uk.ac.standrews.cs.sos.impl.node.directory.CP;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -35,8 +37,8 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT
 /**
  * This class represents the SOSNode of this machine.
  *
- * A SOSLocalNode may expose multiple SOS interfaces to the caller: Agent, Storage
- *  NDS, DDS, and MCS
+ * A SOSLocalNode may expose multiple SOS interfaces to the caller:
+ * Agent, Storage, NDS, DDS, and MCS
  *
  * A SOSLocalNode is created via a builder.
  * Example:
@@ -68,6 +70,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     // as useful information about the node itself.
     private SOS_LOG SOS_LOG = new SOS_LOG(getNodeGUID());
 
+    /**
+     * Construct the Node instance for this machine
+     *
+     * @throws SOSException
+     * @throws GUIDGenerationException
+     */
     public SOSLocalNode() throws SOSException, GUIDGenerationException {
         super(Builder.configuration);
 
@@ -89,11 +97,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         initNDS();
         loadBootstrapNodes(Builder.bootstrapNodes);
-        registerNode(configuration.getNodePort());
-        initSOSInstances();
+        registerNode(configuration);
+        initActors();
         cacheFlusher();
 
-        SOS_LOG.log(LEVEL.INFO, "Node initialised");
+        SOS_LOG.log(LEVEL.INFO, "Node started");
     }
 
     public Agent getAgent() {
@@ -136,9 +144,21 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         storage.flush();
         cacheFlusherService.shutdown();
 
+        try {
+            CP.instance().kill();
+        } catch (SQLException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to close the DB connection pool cleanly");
+        }
+
         RequestsManager.getInstance().shutdown();
     }
 
+    /**
+     * Load the bootstrap nodes specified in the configuration file into the local NDS.
+     *
+     * @param bootstrapNodes
+     * @throws NodeRegistrationException
+     */
     private void loadBootstrapNodes(List<Node> bootstrapNodes)
             throws NodeRegistrationException {
 
@@ -147,9 +167,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
     }
 
-    private void registerNode(int port) {
+    /**
+     * Register this node to the NDS network
+     *
+     * @param configuration
+     */
+    private void registerNode(SOSConfiguration configuration) {
 
         try {
+            int port = configuration.getNodePort();
             InetAddress inetAddress = InetAddress.getLocalHost();
             this.hostAddress = new InetSocketAddress(inetAddress, port);
 
@@ -160,6 +186,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     }
 
+    /**
+     * Initialise the local NDS actor
+     *
+     * @throws SOSException
+     */
     private void initNDS() throws SOSException {
         try {
             SOSURLProtocol.getInstance().register(localStorage);
@@ -170,7 +201,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
     }
 
-    private void initSOSInstances() {
+    /**
+     * Initialise all the actors for this node
+     */
+    private void initActors() {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
 
         dds = new SOSDDS(localStorage, nds);
@@ -182,6 +216,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         agent = SOSAgent.instance(storage, dds, mms, rms);
     }
 
+    /**
+     * Launch a background scheduled process that checks the size of the local cache
+     * and cleans it up if needed
+     */
     private void cacheFlusher() {
         SOS_LOG.log(LEVEL.INFO, "Cache Flusher started");
 
