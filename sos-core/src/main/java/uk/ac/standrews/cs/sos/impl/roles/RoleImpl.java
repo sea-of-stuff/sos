@@ -11,10 +11,13 @@ import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
-import uk.ac.standrews.cs.sos.utils.crypto.SignatureCrypto;
+import uk.ac.standrews.cs.sos.utils.SignatureCrypto;
+import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyPair;
 import java.security.PublicKey;
 
 /**
@@ -28,14 +31,13 @@ public class RoleImpl implements Role {
     private IGUID roleGUID;
     private String name;
 
-    private PublicKey pubkey;
-    private SignatureCrypto signature;
-    private File privateKeyFile;
-    private File publicKeyFile;
     private final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/";
 
-    // TODO - use RSA to encrypt content?
+    private SignatureCrypto signatureCrypto;
+    private File privateKeyFile;
+    private File publicKeyFile;
 
+    private KeyPair asymmetricKeys;
 
     /**
      *
@@ -51,8 +53,10 @@ public class RoleImpl implements Role {
         this.roleGUID = guid;
         this.name = name;
 
-        signature = new SignatureCrypto();
+        signatureCrypto = new SignatureCrypto();
 
+        // Private key is saved to disk and keps into memory, but it is not exposed to other objects or other nodes
+        // for obvious security issues
         privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
         publicKeyFile = new File(KEYS_FOLDER + roleGUID + "-pub.pem");
         if (!privateKeyFile.exists() || !publicKeyFile.exists()) {
@@ -61,7 +65,12 @@ public class RoleImpl implements Role {
             loadKeys();
         }
 
-        this.pubkey = signature.getPublicKey();
+        try {
+            asymmetricKeys = AsymmetricEncryption.generateKeys();
+
+        } catch (CryptoException e) {
+            e.printStackTrace();
+        }
 
         // TODO - generate SIGNATURE for this role using the user
     }
@@ -73,7 +82,7 @@ public class RoleImpl implements Role {
 
     @Override
     public IGUID getUser() {
-        return null;
+        return userGUID;
     }
 
     @Override
@@ -82,13 +91,13 @@ public class RoleImpl implements Role {
     }
 
     @Override
-    public String algorithm() {
-        return null;
+    public PublicKey getSignaturePubKey() {
+        return signatureCrypto.getPublicKey();
     }
 
     @Override
-    public PublicKey getPubkey() {
-        return pubkey;
+    public PublicKey getDataPubKey() {
+        return asymmetricKeys.getPublic();
     }
 
     @Override
@@ -98,12 +107,12 @@ public class RoleImpl implements Role {
 
     @Override
     public String sign(String text) throws EncryptionException {
-        return signature.sign64(text);
+        return signatureCrypto.sign64(text);
     }
 
     @Override
     public boolean verify(String text, String signatureToVerify) throws DecryptionException {
-        return signature.verify64(text, signatureToVerify);
+        return signatureCrypto.verify64(text, signatureToVerify);
     }
 
     /**
@@ -111,17 +120,17 @@ public class RoleImpl implements Role {
      * Store the set of keys in appropriate files based on the specified configuration.
      */
     private void generateKeys() throws KeyGenerationException {
-        signature.generateKeys();
+        signatureCrypto.generateKeys();
 
         try {
-            signature.saveToFile(privateKeyFile, publicKeyFile);
+            signatureCrypto.saveToFile(privateKeyFile, publicKeyFile);
         } catch (IOException e) {
             throw new KeyGenerationException("Unable to save keys");
         }
     }
 
     private void loadKeys() throws KeyLoadedException {
-        signature.loadKeys(privateKeyFile, publicKeyFile);
+        signatureCrypto.loadKeys(privateKeyFile, publicKeyFile);
     }
 
 }

@@ -12,9 +12,12 @@ import java.security.PublicKey;
  *      "GUID": "a243",
  *      "Name": "Simone's work",
  *      "User": "2321aaa3",
- *      "PubKey": "1342242234",
- *      "Signature": "MQ17983827se="
+ *      "Signature_PubKey": "1342242234",
+ *      "Data_PubKey" : "13442421",
+ *      "Signature": "MQ17983827se=" // Generated using User's keys
  * }
+ *
+ * TODO: consider sharing algorithm info about encryption, signatures, etc
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -22,16 +25,43 @@ public interface Role extends User {
 
     IGUID guid(); // random GUID
 
-    IGUID getUser(); // e.g. guid for user Simone
+    /**
+     * Get the GUID for the user that created this Role
+     * e.g. guid for user Simone
+     *
+     * @return
+     */
+    IGUID getUser();
 
-    String getName(); // e.g. Simone's work
+    /**
+     * Get the name of the role
+     * e.g. Simone's work
+     *
+     * @return
+     */
+    String getName();
 
-    // TODO - is this same key used for signing and for RSA encryption?
-    String algorithm(); // TODO - algorithm used for key
+    /**
+     * Used to sign metadata, manifests, etc
+     *
+     * @return
+     */
+    PublicKey getSignaturePubKey();
 
-    PublicKey getPubkey();
+    /**
+     * Used to encrypt data
+     *
+     * @return
+     */
+    PublicKey getDataPubKey();
 
-    String getSignature(); // signed using the user public key
+    /**
+     * Signature for this role manifest.
+     * This signature is generated using the User public key.
+     *
+     * @return
+     */
+    String getSignature();
 
     /**
      * Sign the given text and return a byte array representing the signature

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.utils.crypto;
+package uk.ac.standrews.cs.sos.utils;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;

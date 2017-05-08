@@ -1,11 +1,10 @@
-package uk.ac.standrews.cs.sos.utils.crypto;
+package uk.ac.standrews.cs.sos.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
-import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +28,15 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class SignatureCrypto {
 
+    public static final String DSA_ALGORITHM = "DSA"; // Digital Signature Algorithm - https://en.wikipedia.org/wiki/Digital_Signature_Algorithm
+    public static final int KEY_SIZE = 512; // in bits - size cannot exceed 2048 according to SUN specs
+    public static final String PROVIDER = "SUN";
+    public static final String SIGNATURE_ALGORITHM = "SHA1withDSA";
+
+    public static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+    public static final String SECURE_RANDOM_PROVIDER = "SUN";
+
+
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
@@ -49,10 +57,10 @@ public class SignatureCrypto {
     private KeyPair generateKeyPair() throws KeyGenerationException {
         KeyPair pair;
         try {
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(CRYPTOConstants.DSA_ALGORITHM, CRYPTOConstants.PROVIDER);
-            SecureRandom random = SecureRandom.getInstance(CRYPTOConstants.SECURE_RANDOM_ALGORITHM, CRYPTOConstants.SECURE_RANDOM_PROVIDER);
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(DSA_ALGORITHM, PROVIDER);
+            SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM, SECURE_RANDOM_PROVIDER);
 
-            keyGen.initialize(CRYPTOConstants.KEY_SIZE, random);
+            keyGen.initialize(KEY_SIZE, random);
             pair = keyGen.generateKeyPair();
 
         } catch (NoSuchAlgorithmException e) {
@@ -103,7 +111,7 @@ public class SignatureCrypto {
             keyfis.read(data);
 
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(CRYPTOConstants.DSA_ALGORITHM);
+            KeyFactory kf = KeyFactory.getInstance(DSA_ALGORITHM);
             privateKey = kf.generatePrivate(keySpec);
 
         } catch (IOException e) {
@@ -123,7 +131,7 @@ public class SignatureCrypto {
             keyfis.read(data);
 
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(data);
-            KeyFactory kf = KeyFactory.getInstance(CRYPTOConstants.DSA_ALGORITHM, CRYPTOConstants.PROVIDER);
+            KeyFactory kf = KeyFactory.getInstance(DSA_ALGORITHM, PROVIDER);
             publicKey = kf.generatePublic(keySpec);
 
         } catch (IOException e) {
@@ -146,7 +154,7 @@ public class SignatureCrypto {
     public byte[] sign(String text) throws EncryptionException {
         byte[] retval;
         try {
-            Signature signature = Signature.getInstance(CRYPTOConstants.SIGNATURE_ALGORITHM, CRYPTOConstants.PROVIDER);
+            Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM, PROVIDER);
 
             signature.initSign(privateKey);
             signature.update(text.getBytes());
@@ -174,7 +182,7 @@ public class SignatureCrypto {
     public boolean verify(String text, byte[] signatureToVerify) throws DecryptionException {
         boolean isValid;
         try {
-            Signature signature = Signature.getInstance(CRYPTOConstants.SIGNATURE_ALGORITHM, CRYPTOConstants.PROVIDER);
+            Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM, PROVIDER);
             signature.initVerify(publicKey);
             signature.update(text.getBytes());
             isValid = signature.verify(signatureToVerify);

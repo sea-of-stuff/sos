@@ -16,6 +16,6 @@ public interface User {
 
     String getName();  // e.g.  Simone Ivan Conte
 
-    PublicKey getPubkey();
+    PublicKey getSignaturePubKey();
 
 }

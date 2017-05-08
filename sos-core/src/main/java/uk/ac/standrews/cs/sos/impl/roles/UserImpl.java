@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.impl.roles;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.User;
-import uk.ac.standrews.cs.sos.utils.crypto.SignatureCrypto;
+import uk.ac.standrews.cs.sos.utils.SignatureCrypto;
 
 import java.security.PublicKey;
 
@@ -41,7 +41,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public PublicKey getPubkey() {
+    public PublicKey getSignaturePubKey() {
         return pubkey;
     }
 }
