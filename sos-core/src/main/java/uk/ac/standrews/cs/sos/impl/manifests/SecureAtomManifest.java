@@ -2,19 +2,17 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
-import uk.ac.standrews.cs.sos.utils.crypto.AESCrypto;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
+import javax.crypto.SecretKey;
 import java.util.Set;
 
 /**
@@ -24,7 +22,6 @@ import java.util.Set;
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
 public class SecureAtomManifest extends AtomManifest implements SecureAtom {
 
-    // TODO - generate them only once or once per ROLE?
     private Role role;
     private String encryptedKey;
 
@@ -52,17 +49,12 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
     private void encrypt(String data){
 
         try {
-            AESCrypto aes = new AESCrypto();
-            aes.generateKey(); // 1
-            String encryptedData = aes.encrypt64(data); // 2
-            this.encryptedKey = role.sign(aes.getKey()); // 3
-            this.contentGUID = GUIDFactory.generateGUID(encryptedData); // 4
+            SecretKey key = SymmetricEncryption.generateRandomKey();
+            String encryptedData = SymmetricEncryption.encrypt(key, data);
 
-        } catch (KeyGenerationException e) {
-            e.printStackTrace();
-        } catch (EncryptionException e) {
-            e.printStackTrace();
-        } catch (GUIDGenerationException e) {
+//            this.encryptedKey = role.sign(key); // 3 -- fixme use RSA key. We have code already in utilityies to encrypt AES key
+//            this.contentGUID = GUIDFactory.generateGUID(encryptedData); // 4
+        } catch (CryptoException e) {
             e.printStackTrace();
         }
 

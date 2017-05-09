@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 
+import javax.crypto.SecretKey;
 import java.security.PublicKey;
 
 /**
@@ -43,17 +44,19 @@ public interface Role extends User {
 
     /**
      * Used to sign metadata, manifests, etc
+     * This is a signature type key, such as DSA
      *
      * @return
      */
     PublicKey getSignaturePubKey();
 
     /**
-     * Used to encrypt data
+     * Used to encrypt symmetric keys
+     * This is an asymmetric key, such as RSA
      *
      * @return
      */
-    PublicKey getDataPubKey();
+    PublicKey getPubKey();
 
     /**
      * Signature for this role manifest.
@@ -81,5 +84,21 @@ public interface Role extends User {
      * @throws DecryptionException
      */
     boolean verify(String text, String signatureToVerify) throws DecryptionException;
+
+    /**
+     * Encrypt a symmetric key using an asymmetric key
+     *
+     * @param key
+     * @return
+     */
+    String encrypt(SecretKey key);
+
+    /**
+     * Encrypted key is decripted using the private key (e.g. RSA)
+     *
+     * @param encryptedKey
+     * @return
+     */
+    SecretKey decrypt(String encryptedKey);
 
 }

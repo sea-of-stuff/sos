@@ -36,7 +36,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  * TODO - should have a default scope
  * TODO - add concept of persistence
  * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
- *
+ * TODO - separate Data structures from CMS
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -44,8 +44,6 @@ public class SOSCMS implements CMS, Serializable {
 
     private transient LocalStorage localStorage;
     private transient DDS dds;
-
-    // TODO - separate Data structures from CMS
 
     // GUID --> Context
     private transient HashMap<IGUID, Context> contexts;
