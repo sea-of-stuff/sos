@@ -16,14 +16,14 @@ package uk.ac.standrews.cs.sos.model;
  *     "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *     "Name" : "Simone's replication context",
  *     "Predicate" : CODE,
- *     "Policies" : CODE,
+ *     "Policies" : [ CODE ], // Will be executed in order
  *     "Sources" : [ Where to get the data from ]
  *     "Where" : [ List of nodes where to spawn and run this context ]
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context extends Manifest {
+public interface Context extends Manifest { // TODO - do not extend manifest?
 
     /**
      * Set the name for the context
@@ -50,6 +50,9 @@ public interface Context extends Manifest {
      * If the context is not build, then the predicate and policies method will fail to work
      *
      * Prior to building the context, make sure that the name and the sources are set.
+     *
+     * The build method is necessary to generate the GUID, which may not be available in advance.
+     * TODO - what if GUID is generate by context definition?
      *
      * @return
      */

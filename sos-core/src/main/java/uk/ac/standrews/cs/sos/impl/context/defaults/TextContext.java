@@ -6,7 +6,10 @@ import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.impl.context.CommonContext;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.model.SOSPredicate;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -23,15 +26,12 @@ public class TextContext extends CommonContext {
     @Override
     public SOSPredicate predicate() {
 
-        // Get this node's agent
-        SOSAgent agent = SOSAgent.instance();
-
         return new SOSPredicateImpl(guid -> {
-            try {
-                Version version = (Version) agent.getManifest(guid);
 
-                Metadata metadata = agent.getMetadata(version.getMetadata());
-                String contentType = metadata.getPropertyAsString(MetadataConstants.CONTENT_TYPE);
+            SOSAgent agent = SOSAgent.instance();
+
+            try {
+                String contentType = getMetaProperty(agent, guid, MetadataConstants.CONTENT_TYPE);
                 return isText(contentType);
 
             } catch (Exception e) {
@@ -42,14 +42,8 @@ public class TextContext extends CommonContext {
         });
     }
 
-    @Override
-    public Policy[] policies() {
-        return new Policy[]{
-                new ExamplePolicy(3, true)
-        };
-    }
-
     private boolean isText(String contentType) {
+
         switch(contentType.toLowerCase()) {
             case "text":
             case "text/plain":
@@ -60,31 +54,33 @@ public class TextContext extends CommonContext {
             default:
                 return false;
         }
+
     }
 
-    private class ExamplePolicy implements Policy {
+    @Override
+    public Policy[] policies() {
+        return new Policy[]{
+                new ManifestReplicationPolicy(3)
+        };
+    }
+
+    private class ManifestReplicationPolicy implements Policy {
 
         private int factor;
-        private boolean manifestOnly;
 
-        public ExamplePolicy(int factor, boolean manifestOnly) {
+        public ManifestReplicationPolicy(int factor) {
             this.factor = factor;
-            this.manifestOnly = manifestOnly;
         }
 
         @Override
         public void run(Manifest manifest) {
 
             try {
-                Iterator<Node> nodes = null;
+                Iterator<Node> nodes = null; // FIXME
 
                 ManifestReplication replication = new ManifestReplication(manifest, nodes, factor, null);
                 TasksQueue.instance().performAsyncTask(replication);
 
-                if (!manifestOnly) {
-                    // TODO - replicate data too
-                    SOS_LOG.log(LEVEL.INFO, "TODO - SHOULD REPLICATE DATA");
-                }
             } catch (SOSProtocolException e) {
                 e.printStackTrace();
             }

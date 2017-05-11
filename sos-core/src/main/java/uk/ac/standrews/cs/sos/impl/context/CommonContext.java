@@ -2,7 +2,10 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.model.*;
 
 /**
@@ -76,5 +79,12 @@ public abstract class CommonContext implements Context {
     @Override
     public String toString() {
         return "Context GUID: " + guid + ", Name: " + name;
+    }
+
+    protected String getMetaProperty(SOSAgent agent, IGUID guid, String property) throws ManifestNotFoundException, MetadataNotFoundException {
+        Version version = (Version) agent.getManifest(guid);
+
+        Metadata metadata = agent.getMetadata(version.getMetadata());
+        return metadata.getPropertyAsString(property);
     }
 }
