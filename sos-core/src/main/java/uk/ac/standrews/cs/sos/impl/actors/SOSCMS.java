@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.context.ContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -20,11 +21,9 @@ import uk.ac.standrews.cs.sos.model.Scope;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -32,36 +31,17 @@ import java.util.concurrent.TimeUnit;
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
 /**
- * TODO - manage scope too
  * TODO - should have a default scope
- * TODO - add concept of persistence
  * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
- * TODO - separate Data structures from CMS
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSCMS implements CMS, Serializable {
+public class SOSCMS implements CMS {
 
-    private transient LocalStorage localStorage;
-    private transient DDS dds;
+    private LocalStorage localStorage;
+    private DDS dds;
 
-    // GUID --> Context
-    private transient HashMap<IGUID, Context> contexts;
-
-    // GUID --> Scope
-    private transient HashMap<IGUID, Scope> scopes;
-
-    // Assign a context to a scope
-    // Context GUID --> Scope GUID
-    private transient HashMap<IGUID, IGUID> contextsToScopes;
-
-    // Maps the context to the versions belonging to it
-    private transient HashMap<IGUID, HashMap<IGUID, CMSRow>> mappings;
-    private class CMSRow {
-        boolean predicateResult;
-        long timestamp; // Time when the predicate was run for this content
-        boolean policySatisfied; // Whether the policy has been satisfied or not
-    }
+    private ContextsDirectory directory;
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
@@ -70,36 +50,29 @@ public class SOSCMS implements CMS, Serializable {
      * Build a CMS instance.
      * The DDS is passed as parameter and it is needed to update the node about manifest-related information
      *
-     * @param dds
+     * @param localStorage used to persist the internal data structures
+     * @param dds used to store the contexts
      */
     public SOSCMS(LocalStorage localStorage, DDS dds) {
         this.localStorage = localStorage;
         this.dds = dds;
 
-        initialiseMappings();
+        directory = new ContextsDirectory();
 
         // TODO - load existing contexts into memory via reflection
         // TODO - load mappings/indices
 
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
 
-        // Start background processes
+        // Background processes
         getData();
         spawnContexts();
         runPredicates();
         runPolicies();
     }
 
-    private void initialiseMappings() {
-
-        contexts = new HashMap<>();
-        scopes = new HashMap<>();
-        contextsToScopes = new HashMap<>();
-        mappings = new HashMap<>();
-    }
-
     @Override
-    public Version addContext(Context context) throws Exception {
+    public Version addContext(IGUID scope, Context context) throws Exception {
 
         try {
             Version version = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
@@ -124,24 +97,11 @@ public class SOSCMS implements CMS, Serializable {
         }
     }
 
-    private Iterator<IGUID> getContexts() {
-        return contexts.keySet().iterator();
-    }
-
-    public void addMapping(IGUID context, IGUID version) {
-
-        if (!mappings.containsKey(context)) {
-            mappings.put(context, new HashMap<>());
-        }
-
-        mappings.get(context).put(version, new CMSRow());
-    }
-
     public Set<IGUID> runPredicates(Version version) {
 
         Set<IGUID> contexts = new HashSet<>();
 
-        Iterator<IGUID> it = getContexts();
+        Iterator<IGUID> it = directory.getContexts();
         while (it.hasNext()) {
             IGUID v = it.next();
 
@@ -163,13 +123,20 @@ public class SOSCMS implements CMS, Serializable {
     @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
-        HashMap<IGUID, CMSRow> contents = mappings.get(context);
-        if (contents == null) {
-            return Collections.emptyIterator();
-        } else {
-            return contents.keySet().iterator();
-        }
+        return directory.getContents(context);
+    }
 
+    @Override
+    public IGUID addScope(Scope scope) {
+
+        scopes.put(scope.guid(), scope);
+        return scope.guid();
+    }
+
+    @Override
+    public Scope getScope(IGUID guid) {
+
+        return scopes.get(guid);
     }
 
     @Override
@@ -179,7 +146,7 @@ public class SOSCMS implements CMS, Serializable {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
             IFile cacheFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-            // TODO - cache.persist(cacheFile);
+            // TODO - cache.persist(cacheFile); <-- persist method of this class/index class
 
         } catch (DataStorageException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
@@ -228,7 +195,7 @@ public class SOSCMS implements CMS, Serializable {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
 
-            Iterator<IGUID> it = getContexts();
+            Iterator<IGUID> it = directory.getContexts();
             while (it.hasNext()) {
                 IGUID contextVersion = it.next();
 
@@ -254,6 +221,7 @@ public class SOSCMS implements CMS, Serializable {
 
         boolean retval = false;
         boolean alreadyRun = mappings.get(contextVersion).containsKey(versionGUID);
+        boolean maxAgeExpired = false;
 
         if (alreadyRun) {
             CMSRow row = mappings.get(contextVersion).get(versionGUID);
@@ -264,12 +232,12 @@ public class SOSCMS implements CMS, Serializable {
             // TODO - diff timetamp, maxage, now
         }
 
-        if (!alreadyRun /* and over maxage */ ) {
+        if (!alreadyRun && !maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
             retval = passed;
             if (passed) {
-                addMapping(contextVersion, versionGUID);
+                directory.addMapping(contextVersion, versionGUID);
             }
         }
 
@@ -282,35 +250,6 @@ public class SOSCMS implements CMS, Serializable {
             SOS_LOG.log(LEVEL.INFO, "Running policies");
 
         }, 1, 10, TimeUnit.MINUTES);
-    }
-
-    ///////////////////
-    // Serialization //
-    ///////////////////
-
-    private void persist(IFile file) throws IOException {
-        // TODO
-    }
-
-    public static SOSCMS load(IFile file) throws IOException, ClassNotFoundException {
-
-        // TODO
-
-        return null;
-    }
-
-    // This method defines how the cache is serialised
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-
-        // TODO
-    }
-
-    // This method defines how the cache is de-serialised
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-
-        // TODO
     }
 
 }
