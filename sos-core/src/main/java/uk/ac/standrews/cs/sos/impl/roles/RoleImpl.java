@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
@@ -68,6 +69,10 @@ public class RoleImpl implements Role {
         signature = "DUMMY_SIGNATURE";
     }
 
+    public RoleImpl(User user, String name) throws KeyGenerationException, KeyLoadedException, CryptoException {
+        this(user, GUIDFactory.generateRandomGUID(), name);
+    }
+
     @Override
     public IGUID guid() {
         return roleGUID;
@@ -111,10 +116,9 @@ public class RoleImpl implements Role {
     @Override
     public String encrypt(SecretKey key) {
         try {
+            // TODO - extend the utilities project
             AsymmetricEncryption.encryptAESKey(key, null, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CryptoException e) {
+        } catch (IOException | CryptoException e) {
             e.printStackTrace();
         }
 

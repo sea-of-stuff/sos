@@ -75,6 +75,8 @@ public class TextContext extends CommonContext {
         @Override
         public void run(Manifest manifest) {
 
+            // TODO - use policy language
+
             try {
                 Iterator<Node> nodes = null; // FIXME
 

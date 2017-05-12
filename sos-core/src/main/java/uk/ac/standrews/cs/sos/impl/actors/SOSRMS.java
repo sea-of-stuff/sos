@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 /**
  * TODO - persistence -> cache, local, remote
  *
+ * There is only one active Role at a given time
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSRMS implements RMS {
@@ -55,8 +57,6 @@ public class SOSRMS implements RMS {
         }
 
         usersToRoles.get(role.getUser()).add(role.guid());
-
-
         roles.put(role.guid(), role);
     }
 

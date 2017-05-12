@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -15,11 +17,16 @@ import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.node.directory.CP;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
+import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
+import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
 import java.io.IOException;
@@ -212,6 +219,21 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         mms = new SOSMMS(dds, metadataEngine);
         cms = new SOSCMS(localStorage, dds);
         rms = SOSRMS.instance();
+
+        // FIXME - have better way to handle roles
+        try {
+            User user = new UserImpl("simone");
+            Role role = new RoleImpl(user, "student");
+            rms.addRole(role);
+            rms.setActive(role);
+
+        } catch (KeyGenerationException e) {
+            e.printStackTrace();
+        } catch (KeyLoadedException e) {
+            e.printStackTrace();
+        } catch (CryptoException e) {
+            e.printStackTrace();
+        }
 
         agent = SOSAgent.instance(storage, dds, mms, rms);
     }

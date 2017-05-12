@@ -127,16 +127,15 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public IGUID addScope(Scope scope) {
+    public void addScope(Scope scope) {
 
-        scopes.put(scope.guid(), scope);
-        return scope.guid();
+        directory.addScope(scope);
     }
 
     @Override
     public Scope getScope(IGUID guid) {
 
-        return scopes.get(guid);
+        return directory.getScope(guid);
     }
 
     @Override
@@ -220,11 +219,13 @@ public class SOSCMS implements CMS {
         IGUID versionGUID = version.guid();
 
         boolean retval = false;
-        boolean alreadyRun = mappings.get(contextVersion).containsKey(versionGUID);
+
+        boolean alreadyRun = directory.has(contextVersion, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
-            CMSRow row = mappings.get(contextVersion).get(versionGUID);
+
+            ContextsDirectory.Row row = directory.get(contextVersion, versionGUID);
             retval = row.predicateResult;
 
             long maxage = context.predicate().max_age();

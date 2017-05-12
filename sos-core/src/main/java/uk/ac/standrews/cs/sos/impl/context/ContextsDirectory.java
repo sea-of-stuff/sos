@@ -33,10 +33,10 @@ public class ContextsDirectory implements Serializable  {
 
     // Maps the context to the versions belonging to it
     private transient HashMap<IGUID, HashMap<IGUID, Row>> mappings;
-    private class Row {
-        boolean predicateResult;
-        long timestamp; // Time when the predicate was run for this content
-        boolean policySatisfied; // Whether the policy has been satisfied or not
+    public class Row {
+        public boolean predicateResult;
+        public long timestamp; // Time when the predicate was run for this content
+        public boolean policySatisfied; // Whether the policy has been satisfied or not
     }
 
     public ContextsDirectory() {
@@ -66,6 +66,10 @@ public class ContextsDirectory implements Serializable  {
         return mappings.get(contextVersion).get(content);
     }
 
+    public boolean has(IGUID contextVersion, IGUID content) {
+        return mappings.get(contextVersion).containsKey(content);
+    }
+
     public Iterator<IGUID> getContexts() {
         return contexts.keySet().iterator();
     }
@@ -77,6 +81,14 @@ public class ContextsDirectory implements Serializable  {
         } else {
             return contents.keySet().iterator();
         }
+    }
+
+    public void addScope(Scope scope) {
+        scopes.put(scope.guid(), scope);
+    }
+
+    public Scope getScope(IGUID guid) {
+        return scopes.get(guid);
     }
 
     ///////////////////

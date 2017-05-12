@@ -88,6 +88,11 @@ public abstract class BasicManifest implements Manifest {
         return manifestType != null;
     }
 
+    /**
+     * Transform this object into a JSON string
+     *
+     * @return
+     */
     @Override
     public String toString() {
         try {
