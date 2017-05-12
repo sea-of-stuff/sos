@@ -48,7 +48,7 @@ public class SOSMMS implements MMS {
         try {
             return (Metadata) dds.getManifest(guid);
         } catch (ManifestNotFoundException e) {
-            throw new MetadataNotFoundException("unable to find metadata");
+            throw new MetadataNotFoundException("Unable to find metadata");
         }
     }
 

@@ -143,6 +143,7 @@ public class MAISOS {
 
         executorService.submit(() -> {
             try {
+                SOS_LOG.log(LEVEL.INFO, "Launching the WebApp on port: " + configuration.getWebAppPort());
                 WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
                 LaunchWebDAV(fileSystem, configuration.getWebDAVPort());
             } catch (Exception e) {
@@ -156,6 +157,7 @@ public class MAISOS {
     private static void HandleJettyApp(ExecutorService executorService, SOSLocalNode sos) {
         executorService.submit(() -> {
             try {
+                SOS_LOG.log(LEVEL.INFO, "Launching the REST App on port: " + sos.getHostAddress().getPort());
                 JettyApp.RUN(sos);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -166,7 +168,7 @@ public class MAISOS {
     private static void LaunchWebDAV(IFileSystem fileSystem, int port) {
 
         try {
-            SOS_LOG.log(LEVEL.INFO, "Starting WebDAV server on port: " + port);
+            SOS_LOG.log(LEVEL.INFO, "Launching the WebDAV server on port: " + port);
             WebDAVLauncher.StartWebDAVServer(fileSystem, port);
         } catch (IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Error while starting WebDAV server on port: " + port + " with error: " + e.getMessage());

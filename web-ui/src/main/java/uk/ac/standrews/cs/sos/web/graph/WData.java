@@ -59,8 +59,11 @@ public class WData {
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
             Manifest contentManifest = sos.getAgent().getManifest(version.getContentGUID());
-            Metadata metadata = sos.getAgent().getMetadata(version.getMetadata());
-            type = metadata.getPropertyAsString("Content-Type");
+
+            if (version.getMetadata() != null) {
+                Metadata metadata = sos.getAgent().getMetadata(version.getMetadata());
+                type = metadata.getPropertyAsString("Content-Type");
+            }
             return getData(sos, contentManifest, type);
         }
 

@@ -175,8 +175,10 @@
     <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-jackson2:1.22.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava-jdk5:17.0" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:utilities:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: uk.ac.standrews.cs:common-test:2.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.github.mpkorstanje:simmetrics-core:4.1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.16.1" level="project" />
+    <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.5" level="project" />

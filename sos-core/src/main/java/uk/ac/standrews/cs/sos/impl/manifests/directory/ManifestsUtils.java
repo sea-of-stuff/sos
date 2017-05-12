@@ -34,7 +34,7 @@ public class ManifestsUtils {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(file.toFile());
             ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
 
-            return constructManifestFromJson(type, file);
+            return constructManifestFromJsonFile(type, file);
         } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
             throw new ManifestNotFoundException("Unable to find manifest given file " + file.getPathname(), e);
         }
@@ -52,7 +52,7 @@ public class ManifestsUtils {
         }
     }
 
-    private static Manifest constructManifestFromJson(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
+    private static Manifest constructManifestFromJsonFile(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
             switch (type) {
@@ -68,7 +68,7 @@ public class ManifestsUtils {
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
                     break;
-                case CONTEXT:
+                case CONTEXT: // TODO - removeme
                     SOS_LOG.log(LEVEL.WARN, "CONTEXT MANIFEST LOADER NOT IMPLEMENTED YET");
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
                 default:
