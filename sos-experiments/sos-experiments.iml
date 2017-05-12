@@ -171,7 +171,7 @@
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:guid-sta:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:logger:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.21" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: org.fluentd:fluent-logger:0.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.msgpack:msgpack:0.6.8" level="project" />

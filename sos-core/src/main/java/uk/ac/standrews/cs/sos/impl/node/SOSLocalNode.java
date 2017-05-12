@@ -220,7 +220,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cms = new SOSCMS(localStorage, dds);
         rms = SOSRMS.instance();
 
-        // FIXME - have better way to handle roles
+        // FIXME - have better way to handle the default user and role
         try {
             User user = new UserImpl("simone");
             Role role = new RoleImpl(user, "student");

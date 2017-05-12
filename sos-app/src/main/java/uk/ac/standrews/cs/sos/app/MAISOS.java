@@ -62,6 +62,7 @@ public class MAISOS {
 
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("posix", options);
+        System.out.println("\n===================================================\n\n");
 
         CommandLine line;
         try {

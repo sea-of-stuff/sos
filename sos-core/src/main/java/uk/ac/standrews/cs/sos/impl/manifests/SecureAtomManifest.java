@@ -2,13 +2,16 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
+import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
@@ -51,10 +54,10 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
         try {
             SecretKey key = SymmetricEncryption.generateRandomKey();
             String encryptedData = SymmetricEncryption.encrypt(key, data);
+            String encryptedKey = AsymmetricEncryption.encryptAESKey(role.getPubKey(), key);
 
-//            this.encryptedKey = role.sign(key); // 3 -- fixme use RSA key. We have code already in utilityies to encrypt AES key
-//            this.contentGUID = GUIDFactory.generateGUID(encryptedData); // 4
-        } catch (CryptoException e) {
+            this.contentGUID = GUIDFactory.generateGUID(encryptedData); // 4
+        } catch (CryptoException | GUIDGenerationException e) {
             e.printStackTrace();
         }
 
