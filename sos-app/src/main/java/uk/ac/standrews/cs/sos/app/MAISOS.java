@@ -150,8 +150,6 @@ public class MAISOS {
                 e.printStackTrace();
             }
         });
-
-
     }
 
     private static void HandleJettyApp(ExecutorService executorService, SOSLocalNode sos) {
