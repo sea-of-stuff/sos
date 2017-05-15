@@ -30,37 +30,10 @@ public interface Context {
     IGUID guid();
 
     /**
-     * Set the name for the context
-     * @param name
-     * @return
-     */
-    Context setName(String name);
-
-    /**
      * Return a human-readable name for the context
      * @return
      */
     String getName();
-
-    /**
-     * Where to get the data from.
-     *
-     * @param nodes
-     */
-    Context setSources(Node[] nodes);
-
-    /**
-     * Build the definition of the context.
-     * If the context is not build, then the predicate and policies method will fail to work
-     *
-     * Prior to building the context, make sure that the name and the sources are set.
-     *
-     * The build method is necessary to generate the GUID, which may not be available in advance.
-     * TODO - what if GUID is generate by context definition?
-     *
-     * @return
-     */
-    Context build();
 
     /**
      * Predicate to run against data.

@@ -1,8 +1,12 @@
-package uk.ac.standrews.cs.sos.impl.context;
+package uk.ac.standrews.cs.sos.impl.context.examples;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.impl.context.CommonContext;
+import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -20,6 +24,16 @@ import java.util.Iterator;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class TextContext extends CommonContext {
+
+    public TextContext(String name, Node[] sources) {
+        this(GUIDFactory.generateRandomGUID(), name, sources);
+    }
+
+    public TextContext(IGUID guid, String name, Node[] sources) {
+        this.guid = guid;
+        this.name = name;
+        this.sources = sources;
+    }
 
     @Override
     public SOSPredicate predicate() {

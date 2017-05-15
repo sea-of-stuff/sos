@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.context;
+package uk.ac.standrews.cs.sos.impl.context.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

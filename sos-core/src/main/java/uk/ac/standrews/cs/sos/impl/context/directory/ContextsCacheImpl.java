@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.context;
+package uk.ac.standrews.cs.sos.impl.context.directory;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;

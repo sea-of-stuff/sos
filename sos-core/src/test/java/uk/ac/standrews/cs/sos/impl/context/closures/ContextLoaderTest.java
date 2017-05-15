@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
-import uk.ac.standrews.cs.sos.impl.context.ContextLoader;
+import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 

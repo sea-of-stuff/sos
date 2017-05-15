@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
@@ -12,10 +11,10 @@ import uk.ac.standrews.cs.sos.model.*;
  */
 public abstract class CommonContext implements Context {
 
-    private IGUID guid;
+    protected IGUID guid;
     protected String name;
     protected SOSPredicate predicate;
-    protected Node[] nodes;
+    protected Node[] sources;
 
     private static int EMPTY_ARRAY = 0;
 
@@ -25,26 +24,8 @@ public abstract class CommonContext implements Context {
     }
 
     @Override
-    public Context setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public Context setSources(Node[] nodes) {
-        this.nodes = nodes;
-        return this;
-    }
-
-    @Override
-    public Context build() {
-        guid = GUIDFactory.generateRandomGUID();
-        return this;
     }
 
     @Override
@@ -65,6 +46,16 @@ public abstract class CommonContext implements Context {
         return "Context GUID: " + guid + ", Name: " + name;
     }
 
+    /**
+     * Utility function
+     *
+     * @param agent
+     * @param guid
+     * @param property
+     * @return
+     * @throws ManifestNotFoundException
+     * @throws MetadataNotFoundException
+     */
     protected String getMetaProperty(SOSAgent agent, IGUID guid, String property) throws ManifestNotFoundException, MetadataNotFoundException {
         Version version = (Version) agent.getManifest(guid);
 
