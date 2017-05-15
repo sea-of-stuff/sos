@@ -6,9 +6,13 @@ import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.actors.RMS;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -50,11 +54,23 @@ public class PolicyLanguage {
         throw new SOSException("Unable to get Policy Language instance");
     }
 
-    public void replicateData(Data data, Set<IGUID> nodes, int replicationFactor) {
+    public void replicateManifest(Manifest manifest, Iterator<Node> nodes, int replicationFactor) {
+
+        try {
+
+            ManifestReplication replication = new ManifestReplication(manifest, nodes, replicationFactor, null);
+            TasksQueue.instance().performAsyncTask(replication);
+
+        } catch (SOSProtocolException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void replicateData(Data data, Iterator<Node> nodes, int replicationFactor) {
 
     }
 
-    public void deleteData(IGUID guid, Set<IGUID> nodes) {
+    public void deleteData(IGUID guid, Iterator<Node> nodes) {
 
     }
 

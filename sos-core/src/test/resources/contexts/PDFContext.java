@@ -2,14 +2,14 @@ package uk.ac.standrews.cs.sos.impl.context.defaults;
 
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
-import uk.ac.standrews.cs.sos.impl.context.CommonContext;
+import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class PDFContext extends CommonContext {
+public class PDFContext extends BaseContext {
 
     public PDFContext(SOSAgent agent, String name) {
         super(agent, name);

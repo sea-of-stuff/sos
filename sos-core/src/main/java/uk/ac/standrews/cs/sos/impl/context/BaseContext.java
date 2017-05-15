@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
@@ -9,7 +10,7 @@ import uk.ac.standrews.cs.sos.model.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class CommonContext implements Context {
+public class BaseContext implements Context {
 
     protected IGUID guid;
     protected String name;
@@ -17,6 +18,16 @@ public abstract class CommonContext implements Context {
     protected Node[] sources;
 
     private static int EMPTY_ARRAY = 0;
+
+    public BaseContext(String name, Node[] sources) {
+        this(GUIDFactory.generateRandomGUID(), name, sources);
+    }
+
+    public BaseContext(IGUID guid, String name, Node[] sources) {
+        this.guid = guid;
+        this.name = name;
+        this.sources = sources;
+    }
 
     @Override
     public IGUID guid() {
@@ -29,7 +40,10 @@ public abstract class CommonContext implements Context {
     }
 
     @Override
-    public abstract SOSPredicate predicate();
+    public SOSPredicate predicate() {
+
+        return new SOSPredicateImpl(guid -> false, Long.MAX_VALUE);
+    }
 
     @Override
     public Policy[] policies() {

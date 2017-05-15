@@ -1,19 +1,17 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
-import uk.ac.standrews.cs.sos.impl.context.CommonContext;
+import uk.ac.standrews.cs.sos.impl.context.BaseContext;
+import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
-import uk.ac.standrews.cs.sos.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Iterator;
@@ -23,16 +21,14 @@ import java.util.Iterator;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class TextContext extends CommonContext {
+public class TextContext extends BaseContext {
 
     public TextContext(String name, Node[] sources) {
-        this(GUIDFactory.generateRandomGUID(), name, sources);
+        super(name, sources);
     }
 
     public TextContext(IGUID guid, String name, Node[] sources) {
-        this.guid = guid;
-        this.name = name;
-        this.sources = sources;
+        super(guid, name, sources);
     }
 
     @Override
@@ -87,15 +83,12 @@ public class TextContext extends CommonContext {
         @Override
         public void run(Manifest manifest) {
 
-            // TODO - use policy language
-
             try {
-                Iterator<Node> nodes = null; // FIXME
 
-                ManifestReplication replication = new ManifestReplication(manifest, nodes, factor, null);
-                TasksQueue.instance().performAsyncTask(replication);
+                Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, 0).iterator();
+                PolicyLanguage.instance().replicateManifest(manifest, nodes, factor);
 
-            } catch (SOSProtocolException e) {
+            } catch (SOSException e) {
                 e.printStackTrace();
             }
         }
