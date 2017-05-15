@@ -220,22 +220,24 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cms = new SOSCMS(localStorage, dds);
         rms = SOSRMS.instance();
 
-        // FIXME - have better way to handle the default user and role
+        createDummyUserRole();
+
+        agent = SOSAgent.instance(storage, dds, mms, rms);
+    }
+
+    // FIXME - have better way to handle the default user and role
+    private void createDummyUserRole() {
+
         try {
             User user = new UserImpl("simone");
             Role role = new RoleImpl(user, "student");
+            rms.addUser(user);
             rms.addRole(role);
             rms.setActive(role);
 
-        } catch (KeyGenerationException e) {
-            e.printStackTrace();
-        } catch (KeyLoadedException e) {
-            e.printStackTrace();
-        } catch (CryptoException e) {
+        } catch (KeyGenerationException | KeyLoadedException | CryptoException e) {
             e.printStackTrace();
         }
-
-        agent = SOSAgent.instance(storage, dds, mms, rms);
     }
 
     /**
