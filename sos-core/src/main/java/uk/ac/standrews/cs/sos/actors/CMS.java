@@ -25,7 +25,7 @@ public interface CMS extends SeaOfStuff {
      * @param context
      * @throws Exception
      */
-    void addContext(IGUID scope, Context context) throws Exception;
+    void addContext(Scope scope, Context context) throws Exception;
 
     /**
      * Get the context given its guid

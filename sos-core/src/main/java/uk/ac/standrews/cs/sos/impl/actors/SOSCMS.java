@@ -70,10 +70,12 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public void addContext(IGUID scope, Context context) throws Exception {
+    public void addContext(Scope scope, Context context) throws Exception {
 
         cache.addContext(context);
-        contextsContents.addContextScope(context.guid(), scope);
+        cache.addScope(scope);
+
+        contextsContents.addContextScope(context.guid(), scope.guid());
     }
 
     @Override
@@ -93,16 +95,15 @@ public class SOSCMS implements CMS {
 
         Iterator<IGUID> it = cache.getContexts();
         while (it.hasNext()) {
-            IGUID v = it.next();
 
             try {
-                Context context = getContext(v);
-                runPredicate(v, context, version);
+                Context context = getContext(it.next());
+                runPredicate(context, version);
 
                 contexts.add(context.guid());
 
             } catch (ContextNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to find context");
             }
 
         }
@@ -186,36 +187,35 @@ public class SOSCMS implements CMS {
 
             Iterator<IGUID> it = cache.getContexts();
             while (it.hasNext()) {
-                IGUID contextVersion = it.next();
 
                 try {
-                    Context context = getContext(contextVersion);
-                    for(Version version : dds.getAllVersions()) { // FIXME - we actually need the dds to get the actual content to be processed
-                        runPredicate(contextVersion, context, version);
+                    Context context = getContext(it.next());
+                    for(Version version : dds.getAllVersions()) {
+                        runPredicate(context, version);
                     }
 
                 } catch (ContextNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + contextVersion);
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context");
                 }
 
             }
 
-        }, 1, 1, TimeUnit.MINUTES);
+        }, 30, 60, TimeUnit.SECONDS);
 
     }
 
-    private boolean runPredicate(IGUID contextVersion, Context context, Version version) {
+    private boolean runPredicate(Context context, Version version) {
 
         IGUID versionGUID = version.guid();
 
         boolean retval = false;
 
-        boolean alreadyRun = contextsContents.has(contextVersion, versionGUID);
+        boolean alreadyRun = contextsContents.has(context.guid(), versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
 
-            ContextsContents.Row row = contextsContents.get(contextVersion, versionGUID);
+            ContextsContents.Row row = contextsContents.get(context.guid(), versionGUID);
             retval = row.predicateResult;
 
             long maxage = context.predicate().maxAge();
@@ -228,7 +228,7 @@ public class SOSCMS implements CMS {
             boolean passed = context.predicate().test(versionGUID);
             retval = passed;
             if (passed) {
-                contextsContents.addMapping(contextVersion, versionGUID);
+                contextsContents.addMapping(context.guid(), versionGUID);
             }
         }
 

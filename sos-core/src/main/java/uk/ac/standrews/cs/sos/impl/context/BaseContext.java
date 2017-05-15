@@ -19,6 +19,10 @@ public class BaseContext implements Context {
 
     private static int EMPTY_ARRAY = 0;
 
+    public BaseContext(String name) {
+        this(GUIDFactory.generateRandomGUID(), name, new Node[EMPTY_ARRAY]);
+    }
+
     public BaseContext(String name, Node[] sources) {
         this(GUIDFactory.generateRandomGUID(), name, sources);
     }

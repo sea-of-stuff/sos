@@ -12,11 +12,8 @@ import static org.testng.Assert.assertNotNull;
 public class TextContextTest {
 
     @Test
-    public void dummy() {
-        Context test = new TextContext()
-                .setName("test")
-                .setSources(null) // TODO - set to local node!
-                .build();
+    public void basicContextConstructor() {
+        Context test = new TextContext("test");
 
         assertNotNull(test.predicate());
     }

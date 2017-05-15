@@ -23,6 +23,10 @@ import java.util.Iterator;
  */
 public class TextContext extends BaseContext {
 
+    public TextContext(String name) {
+        super(name);
+    }
+
     public TextContext(String name, Node[] sources) {
         super(name, sources);
     }
@@ -43,7 +47,8 @@ public class TextContext extends BaseContext {
                 return isText(contentType);
 
             } catch (Exception e) {
-                SOS_LOG.log(LEVEL.ERROR, "Predicate could not be run");
+                // This could occur because the metadata could not be found or the type property was not available
+                SOS_LOG.log(LEVEL.WARN, "Predicate could not be run");
             }
 
             return false;

@@ -18,14 +18,13 @@ public class ContextsCacheImpl {
     // GUID --> Scope
     private transient HashMap<IGUID, Scope> scopes;
 
-
     public ContextsCacheImpl() {
         contexts = new HashMap<>();
         scopes = new HashMap<>();
     }
 
     public void addContext(Context context) {
-        // TODO
+        contexts.put(context.guid(), context);
     }
 
     public Context getContext(IGUID guid) {

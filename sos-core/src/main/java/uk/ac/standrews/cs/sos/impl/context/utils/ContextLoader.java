@@ -172,8 +172,8 @@ public class ContextLoader {
         try {
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
 
-            Context context = (Context) clazz.newInstance();
-            return context.build();
+            Context context = (Context) clazz.newInstance(); // FIXME - pass any parameters
+            return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);
         }

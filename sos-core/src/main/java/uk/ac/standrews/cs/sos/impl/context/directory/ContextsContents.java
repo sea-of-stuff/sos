@@ -49,13 +49,21 @@ public class ContextsContents implements Serializable  {
         mappings.get(context).put(version, new Row());
     }
 
-    public Row get(IGUID contextVersion, IGUID content) {
+    /**
+     * Get the known values for the content at the given context
+     *
+     * @param context
+     * @param content
+     * @return
+     */
+    public Row get(IGUID context, IGUID content) {
 
-        return mappings.get(contextVersion).get(content);
+        return mappings.get(context).get(content);
     }
 
-    public boolean has(IGUID contextVersion, IGUID content) {
-        return mappings.get(contextVersion).containsKey(content);
+    public boolean has(IGUID context, IGUID content) {
+
+        return mappings.containsKey(content) && mappings.get(context).containsKey(content);
     }
 
     public Iterator<IGUID> getContents(IGUID context) {

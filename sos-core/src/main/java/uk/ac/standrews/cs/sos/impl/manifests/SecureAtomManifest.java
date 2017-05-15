@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
+import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
@@ -64,4 +65,8 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
 
     }
 
+    @Override
+    public Set<Tuple<String, IGUID>> keysRoles() {
+        return null;
+    }
 }
