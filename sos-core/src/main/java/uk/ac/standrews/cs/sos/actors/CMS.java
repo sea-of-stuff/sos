@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Scope;
-import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Iterator;
 
@@ -24,22 +23,20 @@ public interface CMS extends SeaOfStuff {
      *
      * @param scope
      * @param context
-     * @return
      * @throws Exception
      */
-    Version addContext(IGUID scope, Context context) throws Exception;
+    void addContext(IGUID scope, Context context) throws Exception;
 
     /**
-     * Get the context for a specific version
+     * Get the context given its guid
      *
-     * @param version
      * @return
      * @throws ContextNotFoundException
      */
-    Context getContext(IGUID version) throws ContextNotFoundException;
+    Context getContext(IGUID contextGUID) throws ContextNotFoundException;
 
     /**
-     * Get an iterator for all versions belonging to the specified context
+     * Get an iterator for all content belonging to the specified context
      *
      * @param context
      * @return

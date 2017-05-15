@@ -8,9 +8,10 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
+import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.SecureAtom;
+import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
@@ -23,7 +24,7 @@ import java.util.Set;
  */
 @JsonSerialize(using = SecureAtomManifestSerializer.class)
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
-public class SecureAtomManifest extends AtomManifest implements SecureAtom {
+public class SecureAtomManifest extends AtomManifest implements Atom, SecureManifest {
 
     private Role role;
     private String encryptedKey;

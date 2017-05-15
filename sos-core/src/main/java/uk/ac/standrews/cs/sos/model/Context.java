@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
+import uk.ac.standrews.cs.IGUID;
+
 /**
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.
  * Entities are assets belonging to the SOS.
@@ -23,7 +25,9 @@ package uk.ac.standrews.cs.sos.model;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context extends Manifest { // TODO - do not extend manifest?
+public interface Context {
+
+    IGUID guid();
 
     /**
      * Set the name for the context

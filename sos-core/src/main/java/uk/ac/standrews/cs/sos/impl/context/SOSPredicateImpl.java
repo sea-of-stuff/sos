@@ -7,19 +7,24 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
+ * This class acts mainly as a wrapper for the Java Predicate object.
+ * The wrapper allows us to cleanly handle the predicate under the test function and to apply it for the and/or operators
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSPredicateImpl implements SOSPredicate {
 
     private Predicate<IGUID> predicate;
+    private long maxAge;
 
-    public SOSPredicateImpl(Predicate<IGUID> predicate) {
+    public SOSPredicateImpl(Predicate<IGUID> predicate, long maxAge) {
         this.predicate = predicate;
+        this.maxAge = maxAge;
     }
 
     @Override
-    public long max_age() {
-        return 0;
+    public long maxAge() {
+        return maxAge;
     }
 
     @Override
@@ -30,13 +35,19 @@ public class SOSPredicateImpl implements SOSPredicate {
     @Override
     public SOSPredicate and(SOSPredicate other) {
         Objects.requireNonNull(other);
-        return new SOSPredicateImpl(predicate.and(other.predicate()));
+
+        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
+
+        return new SOSPredicateImpl(predicate.and(other.predicate()), newMaxAge);
     }
 
     @Override
     public SOSPredicate or(SOSPredicate other) {
         Objects.requireNonNull(other);
-        return new SOSPredicateImpl(predicate.or(other.predicate()));
+
+        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
+
+        return new SOSPredicateImpl(predicate.or(other.predicate()), newMaxAge);
     }
 
     @Override

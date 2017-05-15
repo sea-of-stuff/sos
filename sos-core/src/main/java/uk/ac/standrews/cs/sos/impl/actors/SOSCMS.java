@@ -7,16 +7,12 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.CMS;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.constants.Threads;
-import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.context.ContextsDirectory;
-import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.impl.context.ContextsCacheImpl;
+import uk.ac.standrews.cs.sos.impl.context.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Scope;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -31,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
 /**
+ * TODO - versioning of contexts
  * TODO - should have a default scope
  * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
  *
@@ -41,30 +38,31 @@ public class SOSCMS implements CMS {
     private LocalStorage localStorage;
     private DDS dds;
 
-    private ContextsDirectory directory;
+    private ContextsCacheImpl cache;
+    // TODO - local + remote
+    private ContextsContents contextsContents;
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
 
     /**
      * Build a CMS instance.
-     * The DDS is passed as parameter and it is needed to update the node about manifest-related information
+     * The DDS is passed as parameter and it is needed to access the manifests to be processed.
      *
      * @param localStorage used to persist the internal data structures
-     * @param dds used to store the contexts
      */
     public SOSCMS(LocalStorage localStorage, DDS dds) {
         this.localStorage = localStorage;
         this.dds = dds;
 
-        directory = new ContextsDirectory();
-
         // TODO - load existing contexts into memory via reflection
-        // TODO - load mappings/indices
+        cache = new ContextsCacheImpl();
 
-        service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
+        // TODO - load mappings/indices
+        contextsContents = new ContextsContents();
 
         // Background processes
+        service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
         getData();
         spawnContexts();
         runPredicates();
@@ -72,36 +70,28 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public Version addContext(IGUID scope, Context context) throws Exception {
+    public void addContext(IGUID scope, Context context) throws Exception {
 
-        try {
-            Version version = ManifestFactory.createVersionManifest(context.guid(), null, null, null, null);
-
-            dds.addManifest(context);
-            dds.addManifest(version);
-
-            return version;
-        } catch (ManifestPersistException e) {
-            throw new ContextException(e);
-        }
+        cache.addContext(context);
+        contextsContents.addContextScope(context.guid(), scope);
     }
 
     @Override
-    public Context getContext(IGUID version) throws ContextNotFoundException {
+    public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
-        try {
-            Manifest manifest = dds.getManifest(version);
-            return (Context) dds.getManifest(((Version) manifest).getContentGUID());
-        } catch (ManifestNotFoundException e) {
-            throw new ContextNotFoundException(e);
-        }
+        return cache.getContext(contextGUID);
     }
 
-    public Set<IGUID> runPredicates(Version version) {
+    /**
+     * Return the context to which this version belongs to
+     * @param version
+     * @return
+     */
+    private Set<IGUID> runPredicates(Version version) {
 
         Set<IGUID> contexts = new HashSet<>();
 
-        Iterator<IGUID> it = directory.getContexts();
+        Iterator<IGUID> it = cache.getContexts();
         while (it.hasNext()) {
             IGUID v = it.next();
 
@@ -109,7 +99,7 @@ public class SOSCMS implements CMS {
                 Context context = getContext(v);
                 runPredicate(v, context, version);
 
-                contexts.add(context.guid()); // FIXME - version of context?
+                contexts.add(context.guid());
 
             } catch (ContextNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find context from version " + v);
@@ -123,19 +113,19 @@ public class SOSCMS implements CMS {
     @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
-        return directory.getContents(context);
+        return contextsContents.getContents(context);
     }
 
     @Override
     public void addScope(Scope scope) {
 
-        directory.addScope(scope);
+        cache.addScope(scope);
     }
 
     @Override
     public Scope getScope(IGUID guid) {
 
-        return directory.getScope(guid);
+        return cache.getScope(guid);
     }
 
     @Override
@@ -194,13 +184,13 @@ public class SOSCMS implements CMS {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
 
-            Iterator<IGUID> it = directory.getContexts();
+            Iterator<IGUID> it = cache.getContexts();
             while (it.hasNext()) {
                 IGUID contextVersion = it.next();
 
                 try {
                     Context context = getContext(contextVersion);
-                    for(Version version : dds.getAllVersions()) {
+                    for(Version version : dds.getAllVersions()) { // FIXME - we actually need the dds to get the actual content to be processed
                         runPredicate(contextVersion, context, version);
                     }
 
@@ -220,15 +210,15 @@ public class SOSCMS implements CMS {
 
         boolean retval = false;
 
-        boolean alreadyRun = directory.has(contextVersion, versionGUID);
+        boolean alreadyRun = contextsContents.has(contextVersion, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
 
-            ContextsDirectory.Row row = directory.get(contextVersion, versionGUID);
+            ContextsContents.Row row = contextsContents.get(contextVersion, versionGUID);
             retval = row.predicateResult;
 
-            long maxage = context.predicate().max_age();
+            long maxage = context.predicate().maxAge();
 
             // TODO - diff timetamp, maxage, now
         }
@@ -238,7 +228,7 @@ public class SOSCMS implements CMS {
             boolean passed = context.predicate().test(versionGUID);
             retval = passed;
             if (passed) {
-                directory.addMapping(contextVersion, versionGUID);
+                contextsContents.addMapping(contextVersion, versionGUID);
             }
         }
 

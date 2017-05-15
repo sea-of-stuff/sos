@@ -9,7 +9,7 @@ import java.util.function.Predicate;
  */
 public interface SOSPredicate {
 
-    long max_age();
+    long maxAge();
 
     /**
      * Test the entity matching this GUID with the predicate

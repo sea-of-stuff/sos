@@ -2,8 +2,6 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Scope;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,18 +12,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * The ContextDirectory holds all the information regarding contexts and their contents.
+ * The ContextsContents holds all the information regarding contexts and their contents.
  * The contexts themselves are stored via the DDS.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextsDirectory implements Serializable  {
-
-    // GUID --> Context
-    private transient HashMap<IGUID, Context> contexts;
-
-    // GUID --> Scope
-    private transient HashMap<IGUID, Scope> scopes;
+public class ContextsContents implements Serializable  {
 
     // Assign a context to a scope
     // Context GUID --> Scope GUID
@@ -39,17 +31,13 @@ public class ContextsDirectory implements Serializable  {
         public boolean policySatisfied; // Whether the policy has been satisfied or not
     }
 
-    public ContextsDirectory() {
-
-        initialiseMappings();
-    }
-
-    private void initialiseMappings() {
-
-        contexts = new HashMap<>();
-        scopes = new HashMap<>();
+    public ContextsContents() {
         contextsToScopes = new HashMap<>();
         mappings = new HashMap<>();
+    }
+
+    public void addContextScope(IGUID context, IGUID scope) {
+        contextsToScopes.put(context, scope);
     }
 
     public void addMapping(IGUID context, IGUID version) {
@@ -70,10 +58,6 @@ public class ContextsDirectory implements Serializable  {
         return mappings.get(contextVersion).containsKey(content);
     }
 
-    public Iterator<IGUID> getContexts() {
-        return contexts.keySet().iterator();
-    }
-
     public Iterator<IGUID> getContents(IGUID context) {
         HashMap<IGUID, Row> contents = mappings.get(context);
         if (contents == null) {
@@ -81,14 +65,6 @@ public class ContextsDirectory implements Serializable  {
         } else {
             return contents.keySet().iterator();
         }
-    }
-
-    public void addScope(Scope scope) {
-        scopes.put(scope.guid(), scope);
-    }
-
-    public Scope getScope(IGUID guid) {
-        return scopes.get(guid);
     }
 
     ///////////////////
@@ -99,7 +75,7 @@ public class ContextsDirectory implements Serializable  {
         // TODO
     }
 
-    public static ContextsDirectory load(IFile file) throws IOException, ClassNotFoundException {
+    public static ContextsContents load(IFile file) throws IOException, ClassNotFoundException {
 
         // TODO
 

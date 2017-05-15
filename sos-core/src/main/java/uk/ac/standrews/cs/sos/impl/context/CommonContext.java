@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.context;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.model.*;
@@ -19,11 +18,6 @@ public abstract class CommonContext implements Context {
     protected Node[] nodes;
 
     private static int EMPTY_ARRAY = 0;
-
-    @Override
-    public ManifestType getType() {
-        return ManifestType.CONTEXT;
-    }
 
     @Override
     public IGUID guid() {
@@ -64,16 +58,6 @@ public abstract class CommonContext implements Context {
     @Override
     public Node[] whereToRun() {
         return new Node[EMPTY_ARRAY];
-    }
-
-    @Override
-    public boolean verifySignature(Role role) throws ManifestVerificationException {
-        return false;
-    }
-
-    @Override
-    public boolean isValid() {
-        return false;
     }
 
     @Override

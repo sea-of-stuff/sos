@@ -1,10 +1,8 @@
-package uk.ac.standrews.cs.sos.impl.context.defaults;
+package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
-import uk.ac.standrews.cs.sos.impl.context.CommonContext;
-import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -39,7 +37,7 @@ public class TextContext extends CommonContext {
             }
 
             return false;
-        });
+        }, Long.MAX_VALUE);
     }
 
     private boolean isText(String contentType) {

@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
@@ -17,7 +16,6 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 
@@ -68,9 +66,6 @@ public class ManifestsUtils {
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
                     break;
-                case CONTEXT: // TODO - removeme
-                    SOS_LOG.log(LEVEL.WARN, "CONTEXT MANIFEST LOADER NOT IMPLEMENTED YET");
-                    throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
             }
