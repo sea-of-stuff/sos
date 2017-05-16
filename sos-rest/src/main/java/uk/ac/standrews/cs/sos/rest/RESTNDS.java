@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.json.model.NodeModel;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -85,35 +86,10 @@ public class RESTNDS {
     public Response findByRole(@PathParam("role") String role) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/role/{role}");
 
-        role = role.toLowerCase();
+        NodeType nodeType = NodeType.get(role.toLowerCase());
 
         NDS nds = RESTConfig.sos.getNDS();
-
-        Set<Node> nodes;
-
-        switch(role) {
-            case "storage":
-                nodes = nds.getStorageNodes();
-                break;
-            case "nds":
-                nodes = nds.getNDSNodes();
-                break;
-            case "dds":
-                nodes = nds.getDDSNodes();
-                break;
-            case "mms":
-                nodes = nds.getMMSNodes();
-                break;
-            case "cms":
-                nodes = nds.getCMSNodes();
-                break;
-            case "rms":
-                nodes = nds.getRMSNodes();
-                break;
-            case "agent":
-            default:
-                return HTTPResponses.BAD_REQUEST("Bad input");
-        }
+        Set<Node> nodes = nds.getNodes(nodeType);
 
         String json = collectionToJson(nodes);
         return HTTPResponses.OK(json);

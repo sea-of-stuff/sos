@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 
 import java.util.Iterator;
@@ -43,49 +44,9 @@ public interface NDS extends SeaOfStuff {
      */
     Node getNode(IGUID guid) throws NodeNotFoundException;
 
-    /**
-     * Get the known NDS nodes
-     *
-     * @return
-     */
-    Set<Node> getNDSNodes();
+    Set<Node> getNodes(NodeType type);
 
-    /**
-     * Get the known DDS nodes
-     *
-     * @return
-     */
-    Set<Node> getDDSNodes();
-    Iterator<Node> getDDSNodesIterator();
-
-    /**
-     * Get the known MMS nodes
-     *
-     * @return
-     */
-    Set<Node> getMMSNodes();
-
-    /**
-     * Get the known storage nodes
-     *
-     * @return
-     */
-    Set<Node> getStorageNodes();
-    Iterator<Node> getStorageNodesIterator();
-
-    /**
-     * Get the known CMS nodes
-     *
-     * @return
-     */
-    Set<Node> getCMSNodes();
-
-    /**
-     * Get the known RMS nodes
-     *
-     * @return
-     */
-    Set<Node> getRMSNodes();
+    Iterator<Node> getNodesIterator(NodeType type);
 
     /**
      * Get all known nodes

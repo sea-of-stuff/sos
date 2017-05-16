@@ -123,7 +123,7 @@ public class LocalNodesDirectory {
         return getNodesIterator(Node::isStorage);
     }
 
-    private Set<Node> getNodes(Predicate<Node> predicate, int limit) {
+    public Set<Node> getNodes(Predicate<Node> predicate, int limit) {
 
         Stream<Node> nodesStream = knownNodes.stream()
                 .filter(predicate)

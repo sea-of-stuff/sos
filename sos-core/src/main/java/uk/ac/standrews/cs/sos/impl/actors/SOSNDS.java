@@ -9,18 +9,22 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.GetNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
  * The SOSNDS represents a basic NDS implementation.
  * It provides naive methods to register new nodes in the sos and get known nodes.
+ *
+ * TODO - pass scope as argument to methods
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -92,43 +96,30 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public Set<Node> getNDSNodes() {
-        return localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
+    public Set<Node> getNodes(NodeType type) {
+
+        switch(type) {
+            case STORAGE:
+                return localNodesDirectory.getNodes(Node::isStorage, LocalNodesDirectory.NO_LIMIT);
+            case NDS:
+                return localNodesDirectory.getNodes(Node::isNDS, LocalNodesDirectory.NO_LIMIT);
+            case CMS:
+                return localNodesDirectory.getNodes(Node::isCMS, LocalNodesDirectory.NO_LIMIT);
+            case DDS:
+                return localNodesDirectory.getNodes(Node::isDDS, LocalNodesDirectory.NO_LIMIT);
+            case RMS:
+                return localNodesDirectory.getNodes(Node::isRMS, LocalNodesDirectory.NO_LIMIT);
+            case MMS:
+                return localNodesDirectory.getNodes(Node::isMMS, LocalNodesDirectory.NO_LIMIT);
+        }
+
+        return Collections.emptySet();
     }
 
     @Override
-    public Set<Node> getDDSNodes() {
-        return localNodesDirectory.getDDSNodes(LocalNodesDirectory.NO_LIMIT);
-    }
+    public Iterator<Node> getNodesIterator(NodeType type) {
 
-    @Override
-    public Iterator<Node> getDDSNodesIterator() {
-        return localNodesDirectory.getDDSNodesIterator();
-    }
-
-    @Override
-    public Set<Node> getMMSNodes() {
-        return localNodesDirectory.getMMSNodes(LocalNodesDirectory.NO_LIMIT);
-    }
-
-    @Override
-    public Set<Node> getStorageNodes() {
-        return localNodesDirectory.getStorageNodes(LocalNodesDirectory.NO_LIMIT);
-    }
-
-    @Override
-    public Iterator<Node> getStorageNodesIterator() {
-        return localNodesDirectory.getStorageNodesIterator();
-    }
-
-    @Override
-    public Set<Node> getCMSNodes() {
-        return localNodesDirectory.getCMSNodes(LocalNodesDirectory.NO_LIMIT);
-    }
-
-    @Override
-    public Set<Node> getRMSNodes() {
-        return localNodesDirectory.getRMSNodes(LocalNodesDirectory.NO_LIMIT);
+        return getNodes(type).iterator();
     }
 
     @Override

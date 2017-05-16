@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
@@ -43,7 +44,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // FIXME - metadata and context should be replicated at different end-points
         // TODO - Policy based on context?
 
-        Iterator<Node> nodes = nds.getStorageNodesIterator();
+        Iterator<Node> nodes = nds.getNodesIterator(NodeType.STORAGE);
         int replicationFactor = 1; // FIXME - do not hardcode replic-factor. use context
 
         try {

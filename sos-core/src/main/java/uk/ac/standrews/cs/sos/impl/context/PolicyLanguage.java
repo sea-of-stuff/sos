@@ -10,8 +10,10 @@ import uk.ac.standrews.cs.sos.impl.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -67,6 +69,13 @@ public class PolicyLanguage {
 
     public void replicateData(Data data, Iterator<Node> nodes, int replicationFactor) {
 
+        try {
+            DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, null, null);
+            TasksQueue.instance().performAsyncTask(dataReplication);
+
+        } catch (SOSProtocolException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteData(IGUID guid, Iterator<Node> nodes) {
