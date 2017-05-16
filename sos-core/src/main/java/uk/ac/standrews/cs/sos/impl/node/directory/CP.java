@@ -19,7 +19,7 @@ public class CP {
      */
     public static String path;
 
-    private static final HikariDataSource ds = new HikariDataSource();
+    private final HikariDataSource ds;
 
     private static CP instance;
     public static CP instance() throws SQLException {
@@ -32,6 +32,8 @@ public class CP {
     private CP() throws SQLException {
 
         if (path == null || path.isEmpty()) throw new SQLException("DB Path not set");
+
+        ds = new HikariDataSource();
 
         ds.setDriverClassName("org.sqlite.JDBC");
         ds.setJdbcUrl("jdbc:sqlite:" + path);
