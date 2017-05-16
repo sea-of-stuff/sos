@@ -64,7 +64,7 @@ public class SOSCMS implements CMS {
         contextsContents = new ContextsContents();
 
 
-        PolicyLanguage.instance(nds);
+        PolicyLanguage.instance(nds, dds);
 
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);

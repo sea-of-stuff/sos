@@ -2,19 +2,20 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -29,17 +30,18 @@ import java.util.Set;
  */
 public class PolicyLanguage {
 
-    private static NDS nds;
+    private NDS nds;
+    private DDS dds;
 
-    private PolicyLanguage(NDS nds) {
+    private PolicyLanguage(NDS nds, DDS dds) {
         this.nds = nds;
     }
 
     private static PolicyLanguage instance;
-    public static PolicyLanguage instance(NDS nds) {
+    public static PolicyLanguage instance(NDS nds, DDS dds) {
 
         if (instance == null) {
-            instance = new PolicyLanguage(nds);
+            instance = new PolicyLanguage(nds, dds);
         }
 
         return instance;
@@ -59,7 +61,7 @@ public class PolicyLanguage {
 
         try {
 
-            ManifestReplication replication = new ManifestReplication(manifest, nodes, replicationFactor, null);
+            ManifestReplication replication = new ManifestReplication(manifest, nodes, replicationFactor, dds);
             TasksQueue.instance().performAsyncTask(replication);
 
         } catch (SOSProtocolException e) {
@@ -131,9 +133,9 @@ public class PolicyLanguage {
         return nds.getNode(guid); // TODO - restrict
     }
 
-    public Set<Node> getNodes(Scope scope, int type /* node type */) {
+    public Set<Node> getNodes(Scope scope, NodeType type) {
 
-        return Collections.emptySet();
+        return nds.getNodes(type);
     }
 
     public Role getRole(IGUID guid) {

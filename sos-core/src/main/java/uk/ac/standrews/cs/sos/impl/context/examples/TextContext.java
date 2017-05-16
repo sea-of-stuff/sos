@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Policy;
@@ -94,7 +95,7 @@ public class TextContext extends BaseContext {
 
             try {
 
-                Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, 0).iterator();
+                Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, NodeType.DDS).iterator();
                 PolicyLanguage.instance().replicateManifest(manifest, nodes, factor);
 
                 return true;
