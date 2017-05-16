@@ -44,7 +44,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // FIXME - metadata and context should be replicated at different end-points
         // TODO - Policy based on context?
 
-        Iterator<Node> nodes = nds.getNodesIterator(NodeType.STORAGE);
+        Iterator<Node> nodes = nds.getNodes(NodeType.STORAGE).iterator();
         int replicationFactor = 1; // FIXME - do not hardcode replic-factor. use context
 
         try {

@@ -6,13 +6,10 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 
-import java.util.Iterator;
 import java.util.Set;
 
 /**
  * NDS - Node Discovery Service
- *
- * Nodes that have this Role allow nodes in the SOS to discovery each other
  *
  * TODO - pass scope to methods
  *
@@ -23,16 +20,16 @@ public interface NDS extends SeaOfStuff {
     /**
      * Get a node object for the local node
      *
-     * @return
+     * @return this node
      */
     Node getThisNode();
 
     /**
      * Registers a node to the SOS
      *
-     * @param node
+     * @param node to register
      * @param localOnly if false, the node will be registered to other known NDS nodes
-     * @return
+     * @return registered node
      */
     Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException;
 
@@ -44,14 +41,18 @@ public interface NDS extends SeaOfStuff {
      */
     Node getNode(IGUID guid) throws NodeNotFoundException;
 
+    /**
+     * Get a set of nodes matching the specified type
+     *
+     * @param type of request nodes
+     * @return set of nodes
+     */
     Set<Node> getNodes(NodeType type);
-
-    Iterator<Node> getNodesIterator(NodeType type);
 
     /**
      * Get all known nodes
      *
-     * @return
+     * @return set of nodes
      */
     Set<Node> getAllNodes();
 

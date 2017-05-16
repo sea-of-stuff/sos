@@ -39,7 +39,7 @@ public class LocalNodesDirectory {
      * Add an arbitrary node to the directory.
      * This will be used to discovery nodes/data in the LocalSOSNode.
      *
-     * @param node
+     * @param node to be added
      */
     public void addNode(Node node) {
 
@@ -56,7 +56,7 @@ public class LocalNodesDirectory {
     /**
      * Get all known nodes.
      *
-     * @return
+     * @return set of known nodes
      */
     public Set<Node> getKnownNodes() {
         return knownNodes;
@@ -65,64 +65,24 @@ public class LocalNodesDirectory {
     /**
      * Get a Node node given its guid identifier.
      *
-     * @param guid
-     * @return
+     * @param guid for the node
+     * @return matching node
      */
     public Node getNode(IGUID guid) {
         Optional<Node> node = knownNodes.stream()
                 .filter(n -> n.getNodeGUID().equals(guid))
                 .findFirst();
 
-        return node.isPresent() ? node.get() : null;
+        return node.orElse(null);
     }
 
     /**
-     * Get all NDS Nodes
+     * Get the nodes matching the predicate and within the given limit
      *
-     * @return NDS nodes
+     * @param predicate (e.g. Node::isAgent, Node::isStorage)
+     * @param limit max number of nodes to return, ignore if limit <= 0
+     * @return set of nodes
      */
-    public Set<Node> getNDSNodes(int limit) {
-        return getNodes(Node::isNDS, limit);
-    }
-
-    /**
-     * Get all DDS Nodes
-     *
-     * @return DDS nodes
-     */
-    public Set<Node> getDDSNodes(int limit) {
-        return getNodes(Node::isDDS, limit);
-    }
-
-    public Iterator<Node> getDDSNodesIterator() {
-        return getNodesIterator(Node::isDDS);
-    }
-
-    /**
-     * Get all MCS Nodes
-     *
-     * @return MCS nodes
-     */
-    public Set<Node> getMMSNodes(int limit) {
-        return getNodes(Node::isMMS, limit);
-    }
-
-    public Set<Node> getCMSNodes(int limit) {
-        return getNodes(Node::isCMS, limit);
-    }
-
-    public Set<Node> getRMSNodes(int limit) {
-        return getNodes(Node::isRMS, limit);
-    }
-
-    public Set<Node> getStorageNodes(int limit) {
-        return getNodes(Node::isStorage, limit);
-    }
-
-    public Iterator<Node> getStorageNodesIterator() {
-        return getNodesIterator(Node::isStorage);
-    }
-
     public Set<Node> getNodes(Predicate<Node> predicate, int limit) {
 
         Stream<Node> nodesStream = knownNodes.stream()
@@ -139,18 +99,10 @@ public class LocalNodesDirectory {
         return new HashSet<>(nodes);
     }
 
-    private Iterator<Node> getNodesIterator(Predicate<Node> predicate) {
-
-        return knownNodes.stream()
-                .filter(predicate)
-                .filter(n -> !n.getNodeGUID().equals(localNode.getNodeGUID())) // Skip any references to local node
-                .distinct()
-                .iterator();
-    }
-
     /**
      * Get the local node running
-     * @return
+     *
+     * @return local node
      */
     public Node getLocalNode() {
         return this.localNode;
@@ -159,7 +111,7 @@ public class LocalNodesDirectory {
     /**
      * Persist the collection of known nodes.
      *
-     * @throws NodesDirectoryException
+     * @throws NodesDirectoryException if nodes table cannot be persisted
      */
     public void persistNodesTable() throws NodesDirectoryException {
         try {
@@ -173,7 +125,8 @@ public class LocalNodesDirectory {
 
     /**
      * Load nodes from the DB to the node directory (in memory)
-     * @throws NodesDirectoryException
+     *
+     * @throws NodesDirectoryException if nodes cannot be loaded
      */
     private void loadNodesFromDB() throws NodesDirectoryException {
         try {

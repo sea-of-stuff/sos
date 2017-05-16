@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -58,7 +57,7 @@ public class SOSNDS implements NDS {
 
         // Register the node to other NDS nodes
         if (!localOnly) {
-            Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
+            Set<Node> ndsNodes = getNodes(NodeType.NDS);
             ndsNodes.forEach(n -> {
                 RegisterNode registerNode = new RegisterNode(node, n);
                 TasksQueue.instance().performAsyncTask(registerNode);
@@ -117,12 +116,6 @@ public class SOSNDS implements NDS {
     }
 
     @Override
-    public Iterator<Node> getNodesIterator(NodeType type) {
-
-        return getNodes(type).iterator();
-    }
-
-    @Override
     public Set<Node> getAllNodes() {
         return localNodesDirectory.getKnownNodes();
     }
@@ -132,7 +125,7 @@ public class SOSNDS implements NDS {
      */
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {
 
-        Set<Node> ndsNodes = localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT);
+        Set<Node> ndsNodes = getNodes(NodeType.NDS);
         GetNode getNode = new GetNode(nodeGUID, ndsNodes.iterator());
         TasksQueue.instance().performSyncTask(getNode);
 

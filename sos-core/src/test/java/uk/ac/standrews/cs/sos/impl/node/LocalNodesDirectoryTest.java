@@ -88,10 +88,11 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
         assertEquals(localNodesDirectory.getKnownNodes().size(), 8);
         assertEquals(localNodesDirectory.getNode(guid), node);
-        assertEquals(localNodesDirectory.getStorageNodes(LocalNodesDirectory.NO_LIMIT).size(), 3);
-        assertEquals(localNodesDirectory.getDDSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
-        assertEquals(localNodesDirectory.getNDSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
-        assertEquals(localNodesDirectory.getMMSNodes(LocalNodesDirectory.NO_LIMIT).size(), 2);
+
+        assertEquals(localNodesDirectory.getNodes(Node::isStorage, LocalNodesDirectory.NO_LIMIT).size(), 3);
+        assertEquals(localNodesDirectory.getNodes(Node::isDDS, LocalNodesDirectory.NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNodes(Node::isNDS, LocalNodesDirectory.NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNodes(Node::isMMS, LocalNodesDirectory.NO_LIMIT).size(), 2);
     }
 
     @Test
@@ -122,7 +123,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(true, true, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(3);
+        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 3);
         assertEquals(storageNodes.size(), 3);
     }
 
@@ -140,7 +141,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(true, true, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(2);
+        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 2);
         assertEquals(storageNodes.size(), 2);
     }
 
@@ -158,7 +159,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(true, true, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(10);
+        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 10);
         assertEquals(storageNodes.size(), 3);
     }
 
@@ -176,7 +177,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(true, true, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getStorageNodes(-1);
+        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, -1);
         assertEquals(storageNodes.size(), 3);
     }
 
