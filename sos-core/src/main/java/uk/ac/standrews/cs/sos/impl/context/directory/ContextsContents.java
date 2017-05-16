@@ -24,13 +24,8 @@ public class ContextsContents implements Serializable  {
     private transient HashMap<IGUID, IGUID> contextsToScopes;
 
     // Maps the context to the versions belonging to it
-    private transient HashMap<IGUID, HashMap<IGUID, Row>> mappings;
-    public class Row {
-        public boolean predicateResult;
-        public long timestamp; // Time when the predicate was run for this content
-        public boolean policySatisfied; // Whether the policy has been satisfied or not
-    }
-
+    private transient HashMap<IGUID, HashMap<IGUID, ContextContent>> mappings;
+    
     public ContextsContents() {
         contextsToScopes = new HashMap<>();
         mappings = new HashMap<>();
@@ -40,13 +35,13 @@ public class ContextsContents implements Serializable  {
         contextsToScopes.put(context, scope);
     }
 
-    public void addMapping(IGUID context, IGUID version) {
+    public void addMapping(IGUID context, IGUID version, ContextContent content) {
 
         if (!mappings.containsKey(context)) {
             mappings.put(context, new HashMap<>());
         }
 
-        mappings.get(context).put(version, new Row());
+        mappings.get(context).put(version, content);
     }
 
     /**
@@ -56,7 +51,7 @@ public class ContextsContents implements Serializable  {
      * @param content
      * @return
      */
-    public Row get(IGUID context, IGUID content) {
+    public ContextContent get(IGUID context, IGUID content) {
 
         return mappings.get(context).get(content);
     }
@@ -67,7 +62,7 @@ public class ContextsContents implements Serializable  {
     }
 
     public Iterator<IGUID> getContents(IGUID context) {
-        HashMap<IGUID, Row> contents = mappings.get(context);
+        HashMap<IGUID, ContextContent> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptyIterator();
         } else {
@@ -75,8 +70,8 @@ public class ContextsContents implements Serializable  {
         }
     }
 
-    public HashMap<IGUID, Row> getContentsRows(IGUID context) {
-        HashMap<IGUID, Row> contents = mappings.get(context);
+    public HashMap<IGUID, ContextContent> getContentsRows(IGUID context) {
+        HashMap<IGUID, ContextContent> contents = mappings.get(context);
         if (contents == null) {
             return new HashMap<>();
         } else {

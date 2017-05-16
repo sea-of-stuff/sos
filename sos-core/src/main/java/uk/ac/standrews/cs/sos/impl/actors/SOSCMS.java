@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -171,7 +172,7 @@ public class SOSCMS implements CMS {
 
                 IGUID contextGUID = it.next();
 
-                HashMap<IGUID, ContextsContents.Row> contentsToProcess = contextsContents.getContentsRows(contextGUID);
+                HashMap<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsRows(contextGUID);
                 contentsToProcess.forEach((guid, row) -> {
                     if (row.predicateResult && !row.policySatisfied) {
                         runPolicies(contextGUID, guid);
@@ -219,7 +220,10 @@ public class SOSCMS implements CMS {
     /**
      * Run the predicate of the given context against the specified version
      *
-     * TODO - logic
+     * - Check if the predicate has already run and if the maxAge constraint is still valid.
+     * - If the answer to the above is NO/False:
+     *  - Run the predicate of the context against the given version
+     *  - Update the contextsContents
      *
      * @param context
      * @param version
@@ -234,7 +238,7 @@ public class SOSCMS implements CMS {
 
         if (alreadyRun) {
 
-            ContextsContents.Row row = contextsContents.get(context.guid(), versionGUID);
+            ContextContent content = contextsContents.get(context.guid(), versionGUID);
 
             long maxage = context.predicate().maxAge();
 
@@ -244,9 +248,12 @@ public class SOSCMS implements CMS {
         if (!alreadyRun && !maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
-            if (passed) {
-                contextsContents.addMapping(context.guid(), versionGUID);
-            }
+
+            ContextContent content = new ContextContent();
+            content.predicateResult = passed;
+            content.timestamp = System.nanoTime();
+            
+            contextsContents.addMapping(context.guid(), versionGUID, content);
         }
 
     }

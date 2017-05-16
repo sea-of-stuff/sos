@@ -64,6 +64,8 @@ public class TextContext extends BaseContext {
             case "text/enriched":
             case "text/html":
                 return true;
+            case "application/octet-stream": // FIXME - remove it. Having it here only for testing reasons
+                return true;
             default:
                 return false;
         }
