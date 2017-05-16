@@ -27,8 +27,9 @@ public interface Policy {
     /**
      * Check that the policy is satisfied
      *
+     * @param manifest
      * @return true if the policy is satisfied
      */
-    boolean check();
+    boolean check(Manifest manifest);
 
 }

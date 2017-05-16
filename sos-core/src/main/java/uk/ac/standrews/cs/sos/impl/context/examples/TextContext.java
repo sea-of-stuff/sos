@@ -23,6 +23,8 @@ import java.util.Iterator;
  */
 public class TextContext extends BaseContext {
 
+    private static final int NUMBER_OF_REPLICAS = 3;
+
     public TextContext(String name) {
         super(name);
     }
@@ -75,7 +77,7 @@ public class TextContext extends BaseContext {
     @Override
     public Policy[] policies() {
         return new Policy[]{
-                new ManifestReplicationPolicy(3)
+                new ManifestReplicationPolicy(NUMBER_OF_REPLICAS)
         };
     }
 
@@ -83,7 +85,7 @@ public class TextContext extends BaseContext {
 
         private int factor;
 
-        public ManifestReplicationPolicy(int factor) {
+        ManifestReplicationPolicy(int factor) {
             this.factor = factor;
         }
 
@@ -104,10 +106,15 @@ public class TextContext extends BaseContext {
         }
 
         @Override
-        public boolean check() {
+        public boolean check(Manifest manifest) {
 
-            // TODO - get nodes that might have manifest from DDS
-            // challenge nodes
+            try {
+                int numberReplicas = PolicyLanguage.instance().numberOfReplicas(null, manifest.guid());
+                return numberReplicas >= factor;
+
+            } catch (SOSException e) {
+                e.printStackTrace();
+            }
 
             return false;
         }
