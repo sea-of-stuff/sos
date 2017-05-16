@@ -97,13 +97,13 @@ public class RESTNDS {
 
     private String collectionToJson(Set<Node> nodes) {
 
-        String json = "[";
+        StringBuilder json = new StringBuilder("[");
         for(Node node:nodes) {
-            json += node.toString() + ", ";
+            json.append(node.toString()).append(", ");
         }
-        json = json.substring(0, json.length()-2);
+        json = new StringBuilder(json.substring(0, json.length() - 2));
 
-        json += "]";
-        return json;
+        json.append("]");
+        return json.toString();
     }
 }
