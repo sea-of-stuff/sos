@@ -17,9 +17,8 @@ import uk.ac.standrews.cs.sos.model.Scope;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -84,33 +83,6 @@ public class SOSCMS implements CMS {
         return cache.getContext(contextGUID);
     }
 
-    /**
-     * Return the context to which this version belongs to
-     * @param version
-     * @return
-     */
-    private Set<IGUID> runPredicates(Version version) {
-
-        Set<IGUID> contexts = new HashSet<>();
-
-        Iterator<IGUID> it = cache.getContexts();
-        while (it.hasNext()) {
-
-            try {
-                Context context = getContext(it.next());
-                runPredicate(context, version);
-
-                contexts.add(context.guid());
-
-            } catch (ContextNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to find context");
-            }
-
-        }
-
-        return contexts;
-    }
-
     @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
@@ -135,10 +107,10 @@ public class SOSCMS implements CMS {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
-            IFile cacheFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-            // TODO - cache.persist(cacheFile); <-- persist method of this class/index class
+            IFile contextsContents = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+            this.contextsContents.persist(contextsContents);
 
-        } catch (DataStorageException e) {
+        } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
         }
     }
@@ -148,49 +120,24 @@ public class SOSCMS implements CMS {
     ////////////////////
 
     /**
-     * Periodically get data (or references?) from other nodes
-     * as specified by the sources of a context
+     * Run PERIODIC predicates.
      *
-     */
-    private void getData() {
-
-        service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Get data from other nodes");
-
-            // TODO - iterate over context
-            // TODO - for each context, context sources
-
-        }, 1, 1, TimeUnit.MINUTES);
-    }
-
-    /**
-     * Periodically spawn/replicate contexts to other nodes
-     */
-    private void spawnContexts() {
-
-        service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Spawn contexts to other nodes");
-
-            // Get contexts that have to be spawned
-            // spawn contexts
-
-        }, 1, 1, TimeUnit.MINUTES);
-    }
-
-    /**
-     * Run PERIODIC predicates
+     * Iterate over all active contexts.
+     * For each context:
+     * Run all known versions against the predicate of the context.
+     *
      */
     private void runPredicates() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running periodic predicates");
+            SOS_LOG.log(LEVEL.INFO, "Running predicates");
 
             Iterator<IGUID> it = cache.getContexts();
             while (it.hasNext()) {
 
                 try {
                     Context context = getContext(it.next());
-                    for(Version version : dds.getAllVersions()) {
+                    for(Version version : dds.getAllVersions()) { // FIXME - get only heads?
                         runPredicate(context, version);
                     }
 
@@ -204,11 +151,67 @@ public class SOSCMS implements CMS {
 
     }
 
-    private boolean runPredicate(Context context, Version version) {
+    /**
+     * Run PERIODIC policies.
+     *
+     * TODO - need to write down logic
+     *
+     *
+     */
+    private void runPolicies() {
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running policies");
+
+        }, 1, 10, TimeUnit.MINUTES);
+    }
+
+
+    /**
+     * Periodically get data (or references?) from other nodes
+     * as specified by the sources of a context
+     */
+    private void getData() {
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "N/A yet - Get data from other nodes");
+
+            // TODO - iterate over context
+            // TODO - for each context, context sources
+
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Periodically spawn/replicate contexts to other nodes
+     */
+    private void spawnContexts() {
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "N/A yet - Spawn contexts to other nodes");
+
+            // Get contexts that have to be spawned
+            // spawn contexts
+
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /////////////////////
+    // PRIVATE METHODS //
+    /////////////////////
+
+    /**
+     * Run the predicate of the given context against the specified version
+     *
+     * TODO - logic
+     *
+     * @param context
+     * @param version
+     * @return
+     */
+    private void runPredicate(Context context, Version version) {
 
         IGUID versionGUID = version.guid();
-
-        boolean retval = false;
 
         boolean alreadyRun = contextsContents.has(context.guid(), versionGUID);
         boolean maxAgeExpired = false;
@@ -216,7 +219,6 @@ public class SOSCMS implements CMS {
         if (alreadyRun) {
 
             ContextsContents.Row row = contextsContents.get(context.guid(), versionGUID);
-            retval = row.predicateResult;
 
             long maxage = context.predicate().maxAge();
 
@@ -226,21 +228,11 @@ public class SOSCMS implements CMS {
         if (!alreadyRun && !maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
-            retval = passed;
             if (passed) {
                 contextsContents.addMapping(context.guid(), versionGUID);
             }
         }
 
-        return retval;
-    }
-
-    private void runPolicies() {
-
-        service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running policies");
-
-        }, 1, 10, TimeUnit.MINUTES);
     }
 
 }

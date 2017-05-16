@@ -43,8 +43,19 @@ public interface CMS extends SeaOfStuff {
      */
     Iterator<IGUID> getContents(IGUID context);
 
+    /**
+     * Add a scope to the CMS
+     *
+     * @param scope
+     */
     void addScope(Scope scope);
 
+    /**
+     * Get the scope with the matching guid
+     *
+     * @param guid
+     * @return
+     */
     Scope getScope(IGUID guid);
 
     /**
