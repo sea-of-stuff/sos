@@ -56,11 +56,24 @@ public class ContextsContents implements Serializable  {
         return mappings.get(context).get(content);
     }
 
-    public boolean has(IGUID context, IGUID content) {
+    /**
+     * Checks if the content has already been run for the given context
+     *
+     * @param context
+     * @param content
+     * @return
+     */
+    public boolean contentProcessedForContext(IGUID context, IGUID content) {
 
         return mappings.containsKey(content) && mappings.get(context).containsKey(content);
     }
 
+    /**
+     * Get an iterator for all the contents for a given context
+     *
+     * @param context
+     * @return
+     */
     public Iterator<IGUID> getContents(IGUID context) {
         HashMap<IGUID, ContextContent> contents = mappings.get(context);
         if (contents == null) {
@@ -84,7 +97,7 @@ public class ContextsContents implements Serializable  {
     ///////////////////
 
     public void persist(IFile file) throws IOException {
-        // TODO
+        // TODO - persist the data stored in this object into a file
     }
 
     public static ContextsContents load(IFile file) throws IOException, ClassNotFoundException {

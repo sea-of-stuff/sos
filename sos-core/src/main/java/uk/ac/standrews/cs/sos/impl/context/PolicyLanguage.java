@@ -55,7 +55,7 @@ public class PolicyLanguage {
         }
 
         // Need to create instance with NDS and RMS first
-        throw new SOSException("Unable to get Policy Language instance");
+        throw new SOSException("Unable to get Policy Language instance. Make an instance of it first!");
     }
 
     public void replicateManifest(Manifest manifest, Iterator<Node> nodes, int replicationFactor) {
@@ -132,7 +132,7 @@ public class PolicyLanguage {
 
     public Node getNode(IGUID guid) throws NodeNotFoundException {
 
-        return nds.getNode(guid); // TODO - restrict
+        return nds.getNode(guid);
     }
 
     public Set<Node> getNodes(Scope scope, NodeType type) {

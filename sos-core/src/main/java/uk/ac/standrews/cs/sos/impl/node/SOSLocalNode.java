@@ -215,7 +215,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         cms = new SOSCMS(localStorage, dds, nds);
 
-        // TODO - this is hardcoded. Contexts and scopes should be loaded
+        // TODO - this is hardcoded. Contexts and scopes should be loaded from storage
         try {
             Scope scope = new ScopeImpl(Scope.TYPE.ANY);
 
@@ -227,7 +227,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         createDummyUserRole();
 

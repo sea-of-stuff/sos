@@ -76,6 +76,9 @@ public class OctetStreamContext extends BaseContext {
         };
     }
 
+    /**
+     * Replicate manifests at least n-times
+     */
     private class ManifestReplicationPolicy implements Policy {
 
         private int factor;

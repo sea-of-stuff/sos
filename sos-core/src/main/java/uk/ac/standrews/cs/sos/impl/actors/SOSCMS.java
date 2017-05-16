@@ -238,7 +238,7 @@ public class SOSCMS implements CMS {
 
         IGUID versionGUID = version.guid();
 
-        boolean alreadyRun = contextsContents.has(context.guid(), versionGUID);
+        boolean alreadyRun = contextsContents.contentProcessedForContext(context.guid(), versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {

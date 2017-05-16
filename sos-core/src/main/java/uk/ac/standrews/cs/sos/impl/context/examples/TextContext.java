@@ -74,17 +74,14 @@ public class TextContext extends BaseContext {
     @Override
     public Policy[] policies() {
         return new Policy[]{
-                new ManifestReplicationPolicy(NUMBER_OF_REPLICAS)
+                new DeletionPolicy()
         };
     }
 
-    private class ManifestReplicationPolicy implements Policy {
-
-        private int factor;
-
-        ManifestReplicationPolicy(int factor) {
-            this.factor = factor;
-        }
+    /**
+     * Delete content from some nodes
+     */
+    private class DeletionPolicy implements Policy {
 
         @Override
         public boolean run(Manifest manifest) {
@@ -111,7 +108,7 @@ public class TextContext extends BaseContext {
 
             try {
                 int numberReplicas = PolicyLanguage.instance().numberOfReplicas(null, manifest.guid());
-                return numberReplicas >= factor;
+                return numberReplicas == 0;
 
             } catch (SOSException e) {
                 e.printStackTrace();
