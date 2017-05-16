@@ -241,8 +241,13 @@ public class SOSCMS implements CMS {
             ContextContent content = contextsContents.get(context.guid(), versionGUID);
 
             long maxage = context.predicate().maxAge();
+            long contentLastRun = content.timestamp;
+            long now = System.nanoTime();
 
-            // TODO - diff timetamp, maxage, now
+            if (now - contentLastRun > maxage) {
+                maxAgeExpired = true;
+            }
+
         }
 
         if (!alreadyRun && !maxAgeExpired) {
