@@ -10,10 +10,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,12 +46,14 @@ public class DatabaseImpl implements Database {
             "(`DB_taskid`       INTEGER , " +
             "PRIMARY KEY (`DB_taskid`) )";
 
+    private String path;
+
     public DatabaseImpl(String path) throws DatabaseException {
-        CP.path = path;
+        this.path = path;
 
         FileHelper.MakePath(path);
 
-        try (Connection connection = CP.instance().connection()) {
+        try (Connection connection = getSQLiteConnection()) {
             boolean tableExists = checkSQLiteTableExists(connection, SQL_CHECK_NODES_TABLE_EXISTS);
             if (!tableExists) {
                 createNodesTable(connection, SQL_CREATE_NODES_TABLE);
@@ -91,7 +90,7 @@ public class DatabaseImpl implements Database {
     @Override
     public void addNode(Node node) throws DatabaseConnectionException {
 
-        try (Connection connection = CP.instance().connection();
+        try (Connection connection = getSQLiteConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_NODE)) {
 
             preparedStatement.setString(1, node.getNodeGUID().toString());
@@ -115,7 +114,7 @@ public class DatabaseImpl implements Database {
     public Set<SOSNode> getNodes() throws DatabaseConnectionException {
         Set<SOSNode> retval = new HashSet<>();
 
-        try (Connection connection = CP.instance().connection();
+        try (Connection connection = getSQLiteConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NODES);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -142,4 +141,20 @@ public class DatabaseImpl implements Database {
         return retval;
     }
 
+    /**
+     * Caller must make sure that the connection is closed
+     * @return
+     * @throws DatabaseConnectionException
+     */
+    private Connection getSQLiteConnection() throws DatabaseConnectionException {
+        Connection connection;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+        } catch (Exception e) {
+            throw new DatabaseConnectionException(e);
+        }
+
+        return connection;
+    }
 }

@@ -18,6 +18,9 @@ import uk.ac.standrews.cs.webdav.entrypoints.WebDAVLauncher;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,6 +34,13 @@ public class MAISOS {
     private static final String FS_OPT = "fs";
     private static final String ROOT_OPT = "root";
 
+    /**
+     *
+     * Example: java -jar sos.jar -c config.conf -j -fs -root 73a7f67f31908dd0e574699f163eda2cc117f7f4
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         CommandLine cli = InitCLI(args);
 
@@ -125,7 +135,9 @@ public class MAISOS {
                     executorService.shutdown();
 
                     ServerState.kill();
-                    SOS_LOG.log(LEVEL.INFO, "SOS Instance Terminated");
+
+                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    SOS_LOG.log(LEVEL.INFO, "SOS Instance Terminated at " + dateFormat.format(new Date()));
                 }
             });
         }

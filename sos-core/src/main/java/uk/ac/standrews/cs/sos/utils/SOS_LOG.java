@@ -17,7 +17,8 @@ public class SOS_LOG {
 
     public SOS_LOG(IGUID guid) {
         nodeGUID = guid;
-        log = Logger.LOG(Logger.LOG4J_LOGGER);
+
+        log = Logger.LOG(Logger.STOUT_LOGGER);
     }
 
     public static void log(LEVEL level, String message) {

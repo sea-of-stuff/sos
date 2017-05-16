@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.sos.impl.context.examples.TextContext;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
-import uk.ac.standrews.cs.sos.impl.node.directory.CP;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
@@ -33,7 +32,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -150,12 +148,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dds.flush();
         storage.flush();
         cacheFlusherService.shutdown();
-
-        try {
-            CP.instance().kill();
-        } catch (SQLException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to close the DB connection pool cleanly");
-        }
 
         RequestsManager.getInstance().shutdown();
     }

@@ -38,6 +38,12 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         this.dds = dds;
     }
 
+    /**
+     * Async operation
+     *
+     * @param manifest
+     * @throws ManifestPersistException
+     */
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
@@ -49,7 +55,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
         try {
             ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dds);
-            TasksQueue.instance().performSyncTask(replicationTask);
+            TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
         }

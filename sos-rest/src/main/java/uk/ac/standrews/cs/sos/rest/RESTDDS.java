@@ -52,9 +52,10 @@ public class RESTDDS {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }
 
-        DDS dds = RESTConfig.sos.getDDS();
         try {
+            DDS dds = RESTConfig.sos.getDDS();
             dds.addManifest(manifest);
+
         } catch (ManifestPersistException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }
@@ -79,10 +80,11 @@ public class RESTDDS {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
-        DDS dds = RESTConfig.sos.getDDS();
         try {
+            DDS dds = RESTConfig.sos.getDDS();
             Manifest manifest = dds.getManifest(manifestGUID);
             return HTTPResponses.OK(manifest.toString());
+
         } catch (ManifestNotFoundException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
         }
