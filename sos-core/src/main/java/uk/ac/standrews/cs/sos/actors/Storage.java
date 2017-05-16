@@ -6,12 +6,9 @@ import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
-import uk.ac.standrews.cs.sos.utils.Tuple;
 
 import java.io.InputStream;
-import java.util.Set;
 
 /**
  * The Storage roles defines an entry point in the SOS to store data.
@@ -28,14 +25,12 @@ public interface Storage extends SeaOfStuff {
      * @param atomBuilder defines the sources for the atom to be added
      * @param persist if true the atom is persisted in this node, otherwise it is cached (e.g. it can be later purged)
      * @param ddsNotificationInfo information used by the storage actor to notify any DDS actors about the atom manifest
-     * @return Tuple<Atom, Set<Node>>
-     *      - The generated atom manifest. This will contain the locations known to this node prior to any replication.
-     *      - A set of DDS nodes
+     * @return The generated atom manifest. This will contain the locations known to this node prior to any replication.
      *
      * @throws StorageException
      * @throws ManifestPersistException
      */
-    Tuple<Atom, Set<Node>> addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.

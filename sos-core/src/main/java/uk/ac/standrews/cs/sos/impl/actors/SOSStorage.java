@@ -22,7 +22,6 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.sos.utils.Tuple;
 
 import java.io.InputStream;
 import java.util.Iterator;
@@ -47,7 +46,7 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Tuple<Atom, Set<Node>> addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
+    public Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);
@@ -58,8 +57,7 @@ public class SOSStorage implements Storage {
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dds.addManifest(manifest);
 
-        // Y is supposed to be the list of DDS nodes that know about this new atom
-        return new Tuple<>(manifest, null);
+        return manifest;
     }
 
     /**

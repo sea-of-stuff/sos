@@ -274,12 +274,12 @@ public class SOSCMS implements CMS {
             Context context = getContext(contextGUID);
 
             Policy[] policies = context.policies();
-            for (Policy policy : policies) {
+            for (Policy policy:policies) {
 
                 Manifest manifest = dds.getManifest(guid);
-                policy.run(manifest);
+                // policy.run(manifest);
 
-                System.out.println("Policy result should be updated");
+                System.out.println("Policy result should be updated for context " + contextGUID + " and content " + guid);
                 // TODO - update contextsContents
             }
         } catch (ContextNotFoundException | ManifestNotFoundException e) {
