@@ -277,7 +277,7 @@ public class SOSCMS implements CMS {
             for (Policy policy:policies) {
 
                 Manifest manifest = dds.getManifest(guid);
-                // policy.run(manifest);
+                policy.run(manifest);
 
                 System.out.println("Policy result should be updated for context " + contextGUID + " and content " + guid);
                 // TODO - update contextsContents
