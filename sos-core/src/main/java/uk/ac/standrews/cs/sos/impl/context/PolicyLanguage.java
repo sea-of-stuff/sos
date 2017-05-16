@@ -73,6 +73,7 @@ public class PolicyLanguage {
     public void replicateData(Data data, Iterator<Node> nodes, int replicationFactor) {
 
         try {
+            // FIXME - Remove that index. In fact, it should be part of the DDS
             DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, nds, dds);
             TasksQueue.instance().performAsyncTask(dataReplication);
 
@@ -81,7 +82,7 @@ public class PolicyLanguage {
         }
     }
 
-    public void deleteData(IGUID guid, Iterator<Node> nodes) {
+    public void deleteData(IGUID guid, IGUID node) {
 
     }
 

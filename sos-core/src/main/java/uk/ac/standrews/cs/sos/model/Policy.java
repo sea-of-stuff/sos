@@ -19,15 +19,16 @@ public interface Policy {
     /**
      * Run this policy over a manifest
      *
-     * @param manifest
-     * @return true if the policy was run/queued
+     * @param manifest over which this policy runs
+     * @return true if the policy was run/queued. The result of this method is not a result of success of the actual policy.
+     * @see #check(Manifest) for info about the success of the policy
      */
     boolean run(Manifest manifest);
 
     /**
      * Check that the policy is satisfied
      *
-     * @param manifest
+     * @param manifest over which this policy will check its agreement
      * @return true if the policy is satisfied
      */
     boolean check(Manifest manifest);

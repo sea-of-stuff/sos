@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.ScopeImpl;
 import uk.ac.standrews.cs.sos.impl.actors.*;
-import uk.ac.standrews.cs.sos.impl.context.examples.TextContext;
+import uk.ac.standrews.cs.sos.impl.context.examples.OctetStreamContext;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
@@ -217,7 +217,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // TODO - this is hardcoded. Contexts and scopes should be loaded
         try {
             Scope scope = new ScopeImpl(Scope.TYPE.ANY);
-            Context dummy = new TextContext("text context");
+            Context dummy = new OctetStreamContext("text context");
 
             cms.addContext(scope, dummy);
         } catch (Exception e) {

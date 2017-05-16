@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
@@ -9,30 +8,33 @@ import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.util.Iterator;
+
 /**
  * This is a simple context that categorises all textual content and replicates it at least two times
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class TextContext extends BaseContext {
+public class OctetStreamContext extends BaseContext {
 
     private static final int NUMBER_OF_REPLICAS = 3;
 
-    public TextContext(String name) {
+    public OctetStreamContext(String name) {
         super(name);
     }
 
-    public TextContext(String name, Node[] sources) {
+    public OctetStreamContext(String name, Node[] sources) {
         super(name, sources);
     }
 
-    public TextContext(IGUID guid, String name, Node[] sources) {
+    public OctetStreamContext(IGUID guid, String name, Node[] sources) {
         super(guid, name, sources);
     }
 
@@ -45,7 +47,7 @@ public class TextContext extends BaseContext {
 
             try {
                 String contentType = getMetaProperty(agent, guid, MetadataConstants.CONTENT_TYPE);
-                return isText(contentType);
+                return isOctetStream(contentType);
 
             } catch (Exception e) {
                 // This could occur because the metadata could not be found or the type property was not available
@@ -56,14 +58,10 @@ public class TextContext extends BaseContext {
         }, Long.MAX_VALUE);
     }
 
-    private boolean isText(String contentType) {
+    private boolean isOctetStream(String contentType) {
 
         switch(contentType.toLowerCase()) {
-            case "text":
-            case "text/plain":
-            case "text/richtext":
-            case "text/enriched":
-            case "text/html":
+            case "application/octet-stream":
                 return true;
             default:
                 return false;
@@ -90,13 +88,8 @@ public class TextContext extends BaseContext {
         public boolean run(Manifest manifest) {
 
             try {
-                IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
-
-                boolean hasData = PolicyLanguage.instance().nodeHasData(fakeNodeGUID, manifest.guid());
-
-                if (hasData) {
-                    PolicyLanguage.instance().deleteData(manifest.guid(), fakeNodeGUID);
-                }
+                Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, NodeType.DDS).iterator();
+                PolicyLanguage.instance().replicateManifest(manifest, nodes, factor);
 
                 return true;
             } catch (SOSException e) {

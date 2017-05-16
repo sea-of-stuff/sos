@@ -31,6 +31,7 @@ public class AtomStorage {
         this.storage = storage;
 
 
+        // Load/Create the locations Index impl
         try {
             IDirectory cacheDir = storage.getNodeDirectory();
             IFile file = storage.createFile(cacheDir, "locations.index");
