@@ -8,16 +8,16 @@ import uk.ac.standrews.cs.sos.actors.CMS;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Scope;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -62,10 +62,10 @@ public class SOSCMS implements CMS {
 
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
-        getData();
-        spawnContexts();
-        runPredicates();
-        runPolicies();
+        getDataPeriodic();
+        spawnContextsPeriodic();
+        runPredicatesPeriodic();
+        runPoliciesPeriodic();
     }
 
     @Override
@@ -127,7 +127,7 @@ public class SOSCMS implements CMS {
      * Run all known versions against the predicate of the context.
      *
      */
-    private void runPredicates() {
+    private void runPredicatesPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates");
@@ -154,24 +154,40 @@ public class SOSCMS implements CMS {
     /**
      * Run PERIODIC policies.
      *
-     * TODO - need to write down logic
-     *
+     * Iterate over contexts
+     * For each context:
+     * - Get all versions for the context such that:
+     *  (1) predicate result was true and
+     *  (2) no policies has been run yet
      *
      */
-    private void runPolicies() {
+    private void runPoliciesPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies");
 
-        }, 1, 10, TimeUnit.MINUTES);
-    }
+            Iterator<IGUID> it = cache.getContexts();
+            while (it.hasNext()) {
 
+                IGUID contextGUID = it.next();
+
+                HashMap<IGUID, ContextsContents.Row> contentsToProcess = contextsContents.getContentsRows(contextGUID);
+                contentsToProcess.forEach((guid, row) -> {
+                    if (row.predicateResult && !row.policySatisfied) {
+                        runPolicies(contextGUID, guid);
+                    }
+                });
+
+            }
+
+        }, 45, 60, TimeUnit.SECONDS);
+    }
 
     /**
      * Periodically get data (or references?) from other nodes
      * as specified by the sources of a context
      */
-    private void getData() {
+    private void getDataPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "N/A yet - Get data from other nodes");
@@ -185,7 +201,7 @@ public class SOSCMS implements CMS {
     /**
      * Periodically spawn/replicate contexts to other nodes
      */
-    private void spawnContexts() {
+    private void spawnContextsPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "N/A yet - Spawn contexts to other nodes");
@@ -233,6 +249,25 @@ public class SOSCMS implements CMS {
             }
         }
 
+    }
+
+    private void runPolicies(IGUID contextGUID, IGUID guid) {
+
+        try {
+            Context context = getContext(contextGUID);
+
+            Policy[] policies = context.policies();
+            for (Policy policy : policies) {
+
+                Manifest manifest = dds.getManifest(guid);
+                policy.run(manifest);
+
+                System.out.println("Policy result should be updated");
+                // TODO - update contextsContents
+            }
+        } catch (ContextNotFoundException | ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

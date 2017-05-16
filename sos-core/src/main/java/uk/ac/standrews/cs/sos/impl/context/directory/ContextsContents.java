@@ -75,6 +75,15 @@ public class ContextsContents implements Serializable  {
         }
     }
 
+    public HashMap<IGUID, Row> getContentsRows(IGUID context) {
+        HashMap<IGUID, Row> contents = mappings.get(context);
+        if (contents == null) {
+            return new HashMap<>();
+        } else {
+            return contents;
+        }
+    }
+
     ///////////////////
     // Serialization //
     ///////////////////

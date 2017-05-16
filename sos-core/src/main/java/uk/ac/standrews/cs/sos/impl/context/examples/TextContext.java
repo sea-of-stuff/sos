@@ -86,16 +86,19 @@ public class TextContext extends BaseContext {
         }
 
         @Override
-        public void run(Manifest manifest) {
+        public boolean run(Manifest manifest) {
 
             try {
 
                 Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, 0).iterator();
                 PolicyLanguage.instance().replicateManifest(manifest, nodes, factor);
 
+                return true;
             } catch (SOSException e) {
                 e.printStackTrace();
             }
+
+            return false;
         }
 
         @Override

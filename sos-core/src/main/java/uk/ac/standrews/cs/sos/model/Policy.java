@@ -20,11 +20,9 @@ public interface Policy {
      * Run this policy over a manifest
      *
      * @param manifest
+     * @return true if the policy was run/queued
      */
-    void run(Manifest manifest);
-
-    // TODO - this method (or similar) will be needed to be able to run policies not only over manifests
-    // void run(Data data);
+    boolean run(Manifest manifest);
 
     /**
      * Check that the policy is satisfied
