@@ -35,6 +35,7 @@ public class PolicyLanguage {
 
     private PolicyLanguage(NDS nds, DDS dds) {
         this.nds = nds;
+        this.dds = dds;
     }
 
     private static PolicyLanguage instance;
@@ -72,7 +73,7 @@ public class PolicyLanguage {
     public void replicateData(Data data, Iterator<Node> nodes, int replicationFactor) {
 
         try {
-            DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, null, null);
+            DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, nds, dds);
             TasksQueue.instance().performAsyncTask(dataReplication);
 
         } catch (SOSProtocolException | IOException e) {

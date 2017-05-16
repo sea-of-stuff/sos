@@ -73,7 +73,7 @@ public class ManifestReplication extends Task {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
 
-            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+            try(InputStream ignored = response.getBody()) {} // Ensure that the connection is closed properly.
 
             return transferWasSuccessful;
         } catch (IOException | SOSURLException e) {
