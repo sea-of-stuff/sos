@@ -6,10 +6,12 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.CMS;
 import uk.ac.standrews.cs.sos.actors.DDS;
+import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
@@ -51,7 +53,7 @@ public class SOSCMS implements CMS {
      *
      * @param localStorage used to persist the internal data structures
      */
-    public SOSCMS(LocalStorage localStorage, DDS dds) {
+    public SOSCMS(LocalStorage localStorage, DDS dds, NDS nds) {
         this.localStorage = localStorage;
         this.dds = dds;
 
@@ -60,6 +62,9 @@ public class SOSCMS implements CMS {
 
         // TODO - load mappings/indices
         contextsContents = new ContextsContents();
+
+
+        PolicyLanguage.instance(nds);
 
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);

@@ -220,7 +220,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         rms = SOSRMS.instance();
 
 
-        cms = new SOSCMS(localStorage, dds);
+        cms = new SOSCMS(localStorage, dds, nds);
 
         // TODO - this is hardcoded. Contexts and scopes should be loaded
         try {

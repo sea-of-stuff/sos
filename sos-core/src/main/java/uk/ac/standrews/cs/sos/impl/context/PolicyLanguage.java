@@ -3,15 +3,16 @@ package uk.ac.standrews.cs.sos.impl.context;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.actors.NDS;
-import uk.ac.standrews.cs.sos.actors.RMS;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.impl.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -27,18 +28,16 @@ import java.util.Set;
 public class PolicyLanguage {
 
     private static NDS nds;
-    private static RMS rms;
 
-    private PolicyLanguage(NDS nds, RMS rms) {
+    private PolicyLanguage(NDS nds) {
         this.nds = nds;
-        this.rms = rms;
     }
 
     private static PolicyLanguage instance;
-    public static PolicyLanguage instance(NDS nds, RMS rms) {
+    public static PolicyLanguage instance(NDS nds) {
 
         if (instance == null) {
-            instance = new PolicyLanguage(nds, rms);
+            instance = new PolicyLanguage(nds);
         }
 
         return instance;
@@ -125,12 +124,12 @@ public class PolicyLanguage {
 
     public Set<Node> getNodes(Scope scope, int type /* node type */) {
 
-        return null;
+        return Collections.emptySet();
     }
 
     public Role getRole(IGUID guid) {
 
-        return rms.getRole(guid);
+        return SOSRMS.instance().getRole(guid);
     }
 
 
