@@ -26,6 +26,7 @@ import static uk.ac.standrews.cs.sos.RESTConfig.sos;
 public class WebApp {
 
     public static void RUN(SOSLocalNode sos, IFileSystem fileSystem, int port) {
+
         SOS_LOG.log(LEVEL.INFO, "Starting WEB APP on port: " + port);
 
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions

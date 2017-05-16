@@ -87,6 +87,7 @@ public class LocalNodesDirectory {
 
         Stream<Node> nodesStream = knownNodes.stream()
                 .filter(predicate)
+                .filter(n -> !n.getNodeGUID().equals(getLocalNode().getNodeGUID()))
                 .distinct();
 
         if (limit > NO_LIMIT) {

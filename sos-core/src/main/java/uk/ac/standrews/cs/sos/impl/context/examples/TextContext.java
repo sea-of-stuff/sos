@@ -94,7 +94,6 @@ public class TextContext extends BaseContext {
         public boolean run(Manifest manifest) {
 
             try {
-
                 Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, NodeType.DDS).iterator();
                 PolicyLanguage.instance().replicateManifest(manifest, nodes, factor);
 
