@@ -69,6 +69,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         try {
             InputStream stream = data.getInputStream();
             AtomBuilder atomBuilder = new AtomBuilder().setInputStream(stream);
+
+            this.atom = sos.addAtom(atomBuilder); // Atom is saved and manifest returned by the SOS
             this.metadata = sos.addMetadata(stream); // Metadata is generated, saved and returned by the SOS
 
             VersionBuilder versionBuilder = new VersionBuilder()
@@ -96,7 +98,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         } catch (IOException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (MetadataException e) {
+        } catch (MetadataException | ManifestPersistException | StorageException e) {
             e.printStackTrace();
         }
 
@@ -158,13 +160,26 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         ErrorHandling.hardError("unimplemented method");
     }
 
+    /**
+     * Get the creation time for this object from its metadata
+     * The creation time matches the modification time
+     *
+     * @return
+     * @throws AccessFailureException
+     */
     @Override
     public long getCreationTime() throws AccessFailureException {
-        // FIXME - we should probably get the timestamp of the first version, but it will be a complex operation,
+        // Note - we should probably get the timestamp of the first version, but it will be a complex operation,
         // so for the moment we just take the timestamp of this asset version
         return getModificationTime();
     }
 
+    /**
+     * Get the last modification time from the metadata of this object's version's metadata
+     *
+     * @return
+     * @throws AccessFailureException
+     */
     @Override
     public long getModificationTime() throws AccessFailureException {
         long modtime = 0;
@@ -185,7 +200,11 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         throw new NotImplementedException();
     }
 
-    // TODO - add comment to explain what this method does and why and how
+    /**
+     *
+     * TODO - add comment to explain what this method does and why and how
+     * @param data
+     */
     @Override
     public void append(IData data) {
         if (!isCompoundData)
