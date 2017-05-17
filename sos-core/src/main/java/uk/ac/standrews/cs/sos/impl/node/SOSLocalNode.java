@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.impl.ScopeImpl;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.actors.*;
-import uk.ac.standrews.cs.sos.impl.context.examples.OctetStreamContext;
+import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
 import uk.ac.standrews.cs.sos.impl.context.examples.TextContext;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
@@ -24,7 +24,10 @@ import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
@@ -217,13 +220,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         // TODO - this is hardcoded. Contexts and scopes should be loaded from storage
         try {
-            Scope scope = new ScopeImpl(Scope.TYPE.ANY);
 
-            Context octetContext = new OctetStreamContext("octet context");
-            Context textContext = new TextContext("text context");
+            Context octetContext = new BinaryReplicationContext("octet context", new NodesCollectionImpl(), new NodesCollectionImpl());
+            Context textContext = new TextContext("text context", new NodesCollectionImpl(), new NodesCollectionImpl());
 
-            cms.addContext(scope, octetContext);
-            cms.addContext(scope, textContext);
+            cms.addContext(octetContext);
+            cms.addContext(textContext);
         } catch (Exception e) {
             e.printStackTrace();
         }

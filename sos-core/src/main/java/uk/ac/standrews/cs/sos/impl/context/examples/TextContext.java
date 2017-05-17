@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -24,16 +24,13 @@ public class TextContext extends BaseContext {
 
     private static final int NUMBER_OF_REPLICAS = 3;
 
-    public TextContext(String name) {
-        super(name);
+    public TextContext(String name, NodesCollection domain, NodesCollection codomain) {
+        super(name, domain, codomain);
     }
 
-    public TextContext(String name, Node[] sources) {
-        super(name, sources);
-    }
-
-    public TextContext(IGUID guid, String name, Node[] sources) {
-        super(guid, name, sources);
+    // FIXME
+    public TextContext(IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        super(guid, name, domain, codomain);
     }
 
     @Override

@@ -15,22 +15,20 @@ public class BaseContext implements Context {
     protected IGUID guid;
     protected String name;
     protected SOSPredicate predicate;
-    protected Node[] sources;
+    protected NodesCollection domain;
+    protected NodesCollection codomain;
 
     private static int EMPTY_ARRAY = 0;
 
-    public BaseContext(String name) {
-        this(GUIDFactory.generateRandomGUID(), name, new Node[EMPTY_ARRAY]);
+    public BaseContext(String name, NodesCollection domain, NodesCollection codomain) {
+        this(GUIDFactory.generateRandomGUID(), name, domain, codomain);
     }
 
-    public BaseContext(String name, Node[] sources) {
-        this(GUIDFactory.generateRandomGUID(), name, sources);
-    }
-
-    public BaseContext(IGUID guid, String name, Node[] sources) {
+    public BaseContext(IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
         this.guid = guid;
         this.name = name;
-        this.sources = sources;
+        this.domain = domain;
+        this.codomain = codomain;
     }
 
     @Override
@@ -55,8 +53,8 @@ public class BaseContext implements Context {
     }
 
     @Override
-    public Node[] whereToRun() {
-        return new Node[EMPTY_ARRAY];
+    public NodesCollection whereToRun() {
+        return null;
     }
 
     @Override
@@ -66,6 +64,8 @@ public class BaseContext implements Context {
 
     /**
      * Utility function
+     *
+     * todo: make agent method to get property
      *
      * @param agent
      * @param guid

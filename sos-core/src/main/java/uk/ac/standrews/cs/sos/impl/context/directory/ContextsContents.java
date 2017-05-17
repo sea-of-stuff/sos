@@ -19,20 +19,11 @@ import java.util.Iterator;
  */
 public class ContextsContents implements Serializable  {
 
-    // Assign a context to a scope
-    // Context GUID --> Scope GUID
-    private transient HashMap<IGUID, IGUID> contextsToScopes;
-
     // Maps the context to the versions belonging to it
     private transient HashMap<IGUID, HashMap<IGUID, ContextContent>> mappings;
     
     public ContextsContents() {
-        contextsToScopes = new HashMap<>();
         mappings = new HashMap<>();
-    }
-
-    public void addContextScope(IGUID context, IGUID scope) {
-        contextsToScopes.put(context, scope);
     }
 
     public void addMapping(IGUID context, IGUID version, ContextContent content) {

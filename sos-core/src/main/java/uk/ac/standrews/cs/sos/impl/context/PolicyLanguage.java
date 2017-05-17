@@ -91,17 +91,17 @@ public class PolicyLanguage {
         return false;
     }
 
-    public int numberOfReplicas(Scope scope, IGUID guid) {
+    public int numberOfReplicas(NodesCollection codomain, IGUID guid) {
 
         return -1;
     }
 
-    public Data getData(Scope scope, IGUID guid) {
+    public Data getData(NodesCollection codomain, IGUID guid) {
 
         return null;
     }
 
-    public Manifest getManifest(Scope scope, IGUID guid) {
+    public Manifest getManifest(NodesCollection codomain, IGUID guid) {
 
         return null;
     }
@@ -135,7 +135,7 @@ public class PolicyLanguage {
         return nds.getNode(guid);
     }
 
-    public Set<Node> getNodes(Scope scope, NodeType type) {
+    public Set<Node> getNodes(NodesCollection codomain, NodeType type) {
 
         return nds.getNodes(type);
     }

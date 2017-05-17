@@ -9,33 +9,27 @@ import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.Policy;
-import uk.ac.standrews.cs.sos.model.SOSPredicate;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Iterator;
 
 /**
- * This is a simple context that categorises all textual content and replicates it at least two times
+ * This is a context that replicates all binary content to at least three randomly chosen nodes
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class OctetStreamContext extends BaseContext {
+public class BinaryReplicationContext extends BaseContext {
 
     private static final int NUMBER_OF_REPLICAS = 3;
 
-    public OctetStreamContext(String name) {
-        super(name);
+    public BinaryReplicationContext(String name, NodesCollection domain, NodesCollection codomain) {
+        super(name, domain, codomain);
     }
 
-    public OctetStreamContext(String name, Node[] sources) {
-        super(name, sources);
-    }
-
-    public OctetStreamContext(IGUID guid, String name, Node[] sources) {
-        super(guid, name, sources);
+    // FIXME
+    public BinaryReplicationContext(IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        super(guid, name, domain, codomain);
     }
 
     @Override
@@ -51,7 +45,7 @@ public class OctetStreamContext extends BaseContext {
 
             } catch (Exception e) {
                 // This could occur because the metadata could not be found or the type property was not available
-                SOS_LOG.log(LEVEL.WARN, "Predicate could not be run");
+                SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
             }
 
             return false;
@@ -60,13 +54,7 @@ public class OctetStreamContext extends BaseContext {
 
     private boolean isOctetStream(String contentType) {
 
-        switch(contentType.toLowerCase()) {
-            case "application/octet-stream":
-                return true;
-            default:
-                return false;
-        }
-
+        return contentType.equals("application/octet-stream");
     }
 
     @Override
@@ -87,6 +75,7 @@ public class OctetStreamContext extends BaseContext {
             this.factor = factor;
         }
 
+        // TODO - rename to apply()
         @Override
         public boolean run(Manifest manifest) {
 
@@ -102,6 +91,7 @@ public class OctetStreamContext extends BaseContext {
             return false;
         }
 
+        // TODO - rename to satisfied()
         @Override
         public boolean check(Manifest manifest) {
 

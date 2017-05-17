@@ -16,7 +16,10 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -29,9 +32,8 @@ import java.util.concurrent.TimeUnit;
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
 /**
- * TODO - versioning of contexts
  * TODO - should have a default scope
- * TODO - should have a lock on content (e.g. this content is being managed by this policy, thus halt)
+ * TODO - should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -40,8 +42,7 @@ public class SOSCMS implements CMS {
     private LocalStorage localStorage;
     private DDS dds;
 
-    private ContextsCacheImpl cache;
-    // TODO - local + remote
+    private ContextsCacheImpl cache; // TODO - store contexts definitions in local storage
     private ContextsContents contextsContents;
 
     // This executor service will be used to schedule any background tasks
@@ -75,12 +76,9 @@ public class SOSCMS implements CMS {
     }
 
     @Override
-    public void addContext(Scope scope, Context context) throws Exception {
+    public void addContext(Context context) throws Exception {
 
         cache.addContext(context);
-        cache.addScope(scope);
-
-        contextsContents.addContextScope(context.guid(), scope.guid());
     }
 
     @Override
@@ -89,22 +87,11 @@ public class SOSCMS implements CMS {
         return cache.getContext(contextGUID);
     }
 
+    // TODO - do not use iterator
     @Override
     public Iterator<IGUID> getContents(IGUID context) {
 
         return contextsContents.getContents(context);
-    }
-
-    @Override
-    public void addScope(Scope scope) {
-
-        cache.addScope(scope);
-    }
-
-    @Override
-    public Scope getScope(IGUID guid) {
-
-        return cache.getScope(guid);
     }
 
     @Override
@@ -136,7 +123,7 @@ public class SOSCMS implements CMS {
     private void runPredicatesPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running predicates");
+            SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
 
             Iterator<IGUID> it = cache.getContexts();
             while (it.hasNext()) {
@@ -170,7 +157,7 @@ public class SOSCMS implements CMS {
     private void runPoliciesPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running policies");
+            SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
             Iterator<IGUID> it = cache.getContexts();
             while (it.hasNext()) {
@@ -196,7 +183,7 @@ public class SOSCMS implements CMS {
     private void getDataPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "N/A yet - Get data from other nodes");
+            SOS_LOG.log(LEVEL.INFO, "N/A yet - Get data from other nodes - this is a periodic background thread");
 
             // TODO - iterate over context
             // TODO - for each context, context sources
@@ -210,7 +197,7 @@ public class SOSCMS implements CMS {
     private void spawnContextsPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "N/A yet - Spawn contexts to other nodes");
+            SOS_LOG.log(LEVEL.INFO, "N/A yet - Spawn contexts to other nodes - this is a periodic background thread");
 
             // Get contexts that have to be spawned
             // spawn contexts

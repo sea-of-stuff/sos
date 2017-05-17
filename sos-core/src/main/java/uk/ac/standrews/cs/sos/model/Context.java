@@ -55,6 +55,6 @@ public interface Context {
      *
      * @return
      */
-    Node[] whereToRun();
+    NodesCollection whereToRun();
 
 }
