@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
@@ -151,7 +152,7 @@ public class SOSCMS implements CMS {
      * For each context:
      * - Get all versions for the context such that:
      *  (1) predicate result was true and
-     *  (2) no policies has been run yet
+     *  (2) no policies has been apply yet
      *
      */
     private void runPoliciesPeriodic() {
@@ -212,7 +213,7 @@ public class SOSCMS implements CMS {
     /**
      * Run the predicate of the given context against the specified version
      *
-     * - Check if the predicate has already run and if the maxAge constraint is still valid.
+     * - Check if the predicate has already apply and if the maxAge constraint is still valid.
      * - If the answer to the above is NO/False:
      *  - Run the predicate of the context against the given version
      *  - Update the contextsContents
@@ -264,12 +265,12 @@ public class SOSCMS implements CMS {
             for (Policy policy:policies) {
 
                 Manifest manifest = dds.getManifest(guid);
-                policy.run(manifest);
+                policy.apply(manifest);
 
                 System.out.println("Policy result should be updated for context " + contextGUID + " and content " + guid);
                 // TODO - update contextsContents
             }
-        } catch (ContextNotFoundException | ManifestNotFoundException e) {
+        } catch (ContextNotFoundException | ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
         }
     }

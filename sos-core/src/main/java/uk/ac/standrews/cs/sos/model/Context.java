@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.IGUID;
  *     "Predicate" : CODE,
  *     "Policies" : [ CODE ], // Will be executed in order
  *     "Sources" : [ Where to get the data from ]
- *     "Where" : [ List of nodes where to spawn and run this context ]
+ *     "Where" : [ List of nodes where to spawn and apply this context ]
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -36,7 +36,7 @@ public interface Context {
     String getName();
 
     /**
-     * Predicate to run against data.
+     * Predicate to apply against data.
      * This will define whether data belongs to this context or not
      *
      * @return
@@ -50,7 +50,7 @@ public interface Context {
     Policy[] policies();
 
     /**
-     * Nodes where to run this context
+     * Nodes where to apply this context
      * This information will be used to spawn the context to such nodes.
      *
      * @return

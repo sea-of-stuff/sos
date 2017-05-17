@@ -5,5 +5,5 @@ package uk.ac.standrews.cs.sos.impl.actors.protocol;
  */
 public class NodeRegistrationAndDiscoveryTest {
 
-    // TODO - check that registration is reflected on node discovery
+    // TODO - satisfied that registration is reflected on node discovery
 }

@@ -2,18 +2,17 @@ package uk.ac.standrews.cs.sos.impl.context.examples;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
-import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+
+import java.util.Arrays;
 
 /**
  * This is a simple context that categorises all textual content and replicates it at least two times
@@ -22,50 +21,16 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
  */
 public class TextContext extends BaseContext {
 
-    private static final int NUMBER_OF_REPLICAS = 3;
-
     public TextContext(String name, NodesCollection domain, NodesCollection codomain) {
         super(name, domain, codomain);
-    }
-
-    // FIXME
-    public TextContext(IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
-        super(guid, name, domain, codomain);
     }
 
     @Override
     public SOSPredicate predicate() {
 
-        return new SOSPredicateImpl(guid -> {
-
-            SOSAgent agent = SOSAgent.instance();
-
-            try {
-                String contentType = getMetaProperty(agent, guid, MetadataConstants.CONTENT_TYPE);
-                return isText(contentType);
-
-            } catch (Exception e) {
-                // This could occur because the metadata could not be found or the type property was not available
-                SOS_LOG.log(LEVEL.WARN, "Predicate could not be run");
-            }
-
-            return false;
-        }, Long.MAX_VALUE);
-    }
-
-    private boolean isText(String contentType) {
-
-        switch(contentType.toLowerCase()) {
-            case "text":
-            case "text/plain":
-            case "text/richtext":
-            case "text/enriched":
-            case "text/html":
-                return true;
-            default:
-                return false;
-        }
-
+        return new SOSPredicateImpl(
+                contentTypePredicate(Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html")),
+                Long.MAX_VALUE);
     }
 
     @Override
@@ -81,7 +46,7 @@ public class TextContext extends BaseContext {
     private class DeletionPolicy implements Policy {
 
         @Override
-        public boolean run(Manifest manifest) {
+        public void apply(Manifest manifest) throws PolicyException {
 
             try {
                 IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
@@ -92,26 +57,22 @@ public class TextContext extends BaseContext {
                     PolicyLanguage.instance().deleteData(manifest.guid(), fakeNodeGUID);
                 }
 
-                return true;
             } catch (SOSException e) {
-                e.printStackTrace();
+                throw new PolicyException("Unable to queue/apply policy");
             }
-
-            return false;
         }
 
         @Override
-        public boolean check(Manifest manifest) {
+        public boolean satisfied(Manifest manifest) throws PolicyException {
 
             try {
                 int numberReplicas = PolicyLanguage.instance().numberOfReplicas(null, manifest.guid());
                 return numberReplicas == 0;
 
             } catch (SOSException e) {
-                e.printStackTrace();
+                throw new PolicyException("Unable to check if the policy was satisfied");
             }
 
-            return false;
         }
     }
 }

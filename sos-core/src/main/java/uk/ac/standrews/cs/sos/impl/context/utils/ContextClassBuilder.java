@@ -49,7 +49,7 @@ public class ContextClassBuilder {
             "            " + PREDICATE_TAG +
             "\n" +
             "        } catch (Exception e) {\n" +
-            "            SOS_LOG.log(LEVEL.ERROR, \"Predicate could not be run\");\n" +
+            "            SOS_LOG.log(LEVEL.ERROR, \"Predicate could not be apply\");\n" +
             "        }\n" +
             "\n" +
             "        return false;\n" +

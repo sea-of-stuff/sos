@@ -24,10 +24,7 @@ import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
@@ -221,8 +218,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // TODO - this is hardcoded. Contexts and scopes should be loaded from storage
         try {
 
-            Context octetContext = new BinaryReplicationContext("octet context", new NodesCollectionImpl(), new NodesCollectionImpl());
-            Context textContext = new TextContext("text context", new NodesCollectionImpl(), new NodesCollectionImpl());
+            Context octetContext = new BinaryReplicationContext("octet context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+            Context textContext = new TextContext("text context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
             cms.addContext(octetContext);
             cms.addContext(textContext);

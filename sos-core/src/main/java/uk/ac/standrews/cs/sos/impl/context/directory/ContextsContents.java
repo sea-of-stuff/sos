@@ -48,7 +48,7 @@ public class ContextsContents implements Serializable  {
     }
 
     /**
-     * Checks if the content has already been run for the given context
+     * Checks if the content has already been apply for the given context
      *
      * @param context
      * @param content

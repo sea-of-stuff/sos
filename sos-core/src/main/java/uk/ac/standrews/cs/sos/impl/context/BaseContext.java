@@ -2,10 +2,16 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -60,6 +66,25 @@ public class BaseContext implements Context {
     @Override
     public String toString() {
         return "Context GUID: " + guid + ", Name: " + name;
+    }
+
+
+    protected Predicate<IGUID> contentTypePredicate(List<String> matchingFormats) {
+
+        return guid -> {
+            SOSAgent agent = SOSAgent.instance();
+
+            try {
+                String contentType = getMetaProperty(agent, guid, MetadataConstants.CONTENT_TYPE);
+                return matchingFormats.contains(contentType);
+
+            } catch (Exception e) {
+                // This could occur because the metadata could not be found or the type property was not available
+                SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
+            }
+
+            return false;
+        };
     }
 
     /**

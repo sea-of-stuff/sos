@@ -4,6 +4,7 @@ import org.junit.Test;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
 import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 
 import static org.testng.Assert.assertNotNull;
 
@@ -14,7 +15,7 @@ public class BinaryReplicationContextTest {
 
     @Test
     public void basicContextConstructor() {
-        Context test = new BinaryReplicationContext("test", new NodesCollectionImpl(), new NodesCollectionImpl());
+        Context test = new BinaryReplicationContext("test", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(test.predicate());
     }

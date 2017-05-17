@@ -17,4 +17,17 @@ public interface NodesCollection {
      */
     Set<Node> nodes();
 
+    /**
+     * Get the type of the collection.
+     *
+     * @return
+     */
+    TYPE type();
+
+    enum TYPE {
+        LOCAL,
+        ANY, // The collection is unlimited
+        SPECIFIED // The collection is limited to the specified nodes
+    }
+
 }

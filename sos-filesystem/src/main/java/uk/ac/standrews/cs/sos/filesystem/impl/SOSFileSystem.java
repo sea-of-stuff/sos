@@ -57,7 +57,7 @@ public class SOSFileSystem implements IFileSystem {
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
 
-        // TODO - check if file exists already. it is often the case with the DS store files at start?
+        // TODO - satisfied if file exists already. it is often the case with the DS store files at start?
         long size = data.getSize();
 
 //        if (data.getSize() != 0) {

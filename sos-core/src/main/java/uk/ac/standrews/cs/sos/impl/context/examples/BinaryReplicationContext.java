@@ -1,17 +1,14 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
-import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -27,34 +24,12 @@ public class BinaryReplicationContext extends BaseContext {
         super(name, domain, codomain);
     }
 
-    // FIXME
-    public BinaryReplicationContext(IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
-        super(guid, name, domain, codomain);
-    }
-
     @Override
     public SOSPredicate predicate() {
 
-        return new SOSPredicateImpl(guid -> {
-
-            SOSAgent agent = SOSAgent.instance();
-
-            try {
-                String contentType = getMetaProperty(agent, guid, MetadataConstants.CONTENT_TYPE);
-                return isOctetStream(contentType);
-
-            } catch (Exception e) {
-                // This could occur because the metadata could not be found or the type property was not available
-                SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
-            }
-
-            return false;
-        }, Long.MAX_VALUE);
-    }
-
-    private boolean isOctetStream(String contentType) {
-
-        return contentType.equals("application/octet-stream");
+        return new SOSPredicateImpl(
+                contentTypePredicate(Collections.singletonList("application/octet-stream")),
+                Long.MAX_VALUE);
     }
 
     @Override
@@ -75,35 +50,31 @@ public class BinaryReplicationContext extends BaseContext {
             this.factor = factor;
         }
 
-        // TODO - rename to apply()
         @Override
-        public boolean run(Manifest manifest) {
+        public void apply(Manifest manifest) throws PolicyException {
 
             try {
                 Iterator<Node> nodes = PolicyLanguage.instance().getNodes(null, NodeType.DDS).iterator();
                 PolicyLanguage.instance().replicateManifest(manifest, nodes, factor);
 
-                return true;
             } catch (SOSException e) {
-                e.printStackTrace();
+                throw new PolicyException("Unable to queue/apply policy");
             }
 
-            return false;
         }
 
-        // TODO - rename to satisfied()
+
         @Override
-        public boolean check(Manifest manifest) {
+        public boolean satisfied(Manifest manifest) throws PolicyException {
 
             try {
                 int numberReplicas = PolicyLanguage.instance().numberOfReplicas(null, manifest.guid());
                 return numberReplicas >= factor;
 
             } catch (SOSException e) {
-                e.printStackTrace();
+                throw new PolicyException("Unable to check if the policy was satisfied");
             }
 
-            return false;
         }
     }
 }

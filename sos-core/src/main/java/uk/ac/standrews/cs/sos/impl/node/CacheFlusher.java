@@ -9,7 +9,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_DATA_SIZE_LIMIT;
 
 /**
  * The Cache Flusher deletes all data and manifests that are safe to delete (e.g. content is replicated elsewhere)
- * The Cache Flusher can be run as a periodic scheduled thread
+ * The Cache Flusher can be apply as a periodic scheduled thread
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -58,6 +58,6 @@ public class CacheFlusher implements Runnable {
         // OLD NOTES
         // Remove unnecessary files - least used files or bigger files
         // Check caches and indices
-        // check that data is replicated
+        // satisfied that data is replicated
     }
 }

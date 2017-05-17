@@ -100,7 +100,7 @@ public class ArchivalApp {
         VersionBuilder versionBuilder = new VersionBuilder()
                 .setAtomBuilder(atomBuilder);
 
-        // TODO - should check if there is already a version for this URI and append version to already existing asset
+        // TODO - should satisfied if there is already a version for this URI and append version to already existing asset
 
         Version version = sos.getAgent().addData(versionBuilder);
 

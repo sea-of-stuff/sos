@@ -10,15 +10,28 @@ import java.util.Set;
  */
 public class NodesCollectionImpl implements NodesCollection {
 
-    // TODO - different constructors
+    private TYPE type;
+    private Set<Node> nodes;
 
-    public NodesCollectionImpl() {
+    public NodesCollectionImpl(TYPE type) {
+        this.type = type;
 
+        // TODO - make sure that type is not specified
+    }
+
+    public NodesCollectionImpl(TYPE type, Set<Node> nodes) {
+        this.type = type;
+        this.nodes = nodes;
     }
 
 
     @Override
     public Set<Node> nodes() {
-        return null;
+        return nodes;
+    }
+
+    @Override
+    public TYPE type() {
+        return type;
     }
 }

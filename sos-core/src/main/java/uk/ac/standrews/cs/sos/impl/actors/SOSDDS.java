@@ -57,7 +57,7 @@ public class SOSDDS implements DDS {
 
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
         // TODO - should this be dealt (1) within a scope and (2) by contexts?
-        remote.addManifest(manifest); // will run in async mode
+        remote.addManifest(manifest); // will apply in async mode
     }
 
     @Override
