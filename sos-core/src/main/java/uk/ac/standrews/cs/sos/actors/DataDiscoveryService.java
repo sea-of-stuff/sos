@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface DDS extends SeaOfStuff {
+public interface DataDiscoveryService extends SeaOfStuff {
 
     /**
      * Add a manifest to the sea of stuff.

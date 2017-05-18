@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 
 import java.util.Set;
 
@@ -15,7 +16,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface NDS extends SeaOfStuff {
+public interface NodeDiscoveryService extends SeaOfStuff {
 
     /**
      * Get a node object for the local node
@@ -48,6 +49,9 @@ public interface NDS extends SeaOfStuff {
      * @return set of nodes
      */
     Set<Node> getNodes(NodeType type);
+
+
+    Set<Node> getNodes(NodesCollection domain, NodeType type);
 
     /**
      * Get all known nodes

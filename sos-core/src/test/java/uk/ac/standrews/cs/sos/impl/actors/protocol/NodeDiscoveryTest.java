@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSNDS;
+import uk.ac.standrews.cs.sos.impl.actors.SOSNodeDiscoveryService;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
@@ -37,7 +37,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class NodeDiscoveryTest {
 
-    private SOSNDS nds;
+    private SOSNodeDiscoveryService nds;
     private SOSConfiguration configurationMock = mock(SOSConfiguration.class);
     private Node localNode;
     private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
@@ -67,7 +67,7 @@ public class NodeDiscoveryTest {
 
         localNode = mock(SOSLocalNode.class);
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
-        nds = new SOSNDS(localNode, database);
+        nds = new SOSNodeDiscoveryService(localNode, database);
 
         // MOCK SERVER SETUP
         nodeFound = GUIDFactory.generateRandomGUID();

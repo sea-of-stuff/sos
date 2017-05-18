@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.GetNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
@@ -27,11 +28,11 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSNDS implements NDS {
+public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
     private LocalNodesDirectory localNodesDirectory;
 
-    public SOSNDS(Node localNode, Database database) throws NodesDirectoryException {
+    public SOSNodeDiscoveryService(Node localNode, Database database) throws NodesDirectoryException {
         localNodesDirectory = new LocalNodesDirectory(localNode, database);
     }
 
@@ -113,6 +114,13 @@ public class SOSNDS implements NDS {
         }
 
         return Collections.emptySet();
+    }
+
+    @Override
+    public Set<Node> getNodes(NodesCollection domain, NodeType type) {
+
+        // TODO - return the requested nodes within that domain
+        return null;
     }
 
     @Override

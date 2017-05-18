@@ -4,8 +4,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
@@ -31,7 +31,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSDDS implements DDS {
+public class SOSDataDiscoveryService implements DataDiscoveryService {
 
     private ManifestsCache cache;
     private LocalManifestsDirectory local;
@@ -40,14 +40,14 @@ public class SOSDDS implements DDS {
 
     private DDSIndex ddsIndex;
 
-    public SOSDDS(LocalStorage localStorage, NDS nds) {
+    public SOSDataDiscoveryService(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
         this.localStorage = localStorage;
 
         loadOrCreateCache();
         loadOrCreateDDSIndex();
 
         local = new LocalManifestsDirectory(localStorage);
-        remote = new RemoteManifestsDirectory(ddsIndex, nds, this);
+        remote = new RemoteManifestsDirectory(ddsIndex, nodeDiscoveryService, this);
     }
 
     @Override

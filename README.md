@@ -13,7 +13,7 @@
 The sos-core module contains the code to:
 - create and manage manifests
 - manage metadata and contexts
-- manage the SOS Roles (agent, storage, nds, dds, mms, etc...)
+- manage the SOS Roles (agent, storage, nodeDiscoveryService, dataDiscoveryService, metadataService, etc...)
 
 
 ## sos-rest and sos-rest-jetty

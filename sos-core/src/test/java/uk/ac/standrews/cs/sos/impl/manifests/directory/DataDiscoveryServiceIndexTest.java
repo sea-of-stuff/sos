@@ -21,7 +21,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DDSIndexTest {
+public class DataDiscoveryServiceIndexTest {
 
     @Test
     public void basicTest() {

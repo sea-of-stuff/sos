@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.DDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
@@ -28,18 +28,18 @@ public class ManifestReplication extends Task {
     private Manifest manifest;
     private Iterator<Node> nodes;
     private int replicationFactor;
-    private DDS dds;
+    private DataDiscoveryService dataDiscoveryService;
 
-    public ManifestReplication(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DDS dds) throws SOSProtocolException {
+    public ManifestReplication(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
 
-        if (dds == null) {
+        if (dataDiscoveryService == null) {
             throw new SOSProtocolException("DDS is null. Manifest replication process is aborted.");
         }
 
         this.manifest = manifest;
         this.nodes = nodes;
         this.replicationFactor = replicationFactor;
-        this.dds = dds;
+        this.dataDiscoveryService = dataDiscoveryService;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ManifestReplication extends Task {
 
                 if (transferWasSuccessful) {
                     SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.toString());
-                    dds.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
+                    dataDiscoveryService.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
                     successfulReplicas++;
                 } else {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());

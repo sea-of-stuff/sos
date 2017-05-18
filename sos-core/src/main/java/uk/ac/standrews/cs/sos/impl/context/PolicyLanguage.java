@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -29,13 +29,13 @@ import java.util.Set;
  */
 public class PolicyLanguage {
 
-    private NDS nds;
-    private DDS dds;
+    private NodeDiscoveryService nodeDiscoveryService;
+    private DataDiscoveryService dataDiscoveryService;
     private UsersRolesService usersRolesService;
 
-    public PolicyLanguage(NDS nds, DDS dds, UsersRolesService usersRolesService) {
-        this.nds = nds;
-        this.dds = dds;
+    public PolicyLanguage(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService) {
+        this.nodeDiscoveryService = nodeDiscoveryService;
+        this.dataDiscoveryService = dataDiscoveryService;
         this.usersRolesService = usersRolesService;
     }
 
@@ -43,7 +43,7 @@ public class PolicyLanguage {
 
         try {
 
-            ManifestReplication replication = new ManifestReplication(manifest, nodes, replicationFactor, dds);
+            ManifestReplication replication = new ManifestReplication(manifest, nodes, replicationFactor, dataDiscoveryService);
             TasksQueue.instance().performAsyncTask(replication);
 
         } catch (SOSProtocolException e) {
@@ -55,7 +55,7 @@ public class PolicyLanguage {
 
         try {
             // FIXME - Remove that index. In fact, it should be part of the DDS
-            DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, nds, dds);
+            DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, nodeDiscoveryService, dataDiscoveryService);
             TasksQueue.instance().performAsyncTask(dataReplication);
 
         } catch (SOSProtocolException | IOException e) {
@@ -113,12 +113,12 @@ public class PolicyLanguage {
 
     public Node getNode(IGUID guid) throws NodeNotFoundException {
 
-        return nds.getNode(guid);
+        return nodeDiscoveryService.getNode(guid);
     }
 
     public Set<Node> getNodes(NodesCollection codomain, NodeType type) {
 
-        return nds.getNodes(type);
+        return nodeDiscoveryService.getNodes(type);
     }
 
     public Role getRole(IGUID guid) {

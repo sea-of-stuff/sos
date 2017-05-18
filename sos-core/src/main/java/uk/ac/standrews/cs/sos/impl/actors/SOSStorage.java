@@ -4,7 +4,7 @@ import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
-import uk.ac.standrews.cs.sos.actors.DDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -32,12 +32,12 @@ import java.util.Set;
  */
 public class SOSStorage implements Storage {
 
-    private DDS dds;
+    private DataDiscoveryService dataDiscoveryService;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalStorage storage, DDS dds) {
-        this.dds = dds;
+    public SOSStorage(Node node, LocalStorage storage, DataDiscoveryService dataDiscoveryService) {
+        this.dataDiscoveryService = dataDiscoveryService;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);
     }
@@ -52,7 +52,7 @@ public class SOSStorage implements Storage {
         }
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        dds.addManifest(manifest);
+        dataDiscoveryService.addManifest(manifest);
 
         return manifest;
     }
@@ -89,7 +89,7 @@ public class SOSStorage implements Storage {
     @Override
     public InputStream getAtomContent(IGUID guid) throws AtomNotFoundException {
         try {
-            Manifest manifest = dds.getManifest(guid);
+            Manifest manifest = dataDiscoveryService.getManifest(guid);
 
             if (manifest.getType() == ManifestType.ATOM) {
                 Atom atom = (Atom) manifest;

@@ -7,8 +7,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -42,7 +42,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationWithDDSFeedbackTest {
+public class DataReplicationWithDataDiscoveryServiceFeedbackTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10003;
@@ -50,8 +50,8 @@ public class DataReplicationWithDDSFeedbackTest {
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
 
-    private NDS mockNDS;
-    private DDS mockDDS;
+    private NodeDiscoveryService mockNodeDiscoveryService;
+    private DataDiscoveryService mockDataDiscoveryService;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -107,8 +107,8 @@ public class DataReplicationWithDDSFeedbackTest {
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
         new SOS_LOG(GUIDFactory.generateRandomGUID());
 
-        mockNDS = mock(NDS.class);
-        mockDDS = mock(DDS.class);
+        mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
+        mockDataDiscoveryService = mock(DataDiscoveryService.class);
     }
 
     @AfterMethod
@@ -130,7 +130,7 @@ public class DataReplicationWithDDSFeedbackTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -140,8 +140,8 @@ public class DataReplicationWithDDSFeedbackTest {
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
 
-        verify(mockNDS, times(3)).registerNode(anyObject(), anyBoolean());
-        verify(mockDDS, times(3)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(mockNodeDiscoveryService, times(3)).registerNode(anyObject(), anyBoolean());
+        verify(mockDataDiscoveryService, times(3)).addManifestDDSMapping(anyObject(), anyObject());
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -155,7 +155,7 @@ public class DataReplicationWithDDSFeedbackTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, null, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, null, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
     }
 
@@ -172,7 +172,7 @@ public class DataReplicationWithDDSFeedbackTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, null, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, null, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
     }
 
@@ -189,7 +189,7 @@ public class DataReplicationWithDDSFeedbackTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, null);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, null);
         TasksQueue.instance().performSyncTask(replicationTask);
     }
 }

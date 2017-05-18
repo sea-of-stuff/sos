@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.actors.DDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -53,8 +53,8 @@ public class RESTDDS {
         }
 
         try {
-            DDS dds = RESTConfig.sos.getDDS();
-            dds.addManifest(manifest);
+            DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
+            dataDiscoveryService.addManifest(manifest);
 
         } catch (ManifestPersistException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
@@ -81,8 +81,8 @@ public class RESTDDS {
         }
 
         try {
-            DDS dds = RESTConfig.sos.getDDS();
-            Manifest manifest = dds.getManifest(manifestGUID);
+            DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
+            Manifest manifest = dataDiscoveryService.getManifest(manifestGUID);
             return HTTPResponses.OK(manifest.toString());
 
         } catch (ManifestNotFoundException e) {

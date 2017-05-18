@@ -14,7 +14,7 @@ import java.io.InputStream;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface MMS extends SeaOfStuff {
+public interface MetadataService extends SeaOfStuff {
 
     /**
      * Computes the metadata for a given input stream

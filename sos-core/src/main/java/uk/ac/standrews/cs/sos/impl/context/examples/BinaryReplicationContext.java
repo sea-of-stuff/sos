@@ -56,7 +56,6 @@ public class BinaryReplicationContext extends BaseContext {
             policyLanguage.replicateManifest(manifest, nodes, factor);
         }
 
-
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 

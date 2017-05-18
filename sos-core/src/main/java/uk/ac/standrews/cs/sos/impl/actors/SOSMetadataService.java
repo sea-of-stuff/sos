@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.MMS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.MetadataService;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
@@ -17,14 +17,14 @@ import java.io.InputStream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSMMS implements MMS {
+public class SOSMetadataService implements MetadataService {
 
-    private DDS dds;
+    private DataDiscoveryService dataDiscoveryService;
     private MetadataEngine engine;
 
-    public SOSMMS(MetadataEngine metadataEngine, DDS dds) {
+    public SOSMetadataService(MetadataEngine metadataEngine, DataDiscoveryService dataDiscoveryService) {
         this.engine = metadataEngine;
-        this.dds = dds;
+        this.dataDiscoveryService = dataDiscoveryService;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SOSMMS implements MMS {
     @Override
     public void addMetadata(Metadata metadata) throws MetadataPersistException {
         try {
-            dds.addManifest(metadata);
+            dataDiscoveryService.addManifest(metadata);
         } catch (ManifestPersistException e) {
             throw new MetadataPersistException(e);
         }
@@ -46,7 +46,7 @@ public class SOSMMS implements MMS {
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         try {
-            return (Metadata) dds.getManifest(guid);
+            return (Metadata) dataDiscoveryService.getManifest(guid);
         } catch (ManifestNotFoundException e) {
             throw new MetadataNotFoundException("Unable to find metadata");
         }

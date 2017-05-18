@@ -7,8 +7,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
@@ -49,8 +49,8 @@ public class DataReplicationServerFailureTest {
     private static final String TEST_NO_RESPONSE_DATA = "test-no-response-data";
     private static final String TEST_RANDOM_DATA = "test-random-data";
 
-    private NDS mockNDS;
-    private DDS mockDDS;
+    private NodeDiscoveryService mockNodeDiscoveryService;
+    private DataDiscoveryService mockDataDiscoveryService;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -109,8 +109,8 @@ public class DataReplicationServerFailureTest {
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
         new SOS_LOG(GUIDFactory.generateRandomGUID());
 
-        mockNDS = mock(NDS.class);
-        mockDDS = mock(DDS.class);
+        mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
+        mockDataDiscoveryService = mock(DataDiscoveryService.class);
     }
 
     @AfterMethod
@@ -132,7 +132,7 @@ public class DataReplicationServerFailureTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -153,7 +153,7 @@ public class DataReplicationServerFailureTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -174,7 +174,7 @@ public class DataReplicationServerFailureTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -195,7 +195,7 @@ public class DataReplicationServerFailureTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -216,7 +216,7 @@ public class DataReplicationServerFailureTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);

@@ -33,21 +33,21 @@ import java.util.Set;
 public class SOSAgent implements Agent {
 
     private Storage storage;
-    private DDS dds;
-    private MMS mms;
+    private DataDiscoveryService dataDiscoveryService;
+    private MetadataService metadataService;
     private UsersRolesService usersRolesService;
 
-    private SOSAgent(Storage storage, DDS dds, MMS mms, UsersRolesService usersRolesService) {
+    private SOSAgent(Storage storage, DataDiscoveryService dataDiscoveryService, MetadataService metadataService, UsersRolesService usersRolesService) {
         this.storage = storage;
-        this.dds = dds;
-        this.mms = mms;
+        this.dataDiscoveryService = dataDiscoveryService;
+        this.metadataService = metadataService;
         this.usersRolesService = usersRolesService;
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, UsersRolesService usersRolesService) {
+    public static SOSAgent instance(Storage storage, DataDiscoveryService dataDiscoveryService, MetadataService metadataService, UsersRolesService usersRolesService) {
         if (instance == null) {
-            instance = new SOSAgent(storage, dds, mms, usersRolesService);
+            instance = new SOSAgent(storage, dataDiscoveryService, metadataService, usersRolesService);
         }
 
         return instance;
@@ -149,7 +149,7 @@ public class SOSAgent implements Agent {
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        return dds.getManifest(guid);
+        return dataDiscoveryService.getManifest(guid);
     }
 
     @Override
@@ -161,20 +161,20 @@ public class SOSAgent implements Agent {
     @Override
     public Metadata addMetadata(InputStream inputStream) throws MetadataException {
 
-        Metadata metadata = mms.processMetadata(inputStream);
-        mms.addMetadata(metadata);
+        Metadata metadata = metadataService.processMetadata(inputStream);
+        metadataService.addMetadata(metadata);
 
         return metadata;
     }
 
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
-        Metadata metadata = mms.getMetadata(guid);
+        Metadata metadata = metadataService.getMetadata(guid);
         return metadata;
     }
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {
-        dds.addManifest(manifest);
+        dataDiscoveryService.addManifest(manifest);
     }
 
 }

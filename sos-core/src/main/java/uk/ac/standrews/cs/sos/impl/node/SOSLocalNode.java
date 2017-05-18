@@ -65,10 +65,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     // Actors for this node
     private Agent agent;
     private Storage storage;
-    private DDS dds;
-    private NDS nds;
-    private MMS mms;
-    private CMS cms;
+    private DataDiscoveryService dataDiscoveryService;
+    private NodeDiscoveryService nodeDiscoveryService;
+    private MetadataService metadataService;
+    private ContextService contextService;
     private UsersRolesService usersRolesService;
 
     // Each node will have its own log and it will be used to log errors as well
@@ -119,23 +119,23 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public DDS getDDS() {
-        return dds;
+    public DataDiscoveryService getDDS() {
+        return dataDiscoveryService;
     }
 
     @Override
-    public NDS getNDS() {
-        return nds;
+    public NodeDiscoveryService getNDS() {
+        return nodeDiscoveryService;
     }
 
     @Override
-    public MMS getMMS() {
-        return mms;
+    public MetadataService getMMS() {
+        return metadataService;
     }
 
     @Override
-    public CMS getCMS() {
-        return cms;
+    public ContextService getCMS() {
+        return contextService;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        dds.flush();
+        dataDiscoveryService.flush();
         storage.flush();
         cacheFlusherService.shutdown();
 
@@ -162,7 +162,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throws NodeRegistrationException {
 
         for(Node node:bootstrapNodes) {
-            nds.registerNode(node, true);
+            nodeDiscoveryService.registerNode(node, true);
         }
     }
 
@@ -178,7 +178,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             InetAddress inetAddress = InetAddress.getLocalHost();
             this.hostAddress = new InetSocketAddress(inetAddress, port);
 
-            nds.registerNode(this, false);
+            nodeDiscoveryService.registerNode(this, false);
         } catch (UnknownHostException | NodeRegistrationException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
         }
@@ -193,8 +193,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initNDS() throws SOSException {
         try {
             SOSURLProtocol.getInstance().register(localStorage);
-            nds = new SOSNDS(this, database);
-            SOSURLProtocol.getInstance().setNDS(nds);
+            nodeDiscoveryService = new SOSNodeDiscoveryService(this, database);
+            SOSURLProtocol.getInstance().setNDS(nodeDiscoveryService);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
         }
@@ -206,12 +206,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initActors() {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
 
-        dds = new SOSDDS(localStorage, nds);
+        dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService();
 
-        storage = new SOSStorage(this, localStorage, dds); // TODO - avoid to pass this local node?
-        mms = new SOSMMS(metadataEngine, dds);
-        cms = new SOSCMS(localStorage, dds, nds, usersRolesService);
+        storage = new SOSStorage(this, localStorage, dataDiscoveryService); // TODO - avoid to pass this local node?
+        metadataService = new SOSMetadataService(metadataEngine, dataDiscoveryService);
+        contextService = new SOSContextService(localStorage, dataDiscoveryService, nodeDiscoveryService, usersRolesService);
 
 
 
@@ -232,7 +232,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         createDummyUserRole();
 
-        agent = SOSAgent.instance(storage, dds, mms, usersRolesService);
+        agent = SOSAgent.instance(storage, dataDiscoveryService, metadataService, usersRolesService);
     }
 
     // FIXME - have better way to handle the default user and role

@@ -4,9 +4,9 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.actors.CMS;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.ContextService;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
@@ -39,10 +39,10 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSCMS implements CMS {
+public class SOSContextService implements ContextService {
 
     private LocalStorage localStorage;
-    private DDS dds;
+    private DataDiscoveryService dataDiscoveryService;
 
     private PolicyLanguage policyLanguage;
 
@@ -58,9 +58,9 @@ public class SOSCMS implements CMS {
      *
      * @param localStorage used to persist the internal data structures
      */
-    public SOSCMS(LocalStorage localStorage, DDS dds, NDS nds, UsersRolesService usersRolesService) {
+    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService) {
         this.localStorage = localStorage;
-        this.dds = dds;
+        this.dataDiscoveryService = dataDiscoveryService;
 
         // TODO - load existing contexts into memory via reflection
         cache = new ContextsCacheImpl();
@@ -68,7 +68,7 @@ public class SOSCMS implements CMS {
         // TODO - load mappings/indices
         contextsContents = new ContextsContents();
 
-        policyLanguage = new PolicyLanguage(nds, dds, usersRolesService);
+        policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService);
 
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
@@ -133,7 +133,7 @@ public class SOSCMS implements CMS {
 
                 try {
                     Context context = getContext(it.next());
-                    for(Version version : dds.getAllVersions()) { // FIXME - get only heads?
+                    for(Version version : dataDiscoveryService.getAllVersions()) { // FIXME - get only heads?
                         runPredicate(context, version);
                     }
 
@@ -266,7 +266,7 @@ public class SOSCMS implements CMS {
             Policy[] policies = context.policies();
             for (Policy policy:policies) {
 
-                Manifest manifest = dds.getManifest(guid);
+                Manifest manifest = dataDiscoveryService.getManifest(guid);
                 policy.apply(manifest);
 
                 System.out.println("Policy result should be updated for context " + contextGUID + " and content " + guid);

@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.actors.MMS;
+import uk.ac.standrews.cs.sos.actors.MetadataService;
 import uk.ac.standrews.cs.sos.bindings.MCSNode;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
@@ -38,9 +38,9 @@ public class RESTMMS {
 
         Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
 
-        MMS mms = RESTConfig.sos.getMMS();
+        MetadataService metadataService = RESTConfig.sos.getMMS();
         try {
-            mms.addMetadata(metadata);
+            metadataService.addMetadata(metadata);
         } catch (MetadataPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
@@ -65,9 +65,9 @@ public class RESTMMS {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
-        MMS mms = RESTConfig.sos.getMMS();
+        MetadataService metadataService = RESTConfig.sos.getMMS();
         try {
-            Metadata metadata = mms.getMetadata(metadataGUID);
+            Metadata metadata = metadataService.getMetadata(metadataGUID);
             return HTTPResponses.OK(metadata.toString());
         } catch (MetadataNotFoundException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");
@@ -81,11 +81,11 @@ public class RESTMMS {
     public Response processMetadata(final InputStream inputStream) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /process");
 
-        MMS MMS = RESTConfig.sos.getMMS();
+        MetadataService MetadataService = RESTConfig.sos.getMMS();
 
         Metadata metadata;
         try {
-            metadata = MMS.processMetadata(inputStream);
+            metadata = MetadataService.processMetadata(inputStream);
         } catch (MetadataException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }

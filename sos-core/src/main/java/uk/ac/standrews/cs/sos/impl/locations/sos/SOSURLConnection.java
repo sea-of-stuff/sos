@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -31,7 +31,7 @@ import java.net.URLConnection;
 public class SOSURLConnection extends URLConnection {
 
     private LocalStorage localStorage;
-    private NDS nds;
+    private NodeDiscoveryService nodeDiscoveryService;
 
     /**
      * Constructs a URL connection to the specified URL. A connection to
@@ -39,11 +39,11 @@ public class SOSURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(LocalStorage localStorage, NDS nds, URL url) {
+    protected SOSURLConnection(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService, URL url) {
         super(url);
 
         this.localStorage = localStorage;
-        this.nds = nds;
+        this.nodeDiscoveryService = nodeDiscoveryService;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class SOSURLConnection extends URLConnection {
             if (isLocalNode(nodeGUID) && dataIsStoredLocally(entityGUID)) {
                 inputStream = getDataLocally(entityGUID);
             } else {
-                Node nodeToContact = nds.getNode(nodeGUID);
+                Node nodeToContact = nodeDiscoveryService.getNode(nodeGUID);
 
                 FetchData fetchData = new FetchData(nodeToContact, entityGUID);
                 TasksQueue.instance().performSyncTask(fetchData);
@@ -84,7 +84,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private boolean isLocalNode(IGUID nodeGUID) {
-        IGUID localNodeGUID = nds.getThisNode().getNodeGUID();
+        IGUID localNodeGUID = nodeDiscoveryService.getThisNode().getNodeGUID();
         return localNodeGUID.equals(nodeGUID);
     }
 

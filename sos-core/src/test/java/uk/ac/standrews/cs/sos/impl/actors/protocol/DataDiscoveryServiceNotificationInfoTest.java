@@ -13,7 +13,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DDSNotificationInfoTest {
+public class DataDiscoveryServiceNotificationInfoTest {
 
     @Test
     public void constructorTest() {

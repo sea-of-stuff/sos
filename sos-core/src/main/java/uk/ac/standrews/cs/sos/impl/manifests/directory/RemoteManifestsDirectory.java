@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -29,13 +29,13 @@ import java.util.Set;
 public class RemoteManifestsDirectory implements ManifestsDirectory {
 
     private DDSIndex ddsIndex;
-    private NDS nds;
-    private DDS dds;
+    private NodeDiscoveryService nodeDiscoveryService;
+    private DataDiscoveryService dataDiscoveryService;
 
-    public RemoteManifestsDirectory(DDSIndex ddsIndex, NDS nds, DDS dds) {
+    public RemoteManifestsDirectory(DDSIndex ddsIndex, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
         this.ddsIndex = ddsIndex;
-        this.nds = nds;
-        this.dds = dds;
+        this.nodeDiscoveryService = nodeDiscoveryService;
+        this.dataDiscoveryService = dataDiscoveryService;
     }
 
     /**
@@ -50,11 +50,11 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // FIXME - metadata and context should be replicated at different end-points
         // TODO - Policy based on context?
 
-        Iterator<Node> nodes = nds.getNodes(NodeType.STORAGE).iterator();
+        Iterator<Node> nodes = nodeDiscoveryService.getNodes(NodeType.STORAGE).iterator();
         int replicationFactor = 1; // FIXME - do not hardcode replic-factor. use context
 
         try {
-            ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dds);
+            ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dataDiscoveryService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
@@ -74,7 +74,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
 
         for(IGUID g:guids) {
             try {
-                Node node = nds.getNode(g);
+                Node node = nodeDiscoveryService.getNode(g);
 
                 FetchManifest fetchManifest = new FetchManifest(node, guid); // FIXME - use different end-points for context, metadata, etc
                 TasksQueue.instance().performSyncTask(fetchManifest);

@@ -7,8 +7,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
@@ -51,8 +51,8 @@ public class DataReplicationTest {
     private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
     private static final String TWIN_NODE_ID = "22aafd93ab9a6e2ed501fc583685088cca66bac2";
 
-    private NDS mockNDS;
-    private DDS mockDDS;
+    private NodeDiscoveryService mockNodeDiscoveryService;
+    private DataDiscoveryService mockDataDiscoveryService;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
@@ -121,8 +121,8 @@ public class DataReplicationTest {
         SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
         new SOS_LOG(GUIDFactory.generateRandomGUID());
 
-        mockNDS = mock(NDS.class);
-        mockDDS = mock(DDS.class);
+        mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
+        mockDataDiscoveryService = mock(DataDiscoveryService.class);
     }
 
     @AfterMethod
@@ -145,7 +145,7 @@ public class DataReplicationTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -170,7 +170,7 @@ public class DataReplicationTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -197,7 +197,7 @@ public class DataReplicationTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -235,7 +235,7 @@ public class DataReplicationTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 3, index, mockNDS, mockDDS); // TODO - test with different replication factor
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 3, index, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - test with different replication factor
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -269,7 +269,7 @@ public class DataReplicationTest {
 
         LocationsIndex index = new LocationsIndexImpl();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS); // TODO - rep factor 1
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);
@@ -301,7 +301,7 @@ public class DataReplicationTest {
         nodes.add(twinStorageNode);
 
         LocationsIndex index = new LocationsIndexImpl();
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNDS, mockDDS);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);

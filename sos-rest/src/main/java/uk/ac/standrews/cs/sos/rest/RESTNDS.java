@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -35,10 +35,10 @@ public class RESTNDS {
     public Response register(NodeModel node) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /nds/register");
 
-        NDS nds = RESTConfig.sos.getNDS();
+        NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 
         try {
-            Node registerNode = nds.registerNode(node, true); // TODO - might change based on configuration
+            Node registerNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on configuration
             if (registerNode != null) {
                 return HTTPResponses.OK(registerNode.toString());
             } else {
@@ -69,10 +69,10 @@ public class RESTNDS {
             return HTTPResponses.BAD_REQUEST("Bad input");
         }
 
-        NDS nds = RESTConfig.sos.getNDS();
+        NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 
         try {
-            Node node = nds.getNode(nodeGUID);
+            Node node = nodeDiscoveryService.getNode(nodeGUID);
             return HTTPResponses.OK(node.toString());
         } catch (NodeNotFoundException e) {
             return HTTPResponses.NOT_FOUND("Node with GUID: " + nodeGUID.toString() + " could not be found");
@@ -88,8 +88,8 @@ public class RESTNDS {
 
         NodeType nodeType = NodeType.get(role.toLowerCase());
 
-        NDS nds = RESTConfig.sos.getNDS();
-        Set<Node> nodes = nds.getNodes(nodeType);
+        NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
+        Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
 
         String json = collectionToJson(nodes);
         return HTTPResponses.OK(json);

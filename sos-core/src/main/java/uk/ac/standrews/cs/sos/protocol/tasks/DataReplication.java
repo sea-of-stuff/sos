@@ -5,8 +5,8 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -47,8 +47,8 @@ public class DataReplication extends Task {
     private Iterator<Node> nodes;
     private int replicationFactor;
     private LocationsIndex index;
-    private NDS nds;
-    private DDS dds;
+    private NodeDiscoveryService nodeDiscoveryService;
+    private DataDiscoveryService dataDiscoveryService;
 
     /**
      * Construct the data replication task.
@@ -59,14 +59,14 @@ public class DataReplication extends Task {
      * @param nodes
      * @param replicationFactor
      * @param index
-     * @param nds
-     * @param dds
+     * @param nodeDiscoveryService
+     * @param dataDiscoveryService
      * @throws SOSProtocolException
      */
     public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor,
-                           LocationsIndex index, NDS nds, DDS dds) throws SOSProtocolException {
+                           LocationsIndex index, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
 
-        if (index == null || nds == null || dds == null) {
+        if (index == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
@@ -74,8 +74,8 @@ public class DataReplication extends Task {
         this.nodes = nodes;
         this.replicationFactor = replicationFactor;
         this.index = index;
-        this.nds = nds;
-        this.dds = dds;
+        this.nodeDiscoveryService = nodeDiscoveryService;
+        this.dataDiscoveryService = dataDiscoveryService;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class DataReplication extends Task {
                 Node node = nodes.next();
                 if (node.isStorage()) {
                     try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
-                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, index, nds, dds);
+                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, index, nodeDiscoveryService, dataDiscoveryService);
 
                         if (transferWasSuccessful) {
                             successfulReplicas++;
@@ -111,11 +111,11 @@ public class DataReplication extends Task {
      * @param data
      * @param node
      * @param index
-     * @param nds
-     * @param dds
+     * @param nodeDiscoveryService
+     * @param dataDiscoveryService
      * @return true if the data was transferred successfully.
      */
-    private static boolean transferDataAndUpdateNodeState(InputStream data, Node node, LocationsIndex index, NDS nds, DDS dds) {
+    private static boolean transferDataAndUpdateNodeState(InputStream data, Node node, LocationsIndex index, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
@@ -139,14 +139,14 @@ public class DataReplication extends Task {
         for(Node ddsNode:tuple.y.y) {
             try {
                 SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
-                nds.registerNode(ddsNode, true);
+                nodeDiscoveryService.registerNode(ddsNode, true);
             } catch (NodeRegistrationException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
             }
         }
 
         for(Node ddsNode:tuple.y.y) {
-            dds.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
+            dataDiscoveryService.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
         }
 
         return true;

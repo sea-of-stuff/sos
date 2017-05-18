@@ -14,7 +14,7 @@ import java.util.Iterator;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface CMS extends SeaOfStuff {
+public interface ContextService extends SeaOfStuff {
 
     /**
      * Adds a context to this CMS and return a version for it.

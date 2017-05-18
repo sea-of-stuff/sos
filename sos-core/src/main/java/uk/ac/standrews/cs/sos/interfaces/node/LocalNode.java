@@ -12,13 +12,13 @@ public interface LocalNode extends Node {
 
     Storage getStorage();
 
-    DDS getDDS();
+    DataDiscoveryService getDDS();
 
-    NDS getNDS();
+    NodeDiscoveryService getNDS();
 
-    MMS getMMS();
+    MetadataService getMMS();
 
-    CMS getCMS();
+    ContextService getCMS();
 
     UsersRolesService getRMS();
 
