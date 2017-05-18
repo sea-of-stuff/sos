@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
@@ -48,6 +49,8 @@ public interface Storage extends SeaOfStuff {
      * @throws AtomNotFoundException
      */
     InputStream getAtomContent(IGUID guid) throws AtomNotFoundException;
+
+    void addLocation(IGUID guid, LocationBundle locationBundle);
 
     /**
      * Flush all indexes and caches managed by the storage actor

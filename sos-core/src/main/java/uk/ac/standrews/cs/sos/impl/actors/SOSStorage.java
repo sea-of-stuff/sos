@@ -18,7 +18,10 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -36,10 +39,10 @@ public class SOSStorage implements Storage {
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalStorage storage, DataDiscoveryService dataDiscoveryService) {
+    public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService) {
         this.dataDiscoveryService = dataDiscoveryService;
 
-        atomStorage = new AtomStorage(node.getNodeGUID(), storage);
+        atomStorage = new AtomStorage(localNodeGUID, storage);
     }
 
     @Override
@@ -100,6 +103,11 @@ public class SOSStorage implements Storage {
         }
 
         return new NullInputStream(0);
+    }
+
+    @Override
+    public void addLocation(IGUID guid, LocationBundle locationBundle) {
+        atomStorage.addLocation(guid, locationBundle);
     }
 
     @Override

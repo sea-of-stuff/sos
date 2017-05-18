@@ -57,6 +57,10 @@ public class AtomStorage {
             throw new DataStorageException(e);
         }
     }
+    
+    public void addLocation(IGUID guid, LocationBundle locationBundle) {
+        locationIndex.addLocation(guid, locationBundle);
+    }
 
     /**
      * Return an iterator of locations for data matching the given guid
@@ -98,7 +102,7 @@ public class AtomStorage {
             LocationBundle locationBundle = store.getLocationBundle();
             bundles.add(locationBundle);
 
-            locationIndex.addLocation(guid, locationBundle);
+            addLocation(guid, locationBundle);
         }
 
         return guid;

@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocationsIndexImpl implements LocationsIndex, Serializable {
+public class LocationsIndexImpl implements LocationsIndex {
 
     private transient HashMap<IGUID, PriorityQueue<LocationBundle>> index;
 
@@ -125,9 +125,7 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
         FileInputStream istream = new FileInputStream(file.toFile());
         ObjectInputStream q = new ObjectInputStream(istream);
 
-        LocationsIndex persistedLocationsIndex = (LocationsIndex)q.readObject();
-
-        return persistedLocationsIndex;
+        return (LocationsIndex)q.readObject();
     }
 
     // This method defines how the cache is serialised

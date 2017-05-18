@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -18,7 +19,6 @@ import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
@@ -46,7 +46,7 @@ public class DataReplication extends Task {
     private InputStream data;
     private Iterator<Node> nodes;
     private int replicationFactor;
-    private LocationsIndex index;
+    private Storage storage;
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
 
@@ -58,22 +58,22 @@ public class DataReplication extends Task {
      * @param data
      * @param nodes
      * @param replicationFactor
-     * @param index
+     * @param storage
      * @param nodeDiscoveryService
      * @param dataDiscoveryService
      * @throws SOSProtocolException
      */
     public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor,
-                           LocationsIndex index, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
+                           Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
 
-        if (index == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
+        if (storage == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
         this.data = data;
         this.nodes = nodes;
         this.replicationFactor = replicationFactor;
-        this.index = index;
+        this.storage = storage;
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;
     }
@@ -89,7 +89,7 @@ public class DataReplication extends Task {
                 Node node = nodes.next();
                 if (node.isStorage()) {
                     try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
-                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, index, nodeDiscoveryService, dataDiscoveryService);
+                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage, nodeDiscoveryService, dataDiscoveryService);
 
                         if (transferWasSuccessful) {
                             successfulReplicas++;
@@ -110,12 +110,13 @@ public class DataReplication extends Task {
      * Transfer a stream of data to a given node and update this node state
      * @param data
      * @param node
-     * @param index
+     * @param storage
      * @param nodeDiscoveryService
      * @param dataDiscoveryService
      * @return true if the data was transferred successfully.
      */
-    private static boolean transferDataAndUpdateNodeState(InputStream data, Node node, LocationsIndex index, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
+    private static boolean transferDataAndUpdateNodeState(InputStream data, Node node, Storage storage,
+                                                          NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
@@ -133,7 +134,7 @@ public class DataReplication extends Task {
 
         SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
         for(LocationBundle locationBundle:tuple.y.x) {
-            index.addLocation(tuple.x, locationBundle);
+            storage.addLocation(tuple.x, locationBundle);
         }
 
         for(Node ddsNode:tuple.y.y) {
@@ -173,11 +174,13 @@ public class DataReplication extends Task {
     private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > parseResponse(Response response) throws SOSProtocolException {
 
         if (response.getCode() != HTTPStatus.CREATED) {
+
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
             catch (IOException e) {
                 throw new SOSProtocolException("Unable to transfer DATA and manage data stream correctly");
             }
             throw new SOSProtocolException("Unable to transfer DATA");
+
         }
 
         Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;

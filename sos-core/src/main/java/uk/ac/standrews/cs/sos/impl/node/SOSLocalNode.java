@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
-import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -57,9 +56,15 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT
  */
 public class SOSLocalNode extends SOSNode implements LocalNode {
 
+    // The local storage allows data to be written locally to this node.
+    // Note, however, that the local storage could the file system of this machine as well as a Dropbox service or an FTP server
     private LocalStorage localStorage;
+
+    // This is a generic abstraction to interact with the Database of this node
     private Database database;
 
+    // This scheduled service spawns a thread to check that the content of this node is within the specified restrictions.
+    // If the restrictions are not satisfied, the background thread will remove any REMOVABLE content
     private ScheduledExecutorService cacheFlusherService;
 
     // Actors for this node
@@ -193,7 +198,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initNDS() throws SOSException {
         try {
             SOSURLProtocol.getInstance().register(localStorage);
-            nodeDiscoveryService = new SOSNodeDiscoveryService(this, database);
+            Node localNode = new SOSNode(this);
+            nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, database);
             SOSURLProtocol.getInstance().setNDS(nodeDiscoveryService);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
@@ -204,18 +210,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * Initialise all the actors for this node
      */
     private void initActors() {
-        MetadataEngine metadataEngine = new TikaMetadataEngine();
 
         dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService();
 
-        storage = new SOSStorage(this, localStorage, dataDiscoveryService); // TODO - avoid to pass this local node?
-        metadataService = new SOSMetadataService(metadataEngine, dataDiscoveryService);
+        storage = new SOSStorage(getNodeGUID(), localStorage, dataDiscoveryService);
+        metadataService = new SOSMetadataService(new TikaMetadataEngine(), dataDiscoveryService);
         contextService = new SOSContextService(localStorage, dataDiscoveryService, nodeDiscoveryService, usersRolesService);
-
-
-
-
 
 
         // TODO - this is hardcoded. Contexts and scopes should be loaded from storage
