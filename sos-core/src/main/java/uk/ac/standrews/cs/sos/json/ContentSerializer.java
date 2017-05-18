@@ -15,9 +15,7 @@ import java.io.IOException;
 public class ContentSerializer extends JsonSerializer<ContentImpl> {
 
     @Override
-    public void serialize(ContentImpl content, JsonGenerator jsonGenerator,
-                          SerializerProvider serializerProvider)
-            throws IOException {
+    public void serialize(ContentImpl content, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 

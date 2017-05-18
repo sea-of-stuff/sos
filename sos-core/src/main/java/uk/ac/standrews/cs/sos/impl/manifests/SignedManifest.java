@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.model.Role;
  */
 public abstract class SignedManifest extends BasicManifest {
 
-    protected final IGUID signer;
+    protected final Role signer;
     protected String signature;
 
     /**
@@ -24,8 +24,9 @@ public abstract class SignedManifest extends BasicManifest {
      * @param signer for this manifest
      * @param manifestType the type of manifest
      */
-    protected SignedManifest(IGUID signer, ManifestType manifestType) {
+    protected SignedManifest(Role signer, ManifestType manifestType) {
         super(manifestType);
+
         this.signer = signer;
     }
 
@@ -35,7 +36,7 @@ public abstract class SignedManifest extends BasicManifest {
      * @return the GUID for the signer
      */
     public IGUID getSigner() {
-        return this.signer;
+        return this.signer.guid();
     }
 
     /**

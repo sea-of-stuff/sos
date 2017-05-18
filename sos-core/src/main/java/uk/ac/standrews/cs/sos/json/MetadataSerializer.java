@@ -31,6 +31,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
     }
 
     private void serializeElements(Metadata metadata, JsonGenerator jsonGenerator) throws IOException {
+
         String[] properties = metadata.getAllPropertyNames();
         for(String property:properties) {
             jsonGenerator.writeStartObject();

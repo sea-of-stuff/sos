@@ -14,9 +14,7 @@ import java.io.IOException;
 public class ContentDeserializer extends JsonDeserializer<ContentImpl> {
 
     @Override
-    public ContentImpl deserialize(JsonParser jsonParser,
-                                   DeserializationContext deserializationContext)
-            throws IOException {
+    public ContentImpl deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

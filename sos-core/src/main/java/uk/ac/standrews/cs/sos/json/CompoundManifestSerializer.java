@@ -17,9 +17,7 @@ import java.util.Set;
 public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest> {
 
     @Override
-    public void serialize(CompoundManifest compoundManifest,
-                          JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-            throws IOException {
+    public void serialize(CompoundManifest compoundManifest, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 

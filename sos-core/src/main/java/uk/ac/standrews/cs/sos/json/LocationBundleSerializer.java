@@ -14,9 +14,7 @@ import java.io.IOException;
 public class LocationBundleSerializer extends JsonSerializer<LocationBundle> {
 
     @Override
-    public void serialize(LocationBundle locationBundle, JsonGenerator jsonGenerator,
-                          SerializerProvider serializerProvider)
-            throws IOException {
+    public void serialize(LocationBundle locationBundle, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 

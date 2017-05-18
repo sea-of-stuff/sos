@@ -4,10 +4,9 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.NDS;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
@@ -32,30 +31,12 @@ public class PolicyLanguage {
 
     private NDS nds;
     private DDS dds;
+    private UsersRolesService usersRolesService;
 
-    private PolicyLanguage(NDS nds, DDS dds) {
+    public PolicyLanguage(NDS nds, DDS dds, UsersRolesService usersRolesService) {
         this.nds = nds;
         this.dds = dds;
-    }
-
-    private static PolicyLanguage instance;
-    public static PolicyLanguage instance(NDS nds, DDS dds) {
-
-        if (instance == null) {
-            instance = new PolicyLanguage(nds, dds);
-        }
-
-        return instance;
-    }
-
-    public static PolicyLanguage instance() throws SOSException {
-
-        if (instance != null) {
-            return instance;
-        }
-
-        // Need to create instance with NDS and RMS first
-        throw new SOSException("Unable to get Policy Language instance. Make an instance of it first!");
+        this.usersRolesService = usersRolesService;
     }
 
     public void replicateManifest(Manifest manifest, Iterator<Node> nodes, int replicationFactor) {
@@ -142,7 +123,7 @@ public class PolicyLanguage {
 
     public Role getRole(IGUID guid) {
 
-        return SOSRMS.instance().getRole(guid);
+        return usersRolesService.getRole(guid);
     }
 
 

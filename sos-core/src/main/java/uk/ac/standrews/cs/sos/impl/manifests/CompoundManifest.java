@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 import uk.ac.standrews.cs.sos.model.*;
@@ -57,7 +56,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
      * @param signer
      * @throws ManifestNotMadeException
      */
-    public CompoundManifest(CompoundType type, Set<Content> contents, IGUID signer)
+    public CompoundManifest(CompoundType type, Set<Content> contents, Role signer)
             throws ManifestNotMadeException {
         super(signer, ManifestType.COMPOUND);
 
@@ -70,7 +69,8 @@ public class CompoundManifest extends SignedManifest implements Compound {
         }
     }
 
-    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, IGUID signer, String signature) throws ManifestNotMadeException {
+    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents,
+                            Role signer, String signature) throws ManifestNotMadeException {
         super(signer, ManifestType.COMPOUND);
 
         assert(type != null);
@@ -111,12 +111,11 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        Role role = SOSRMS.instance().getRole(signer);
 
-        if (role == null) {
+        if (signer == null) {
             return "";
         } else {
-            return role.sign(toSign);
+            return signer.sign(toSign);
         }
     }
 

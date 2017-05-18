@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSRMS;
 import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -63,7 +62,7 @@ public class VersionManifest extends SignedManifest implements Version {
      */
     public VersionManifest(IGUID invariant, IGUID content,
                            Set<IGUID> prevs, IGUID metadata,
-                           IGUID signer)
+                           Role signer)
             throws ManifestNotMadeException {
         super(signer, ManifestType.VERSION);
 
@@ -99,7 +98,7 @@ public class VersionManifest extends SignedManifest implements Version {
      */
     public VersionManifest(IGUID invariant, IGUID version, IGUID content,
                            Set<IGUID> prevs, IGUID metadata,
-                           IGUID signer,
+                           Role signer,
                            String signature) {
         super(signer, ManifestType.VERSION);
         this.invariant = invariant;
@@ -171,12 +170,11 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     protected String generateSignature(String toSign) throws EncryptionException {
-        Role role = SOSRMS.instance().getRole(signer);
 
-        if (role == null) {
+        if (signer == null) {
             return "";
         } else {
-            return role.sign(toSign);
+            return signer.sign(toSign);
         }
     }
 

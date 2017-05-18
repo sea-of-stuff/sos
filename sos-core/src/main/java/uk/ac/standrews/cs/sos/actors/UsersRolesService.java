@@ -7,13 +7,11 @@ import uk.ac.standrews.cs.sos.model.User;
 import java.util.Set;
 
 /**
- * Role (and User) Management Service
- *
- * TODO - change name to URDS - Users and Roles Discovery Service
+ * Users and Roles Management/Discovery Service
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface RMS {
+public interface UsersRolesService {
 
     /**
      * Add a user to the service

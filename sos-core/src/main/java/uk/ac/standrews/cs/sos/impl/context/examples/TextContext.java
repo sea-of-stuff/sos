@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.context.examples;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
@@ -21,8 +20,8 @@ import java.util.Arrays;
  */
 public class TextContext extends BaseContext {
 
-    public TextContext(String name, NodesCollection domain, NodesCollection codomain) {
-        super(name, domain, codomain);
+    public TextContext(PolicyLanguage policyLanguage, String name, NodesCollection domain, NodesCollection codomain) {
+        super(policyLanguage, name, domain, codomain);
     }
 
     @Override
@@ -48,31 +47,20 @@ public class TextContext extends BaseContext {
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
-            try {
-                IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
+            IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
 
-                boolean hasData = PolicyLanguage.instance().nodeHasData(fakeNodeGUID, manifest.guid());
+            boolean hasData = policyLanguage.nodeHasData(fakeNodeGUID, manifest.guid());
 
-                if (hasData) {
-                    PolicyLanguage.instance().deleteData(manifest.guid(), fakeNodeGUID);
-                }
-
-            } catch (SOSException e) {
-                throw new PolicyException("Unable to queue/apply policy");
+            if (hasData) {
+                policyLanguage.deleteData(manifest.guid(), fakeNodeGUID);
             }
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            try {
-                int numberReplicas = PolicyLanguage.instance().numberOfReplicas(null, manifest.guid());
-                return numberReplicas == 0;
-
-            } catch (SOSException e) {
-                throw new PolicyException("Unable to check if the policy was satisfied");
-            }
-
+            int numberReplicas = policyLanguage.numberOfReplicas(null, manifest.guid());
+            return numberReplicas == 0;
         }
     }
 }

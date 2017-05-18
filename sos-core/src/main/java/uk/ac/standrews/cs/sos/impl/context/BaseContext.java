@@ -18,6 +18,8 @@ import java.util.function.Predicate;
  */
 public class BaseContext implements Context {
 
+    protected PolicyLanguage policyLanguage;
+
     protected IGUID guid;
     protected String name;
     protected SOSPredicate predicate;
@@ -26,11 +28,13 @@ public class BaseContext implements Context {
 
     private static int EMPTY_ARRAY = 0;
 
-    public BaseContext(String name, NodesCollection domain, NodesCollection codomain) {
-        this(GUIDFactory.generateRandomGUID(), name, domain, codomain);
+    public BaseContext(PolicyLanguage policyLanguage, String name, NodesCollection domain, NodesCollection codomain) {
+        this(policyLanguage, GUIDFactory.generateRandomGUID(), name, domain, codomain);
     }
 
-    public BaseContext(IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+    public BaseContext(PolicyLanguage policyLanguage, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        this.policyLanguage = policyLanguage;
+
         this.guid = guid;
         this.name = name;
         this.domain = domain;
@@ -67,6 +71,11 @@ public class BaseContext implements Context {
     public String toString() {
         return "Context GUID: " + guid + ", Name: " + name;
     }
+
+
+    ///////////////////////////////////
+    // UTILITY - COMMOND METHODS //////
+    ///////////////////////////////////
 
 
     protected Predicate<IGUID> contentTypePredicate(List<String> matchingFormats) {

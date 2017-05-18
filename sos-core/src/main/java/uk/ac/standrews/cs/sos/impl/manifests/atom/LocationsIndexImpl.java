@@ -25,11 +25,6 @@ public class LocationsIndexImpl implements LocationsIndex, Serializable {
     }
 
     @Override
-    public void reBuild() {
-        // TODO - rebuild index looking at what is stored in the storage?
-    }
-
-    @Override
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
 
         if (index.containsKey(guid)) {

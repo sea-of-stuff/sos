@@ -35,19 +35,19 @@ public class SOSAgent implements Agent {
     private Storage storage;
     private DDS dds;
     private MMS mms;
-    private RMS rms;
+    private UsersRolesService usersRolesService;
 
-    private SOSAgent(Storage storage, DDS dds, MMS mms, RMS rms) {
+    private SOSAgent(Storage storage, DDS dds, MMS mms, UsersRolesService usersRolesService) {
         this.storage = storage;
         this.dds = dds;
         this.mms = mms;
-        this.rms = rms;
+        this.usersRolesService = usersRolesService;
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, RMS rms) {
+    public static SOSAgent instance(Storage storage, DDS dds, MMS mms, UsersRolesService usersRolesService) {
         if (instance == null) {
-            instance = new SOSAgent(storage, dds, mms, rms);
+            instance = new SOSAgent(storage, dds, mms, usersRolesService);
         }
 
         return instance;
@@ -69,7 +69,7 @@ public class SOSAgent implements Agent {
 
         CompoundType type = compoundBuilder.getType();
         Set<Content> contents = compoundBuilder.getContents();
-        CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, rms.active());
+        CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, usersRolesService.active());
 
         addManifest(compound);
 
@@ -85,7 +85,7 @@ public class SOSAgent implements Agent {
         Set<IGUID> prevs = versionBuilder.getPreviousCollection();
         IGUID metadata = versionBuilder.getMetadataCollection();
 
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, rms.active());
+        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, usersRolesService.active());
         addManifest(manifest);
 
         return manifest;

@@ -11,10 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.actors.*;
-import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
-import uk.ac.standrews.cs.sos.impl.context.examples.TextContext;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
@@ -24,7 +21,9 @@ import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
@@ -70,7 +69,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private NDS nds;
     private MMS mms;
     private CMS cms;
-    private RMS rms;
+    private UsersRolesService usersRolesService;
 
     // Each node will have its own log and it will be used to log errors as well
     // as useful information about the node itself.
@@ -140,8 +139,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public RMS getRMS() {
-        return rms;
+    public UsersRolesService getRMS() {
+        return usersRolesService;
     }
 
     @Override
@@ -208,28 +207,32 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         MetadataEngine metadataEngine = new TikaMetadataEngine();
 
         dds = new SOSDDS(localStorage, nds);
-        storage = new SOSStorage(this, localStorage, nds, dds);
-        mms = new SOSMMS(dds, metadataEngine);
-        rms = SOSRMS.instance();
+        usersRolesService = new SOSUsersRolesService();
+
+        storage = new SOSStorage(this, localStorage, dds); // TODO - avoid to pass this local node?
+        mms = new SOSMMS(metadataEngine, dds);
+        cms = new SOSCMS(localStorage, dds, nds, usersRolesService);
 
 
-        cms = new SOSCMS(localStorage, dds, nds);
+
+
+
 
         // TODO - this is hardcoded. Contexts and scopes should be loaded from storage
-        try {
-
-            Context octetContext = new BinaryReplicationContext("octet context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-            Context textContext = new TextContext("text context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-
-            cms.addContext(octetContext);
-            cms.addContext(textContext);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//
+//            Context octetContext = new BinaryReplicationContext("octet context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+//            Context textContext = new TextContext("text context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+//
+//            cms.addContext(octetContext);
+//            cms.addContext(textContext);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         createDummyUserRole();
 
-        agent = SOSAgent.instance(storage, dds, mms, rms);
+        agent = SOSAgent.instance(storage, dds, mms, usersRolesService);
     }
 
     // FIXME - have better way to handle the default user and role
@@ -238,9 +241,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         try {
             User user = new UserImpl("simone");
             Role role = new RoleImpl(user, "student");
-            rms.addUser(user);
-            rms.addRole(role);
-            rms.setActive(role);
+            usersRolesService.addUser(user);
+            usersRolesService.addRole(role);
+            usersRolesService.setActive(role);
 
         } catch (KeyGenerationException | KeyLoadedException | CryptoException e) {
             e.printStackTrace();

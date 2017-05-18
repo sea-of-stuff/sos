@@ -11,14 +11,16 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CommonJson {
+class CommonJson {
 
-    public static IGUID GetGUID(JsonNode node, String key) throws GUIDGenerationException {
+    static IGUID GetGUID(JsonNode node, String key) throws GUIDGenerationException {
+
         String guid = node.get(key).textValue();
         return GUIDFactory.recreateGUID(guid);
     }
 
-    public static Set<IGUID> GetGUIDCollection(JsonNode node, String key) throws GUIDGenerationException {
+    static Set<IGUID> GetGUIDCollection(JsonNode node, String key) throws GUIDGenerationException {
+
         JsonNode nodes = node.get(key);
         Set<IGUID> retval = null;
         if (nodes != null && nodes.isArray()) {

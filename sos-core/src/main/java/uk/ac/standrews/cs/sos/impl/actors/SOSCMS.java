@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.CMS;
 import uk.ac.standrews.cs.sos.actors.DDS;
 import uk.ac.standrews.cs.sos.actors.NDS;
+import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
@@ -43,6 +44,8 @@ public class SOSCMS implements CMS {
     private LocalStorage localStorage;
     private DDS dds;
 
+    private PolicyLanguage policyLanguage;
+
     private ContextsCacheImpl cache; // TODO - store contexts definitions in local storage
     private ContextsContents contextsContents;
 
@@ -55,7 +58,7 @@ public class SOSCMS implements CMS {
      *
      * @param localStorage used to persist the internal data structures
      */
-    public SOSCMS(LocalStorage localStorage, DDS dds, NDS nds) {
+    public SOSCMS(LocalStorage localStorage, DDS dds, NDS nds, UsersRolesService usersRolesService) {
         this.localStorage = localStorage;
         this.dds = dds;
 
@@ -65,8 +68,7 @@ public class SOSCMS implements CMS {
         // TODO - load mappings/indices
         contextsContents = new ContextsContents();
 
-
-        PolicyLanguage.instance(nds, dds);
+        policyLanguage = new PolicyLanguage(nds, dds, usersRolesService);
 
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);

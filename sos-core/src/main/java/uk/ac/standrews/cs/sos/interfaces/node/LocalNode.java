@@ -20,7 +20,7 @@ public interface LocalNode extends Node {
 
     CMS getCMS();
 
-    RMS getRMS();
+    UsersRolesService getRMS();
 
     void kill();
 }

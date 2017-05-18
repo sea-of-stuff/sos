@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -16,6 +17,9 @@ import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -58,7 +62,10 @@ public class VersionManifestTest extends CommonTest {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
 
-        VersionManifest versionManifest = new VersionManifest(null, guid, null, null, GUIDFactory.generateRandomGUID());
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+
+        VersionManifest versionManifest = new VersionManifest(null, guid, null, null, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
@@ -75,7 +82,10 @@ public class VersionManifestTest extends CommonTest {
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
 
-        VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, GUIDFactory.generateRandomGUID());
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+
+        VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
@@ -97,7 +107,10 @@ public class VersionManifestTest extends CommonTest {
         Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
-        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, null, GUIDFactory.generateRandomGUID());
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+
+        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, null, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
@@ -122,7 +135,10 @@ public class VersionManifestTest extends CommonTest {
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
 
-        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, GUIDFactory.generateRandomGUID());
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+
+        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
@@ -147,7 +163,10 @@ public class VersionManifestTest extends CommonTest {
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
         IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
 
-        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, GUIDFactory.generateRandomGUID());
+        Role roleMocked = mock(Role.class);
+        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+
+        VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 
         assertEquals(versionManifest.getContentGUID(), guid);
         assertEquals(versionManifest.getInvariantGUID(), invariantGUID);

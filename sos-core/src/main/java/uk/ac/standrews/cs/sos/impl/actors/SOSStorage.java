@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.actors.DDS;
-import uk.ac.standrews.cs.sos.actors.NDS;
 import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -33,13 +32,11 @@ import java.util.Set;
  */
 public class SOSStorage implements Storage {
 
-    private NDS nds;
     private DDS dds;
 
     private AtomStorage atomStorage;
 
-    public SOSStorage(Node node, LocalStorage storage, NDS nds, DDS dds) {
-        this.nds = nds;
+    public SOSStorage(Node node, LocalStorage storage, DDS dds) {
         this.dds = dds;
 
         atomStorage = new AtomStorage(node.getNodeGUID(), storage);

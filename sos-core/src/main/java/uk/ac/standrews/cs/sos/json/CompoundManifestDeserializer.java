@@ -25,9 +25,7 @@ import java.util.Set;
 public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManifest> {
 
     @Override
-    public CompoundManifest deserialize(JsonParser jsonParser,
-                                        DeserializationContext deserializationContext)
-            throws IOException {
+    public CompoundManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
@@ -39,6 +37,8 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
             if (node.has(ManifestConstants.KEY_SIGNATURE) && node.has(ManifestConstants.KEY_SIGNER)) {
                 signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
                 signer = GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_SIGNER).textValue());
+
+                // FIXME - recreate Role signer
             }
 
             String compoundTypeString = node.get(ManifestConstants.KEY_COMPOUND_TYPE).textValue();
@@ -53,7 +53,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
                 }
             }
 
-            return new CompoundManifest(compoundType, contentGUID, contents, signer, signature);
+            return new CompoundManifest(compoundType, contentGUID, contents, null, signature);
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         } catch (ManifestNotMadeException e) {

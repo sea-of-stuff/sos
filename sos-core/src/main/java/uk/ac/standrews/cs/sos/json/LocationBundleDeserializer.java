@@ -17,9 +17,7 @@ import java.io.IOException;
 public class LocationBundleDeserializer extends JsonDeserializer<LocationBundle> {
 
     @Override
-    public LocationBundle deserialize(JsonParser jsonParser,
-                                      DeserializationContext deserializationContext)
-            throws IOException {
+    public LocationBundle deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

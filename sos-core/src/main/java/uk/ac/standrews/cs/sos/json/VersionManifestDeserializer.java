@@ -19,9 +19,7 @@ import java.util.Set;
 public class VersionManifestDeserializer extends JsonDeserializer<VersionManifest> {
 
     @Override
-    public VersionManifest deserialize(JsonParser jsonParser,
-                                       DeserializationContext deserializationContext)
-            throws IOException {
+    public VersionManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
@@ -35,6 +33,7 @@ public class VersionManifestDeserializer extends JsonDeserializer<VersionManifes
             if (node.has(ManifestConstants.KEY_SIGNATURE) && node.has(ManifestConstants.KEY_SIGNER)) {
                 signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
                 signer = GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_SIGNER).textValue());
+                // FIXME - recreate Role signer
             }
 
             Set<IGUID> prevs = CommonJson.GetGUIDCollection(node, ManifestConstants.KEY_PREVIOUS_GUID);
@@ -44,7 +43,7 @@ public class VersionManifestDeserializer extends JsonDeserializer<VersionManifes
                 metadata = CommonJson.GetGUID(node, ManifestConstants.KEY_METADATA_GUID);
             }
 
-            return new VersionManifest(invariant, version, content, prevs, metadata, signer, signature);
+            return new VersionManifest(invariant, version, content, prevs, metadata, null, signature);
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         }

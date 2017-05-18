@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.actors.RMS;
+import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
@@ -12,31 +12,23 @@ import java.util.stream.Collectors;
 
 /**
  * TODO - persistence -> cache, local, remote
+ * TODO - integrate with NDS to find users in some other nodes
  *
  * There is only one active Role at a given time
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSRMS implements RMS {
+public class SOSUsersRolesService implements UsersRolesService {
 
     private HashMap<IGUID, User> users;
     private HashMap<IGUID, Role> roles;
     private HashMap<IGUID, Set<IGUID>> usersToRoles;
     private Role activeRole;
 
-    private SOSRMS() {
+    public SOSUsersRolesService() {
         users = new HashMap<>();
         roles = new HashMap<>();
         usersToRoles = new HashMap<>();
-    }
-
-    private static SOSRMS instance;
-    public static SOSRMS instance() {
-        if (instance == null) {
-            instance = new SOSRMS();
-        }
-
-        return instance;
     }
 
     @Override

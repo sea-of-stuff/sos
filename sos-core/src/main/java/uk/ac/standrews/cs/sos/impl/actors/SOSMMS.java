@@ -22,9 +22,9 @@ public class SOSMMS implements MMS {
     private DDS dds;
     private MetadataEngine engine;
 
-    public SOSMMS(DDS dds, MetadataEngine metadataEngine) {
-        this.dds = dds;
+    public SOSMMS(MetadataEngine metadataEngine, DDS dds) {
         this.engine = metadataEngine;
+        this.dds = dds;
     }
 
     @Override

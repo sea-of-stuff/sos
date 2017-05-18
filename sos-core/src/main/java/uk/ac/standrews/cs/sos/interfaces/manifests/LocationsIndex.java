@@ -12,8 +12,6 @@ import java.util.Iterator;
  */
 public interface LocationsIndex {
 
-    void reBuild();
-
     void addLocation(IGUID guid, LocationBundle locationBundle);
 
     Iterator<LocationBundle> findLocations(IGUID guid);

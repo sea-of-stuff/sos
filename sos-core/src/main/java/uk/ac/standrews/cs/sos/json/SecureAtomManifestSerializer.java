@@ -16,9 +16,7 @@ import java.util.Set;
  */
 public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManifest> {
     @Override
-    public void serialize(SecureAtomManifest atomManifest, JsonGenerator jsonGenerator,
-                          SerializerProvider serializerProvider)
-            throws IOException {
+    public void serialize(SecureAtomManifest atomManifest, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 
