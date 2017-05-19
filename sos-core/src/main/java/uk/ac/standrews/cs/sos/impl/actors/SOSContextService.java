@@ -29,6 +29,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
+import static uk.ac.standrews.cs.sos.constants.Threads.*;
 
 /**
  * TODO - should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
@@ -42,7 +43,9 @@ public class SOSContextService implements ContextService {
 
     private PolicyLanguage policyLanguage;
 
-    private ContextsCacheImpl cache; // TODO - store contexts definitions in local storage
+    // The inMemoryCache keeps the context objects for this node in memory.
+    // TODO - store contexts definitions in local storage
+    private ContextsCacheImpl inMemoryCache;
     private ContextsContents contextsContents;
 
     // This executor service will be used to schedule any background tasks
@@ -53,13 +56,19 @@ public class SOSContextService implements ContextService {
      * The DDS is passed as parameter and it is needed to access the manifests to be processed.
      *
      * @param localStorage used to persist the internal data structures
+     * @param dataDiscoveryService used to discover the data to process and act upon it
+     * @param nodeDiscoveryService used to operate on the SOS and its nodes
+     * @param usersRolesService uses to perform USER/ROLE operations in the SOS
+     * @param storage used to access the SOS' storage
      */
-    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService,
+                             NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
 
         // TODO - load existing contexts into memory via reflection
-        cache = new ContextsCacheImpl();
+        inMemoryCache = new ContextsCacheImpl();
 
         // TODO - load mappings/indices
         contextsContents = new ContextsContents();
@@ -67,7 +76,7 @@ public class SOSContextService implements ContextService {
         policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
 
 
-        // FIXME - do not hardcode this (see comments above)
+        // FIXME - do not hardcode this as contexts should be loaded from disk (see comments above)
         try {
             Context binaryReplicationContext = new BinaryReplicationContext(policyLanguage, "binary replication context",
                     new NodesCollectionImpl(NodesCollection.TYPE.LOCAL),
@@ -89,13 +98,13 @@ public class SOSContextService implements ContextService {
     @Override
     public void addContext(Context context) throws Exception {
 
-        cache.addContext(context);
+        inMemoryCache.addContext(context);
     }
 
     @Override
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
-        return cache.getContext(contextGUID);
+        return inMemoryCache.getContext(contextGUID);
     }
 
     @Override
@@ -135,7 +144,7 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
 
-            Iterator<IGUID> it = cache.getContexts();
+            Iterator<IGUID> it = inMemoryCache.getContexts();
             while (it.hasNext()) {
 
                 try {
@@ -150,7 +159,7 @@ public class SOSContextService implements ContextService {
 
             }
 
-        }, 30, 60, TimeUnit.SECONDS);
+        }, PREDICATE_PERIODIC_INIT_DELAY_S, PREDICATE_PERIODIC_DELAY_S, TimeUnit.SECONDS);
 
     }
 
@@ -169,7 +178,7 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
-            Iterator<IGUID> it = cache.getContexts();
+            Iterator<IGUID> it = inMemoryCache.getContexts();
             while (it.hasNext()) {
 
                 IGUID contextGUID = it.next();
@@ -183,7 +192,7 @@ public class SOSContextService implements ContextService {
 
             }
 
-        }, 45, 60, TimeUnit.SECONDS);
+        }, POLICIES_PERIODIC_INIT_DELAY_S, POLICIES_PERIODIC_DELAY_S, TimeUnit.SECONDS);
     }
 
     /**
@@ -198,7 +207,7 @@ public class SOSContextService implements ContextService {
             // TODO - iterate over context
             // TODO - for each context, context sources
 
-        }, 1, 1, TimeUnit.MINUTES);
+        }, GET_DATA_PERIODIC_INIT_DELAY_S, GET_DATA_PERIODIC_DELAY_S, TimeUnit.SECONDS);
     }
 
     /**
@@ -212,7 +221,7 @@ public class SOSContextService implements ContextService {
             // Get contexts that have to be spawned
             // spawn contexts
 
-        }, 1, 1, TimeUnit.MINUTES);
+        }, SPAWN_PERIODIC_INIT_DELAY_S, SPAWN_PERIODIC_DELAY_S, TimeUnit.SECONDS);
     }
 
     /////////////////////

@@ -34,7 +34,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
  */
 public class SOSDataDiscoveryService implements DataDiscoveryService {
 
-    private ManifestsCache cache;
+    private ManifestsCache inMemoryCache;
     private LocalManifestsDirectory local;
     private RemoteManifestsDirectory remote;
     private LocalStorage localStorage;
@@ -53,7 +53,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
-        cache.addManifest(manifest);
+        inMemoryCache.addManifest(manifest);
         local.addManifest(manifest);
 
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
@@ -86,7 +86,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             manifest = findManifest(remote, guid);
         }
         if (manifest == null) {
-            throw new ManifestNotFoundException("Unable to find manifest in cache, local, remote. GUID: " + guid.toString());
+            throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toString());
         }
 
         return manifest;
@@ -95,8 +95,8 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     @Override
     public Set<Version> getAllVersions() {
 
-        // TODO - returning only the ones from the cache for the moment
-        return new HashSet<>(cache.getAllAsset());
+        // TODO - returning only the ones from the inMemoryCache for the moment
+        return new HashSet<>(inMemoryCache.getAllAsset());
     }
 
     @Override
@@ -106,13 +106,13 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
             IFile cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
-            cache.persist(cacheFile);
+            inMemoryCache.persist(cacheFile);
 
             IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             ddsIndex.persist(ddsIndexFile);
 
         } catch (DataStorageException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the DDS cache and/or index");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the DDS inMemoryCache and/or index");
         }
     }
 
@@ -121,14 +121,14 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile file = localStorage.createFile(cacheDir, CACHE_FILE);
             if (file.exists()) {
-                cache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
+                inMemoryCache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS cache");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS inMemoryCache");
         }
 
-        if (cache == null) {
-            cache = new ManifestsCacheImpl();
+        if (inMemoryCache == null) {
+            inMemoryCache = new ManifestsCacheImpl();
         }
     }
 
@@ -151,7 +151,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     private Manifest findManifestCache(IGUID guid) {
         Manifest manifest = null;
         try {
-            manifest = cache.getManifest(guid);
+            manifest = inMemoryCache.getManifest(guid);
         } catch (ManifestsCacheMissException e) {
             SOS_LOG.log(LEVEL.WARN, e.getMessage());
         }
@@ -164,7 +164,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             manifest = directory.findManifest(guid);
 
             // Manifest is cached and saved to local disk for faster access in the future
-            cache.addManifest(manifest);
+            inMemoryCache.addManifest(manifest);
             local.addManifest(manifest);
 
         } catch (ManifestNotFoundException e) {
