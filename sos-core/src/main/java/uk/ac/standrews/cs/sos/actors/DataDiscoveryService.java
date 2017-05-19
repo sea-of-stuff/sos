@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Set;
@@ -27,6 +28,8 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @throws ManifestPersistException
      */
     void addManifest(Manifest manifest) throws ManifestPersistException;
+
+    void addManifest(Manifest manifest, NodesCollection nodes, int replication);
 
     /**
      * Get the manifest that matches a given GUID.

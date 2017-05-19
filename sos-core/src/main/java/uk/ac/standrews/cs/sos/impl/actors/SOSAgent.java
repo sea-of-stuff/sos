@@ -159,6 +159,14 @@ public class SOSAgent implements Agent {
     }
 
     @Override
+    public Object getMetaProperty(IGUID guid, String property) throws ManifestNotFoundException, MetadataNotFoundException {
+        Version version = (Version) getManifest(guid);
+
+        Metadata metadata = getMetadata(version.getMetadata());
+        return metadata.getProperty(property);
+    }
+
+    @Override
     public Metadata addMetadata(InputStream inputStream) throws MetadataException {
 
         Metadata metadata = metadataService.processMetadata(inputStream);

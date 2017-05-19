@@ -127,5 +127,15 @@ public interface Agent {
      */
     boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException;
 
-    // TODO - methods to interact with contexts and Roles
+    /**
+     * Get the propery value for the given manifest matching GUID
+     * The manifest MUST be a version manifest
+     *
+     * @param guid
+     * @param property
+     * @return
+     * @throws ManifestNotFoundException
+     * @throws MetadataNotFoundException
+     */
+    Object getMetaProperty(IGUID guid, String property) throws ManifestNotFoundException, MetadataNotFoundException;
 }

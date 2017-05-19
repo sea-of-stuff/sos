@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.InputStream;
@@ -10,7 +11,8 @@ import java.io.InputStream;
 public class AtomBuilder {
 
     private Location location;
-    private InputStream inputStream;
+    private InputStream inputStream; // FIXME - replace with DATA
+    private Data data;
 
     private boolean buildIsSet = false;
     private boolean isLocation = false;
@@ -36,6 +38,12 @@ public class AtomBuilder {
         return this;
     }
 
+    public AtomBuilder setData(Data data) {
+        this.data = data;
+
+        return this;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -43,6 +51,10 @@ public class AtomBuilder {
     public InputStream getInputStream() {
         return inputStream;
     }
+
+    public Data getData() {
+        return data;
+    };
 
     public boolean isLocation() {
         return isLocation;

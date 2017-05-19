@@ -12,8 +12,6 @@ import java.util.Set;
 /**
  * NDS - Node Discovery Service
  *
- * TODO - pass scope to methods
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface NodeDiscoveryService extends SeaOfStuff {
@@ -50,8 +48,14 @@ public interface NodeDiscoveryService extends SeaOfStuff {
      */
     Set<Node> getNodes(NodeType type);
 
-
-    Set<Node> getNodes(NodesCollection domain, NodeType type);
+    /**
+     * Get a collection of nodes within the given domain and matching the specified type
+     *
+     * @param domain
+     * @param type
+     * @return
+     */
+    NodesCollection getNodes(NodesCollection domain, NodeType type);
 
     /**
      * Get all known nodes

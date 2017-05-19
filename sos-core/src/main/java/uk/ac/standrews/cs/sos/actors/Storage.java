@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 
 import java.io.InputStream;
@@ -33,6 +34,8 @@ public interface Storage extends SeaOfStuff {
      */
     Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException;
 
+    Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor);
+
     /**
      * Get an atom's data given an AtomManifest.
      *
@@ -51,6 +54,7 @@ public interface Storage extends SeaOfStuff {
     InputStream getAtomContent(IGUID guid) throws AtomNotFoundException;
 
     void addLocation(IGUID guid, LocationBundle locationBundle);
+
 
     /**
      * Flush all indexes and caches managed by the storage actor

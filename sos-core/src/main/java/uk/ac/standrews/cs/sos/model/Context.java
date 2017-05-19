@@ -27,11 +27,17 @@ import uk.ac.standrews.cs.IGUID;
  */
 public interface Context {
 
+    /**
+     * This is the unique GUID for this context
+     *
+     * @return GUID of the context
+     */
     IGUID guid();
 
     /**
      * Return a human-readable name for the context
-     * @return
+     *
+     * @return name of the context
      */
     String getName();
 
@@ -39,13 +45,16 @@ public interface Context {
      * Predicate to apply against data.
      * This will define whether data belongs to this context or not
      *
-     * @return
+     * @return predicate of the context
      */
     SOSPredicate predicate();
 
     /**
      * Return the policies of this context
-     * @return
+     *
+     * The predicates must be executed in order.
+     *
+     * @return an array of policies
      */
     Policy[] policies();
 
@@ -53,7 +62,7 @@ public interface Context {
      * Nodes where to apply this context
      * This information will be used to spawn the context to such nodes.
      *
-     * @return
+     * @return the nodes where to spawn this context
      */
     NodesCollection whereToRun();
 

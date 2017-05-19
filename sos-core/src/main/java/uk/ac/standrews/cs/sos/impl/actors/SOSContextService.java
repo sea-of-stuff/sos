@@ -4,29 +4,26 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.actors.ContextService;
-import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
-import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.actors.UsersRolesService;
+import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
+import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.Policy;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
 /**
- * TODO - should have a default scope
  * TODO - should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -58,7 +54,7 @@ public class SOSContextService implements ContextService {
      *
      * @param localStorage used to persist the internal data structures
      */
-    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService) {
+    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
 
@@ -68,7 +64,19 @@ public class SOSContextService implements ContextService {
         // TODO - load mappings/indices
         contextsContents = new ContextsContents();
 
-        policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService);
+        policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
+
+
+        // FIXME - do not hardcode this (see comments above)
+        try {
+            Context binaryReplicationContext = new BinaryReplicationContext(policyLanguage, "binary replication context",
+                    new NodesCollectionImpl(NodesCollection.TYPE.LOCAL),
+                    new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+
+            addContext(binaryReplicationContext);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
@@ -90,9 +98,8 @@ public class SOSContextService implements ContextService {
         return cache.getContext(contextGUID);
     }
 
-    // TODO - do not use iterator
     @Override
-    public Iterator<IGUID> getContents(IGUID context) {
+    public Set<IGUID> getContents(IGUID context) {
 
         return contextsContents.getContents(context);
     }

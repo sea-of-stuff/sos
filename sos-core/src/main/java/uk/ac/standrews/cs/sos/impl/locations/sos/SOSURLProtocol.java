@@ -27,7 +27,7 @@ public class SOSURLProtocol {
         return instance;
     }
 
-    public void register(LocalStorage localStorage) throws SOSProtocolException {
+    public void register(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) throws SOSProtocolException {
         SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
         try {
             if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
@@ -39,9 +39,7 @@ public class SOSURLProtocol {
             SOS_LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSProtocolException(e);
         }
-    }
 
-    public void setNDS(NodeDiscoveryService nodeDiscoveryService) {
         urlStreamHandlerFactory.getSOSURLStreamHandler().setNodeDiscoveryService(nodeDiscoveryService);
     }
 

@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
 
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Context Management Service
@@ -34,12 +34,12 @@ public interface ContextService extends SeaOfStuff {
     Context getContext(IGUID contextGUID) throws ContextNotFoundException;
 
     /**
-     * Get an iterator for all content belonging to the specified context
+     * Get the set for all content belonging to the specified context
      *
      * @param context
      * @return
      */
-    Iterator<IGUID> getContents(IGUID context);
+    Set<IGUID> getContents(IGUID context);
 
     /**
      * Flushes any in-memory information into disk

@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -58,6 +59,11 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
         // TODO - should this be dealt (1) within a scope and (2) by contexts?
         remote.addManifest(manifest); // will apply in async mode
+    }
+
+    @Override
+    public void addManifest(Manifest manifest, NodesCollection nodes, int replication) {
+
     }
 
     @Override

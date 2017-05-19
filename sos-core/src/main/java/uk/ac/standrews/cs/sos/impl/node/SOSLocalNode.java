@@ -197,10 +197,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     private void initNDS() throws SOSException {
         try {
-            SOSURLProtocol.getInstance().register(localStorage);
             Node localNode = new SOSNode(this);
             nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, database);
-            SOSURLProtocol.getInstance().setNDS(nodeDiscoveryService);
+            SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
         }
@@ -212,24 +211,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initActors() {
 
         dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
-        usersRolesService = new SOSUsersRolesService();
+        usersRolesService = new SOSUsersRolesService(); // TODO - will need to pass NDS to discover other roles
 
         storage = new SOSStorage(getNodeGUID(), localStorage, dataDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), dataDiscoveryService);
-        contextService = new SOSContextService(localStorage, dataDiscoveryService, nodeDiscoveryService, usersRolesService);
-
-
-        // TODO - this is hardcoded. Contexts and scopes should be loaded from storage
-//        try {
-//
-//            Context octetContext = new BinaryReplicationContext("octet context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-//            Context textContext = new TextContext("text context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-//
-//            cms.addContext(octetContext);
-//            cms.addContext(textContext);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        contextService = new SOSContextService(localStorage, dataDiscoveryService, nodeDiscoveryService, usersRolesService, storage);
 
         createDummyUserRole();
 

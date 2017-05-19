@@ -11,23 +11,23 @@ public interface NodesCollection {
      * Returns the nodes available from within this scope
      * if the type is SPECIFIED
      *
-     * NOTE: will use the NDS to actually find the nodes
+     * If the type is LOCAL or ANY, the set of nodes returned is empty.
      *
-     * @return
+     * @return a set of nodes
      */
     Set<Node> nodes();
 
     /**
      * Get the type of the collection.
      *
-     * @return
+     * @return the type of this nodes collection
      */
     TYPE type();
 
     enum TYPE {
-        LOCAL,
-        ANY, // The collection is unlimited
-        SPECIFIED // The collection is limited to the specified nodes
+        LOCAL, // This local node
+        SPECIFIED, // The collection is limited to the specified nodes
+        ANY // The collection is unlimited
     }
 
 }

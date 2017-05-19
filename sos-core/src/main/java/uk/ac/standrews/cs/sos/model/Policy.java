@@ -12,8 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
  * - protect data
  * - migrate data from S3 to Azure
  *
- * Policies are apply within a given scope (see @link Scope)
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Policy {
@@ -22,7 +20,7 @@ public interface Policy {
      * Run this policy over a manifest
      *
      * @param manifest over which this policy runs
-     * @throws PolicyException
+     * @throws PolicyException if an error occurred while applying the policy
      * @see #satisfied(Manifest) for info about the success of the policy
      */
     void apply(Manifest manifest) throws PolicyException;
@@ -32,7 +30,7 @@ public interface Policy {
      *
      * @param manifest over which this policy will satisfied its agreement
      * @return true if the policy is satisfied
-     * @throws PolicyException
+     * @throws PolicyException if an error occurred while checking that the policy is satisfied
      */
     boolean satisfied(Manifest manifest) throws PolicyException;
 

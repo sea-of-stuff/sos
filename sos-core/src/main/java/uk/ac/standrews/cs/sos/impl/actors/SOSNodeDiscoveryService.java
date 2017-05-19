@@ -117,7 +117,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
-    public Set<Node> getNodes(NodesCollection domain, NodeType type) {
+    public NodesCollection getNodes(NodesCollection domain, NodeType type) {
 
         // TODO - return the requested nodes within that domain
         return null;

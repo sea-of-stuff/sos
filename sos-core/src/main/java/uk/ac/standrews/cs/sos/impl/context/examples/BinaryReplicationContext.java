@@ -5,10 +5,12 @@ import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.model.SOSPredicate;
 
 import java.util.Collections;
-import java.util.Iterator;
 
 /**
  * This is a context that replicates all binary content to at least three randomly chosen nodes
@@ -28,7 +30,7 @@ public class BinaryReplicationContext extends BaseContext {
 
         return new SOSPredicateImpl(
                 contentTypePredicate(Collections.singletonList("application/octet-stream")),
-                Long.MAX_VALUE);
+                PREDICATE_ALWAYS_TRUE);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class BinaryReplicationContext extends BaseContext {
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
-            Iterator<Node> nodes = policyLanguage.getNodes(null, NodeType.DDS).iterator();
+            NodesCollection nodes = policyLanguage.getNodes(codomain, NodeType.DDS);
             policyLanguage.replicateManifest(manifest, nodes, factor);
         }
 

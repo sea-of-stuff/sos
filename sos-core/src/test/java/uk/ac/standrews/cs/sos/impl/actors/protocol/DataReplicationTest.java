@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
@@ -40,7 +41,7 @@ import static org.testng.AssertJUnit.assertFalse;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationTest {
+public class DataReplicationTest extends SetUpTest {
 
     private ClientAndServer mockServer;
     private ClientAndServer mockServerTwin;
@@ -143,9 +144,7 @@ public class DataReplicationTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
-
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, localStorage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = index.findLocations(testGUID);

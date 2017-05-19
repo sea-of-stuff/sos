@@ -18,10 +18,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -58,6 +55,11 @@ public class SOSStorage implements Storage {
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;
+    }
+
+    @Override
+    public Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) {
+        return null;
     }
 
     /**

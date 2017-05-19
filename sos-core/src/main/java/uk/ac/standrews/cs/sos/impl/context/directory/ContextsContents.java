@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The ContextsContents holds all the information regarding contexts and their contents.
@@ -60,17 +60,17 @@ public class ContextsContents implements Serializable  {
     }
 
     /**
-     * Get an iterator for all the contents for a given context
+     * Get a set for all the contents for a given context
      *
      * @param context
      * @return
      */
-    public Iterator<IGUID> getContents(IGUID context) {
+    public Set<IGUID> getContents(IGUID context) {
         HashMap<IGUID, ContextContent> contents = mappings.get(context);
         if (contents == null) {
-            return Collections.emptyIterator();
+            return Collections.emptySet();
         } else {
-            return contents.keySet().iterator();
+            return contents.keySet();
         }
     }
 

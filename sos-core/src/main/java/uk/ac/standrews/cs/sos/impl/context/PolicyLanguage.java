@@ -4,26 +4,16 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
-import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
- * Methods accessible by the policies
- *
- * What it is yet todo:
- * - calls to appropriate tasks
- * - indices for this node updated
+ * Utility methods accessible by the policies
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -32,35 +22,24 @@ public class PolicyLanguage {
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
     private UsersRolesService usersRolesService;
+    private Storage storage;
 
-    public PolicyLanguage(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService) {
+    public PolicyLanguage(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;
         this.usersRolesService = usersRolesService;
+        this.storage = storage;
     }
 
-    public void replicateManifest(Manifest manifest, Iterator<Node> nodes, int replicationFactor) {
+    public void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) {
 
-        try {
-
-            ManifestReplication replication = new ManifestReplication(manifest, nodes, replicationFactor, dataDiscoveryService);
-            TasksQueue.instance().performAsyncTask(replication);
-
-        } catch (SOSProtocolException e) {
-            e.printStackTrace();
-        }
+        dataDiscoveryService.addManifest(manifest, nodes, replicationFactor);
     }
 
-    public void replicateData(Data data, Iterator<Node> nodes, int replicationFactor) {
+    public void replicateData(Data data, NodesCollection nodes, int replicationFactor) {
 
-        try {
-            // FIXME - Remove that index. In fact, it should be part of the DDS
-            DataReplication dataReplication = new DataReplication(data.getInputStream(), nodes, replicationFactor, null, nodeDiscoveryService, dataDiscoveryService);
-            TasksQueue.instance().performAsyncTask(dataReplication);
-
-        } catch (SOSProtocolException | IOException e) {
-            e.printStackTrace();
-        }
+        storage.addData(new AtomBuilder().setData(data), nodes, replicationFactor);
     }
 
     public void deleteData(IGUID guid, IGUID node) {
@@ -116,9 +95,10 @@ public class PolicyLanguage {
         return nodeDiscoveryService.getNode(guid);
     }
 
-    public Set<Node> getNodes(NodesCollection codomain, NodeType type) {
+    public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
-        return nodeDiscoveryService.getNodes(type);
+        return null;
+        // return nodeDiscoveryService.getNodes(type);
     }
 
     public Role getRole(IGUID guid) {
