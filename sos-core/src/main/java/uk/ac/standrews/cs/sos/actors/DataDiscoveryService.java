@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Set;
@@ -15,6 +16,9 @@ import java.util.Set;
  * The DDS takes care of:
  * - managing the manifests in the SOS
  * - track where the data is and help nodes to find the data
+ *
+ * TODO - pass param to methods so that it is possible to restrict the scope:
+ * e.g. get manifest from this node, vs from all the nodes in the world
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -29,6 +33,13 @@ public interface DataDiscoveryService extends SeaOfStuff {
      */
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
+    /**
+     * Adds a manifest to the specified nodes using the replication factor as an AT_LEAST restriction
+     *
+     * @param manifest
+     * @param nodes
+     * @param replication
+     */
     void addManifest(Manifest manifest, NodesCollection nodes, int replication);
 
     /**
@@ -55,10 +66,46 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * Get all known versions to this DDS node
      *
      * @return list of DDS versions
+     *
+     * TODO - remove this method
      */
     Set<Version> getAllVersions();
 
-    // TODO - get heads OR current versions? - see notes at page 31
+    /**
+     * Get all the assets stored at this node
+     *
+     * @return invariants
+     */
+    Set<IGUID> getAssets();
+
+    /**
+     * Get all the HEADS for the given invariant
+     *
+     * @param invariant
+     * @return
+     */
+    Set<Version> getHeads(IGUID invariant);
+
+    /**
+     * Get the CURRENT version for the role.
+     * The CURRENT does not need to match one of the HEADS
+     *
+     * Different roles might have different currents.
+     *
+     * @param role
+     * @param invariant
+     * @return
+     */
+    // TODO - what if multiple currents at different nodes?
+    Version getCurrent(Role role, IGUID invariant);
+
+    /**
+     * Set the specified version as the CURRENT for its asset and for the given role
+     *
+     * @param role
+     * @param version
+     */
+    void setCurrent(Role role, Version version);
 
     /**
      * Flushes any in-memory information into disk

@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -97,6 +98,26 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
         // TODO - returning only the ones from the inMemoryCache for the moment
         return new HashSet<>(inMemoryCache.getAllAsset());
+    }
+
+    @Override
+    public Set<IGUID> getAssets() {
+        return null;
+    }
+
+    @Override
+    public Set<Version> getHeads(IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public Version getCurrent(Role role, IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public void setCurrent(Role role, Version version) {
+
     }
 
     @Override

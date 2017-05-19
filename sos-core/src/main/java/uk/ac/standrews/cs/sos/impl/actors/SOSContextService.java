@@ -150,7 +150,7 @@ public class SOSContextService implements ContextService {
                 try {
                     Context context = getContext(it.next());
                     for(Version version : dataDiscoveryService.getAllVersions()) { // FIXME - get only heads?
-                        runPredicate(context, version);
+                        runPredicate(context, version.guid());
                     }
 
                 } catch (ContextNotFoundException e) {
@@ -237,27 +237,25 @@ public class SOSContextService implements ContextService {
      *  - Update the contextsContents
      *
      * @param context
-     * @param version
+     * @param versionGUID
      * @return
      */
-    private void runPredicate(Context context, Version version) {
+    private void runPredicate(Context context, IGUID versionGUID) {
 
-        IGUID versionGUID = version.guid();
+        IGUID contextGUID = context.guid();
 
-        boolean alreadyRun = contextsContents.contentProcessedForContext(context.guid(), versionGUID);
+        boolean alreadyRun = contextsContents.contentProcessedForContext(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
 
-            ContextContent content = contextsContents.get(context.guid(), versionGUID);
+            ContextContent content = contextsContents.get(contextGUID, versionGUID);
 
             long maxage = context.predicate().maxAge();
             long contentLastRun = content.timestamp;
             long now = System.nanoTime();
 
-            if (now - contentLastRun > maxage) {
-                maxAgeExpired = true;
-            }
+            maxAgeExpired = (now - contentLastRun) > maxage;
 
         }
 
@@ -269,7 +267,7 @@ public class SOSContextService implements ContextService {
             content.predicateResult = passed;
             content.timestamp = System.nanoTime();
             
-            contextsContents.addMapping(context.guid(), versionGUID, content);
+            contextsContents.addMapping(contextGUID, versionGUID, content);
         }
 
     }
