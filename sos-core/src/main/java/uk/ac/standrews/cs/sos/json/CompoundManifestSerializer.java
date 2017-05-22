@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.Content;
@@ -31,9 +32,9 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
         jsonGenerator.writeEndArray();
 
         String signature = compoundManifest.getSignature();
-        if (signature != null && !signature.isEmpty()) {
-            String signer = compoundManifest.getSigner().toString();
-            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, signer); // FIXME
+        IGUID signer = compoundManifest.getSigner();
+        if (signature != null && !signature.isEmpty() && signer != null && !signer.isInvalid()) {
+            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, signer.toString());
             jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNATURE, signature);
         }
 

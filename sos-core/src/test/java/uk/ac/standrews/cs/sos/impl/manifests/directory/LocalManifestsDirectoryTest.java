@@ -91,6 +91,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
         Content content = new ContentImpl("Cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
@@ -121,6 +122,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, roleMocked);
     }
@@ -224,6 +226,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     private Version createDummyVersion(IGUID contentGUID) throws Exception {
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
         Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, roleMocked);
 
         return version;
