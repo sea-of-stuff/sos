@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocalManifestsDirectory;
@@ -40,6 +39,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     private RemoteManifestsDirectory remote;
     private LocalStorage localStorage;
 
+    // Maps ManifestGUID --> [ DDS Nodes that might have it ]
     private DDSIndex ddsIndex;
 
     public SOSDataDiscoveryService(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
@@ -56,15 +56,16 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         inMemoryCache.addManifest(manifest);
         local.addManifest(manifest);
+    }
+
+    @Override
+    public void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException {
+        inMemoryCache.addManifest(manifest);
+        local.addManifest(manifest);
 
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
         // TODO - should this be dealt (1) within a scope and (2) by contexts?
         remote.addManifest(manifest); // will apply in async mode
-    }
-
-    @Override
-    public void addManifest(Manifest manifest, NodesCollection nodes, int replication) {
-
     }
 
     @Override
@@ -79,7 +80,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             throw new ManifestNotFoundException("GUID was invalid");
         }
 
-        Manifest manifest = findManifestCache(guid);
+        Manifest manifest = findManifest(inMemoryCache, guid);
         if (manifest == null) {
             manifest = findManifest(local, guid);
         }
@@ -97,7 +98,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public Set<Version> getAllVersions() {
 
         // TODO - returning only the ones from the inMemoryCache for the moment
-        return new HashSet<>(inMemoryCache.getAllAsset());
+        return new HashSet<>(inMemoryCache.getAllAssets());
     }
 
     @Override
@@ -167,16 +168,6 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         if (ddsIndex == null) {
             ddsIndex = new DDSIndex();
         }
-    }
-
-    private Manifest findManifestCache(IGUID guid) {
-        Manifest manifest = null;
-        try {
-            manifest = inMemoryCache.getManifest(guid);
-        } catch (ManifestsCacheMissException e) {
-            SOS_LOG.log(LEVEL.WARN, e.getMessage());
-        }
-        return manifest;
     }
 
     private Manifest findManifest(ManifestsDirectory directory, IGUID guid) {

@@ -40,7 +40,7 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @param nodes
      * @param replication
      */
-    void addManifest(Manifest manifest, NodesCollection nodes, int replication);
+    void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException;
 
     /**
      * Get the manifest that matches a given GUID.

@@ -8,18 +8,20 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,11 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     private transient HashMap<IGUID, Manifest> cache;
     private transient ConcurrentLinkedQueue<IGUID> lru;
 
+    private transient HashMap<IGUID, Set<IGUID>> heads;
+
+    // Invariant --> Role --> Current
+    private transient HashMap<IGUID, HashMap<IGUID, IGUID>> currents;
+
     public ManifestsCacheImpl() {
         this(MAX_DEFAULT_SIZE);
     }
@@ -45,10 +52,13 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
         cache = new HashMap<>();
         lru = new ConcurrentLinkedQueue<>();
+
+        heads = new HashMap<>();
+        currents = new HashMap<>();
     }
 
     @Override
-    public synchronized void addManifest(Manifest manifest) {
+    public synchronized void addManifest(Manifest manifest) throws ManifestPersistException {
 
         IGUID guid = manifest.guid();
         applyLRU(guid);
@@ -56,19 +66,42 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public Manifest getManifest(IGUID guid) throws ManifestsCacheMissException {
+    public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
         if (cache == null) {
-            throw new ManifestsCacheMissException("Cache has not been initialised");
+            throw new ManifestNotFoundException("Cache has not been initialised");
         }
 
         if (!cache.containsKey(guid)) {
-            throw new ManifestsCacheMissException("Unable to find manifest for GUID: " + guid.toString());
+            throw new ManifestNotFoundException("Unable to find manifest for GUID: " + guid.toString());
         }
 
         applyReadLRU(guid);
 
         return cache.get(guid);
+    }
+
+    @Override
+    public Set<Version> getHeads(IGUID invariant) {
+
+
+        heads.get(invariant);
+        return null;
+    }
+
+    @Override
+    public Version getCurrent(Role role, IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public void setCurrent(Role role, Version version) {
+
+    }
+
+    @Override
+    public void flush() {
+        // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
     }
 
     @Override
@@ -95,7 +128,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public List<Version> getAllAsset() {
+    public List<Version> getAllAssets() {
         return cache.values()
                 .stream()
                 .filter(m -> m.getType() == ManifestType.VERSION)
@@ -122,7 +155,11 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         while ((guid = lru.poll()) != null) {
             Manifest manifest = loadManifest(storage, manifestsDir, guid);
             if (manifest != null) {
-                persistedCache.addManifest(manifest);
+                try {
+                    persistedCache.addManifest(manifest);
+                } catch (ManifestPersistException e) {
+                    throw new IOException("Unable to load manifest correctly " + manifest);
+                }
             }
         }
 
