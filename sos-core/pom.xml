@@ -35,7 +35,7 @@
         <guava.version>21.0-rc2</guava.version>
 
         <typesafe.version>1.3.1</typesafe.version>
-        <okhttp.version>3.5.0</okhttp.version>
+        <okhttp.version>3.8.0</okhttp.version>
 
         <tika.version>1.14</tika.version>
         <rdf4j.version>2.0.2</rdf4j.version>
