@@ -29,13 +29,15 @@ public class VersionManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_BASIC_VERSION =
             "{\"Type\":\"Version\"," +
-                    "\"Signature\":\"\"," +
+                    "\"Signature\":\"AAAB\"," +
+                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_VERSION =
             "{\"Type\":\"Version\"," +
-                    "\"Signature\":\"\"," +
+                    "\"Signature\":\"AAAB\"," +
+                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
@@ -43,7 +45,8 @@ public class VersionManifestTest extends CommonTest {
     private static final String EXPECTED_JSON_PREVIOUS_VERSION =
             "{\"Type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Signature\":\"\"," +
+                    "\"Signature\":\"AAAB\"," +
+                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
@@ -51,7 +54,8 @@ public class VersionManifestTest extends CommonTest {
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION =
             "{\"Type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Signature\":\"\"," +
+                    "\"Signature\":\"AAAB\"," +
+                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
@@ -64,6 +68,7 @@ public class VersionManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         VersionManifest versionManifest = new VersionManifest(null, guid, null, null, roleMocked);
 
@@ -84,6 +89,7 @@ public class VersionManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, roleMocked);
 
@@ -109,6 +115,7 @@ public class VersionManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, null, roleMocked);
 
@@ -137,6 +144,7 @@ public class VersionManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 
@@ -165,6 +173,7 @@ public class VersionManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 

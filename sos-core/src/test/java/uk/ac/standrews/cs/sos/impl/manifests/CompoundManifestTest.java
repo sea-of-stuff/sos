@@ -30,7 +30,8 @@ public class CompoundManifestTest extends CommonTest {
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
                     "\"GUID\":\"44ebfc76e2671daf7f1e1b02c9538e5fe1e44995\"," +
-                    "\"Signature\":\"\"," +
+                    "\"Signature\":\"AAAB\"," +
+                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
                     "[{" +
@@ -41,7 +42,8 @@ public class CompoundManifestTest extends CommonTest {
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
                     "\"GUID\":\"32096c2e0eff33d844ee6d675407ace18289357d\"," +
-                    "\"Signature\":\"\"," +
+                    "\"Signature\":\"AAAB\"," +
+                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
                     "\"Content\":" +
                     "[]}";
@@ -57,6 +59,7 @@ public class CompoundManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
@@ -74,6 +77,7 @@ public class CompoundManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
@@ -90,6 +94,7 @@ public class CompoundManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
@@ -103,6 +108,7 @@ public class CompoundManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
@@ -120,6 +126,7 @@ public class CompoundManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
@@ -132,6 +139,7 @@ public class CompoundManifestTest extends CommonTest {
 
         Role roleMocked = mock(Role.class);
         when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
+        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
 
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 

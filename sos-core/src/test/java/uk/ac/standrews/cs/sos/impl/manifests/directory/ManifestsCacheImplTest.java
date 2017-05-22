@@ -54,7 +54,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         assertEquals(manifest, manifest1);
     }
 
-    @Test (expectedExceptions = ManifestPersistException.class)
+    @Test (expectedExceptions = ManifestNotFoundException.class)
     public void cacheMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
@@ -62,7 +62,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.findManifest(guid);
     }
 
-    @Test (expectedExceptions = ManifestPersistException.class)
+    @Test (expectedExceptions = ManifestNotFoundException.class)
     public void cacheAddAndMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl(2);
 
@@ -124,7 +124,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         assertNotNull(persistedCache.findManifest(guid));
     }
 
-    @Test (expectedExceptions = ManifestPersistException.class)
+    @Test (expectedExceptions = ManifestNotFoundException.class)
     public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
             ManifestPersistException, StorageException, DataStorageException, ManifestNotFoundException {
 
