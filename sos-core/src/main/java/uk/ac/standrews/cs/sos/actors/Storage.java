@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 
 import java.io.InputStream;
+import java.util.Iterator;
 
 /**
  * The Storage roles defines an entry point in the SOS to store data.
@@ -54,6 +55,8 @@ public interface Storage extends SeaOfStuff {
     InputStream getAtomContent(IGUID guid) throws AtomNotFoundException;
 
     void addLocation(IGUID guid, LocationBundle locationBundle);
+
+    Iterator<LocationBundle> findLocations(IGUID guid);
 
 
     /**

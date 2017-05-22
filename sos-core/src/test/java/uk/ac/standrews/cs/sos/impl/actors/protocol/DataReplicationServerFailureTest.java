@@ -7,14 +7,14 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
-import uk.ac.standrews.cs.sos.impl.manifests.atom.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
@@ -38,7 +38,7 @@ import static org.testng.AssertJUnit.assertFalse;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationServerFailureTest {
+public class DataReplicationServerFailureTest extends SetUpTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10004;
@@ -106,7 +106,7 @@ public class DataReplicationServerFailureTest {
                                 .withBody("")
                 );
 
-        SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
         new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
@@ -130,12 +130,12 @@ public class DataReplicationServerFailureTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertFalse(it.hasNext());
     }
 
@@ -151,12 +151,12 @@ public class DataReplicationServerFailureTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertFalse(it.hasNext());
     }
 
@@ -172,12 +172,12 @@ public class DataReplicationServerFailureTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertFalse(it.hasNext());
     }
 
@@ -193,12 +193,12 @@ public class DataReplicationServerFailureTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertFalse(it.hasNext());
     }
 
@@ -214,12 +214,12 @@ public class DataReplicationServerFailureTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertFalse(it.hasNext());
     }
 }

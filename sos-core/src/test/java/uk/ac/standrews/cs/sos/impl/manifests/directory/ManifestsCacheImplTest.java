@@ -13,8 +13,8 @@ import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsCacheMissException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -43,27 +43,27 @@ import static org.testng.Assert.assertNotNull;
 public class ManifestsCacheImplTest extends CommonTest {
 
     @Test
-    public void basicTest() throws ManifestsCacheMissException {
+    public void basicTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
         Manifest manifest = getMockManifest();
         IGUID guid = manifest.guid();
         cache.addManifest(manifest);
 
-        Manifest manifest1 = cache.getManifest(guid);
+        Manifest manifest1 = cache.findManifest(guid);
         assertEquals(manifest, manifest1);
     }
 
-    @Test (expectedExceptions = ManifestsCacheMissException.class)
-    public void cacheMissTest() throws ManifestsCacheMissException {
+    @Test (expectedExceptions = ManifestPersistException.class)
+    public void cacheMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
         IGUID guid = GUIDFactory.generateRandomGUID();
-        cache.getManifest(guid);
+        cache.findManifest(guid);
     }
 
-    @Test (expectedExceptions = ManifestsCacheMissException.class)
-    public void cacheAddAndMissTest() throws ManifestsCacheMissException {
+    @Test (expectedExceptions = ManifestPersistException.class)
+    public void cacheAddAndMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl(2);
 
         Manifest manifest = getMockManifest();
@@ -74,12 +74,11 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.addManifest(manifest1);
         cache.addManifest(manifest2);
 
-
-        cache.getManifest(manifest.guid());
+        cache.findManifest(manifest.guid());
     }
 
     @Test
-    public void cacheAddUniqueTest() throws ManifestsCacheMissException {
+    public void cacheAddUniqueTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
         Manifest manifest = getMockManifest();
@@ -88,13 +87,13 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.addManifest(manifest);
         cache.addManifest(manifest);
 
-        Manifest manifest1 = cache.getManifest(manifest.guid());
+        Manifest manifest1 = cache.findManifest(manifest.guid());
         assertEquals(manifest, manifest1);
     }
 
     @Test
-    public void persistCacheTest() throws IOException, ClassNotFoundException, ManifestsCacheMissException, StorageException,
-            DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException {
+    public void persistCacheTest() throws IOException, ClassNotFoundException, ManifestPersistException, StorageException,
+            DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException, ManifestNotFoundException {
 
         String root = System.getProperty("user.home") + "/sos/";
 
@@ -122,12 +121,12 @@ public class ManifestsCacheImplTest extends CommonTest {
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
 
-        assertNotNull(persistedCache.getManifest(guid));
+        assertNotNull(persistedCache.findManifest(guid));
     }
 
-    @Test (expectedExceptions = ManifestsCacheMissException.class)
+    @Test (expectedExceptions = ManifestPersistException.class)
     public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
-            ManifestsCacheMissException, StorageException, DataStorageException {
+            ManifestPersistException, StorageException, DataStorageException, ManifestNotFoundException {
 
         String root = System.getProperty("user.home") + "/sos/";
 
@@ -150,9 +149,8 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.persist(file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
-        persistedCache.getManifest(guid);
+        persistedCache.findManifest(guid);
     }
-
 
     private Manifest getValidManifest() throws GUIDGenerationException, URISyntaxException {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
@@ -163,7 +161,6 @@ public class ManifestsCacheImplTest extends CommonTest {
 
         return atomManifest;
     }
-
 
     private Manifest getMockManifest() {
         Manifest manifest = mock(Manifest.class);

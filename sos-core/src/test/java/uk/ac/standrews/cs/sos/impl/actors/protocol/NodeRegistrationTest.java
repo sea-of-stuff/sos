@@ -105,7 +105,7 @@ public class NodeRegistrationTest {
                                 .withStatusCode(500)
                 );
 
-        SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
     }
 
     @AfterMethod

@@ -10,14 +10,13 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
-import uk.ac.standrews.cs.sos.impl.manifests.atom.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
@@ -119,7 +118,7 @@ public class DataReplicationTest extends SetUpTest {
                                 )
                 );
 
-        SOSURLProtocol.getInstance().register(null); // Local storage is not needed for this set of tests
+        SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
         new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
@@ -144,10 +143,12 @@ public class DataReplicationTest extends SetUpTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, localStorage, mockNodeDiscoveryService, mockDataDiscoveryService);
+        Storage storage = localSOSNode.getStorage();
+
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -167,12 +168,12 @@ public class DataReplicationTest extends SetUpTest {
         Set<Node> nodes = new HashSet<>();
         nodes.add(node);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
     }
 
@@ -194,12 +195,12 @@ public class DataReplicationTest extends SetUpTest {
         nodes.add(node);
         nodes.add(storageNode);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -232,12 +233,12 @@ public class DataReplicationTest extends SetUpTest {
         nodes.add(storageNode);
         nodes.add(anotherNode);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 3, index, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - test with different replication factor
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 3, storage, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - test with different replication factor
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -266,12 +267,12 @@ public class DataReplicationTest extends SetUpTest {
         nodes.add(storageNode);
         nodes.add(twinStorageNode);
 
-        LocationsIndex index = new LocationsIndexImpl();
+        Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - rep factor 1
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -299,11 +300,11 @@ public class DataReplicationTest extends SetUpTest {
         nodes.add(storageNode);
         nodes.add(twinStorageNode);
 
-        LocationsIndex index = new LocationsIndexImpl();
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, index, mockNodeDiscoveryService, mockDataDiscoveryService);
+        Storage storage = localSOSNode.getStorage();
+        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = index.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID);
         assertTrue(it.hasNext());
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);

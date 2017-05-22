@@ -113,6 +113,11 @@ public class SOSStorage implements Storage {
     }
 
     @Override
+    public Iterator<LocationBundle> findLocations(IGUID guid) {
+        return atomStorage.getLocationsIterator(guid);
+    }
+
+    @Override
     public void flush() {
 
         try {

@@ -63,8 +63,7 @@ public class DataReplication extends Task {
      * @param dataDiscoveryService
      * @throws SOSProtocolException
      */
-    public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor,
-                           Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
+    public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
 
         if (storage == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
