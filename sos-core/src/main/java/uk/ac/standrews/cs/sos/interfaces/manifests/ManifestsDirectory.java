@@ -18,9 +18,9 @@ public interface ManifestsDirectory {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
-    Set<Version> getHeads(IGUID invariant);
+    Set<IGUID> getHeads(IGUID invariant);
 
-    Version getCurrent(Role role, IGUID invariant);
+    IGUID getCurrent(Role role, IGUID invariant);
 
     void setCurrent(Role role, Version version);
 

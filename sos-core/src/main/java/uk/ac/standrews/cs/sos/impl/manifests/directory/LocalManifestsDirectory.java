@@ -15,12 +15,11 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.FileHelper;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * IDirectory for the manifests stored locally to this node
@@ -77,6 +76,21 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         }
 
         return getManifestFromGUID(guid);
+    }
+
+    @Override
+    public Set<IGUID> getHeads(IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public IGUID getCurrent(Role role, IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public void setCurrent(Role role, Version version) {
+
     }
 
     @Override

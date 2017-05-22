@@ -12,6 +12,8 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
@@ -94,6 +96,21 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         }
 
         return retval;
+    }
+
+    @Override
+    public Set<IGUID> getHeads(IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public IGUID getCurrent(Role role, IGUID invariant) {
+        return null;
+    }
+
+    @Override
+    public void setCurrent(Role role, Version version) {
+
     }
 
     @Override

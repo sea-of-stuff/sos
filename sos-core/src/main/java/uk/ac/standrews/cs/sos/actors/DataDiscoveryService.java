@@ -72,19 +72,12 @@ public interface DataDiscoveryService extends SeaOfStuff {
     Set<Version> getAllVersions();
 
     /**
-     * Get all the assets stored at this node
-     *
-     * @return invariants
-     */
-    Set<IGUID> getAssets();
-
-    /**
      * Get all the HEADS for the given invariant
      *
      * @param invariant
      * @return
      */
-    Set<Version> getHeads(IGUID invariant);
+    Set<IGUID> getHeads(IGUID invariant);
 
     /**
      * Get the CURRENT version for the role.
@@ -97,7 +90,7 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @return
      */
     // TODO - what if multiple currents at different nodes?
-    Version getCurrent(Role role, IGUID invariant);
+    IGUID getCurrent(Role role, IGUID invariant);
 
     /**
      * Set the specified version as the CURRENT for its asset and for the given role

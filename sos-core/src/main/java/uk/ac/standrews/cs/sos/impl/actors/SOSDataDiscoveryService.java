@@ -102,23 +102,19 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public Set<IGUID> getAssets() {
-        return null;
+    public Set<IGUID> getHeads(IGUID invariant) {
+        return inMemoryCache.getHeads(invariant);
     }
 
     @Override
-    public Set<Version> getHeads(IGUID invariant) {
-        return null;
-    }
-
-    @Override
-    public Version getCurrent(Role role, IGUID invariant) {
-        return null;
+    public IGUID getCurrent(Role role, IGUID invariant) {
+        return getCurrent(role, invariant);
     }
 
     @Override
     public void setCurrent(Role role, Version version) {
 
+        inMemoryCache.setCurrent(role, version);
     }
 
     @Override

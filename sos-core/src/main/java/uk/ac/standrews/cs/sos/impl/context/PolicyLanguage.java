@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
+import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -32,9 +34,13 @@ public class PolicyLanguage {
         this.storage = storage;
     }
 
-    public void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) {
+    public void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
-        dataDiscoveryService.addManifest(manifest, nodes, replicationFactor);
+        try {
+            dataDiscoveryService.addManifest(manifest, nodes, replicationFactor);
+        } catch (ManifestPersistException e) {
+            throw new PolicyException("Unable to replicate manifest");
+        }
     }
 
     public void replicateData(Data data, NodesCollection nodes, int replicationFactor) {

@@ -82,21 +82,33 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public Set<Version> getHeads(IGUID invariant) {
+    public Set<IGUID> getHeads(IGUID invariant) {
 
-
-        heads.get(invariant);
-        return null;
+        return heads.get(invariant);
     }
 
     @Override
-    public Version getCurrent(Role role, IGUID invariant) {
-        return null;
+    public IGUID getCurrent(Role role, IGUID invariant) {
+
+        if (currents.containsKey(invariant)) {
+            return currents.get(invariant).get(role.guid());
+        }
+
+        return null; // TODO - throw exception
     }
 
     @Override
     public void setCurrent(Role role, Version version) {
 
+        IGUID invariantGUID = version.getInvariantGUID();
+        IGUID versionGUID = version.guid();
+        IGUID roleGUID = role.guid();
+
+        if (!currents.containsKey(invariantGUID)) {
+            currents.put(invariantGUID, new HashMap<>());
+        }
+
+        currents.get(invariantGUID).put(roleGUID, versionGUID);
     }
 
     @Override
