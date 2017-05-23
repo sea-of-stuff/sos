@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import javax.crypto.SecretKey;
 import java.security.PublicKey;
@@ -24,13 +24,18 @@ import java.security.PublicKey;
  */
 public interface Role extends User {
 
-    IGUID guid(); // random GUID
+    /**
+     * GUID for this role
+     *
+     * @return guid of this role
+     */
+    IGUID guid();
 
     /**
      * Get the GUID for the user that created this Role
      * e.g. guid for user Simone
      *
-     * @return
+     * @return guid of the user
      */
     IGUID getUser();
 
@@ -38,15 +43,14 @@ public interface Role extends User {
      * Get the name of the role
      * e.g. Simone's work
      *
-     * @return
+     * @return name for the role
      */
     String getName();
 
     /**
      * Used to sign metadata, manifests, etc
-     * This is a signature type key, such as DSA
      *
-     * @return
+     * @return certificate for this role
      */
     PublicKey getSignatureCertificate();
 
@@ -54,7 +58,7 @@ public interface Role extends User {
      * Used to encrypt symmetric keys
      * This is an asymmetric key, such as RSA
      *
-     * @return
+     * @return key to sign keys
      */
     PublicKey getPubKey();
 
@@ -62,7 +66,7 @@ public interface Role extends User {
      * Signature for this role manifest.
      * This signature is generated using the User public key.
      *
-     * @return
+     * @return signfature for this role
      */
     String getSignature();
 
@@ -71,9 +75,9 @@ public interface Role extends User {
      *
      * @param text
      * @return
-     * @throws EncryptionException
+     * @throws CryptoException
      */
-    String sign(String text) throws EncryptionException;
+    String sign(String text) throws CryptoException;
 
     /**
      * Verify that the given text and signature match
@@ -83,7 +87,7 @@ public interface Role extends User {
      * @return
      * @throws DecryptionException
      */
-    boolean verify(String text, String signatureToVerify) throws DecryptionException;
+    boolean verify(String text, String signatureToVerify) throws CryptoException;
 
     /**
      * Encrypt a symmetric key using an asymmetric key
@@ -91,7 +95,7 @@ public interface Role extends User {
      * @param key
      * @return
      */
-    String encrypt(SecretKey key);
+    String encrypt(SecretKey key) throws CryptoException;
 
     /**
      * Encrypted key is decripted using the private key (e.g. RSA)

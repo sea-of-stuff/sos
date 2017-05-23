@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.security.PublicKey;
 
@@ -33,5 +34,14 @@ public interface User {
      * @return public key of the user
      */
     PublicKey getSignatureCertificate();
+
+    /**
+     * Sign some given text using this user private key
+     *
+     * @param text to be signed
+     * @return the signed text
+     * @throws CryptoException if the text could not be signed
+     */
+    String sign(String text) throws CryptoException;
 
 }

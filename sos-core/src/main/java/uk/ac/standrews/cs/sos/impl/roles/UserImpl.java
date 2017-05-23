@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 
 /**
@@ -16,22 +17,22 @@ public class UserImpl implements User {
 
     private IGUID guid;
     private String name;
+
+    private PrivateKey signaturePrivateKey;
     private PublicKey signatureCertificate;
 
-    public UserImpl(String name) {
+    public UserImpl(String name) throws CryptoException {
         this(GUIDFactory.generateRandomGUID(), name);
     }
 
-    public UserImpl(IGUID guid, String name) {
+    public UserImpl(IGUID guid, String name) throws CryptoException {
         this.guid = guid;
         this.name = name;
 
-        try {
-            KeyPair keyPair = DigitalSignature.generateKeys();
-            this.signatureCertificate = keyPair.getPublic();
-        } catch (CryptoException e) {
-            e.printStackTrace();
-        }
+        KeyPair keyPair = DigitalSignature.generateKeys();
+        this.signaturePrivateKey = keyPair.getPrivate();
+        this.signatureCertificate = keyPair.getPublic();
+
     }
 
     @Override
@@ -47,5 +48,10 @@ public class UserImpl implements User {
     @Override
     public PublicKey getSignatureCertificate() {
         return signatureCertificate;
+    }
+
+    @Override
+    public String sign(String text) throws CryptoException {
+        return DigitalSignature.sign64(signaturePrivateKey, text);
     }
 }

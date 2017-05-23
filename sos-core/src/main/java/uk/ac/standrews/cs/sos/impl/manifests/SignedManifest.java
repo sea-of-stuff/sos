@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 /**
  * Abstract class for all manifests that support signatures.
@@ -62,7 +62,7 @@ public abstract class SignedManifest extends BasicManifest {
         try {
             String manifestToSign = getManifestToSign();
             success = role.verify(manifestToSign, signature);
-        } catch (DecryptionException e) {
+        } catch (CryptoException e) {
             throw new ManifestVerificationException("Unable to decrypt identity", e);
         }
 

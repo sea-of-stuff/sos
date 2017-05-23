@@ -4,10 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -18,7 +14,7 @@ import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import javax.crypto.SecretKey;
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -33,6 +29,7 @@ public class RoleImpl implements Role {
     private IGUID userGUID;
     private IGUID roleGUID;
     private String name;
+    private String signature;
 
     private final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/";
 
@@ -41,18 +38,15 @@ public class RoleImpl implements Role {
 
     private KeyPair asymmetricKeys;
 
-    private String signature;
-
     /**
      *
      * keys are either created and persisted, or loaded
      *
      * @param guid
      * @param name
-     * @throws KeyGenerationException
-     * @throws KeyLoadedException
+     * @throws CryptoException
      */
-    public RoleImpl(User user, IGUID guid, String name) throws KeyGenerationException, KeyLoadedException, CryptoException, EncryptionException {
+    public RoleImpl(User user, IGUID guid, String name) throws CryptoException {
         this.userGUID = user.guid();
         this.roleGUID = guid;
         this.name = name;
@@ -61,16 +55,13 @@ public class RoleImpl implements Role {
 
         // Keys to encrypt AES keys
         asymmetricKeys = AsymmetricEncryption.generateKeys();
-
         // TODO - load/save keys
 
-        // TODO - generate SIGNATURE for this role using the user
-
-        // signature = new SignatureCrypto(user.getSignatureCertificate()).sign64("DUMMY_SIGNATURE");
+        signature = user.sign("TODO - this role string representation");
     }
 
     // FIXME - better exceptions (e.g. RoleException)
-    public RoleImpl(User user, String name) throws KeyGenerationException, KeyLoadedException, CryptoException, EncryptionException {
+    public RoleImpl(User user, String name) throws CryptoException {
         this(user, GUIDFactory.generateRandomGUID(), name);
     }
 
@@ -105,59 +96,55 @@ public class RoleImpl implements Role {
     }
 
     @Override
-    public String sign(String text) throws EncryptionException {
-        try {
-            return DigitalSignature.sign64(signaturePrivateKey, text);
-        } catch (CryptoException e) {
-            throw new EncryptionException(e);
-        }
+    public String sign(String text) throws CryptoException {
+
+        return DigitalSignature.sign64(signaturePrivateKey, text);
     }
 
     @Override
-    public boolean verify(String text, String signatureToVerify) throws DecryptionException {
+    public boolean verify(String text, String signatureToVerify) throws CryptoException {
 
-        try {
-            return DigitalSignature.verify64(signatureCertificate, text, signatureToVerify);
-        } catch (CryptoException e) {
-            throw new DecryptionException(e);
-        }
+        return DigitalSignature.verify64(signatureCertificate, text, signatureToVerify);
     }
 
     @Override
-    public String encrypt(SecretKey key) {
-        try {
-            // TODO - extend the utilities project
-            AsymmetricEncryption.encryptAESKey(key, null, null);
-        } catch (IOException | CryptoException e) {
-            e.printStackTrace();
-        }
+    public String encrypt(SecretKey key) throws CryptoException {
 
-        return "TODO";
+        PublicKey publicKey = getPubKey();
+        return AsymmetricEncryption.encryptAESKey(publicKey, key);
     }
 
     @Override
     public SecretKey decrypt(String encryptedKey) {
+
         return null;
     }
 
+    /**
+     * Attempt to load the private key and the certificate for the digital signature.
+     * If keys cannot be loaded, then generate them and save to disk
+     *
+     * @throws CryptoException if an error occurred while managing the keys
+     */
+    private void manageSignatureKeys() throws CryptoException {
 
-    private void manageSignatureKeys() throws KeyGenerationException, KeyLoadedException, CryptoException {
-
-        // TODO - load private and certificate independently from each other
-
-        // Private key is saved to disk and keps into memory, but it is not exposed to other objects or other nodes
-        // for obvious security issues
-        File privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
-        File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "-pub.pem");
-        if (!privateKeyFile.exists() || !publicKeyFile.exists()) {
-
-            KeyPair keys = DigitalSignature.generateKeys();
-            DigitalSignature.persist(keys, privateKeyFile.toPath(), publicKeyFile.toPath());
-        } else {
-
-            signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
+        File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "_pub.pem");
+        if (publicKeyFile.exists()) {
             signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
         }
+
+        File privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
+        if (privateKeyFile.exists()) {
+            signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
+        }
+
+
+        if (signatureCertificate != null && signaturePrivateKey != null) {
+
+            KeyPair keys = DigitalSignature.generateKeys();
+            DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + roleGUID), Paths.get(KEYS_FOLDER + roleGUID + "_pub"));
+        }
+
     }
 
 }

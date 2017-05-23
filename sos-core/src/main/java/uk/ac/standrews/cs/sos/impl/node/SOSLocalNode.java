@@ -6,9 +6,6 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.KeyLoadedException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -233,7 +230,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             usersRolesService.addRole(role);
             usersRolesService.setActive(role);
 
-        } catch (KeyGenerationException | KeyLoadedException | CryptoException | EncryptionException e) {
+        } catch (CryptoException e) {
             e.printStackTrace();
         }
     }
