@@ -3,8 +3,10 @@ package uk.ac.standrews.cs.sos.impl.roles;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.User;
-import uk.ac.standrews.cs.sos.utils.SignatureCrypto;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
+import java.security.KeyPair;
 import java.security.PublicKey;
 
 /**
@@ -14,20 +16,22 @@ public class UserImpl implements User {
 
     private IGUID guid;
     private String name;
-    private PublicKey pubkey;
-    private SignatureCrypto signature;
+    private PublicKey signatureCertificate;
 
     public UserImpl(String name) {
-        guid = GUIDFactory.generateRandomGUID();
-        this.name = name;
-
-        signature = new SignatureCrypto();
-        this.pubkey = signature.getPublicKey();
+        this(GUIDFactory.generateRandomGUID(), name);
     }
 
-
     public UserImpl(IGUID guid, String name) {
-        // Should be used to construct existing user
+        this.guid = guid;
+        this.name = name;
+
+        try {
+            KeyPair keyPair = DigitalSignature.generateKeys();
+            this.signatureCertificate = keyPair.getPublic();
+        } catch (CryptoException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -41,7 +45,7 @@ public class UserImpl implements User {
     }
 
     @Override
-    public PublicKey getSignaturePubKey() {
-        return pubkey;
+    public PublicKey getSignatureCertificate() {
+        return signatureCertificate;
     }
 }

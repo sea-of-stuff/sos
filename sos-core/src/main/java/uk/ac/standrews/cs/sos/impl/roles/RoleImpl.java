@@ -12,14 +12,15 @@ import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
-import uk.ac.standrews.cs.sos.utils.SignatureCrypto;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 
 /**
@@ -35,9 +36,8 @@ public class RoleImpl implements Role {
 
     private final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/";
 
-    private SignatureCrypto signatureCrypto;
-    private File privateKeyFile;
-    private File publicKeyFile;
+    private PrivateKey signaturePrivateKey;
+    private PublicKey signatureCertificate;
 
     private KeyPair asymmetricKeys;
 
@@ -52,13 +52,12 @@ public class RoleImpl implements Role {
      * @throws KeyGenerationException
      * @throws KeyLoadedException
      */
-    public RoleImpl(User user, IGUID guid, String name) throws KeyGenerationException, KeyLoadedException, CryptoException {
+    public RoleImpl(User user, IGUID guid, String name) throws KeyGenerationException, KeyLoadedException, CryptoException, EncryptionException {
         this.userGUID = user.guid();
         this.roleGUID = guid;
         this.name = name;
 
-        signatureCrypto = new SignatureCrypto();
-        manageKeys(signatureCrypto);
+        manageSignatureKeys();
 
         // Keys to encrypt AES keys
         asymmetricKeys = AsymmetricEncryption.generateKeys();
@@ -66,10 +65,12 @@ public class RoleImpl implements Role {
         // TODO - load/save keys
 
         // TODO - generate SIGNATURE for this role using the user
-        signature = "DUMMY_SIGNATURE";
+
+        // signature = new SignatureCrypto(user.getSignatureCertificate()).sign64("DUMMY_SIGNATURE");
     }
 
-    public RoleImpl(User user, String name) throws KeyGenerationException, KeyLoadedException, CryptoException {
+    // FIXME - better exceptions (e.g. RoleException)
+    public RoleImpl(User user, String name) throws KeyGenerationException, KeyLoadedException, CryptoException, EncryptionException {
         this(user, GUIDFactory.generateRandomGUID(), name);
     }
 
@@ -89,8 +90,8 @@ public class RoleImpl implements Role {
     }
 
     @Override
-    public PublicKey getSignaturePubKey() {
-        return signatureCrypto.getPublicKey();
+    public PublicKey getSignatureCertificate() {
+        return signatureCertificate;
     }
 
     @Override
@@ -105,12 +106,21 @@ public class RoleImpl implements Role {
 
     @Override
     public String sign(String text) throws EncryptionException {
-        return signatureCrypto.sign64(text);
+        try {
+            return DigitalSignature.sign64(signaturePrivateKey, text);
+        } catch (CryptoException e) {
+            throw new EncryptionException(e);
+        }
     }
 
     @Override
     public boolean verify(String text, String signatureToVerify) throws DecryptionException {
-        return signatureCrypto.verify64(text, signatureToVerify);
+
+        try {
+            return DigitalSignature.verify64(signatureCertificate, text, signatureToVerify);
+        } catch (CryptoException e) {
+            throw new DecryptionException(e);
+        }
     }
 
     @Override
@@ -131,36 +141,23 @@ public class RoleImpl implements Role {
     }
 
 
-    private void manageKeys(SignatureCrypto signatureCrypto) throws KeyGenerationException, KeyLoadedException {
+    private void manageSignatureKeys() throws KeyGenerationException, KeyLoadedException, CryptoException {
 
-        // TODO - betters ways to save/load to/from file
+        // TODO - load private and certificate independently from each other
+
         // Private key is saved to disk and keps into memory, but it is not exposed to other objects or other nodes
         // for obvious security issues
-        privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
-        publicKeyFile = new File(KEYS_FOLDER + roleGUID + "-pub.pem");
+        File privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
+        File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "-pub.pem");
         if (!privateKeyFile.exists() || !publicKeyFile.exists()) {
-            generateKeys(signatureCrypto);
+
+            KeyPair keys = DigitalSignature.generateKeys();
+            DigitalSignature.persist(keys, privateKeyFile.toPath(), publicKeyFile.toPath());
         } else {
-            loadKeys(signatureCrypto);
+
+            signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
+            signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
         }
-    }
-
-    /**
-     * Generate key which contains a pair of private and public key.
-     * Store the set of keys in appropriate files based on the specified configuration.
-     */
-    private void generateKeys(SignatureCrypto signatureCrypto) throws KeyGenerationException {
-        signatureCrypto.generateKeys();
-
-        try {
-            signatureCrypto.saveToFile(privateKeyFile, publicKeyFile);
-        } catch (IOException e) {
-            throw new KeyGenerationException("Unable to save keys");
-        }
-    }
-
-    private void loadKeys(SignatureCrypto signatureCrypto) throws KeyLoadedException {
-        signatureCrypto.loadKeys(privateKeyFile, publicKeyFile);
     }
 
 }

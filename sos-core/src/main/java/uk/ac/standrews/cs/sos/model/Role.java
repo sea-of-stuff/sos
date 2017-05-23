@@ -48,7 +48,7 @@ public interface Role extends User {
      *
      * @return
      */
-    PublicKey getSignaturePubKey();
+    PublicKey getSignatureCertificate();
 
     /**
      * Used to encrypt symmetric keys

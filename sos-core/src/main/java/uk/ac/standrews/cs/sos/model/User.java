@@ -12,10 +12,26 @@ import java.security.PublicKey;
  */
 public interface User {
 
+    /**
+     * Unique GUID for the user
+     *
+     * @return guid of the user
+     */
     IGUID guid();
 
-    String getName();  // e.g.  Simone Ivan Conte
+    /**
+     * Human-readable name for the user
+     * e.g. Simone Ivan Conte
+     *
+     * @return name of the user
+     */
+    String getName();
 
-    PublicKey getSignaturePubKey();
+    /**
+     * Public key of the user used to generate signatures
+     *
+     * @return public key of the user
+     */
+    PublicKey getSignatureCertificate();
 
 }
