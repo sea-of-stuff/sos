@@ -34,7 +34,7 @@ public class SyncRequestTest extends CommonTest {
 
     @Test
     public void testGet() throws Exception {
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/range/10"));
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/range/10"));
         RequestsManager.getInstance().playSyncRequest(request);
 
         Response response = request.getResponse();
@@ -48,7 +48,7 @@ public class SyncRequestTest extends CommonTest {
     public void testGetOKAYRespondeCode() throws Exception {
         int testCode = 418;
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/status/" + testCode));
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode));
         RequestsManager.getInstance().playSyncRequest(request);
 
         int code = request.getRespondeCode();
@@ -124,7 +124,7 @@ public class SyncRequestTest extends CommonTest {
 
         Runnable r = () -> {
             try {
-                SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/status/" + testCode));
+                SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode));
                 RequestsManager.getInstance().playSyncRequest(request);
 
                 int code = request.getRespondeCode();

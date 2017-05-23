@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.io.input.NullInputStream;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -17,6 +16,7 @@ import uk.ac.standrews.cs.sos.model.CompressionAlgorithms;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Set;
@@ -83,9 +83,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     @Override
     public boolean isValid() {
-        return super.isValid() &&
-                !locations.isEmpty() &&
-                isGUIDValid(contentGUID);
+        return super.isValid() && !locations.isEmpty() && isGUIDValid(contentGUID);
     }
 
     @Override
@@ -95,12 +93,26 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     @Override
     public boolean verifySignature(Role role) throws ManifestVerificationException {
-        throw new NotImplementedException();
+        if (contentGUID == null || contentGUID.isInvalid())
+            return false;
+
+        for(LocationBundle location:locations) {
+            try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation())) {
+
+                if (!verifyStream(dataStream)) {
+                    return false;
+                }
+
+            } catch (GUIDGenerationException| IOException e) {
+                throw new ManifestVerificationException("Unable to verify Atom Manifest", e);
+            }
+        }
+
+        return true;
     }
 
     private boolean verifyStream(InputStream inputStream) throws GUIDGenerationException {
-        return inputStream != null &&
-                contentGUID.equals(GUIDFactory.generateGUID(inputStream));
+        return inputStream != null && contentGUID.equals(GUIDFactory.generateGUID(inputStream));
     }
 
     @Override

@@ -19,6 +19,8 @@ public class RequestsManager {
 
     private static RequestsManager lazyInstance;
 
+    // Useful resource about OkHttp ciphers
+    // https://docs.google.com/spreadsheets/d/1C3FdZSlCBq_-qrVwG1KDIzNIB3Hyg_rKAcgmSzOsHyQ/edit#gid=0
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)

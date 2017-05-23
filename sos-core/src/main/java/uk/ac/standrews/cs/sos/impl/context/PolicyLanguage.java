@@ -26,6 +26,14 @@ public class PolicyLanguage {
     private UsersRolesService usersRolesService;
     private Storage storage;
 
+    /**
+     * Create a policy language utility object using the specified SOS actors
+     *
+     * @param nodeDiscoveryService
+     * @param dataDiscoveryService
+     * @param usersRolesService
+     * @param storage
+     */
     public PolicyLanguage(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
 
         this.nodeDiscoveryService = nodeDiscoveryService;
@@ -49,26 +57,30 @@ public class PolicyLanguage {
     }
 
     public void deleteData(IGUID guid, IGUID node) {
-
+        // TODO - there is not such method yet as I have not thought of a way of removing data/content/assets yet
     }
 
     public boolean nodeHasData(IGUID node, IGUID guid) {
 
+        // TODO - this will make a challenge/check/verify call to the node
         return false;
     }
 
     public int numberOfReplicas(NodesCollection codomain, IGUID guid) {
 
+        // TODO - contact DDS/Storage?
         return -1;
     }
 
     public Data getData(NodesCollection codomain, IGUID guid) {
 
+        // Check DDS, Storage restricting the request with the codomain
         return null;
     }
 
     public Manifest getManifest(NodesCollection codomain, IGUID guid) {
 
+        // See getData()
         return null;
     }
 
@@ -94,6 +106,7 @@ public class PolicyLanguage {
      */
     public void unprotect(SecureManifest secureManifest, Role role) {
 
+        // TODO - replace encrypted data/manifest with the unencrypted one
     }
 
     public Node getNode(IGUID guid) throws NodeNotFoundException {
@@ -103,8 +116,7 @@ public class PolicyLanguage {
 
     public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
-        return null;
-        // return nodeDiscoveryService.getNodes(type);
+        return nodeDiscoveryService.getNodes(codomain, type);
     }
 
     public Role getRole(IGUID guid) {

@@ -1,17 +1,18 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
+import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
+import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
+import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Location;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
 import static uk.ac.standrews.cs.sos.constants.LocationSchemes.*;
-import static uk.ac.standrews.cs.sos.constants.SOSConstants.USER_AGENT;
 
 /**
  * supported schemes: http, https, file, ftp, etc
@@ -50,17 +51,19 @@ public class URILocation implements Location {
     }
 
     private InputStream getHTTPSource() throws IOException {
-        HttpURLConnection httpcon = (HttpURLConnection) uri.toURL().openConnection();
-        httpcon.addRequestProperty("User-Agent", USER_AGENT);
 
-        return httpcon.getInputStream();
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL());
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
+
+        return response.getBody();
     }
 
     private InputStream getHTTPSSource() throws IOException {
-        HttpsURLConnection httpcon = (HttpsURLConnection) uri.toURL().openConnection();
-        httpcon.addRequestProperty("User-Agent", USER_AGENT);
 
-        return httpcon.getInputStream();
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL());
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
+
+        return response.getBody();
     }
 
     private InputStream getFileSource() throws IOException {
