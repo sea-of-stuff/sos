@@ -20,6 +20,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -34,9 +35,15 @@ import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
  */
 public class SOSDataDiscoveryService implements DataDiscoveryService {
 
+    // We have three layers for storing and getting manifests:
+    // 1. memory cache
+    // 2. local disk
+    // 3. remote nodes (i.e. other Data Discovery services)
     private ManifestsCache inMemoryCache;
     private LocalManifestsDirectory local;
     private RemoteManifestsDirectory remote;
+
+    // Uses to store/get manifests into the local disk
     private LocalStorage localStorage;
 
     // Maps ManifestGUID --> [ DDS Nodes that might have it ]
@@ -124,10 +131,10 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
             IFile cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
-            inMemoryCache.persist(cacheFile);
+            Persistence.Persist(inMemoryCache, cacheFile);
 
             IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
-            ddsIndex.persist(ddsIndexFile);
+            Persistence.Persist(ddsIndex, ddsIndexFile);
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the DDS inMemoryCache and/or index");

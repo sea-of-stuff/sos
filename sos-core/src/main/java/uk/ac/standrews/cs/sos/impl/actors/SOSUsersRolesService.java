@@ -2,76 +2,65 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
+import uk.ac.standrews.cs.sos.impl.roles.UsersRolesDirectory;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
- * TODO - persistence -> cache, local, remote
- * TODO - integrate with NDS to find users in some other nodes
- *
  * There is only one active Role at a given time
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSUsersRolesService implements UsersRolesService {
 
-    private HashMap<IGUID, User> users;
-    private HashMap<IGUID, Role> roles;
-    private HashMap<IGUID, Set<IGUID>> usersToRoles;
-    private Role activeRole;
+    // TODO - need to define two more layers:
+    // 1. inMemory cache
+    // 2. TODO - local disk
+    // 3. TODO - remote
+    private UsersRolesDirectory inMemoryCache;
 
     public SOSUsersRolesService() {
-        users = new HashMap<>();
-        roles = new HashMap<>();
-        usersToRoles = new HashMap<>();
+
+        inMemoryCache = new UsersRolesDirectory();
     }
 
     @Override
     public void addUser(User user) {
-        users.put(user.guid(), user);
+
+        inMemoryCache.addUser(user);
     }
 
     @Override
     public User getUser(IGUID userGUID) {
-        return users.get(userGUID);
+        return inMemoryCache.getUser(userGUID);
     }
 
     @Override
     public void addRole(Role role) {
 
-        if (!usersToRoles.containsKey(role.getUser())) {
-            usersToRoles.put(role.getUser(), new LinkedHashSet<>());
-        }
-
-        usersToRoles.get(role.getUser()).add(role.guid());
-        roles.put(role.guid(), role);
+        inMemoryCache.addRole(role);
     }
 
     @Override
     public Role getRole(IGUID roleGUID) {
-        return roles.get(roleGUID);
+        return inMemoryCache.getRole(roleGUID);
     }
 
     @Override
     public Set<Role> getRoles(IGUID userGUID) {
-        return usersToRoles.get(userGUID).stream()
-                .map(u -> roles.get(u))
-                .collect(Collectors.toSet());
+        return inMemoryCache.getRoles(userGUID);
     }
 
     @Override
     public Role active() {
-        return activeRole;
+        return inMemoryCache.active();
     }
 
     @Override
     public void setActive(Role role) {
-        this.activeRole = role;
+        inMemoryCache.setActive(role);
     }
 
 }

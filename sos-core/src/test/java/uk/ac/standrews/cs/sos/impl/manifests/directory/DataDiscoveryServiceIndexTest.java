@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 
 import java.io.IOException;
 import java.util.Set;
@@ -81,7 +82,7 @@ public class DataDiscoveryServiceIndexTest {
         ddsIndex.addEntry(manifestGUID, nodeGUID);
 
         IFile file = localStorage.createFile(cachesDir, "dds.index");
-        ddsIndex.persist(file);
+        Persistence.Persist(ddsIndex, file);
 
         DDSIndex persistedIndex = DDSIndex.load(file);
         Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
@@ -108,7 +109,7 @@ public class DataDiscoveryServiceIndexTest {
         DDSIndex ddsIndex = new DDSIndex();
 
         IFile file = localStorage.createFile(cachesDir, "dds.index");
-        ddsIndex.persist(file);
+        Persistence.Persist(ddsIndex, file);
 
         DDSIndex persistedIndex = DDSIndex.load(file);
 

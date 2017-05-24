@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -114,24 +113,6 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     @Override
     public void flush() {
         // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
-    }
-
-    @Override
-    public void persist(IFile file) throws IOException {
-        if (!file.exists()) {
-            try {
-                file.persist();
-            } catch (PersistenceException e) {
-                throw new IOException(e);
-            }
-        }
-
-        FileOutputStream ostream = new FileOutputStream(file.toFile());
-        ObjectOutputStream p = new ObjectOutputStream(ostream);
-
-        p.writeObject(this);
-        p.flush();
-        ostream.close();
     }
 
     @Override

@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 
@@ -45,23 +44,6 @@ public class DDSIndex implements Serializable {
 
     public Set<IGUID> getDDSRefs(IGUID manifestGUID) {
         return index.get(manifestGUID);
-    }
-
-    public void persist(IFile file) throws IOException {
-        if (!file.exists()) {
-            try {
-                file.persist();
-            } catch (PersistenceException e) {
-                throw new IOException(e);
-            }
-        }
-
-        FileOutputStream ostream = new FileOutputStream(file.toFile());
-        ObjectOutputStream p = new ObjectOutputStream(ostream);
-
-        p.writeObject(this);
-        p.flush();
-        ostream.close();
     }
 
     public static DDSIndex load(IFile file) throws IOException, ClassNotFoundException {

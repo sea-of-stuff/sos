@@ -26,6 +26,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -117,7 +118,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.addManifest(manifest);
 
         IFile file = localStorage.createFile(cachesDir, "manifests.cache");
-        cache.persist(file);
+        Persistence.Persist(cache, file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
 
@@ -146,7 +147,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.addManifest(manifest);
 
         IFile file = localStorage.createFile(cachesDir, "manifests.cache");
-        cache.persist(file);
+        Persistence.Persist(cache, file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
         persistedCache.findManifest(guid);
