@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
@@ -21,18 +22,23 @@ public class UserImpl implements User {
     private PrivateKey signaturePrivateKey;
     private PublicKey signatureCertificate;
 
-    public UserImpl(String name) throws CryptoException {
+    public UserImpl(String name) throws SignatureException {
         this(GUIDFactory.generateRandomGUID(), name);
     }
 
-    public UserImpl(IGUID guid, String name) throws CryptoException {
+    public UserImpl(IGUID guid, String name) throws SignatureException {
         this.guid = guid;
         this.name = name;
 
-        KeyPair keyPair = DigitalSignature.generateKeys();
-        this.signaturePrivateKey = keyPair.getPrivate();
-        this.signatureCertificate = keyPair.getPublic();
+        try {
 
+            KeyPair keyPair = DigitalSignature.generateKeys();
+            this.signaturePrivateKey = keyPair.getPrivate();
+            this.signatureCertificate = keyPair.getPublic();
+
+        } catch (CryptoException e) {
+            throw new SignatureException(e);
+        }
     }
 
     @Override
@@ -51,7 +57,11 @@ public class UserImpl implements User {
     }
 
     @Override
-    public String sign(String text) throws CryptoException {
-        return DigitalSignature.sign64(signaturePrivateKey, text);
+    public String sign(String text) throws SignatureException {
+        try {
+            return DigitalSignature.sign64(signaturePrivateKey, text);
+        } catch (CryptoException e) {
+            throw new SignatureException(e);
+        }
     }
 }

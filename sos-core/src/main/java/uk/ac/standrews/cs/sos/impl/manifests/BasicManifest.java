@@ -3,9 +3,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -54,11 +52,10 @@ public abstract class BasicManifest implements Manifest {
      * Verifies this manifest's GUID against its content.
      *
      * @return true if the GUID of the manifest matches the content.
-     * @throws GUIDGenerationException if the manifest's GUID could not be generated.
-     * @throws DecryptionException
+     * @throws SignatureException
      */
     @Override
-    public abstract boolean verifySignature(Role role) throws ManifestVerificationException;
+    public abstract boolean verifySignature(Role role) throws SignatureException;
 
     /**
      * Checks whether this manifest contains valid key-value entries.

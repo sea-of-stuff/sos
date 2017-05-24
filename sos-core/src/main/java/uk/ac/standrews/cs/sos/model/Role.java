@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.crypto.DecryptionException;
-import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
 import javax.crypto.SecretKey;
 import java.security.PublicKey;
@@ -75,9 +75,9 @@ public interface Role extends User {
      *
      * @param text
      * @return
-     * @throws CryptoException
+     * @throws SignatureException
      */
-    String sign(String text) throws CryptoException;
+    String sign(String text) throws SignatureException;
 
     /**
      * Verify that the given text and signature match
@@ -85,24 +85,26 @@ public interface Role extends User {
      * @param text
      * @param signatureToVerify
      * @return
-     * @throws DecryptionException
+     * @throws SignatureException
      */
-    boolean verify(String text, String signatureToVerify) throws CryptoException;
+    boolean verify(String text, String signatureToVerify) throws SignatureException;
 
     /**
      * Encrypt a symmetric key using an asymmetric key
      *
      * @param key
      * @return
+     * @throws ProtectionException
      */
-    String encrypt(SecretKey key) throws CryptoException;
+    String encrypt(SecretKey key) throws ProtectionException;
 
     /**
      * Encrypted key is decripted using the private key (e.g. RSA)
      *
      * @param encryptedKey
      * @return
+     * @throws ProtectionException
      */
-    SecretKey decrypt(String encryptedKey);
+    SecretKey decrypt(String encryptedKey) throws ProtectionException;
 
 }

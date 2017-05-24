@@ -6,7 +6,7 @@ import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.AtomManifestDeserializer;
@@ -92,7 +92,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public boolean verifySignature(Role role) throws ManifestVerificationException {
+    public boolean verifySignature(Role role) throws SignatureException {
         if (contentGUID == null || contentGUID.isInvalid())
             return false;
 
@@ -104,7 +104,7 @@ public class AtomManifest extends BasicManifest implements Atom {
                 }
 
             } catch (GUIDGenerationException| IOException e) {
-                throw new ManifestVerificationException("Unable to verify Atom Manifest", e);
+                throw new SignatureException("Unable to verify Atom Manifest", e);
             }
         }
 

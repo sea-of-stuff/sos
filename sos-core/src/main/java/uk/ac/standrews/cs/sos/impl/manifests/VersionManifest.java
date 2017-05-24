@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.EncryptionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
@@ -169,7 +169,7 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     @Override
-    protected String generateSignature(String toSign) throws EncryptionException {
+    protected String generateSignature(String toSign) throws SignatureException {
 
         if (signer == null) {
             return "";

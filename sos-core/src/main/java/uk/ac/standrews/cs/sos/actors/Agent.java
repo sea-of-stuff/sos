@@ -3,10 +3,10 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -112,6 +112,8 @@ public interface Agent {
      * Verify the integrity of the manifest's GUID against the
      * content of the manifest.
      *
+     * FIXME - verify the signature vs verify the integrity
+     *
      * Hash-based verification ensures that a file has not been corrupted by
      * comparing the data's hash value to a previously calculated value.
      * If these values match, the data is presumed to be unmodified.
@@ -123,9 +125,9 @@ public interface Agent {
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
-     * @throws ManifestVerificationException if the manifest could not be verified
+     * @throws SignatureException if the manifest could not be verified
      */
-    boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException;
+    boolean verifyManifest(Role role, Manifest manifest) throws SignatureException;
 
     /**
      * Get the propery value for the given manifest matching GUID

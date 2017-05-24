@@ -4,10 +4,10 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
@@ -153,7 +153,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public boolean verifyManifest(Role role, Manifest manifest) throws ManifestVerificationException {
+    public boolean verifyManifest(Role role, Manifest manifest) throws SignatureException {
         boolean success = manifest.verifySignature(role);
         return success;
     }

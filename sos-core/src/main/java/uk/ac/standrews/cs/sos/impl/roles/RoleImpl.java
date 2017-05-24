@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -44,24 +46,21 @@ public class RoleImpl implements Role {
      *
      * @param guid
      * @param name
-     * @throws CryptoException
+     * @throws SignatureException
+     * @throws ProtectionException
      */
-    public RoleImpl(User user, IGUID guid, String name) throws CryptoException {
+    public RoleImpl(User user, IGUID guid, String name) throws SignatureException, ProtectionException {
         this.userGUID = user.guid();
         this.roleGUID = guid;
         this.name = name;
 
         manageSignatureKeys();
-
-        // Keys to encrypt AES keys
-        asymmetricKeys = AsymmetricEncryption.generateKeys();
-        // TODO - load/save keys
+        manageProtectionKey();
 
         signature = user.sign("TODO - this role string representation");
     }
 
-    // FIXME - better exceptions (e.g. RoleException)
-    public RoleImpl(User user, String name) throws CryptoException {
+    public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
         this(user, GUIDFactory.generateRandomGUID(), name);
     }
 
@@ -96,26 +95,38 @@ public class RoleImpl implements Role {
     }
 
     @Override
-    public String sign(String text) throws CryptoException {
+    public String sign(String text) throws SignatureException {
 
-        return DigitalSignature.sign64(signaturePrivateKey, text);
+        try {
+            return DigitalSignature.sign64(signaturePrivateKey, text);
+        } catch (CryptoException e) {
+            throw new SignatureException(e);
+        }
     }
 
     @Override
-    public boolean verify(String text, String signatureToVerify) throws CryptoException {
+    public boolean verify(String text, String signatureToVerify) throws SignatureException {
 
-        return DigitalSignature.verify64(signatureCertificate, text, signatureToVerify);
+        try {
+            return DigitalSignature.verify64(signatureCertificate, text, signatureToVerify);
+        } catch (CryptoException e) {
+            throw new SignatureException(e);
+        }
     }
 
     @Override
-    public String encrypt(SecretKey key) throws CryptoException {
+    public String encrypt(SecretKey key) throws ProtectionException {
 
-        PublicKey publicKey = getPubKey();
-        return AsymmetricEncryption.encryptAESKey(publicKey, key);
+        try {
+            PublicKey publicKey = getPubKey();
+            return AsymmetricEncryption.encryptAESKey(publicKey, key);
+        } catch (CryptoException e) {
+            throw new ProtectionException(e);
+        }
     }
 
     @Override
-    public SecretKey decrypt(String encryptedKey) {
+    public SecretKey decrypt(String encryptedKey) throws ProtectionException {
 
         return null;
     }
@@ -126,23 +137,40 @@ public class RoleImpl implements Role {
      *
      * @throws CryptoException if an error occurred while managing the keys
      */
-    private void manageSignatureKeys() throws CryptoException {
+    private void manageSignatureKeys() throws SignatureException {
 
-        File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "_pub.pem");
-        if (publicKeyFile.exists()) {
-            signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
+        try {
+            File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "_pub.pem");
+            if (publicKeyFile.exists()) {
+                signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
+            }
+
+            File privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
+            if (privateKeyFile.exists()) {
+                signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
+            }
+
+
+            if (signatureCertificate != null && signaturePrivateKey != null) {
+
+                KeyPair keys = DigitalSignature.generateKeys();
+                DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + roleGUID), Paths.get(KEYS_FOLDER + roleGUID + "_pub"));
+            }
+
+        } catch (CryptoException e) {
+            throw new SignatureException(e);
         }
+    }
 
-        File privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
-        if (privateKeyFile.exists()) {
-            signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
-        }
+    private void manageProtectionKey() throws ProtectionException {
 
+        try {
+            // Keys to encrypt AES keys
+            asymmetricKeys = AsymmetricEncryption.generateKeys();
+            // TODO - load/save keys
 
-        if (signatureCertificate != null && signaturePrivateKey != null) {
-
-            KeyPair keys = DigitalSignature.generateKeys();
-            DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + roleGUID), Paths.get(KEYS_FOLDER + roleGUID + "_pub"));
+        } catch (CryptoException e) {
+            throw new ProtectionException(e);
         }
 
     }

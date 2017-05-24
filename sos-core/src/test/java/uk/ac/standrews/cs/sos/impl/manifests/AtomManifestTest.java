@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.constants.ManifestConstants;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
@@ -137,7 +137,7 @@ public class AtomManifestTest extends CommonTest {
     }
 
     @Test
-    public void verifyAtomWithNullGUIDTest() throws ManifestVerificationException {
+    public void verifyAtomWithNullGUIDTest() throws SignatureException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 

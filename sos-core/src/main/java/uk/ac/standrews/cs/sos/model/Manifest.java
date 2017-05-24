@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -21,10 +21,9 @@ public interface Manifest {
      *
      * @param role
      * @return true if the GUID of the manifest matches the content.
-     * @throws ManifestVerificationException if the GUIDs of the manifests could not be generated
-     *                                  due to uk.ac.standrews.cs.IO, network or other issues.
+     * @throws SignatureException signature of the manifest could not be verified
      */
-    boolean verifySignature(Role role) throws ManifestVerificationException;
+    boolean verifySignature(Role role) throws SignatureException;
 
     /**
      * Check that the key-value pairs contained in the manifest comply to
