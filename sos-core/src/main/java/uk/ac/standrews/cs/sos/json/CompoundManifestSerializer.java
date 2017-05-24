@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -22,11 +22,11 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.COMPOUND.toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_COMPOUND_TYPE, compoundManifest.getCompoundType().toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, compoundManifest.guid().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.COMPOUND.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_COMPOUND_TYPE, compoundManifest.getCompoundType().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, compoundManifest.guid().toString());
 
-        jsonGenerator.writeFieldName(ManifestConstants.KEY_CONTENTS);
+        jsonGenerator.writeFieldName(JSONConstants.KEY_CONTENTS);
         jsonGenerator.writeStartArray();
         serializeContents(compoundManifest, jsonGenerator);
         jsonGenerator.writeEndArray();
@@ -34,8 +34,8 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
         String signature = compoundManifest.getSignature();
         IGUID signer = compoundManifest.getSigner();
         if (signature != null && !signature.isEmpty() && signer != null && !signer.isInvalid()) {
-            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, signer.toString());
-            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNATURE, signature);
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNER, signer.toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE, signature);
         }
 
         jsonGenerator.writeEndObject();

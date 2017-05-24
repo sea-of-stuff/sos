@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 
 import java.io.IOException;
@@ -23,10 +23,10 @@ public class ContentSerializer extends JsonSerializer<ContentImpl> {
         IGUID guid = content.getGUID();
 
         if (label != null && !label.isEmpty()) {
-            jsonGenerator.writeStringField(ManifestConstants.CONTENT_KEY_LABEL, label);
+            jsonGenerator.writeStringField(JSONConstants.CONTENT_KEY_LABEL, label);
         }
 
-        jsonGenerator.writeStringField(ManifestConstants.CONTENT_KEY_GUID, guid.toString());
+        jsonGenerator.writeStringField(JSONConstants.CONTENT_KEY_GUID, guid.toString());
 
         jsonGenerator.writeEndObject();
     }

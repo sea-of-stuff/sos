@@ -1,15 +1,19 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.json.RoleDeserializer;
 import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
@@ -57,11 +61,20 @@ public class RoleImpl implements Role {
         manageSignatureKeys();
         manageProtectionKey();
 
-        signature = user.sign("TODO - this role string representation");
+        this.signature = user.sign("TODO - this role string representation, which is not the JSON");
     }
 
     public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
         this(user, GUIDFactory.generateRandomGUID(), name);
+    }
+
+    // TODO - keys, signatures?
+    public RoleImpl(IGUID userGUID, IGUID guid, String name, String signature) {
+        this.userGUID = userGUID;
+        this.roleGUID = guid;
+        this.name = name;
+
+        this.signature = signature;
     }
 
     @Override
@@ -173,6 +186,16 @@ public class RoleImpl implements Role {
             throw new ProtectionException(e);
         }
 
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return JSONHelper.JsonObjMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for role " + guid());
+            return "";
+        }
     }
 
 }

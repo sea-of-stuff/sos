@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
@@ -17,30 +18,31 @@ import java.util.stream.Collectors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class UsersRolesDirectory implements Serializable {
+public class UsersRolesCache implements UsersRolesService, Serializable {
 
     private transient HashMap<IGUID, User> users;
     private transient HashMap<IGUID, Role> roles;
     private transient HashMap<IGUID, Set<IGUID>> usersToRoles;
     private transient Role activeRole;
 
-    public UsersRolesDirectory() {
+    public UsersRolesCache() {
 
         users = new HashMap<>();
         roles = new HashMap<>();
         usersToRoles = new HashMap<>();
     }
 
+    @Override
     public void addUser(User user) {
         users.put(user.guid(), user);
     }
 
-
+    @Override
     public User getUser(IGUID userGUID) {
         return users.get(userGUID);
     }
 
-
+    @Override
     public void addRole(Role role) {
 
         if (!usersToRoles.containsKey(role.getUser())) {
@@ -51,28 +53,27 @@ public class UsersRolesDirectory implements Serializable {
         roles.put(role.guid(), role);
     }
 
-
+    @Override
     public Role getRole(IGUID roleGUID) {
         return roles.get(roleGUID);
     }
 
-
+    @Override
     public Set<Role> getRoles(IGUID userGUID) {
         return usersToRoles.get(userGUID).stream()
                 .map(u -> roles.get(u))
                 .collect(Collectors.toSet());
     }
 
-
+    @Override
     public Role active() {
         return activeRole;
     }
 
+    @Override
     public void setActive(Role role) {
         this.activeRole = role;
     }
-
-    // TODO - load method
 
     // This method defines how the cache is serialised
     private void writeObject(ObjectOutputStream out) throws IOException {

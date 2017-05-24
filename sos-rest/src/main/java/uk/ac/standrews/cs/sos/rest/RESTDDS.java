@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.bindings.DDSNode;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
@@ -42,7 +42,7 @@ public class RESTDDS {
         Manifest manifest;
         try {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(json);
-            ManifestType type = ManifestType.get(jsonNode.get(ManifestConstants.KEY_TYPE).textValue());
+            ManifestType type = ManifestType.get(jsonNode.get(JSONConstants.KEY_TYPE).textValue());
             manifest = getManifest(type, json);
         } catch (IOException e) {
             return HTTPResponses.BAD_REQUEST("Invalid Input");

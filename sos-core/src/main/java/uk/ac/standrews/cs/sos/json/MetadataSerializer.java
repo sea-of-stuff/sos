@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
@@ -19,10 +19,10 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, metadata.guid().toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.METADATA.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, metadata.guid().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.METADATA.toString());
 
-        jsonGenerator.writeFieldName(ManifestConstants.KEY_META_PROPERTIES);
+        jsonGenerator.writeFieldName(JSONConstants.KEY_META_PROPERTIES);
         jsonGenerator.writeStartArray();
         serializeElements(metadata, jsonGenerator);
         jsonGenerator.writeEndArray();
@@ -39,8 +39,8 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
             Object value = metadata.getProperty(property);
             String type = getType(value);
 
-            jsonGenerator.writeStringField(ManifestConstants.KEY_META_KEY, property);
-            jsonGenerator.writeStringField(ManifestConstants.KEY_META_TYPE, type);
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_KEY, property);
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, type);
             writeValue(jsonGenerator, type, value);
 
             jsonGenerator.writeEndObject();
@@ -60,10 +60,10 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
     private void writeValue(JsonGenerator jsonGenerator, String type, Object value) throws IOException {
         switch(type) {
             case "INT":
-                jsonGenerator.writeNumberField(ManifestConstants.KEY_META_VALUE, (Integer) value);
+                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Integer) value);
                 break;
             case "STRING":
-                jsonGenerator.writeStringField(ManifestConstants.KEY_META_VALUE, (String) value);
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
                 break;
         }
     }

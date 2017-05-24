@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.Storage;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -205,7 +205,7 @@ public class DataReplication extends Task {
 
         IGUID guid = GUIDFactory.recreateGUID(stringGUID);
 
-        JsonNode bundlesNode = manifestNode.get(ManifestConstants.KEY_LOCATIONS);
+        JsonNode bundlesNode = manifestNode.get(JSONConstants.KEY_LOCATIONS);
         Set<LocationBundle> bundles = new HashSet<>();
         if (bundlesNode.isArray()) {
             for(final JsonNode bundleNode:bundlesNode) {

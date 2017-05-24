@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 
 import java.io.IOException;
@@ -18,8 +18,8 @@ public class LocationBundleSerializer extends JsonSerializer<LocationBundle> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.BUNDLE_TYPE, locationBundle.getType().toString());
-        jsonGenerator.writeStringField(ManifestConstants.BUNDLE_LOCATION, locationBundle.getLocation().toString());
+        jsonGenerator.writeStringField(JSONConstants.BUNDLE_TYPE, locationBundle.getType().toString());
+        jsonGenerator.writeStringField(JSONConstants.BUNDLE_LOCATION, locationBundle.getLocation().toString());
 
         jsonGenerator.writeEndObject();
     }

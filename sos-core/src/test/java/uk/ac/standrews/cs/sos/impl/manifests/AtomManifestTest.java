@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -109,7 +109,7 @@ public class AtomManifestTest extends CommonTest {
         assertEquals(newBundles.size(), 1);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(atomManifest.toString());
-        JsonNode locationsNode = node.get(ManifestConstants.KEY_LOCATIONS);
+        JsonNode locationsNode = node.get(JSONConstants.KEY_LOCATIONS);
         assertTrue(locationsNode.isArray());
         assertEquals(locationsNode.size(), 1);
     }

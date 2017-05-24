@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 
@@ -21,17 +21,17 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.VERSION.toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, versionManifest.getVersionGUID().toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_INVARIANT, versionManifest.getInvariantGUID().toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_CONTENT_GUID, versionManifest.getContentGUID().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.VERSION.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, versionManifest.getVersionGUID().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_INVARIANT, versionManifest.getInvariantGUID().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_CONTENT_GUID, versionManifest.getContentGUID().toString());
 
         if (versionManifest.getMetadata() != null) {
-            jsonGenerator.writeStringField(ManifestConstants.KEY_METADATA_GUID, versionManifest.getMetadata().toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_METADATA_GUID, versionManifest.getMetadata().toString());
         }
 
         if (versionManifest.getPreviousVersions() != null) {
-            jsonGenerator.writeFieldName(ManifestConstants.KEY_PREVIOUS_GUID);
+            jsonGenerator.writeFieldName(JSONConstants.KEY_PREVIOUS_GUID);
             jsonGenerator.writeStartArray();
             serializePrevious(versionManifest, jsonGenerator);
             jsonGenerator.writeEndArray();
@@ -40,8 +40,8 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
         String signature = versionManifest.getSignature();
         IGUID signer = versionManifest.getSigner();
         if (signature != null && !signature.isEmpty() && signer != null && !signer.isInvalid()) {
-            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNER, signer.toString());
-            jsonGenerator.writeStringField(ManifestConstants.KEY_SIGNATURE, signature);
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNER, signer.toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE, signature);
         }
 
         jsonGenerator.writeEndObject();

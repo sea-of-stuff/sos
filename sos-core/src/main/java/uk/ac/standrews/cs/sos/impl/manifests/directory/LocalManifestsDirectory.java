@@ -99,7 +99,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
         IFile manifestFile = getManifestFile(guid);
 
-        return ManifestsUtils.ManifestFromFile(manifestFile);
+        return FileUtils.ManifestFromFile(manifestFile);
     }
 
     private void saveManifest(Manifest manifest) throws ManifestsDirectoryException {
@@ -209,13 +209,13 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private IFile getManifestFile(String guid) throws DataStorageException {
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        return ManifestsUtils.ManifestFile(localStorage, manifestsDir, guid);
+        return FileUtils.File(localStorage, manifestsDir, guid);
     }
 
     private IFile getManifestTempFile(String guid) throws DataStorageException {
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        return ManifestsUtils.ManifestTempFile(localStorage, manifestsDir, guid);
+        return FileUtils.TempFile(localStorage, manifestsDir, guid);
     }
 
 

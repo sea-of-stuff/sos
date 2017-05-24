@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.LocationFactory;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.*;
 import uk.ac.standrews.cs.sos.model.Location;
@@ -21,8 +21,8 @@ public class LocationBundleDeserializer extends JsonDeserializer<LocationBundle>
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        String type = node.get(ManifestConstants.BUNDLE_TYPE).textValue();
-        String uri = node.get(ManifestConstants.BUNDLE_LOCATION).textValue();
+        String type = node.get(JSONConstants.BUNDLE_TYPE).textValue();
+        String uri = node.get(JSONConstants.BUNDLE_LOCATION).textValue();
 
         return makeLocationBundle(type, uri);
     }

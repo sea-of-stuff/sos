@@ -5,10 +5,10 @@ package uk.ac.standrews.cs.sos.constants;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestConstants {
+public class JSONConstants {
 
     // Suppresses default constructor, ensuring non-instantiability.
-    private ManifestConstants() {}
+    private JSONConstants() {}
 
     // Manifest keys
     public static final String KEY_TYPE = "Type";
@@ -40,4 +40,8 @@ public class ManifestConstants {
     // Protection
     public static final String KEY_KEYS = "Keys";
 
+    // Role/User
+    public static final String KEY_USER = "User";
+    public static final String KEY_NAME = "Name";
+    public static final String KEY_SIGNATURE_CERTIFICATE = "Certificate";
 }

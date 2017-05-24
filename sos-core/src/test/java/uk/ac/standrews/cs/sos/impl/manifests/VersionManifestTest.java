@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -73,8 +73,8 @@ public class VersionManifestTest extends CommonTest {
         VersionManifest versionManifest = new VersionManifest(null, guid, null, null, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
-        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+        Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
+        Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_BASIC_VERSION, versionManifest.toString(), false);
     }
@@ -94,8 +94,8 @@ public class VersionManifestTest extends CommonTest {
         VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
-        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+        Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
+        Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_METADATA_VERSION, versionManifest.toString(), false);
     }
@@ -120,8 +120,8 @@ public class VersionManifestTest extends CommonTest {
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, null, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
-        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+        Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
+        Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_PREVIOUS_VERSION, versionManifest.toString(), false);
     }
@@ -149,8 +149,8 @@ public class VersionManifestTest extends CommonTest {
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
-        Assert.assertTrue(node.has(ManifestConstants.KEY_GUID));
-        Assert.assertTrue(node.has(ManifestConstants.KEY_INVARIANT));
+        Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
+        Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION, versionManifest.toString(), false);
     }

@@ -210,7 +210,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initActors() {
 
         dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
-        usersRolesService = new SOSUsersRolesService(); // TODO - will need to pass NDS to discover other roles
+        usersRolesService = new SOSUsersRolesService(localStorage); // TODO - will need to pass NDS to discover other roles
 
         storage = new SOSStorage(getNodeGUID(), localStorage, dataDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), dataDiscoveryService);

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -26,9 +26,9 @@ public class AtomManifestDeserializer extends JsonDeserializer<AtomManifest> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         try {
-            IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_GUID);
+            IGUID contentGUID = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
 
-            JsonNode bundlesNode = node.get(ManifestConstants.KEY_LOCATIONS);
+            JsonNode bundlesNode = node.get(JSONConstants.KEY_LOCATIONS);
             Set<LocationBundle> bundles = new LinkedHashSet<>();
             if (bundlesNode.isArray()) {
                 for(final JsonNode bundleNode:bundlesNode) {

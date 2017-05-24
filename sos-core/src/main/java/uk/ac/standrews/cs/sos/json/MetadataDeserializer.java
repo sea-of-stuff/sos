@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 
 import java.io.IOException;
@@ -25,19 +25,19 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         BasicMetadata basicMetadata = new BasicMetadata();
         try {
             // TODO - should not trust this GUID. Better to recreate it?
-            basicMetadata.setGUID(GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_GUID).asText()));
+            basicMetadata.setGUID(GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_GUID).asText()));
         } catch (GUIDGenerationException e) {
             throw new IOException(e);
         }
 
-        JsonNode properties = node.get(ManifestConstants.KEY_META_PROPERTIES);
+        JsonNode properties = node.get(JSONConstants.KEY_META_PROPERTIES);
         Iterator<JsonNode> it = properties.elements();
         while(it.hasNext()) {
             JsonNode n = it.next();
 
-            String key = n.get(ManifestConstants.KEY_META_KEY).asText();
-            String type = n.get(ManifestConstants.KEY_META_TYPE).asText();
-            Object value = getObject(n.get(ManifestConstants.KEY_META_VALUE), type);
+            String key = n.get(JSONConstants.KEY_META_KEY).asText();
+            String type = n.get(JSONConstants.KEY_META_TYPE).asText();
+            Object value = getObject(n.get(JSONConstants.KEY_META_VALUE), type);
 
             basicMetadata.addProperty(key, value);
         }

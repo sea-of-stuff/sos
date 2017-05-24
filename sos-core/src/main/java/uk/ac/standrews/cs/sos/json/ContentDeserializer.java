@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 
 import java.io.IOException;
@@ -21,14 +21,14 @@ public class ContentDeserializer extends JsonDeserializer<ContentImpl> {
         ContentImpl ret;
         IGUID guid;
         try {
-            guid = CommonJson.GetGUID(node, ManifestConstants.CONTENT_KEY_GUID);
+            guid = CommonJson.GetGUID(node, JSONConstants.CONTENT_KEY_GUID);
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         }
 
-        boolean hasLabel = node.has(ManifestConstants.CONTENT_KEY_LABEL);
+        boolean hasLabel = node.has(JSONConstants.CONTENT_KEY_LABEL);
         if (hasLabel) {
-            String label = node.get(ManifestConstants.CONTENT_KEY_LABEL).textValue();
+            String label = node.get(JSONConstants.CONTENT_KEY_LABEL).textValue();
             ret = new ContentImpl(label, guid);
         } else {
             ret = new ContentImpl(guid);

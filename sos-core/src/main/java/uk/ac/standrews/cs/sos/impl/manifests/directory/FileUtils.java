@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
@@ -13,8 +13,12 @@ import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
+import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -22,7 +26,7 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestsUtils {
+public class FileUtils {
 
     private final static String JSON_EXTENSION = ".json";
 
@@ -30,7 +34,7 @@ public class ManifestsUtils {
 
         try {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(file.toFile());
-            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
+            ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
 
             return constructManifestFromJsonFile(type, file);
         } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
@@ -42,7 +46,7 @@ public class ManifestsUtils {
 
         try {
             JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
-            ManifestType type = ManifestType.get(node.get(ManifestConstants.KEY_TYPE).textValue());
+            ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
 
             return constructManifestFromJson(type, json);
         } catch (UnknownManifestTypeException | ManifestNotMadeException | IOException e) {
@@ -102,11 +106,31 @@ public class ManifestsUtils {
         return manifest;
     }
 
-    public static IFile ManifestFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
+    public static User UserFromFile(IFile file) throws ManifestNotFoundException {
+
+        try {
+            return JSONHelper.JsonObjMapper().readValue(file.toFile(), UserImpl.class);
+
+        } catch (IOException e) {
+            throw new ManifestNotFoundException("Unable to find USER given file " + file.getPathname(), e);
+        }
+    }
+
+    public static Role RoleFromFile(IFile file) throws ManifestNotFoundException {
+
+        try {
+            return JSONHelper.JsonObjMapper().readValue(file.toFile(), RoleImpl.class);
+
+        } catch (IOException e) {
+            throw new ManifestNotFoundException("Unable to find ROLE given file " + file.getPathname(), e);
+        }
+    }
+
+    public static IFile File(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
         return storage.createFile(directory, normaliseGUID(guid));
     }
 
-    public static IFile ManifestTempFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
+    public static IFile TempFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
         return storage.createFile(directory, normaliseGUID(guid) + "-TEMP");
     }
 

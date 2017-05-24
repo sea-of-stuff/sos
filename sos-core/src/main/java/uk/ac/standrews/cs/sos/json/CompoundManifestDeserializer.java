@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
@@ -30,21 +30,21 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         try {
-            IGUID contentGUID = CommonJson.GetGUID(node, ManifestConstants.KEY_GUID);
+            IGUID contentGUID = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
 
             String signature = null;
             IGUID signer = null;
-            if (node.has(ManifestConstants.KEY_SIGNATURE) && node.has(ManifestConstants.KEY_SIGNER)) {
-                signature = node.get(ManifestConstants.KEY_SIGNATURE).textValue();
-                signer = GUIDFactory.recreateGUID(node.get(ManifestConstants.KEY_SIGNER).textValue());
+            if (node.has(JSONConstants.KEY_SIGNATURE) && node.has(JSONConstants.KEY_SIGNER)) {
+                signature = node.get(JSONConstants.KEY_SIGNATURE).textValue();
+                signer = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_SIGNER).textValue());
 
                 // FIXME - recreate Role signer
             }
 
-            String compoundTypeString = node.get(ManifestConstants.KEY_COMPOUND_TYPE).textValue();
+            String compoundTypeString = node.get(JSONConstants.KEY_COMPOUND_TYPE).textValue();
             CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
 
-            JsonNode contentsNode = node.get(ManifestConstants.KEY_CONTENTS);
+            JsonNode contentsNode = node.get(JSONConstants.KEY_CONTENTS);
             Set<Content> contents = new LinkedHashSet<>();
             if (contentsNode.isArray()) {
                 for(final JsonNode contentNode:contentsNode) {

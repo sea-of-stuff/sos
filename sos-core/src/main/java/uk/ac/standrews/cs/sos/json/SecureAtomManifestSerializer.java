@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.sos.constants.ManifestConstants;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -20,15 +20,15 @@ public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManif
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(ManifestConstants.KEY_TYPE, ManifestType.ATOM.toString());
-        jsonGenerator.writeStringField(ManifestConstants.KEY_GUID, atomManifest.guid().toString()); // HASH(d')
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.ATOM.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toString()); // HASH(d')
 
-        jsonGenerator.writeFieldName(ManifestConstants.KEY_LOCATIONS);
+        jsonGenerator.writeFieldName(JSONConstants.KEY_LOCATIONS);
         jsonGenerator.writeStartArray();
         serializeLocations(atomManifest, jsonGenerator);
         jsonGenerator.writeEndArray();
 
-        jsonGenerator.writeFieldName(ManifestConstants.KEY_KEYS);
+        jsonGenerator.writeFieldName(JSONConstants.KEY_KEYS);
         jsonGenerator.writeStartArray();
 
         jsonGenerator.writeEndArray();

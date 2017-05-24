@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.impl.manifests.directory.ManifestsUtils;
+import uk.ac.standrews.cs.sos.impl.manifests.directory.FileUtils;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
@@ -58,7 +58,7 @@ public class FetchManifest extends Task {
 
                 try (InputStream inputStream = response.getBody()) {
                     String responseBody = IO.InputStreamToString(inputStream);
-                    this.manifest = ManifestsUtils.ManifestFromJson(responseBody);
+                    this.manifest = FileUtils.ManifestFromJson(responseBody);
                 } catch (ManifestNotFoundException e) {
                     throw new IOException("Unable to parse manifest with GUID " + manifestId);
                 }
