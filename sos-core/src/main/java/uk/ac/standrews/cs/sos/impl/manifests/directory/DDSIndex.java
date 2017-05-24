@@ -2,10 +2,12 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,22 +46,6 @@ public class DDSIndex implements Serializable {
 
     public Set<IGUID> getDDSRefs(IGUID manifestGUID) {
         return index.get(manifestGUID);
-    }
-
-    public static DDSIndex load(IFile file) throws IOException, ClassNotFoundException {
-
-        // Check that file is not empty
-        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
-        if (br.readLine() == null) {
-            return null;
-        }
-
-        FileInputStream istream = new FileInputStream(file.toFile());
-        ObjectInputStream q = new ObjectInputStream(istream);
-
-        DDSIndex persistedIndex = (DDSIndex)q.readObject();
-
-        return persistedIndex;
     }
 
     // This method defines how the cache is serialised

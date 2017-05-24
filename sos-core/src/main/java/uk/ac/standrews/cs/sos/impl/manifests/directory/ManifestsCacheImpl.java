@@ -15,9 +15,13 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -131,17 +135,12 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
 
-        // Check that file is not empty
-        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
-        if (br.readLine() == null) {
-            return null;
-        }
+        ManifestsCache persistedCache = (ManifestsCache) Persistence.Load(file);
 
-        FileInputStream istream = new FileInputStream(file.toFile());
-        ObjectInputStream q = new ObjectInputStream(istream);
+        if (persistedCache == null) throw new ClassNotFoundException();
+        if (persistedCache.getLRU() == null) return persistedCache;
 
-        ManifestsCache persistedCache = (ManifestsCache)q.readObject();
-
+        // Re-build cache
         ConcurrentLinkedQueue<IGUID> lru = new ConcurrentLinkedQueue<>(persistedCache.getLRU());
 
         IGUID guid;

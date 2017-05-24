@@ -10,7 +10,10 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 
 /**
@@ -112,20 +115,6 @@ public class LocationsIndexImpl implements LocationsIndex {
         p.writeObject(this);
         p.flush();
         ostream.close();
-    }
-
-    public static LocationsIndex load(IFile file) throws IOException, ClassNotFoundException {
-
-        // Check that file is not empty
-        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
-        if (br.readLine() == null) {
-            return null;
-        }
-
-        FileInputStream istream = new FileInputStream(file.toFile());
-        ObjectInputStream q = new ObjectInputStream(istream);
-
-        return (LocationsIndex)q.readObject();
     }
 
     // This method defines how the cache is serialised

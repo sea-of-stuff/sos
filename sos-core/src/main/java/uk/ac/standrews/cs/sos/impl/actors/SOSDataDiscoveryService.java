@@ -162,7 +162,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             if (file.exists()) {
-                ddsIndex = DDSIndex.load(file);
+                ddsIndex = (DDSIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS index");

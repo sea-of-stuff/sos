@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.PersistLocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -77,7 +78,8 @@ public class LocationsIndexImplTest {
         IFile file = localStorage.createFile(cachesDir, "locations.index");
         locationsIndex.persist(file);
 
-        LocationsIndex locationsIndexPersisted = LocationsIndexImpl.load(file);
+
+        LocationsIndex locationsIndexPersisted = (LocationsIndex) Persistence.Load(file);
         assertNotNull(locationsIndexPersisted);
 
         Iterator<LocationBundle> it = locationsIndexPersisted.findLocations(guid);

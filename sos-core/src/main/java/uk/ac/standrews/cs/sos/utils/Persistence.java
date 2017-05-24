@@ -3,9 +3,7 @@ package uk.ac.standrews.cs.sos.utils;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -29,5 +27,17 @@ public class Persistence {
         ostream.close();
     }
 
-    // TODO - load ???
+    public static Object Load(IFile file) throws IOException, ClassNotFoundException {
+
+        // Check that file is not empty
+        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
+        if (br.readLine() == null) {
+            return null;
+        }
+
+        FileInputStream istream = new FileInputStream(file.toFile());
+        ObjectInputStream q = new ObjectInputStream(istream);
+
+        return q.readObject();
+    }
 }

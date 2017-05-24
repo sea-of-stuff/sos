@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.atom.store.*;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,7 @@ public class AtomStorage {
             IDirectory cacheDir = storage.getNodeDirectory();
             IFile file = storage.createFile(cacheDir, "locations.index");
             if (file.exists()) {
-                locationIndex = LocationsIndexImpl.load(file);
+                locationIndex = (LocationsIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             e.printStackTrace();

@@ -84,7 +84,7 @@ public class DataDiscoveryServiceIndexTest {
         IFile file = localStorage.createFile(cachesDir, "dds.index");
         Persistence.Persist(ddsIndex, file);
 
-        DDSIndex persistedIndex = DDSIndex.load(file);
+        DDSIndex persistedIndex = (DDSIndex) Persistence.Load(file);
         Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
         assertNotNull(nodesGUIDs);
         assertNotEquals(nodesGUIDs.size(), 0);
@@ -111,8 +111,7 @@ public class DataDiscoveryServiceIndexTest {
         IFile file = localStorage.createFile(cachesDir, "dds.index");
         Persistence.Persist(ddsIndex, file);
 
-        DDSIndex persistedIndex = DDSIndex.load(file);
-
+        DDSIndex persistedIndex = (DDSIndex) Persistence.Load(file);
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
         assertNull(nodesGUIDs);
