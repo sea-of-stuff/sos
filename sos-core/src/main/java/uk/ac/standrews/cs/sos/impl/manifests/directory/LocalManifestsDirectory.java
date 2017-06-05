@@ -209,7 +209,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private IFile getManifestFile(String guid) throws DataStorageException {
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        return FileUtils.File(localStorage, manifestsDir, guid);
+        return FileUtils.File(localStorage, manifestsDir, guid, FileUtils.JSON_EXTENSION);
     }
 
     private IFile getManifestTempFile(String guid) throws DataStorageException {

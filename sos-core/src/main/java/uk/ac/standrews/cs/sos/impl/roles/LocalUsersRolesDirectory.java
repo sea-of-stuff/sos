@@ -79,8 +79,15 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     @Override
     public void setActiveRole(Role role) {
 
-        // TODO - make file ACTIVE_ROLE containing GUID of role
-        // overwrite existing info
+        try {
+            IFile file = makeFile("ACTIVE_ROLE");
+
+            file.setData(new StringData(role.guid().toString()));
+            file.persist();
+
+        } catch (DataStorageException | PersistenceException | DataException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -91,7 +98,15 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     @Override
     public void setActiveUser(User user) {
 
-        // TODO - make file ACTIVE_USER containing GUID of user
+        try {
+            IFile file = makeFile("ACTIVE_USER");
+
+            file.setData(new StringData(user.guid().toString()));
+            file.persist();
+
+        } catch (DataStorageException | PersistenceException | DataException e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveToFile(User user) throws ManifestsDirectoryException {
@@ -101,7 +116,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
 
             Data data = new StringData(user.toString());
 
-            IFile file = getFile(userGUID);
+            IFile file = makeJSONFile(userGUID);
             file.setData(data);
             file.persist();
 
@@ -110,15 +125,20 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         }
     }
 
-    private IFile getFile(String guid) throws DataStorageException {
+    private IFile makeFile(String filename) throws DataStorageException {
         IDirectory usroDir = localStorage.getUsersRolesDirectory();
 
-        return FileUtils.File(localStorage, usroDir, guid);
+        return FileUtils.File(localStorage, usroDir, filename);
+    }
+
+    private IFile makeJSONFile(String guid) throws DataStorageException {
+
+        return makeFile(guid + FileUtils.JSON_EXTENSION);
     }
 
     private User getUserFromGUID(IGUID guid) throws UserNotFoundException {
         try {
-            IFile file = getFile(guid.toString());
+            IFile file = makeJSONFile(guid.toString());
 
             return FileUtils.UserFromFile(file);
 
@@ -129,7 +149,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
 
     private Role getRoleFromGUID(IGUID guid) throws RoleNotFoundException {
         try {
-            IFile file = getFile(guid.toString());
+            IFile file = makeJSONFile(guid.toString());
 
             return FileUtils.RoleFromFile(file);
 

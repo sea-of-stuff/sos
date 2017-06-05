@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    private final static String JSON_EXTENSION = ".json";
+    public final static String JSON_EXTENSION = ".json";
 
     public static Manifest ManifestFromFile(IFile file) throws ManifestNotFoundException {
 
@@ -128,16 +128,16 @@ public class FileUtils {
         }
     }
 
-    public static IFile File(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
-        return storage.createFile(directory, normaliseGUID(guid));
+    public static IFile File(LocalStorage storage, IDirectory directory, String filename) throws DataStorageException {
+        return storage.createFile(directory, filename);
+    }
+
+    public static IFile File(LocalStorage storage, IDirectory directory, String filename, String extension) throws DataStorageException {
+        return File(storage, directory, filename + extension);
     }
 
     public static IFile TempFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
-        return storage.createFile(directory, normaliseGUID(guid) + "-TEMP");
-    }
-
-    private static String normaliseGUID(String guid) {
-        return guid + JSON_EXTENSION;
+        return storage.createFile(directory, guid + "-TEMP");
     }
 
 }
