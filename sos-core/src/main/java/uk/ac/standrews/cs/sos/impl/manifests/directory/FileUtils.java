@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
@@ -106,23 +108,23 @@ public class FileUtils {
         return manifest;
     }
 
-    public static User UserFromFile(IFile file) throws ManifestNotFoundException {
+    public static User UserFromFile(IFile file) throws UserNotFoundException {
 
         try {
             return JSONHelper.JsonObjMapper().readValue(file.toFile(), UserImpl.class);
 
         } catch (IOException e) {
-            throw new ManifestNotFoundException("Unable to find USER given file " + file.getPathname(), e);
+            throw new UserNotFoundException();
         }
     }
 
-    public static Role RoleFromFile(IFile file) throws ManifestNotFoundException {
+    public static Role RoleFromFile(IFile file) throws RoleNotFoundException {
 
         try {
             return JSONHelper.JsonObjMapper().readValue(file.toFile(), RoleImpl.class);
 
         } catch (IOException e) {
-            throw new ManifestNotFoundException("Unable to find ROLE given file " + file.getPathname(), e);
+            throw new RoleNotFoundException();
         }
     }
 

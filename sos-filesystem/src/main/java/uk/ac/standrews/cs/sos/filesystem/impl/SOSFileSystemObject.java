@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
 import uk.ac.standrews.cs.sos.actors.Agent;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
@@ -72,7 +73,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
             } else {
                 SOS_LOG.log(LEVEL.WARN, "Version has exactly the same data. Metadata, however, might have changed.");
             }
-        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException | RoleNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -119,7 +120,7 @@ public class PolicyLanguage {
         return nodeDiscoveryService.getNodes(codomain, type);
     }
 
-    public Role getRole(IGUID guid) {
+    public Role getRole(IGUID guid) throws RoleNotFoundException {
 
         return usersRolesService.getRole(guid);
     }

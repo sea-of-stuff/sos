@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemFactory;
 import uk.ac.standrews.cs.sos.actors.Agent;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -88,7 +89,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             WriteCurrentVersion(rootGUID, versionGUID);
 
             return retval;
-        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException | RoleNotFoundException e) {
             throw new FileSystemCreationException("WEBDAV - Unable to create Root Asset");
         }
 
@@ -109,7 +110,8 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         return retval;
     }
 
-    private Compound createRootCompound(Agent sos) throws ManifestPersistException, ManifestNotMadeException {
+    private Compound createRootCompound(Agent sos) throws ManifestPersistException, ManifestNotMadeException, RoleNotFoundException {
+
         CompoundBuilder compoundBuilder = new CompoundBuilder()
                 .setType(CompoundType.COLLECTION)
                 .setContents(Collections.emptySet());

@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBind
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.actors.Agent;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -105,6 +106,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             CompoundBuilder compoundBuilder = new CompoundBuilder()
                     .setType(CompoundType.COLLECTION)
                     .setContents(contents);
+
             this.compound = sos.addCompound(compoundBuilder);
 
             boolean previousVersionDiffers = previousAssetDiffers(compound.guid());
@@ -124,7 +126,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.previous = previous.getPreviousObject();
             }
 
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -169,7 +171,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.previous = previous.getPreviousObject();
             }
 
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
             e.printStackTrace();
         }
 

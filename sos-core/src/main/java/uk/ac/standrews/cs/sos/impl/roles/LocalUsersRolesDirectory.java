@@ -8,7 +8,8 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.FileUtils;
@@ -44,14 +45,9 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
-    public User getUser(IGUID userGUID) {
-        try {
-            return getUserFromGUID(userGUID);
-        } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
+    public User getUser(IGUID userGUID) throws UserNotFoundException {
 
-        return null;
+        return getUserFromGUID(userGUID);
     }
 
     @Override
@@ -65,24 +61,18 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
-    public Role getRole(IGUID roleGUID) {
+    public Role getRole(IGUID roleGUID) throws RoleNotFoundException {
 
-        try {
-            return getRoleFromGUID(roleGUID);
-        } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
+        return getRoleFromGUID(roleGUID);
+    }
 
+    @Override
+    public Set<Role> getRoles(IGUID userGUID) throws RoleNotFoundException {
         return null;
     }
 
     @Override
-    public Set<Role> getRoles(IGUID userGUID) {
-        return null;
-    }
-
-    @Override
-    public Role active() {
+    public Role active() throws RoleNotFoundException {
         return null;
     }
 
@@ -116,25 +106,25 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         return FileUtils.File(localStorage, usroDir, guid);
     }
 
-    private User getUserFromGUID(IGUID guid) throws ManifestNotFoundException { // FIXME - better exception
+    private User getUserFromGUID(IGUID guid) throws UserNotFoundException {
         try {
             IFile file = getFile(guid.toString());
 
             return FileUtils.UserFromFile(file);
 
         } catch (DataStorageException e) {
-            throw new ManifestNotFoundException("Unable to get User");
+            throw new UserNotFoundException();
         }
     }
 
-    private Role getRoleFromGUID(IGUID guid) throws ManifestNotFoundException { // FIXME - better exception
+    private Role getRoleFromGUID(IGUID guid) throws RoleNotFoundException {
         try {
             IFile file = getFile(guid.toString());
 
             return FileUtils.RoleFromFile(file);
 
         } catch (DataStorageException e) {
-            throw new ManifestNotFoundException("Unable to get Role");
+            throw new RoleNotFoundException();
         }
     }
 }

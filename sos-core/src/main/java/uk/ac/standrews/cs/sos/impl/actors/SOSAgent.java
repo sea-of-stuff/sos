@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -19,7 +20,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -38,6 +38,7 @@ public class SOSAgent implements Agent {
     private UsersRolesService usersRolesService;
 
     private SOSAgent(Storage storage, DataDiscoveryService dataDiscoveryService, MetadataService metadataService, UsersRolesService usersRolesService) {
+
         this.storage = storage;
         this.dataDiscoveryService = dataDiscoveryService;
         this.metadataService = metadataService;
@@ -59,17 +60,23 @@ public class SOSAgent implements Agent {
 
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
+
         Atom manifest = storage.addAtom(atomBuilder, false, new DDSNotificationInfo().setNotifyDDSNodes(true));
         return manifest;
     }
 
     @Override
-    public Compound addCompound(CompoundBuilder compoundBuilder)
-            throws ManifestNotMadeException, ManifestPersistException {
+    public Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
 
         CompoundType type = compoundBuilder.getType();
         Set<Content> contents = compoundBuilder.getContents();
-        CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, usersRolesService.active());
+
+        Role role = compoundBuilder.getRole();
+        if (role == null) {
+            role = usersRolesService.active();
+        }
+
+        CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, role);
 
         addManifest(compound);
 
@@ -77,15 +84,19 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Version addVersion(VersionBuilder versionBuilder)
-            throws ManifestNotMadeException, ManifestPersistException {
+    public Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
 
         IGUID content = versionBuilder.getContent();
         IGUID invariant = versionBuilder.getInvariant();
         Set<IGUID> prevs = versionBuilder.getPreviousCollection();
         IGUID metadata = versionBuilder.getMetadataCollection();
 
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, usersRolesService.active());
+        Role role = versionBuilder.getRole();
+        if (role == null) {
+            role = usersRolesService.active();
+        }
+
+        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
         addManifest(manifest);
 
         return manifest;
@@ -94,8 +105,7 @@ public class SOSAgent implements Agent {
     @Override
     public Version addData(VersionBuilder versionBuilder) {
 
-        // FIXME - we are consuming the inputstream before storing the data. Can we then reuse the stream?
-        try (InputStream stream = versionBuilder.getAtomBuilder().getInputStream()) {
+        try {
 
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());
@@ -103,8 +113,9 @@ public class SOSAgent implements Agent {
             Version manifest = addVersion(versionBuilder);
 
             return manifest;
-        } catch (StorageException | ManifestPersistException | IOException | ManifestNotMadeException e) {
+        } catch (StorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
             e.printStackTrace();
+            // TODO - throw proper exception
         }
 
         return null;
@@ -120,7 +131,7 @@ public class SOSAgent implements Agent {
             Version manifest = addVersion(versionBuilder);
 
             return manifest;
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
             e.printStackTrace();
             // TODO - throw proper exception
         }
@@ -140,7 +151,7 @@ public class SOSAgent implements Agent {
      * The caller should ensure that the stream is closed.
      *
      * @param atom describing the atom to retrieve.
-     * @return
+     * @return Input Stream of the data for the given atom
      */
     @Override
     public InputStream getAtomContent(Atom atom) throws AtomNotFoundException {
@@ -154,8 +165,8 @@ public class SOSAgent implements Agent {
 
     @Override
     public boolean verifyManifest(Role role, Manifest manifest) throws SignatureException {
-        boolean success = manifest.verifySignature(role);
-        return success;
+
+        return manifest.verifySignature(role);
     }
 
     @Override
@@ -177,8 +188,8 @@ public class SOSAgent implements Agent {
 
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
-        Metadata metadata = metadataService.getMetadata(guid);
-        return metadata;
+
+        return metadataService.getMetadata(guid);
     }
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {

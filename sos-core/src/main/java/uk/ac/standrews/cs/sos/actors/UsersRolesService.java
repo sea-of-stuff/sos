@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
@@ -26,7 +28,7 @@ public interface UsersRolesService {
      * @param userGUID
      * @return
      */
-    User getUser(IGUID userGUID);
+    User getUser(IGUID userGUID) throws UserNotFoundException;
 
     /**
      * Add the specified role to the directory of roles
@@ -41,21 +43,21 @@ public interface UsersRolesService {
      * @param roleGUID
      * @return
      */
-    Role getRole(IGUID roleGUID);
+    Role getRole(IGUID roleGUID) throws RoleNotFoundException;
 
     /**
      *
      * @param userGUID
      * @return
      */
-    Set<Role> getRoles(IGUID userGUID);
+    Set<Role> getRoles(IGUID userGUID) throws RoleNotFoundException;
 
     /**
      * Returns the active role for this node
      *
      * @return the active role
      */
-    Role active();
+    Role active() throws RoleNotFoundException;
 
     /**
      * Sets the active role for this node

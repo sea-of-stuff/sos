@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.actors;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -54,7 +55,7 @@ public interface Agent {
      *
      * @deprecated - use addCollection(VersionBuilder)?
      */
-    Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException;
+    Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
 
     /**
      * Adds a version of an asset to the Sea of Stuff.
@@ -65,7 +66,7 @@ public interface Agent {
      * @throws ManifestPersistException
      *
      */
-    Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException;
+    Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
 
     Version addData(VersionBuilder versionBuilder); // TODO - exceptions
     InputStream getData(Version version) throws AtomNotFoundException;

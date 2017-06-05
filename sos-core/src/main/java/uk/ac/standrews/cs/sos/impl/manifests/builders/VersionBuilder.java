@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.Set;
 
@@ -16,6 +17,7 @@ public class VersionBuilder {
     private Set<IGUID> previousCollection;
     private AtomBuilder atomBuilder;
     private CompoundBuilder compoundBuilder;
+    private Role role;
 
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
@@ -98,5 +100,15 @@ public class VersionBuilder {
 
     public CompoundBuilder getCompoundBuilder() {
         return compoundBuilder;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public VersionBuilder setRole(Role role) {
+        this.role = role;
+
+        return this;
     }
 }
