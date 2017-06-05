@@ -55,7 +55,7 @@ public class SOSAddCompoundTest extends AgentTest {
         Compound manifest = agent.addCompound(compoundBuilder);
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
 
-        Role role = localSOSNode.getRMS().active();
+        Role role = localSOSNode.getRMS().activeRole();
         boolean isVerified = agent.verifyManifest(role, retrievedManifest);
         assertTrue(isVerified);
     }

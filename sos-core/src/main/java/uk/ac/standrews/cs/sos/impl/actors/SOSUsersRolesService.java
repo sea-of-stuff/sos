@@ -2,8 +2,14 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.roles.LocalUsersRolesDirectory;
+import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
+import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UsersRolesCache;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
@@ -13,7 +19,7 @@ import java.util.Set;
 /**
  * Service to manage Users and Roles.
  *
- * There is only one active Role at a given time
+ * There is only one activeRole Role at a given time
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -29,6 +35,44 @@ public class SOSUsersRolesService implements UsersRolesService {
 
         inMemoryCache = new UsersRolesCache();
         localDirectory = new LocalUsersRolesDirectory(localStorage);
+
+        try {
+
+            manageDefaultUser();
+            manageDefaultRole();
+
+        } catch (SignatureException | UserNotFoundException | ProtectionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void manageDefaultUser() throws SignatureException {
+
+        try {
+            activeUser();
+
+        } catch (UserNotFoundException e) {
+
+            User defaultUser = new UserImpl("DEFAULT_USER");
+
+            addUser(defaultUser);
+            setActiveUser(defaultUser);
+        }
+    }
+
+    private void manageDefaultRole() throws ProtectionException, SignatureException, UserNotFoundException {
+
+        try {
+            activeRole();
+
+        } catch (RoleNotFoundException e) {
+
+            User defaultUser = activeUser();
+            Role defaultRole = new RoleImpl(defaultUser, "DEFAULT_ROLE");
+
+            addRole(defaultRole);
+            setActiveRole(defaultRole);
+        }
     }
 
     @Override
@@ -64,16 +108,28 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public Role active() {
+    public Role activeRole() throws RoleNotFoundException {
 
-        return inMemoryCache.active();
+        return inMemoryCache.activeRole();
     }
 
     @Override
-    public void setActive(Role role) {
+    public void setActiveRole(Role role) {
 
-        inMemoryCache.setActive(role);
-        localDirectory.setActive(role);
+        inMemoryCache.setActiveRole(role);
+        localDirectory.setActiveRole(role);
+    }
+
+    @Override
+    public User activeUser() throws UserNotFoundException {
+        return inMemoryCache.activeUser();
+    }
+
+    @Override
+    public void setActiveUser(User user) {
+
+        inMemoryCache.setActiveUser(user);
+        localDirectory.setActiveUser(user);
     }
 
 }

@@ -18,7 +18,7 @@ public interface ContextService extends SeaOfStuff {
 
     /**
      * Adds a context to this CMS and return a version for it.
-     * The context is automatically set as active
+     * The context is automatically set as activeRole
      *
      * @param context
      * @throws Exception

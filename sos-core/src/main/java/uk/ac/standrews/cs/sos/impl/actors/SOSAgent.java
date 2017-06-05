@@ -73,7 +73,7 @@ public class SOSAgent implements Agent {
 
         Role role = compoundBuilder.getRole();
         if (role == null) {
-            role = usersRolesService.active();
+            role = usersRolesService.activeRole();
         }
 
         CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, role);
@@ -93,7 +93,7 @@ public class SOSAgent implements Agent {
 
         Role role = versionBuilder.getRole();
         if (role == null) {
-            role = usersRolesService.active();
+            role = usersRolesService.activeRole();
         }
 
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);

@@ -229,7 +229,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             Role role = new RoleImpl(user, "student");
             usersRolesService.addUser(user);
             usersRolesService.addRole(role);
-            usersRolesService.setActive(role);
+            usersRolesService.setActiveRole(role);
 
         } catch (SignatureException | ProtectionException e) {
             e.printStackTrace();

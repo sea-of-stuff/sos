@@ -53,16 +53,20 @@ public interface UsersRolesService {
     Set<Role> getRoles(IGUID userGUID) throws RoleNotFoundException;
 
     /**
-     * Returns the active role for this node
+     * Returns the activeRole role for this node
      *
-     * @return the active role
+     * @return the activeRole role
      */
-    Role active() throws RoleNotFoundException;
+    Role activeRole() throws RoleNotFoundException;
 
     /**
-     * Sets the active role for this node
+     * Sets the activeRole role for this node
      *
      * @param role
      */
-    void setActive(Role role);
+    void setActiveRole(Role role);
+
+    User activeUser() throws UserNotFoundException;
+
+    void setActiveUser(User user);
 }

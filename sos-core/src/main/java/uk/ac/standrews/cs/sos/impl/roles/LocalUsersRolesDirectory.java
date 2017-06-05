@@ -72,16 +72,26 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
-    public Role active() throws RoleNotFoundException {
+    public Role activeRole() throws RoleNotFoundException {
         return null;
     }
 
     @Override
-    public void setActive(Role role) {
+    public void setActiveRole(Role role) {
 
+        // TODO - make file ACTIVE_ROLE containing GUID of role
+        // overwrite existing info
+    }
 
-        // TODO - make a file in the disk called ACTIVE-GUID
-        // delete other files of same format if not matching this role
+    @Override
+    public User activeUser() throws UserNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void setActiveUser(User user) {
+
+        // TODO - make file ACTIVE_USER containing GUID of user
     }
 
     private void saveToFile(User user) throws ManifestsDirectoryException {

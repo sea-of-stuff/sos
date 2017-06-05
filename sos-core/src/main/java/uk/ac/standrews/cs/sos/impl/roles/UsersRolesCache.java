@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
+import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
@@ -24,6 +26,7 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
     private transient HashMap<IGUID, Role> roles;
     private transient HashMap<IGUID, Set<IGUID>> usersToRoles;
     private transient Role activeRole;
+    private transient User activeUser;
 
     public UsersRolesCache() {
 
@@ -66,13 +69,29 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
     }
 
     @Override
-    public Role active() {
+    public Role activeRole() throws RoleNotFoundException {
+
+        if (activeRole == null) throw new RoleNotFoundException();
+
         return activeRole;
     }
 
     @Override
-    public void setActive(Role role) {
+    public void setActiveRole(Role role) {
         this.activeRole = role;
+    }
+
+    @Override
+    public User activeUser() throws UserNotFoundException {
+
+        if (activeUser == null) throw new UserNotFoundException();
+
+        return activeUser;
+    }
+
+    @Override
+    public void setActiveUser(User user) {
+        this.activeUser = user;
     }
 
     // This method defines how the cache is serialised

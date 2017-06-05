@@ -134,7 +134,7 @@ public class SOSContextService implements ContextService {
     /**
      * Run PERIODIC predicates.
      *
-     * Iterate over all active contexts.
+     * Iterate over all activeRole contexts.
      * For each context:
      * Run all known versions against the predicate of the context.
      *
