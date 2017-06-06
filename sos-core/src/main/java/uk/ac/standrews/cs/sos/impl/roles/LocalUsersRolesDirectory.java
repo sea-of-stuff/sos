@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
+import uk.ac.standrews.cs.sos.exceptions.UserRolePersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.FileUtils;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -20,8 +20,6 @@ import uk.ac.standrews.cs.sos.model.User;
 import java.util.Set;
 
 /**
- *
- * TODO - files are immutable and should not be updatable?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -33,15 +31,10 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         this.localStorage = localStorage;
     }
 
-
     @Override
-    public void addUser(User user) {
+    public void addUser(User user) throws UserRolePersistException {
 
-        try {
-            saveToFile(user);
-        } catch (ManifestsDirectoryException e) {
-            e.printStackTrace();
-        }
+        saveToFile(user);
     }
 
     @Override
@@ -51,13 +44,9 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
-    public void addRole(Role role) {
+    public void addRole(Role role) throws UserRolePersistException {
 
-        try {
-            saveToFile(role);
-        } catch (ManifestsDirectoryException e) {
-            e.printStackTrace();
-        }
+        saveToFile(role);
     }
 
     @Override
@@ -109,7 +98,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         }
     }
 
-    private void saveToFile(User user) throws ManifestsDirectoryException {
+    private void saveToFile(User user) throws UserRolePersistException {
 
         try {
             String userGUID = user.guid().toString();
@@ -121,7 +110,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
             file.persist();
 
         } catch (PersistenceException | DataException | DataStorageException e) {
-            throw new ManifestsDirectoryException(e);
+            throw new UserRolePersistException();
         }
     }
 

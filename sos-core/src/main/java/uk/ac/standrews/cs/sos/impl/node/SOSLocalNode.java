@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.UserRolePersistException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
@@ -231,7 +232,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             usersRolesService.addRole(role);
             usersRolesService.setActiveRole(role);
 
-        } catch (SignatureException | ProtectionException e) {
+        } catch (SignatureException | ProtectionException | UserRolePersistException e) {
             e.printStackTrace();
         }
     }

@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.UserRolePersistException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -41,12 +42,12 @@ public class SOSUsersRolesService implements UsersRolesService {
             manageDefaultUser();
             manageDefaultRole();
 
-        } catch (SignatureException | UserNotFoundException | ProtectionException e) {
+        } catch (SignatureException | UserNotFoundException | ProtectionException | UserRolePersistException e) {
             e.printStackTrace();
         }
     }
 
-    private void manageDefaultUser() throws SignatureException {
+    private void manageDefaultUser() throws SignatureException, UserRolePersistException {
 
         try {
             activeUser();
@@ -60,7 +61,7 @@ public class SOSUsersRolesService implements UsersRolesService {
         }
     }
 
-    private void manageDefaultRole() throws ProtectionException, SignatureException, UserNotFoundException {
+    private void manageDefaultRole() throws ProtectionException, SignatureException, UserNotFoundException, UserRolePersistException {
 
         try {
             activeRole();
@@ -76,7 +77,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public void addUser(User user) {
+    public void addUser(User user) throws UserRolePersistException {
 
         inMemoryCache.addUser(user);
         localDirectory.addUser(user);
@@ -89,7 +90,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public void addRole(Role role) {
+    public void addRole(Role role) throws UserRolePersistException {
 
         inMemoryCache.addRole(role);
         localDirectory.addRole(role);
