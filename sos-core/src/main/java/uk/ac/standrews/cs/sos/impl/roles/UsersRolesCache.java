@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
-import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 

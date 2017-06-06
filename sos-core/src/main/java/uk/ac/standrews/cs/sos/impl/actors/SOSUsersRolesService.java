@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
-import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserRolePersistException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.roles.LocalUsersRolesDirectory;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
@@ -16,6 +16,9 @@ import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
 import java.util.Set;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.DEFAULT_ROLE_NAME;
+import static uk.ac.standrews.cs.sos.constants.Internals.DEFAULT_USER_NAME;
 
 /**
  * Service to manage Users and Roles.
@@ -54,7 +57,7 @@ public class SOSUsersRolesService implements UsersRolesService {
 
         } catch (UserNotFoundException e) {
 
-            User defaultUser = new UserImpl("DEFAULT_USER");
+            User defaultUser = new UserImpl(DEFAULT_USER_NAME);
 
             addUser(defaultUser);
             setActiveUser(defaultUser);
@@ -69,7 +72,7 @@ public class SOSUsersRolesService implements UsersRolesService {
         } catch (RoleNotFoundException e) {
 
             User defaultUser = activeUser();
-            Role defaultRole = new RoleImpl(defaultUser, "DEFAULT_ROLE");
+            Role defaultRole = new RoleImpl(defaultUser, DEFAULT_ROLE_NAME);
 
             addRole(defaultRole);
             setActiveRole(defaultRole);
@@ -115,7 +118,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public void setActiveRole(Role role) {
+    public void setActiveRole(Role role) throws UserRolePersistException {
 
         inMemoryCache.setActiveRole(role);
         localDirectory.setActiveRole(role);
@@ -127,7 +130,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public void setActiveUser(User user) {
+    public void setActiveUser(User user) throws UserRolePersistException {
 
         inMemoryCache.setActiveUser(user);
         localDirectory.setActiveUser(user);

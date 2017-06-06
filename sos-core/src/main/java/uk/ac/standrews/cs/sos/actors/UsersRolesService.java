@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserRolePersistException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
@@ -71,8 +71,9 @@ public interface UsersRolesService {
      * Sets the active role for this node
      *
      * @param role to be made active
+     * @throws UserRolePersistException if the role could not be made active
      */
-    void setActiveRole(Role role);
+    void setActiveRole(Role role) throws UserRolePersistException;
 
     /**
      * Returns the active user
@@ -86,6 +87,7 @@ public interface UsersRolesService {
      * Sets the active user
      *
      * @param user to be made active
+     * @throws UserRolePersistException if the user could not be made active
      */
-    void setActiveUser(User user);
+    void setActiveUser(User user) throws UserRolePersistException;
 }

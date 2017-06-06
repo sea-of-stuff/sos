@@ -12,10 +12,10 @@ import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBind
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.sos.actors.Agent;
-import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;

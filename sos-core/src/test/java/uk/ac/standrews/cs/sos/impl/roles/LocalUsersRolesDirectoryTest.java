@@ -8,6 +8,11 @@ import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.sos.CommonTest;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
@@ -65,6 +70,34 @@ public class LocalUsersRolesDirectoryTest extends CommonTest {
         Role retrieved = usroDir.getRole(role.guid());
         assertEquals(retrieved.guid(), role.guid());
         assertEquals(retrieved.getName(), role.getName());
+    }
+
+    @Test
+    public void activeUserTest() throws SignatureException, UserNotFoundException, UserRolePersistException {
+        LocalUsersRolesDirectory usroDir = new LocalUsersRolesDirectory(storage);
+
+        User user = new UserImpl("test");
+
+        usroDir.setActiveUser(user);
+        User activeUser = usroDir.activeUser();
+
+        assertEquals(activeUser.guid(), user.guid());
+        assertEquals(activeUser.getName(), user.getName());
+    }
+
+    @Test
+    public void activeRoleTest() throws SignatureException, UserRolePersistException, ProtectionException, RoleNotFoundException {
+        LocalUsersRolesDirectory usroDir = new LocalUsersRolesDirectory(storage);
+
+        User user = new UserImpl("test");
+
+        Role role = new RoleImpl(user, "test_role");
+
+        usroDir.setActiveRole(role);
+        Role activeRole = usroDir.activeRole();
+
+        assertEquals(activeRole.guid(), role.guid());
+        assertEquals(activeRole.getName(), role.getName());
     }
 
 }

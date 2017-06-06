@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
@@ -7,17 +8,21 @@ import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
-import uk.ac.standrews.cs.sos.exceptions.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.UserRolePersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.FileUtils;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
 import java.util.Set;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.ACTIVE_ROLE;
+import static uk.ac.standrews.cs.sos.constants.Internals.ACTIVE_USER;
 
 /**
  *
@@ -62,33 +67,36 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
 
     @Override
     public Role activeRole() throws RoleNotFoundException {
-        return null;
+
+        IGUID guid = getActive(ACTIVE_ROLE);
+        return getRole(guid);
     }
 
     @Override
-    public void setActiveRole(Role role) {
+    public void setActiveRole(Role role) throws UserRolePersistException {
 
-        try {
-            IFile file = makeFile("ACTIVE_ROLE");
-
-            file.setData(new StringData(role.guid().toString()));
-            file.persist();
-
-        } catch (DataStorageException | PersistenceException | DataException e) {
-            e.printStackTrace();
-        }
+        addRole(role);
+        setActive(role, ACTIVE_ROLE);
     }
 
     @Override
     public User activeUser() throws UserNotFoundException {
-        return null;
+
+        IGUID guid = getActive(ACTIVE_USER);
+        return getUser(guid);
     }
 
     @Override
-    public void setActiveUser(User user) {
+    public void setActiveUser(User user) throws UserRolePersistException {
+
+        addUser(user);
+        setActive(user, ACTIVE_USER);
+    }
+
+    private void setActive(User user, String filename) {
 
         try {
-            IFile file = makeFile("ACTIVE_USER");
+            IFile file = makeFile(filename);
 
             file.setData(new StringData(user.guid().toString()));
             file.persist();
@@ -96,6 +104,21 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         } catch (DataStorageException | PersistenceException | DataException e) {
             e.printStackTrace();
         }
+    }
+
+    private IGUID getActive(String filename) {
+
+        try {
+            IFile file = makeFile(filename);
+            String guidString = new String(file.getData().getState());
+
+            return GUIDFactory.recreateGUID(guidString);
+
+        } catch (DataStorageException | GUIDGenerationException | DataException e) {
+            // FIXME - throw exception
+            return null;
+        }
+
     }
 
     private void saveToFile(User user) throws UserRolePersistException {
