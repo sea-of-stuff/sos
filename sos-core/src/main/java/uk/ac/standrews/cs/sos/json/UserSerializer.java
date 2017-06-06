@@ -26,7 +26,7 @@ public class UserSerializer extends JsonSerializer<User> {
         try {
             jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(user.getSignatureCertificate()));
         } catch (CryptoException e) {
-            e.printStackTrace();
+            throw new IOException("Unable to write signature certificate for user");
         }
 
         jsonGenerator.writeEndObject();

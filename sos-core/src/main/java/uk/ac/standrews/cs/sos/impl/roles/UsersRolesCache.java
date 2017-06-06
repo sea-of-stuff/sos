@@ -63,7 +63,9 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
 
     @Override
     public Set<Role> getRoles(IGUID userGUID) {
-        return usersToRoles.get(userGUID).stream()
+
+        return usersToRoles.get(userGUID)
+                .stream()
                 .map(u -> roles.get(u))
                 .collect(Collectors.toSet());
     }
@@ -78,6 +80,8 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
 
     @Override
     public void setActiveRole(Role role) {
+
+        addRole(role);
         this.activeRole = role;
     }
 
@@ -91,6 +95,8 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
 
     @Override
     public void setActiveUser(User user) {
+
+        addUser(user);
         this.activeUser = user;
     }
 

@@ -20,7 +20,7 @@ public interface UsersRolesService {
      * Add a user to the service
      *
      * @param user to be added
-     * @throws UserNotFoundException if the user could not be added
+     * @throws UserRolePersistException if the user could not be added
      */
     void addUser(User user) throws UserRolePersistException;
 
@@ -37,7 +37,7 @@ public interface UsersRolesService {
      * Add the specified role to the directory of roles
      *
      * @param role to be added
-     * @throws UserNotFoundException if the role could not be added
+     * @throws UserRolePersistException if the role could not be added
      */
     void addRole(Role role) throws UserRolePersistException;
 
