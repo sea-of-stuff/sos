@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.utils.Tuple;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.util.Set;
 
@@ -11,6 +11,6 @@ import java.util.Set;
 public interface SecureManifest extends Manifest {
 
     // [encrypted key, role guid]
-    Set<Tuple<String, IGUID>> keysRoles();
+    Set<Pair<String, IGUID>> keysRoles();
 
 }

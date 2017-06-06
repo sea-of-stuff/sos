@@ -26,7 +26,7 @@ import uk.ac.standrews.cs.sos.protocol.Task;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.sos.utils.Tuple;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -118,7 +118,7 @@ public class DataReplication extends Task {
                                                           NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
-        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > tuple;
+        Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>>> tuple;
         try {
             tuple = transferDataRequest(data, node);
         } catch (SOSProtocolException e) {
@@ -132,11 +132,11 @@ public class DataReplication extends Task {
         }
 
         SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
-        for(LocationBundle locationBundle:tuple.y.x) {
-            storage.addLocation(tuple.x, locationBundle);
+        for(LocationBundle locationBundle:tuple.Y().X()) {
+            storage.addLocation(tuple.X(), locationBundle);
         }
 
-        for(Node ddsNode:tuple.y.y) {
+        for(Node ddsNode:tuple.Y().Y()) {
             try {
                 SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
                 nodeDiscoveryService.registerNode(ddsNode, true);
@@ -145,16 +145,16 @@ public class DataReplication extends Task {
             }
         }
 
-        for(Node ddsNode:tuple.y.y) {
-            dataDiscoveryService.addManifestDDSMapping(tuple.x, ddsNode.getNodeGUID());
+        for(Node ddsNode:tuple.Y().Y()) {
+            dataDiscoveryService.addManifestDDSMapping(tuple.X(), ddsNode.getNodeGUID());
         }
 
         return true;
     }
 
-    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
+    private static Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
-        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
+        Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > retval;
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
@@ -170,7 +170,7 @@ public class DataReplication extends Task {
         return retval;
     }
 
-    private static Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > parseResponse(Response response) throws SOSProtocolException {
+    private static Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > parseResponse(Response response) throws SOSProtocolException {
 
         if (response.getCode() != HTTPStatus.CREATED) {
 
@@ -182,17 +182,17 @@ public class DataReplication extends Task {
 
         }
 
-        Tuple<IGUID, Tuple<Set<LocationBundle>, Set<Node>> > retval;
+        Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > retval;
 
         try (InputStream body = response.getBody()) {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
             JsonNode manifestNode = jsonNode.get(SOSConstants.MANIFEST);
             JsonNode ddsInfo = jsonNode.has(SOSConstants.DDD_INFO) ? jsonNode.get(SOSConstants.DDD_INFO) : null;
 
-            Tuple<IGUID, Set<LocationBundle>> manifestNodeInfo = getManifestNode(manifestNode);
+            Pair<IGUID, Set<LocationBundle>> manifestNodeInfo = getManifestNode(manifestNode);
             Set<Node> ddsNodes = getDDSInfoFeedback(ddsInfo);
 
-            retval = new Tuple<>(manifestNodeInfo.x, new Tuple<>(manifestNodeInfo.y, ddsNodes));
+            retval = new Pair<>(manifestNodeInfo.X(), new Pair<>(manifestNodeInfo.Y(), ddsNodes));
         } catch (IOException | GUIDGenerationException e) {
             throw new SOSProtocolException("Unable to parse response from slave replication node", e);
         }
@@ -200,7 +200,7 @@ public class DataReplication extends Task {
         return retval;
     }
 
-    private static Tuple<IGUID, Set<LocationBundle>> getManifestNode(JsonNode manifestNode) throws GUIDGenerationException {
+    private static Pair<IGUID, Set<LocationBundle>> getManifestNode(JsonNode manifestNode) throws GUIDGenerationException {
         String stringGUID = manifestNode.get("ContentGUID").textValue();
 
         IGUID guid = GUIDFactory.recreateGUID(stringGUID);
@@ -214,7 +214,7 @@ public class DataReplication extends Task {
             }
         }
 
-        return new Tuple<>(guid, bundles);
+        return new Pair<>(guid, bundles);
     }
 
     private static Set<Node> getDDSInfoFeedback(JsonNode ddsInfo) throws GUIDGenerationException {

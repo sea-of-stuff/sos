@@ -11,8 +11,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.utils.Tuple;
 import uk.ac.standrews.cs.sos.web.Utils;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,30 +31,30 @@ public class WData {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
         Manifest manifest = sos.getAgent().getManifest(guid);
 
-        Tuple<String, String> data = getData(sos, manifest, DEFAULT_TYPE);
+        Pair<String, String> data = getData(sos, manifest, DEFAULT_TYPE);
 
-        if (data.y.isEmpty()) {
+        if (data.Y().isEmpty()) {
             return " ";
         }
 
-        switch(data.x) {
+        switch(data.X()) {
             case "Raw":
             case "application/octet-stream":
             case "text/plain":
             case "text/plain; charset=ISO-8859-1":
                 return "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">" +
-                        (data.y.length() > 140 ? data.y.substring(0, 140) + ".... OTHER DATA FOLLOWING" : data.y) +
+                        (data.Y().length() > 140 ? data.Y().substring(0, 140) + ".... OTHER DATA FOLLOWING" : data.Y()) +
                         "</pre>";
             case "image/png":
             case "image/jpeg":
             case "image/jpg":
-                return "<img style=\"max-width:500px;\" src=\"data:" + data.x + ";base64," + data.y + "\">";
+                return "<img style=\"max-width:500px;\" src=\"data:" + data.X() + ";base64," + data.Y() + "\">";
         }
 
         return "Unable to render data";
     }
 
-    private static Tuple<String, String> getData(SOSLocalNode sos, Manifest manifest, String type) throws IOException, ManifestNotFoundException, MetadataNotFoundException {
+    private static Pair<String, String> getData(SOSLocalNode sos, Manifest manifest, String type) throws IOException, ManifestNotFoundException, MetadataNotFoundException {
 
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
@@ -74,7 +74,7 @@ public class WData {
             try {
                 atomContent = sos.getAgent().getAtomContent(atom);
             } catch (AtomNotFoundException e) {
-                return new Tuple(type, "ATOM NOT FOUND");
+                return new Pair<>(type, "ATOM NOT FOUND");
             }
 
             String retval;
@@ -90,9 +90,9 @@ public class WData {
                     retval = Utils.InputStreamToString(atomContent);
             }
 
-            return new Tuple(type, retval);
+            return new Pair<>(type, retval);
         }
 
-        return new Tuple(type, "N/A");
+        return new Pair<>(type, "N/A");
     }
 }
