@@ -148,6 +148,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         return makeFile(guid + FileUtils.JSON_EXTENSION);
     }
 
+    // TODO - attempt to get also keys?????
     private User getUserFromGUID(IGUID guid) throws UserNotFoundException {
         try {
             IFile file = makeJSONFile(guid.toString());

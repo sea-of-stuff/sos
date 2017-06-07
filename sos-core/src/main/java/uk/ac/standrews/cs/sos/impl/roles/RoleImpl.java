@@ -48,10 +48,11 @@ public class RoleImpl implements Role {
      *
      * keys are either created and persisted, or loaded
      *
-     * @param guid
-     * @param name
-     * @throws SignatureException
-     * @throws ProtectionException
+     * @param user used to create this role
+     * @param guid for this role
+     * @param name for this role
+     * @throws SignatureException if the signature keys or the signature for this role could not be generated
+     * @throws ProtectionException if the protection keys could not be generated
      */
     public RoleImpl(User user, IGUID guid, String name) throws SignatureException, ProtectionException {
         this.userGUID = user.guid();
@@ -141,14 +142,20 @@ public class RoleImpl implements Role {
     @Override
     public SecretKey decrypt(String encryptedKey) throws ProtectionException {
 
-        return null;
+        PrivateKey privateKey = asymmetricKeys.getPrivate(); // FIXME - this might fail if we do not have the private key
+
+        try {
+            return AsymmetricEncryption.decryptAESKey(privateKey, encryptedKey);
+        } catch (CryptoException e) {
+            throw new ProtectionException(e);
+        }
     }
 
     /**
      * Attempt to load the private key and the certificate for the digital signature.
      * If keys cannot be loaded, then generate them and save to disk
      *
-     * @throws CryptoException if an error occurred while managing the keys
+     * @throws SignatureException if an error occurred while managing the keys
      */
     private void manageSignatureKeys() throws SignatureException {
 

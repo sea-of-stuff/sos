@@ -50,35 +50,6 @@ public class SOSUsersRolesService implements UsersRolesService {
         }
     }
 
-    private void manageDefaultUser() throws SignatureException, UserRolePersistException {
-
-        try {
-            activeUser();
-
-        } catch (UserNotFoundException e) {
-
-            User defaultUser = new UserImpl(DEFAULT_USER_NAME);
-
-            addUser(defaultUser);
-            setActiveUser(defaultUser);
-        }
-    }
-
-    private void manageDefaultRole() throws ProtectionException, SignatureException, UserNotFoundException, UserRolePersistException {
-
-        try {
-            activeRole();
-
-        } catch (RoleNotFoundException e) {
-
-            User defaultUser = activeUser();
-            Role defaultRole = new RoleImpl(defaultUser, DEFAULT_ROLE_NAME);
-
-            addRole(defaultRole);
-            setActiveRole(defaultRole);
-        }
-    }
-
     @Override
     public void addUser(User user) throws UserRolePersistException {
 
@@ -135,5 +106,35 @@ public class SOSUsersRolesService implements UsersRolesService {
         inMemoryCache.setActiveUser(user);
         localDirectory.setActiveUser(user);
     }
+
+    private void manageDefaultUser() throws SignatureException, UserRolePersistException {
+
+        try {
+            activeUser();
+
+        } catch (UserNotFoundException e) {
+
+            User defaultUser = new UserImpl(DEFAULT_USER_NAME);
+
+            addUser(defaultUser);
+            setActiveUser(defaultUser);
+        }
+    }
+
+    private void manageDefaultRole() throws ProtectionException, SignatureException, UserNotFoundException, UserRolePersistException {
+
+        try {
+            activeRole();
+
+        } catch (RoleNotFoundException e) {
+
+            User defaultUser = activeUser();
+            Role defaultRole = new RoleImpl(defaultUser, DEFAULT_ROLE_NAME);
+
+            addRole(defaultRole);
+            setActiveRole(defaultRole);
+        }
+    }
+
 
 }
