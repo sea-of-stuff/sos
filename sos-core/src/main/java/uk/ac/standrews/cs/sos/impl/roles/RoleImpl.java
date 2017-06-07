@@ -37,16 +37,17 @@ public class RoleImpl implements Role {
     private String name;
     private String signature;
 
-    private final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/";
+    private final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/"; // TODO - this info should be in the constants OR in the LocalStorage.java
 
     private PrivateKey signaturePrivateKey;
     private PublicKey signatureCertificate;
 
-    private KeyPair asymmetricKeys;
+    private PrivateKey protectionPrivateKey;
+    private PublicKey protectionPublicKey;
 
     /**
      *
-     * keys are either created and persisted, or loaded
+     * Keys are either created and persisted, or loaded
      *
      * @param user used to create this role
      * @param guid for this role
@@ -59,8 +60,8 @@ public class RoleImpl implements Role {
         this.roleGUID = guid;
         this.name = name;
 
-        manageSignatureKeys();
-        manageProtectionKey();
+        manageSignatureKeys(false);
+        manageProtectionKey(false);
 
         this.signature = user.sign("TODO - this role string representation, which is not the JSON");
     }
@@ -69,13 +70,33 @@ public class RoleImpl implements Role {
         this(user, GUIDFactory.generateRandomGUID(), name);
     }
 
-    // TODO - keys, signatures?
-    public RoleImpl(IGUID userGUID, IGUID guid, String name, String signature) {
+    /**
+     * This constructor is used to create a Role object for an already existing role.
+     * Thus it will try to load the keys from disk. It is okay for the role not to have all the keys.
+     * For example, one might wish to create a role that does not "own".
+     *
+     * @param userGUID
+     * @param guid
+     * @param name
+     * @param signature
+     * @param signatureCertificate
+     * @param protectionPublicKey
+     * @throws ProtectionException
+     * @throws SignatureException
+     */
+    public RoleImpl(IGUID userGUID, IGUID guid, String name, String signature, PublicKey signatureCertificate, PublicKey protectionPublicKey) throws ProtectionException, SignatureException {
         this.userGUID = userGUID;
         this.roleGUID = guid;
         this.name = name;
 
         this.signature = signature;
+
+        this.signatureCertificate = signatureCertificate;
+        this.protectionPublicKey = protectionPublicKey;
+
+        // Meanwhile attempt to load any private keys.
+        manageSignatureKeys(true);
+        manageProtectionKey(true);
     }
 
     @Override
@@ -100,7 +121,7 @@ public class RoleImpl implements Role {
 
     @Override
     public PublicKey getPubKey() {
-        return asymmetricKeys.getPublic();
+        return protectionPublicKey;
     }
 
     @Override
@@ -142,10 +163,10 @@ public class RoleImpl implements Role {
     @Override
     public SecretKey decrypt(String encryptedKey) throws ProtectionException {
 
-        PrivateKey privateKey = asymmetricKeys.getPrivate(); // FIXME - this might fail if we do not have the private key
+        if (protectionPrivateKey == null) throw new ProtectionException("No protection private key");
 
         try {
-            return AsymmetricEncryption.decryptAESKey(privateKey, encryptedKey);
+            return AsymmetricEncryption.decryptAESKey(protectionPrivateKey, encryptedKey);
         } catch (CryptoException e) {
             throw new ProtectionException(e);
         }
@@ -155,26 +176,30 @@ public class RoleImpl implements Role {
      * Attempt to load the private key and the certificate for the digital signature.
      * If keys cannot be loaded, then generate them and save to disk
      *
+     * @param loadOnly if true, it will try to load the keys, but not to generate them
      * @throws SignatureException if an error occurred while managing the keys
      */
-    private void manageSignatureKeys() throws SignatureException {
+    private void manageSignatureKeys(boolean loadOnly) throws SignatureException {
 
         try {
-            File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "_pub.pem");
-            if (publicKeyFile.exists()) {
+            File publicKeyFile = new File(KEYS_FOLDER + roleGUID + DigitalSignature.CERTIFICATE_EXTENSION);
+            if (signatureCertificate == null && publicKeyFile.exists()) {
                 signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
             }
 
-            File privateKeyFile = new File(KEYS_FOLDER + roleGUID + ".pem");
-            if (privateKeyFile.exists()) {
+            File privateKeyFile = new File(KEYS_FOLDER + roleGUID + DigitalSignature.PRIVATE_KEY_EXTENSION);
+            if (signaturePrivateKey == null && privateKeyFile.exists()) {
                 signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
             }
 
 
-            if (signatureCertificate != null && signaturePrivateKey != null) {
+            if (!loadOnly && signatureCertificate != null && signaturePrivateKey != null) {
 
                 KeyPair keys = DigitalSignature.generateKeys();
-                DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + roleGUID), Paths.get(KEYS_FOLDER + roleGUID + "_pub"));
+                signatureCertificate = keys.getPublic();
+                signaturePrivateKey = keys.getPrivate();
+
+                DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + roleGUID), Paths.get(KEYS_FOLDER + roleGUID));
             }
 
         } catch (CryptoException e) {
@@ -182,12 +207,34 @@ public class RoleImpl implements Role {
         }
     }
 
-    private void manageProtectionKey() throws ProtectionException {
+    /**
+     * Attempt to load the private and public keys for the asymmetric protection key.
+     * If keys cannot be loaded, then generate them and save to disk
+     *
+     * @param loadOnly if true, it will try to load the keys, but not to generate them
+     * @throws ProtectionException if an error occurred while managing the keys
+     */
+    private void manageProtectionKey(boolean loadOnly) throws ProtectionException {
 
         try {
-            // Keys to encrypt AES keys
-            asymmetricKeys = AsymmetricEncryption.generateKeys();
-            // TODO - load/save keys
+            File publicKeyFile = new File(KEYS_FOLDER + roleGUID + "_pub" + AsymmetricEncryption.KEY_EXTENSION);
+            if (protectionPublicKey == null && publicKeyFile.exists()) {
+                protectionPublicKey = AsymmetricEncryption.getPublicKey(publicKeyFile.toPath());
+            }
+
+            File privateKeyFile = new File(KEYS_FOLDER + roleGUID + AsymmetricEncryption.KEY_EXTENSION);
+            if (protectionPrivateKey == null && privateKeyFile.exists()) {
+                protectionPrivateKey = AsymmetricEncryption.getPrivateKey(privateKeyFile.toPath());
+            }
+
+            if (!loadOnly && protectionPublicKey != null && protectionPrivateKey != null) {
+
+                KeyPair asymmetricKeys = AsymmetricEncryption.generateKeys();
+                protectionPublicKey = asymmetricKeys.getPublic();
+                protectionPrivateKey = asymmetricKeys.getPrivate();
+
+                AsymmetricEncryption.persist(asymmetricKeys, Paths.get(KEYS_FOLDER + roleGUID), Paths.get(KEYS_FOLDER + roleGUID + "_pub"));
+            }
 
         } catch (CryptoException e) {
             throw new ProtectionException(e);

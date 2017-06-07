@@ -44,4 +44,5 @@ public class JSONConstants {
     public static final String KEY_USER = "User";
     public static final String KEY_NAME = "Name";
     public static final String KEY_SIGNATURE_CERTIFICATE = "Certificate";
+    public static final String KEY_PUBLIC_KEY = "PublicKey";
 }
