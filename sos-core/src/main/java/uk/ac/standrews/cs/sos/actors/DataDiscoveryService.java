@@ -66,10 +66,8 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * Get all known versions to this DDS node
      *
      * @return list of DDS versions
-     *
-     * TODO - remove this method
      */
-    Set<Version> getAllVersions();
+    Set<IGUID> getAllAssets();
 
     /**
      * Get all the HEADS for the given invariant

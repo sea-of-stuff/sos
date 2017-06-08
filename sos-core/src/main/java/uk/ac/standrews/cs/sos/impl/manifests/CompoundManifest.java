@@ -10,7 +10,11 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.utils.IO;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /**
@@ -62,7 +66,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
         this.type = type;
         this.contents = contents;
-        this.contentGUID = makeContentGUID();
+        this.guid = makeContentGUID();
 
         if (signer != null) {
             this.signature = makeSignature();
@@ -76,7 +80,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
         assert(type != null);
 
         this.type = type;
-        this.contentGUID = contentGUID;
+        this.guid = contentGUID;
         this.contents = contents;
         this.signature = signature;
     }
@@ -101,12 +105,23 @@ public class CompoundManifest extends SignedManifest implements Compound {
         return super.isValid() &&
                 type != null &&
                 contents != null &&
-                isGUIDValid(contentGUID);
+                isGUIDValid(guid);
     }
 
     @Override
     public IGUID guid() {
-        return contentGUID;
+        return guid;
+    }
+
+    @Override
+    public InputStream contentToHash() throws UnsupportedEncodingException {
+
+        StringBuilder toHash = new StringBuilder("C");
+        for(Content content:contents) {
+            toHash.append(content.toString());
+        }
+
+        return IO.StringToInputStream(toHash.toString());
     }
 
     @Override
@@ -131,20 +146,21 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
     @Override
     protected String getManifestToSign() {
-        String toSign = getType() +
+
+        return getType() +
                 "T" + getCompoundType() +
                 "C" + guid();
-
-        return toSign;
     }
 
     private IGUID generateContentGUID() throws GUIDGenerationException {
-        StringBuilder toHash = new StringBuilder("C");
-        for(Content content:contents) {
-            toHash.append(content.toString());
-        }
 
-        return GUIDFactory.generateGUID(toHash.toString());
+        try (InputStream inputStream = contentToHash()) {
+
+            return GUIDFactory.generateGUID(inputStream);
+
+        } catch (IOException e) {
+            throw new GUIDGenerationException();
+        }
     }
 
 }

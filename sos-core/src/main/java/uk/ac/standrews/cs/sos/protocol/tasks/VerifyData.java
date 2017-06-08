@@ -59,6 +59,7 @@ public class VerifyData extends Task {
         } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -81,6 +82,7 @@ public class VerifyData extends Task {
         }
     }
 
+    // TODO - we do not have this REST end-point yet
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
         URL url = SOSURL.CHALLENGE(node, entity, challenge);

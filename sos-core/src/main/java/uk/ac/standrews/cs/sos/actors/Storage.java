@@ -59,6 +59,23 @@ public interface Storage extends SeaOfStuff {
     Iterator<LocationBundle> findLocations(IGUID guid);
 
 
+    // FIXME - challenge()
+    /**
+     * Challenge this node the integrity of the entity matching the given GUID
+     *
+     * Hash-based verification ensures that a file has not been corrupted by
+     * comparing the data's hash value to a previously calculated value.
+     * If these values match, the data is presumed to be unmodified.
+     * Due to the nature of hash functions, hash collisions may result
+     * in false positives, but the likelihood of collisions is
+     * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
+     *
+     * @param manifest                      to be verified
+     * @return <code>true</code>            if the GUID of the manifest matches
+     *                                      the content referred by the manifest.
+     */
+    boolean verifyIntegrity(IGUID guid, String challenge);
+
     /**
      * Flush all indexes and caches managed by the storage actor
      */

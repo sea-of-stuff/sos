@@ -102,7 +102,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public Set<Version> getAllVersions() {
+    public Set<IGUID> getAllAssets() {
 
         // TODO - returning only the ones from the inMemoryCache for the moment
         return new HashSet<>(inMemoryCache.getAllAssets());

@@ -3,6 +3,9 @@ package uk.ac.standrews.cs.sos.model;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
  * recording metadata about them.
@@ -48,5 +51,11 @@ public interface Manifest {
      * @return
      */
     IGUID guid();
+
+    /**
+     *
+     * @return the content used to generate the GUID for this manifest
+     */
+    InputStream contentToHash() throws UnsupportedEncodingException;
 
 }

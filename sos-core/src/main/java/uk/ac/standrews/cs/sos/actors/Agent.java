@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
@@ -110,10 +111,19 @@ public interface Agent {
     Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
 
     /**
+     * Verify the manifest signature against the given role.
+     *
+     * @param role                          used to verify the manifest
+     * @param manifest                      to be verified
+     * @return <code>true</code>            if the GUID of the manifest matches
+     *                                      the content referred by the manifest.
+     * @throws SignatureException if the manifest could not be verified
+     */
+    boolean verifyManifestSignature(Role role, Manifest manifest) throws SignatureException;
+
+    /**
      * Verify the integrity of the manifest's GUID against the
      * content of the manifest.
-     *
-     * FIXME - verify the signature vs verify the integrity
      *
      * Hash-based verification ensures that a file has not been corrupted by
      * comparing the data's hash value to a previously calculated value.
@@ -122,13 +132,11 @@ public interface Agent {
      * in false positives, but the likelihood of collisions is
      * often negligible with random corruption. (https://en.wikipedia.org/wiki/File_verification)
      *
-     * @param role                          used to verify the manifest
      * @param manifest                      to be verified
      * @return <code>true</code>            if the GUID of the manifest matches
      *                                      the content referred by the manifest.
-     * @throws SignatureException if the manifest could not be verified
      */
-    boolean verifyManifest(Role role, Manifest manifest) throws SignatureException;
+    boolean verifyManifestIntegrity(Manifest manifest) throws ManifestVerificationException;
 
     /**
      * Get the propery value for the given manifest matching GUID

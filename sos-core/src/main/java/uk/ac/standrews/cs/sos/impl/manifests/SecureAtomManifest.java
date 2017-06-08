@@ -58,7 +58,7 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
             String encryptedData = SymmetricEncryption.encrypt(key, data);
             String encryptedKey = AsymmetricEncryption.encryptAESKey(role.getPubKey(), key);
 
-            this.contentGUID = GUIDFactory.generateGUID(encryptedData); // 4
+            this.guid = GUIDFactory.generateGUID(encryptedData); // 4
         } catch (CryptoException | GUIDGenerationException e) {
             e.printStackTrace();
         }

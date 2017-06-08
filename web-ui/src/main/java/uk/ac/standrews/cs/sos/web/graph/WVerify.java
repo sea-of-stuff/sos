@@ -23,7 +23,7 @@ public class WVerify {
         Manifest manifest = agent.getManifest(guid);
 
         try {
-            if (agent.verifyManifest(null, manifest)) {
+            if (agent.verifyManifestSignature(null, manifest)) {
                 return "verified";
             } else {
                 return "not verified";

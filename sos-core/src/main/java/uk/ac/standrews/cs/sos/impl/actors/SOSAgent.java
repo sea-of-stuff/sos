@@ -1,13 +1,16 @@
 package uk.ac.standrews.cs.sos.impl.actors;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
@@ -20,6 +23,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -164,9 +168,24 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public boolean verifyManifest(Role role, Manifest manifest) throws SignatureException {
+    public boolean verifyManifestSignature(Role role, Manifest manifest) throws SignatureException {
 
         return manifest.verifySignature(role);
+    }
+
+    @Override
+    public boolean verifyManifestIntegrity(Manifest manifest) throws ManifestVerificationException {
+
+        IGUID guidToCheck = manifest.guid();
+        try(InputStream inputStream = manifest.contentToHash()) {
+
+            IGUID guidGenerated = GUIDFactory.generateGUID(inputStream);
+
+            return guidGenerated.equals(guidToCheck);
+
+        } catch (IOException | GUIDGenerationException e) {
+            throw new ManifestVerificationException();
+        }
     }
 
     @Override

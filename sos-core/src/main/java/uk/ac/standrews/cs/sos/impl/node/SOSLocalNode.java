@@ -6,24 +6,17 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.impl.actors.*;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
-import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
-import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
@@ -217,25 +210,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), dataDiscoveryService);
         contextService = new SOSContextService(localStorage, dataDiscoveryService, nodeDiscoveryService, usersRolesService, storage);
 
-        createDummyUserRole();
-
         agent = SOSAgent.instance(storage, dataDiscoveryService, metadataService, usersRolesService);
-    }
-
-    // FIXME - have better way to handle the default user and role
-    private void createDummyUserRole() {
-
-        try {
-            User user = new UserImpl("simone");
-            Role role = new RoleImpl(user, "student");
-
-            usersRolesService.addUser(user);
-            usersRolesService.addRole(role);
-            usersRolesService.setActiveRole(role);
-
-        } catch (SignatureException | ProtectionException | UserRolePersistException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

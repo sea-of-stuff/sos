@@ -149,7 +149,7 @@ public class SOSContextService implements ContextService {
 
                 try {
                     Context context = getContext(it.next());
-                    for(Version version : dataDiscoveryService.getAllVersions()) { // FIXME - get only heads?
+                    for(Version version : dataDiscoveryService.getAllAssets()) { // FIXME - get only heads?
                         runPredicate(context, version.guid());
                     }
 

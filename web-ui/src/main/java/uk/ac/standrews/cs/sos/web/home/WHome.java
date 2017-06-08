@@ -15,7 +15,7 @@ public class WHome {
         // TODO - show node configuration and stats?
 
         Map<String, Object> model = new HashMap<>();
-        model.put("assets",sos.getDDS().getAllVersions());
+        model.put("assets",sos.getDDS().getAllAssets());
 
         return VelocityUtils.RenderTemplate("velocity/index.vm", model);
     }

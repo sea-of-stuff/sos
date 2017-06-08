@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class AtomManifest extends BasicManifest implements Atom {
      */
     public AtomManifest(IGUID guid, Set<LocationBundle> locations) {
         super(ManifestType.ATOM);
-        this.contentGUID = guid;
+        this.guid = guid;
         this.locations = locations;
     }
 
@@ -83,17 +84,22 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && !locations.isEmpty() && isGUIDValid(contentGUID);
+        return super.isValid() && !locations.isEmpty() && isGUIDValid(guid);
     }
 
     @Override
     public IGUID guid() {
-        return contentGUID;
+        return guid;
+    }
+
+    @Override
+    public InputStream contentToHash() throws UnsupportedEncodingException {
+        return getData();
     }
 
     @Override
     public boolean verifySignature(Role role) throws SignatureException {
-        if (contentGUID == null || contentGUID.isInvalid())
+        if (guid == null || guid.isInvalid())
             return false;
 
         for(LocationBundle location:locations) {
@@ -112,7 +118,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     private boolean verifyStream(InputStream inputStream) throws GUIDGenerationException {
-        return inputStream != null && contentGUID.equals(GUIDFactory.generateGUID(inputStream));
+        return inputStream != null && guid.equals(GUIDFactory.generateGUID(inputStream));
     }
 
     @Override

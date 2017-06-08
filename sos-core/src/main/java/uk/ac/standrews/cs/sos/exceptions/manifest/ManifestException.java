@@ -7,6 +7,10 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
  */
 public class ManifestException extends SOSException {
 
+    public ManifestException() {
+        super();
+    }
+
     public ManifestException(Throwable throwable) {
         super(throwable);
     }

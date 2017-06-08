@@ -12,7 +12,11 @@ import uk.ac.standrews.cs.sos.json.VersionManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.utils.IO;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /**
@@ -72,7 +76,7 @@ public class VersionManifest extends SignedManifest implements Version {
             this.invariant = makeInvariant();
         }
 
-        this.contentGUID = content;
+        this.guid = content;
         this.prevs = prevs;
         this.metadata = metadata;
         try {
@@ -103,7 +107,7 @@ public class VersionManifest extends SignedManifest implements Version {
         super(signer, ManifestType.VERSION);
         this.invariant = invariant;
         this.version = version;
-        this.contentGUID = content;
+        this.guid = content;
         this.prevs = prevs;
         this.metadata = metadata;
         this.signature = signature;
@@ -142,7 +146,7 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     public IGUID getContentGUID() {
-        return contentGUID;
+        return guid;
     }
 
     /**
@@ -160,12 +164,25 @@ public class VersionManifest extends SignedManifest implements Version {
     @Override
     public boolean isValid() {
         return super.isValid() &&
-                isGUIDValid(contentGUID);
+                isGUIDValid(guid);
     }
 
     @Override
     public IGUID guid() {
         return getVersionGUID();
+    }
+
+    @Override
+    public InputStream contentToHash() throws UnsupportedEncodingException {
+
+        String toHash = getType() +
+                "I" + getInvariantGUID() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
+                "C" + getContentGUID();
+
+        toHash += getPreviousToHashOrSign();
+        toHash += getMetadataToHashOrSign();
+
+        return IO.StringToInputStream(toHash);
     }
 
     @Override
@@ -176,17 +193,6 @@ public class VersionManifest extends SignedManifest implements Version {
         } else {
             return signer.sign(toSign);
         }
-    }
-
-    private String manifestToHash() {
-        String toHash = getType() +
-                "I" + getInvariantGUID() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
-                "C" + getContentGUID();
-
-        toHash += getPreviousToHashOrSign();
-        toHash += getMetadataToHashOrSign();
-
-        return toHash;
     }
 
     @Override
@@ -205,7 +211,14 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     private IGUID makeVersionGUID() throws GUIDGenerationException {
-        return GUIDFactory.generateGUID(manifestToHash());
+
+        try (InputStream inputStream = contentToHash()) {
+
+            return GUIDFactory.generateGUID(inputStream);
+
+        } catch (IOException e) {
+            throw new GUIDGenerationException();
+        }
     }
 
     private String getPreviousToHashOrSign() {
