@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -18,9 +20,9 @@ public interface ManifestsDirectory {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
-    Set<IGUID> getHeads(IGUID invariant);
+    Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException;
 
-    IGUID getCurrent(Role role, IGUID invariant);
+    IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException;
 
     void setCurrent(Role role, Version version);
 

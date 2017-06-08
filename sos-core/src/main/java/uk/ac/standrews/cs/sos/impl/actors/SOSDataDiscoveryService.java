@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -108,19 +110,38 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) {
-        return inMemoryCache.getHeads(invariant);
+    public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
+
+        try {
+
+            return inMemoryCache.getHeads(invariant);
+
+        } catch (HEADNotFoundException e) {
+
+            return local.getHeads(invariant);
+        }
+
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) {
-        return getCurrent(role, invariant);
+    public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
+
+        try {
+
+            return inMemoryCache.getCurrent(role, invariant);
+
+        } catch (CURRENTNotFoundException e) {
+
+            return local.getCurrent(role, invariant);
+        }
+
     }
 
     @Override
     public void setCurrent(Role role, Version version) {
 
         inMemoryCache.setCurrent(role, version);
+        local.setCurrent(role, version);
     }
 
     @Override

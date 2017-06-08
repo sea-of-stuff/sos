@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -65,7 +67,7 @@ public interface DataDiscoveryService extends SeaOfStuff {
     /**
      * Get all known versions to this DDS node
      *
-     * @return list of DDS versions
+     * @return list of DDS versions's invariants
      */
     Set<IGUID> getAllAssets();
 
@@ -75,7 +77,7 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @param invariant
      * @return
      */
-    Set<IGUID> getHeads(IGUID invariant);
+    Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException;
 
     /**
      * Get the CURRENT version for the role.
@@ -88,7 +90,7 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @return
      */
     // TODO - what if multiple currents at different nodes?
-    IGUID getCurrent(Role role, IGUID invariant);
+    IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException;
 
     /**
      * Set the specified version as the CURRENT for its asset and for the given role

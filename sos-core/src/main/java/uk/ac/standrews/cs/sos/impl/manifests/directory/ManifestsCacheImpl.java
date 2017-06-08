@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -84,19 +86,23 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) {
+    public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
 
-        return heads.get(invariant);
+        if (heads.containsKey(invariant)) {
+            return heads.get(invariant);
+        }
+
+        throw new HEADNotFoundException();
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) {
+    public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
 
         if (currents.containsKey(invariant)) {
             return currents.get(invariant).get(role.guid());
         }
 
-        return null; // TODO - throw exception
+        throw new CURRENTNotFoundException();
     }
 
     @Override

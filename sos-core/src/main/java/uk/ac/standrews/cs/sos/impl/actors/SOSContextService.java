@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
@@ -162,6 +163,8 @@ public class SOSContextService implements ContextService {
 
                 } catch (ContextNotFoundException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to find context");
+                } catch (HEADNotFoundException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
                 }
 
             }

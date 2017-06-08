@@ -7,9 +7,7 @@ import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
@@ -79,12 +77,12 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) {
+    public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
         return null;
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) {
+    public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
         return null;
     }
 
