@@ -17,7 +17,10 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -149,8 +152,12 @@ public class SOSContextService implements ContextService {
 
                 try {
                     Context context = getContext(it.next());
-                    for(Version version : dataDiscoveryService.getAllAssets()) { // FIXME - get only heads?
-                        runPredicate(context, version.guid());
+                    for(IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
+
+                        for(IGUID head : dataDiscoveryService.getHeads(assetInvariant)) {
+
+                            runPredicate(context, head);
+                        }
                     }
 
                 } catch (ContextNotFoundException e) {

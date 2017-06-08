@@ -24,7 +24,6 @@ import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
@@ -105,7 +104,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public Set<IGUID> getAllAssets() {
 
         // TODO - returning only the ones from the inMemoryCache for the moment
-        return new HashSet<>(inMemoryCache.getAllAssets());
+        return inMemoryCache.getAllAssets();
     }
 
     @Override

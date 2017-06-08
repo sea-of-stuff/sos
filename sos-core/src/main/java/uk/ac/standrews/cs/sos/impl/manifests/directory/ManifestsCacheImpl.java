@@ -23,7 +23,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
@@ -125,12 +124,13 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public List<Version> getAllAssets() {
+    public Set<IGUID> getAllAssets() {
         return cache.values()
                 .stream()
                 .filter(m -> m.getType() == ManifestType.VERSION)
-                .map(m -> (Version) m)
-                .collect(Collectors.toList());
+                .map(m -> ((Version) m).getInvariantGUID())
+                .distinct()
+                .collect(Collectors.toSet());
     }
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {

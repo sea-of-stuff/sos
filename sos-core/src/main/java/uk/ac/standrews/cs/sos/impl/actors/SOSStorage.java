@@ -118,6 +118,11 @@ public class SOSStorage implements Storage {
     }
 
     @Override
+    public boolean challenge(IGUID guid, String challenge) {
+        return false;
+    }
+
+    @Override
     public void flush() {
 
         try {

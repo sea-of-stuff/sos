@@ -8,8 +8,11 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,6 +61,11 @@ public abstract class AbstractMetadata implements Metadata {
     public IGUID generateGUID() throws GUIDGenerationException {
         String metadata = metadata();
         return GUIDFactory.generateGUID(metadata);
+    }
+
+    @Override
+    public InputStream contentToHash() throws UnsupportedEncodingException {
+        return IO.StringToInputStream(metadata());
     }
 
     @Override
