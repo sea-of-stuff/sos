@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
 import javax.crypto.SecretKey;
 import java.security.PublicKey;
@@ -69,25 +68,6 @@ public interface Role extends User {
      * @return signfature for this role
      */
     String getSignature();
-
-    /**
-     * Sign the given text and return a byte array representing the signature
-     *
-     * @param text
-     * @return
-     * @throws SignatureException
-     */
-    String sign(String text) throws SignatureException;
-
-    /**
-     * Verify that the given text and signature match
-     *
-     * @param text
-     * @param signatureToVerify
-     * @return
-     * @throws SignatureException
-     */
-    boolean verify(String text, String signatureToVerify) throws SignatureException;
 
     /**
      * Encrypt a symmetric key using an asymmetric key

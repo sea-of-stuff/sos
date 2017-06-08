@@ -228,6 +228,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         try {
             User user = new UserImpl("simone");
             Role role = new RoleImpl(user, "student");
+
             usersRolesService.addUser(user);
             usersRolesService.addRole(role);
             usersRolesService.setActiveRole(role);

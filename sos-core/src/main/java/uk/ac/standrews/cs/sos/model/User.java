@@ -44,4 +44,14 @@ public interface User {
      */
     String sign(String text) throws SignatureException;
 
+    /**
+     * Verify that the given text and signature match
+     *
+     * @param text
+     * @param signatureToVerify
+     * @return
+     * @throws SignatureException
+     */
+    boolean verify(String text, String signatureToVerify) throws SignatureException;
+
 }
