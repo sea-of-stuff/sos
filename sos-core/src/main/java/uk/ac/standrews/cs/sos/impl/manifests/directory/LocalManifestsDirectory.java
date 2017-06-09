@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
@@ -7,6 +8,7 @@ import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -14,10 +16,13 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.sos.utils.FileUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * IDirectory for the manifests stored locally to this node
@@ -27,6 +32,8 @@ import java.util.Set;
 public class LocalManifestsDirectory implements ManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
+    private final static String HEAD_TAG = "HEAD-";
+    private final static String CURRENT_TAG = "CURRENT-";
 
     final private LocalStorage localStorage;
 
@@ -77,17 +84,69 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
+    public void setHead(IGUID invariant, IGUID version) {
+
+        appendHead(invariant, version);
+    }
+
+    @Override
+    public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {
+
+        try {
+
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = HEAD_TAG + invariant.toString();
+
+            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
+            List<String> versions = Arrays.asList(content.split("\n"));
+            if (versions.contains(previousVersion.toString())) {
+
+                setHead(invariant, newVersion);
+                removeHead(invariant, previousVersion);
+            }
+
+
+        } catch (DataStorageException | DataException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
-        return null;
+
+        throw new HEADNotFoundException();
     }
 
     @Override
     public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
-        return null;
+
+        try {
+
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = CURRENT_TAG + invariant.toString() + "-ROLE-" + role.guid();
+
+            String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
+            return GUIDFactory.recreateGUID(guid);
+
+        } catch (DataStorageException | DataException | GUIDGenerationException e) {
+            throw new CURRENTNotFoundException();
+        }
+
     }
 
     @Override
     public void setCurrent(Role role, Version version) {
+
+        try {
+
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = CURRENT_TAG + version.getInvariantGUID().toString() + "-ROLE-" + role.guid();
+            FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toString());
+
+        } catch (DataStorageException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -131,11 +190,11 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private void saveExistingManifest(IGUID manifestFileGUID, Manifest manifest) throws ManifestsDirectoryException, ManifestNotFoundException {
         IFile manifestFile = getManifestFile(manifestFileGUID);
         IFile backupFile = backupManifest(manifest);
-        FileHelper.DeleteFile(manifestFile);
+        FileUtils.DeleteFile(manifestFile);
 
         saveToFile(manifest);
 
-        FileHelper.DeleteFile(backupFile);
+        FileUtils.DeleteFile(backupFile);
     }
 
     private void mergeAtomManifestAndSave(Manifest existingManifest, Manifest manifest) throws ManifestsDirectoryException {
@@ -148,14 +207,13 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             if (!existingManifest.equals(manifest)) {
                 manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
-                FileHelper.DeleteFile(manifestFile);
+                FileUtils.DeleteFile(manifestFile);
                 saveToFile(manifest);
             }
 
-            FileHelper.DeleteFile(backupFile);
+            FileUtils.DeleteFile(backupFile);
         } catch (ManifestNotFoundException e) {
-            throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toString()
-                    + " and " + manifest.guid().toString() + "could not be merged", e);
+            throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toString() + " and " + manifest.guid().toString() + "could not be merged", e);
         }
 
     }
@@ -168,8 +226,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             IDirectory manifestsDirectory = localStorage.getManifestsDirectory();
             IFile backupManifest = localStorage.createFile(manifestsDirectory,
-                    manifestFileToBackup.getName() + BACKUP_EXTENSION,
-                    manifestFileToBackup.getData());
+                    manifestFileToBackup.getName() + BACKUP_EXTENSION, manifestFileToBackup.getData());
             backupManifest.persist();
 
             return backupManifest;
@@ -190,7 +247,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             manifestTempFile.persist();
 
             IFile manifestFile = getManifestFile(manifestGUID);
-            FileHelper.RenameFile(manifestTempFile, manifestFile);
+            FileUtils.RenameFile(manifestTempFile, manifestFile);
         } catch (PersistenceException | DataException | DataStorageException e) {
             throw new ManifestsDirectoryException(e);
         }
@@ -207,13 +264,13 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private IFile getManifestFile(String guid) throws DataStorageException {
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        return FileUtils.File(localStorage, manifestsDir, guid, FileUtils.JSON_EXTENSION);
+        return FileUtils.CreateFile(localStorage, manifestsDir, guid, FileUtils.JSON_EXTENSION);
     }
 
     private IFile getManifestTempFile(String guid) throws DataStorageException {
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        return FileUtils.TempFile(localStorage, manifestsDir, guid);
+        return FileUtils.CreateTempFile(localStorage, manifestsDir, guid);
     }
 
 
@@ -229,4 +286,50 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         IFile manifest = getManifestFile(guid);
         return manifest.exists();
     }
+
+    private void appendHead(IGUID invariant, IGUID version) {
+
+        try {
+
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = HEAD_TAG + invariant.toString();
+
+            String newContent;
+            try {
+                String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
+                List<String> versions = Arrays.asList(content.split("\n"));
+                versions.add(version.toString());
+
+                newContent = versions.stream().collect(Collectors.joining( "\n" ));
+
+            } catch (DataStorageException | DataException e) {
+                newContent = version.toString();
+            }
+
+            FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
+
+        } catch (DataStorageException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeHead(IGUID invariant, IGUID version) {
+
+        try {
+
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = HEAD_TAG + invariant.toString();
+
+            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
+            List<String> versions = Arrays.asList(content.split("\n"));
+            versions.remove(version.toString());
+
+            String newContent = versions.stream().collect(Collectors.joining( "\n" ));
+            FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
+
+        } catch (DataException | DataStorageException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

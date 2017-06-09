@@ -99,6 +99,12 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
+    public void setHead(IGUID invariant, IGUID version) {}
+
+    @Override
+    public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {}
+
+    @Override
     public Set<IGUID> getHeads(IGUID invariant) {
         return null;
     }
@@ -109,9 +115,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public void setCurrent(Role role, Version version) {
-
-    }
+    public void setCurrent(Role role, Version version) {}
 
     @Override
     public void flush() {}

@@ -14,10 +14,10 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
-import uk.ac.standrews.cs.sos.impl.manifests.directory.FileUtils;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 import java.util.Set;
 
@@ -140,7 +140,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     private IFile makeFile(String filename) throws DataStorageException {
         IDirectory usroDir = localStorage.getUsersRolesDirectory();
 
-        return FileUtils.File(localStorage, usroDir, filename);
+        return FileUtils.CreateFile(localStorage, usroDir, filename);
     }
 
     private IFile makeJSONFile(String guid) throws DataStorageException {

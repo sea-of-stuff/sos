@@ -106,14 +106,14 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     public SOSFile(Agent sos)  {
         super(sos);
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating SOS File - Compound Data: true");
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Creating SOS CreateFile - Compound Data: true");
 
         this.isCompoundData = true;
         this.atoms = new LinkedHashSet<>();
     }
 
     /**
-     * Use this constructor to make a File reference.
+     * Use this constructor to make a CreateFile reference.
      * That is, the file and the data are already in the SOS, but we need to get a handle for it.
      *
      * @param sos
@@ -129,7 +129,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         try {
             this.atom = (Atom) sos.getManifest(contentGUID);
         } catch (ManifestNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get atom content for GUID " + contentGUID);
+            SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get atom content for GUID " + contentGUID);
         }
 
         IGUID meta = version.getMetadata();
@@ -137,7 +137,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             try {
                 this.metadata = sos.getMetadata(meta);
             } catch (MetadataNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS File - Unable to get metadata for GUID " + meta);
+                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get metadata for GUID " + meta);
             }
         }
 

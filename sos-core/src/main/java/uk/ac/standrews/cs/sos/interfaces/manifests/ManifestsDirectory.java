@@ -20,6 +20,10 @@ public interface ManifestsDirectory {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
+    void setHead(IGUID invariant, IGUID version);
+
+    void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion);
+
     Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException;
 
     IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException;

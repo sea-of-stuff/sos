@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -25,6 +26,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
@@ -83,6 +85,26 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         applyReadLRU(guid);
 
         return cache.get(guid);
+    }
+
+    @Override
+    public void setHead(IGUID invariant, IGUID version) {
+
+        if (!heads.containsKey(invariant)) {
+            heads.put(invariant, new LinkedHashSet<>());
+        }
+
+        heads.get(invariant).add(version);
+    }
+
+    @Override
+    public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {
+
+        if (heads.containsKey(invariant) && heads.get(invariant).contains(previousVersion)) {
+
+            setHead(invariant, newVersion);
+            heads.get(invariant).remove(previousVersion);
+        }
     }
 
     @Override
@@ -181,7 +203,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
     private static Manifest loadManifest(LocalStorage storage, IDirectory manifestsDir, IGUID guid) {
         try {
-            IFile file = FileUtils.File(storage, manifestsDir, guid.toString(), FileUtils.JSON_EXTENSION);
+            IFile file = FileUtils.CreateFile(storage, manifestsDir, guid.toString(), FileUtils.JSON_EXTENSION);
             return FileUtils.ManifestFromFile(file);
         } catch (DataStorageException | ManifestNotFoundException e) {
             return null;

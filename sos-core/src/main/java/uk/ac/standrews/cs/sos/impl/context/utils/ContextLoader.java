@@ -141,11 +141,11 @@ public class ContextLoader {
     private static void Load(File dir, String className) throws ContextLoaderException {
 
         if (!dir.exists()) {
-            throw new ContextLoaderException("File for class " + className + " was not found");
+            throw new ContextLoaderException("CreateFile for class " + className + " was not found");
         }
 
         try {
-            // Convert File to a URL
+            // Convert CreateFile to a URL
             URL url = dir.toURL();
             URL[] urls = new URL[]{url};
 

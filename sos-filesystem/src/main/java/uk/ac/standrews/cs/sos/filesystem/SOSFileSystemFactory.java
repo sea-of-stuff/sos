@@ -57,7 +57,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     public IFileSystem makeFileSystem(Agent agent) throws FileSystemCreationException {
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the CreateFile System");
 
         // Create directories for Webdav info
         File dir = new File(WEBDAV_CURRENT_PATH);

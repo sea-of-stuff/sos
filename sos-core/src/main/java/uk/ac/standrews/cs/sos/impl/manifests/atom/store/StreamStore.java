@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -48,7 +48,7 @@ public abstract class StreamStore extends CommonLocalStore {
                 IFile cachedLocation = getAtomLocation(guid);
 
                 // FIXME - use internal storage api !!!!!
-                FileHelper.RenameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
+                FileUtils.RenameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
 
                 Location location = getLocation(guid);
                 locationBundle = getBundle(location);

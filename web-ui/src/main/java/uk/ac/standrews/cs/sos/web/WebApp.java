@@ -76,7 +76,7 @@ public class WebApp {
             AtomBuilder builder = new AtomBuilder().setInputStream(is);
             Atom atom = sos.getAgent().addAtom(builder);
         }
-        return "File uploaded";
+        return "CreateFile uploaded";
     }
 
 }

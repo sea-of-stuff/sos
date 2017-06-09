@@ -1,11 +1,15 @@
-package uk.ac.standrews.cs.sos.impl.manifests.directory;
+package uk.ac.standrews.cs.sos.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
@@ -21,7 +25,6 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 
@@ -128,16 +131,94 @@ public class FileUtils {
         }
     }
 
-    public static IFile File(LocalStorage storage, IDirectory directory, String filename) throws DataStorageException {
+    /**
+     * Create a file object.
+     * The file object must be persisted by the caller.
+     *
+     * @param storage
+     * @param directory
+     * @param filename
+     * @return
+     * @throws DataStorageException
+     */
+    public static IFile CreateFile(LocalStorage storage, IDirectory directory, String filename) throws DataStorageException {
         return storage.createFile(directory, filename);
     }
 
-    public static IFile File(LocalStorage storage, IDirectory directory, String filename, String extension) throws DataStorageException {
-        return File(storage, directory, filename + extension);
+    /**
+     * Create a file object.
+     * The file object must be persisted by the caller.
+     *
+     * @param storage
+     * @param directory
+     * @param filename
+     * @return
+     * @throws DataStorageException
+     */
+    public static IFile CreateFile(LocalStorage storage, IDirectory directory, String filename, String extension) throws DataStorageException {
+        return CreateFile(storage, directory, filename + extension);
     }
 
-    public static IFile TempFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
+    /**
+     * Create a file object with some given string content.
+     * The file object must be persisted by the caller.
+     *
+     * @param storage
+     * @param directory
+     * @param filename
+     * @return
+     * @throws DataStorageException
+     */
+    public static IFile CreateFileWithContent(LocalStorage storage, IDirectory directory, String filename, String content) throws DataStorageException {
+        return storage.createFile(directory, filename, new StringData(content));
+    }
+
+    public static IFile CreateTempFile(LocalStorage storage, IDirectory directory, String guid) throws DataStorageException {
         return storage.createFile(directory, guid + "-TEMP");
+    }
+
+    public static String FileContent(LocalStorage storage, IDirectory directory, String filename) throws DataStorageException, DataException {
+        return new String(CreateFile(storage, directory, filename).getData().getState());
+    }
+
+    public static java.io.File CreateIOFile(java.io.File file) throws IOException {
+
+        MakePath(file.getPath());
+        file.createNewFile();
+
+        return file;
+    }
+
+    public static void DeleteFile(IFile file) throws ManifestsDirectoryException {
+        IDirectory parent = file.getLogicalParent();
+        try {
+            parent.remove(file.getName());
+        } catch (BindingAbsentException e) {
+            throw new ManifestsDirectoryException("Unable to delete file " + file.getName(), e);
+        }
+    }
+
+    public static void RenameFile(String oldPathname, String newPathname) {
+        java.io.File oldfile = new java.io.File(oldPathname);
+        java.io.File newfile = new java.io.File(newPathname);
+        oldfile.renameTo(newfile);
+    }
+
+    public static void RenameFile(IFile oldFile, IFile newFile) {
+        try {
+            java.io.File oldfile =  oldFile.toFile();
+            java.io.File newfile = newFile.toFile();
+            oldfile.renameTo(newfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void MakePath(String path) {
+        java.io.File file = new java.io.File(path);
+        java.io.File parent = file.getParentFile();
+        if (parent != null)
+            parent.mkdirs();
     }
 
 }

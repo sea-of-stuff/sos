@@ -22,7 +22,7 @@ public class SesameTriplestore implements Triplestore {
     private Repository repo;
     private ValueFactory valueFactory;
 
-//    File dataDir = new File("/path/to/datadir/");
+//    CreateFile dataDir = new CreateFile("/path/to/datadir/");
 //    Repository repo = new SailRepository(new NativeStore(dataDir));
 
     public SesameTriplestore() {

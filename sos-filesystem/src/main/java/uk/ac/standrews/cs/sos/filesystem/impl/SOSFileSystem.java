@@ -50,7 +50,7 @@ public class SOSFileSystem implements IFileSystem {
 
 
         pendingFiles = new HashMap<>();
-        SOS_LOG.log(LEVEL.INFO, "WEBDAV - File System Created");
+        SOS_LOG.log(LEVEL.INFO, "WEBDAV - CreateFile System Created");
     }
 
     @Override

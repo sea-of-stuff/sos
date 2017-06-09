@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.utils.FileHelper;
+import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 import java.sql.*;
 import java.util.HashSet;
@@ -51,7 +51,7 @@ public class DatabaseImpl implements Database {
     public DatabaseImpl(String path) throws DatabaseException {
         this.path = path;
 
-        FileHelper.MakePath(path);
+        FileUtils.MakePath(path);
 
         try (Connection connection = getSQLiteConnection()) {
             boolean tableExists = checkSQLiteTableExists(connection, SQL_CHECK_NODES_TABLE_EXISTS);

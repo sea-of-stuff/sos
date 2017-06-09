@@ -64,12 +64,13 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public void addManifest(Manifest manifest) throws ManifestPersistException {
         inMemoryCache.addManifest(manifest);
         local.addManifest(manifest);
+
+        // TODO - set head if version and/or advance
     }
 
     @Override
     public void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException {
-        inMemoryCache.addManifest(manifest);
-        local.addManifest(manifest);
+        addManifest(manifest);
 
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
         // TODO - should this be dealt (1) within a scope and (2) by contexts?
