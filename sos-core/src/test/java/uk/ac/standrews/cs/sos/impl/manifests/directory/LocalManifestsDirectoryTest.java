@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.ManifestUtils;
+import uk.ac.standrews.cs.sos.utils.UserRoleUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -32,7 +33,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -90,10 +90,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void addCompoundManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
-        Role roleMocked = mock(Role.class);
-        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
-        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
-        Content content = new ContentImpl("Cat", GUIDFactory.recreateGUID("123"));
+        Role roleMocked = UserRoleUtils.BareRoleMock();        Content content = new ContentImpl("Cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
@@ -121,10 +118,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
-        Role roleMocked = mock(Role.class);
-        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
-        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
-
+        Role roleMocked = UserRoleUtils.BareRoleMock();
         CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, roleMocked);
     }
 
