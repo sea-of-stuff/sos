@@ -1,99 +1,59 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.model.Version;
-import uk.ac.standrews.cs.sos.utils.ManifestUtils;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.CastoreType;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.testng.Assert.*;
+import java.lang.reflect.Method;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalManifestsDirectory_HEADS_CURRENT_Test extends LocalManifestsDirectoryTest {
+public class LocalManifestsDirectory_HEADS_CURRENT_Test extends HEADS_CURRENT_Test {
+
+    protected LocalStorage storage;
+
+    @BeforeMethod
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
+
+        String root = System.getProperty("user.home") + "/sos/";
+
+        CastoreBuilder castoreBuilder = new CastoreBuilder()
+                .setType(CastoreType.LOCAL)
+                .setRoot(root);
+        IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+        storage = new LocalStorage(stor);
+    }
+
+    @AfterMethod
+    public void tearDown() throws Exception {
+        storage.destroy();
+    }
 
     @Test
     public void basicHeadTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
-
-        Version versionManifest = ManifestUtils.createDummyVersion();
-        IGUID guid = versionManifest.getVersionGUID();
-        manifestsDirectory.advanceHead(versionManifest.getInvariantGUID(), guid);
-
-        Set<IGUID> heads = manifestsDirectory.getHeads(versionManifest.getInvariantGUID());
-        assertNotNull(heads);
-        assertEquals(heads.size(), 1);
-
-        assertTrue(heads.contains(guid));
+        super.basicHeadTest(new LocalManifestsDirectory(storage));
     }
 
     @Test
     public void advanceHeadTest() throws Exception {
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
-
-        Version versionManifest = ManifestUtils.createDummyVersion();
-        manifestsDirectory.advanceHead(versionManifest.getInvariantGUID(), versionManifest.guid());
-
-        // Create new version for same asset and advance the head
-        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.recreateGUID("456"), Collections.singleton(versionManifest.guid()), versionManifest.getInvariantGUID());
-
-        manifestsDirectory.advanceHead(newVersionManifest.getInvariantGUID(), Collections.singleton(versionManifest.guid()), newVersionManifest.guid());
-
-        Set<IGUID> heads = manifestsDirectory.getHeads(versionManifest.getInvariantGUID());
-        assertNotNull(heads);
-        assertEquals(heads.size(), 1);
-
-        assertTrue(heads.contains(newVersionManifest.guid()));
+        super.advanceHeadTest(new LocalManifestsDirectory(storage));
     }
 
     @Test
     public void multipleHeadsTest() throws Exception {
-
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
-
-        Version versionManifest = ManifestUtils.createDummyVersion();
-        Version siblingVersionManifest = ManifestUtils.createDummyVersion();
-
-        manifestsDirectory.advanceHead(versionManifest.getInvariantGUID(), versionManifest.guid());
-        manifestsDirectory.advanceHead(versionManifest.getInvariantGUID(), siblingVersionManifest.guid());
-
-        Set<IGUID> heads = manifestsDirectory.getHeads(versionManifest.getInvariantGUID());
-        assertNotNull(heads);
-        assertEquals(heads.size(), 2);
-
-        assertTrue(heads.contains(versionManifest.guid()));
-        assertTrue(heads.contains(siblingVersionManifest.guid()));
+        super.multipleHeadsTest(new LocalManifestsDirectory(storage));
     }
 
     @Test
     public void advanceMultipleHeadsTest() throws Exception {
-
-        LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
-
-        Version versionManifest = ManifestUtils.createDummyVersion();
-        Version siblingVersionManifest = ManifestUtils.createDummyVersion();
-
-        manifestsDirectory.advanceHead(versionManifest.getInvariantGUID(), versionManifest.guid());
-        manifestsDirectory.advanceHead(versionManifest.getInvariantGUID(), siblingVersionManifest.guid());
-
-        // Create new version for same asset and advance the head
-        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.recreateGUID("789"),
-                new HashSet<>(Arrays.asList(versionManifest.guid(), siblingVersionManifest.guid())),
-                versionManifest.getInvariantGUID());
-
-        manifestsDirectory.advanceHead(newVersionManifest.getInvariantGUID(), new HashSet<>(Arrays.asList(versionManifest.guid(), siblingVersionManifest.guid())), newVersionManifest.guid());
-
-        Set<IGUID> heads = manifestsDirectory.getHeads(versionManifest.getInvariantGUID());
-        assertNotNull(heads);
-        assertEquals(heads.size(), 1);
-
-        assertTrue(heads.contains(newVersionManifest.guid()));
+        super.advanceMultipleHeadsTest(new LocalManifestsDirectory(storage));
     }
 
 }
