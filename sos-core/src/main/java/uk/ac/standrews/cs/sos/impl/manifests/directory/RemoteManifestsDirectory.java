@@ -53,7 +53,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
         // TODO - Policy based on context?
 
         Iterator<Node> nodes = nodeDiscoveryService.getNodes(NodeType.STORAGE).iterator();
-        int replicationFactor = 1; // FIXME - do not hardcode replic-factor. use context
+        int replicationFactor = 1; // FIXME - do not hardcode replication-factor. use context
 
         try {
             ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dataDiscoveryService);
@@ -102,7 +102,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     public void advanceHead(IGUID invariant, IGUID version) {}
 
     @Override
-    public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {}
+    public void advanceHead(IGUID invariant, Set<IGUID> previousVersion, IGUID newVersion) {}
 
     @Override
     public Set<IGUID> getHeads(IGUID invariant) {

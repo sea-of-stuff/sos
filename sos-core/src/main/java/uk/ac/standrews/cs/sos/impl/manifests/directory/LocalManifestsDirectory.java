@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.IKey;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.impl.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -19,10 +21,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,13 +84,13 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public void advanceHead(IGUID invariant, IGUID newVersion) {
+    public void advanceHead(IGUID invariant, IGUID version) {
 
-        appendHead(invariant, newVersion);
+        appendHead(invariant, version);
     }
 
     @Override
-    public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {
+    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
         try {
 
@@ -99,11 +98,16 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             String filename = HEAD_TAG + invariant.toString();
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            List<String> versions = Arrays.asList(content.split("\n"));
-            if (versions.contains(previousVersion.toString())) {
+            Set<String> versions = new LinkedHashSet<>(Arrays.asList(content.split("\n")));
+
+            Set<String> previousVersionsStrings = previousVersions.stream()
+                    .map(IKey::toString)
+                    .collect(Collectors.toSet());
+
+            if (versions.containsAll(previousVersionsStrings)) {
 
                 appendHead(invariant, newVersion);
-                removeHead(invariant, previousVersion);
+                removeHeads(invariant, previousVersionsStrings);
             }
 
 
@@ -115,7 +119,33 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     @Override
     public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
 
-        throw new HEADNotFoundException();
+        try {
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = HEAD_TAG + invariant.toString();
+
+            // Make sure that the HEAD file exists
+            IFile file = localStorage.createFile(manifestsDir, filename);
+            if (!file.exists()) {
+                throw new HEADNotFoundException();
+            }
+
+            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
+            List<String> versions = content.isEmpty() ? new LinkedList<>() : Arrays.asList(content.split("\n"));
+
+            Set<IGUID> versionsRefs =  versions.stream()
+                    .map(v -> {
+                        try {
+                            return GUIDFactory.recreateGUID(v);
+                        } catch (GUIDGenerationException e) {
+                            return new InvalidID();
+                        }
+                    }).collect(Collectors.toSet());
+
+            return versionsRefs;
+
+        } catch (DataException | DataStorageException e) {
+            throw new HEADNotFoundException();
+        }
     }
 
     @Override
@@ -142,9 +172,11 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
             String filename = CURRENT_TAG + version.getInvariantGUID().toString() + "-ROLE-" + role.guid();
-            FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toString());
 
-        } catch (DataStorageException e) {
+            IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toString());
+            file.persist();
+
+        } catch (DataStorageException | PersistenceException e) {
             e.printStackTrace();
         }
 
@@ -300,10 +332,16 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
             String filename = HEAD_TAG + invariant.toString();
 
+            // Make sure that the HEAD file exists
+            IFile file = localStorage.createFile(manifestsDir, filename);
+            if (!file.exists()) {
+                file.persist();
+            }
+
             String newContent;
             try {
                 String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-                List<String> versions = Arrays.asList(content.split("\n"));
+                List<String> versions = content.isEmpty() ? new LinkedList<>() : Arrays.asList(content.split("\n"));
                 versions.add(version.toString());
 
                 newContent = versions.stream().collect(Collectors.joining( "\n" ));
@@ -312,19 +350,20 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
                 newContent = version.toString();
             }
 
-            FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
+            IFile fileWithContent = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
+            fileWithContent.persist();
 
-        } catch (DataStorageException e) {
+        } catch (DataStorageException | PersistenceException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Remove the specified version from the HEAD file for the specified invariant
+     * Remove the specified versions from the HEAD file for the specified invariant
      * @param invariant
-     * @param version
+     * @param versionsToRemove
      */
-    private void removeHead(IGUID invariant, IGUID version) {
+    private void removeHeads(IGUID invariant, Set<String> versionsToRemove) {
 
         try {
 
@@ -333,12 +372,14 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
             List<String> versions = Arrays.asList(content.split("\n"));
-            versions.remove(version.toString());
+            versions.removeAll(versionsToRemove);
 
             String newContent = versions.stream().collect(Collectors.joining( "\n" ));
-            FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
 
-        } catch (DataException | DataStorageException e) {
+            IFile fileWithContent = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
+            fileWithContent.persist();
+
+        } catch (DataException | DataStorageException | PersistenceException e) {
             e.printStackTrace();
         }
     }

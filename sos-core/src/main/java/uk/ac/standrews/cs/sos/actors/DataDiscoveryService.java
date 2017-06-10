@@ -85,11 +85,12 @@ public interface DataDiscoveryService extends SeaOfStuff {
      *
      * Different roles might have different currents.
      *
+     * TODO - what if multiple currents at different nodes?
+     *
      * @param role
      * @param invariant
      * @return
      */
-    // TODO - what if multiple currents at different nodes?
     IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException;
 
     /**

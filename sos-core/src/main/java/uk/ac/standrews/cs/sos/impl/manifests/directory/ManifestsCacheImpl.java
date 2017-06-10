@@ -98,12 +98,12 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {
+    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
-        if (heads.containsKey(invariant) && heads.get(invariant).contains(previousVersion)) {
+        if (heads.containsKey(invariant) && heads.get(invariant).containsAll(previousVersions)) {
 
             advanceHead(invariant, newVersion);
-            heads.get(invariant).remove(previousVersion);
+            heads.get(invariant).removeAll(previousVersions);
         }
     }
 

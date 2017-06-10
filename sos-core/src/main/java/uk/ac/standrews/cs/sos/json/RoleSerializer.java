@@ -33,7 +33,6 @@ public class RoleSerializer  extends JsonSerializer<Role> {
             throw new IOException("Unable to write signature certificate for user");
         }
 
-
         jsonGenerator.writeEndObject();
     }
 }

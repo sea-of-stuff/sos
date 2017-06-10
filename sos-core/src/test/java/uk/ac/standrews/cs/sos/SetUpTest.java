@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos;
 
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
@@ -102,6 +103,8 @@ public class SetUpTest extends CommonTest {
     @AfterMethod
     public void tearDown() throws IOException, InterruptedException, DataStorageException {
         localStorage.destroy();
+
+        FileUtils.deleteDirectory(new File(System.getProperty("user.home") + "/sos/keys/"));
     }
 
     protected void createConfiguration() throws SOSConfigurationException, IOException {

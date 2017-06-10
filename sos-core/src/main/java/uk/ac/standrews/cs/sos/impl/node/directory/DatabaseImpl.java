@@ -33,7 +33,6 @@ public class DatabaseImpl implements Database {
             "`DB_is_rms`        BOOLEAN NOT NULL , " +
             "PRIMARY KEY (`DB_nodeid`) )";
 
-
     // http://stackoverflow.com/questions/418898/sqlite-upsert-not-insert-or-replace/4330694#4330694
     private final static String SQL_ADD_NODE = "INSERT OR REPLACE INTO nodes " +
             "(DB_nodeid, DB_hostname, DB_port, DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms) " +
@@ -54,6 +53,7 @@ public class DatabaseImpl implements Database {
         FileUtils.MakePath(path);
 
         try (Connection connection = getSQLiteConnection()) {
+
             boolean tableExists = checkSQLiteTableExists(connection, SQL_CHECK_NODES_TABLE_EXISTS);
             if (!tableExists) {
                 createNodesTable(connection, SQL_CREATE_NODES_TABLE);
@@ -74,6 +74,7 @@ public class DatabaseImpl implements Database {
         boolean retval;
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet  = preparedStatement.executeQuery()) {
+
             retval = resultSet.next();
         }
 
@@ -83,6 +84,7 @@ public class DatabaseImpl implements Database {
     private void createNodesTable(Connection connection, String query) throws SQLException {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.executeUpdate();
         }
     }

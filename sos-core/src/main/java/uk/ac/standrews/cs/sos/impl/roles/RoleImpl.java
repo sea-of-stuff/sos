@@ -140,9 +140,9 @@ public class RoleImpl extends UserImpl implements Role {
                 protectionPrivateKey = AsymmetricEncryption.getPrivateKey(privateKeyFile.toPath());
             }
 
-            if (!loadOnly && protectionPublicKey != null && protectionPrivateKey != null) {
+            if (!loadOnly && protectionPublicKey == null && protectionPrivateKey == null) {
 
-                KeyPair asymmetricKeys = AsymmetricEncryption.generateKeys();
+                KeyPair asymmetricKeys = AsymmetricEncryption.generateKeys(512);
                 protectionPublicKey = asymmetricKeys.getPublic();
                 protectionPrivateKey = asymmetricKeys.getPrivate();
 

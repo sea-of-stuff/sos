@@ -94,7 +94,7 @@ public class UserImpl implements User {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for user " + guid());
+            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for user/role " + guid() + " instanceof " + this.getClass().getName());
             return "";
         }
     }
@@ -120,7 +120,7 @@ public class UserImpl implements User {
             }
 
 
-            if (!loadOnly && signatureCertificate != null && signaturePrivateKey != null) {
+            if (!loadOnly && signatureCertificate == null && signaturePrivateKey == null) {
 
                 KeyPair keys = DigitalSignature.generateKeys();
                 signatureCertificate = keys.getPublic();

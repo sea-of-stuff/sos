@@ -42,7 +42,7 @@ import static org.testng.Assert.assertFalse;
  */
 public class LocalManifestsDirectoryTest extends CommonTest {
 
-    private LocalStorage storage;
+    protected LocalStorage storage;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {

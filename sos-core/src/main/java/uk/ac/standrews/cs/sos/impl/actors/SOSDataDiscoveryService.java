@@ -18,10 +18,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.directory.RemoteManifestsDirectory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -65,7 +62,20 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         inMemoryCache.addManifest(manifest);
         local.addManifest(manifest);
 
-        // TODO - set head if version and/or advance
+        if (manifest.getType() == ManifestType.VERSION) {
+
+            Version version = (Version) manifest;
+            Set<IGUID> previousVersions = version.getPreviousVersions();
+            if (previousVersions == null || previousVersions.isEmpty()) {
+
+                inMemoryCache.advanceHead(version.getInvariantGUID(), version.guid());
+                local.advanceHead(version.getInvariantGUID(), version.guid());
+            } else {
+
+                inMemoryCache.advanceHead(version.getInvariantGUID(), previousVersions, version.guid());
+                local.advanceHead(version.getInvariantGUID(), previousVersions, version.guid());
+            }
+        }
     }
 
     @Override
