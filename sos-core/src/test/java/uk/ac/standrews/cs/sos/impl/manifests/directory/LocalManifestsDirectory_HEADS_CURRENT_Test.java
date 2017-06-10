@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 
 import java.lang.reflect.Method;
@@ -54,6 +55,21 @@ public class LocalManifestsDirectory_HEADS_CURRENT_Test extends HEADS_CURRENT_Te
     @Test
     public void advanceMultipleHeadsTest() throws Exception {
         super.advanceMultipleHeadsTest(new LocalManifestsDirectory(storage));
+    }
+
+    @Test
+    public void basicCurrentTest() throws Exception, CURRENTNotFoundException {
+        super.basicCurrentTest(new LocalManifestsDirectory(storage));
+    }
+
+    @Test
+    public void basicMultiCurrentSameVersionTest() throws Exception, CURRENTNotFoundException {
+        super.basicMultiCurrentSameVersionTest(new LocalManifestsDirectory(storage));
+    }
+
+    @Test
+    public void basicMultiCurrentDifferentVersionTest() throws Exception, CURRENTNotFoundException {
+        super.basicMultiCurrentDifferentVersionTest(new LocalManifestsDirectory(storage));
     }
 
 }
