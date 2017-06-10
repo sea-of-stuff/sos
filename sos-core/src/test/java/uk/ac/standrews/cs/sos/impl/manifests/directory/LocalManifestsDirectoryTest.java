@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.*;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.ManifestUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -132,7 +133,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         IGUID contentGUID = GUIDFactory.recreateGUID("123");
-        Version versionManifest = createDummyVersion(contentGUID);
+        Version versionManifest = ManifestUtils.createDummyVersion(contentGUID);
 
         IGUID guid = versionManifest.getVersionGUID();
         try {
@@ -149,7 +150,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testAddVersionManifestNullContent() throws Exception {
-        Version versionManifest = createDummyVersion(null);
+        Version versionManifest = ManifestUtils.createDummyVersion(null);
     }
 
     @Test
@@ -223,12 +224,4 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         manifestsDirectory.addManifest(manifest);
     }
 
-    private Version createDummyVersion(IGUID contentGUID) throws Exception {
-        Role roleMocked = mock(Role.class);
-        when(roleMocked.sign(any(String.class))).thenReturn("AAAB");
-        when(roleMocked.guid()).thenReturn(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED));
-        Version version = ManifestFactory.createVersionManifest(contentGUID, null, null, null, roleMocked);
-
-        return version;
-    }
 }

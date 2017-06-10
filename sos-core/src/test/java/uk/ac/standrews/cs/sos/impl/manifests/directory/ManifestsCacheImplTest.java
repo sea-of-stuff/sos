@@ -25,7 +25,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.utils.ManifestUtils;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 
 import java.io.IOException;
@@ -33,8 +33,6 @@ import java.net.URISyntaxException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -47,7 +45,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void basicTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
-        Manifest manifest = getMockManifest();
+        Manifest manifest = ManifestUtils.createMockManifestTypeAtom();
         IGUID guid = manifest.guid();
         cache.addManifest(manifest);
 
@@ -67,9 +65,9 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void cacheAddAndMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl(2);
 
-        Manifest manifest = getMockManifest();
-        Manifest manifest1 = getMockManifest();
-        Manifest manifest2 = getMockManifest();
+        Manifest manifest = ManifestUtils.createMockManifestTypeAtom();
+        Manifest manifest1 = ManifestUtils.createMockManifestTypeAtom();
+        Manifest manifest2 = ManifestUtils.createMockManifestTypeAtom();
 
         cache.addManifest(manifest);
         cache.addManifest(manifest1);
@@ -82,7 +80,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void cacheAddUniqueTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
-        Manifest manifest = getMockManifest();
+        Manifest manifest = ManifestUtils.createMockManifestTypeAtom();
 
         cache.addManifest(manifest);
         cache.addManifest(manifest);
@@ -142,7 +140,7 @@ public class ManifestsCacheImplTest extends CommonTest {
 
         ManifestsCache cache = new ManifestsCacheImpl();
 
-        Manifest manifest = getMockManifest();
+        Manifest manifest = ManifestUtils.createMockManifestTypeAtom();
         IGUID guid = manifest.guid();
         cache.addManifest(manifest);
 
@@ -163,14 +161,4 @@ public class ManifestsCacheImplTest extends CommonTest {
         return atomManifest;
     }
 
-    private Manifest getMockManifest() {
-        Manifest manifest = mock(Manifest.class);
-        IGUID guid = GUIDFactory.generateRandomGUID();
-        when(manifest.guid()).thenReturn(guid);
-        when(manifest.guid()).thenReturn(guid);
-        when(manifest.isValid()).thenReturn(true);
-        when(manifest.getType()).thenReturn(ManifestType.ATOM);
-
-        return manifest;
-    }
 }

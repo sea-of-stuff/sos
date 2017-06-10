@@ -341,7 +341,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             String newContent;
             try {
                 String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-                List<String> versions = content.isEmpty() ? new LinkedList<>() : Arrays.asList(content.split("\n"));
+                List<String> versions = content.isEmpty() ? new LinkedList<>() : new LinkedList<>(Arrays.asList(content.split("\n")));
                 versions.add(version.toString());
 
                 newContent = versions.stream().collect(Collectors.joining( "\n" ));
@@ -371,7 +371,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             String filename = HEAD_TAG + invariant.toString();
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            List<String> versions = Arrays.asList(content.split("\n"));
+            List<String> versions = content.isEmpty() ? new LinkedList<>() : new LinkedList<>(Arrays.asList(content.split("\n")));
             versions.removeAll(versionsToRemove);
 
             String newContent = versions.stream().collect(Collectors.joining( "\n" ));
