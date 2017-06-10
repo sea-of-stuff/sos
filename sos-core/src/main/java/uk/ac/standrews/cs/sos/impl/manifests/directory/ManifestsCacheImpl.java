@@ -88,7 +88,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
     }
 
     @Override
-    public void setHead(IGUID invariant, IGUID version) {
+    public void advanceHead(IGUID invariant, IGUID version) {
 
         if (!heads.containsKey(invariant)) {
             heads.put(invariant, new LinkedHashSet<>());
@@ -102,7 +102,7 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
 
         if (heads.containsKey(invariant) && heads.get(invariant).contains(previousVersion)) {
 
-            setHead(invariant, newVersion);
+            advanceHead(invariant, newVersion);
             heads.get(invariant).remove(previousVersion);
         }
     }

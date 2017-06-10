@@ -181,36 +181,12 @@ public class FileUtils {
         return new String(CreateFile(storage, directory, filename).getData().getState());
     }
 
-    public static java.io.File CreateIOFile(java.io.File file) throws IOException {
-
-        MakePath(file.getPath());
-        file.createNewFile();
-
-        return file;
-    }
-
     public static void DeleteFile(IFile file) throws ManifestsDirectoryException {
-        IDirectory parent = file.getLogicalParent();
+        IDirectory parent = file.getParent();
         try {
             parent.remove(file.getName());
         } catch (BindingAbsentException e) {
             throw new ManifestsDirectoryException("Unable to delete file " + file.getName(), e);
-        }
-    }
-
-    public static void RenameFile(String oldPathname, String newPathname) {
-        java.io.File oldfile = new java.io.File(oldPathname);
-        java.io.File newfile = new java.io.File(newPathname);
-        oldfile.renameTo(newfile);
-    }
-
-    public static void RenameFile(IFile oldFile, IFile newFile) {
-        try {
-            java.io.File oldfile =  oldFile.toFile();
-            java.io.File newfile = newFile.toFile();
-            oldfile.renameTo(newfile);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

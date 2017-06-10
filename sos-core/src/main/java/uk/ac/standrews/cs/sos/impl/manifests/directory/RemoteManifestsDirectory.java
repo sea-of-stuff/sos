@@ -99,7 +99,7 @@ public class RemoteManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public void setHead(IGUID invariant, IGUID version) {}
+    public void advanceHead(IGUID invariant, IGUID version) {}
 
     @Override
     public void advanceHead(IGUID invariant, IGUID previousVersion, IGUID newVersion) {}

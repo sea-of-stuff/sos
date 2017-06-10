@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -84,9 +85,9 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     }
 
     @Override
-    public void setHead(IGUID invariant, IGUID version) {
+    public void advanceHead(IGUID invariant, IGUID newVersion) {
 
-        appendHead(invariant, version);
+        appendHead(invariant, newVersion);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             List<String> versions = Arrays.asList(content.split("\n"));
             if (versions.contains(previousVersion.toString())) {
 
-                setHead(invariant, newVersion);
+                appendHead(invariant, newVersion);
                 removeHead(invariant, previousVersion);
             }
 
@@ -246,9 +247,9 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
             manifestTempFile.setData(manifestData);
             manifestTempFile.persist();
 
-            IFile manifestFile = getManifestFile(manifestGUID);
-            FileUtils.RenameFile(manifestTempFile, manifestFile);
-        } catch (PersistenceException | DataException | DataStorageException e) {
+            manifestTempFile.rename(manifestGUID + FileUtils.JSON_EXTENSION);
+
+        } catch (PersistenceException | DataException | DataStorageException | RenameException e) {
             throw new ManifestsDirectoryException(e);
         }
     }
@@ -287,6 +288,11 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         return manifest.exists();
     }
 
+    /**
+     * Append a version to the HEAD file for the specified invariant
+     * @param invariant
+     * @param version
+     */
     private void appendHead(IGUID invariant, IGUID version) {
 
         try {
@@ -313,6 +319,11 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         }
     }
 
+    /**
+     * Remove the specified version from the HEAD file for the specified invariant
+     * @param invariant
+     * @param version
+     */
     private void removeHead(IGUID invariant, IGUID version) {
 
         try {

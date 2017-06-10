@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.atom.store;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -12,7 +13,6 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -45,16 +45,12 @@ public abstract class StreamStore extends CommonLocalStore {
                 IFile tmpCachedLocation = getAtomLocation(tmpGUID);
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
 
-                IFile cachedLocation = getAtomLocation(guid);
-
-                // FIXME - use internal storage api !!!!!
-                FileUtils.RenameFile(tmpCachedLocation.getPathname(), cachedLocation.getPathname());
+                tmpCachedLocation.rename(guid.toString());
 
                 Location location = getLocation(guid);
                 locationBundle = getBundle(location);
 
-            } catch (GUIDGenerationException | SourceLocationException |
-                    URISyntaxException | DataStorageException e) {
+            } catch (GUIDGenerationException | SourceLocationException | URISyntaxException | DataStorageException | RenameException e) {
                 throw new StorageException(e);
             }
 
