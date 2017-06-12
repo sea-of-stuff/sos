@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 /**
  * This class acts mainly as a wrapper for the Java Predicate object.
- * The wrapper allows us to cleanly handle the predicate under the test function and to apply it for the and/or operators
+ * The wrapper allows us to cleanly handle the predicate under the test function and to apply it for the and/or operators of the context.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -51,7 +51,7 @@ public class SOSPredicateImpl implements SOSPredicate {
     }
 
     @Override
-    public Predicate predicate() {
+    public Predicate<IGUID> predicate() {
         return predicate;
     }
 

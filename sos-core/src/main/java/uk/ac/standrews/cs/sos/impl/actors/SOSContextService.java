@@ -48,9 +48,10 @@ public class SOSContextService implements ContextService {
     private PolicyLanguage policyLanguage;
 
     // The inMemoryCache keeps the context objects for this node in memory.
-    // TODO - store contexts definitions in local storage
     private ContextsCacheImpl inMemoryCache;
     private ContextsContents contextsContents;
+
+    // TODO - store contexts definitions in local storage
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;

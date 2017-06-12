@@ -9,34 +9,40 @@ import java.util.function.Predicate;
  */
 public interface SOSPredicate {
 
+    /**
+     * Get the max age for the validity of this predicate
+     * The max age is compared against the system time, in nano seconds - System.nanoTime();
+     *
+     * @return the max age
+     */
     long maxAge();
 
     /**
      * Test the entity matching this GUID with the predicate
      *
-     * @param guid
-     * @return
+     * @param guid of the entity to test
+     * @return true if the test has passed
      */
     boolean test(IGUID guid);
 
     /**
      * AND this predicate with another one
-     * @param other
-     * @return
+     * @param other the predicate to AND
+     * @return the resulting predicate
      */
     SOSPredicate and(SOSPredicate other);
 
     /**
      * OR this predicate with another one
-     * @param other
-     * @return
+     * @param other the predicate to OR
+     * @return the resulting predicate
      */
     SOSPredicate or(SOSPredicate other);
 
     /**
      * Get the actual predicate. This is needed to implement the AND/OR methods
-     * @return
+     * @return the actual predicate
      */
-    Predicate predicate();
+    Predicate<IGUID> predicate();
 
 }

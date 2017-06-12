@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.context.examples;
 
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
+import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
@@ -29,7 +30,7 @@ public class BinaryReplicationContext extends BaseContext {
     public SOSPredicate predicate() {
 
         return new SOSPredicateImpl(
-                contentTypePredicate(Collections.singletonList("application/octet-stream")),
+                CommonPredicates.ContentTypePredicate(Collections.singletonList("application/octet-stream")),
                 PREDICATE_ALWAYS_TRUE);
     }
 

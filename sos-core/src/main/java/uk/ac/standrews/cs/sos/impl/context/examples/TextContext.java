@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
+import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -28,7 +29,7 @@ public class TextContext extends BaseContext {
     public SOSPredicate predicate() {
 
         return new SOSPredicateImpl(
-                contentTypePredicate(Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html")),
+                CommonPredicates.ContentTypePredicate(Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html")),
                 Long.MAX_VALUE);
     }
 
