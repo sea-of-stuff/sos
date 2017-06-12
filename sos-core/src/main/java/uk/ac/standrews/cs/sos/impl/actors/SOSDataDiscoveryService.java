@@ -68,12 +68,12 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             Set<IGUID> previousVersions = version.getPreviousVersions();
             if (previousVersions == null || previousVersions.isEmpty()) {
 
-                inMemoryCache.advanceHead(version.getInvariantGUID(), version.guid());
-                local.advanceHead(version.getInvariantGUID(), version.guid());
+                inMemoryCache.advanceHead(version);
+                local.advanceHead(version);
             } else {
 
-                inMemoryCache.advanceHead(version.getInvariantGUID(), previousVersions, version.guid());
-                local.advanceHead(version.getInvariantGUID(), previousVersions, version.guid());
+                inMemoryCache.advanceHead(version);
+                local.advanceHead(version);
             }
         }
     }
@@ -85,6 +85,8 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
         // TODO - should this be dealt (1) within a scope and (2) by contexts?
         remote.addManifest(manifest); // will apply in async mode
+
+        // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook a page 92
     }
 
     @Override
@@ -116,7 +118,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     @Override
     public Set<IGUID> getAllAssets() {
 
-        // TODO - returning only the ones from the inMemoryCache for the moment
+        // NOTE - returning only the ones from the inMemoryCache for the moment
         return inMemoryCache.getAllAssets();
     }
 

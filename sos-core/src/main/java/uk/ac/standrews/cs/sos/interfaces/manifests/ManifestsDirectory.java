@@ -20,8 +20,7 @@ public interface ManifestsDirectory {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
-    void advanceHead(IGUID invariant, IGUID version);
-    void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion);
+    void advanceHead(Version version);
 
     Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException;
 

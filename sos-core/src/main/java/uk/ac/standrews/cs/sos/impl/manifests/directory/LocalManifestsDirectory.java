@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalManifestsDirectory implements ManifestsDirectory {
+public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
     private final static String HEAD_TAG = "HEAD-";
@@ -81,39 +80,6 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
         }
 
         return getManifestFromGUID(guid);
-    }
-
-    @Override
-    public void advanceHead(IGUID invariant, IGUID version) {
-
-        appendHead(invariant, version);
-    }
-
-    @Override
-    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
-
-        try {
-
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString();
-
-            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            Set<String> versions = new LinkedHashSet<>(Arrays.asList(content.split("\n")));
-
-            Set<String> previousVersionsStrings = previousVersions.stream()
-                    .map(IKey::toString)
-                    .collect(Collectors.toSet());
-
-            if (versions.containsAll(previousVersionsStrings)) {
-
-                appendHead(invariant, newVersion);
-                removeHeads(invariant, previousVersionsStrings);
-            }
-
-
-        } catch (DataStorageException | DataException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -318,6 +284,34 @@ public class LocalManifestsDirectory implements ManifestsDirectory {
     private boolean manifestExistsInStorage(IGUID guid) throws ManifestNotFoundException {
         IFile manifest = getManifestFile(guid);
         return manifest.exists();
+    }
+
+    public void advanceHead(IGUID invariant, IGUID version) {
+
+        appendHead(invariant, version);
+    }
+
+    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
+
+        try {
+
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            String filename = HEAD_TAG + invariant.toString();
+
+            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
+            Set<String> versions = new LinkedHashSet<>(Arrays.asList(content.split("\n")));
+
+            Set<String> previousVersionsStrings = previousVersions.stream()
+                    .map(IKey::toString)
+                    .collect(Collectors.toSet());
+
+            appendHead(invariant, newVersion);
+            removeHeads(invariant, previousVersionsStrings);
+
+
+        } catch (DataStorageException | DataException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

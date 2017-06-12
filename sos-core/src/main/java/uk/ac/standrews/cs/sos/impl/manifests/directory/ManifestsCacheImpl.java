@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestsCacheImpl implements ManifestsCache, Serializable {
+public class ManifestsCacheImpl extends AbstractManifestsDirectory implements ManifestsCache, Serializable {
 
     // Maximum number of manifests kept in the cache at one time
     private static final int MAX_DEFAULT_SIZE = 1024;
@@ -85,26 +85,6 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
         applyReadLRU(guid);
 
         return cache.get(guid);
-    }
-
-    @Override
-    public void advanceHead(IGUID invariant, IGUID version) {
-
-        if (!heads.containsKey(invariant)) {
-            heads.put(invariant, new LinkedHashSet<>());
-        }
-
-        heads.get(invariant).add(version);
-    }
-
-    @Override
-    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
-
-        if (heads.containsKey(invariant) && heads.get(invariant).containsAll(previousVersions)) {
-
-            advanceHead(invariant, newVersion);
-            heads.get(invariant).removeAll(previousVersions);
-        }
     }
 
     @Override
@@ -159,6 +139,24 @@ public class ManifestsCacheImpl implements ManifestsCache, Serializable {
                 .map(m -> ((Version) m).getInvariantGUID())
                 .distinct()
                 .collect(Collectors.toSet());
+    }
+
+    public void advanceHead(IGUID invariant, IGUID version) {
+
+        if (!heads.containsKey(invariant)) {
+            heads.put(invariant, new LinkedHashSet<>());
+        }
+
+        heads.get(invariant).add(version);
+    }
+
+    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
+
+        if (heads.containsKey(invariant) && heads.get(invariant).containsAll(previousVersions)) {
+
+            advanceHead(invariant, newVersion);
+            heads.get(invariant).removeAll(previousVersions);
+        }
     }
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {

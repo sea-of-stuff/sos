@@ -28,7 +28,7 @@ import java.util.Set;
  * as well as finding manifests in the rest of the SOS
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class RemoteManifestsDirectory implements ManifestsDirectory {
+public class RemoteManifestsDirectory extends AbstractManifestsDirectory implements ManifestsDirectory {
 
     private DDSIndex ddsIndex;
     private NodeDiscoveryService nodeDiscoveryService;

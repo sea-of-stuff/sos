@@ -25,25 +25,24 @@ public class HEADS_CURRENT_Test extends CommonTest {
     void basicHeadTest(ManifestsDirectory directory) throws Exception {
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-        IGUID guid = versionManifest.getVersionGUID();
-        directory.advanceHead(versionManifest.getInvariantGUID(), guid);
+        directory.advanceHead(versionManifest);
 
         Set<IGUID> heads = directory.getHeads(versionManifest.getInvariantGUID());
         assertNotNull(heads);
         assertEquals(heads.size(), 1);
 
-        assertTrue(heads.contains(guid));
+        assertTrue(heads.contains(versionManifest.getVersionGUID()));
     }
 
     void advanceHeadTest(ManifestsDirectory directory) throws Exception {
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-        directory.advanceHead(versionManifest.getInvariantGUID(), versionManifest.guid());
+        directory.advanceHead(versionManifest);
 
         // Create new version for same asset and advance the head
         Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.recreateGUID("456"), Collections.singleton(versionManifest.guid()), versionManifest.getInvariantGUID());
 
-        directory.advanceHead(newVersionManifest.getInvariantGUID(), Collections.singleton(versionManifest.guid()), newVersionManifest.guid());
+        directory.advanceHead(newVersionManifest);
 
         Set<IGUID> heads = directory.getHeads(versionManifest.getInvariantGUID());
         assertNotNull(heads);
@@ -57,8 +56,8 @@ public class HEADS_CURRENT_Test extends CommonTest {
         Version versionManifest = ManifestUtils.createDummyVersion();
         Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), versionManifest.getInvariantGUID());
 
-        directory.advanceHead(versionManifest.getInvariantGUID(), versionManifest.guid());
-        directory.advanceHead(versionManifest.getInvariantGUID(), siblingVersionManifest.guid());
+        directory.advanceHead(versionManifest);
+        directory.advanceHead(siblingVersionManifest);
 
         Set<IGUID> heads = directory.getHeads(versionManifest.getInvariantGUID());
         assertNotNull(heads);
@@ -73,15 +72,15 @@ public class HEADS_CURRENT_Test extends CommonTest {
         Version versionManifest = ManifestUtils.createDummyVersion();
         Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), versionManifest.getInvariantGUID());
 
-        directory.advanceHead(versionManifest.getInvariantGUID(), versionManifest.guid());
-        directory.advanceHead(versionManifest.getInvariantGUID(), siblingVersionManifest.guid());
+        directory.advanceHead(versionManifest);
+        directory.advanceHead(siblingVersionManifest);
 
         // Create new version for same asset and advance the head
         Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.recreateGUID("789"),
                 new HashSet<>(Arrays.asList(versionManifest.guid(), siblingVersionManifest.guid())),
                 versionManifest.getInvariantGUID());
 
-        directory.advanceHead(newVersionManifest.getInvariantGUID(), new HashSet<>(Arrays.asList(versionManifest.guid(), siblingVersionManifest.guid())), newVersionManifest.guid());
+        directory.advanceHead(newVersionManifest);
 
         Set<IGUID> heads = directory.getHeads(versionManifest.getInvariantGUID());
         assertNotNull(heads);
@@ -130,7 +129,7 @@ public class HEADS_CURRENT_Test extends CommonTest {
         IGUID current = directory.getCurrent(role, versionManifest.getInvariantGUID());
         assertEquals(current, versionManifest.guid());
 
-        IGUID otherCurrent = directory.getCurrent(otherRole, versionManifest.getInvariantGUID());
+        IGUID otherCurrent = directory.getCurrent(otherRole, otherVersionManifest.getInvariantGUID());
         assertEquals(otherCurrent, otherVersionManifest.guid());
     }
 
