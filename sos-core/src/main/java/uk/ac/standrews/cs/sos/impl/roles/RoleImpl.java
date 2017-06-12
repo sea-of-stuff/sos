@@ -38,22 +38,17 @@ public class RoleImpl extends UserImpl implements Role {
      * Keys are either created and persisted, or loaded
      *
      * @param user used to create this role
-     * @param guid for this role
      * @param name for this role
      * @throws SignatureException if the signature keys or the signature for this role could not be generated
      * @throws ProtectionException if the protection keys could not be generated
      */
-    public RoleImpl(User user, IGUID guid, String name) throws SignatureException, ProtectionException {
-        super(guid, name);
+    public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
+        super(GUIDFactory.generateRandomGUID(), name);
         this.userGUID = user.guid();
 
         manageProtectionKey(false);
 
         this.signature = user.sign("TODO - this role string representation, which is not the JSON");
-    }
-
-    public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
-        this(user, GUIDFactory.generateRandomGUID(), name);
     }
 
     /**
@@ -95,7 +90,6 @@ public class RoleImpl extends UserImpl implements Role {
     public String getSignature() {
         return signature;
     }
-
 
     @Override
     public String encrypt(SecretKey key) throws ProtectionException {

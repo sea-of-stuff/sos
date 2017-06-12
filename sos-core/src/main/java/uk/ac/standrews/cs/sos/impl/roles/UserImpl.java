@@ -40,7 +40,7 @@ public class UserImpl implements User {
         this(GUIDFactory.generateRandomGUID(), name);
     }
 
-    public UserImpl(IGUID guid, String name) throws SignatureException {
+    UserImpl(IGUID guid, String name) throws SignatureException {
         this.guid = guid;
         this.name = name;
 

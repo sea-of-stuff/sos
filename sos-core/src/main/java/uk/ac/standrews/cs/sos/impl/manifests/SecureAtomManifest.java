@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
@@ -13,7 +14,6 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.utilities.Pair;
-import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
@@ -54,12 +54,13 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
     private void encrypt(String data){
 
         try {
+
             SecretKey key = SymmetricEncryption.generateRandomKey();
             String encryptedData = SymmetricEncryption.encrypt(key, data);
-            String encryptedKey = AsymmetricEncryption.encryptAESKey(role.getPubKey(), key);
+            this.encryptedKey = role.encrypt(key);
+            this.guid = GUIDFactory.generateGUID(encryptedData);
 
-            this.guid = GUIDFactory.generateGUID(encryptedData); // 4
-        } catch (CryptoException | GUIDGenerationException e) {
+        } catch (CryptoException | ProtectionException | GUIDGenerationException e) {
             e.printStackTrace();
         }
 
