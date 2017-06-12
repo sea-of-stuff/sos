@@ -116,7 +116,7 @@ public class SOSAddAtomTest extends AgentTest {
 
     @Test (timeOut = TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
-        Location location = new URILocation("https://www.adobe.com/be_en/activeRole-use/pdf/Alice_in_Wonderland.pdf");
+        Location location = new URILocation("https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf");
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);

@@ -17,8 +17,8 @@ import java.util.Set;
 public interface ContextService extends SeaOfStuff {
 
     /**
-     * Adds a context to this CMS and return a version for it.
-     * The context is automatically set as activeRole
+     * Adds a context to this service.
+     * The context is automatically set as active
      *
      * @param context
      * @throws Exception
