@@ -21,6 +21,16 @@ public abstract class CommonTest {
 
     @AfterMethod // (dependsOnMethods = "tearDown")
     public void tearDownFinished(ITestResult result) {
-        System.out.println("==FINISHED Test: " + result.getMethod().getMethodName() + ". STATUS: " + result.getStatus() + ".\n");
+
+        System.out.println("==FINISHED Test: " + result.getMethod().getMethodName() + ". STATUS: " + status(result.getStatus()) + ".\n");
+    }
+
+    private String status(int status) {
+        switch(status) {
+            case 1:
+                return "SUCCESS";
+            default:
+                return "FAILED";
+        }
     }
 }

@@ -36,7 +36,9 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 import static uk.ac.standrews.cs.sos.constants.Threads.*;
 
 /**
- * TODO - should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
+ * The SOSContextService managed the contexts for this node.
+ *
+ * NOTE - IDEA should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -71,14 +73,10 @@ public class SOSContextService implements ContextService {
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
 
-        // TODO - load existing contexts into memory via reflection
-        inMemoryCache = new ContextsCacheImpl();
+        inMemoryCache = new ContextsCacheImpl(); // TODO - load existing contexts into memory via reflection
+        contextsContents = new ContextsContents(); // TODO - load mappings/indices
 
-        // TODO - load mappings/indices
-        contextsContents = new ContextsContents();
-
-        policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
-
+        policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage); // TODO - the policy language should be made available to all the context instances
 
         // FIXME - The following is an hardcoded context, which should instead be loaded from disk
         try {
@@ -92,7 +90,7 @@ public class SOSContextService implements ContextService {
             e.printStackTrace();
         }
 
-        // Background processes
+        // Background CRON processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
         getDataPeriodic();
         runPredicatesPeriodic();

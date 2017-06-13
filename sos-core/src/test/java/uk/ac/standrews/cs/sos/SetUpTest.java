@@ -105,6 +105,8 @@ public class SetUpTest extends CommonTest {
         localStorage.destroy();
 
         FileUtils.deleteDirectory(new File(System.getProperty("user.home") + "/sos/keys/"));
+
+        localSOSNode.kill();
     }
 
     protected void createConfiguration() throws SOSConfigurationException, IOException {

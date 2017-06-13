@@ -58,7 +58,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public User getUser(IGUID userGUID) {
+    public User getUser(IGUID userGUID) throws UserNotFoundException {
 
         return inMemoryCache.getUser(userGUID);
     }
@@ -71,7 +71,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public Role getRole(IGUID roleGUID) {
+    public Role getRole(IGUID roleGUID) throws RoleNotFoundException {
 
         return inMemoryCache.getRole(roleGUID);
     }

@@ -235,5 +235,9 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         }
 
         cache = new HashMap<>();
+
+        // TODO - heads and currents should be stored to disk?
+        heads = new HashMap<>();
+        currents = new HashMap<>();
     }
 }

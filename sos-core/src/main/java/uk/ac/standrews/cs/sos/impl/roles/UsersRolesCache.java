@@ -41,7 +41,10 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
     }
 
     @Override
-    public User getUser(IGUID userGUID) {
+    public User getUser(IGUID userGUID) throws UserNotFoundException {
+
+        if (!users.containsKey(userGUID)) throw new UserNotFoundException();
+
         return users.get(userGUID);
     }
 
@@ -57,7 +60,10 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
     }
 
     @Override
-    public Role getRole(IGUID roleGUID) {
+    public Role getRole(IGUID roleGUID) throws RoleNotFoundException {
+
+        if (!roles.containsKey(roleGUID)) throw new RoleNotFoundException();
+
         return roles.get(roleGUID);
     }
 

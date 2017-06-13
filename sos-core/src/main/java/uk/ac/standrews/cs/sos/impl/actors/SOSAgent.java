@@ -62,6 +62,10 @@ public class SOSAgent implements Agent {
         return instance;
     }
 
+    public static void destroy() {
+        instance = null;
+    }
+
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
 
@@ -81,7 +85,6 @@ public class SOSAgent implements Agent {
         }
 
         CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, role);
-
         addManifest(compound);
 
         return compound;

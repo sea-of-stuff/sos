@@ -147,6 +147,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         storage.flush();
         cacheFlusherService.shutdown();
 
+        SOSAgent.destroy();
+
         RequestsManager.getInstance().shutdown();
     }
 

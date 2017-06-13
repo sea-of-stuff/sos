@@ -1,12 +1,15 @@
 package uk.ac.standrews.cs.sos.impl.actors.Client.standard;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.actors.Agent;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
@@ -22,6 +25,12 @@ public class AgentTest extends SetUpTest {
         super.setUp(testMethod);
 
         agent = localSOSNode.getAgent();
+    }
+
+    @Override
+    @AfterMethod
+    public void tearDown() throws InterruptedException, DataStorageException, IOException {
+        super.tearDown();
     }
 
     @Test(expectedExceptions = ManifestNotFoundException.class)

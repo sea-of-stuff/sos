@@ -97,6 +97,7 @@ public class AtomManifest extends BasicManifest implements Atom {
         return getData();
     }
 
+    // REMOVEME
     @Override
     public boolean verifySignature(Role role) throws SignatureException {
         if (guid == null || guid.isInvalid())
