@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.model.SOSPredicate;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class BaseContext implements Context {
+public abstract class BaseContext implements Context {
 
     protected PolicyLanguage policyLanguage;
 

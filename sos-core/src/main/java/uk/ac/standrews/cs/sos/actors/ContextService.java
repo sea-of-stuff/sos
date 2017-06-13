@@ -20,24 +20,27 @@ public interface ContextService extends SeaOfStuff {
      * Adds a context to this service.
      * The context is automatically set as active
      *
-     * @param context
-     * @throws Exception
+     * @param context to be added
+     * @throws Exception if the context could not be added
      */
     void addContext(Context context) throws Exception;
 
     /**
      * Get the context given its guid
      *
-     * @return
-     * @throws ContextNotFoundException
+     * @return the matching context
+     * @throws ContextNotFoundException if no context could be found
      */
     Context getContext(IGUID contextGUID) throws ContextNotFoundException;
 
     /**
      * Get the set for all content belonging to the specified context
      *
-     * @param context
-     * @return
+     * @param context for which we want to find its contents
+     * @return the references to the contents of the context
+     *
+     * TODO - only the refs of versions that are still HEADS?
+     *
      */
     Set<IGUID> getContents(IGUID context);
 

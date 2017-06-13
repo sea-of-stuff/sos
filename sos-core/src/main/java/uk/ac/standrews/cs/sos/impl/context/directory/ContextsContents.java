@@ -56,7 +56,7 @@ public class ContextsContents implements Serializable  {
      */
     public boolean contentProcessedForContext(IGUID context, IGUID content) {
 
-        return mappings.containsKey(content) && mappings.get(context).containsKey(content);
+        return mappings.containsKey(context) && mappings.get(context).containsKey(content);
     }
 
     /**

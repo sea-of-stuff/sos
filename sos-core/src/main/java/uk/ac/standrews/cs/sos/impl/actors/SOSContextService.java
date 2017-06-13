@@ -66,8 +66,7 @@ public class SOSContextService implements ContextService {
      * @param usersRolesService uses to perform USER/ROLE operations in the SOS
      * @param storage used to access the SOS' storage
      */
-    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService,
-                             NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
 
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
@@ -81,9 +80,10 @@ public class SOSContextService implements ContextService {
         policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
 
 
-        // FIXME - do not hardcode this as contexts should be loaded from disk (see comments above)
+        // FIXME - The following is an hardcoded context, which should instead be loaded from disk
         try {
-            Context binaryReplicationContext = new BinaryReplicationContext(policyLanguage, "binary replication context",
+            Context binaryReplicationContext = new BinaryReplicationContext(policyLanguage,
+                    "binary replication context",
                     new NodesCollectionImpl(NodesCollection.TYPE.LOCAL),
                     new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
@@ -95,9 +95,9 @@ public class SOSContextService implements ContextService {
         // Background processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
         getDataPeriodic();
-        spawnContextsPeriodic();
         runPredicatesPeriodic();
         runPoliciesPeriodic();
+        spawnContextsPeriodic();
     }
 
     @Override
@@ -259,15 +259,7 @@ public class SOSContextService implements ContextService {
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
-
-            ContextContent content = contextsContents.get(contextGUID, versionGUID);
-
-            long maxage = context.predicate().maxAge();
-            long contentLastRun = content.timestamp;
-            long now = System.nanoTime();
-
-            maxAgeExpired = (now - contentLastRun) > maxage;
-
+            maxAgeExpired = predicateHasExpired(context, versionGUID);
         }
 
         if (!alreadyRun && !maxAgeExpired) {
@@ -283,6 +275,12 @@ public class SOSContextService implements ContextService {
 
     }
 
+    /**
+     * Run the policies of a given context for the specified entity
+     *
+     * @param contextGUID of the context
+     * @param guid of the entity
+     */
     private void runPolicies(IGUID contextGUID, IGUID guid) {
 
         try {
@@ -302,4 +300,20 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    /**
+     * Check if the predicate of a context is still valid a given version or not
+     *
+     * @param context
+     * @param versionGUID
+     * @return true if the predicate is still valid
+     */
+    private boolean predicateHasExpired(Context context, IGUID versionGUID) {
+        ContextContent content = contextsContents.get(context.guid(), versionGUID);
+
+        long maxage = context.predicate().maxAge();
+        long contentLastRun = content.timestamp;
+        long now = System.nanoTime();
+
+        return (now - contentLastRun) > maxage;
+    }
 }
