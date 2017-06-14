@@ -133,4 +133,19 @@ public class HEADS_CURRENT_Test extends CommonTest {
         assertEquals(otherCurrent, otherVersionManifest.guid());
     }
 
+    void noDuplicatesInHead(ManifestsDirectory directory) throws Exception {
+
+        Version versionManifest = ManifestUtils.createDummyVersion();
+        directory.advanceHead(versionManifest);
+        directory.advanceHead(versionManifest);
+        directory.advanceHead(versionManifest);
+        directory.advanceHead(versionManifest);
+
+        Set<IGUID> heads = directory.getHeads(versionManifest.getInvariantGUID());
+        assertNotNull(heads);
+        assertEquals(heads.size(), 1);
+
+        assertTrue(heads.contains(versionManifest.getVersionGUID()));
+    }
+
 }

@@ -95,6 +95,7 @@ public abstract class BasicManifest implements Manifest {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for manifest object " + guid());
             return "";
         }

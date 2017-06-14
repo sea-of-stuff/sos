@@ -72,4 +72,9 @@ public class LocalManifestsDirectory_HEADS_CURRENT_Test extends HEADS_CURRENT_Te
         super.basicMultiCurrentDifferentVersionTest(new LocalManifestsDirectory(storage));
     }
 
+    @Test
+    public void noDuplicatesInHead() throws Exception, CURRENTNotFoundException {
+        super.noDuplicatesInHead(new LocalManifestsDirectory(storage));
+    }
+
 }

@@ -62,7 +62,7 @@ public class BinaryReplicationContext extends BaseContext {
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyLanguage.numberOfReplicas(null, manifest.guid());
+            int numberReplicas = policyLanguage.numberOfReplicas(codomain, manifest.guid());
             return numberReplicas >= factor;
         }
     }

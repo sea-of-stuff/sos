@@ -43,4 +43,9 @@ public class ManifestCacheImpl_HEADS_CURRENT_Test extends HEADS_CURRENT_Test {
         super.basicMultiCurrentDifferentVersionTest(new ManifestsCacheImpl());
     }
 
+    @Test
+    public void noDuplicatesInHead() throws Exception, CURRENTNotFoundException {
+        super.noDuplicatesInHead(new ManifestsCacheImpl());
+    }
+
 }

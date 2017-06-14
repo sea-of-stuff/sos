@@ -298,9 +298,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
             String filename = HEAD_TAG + invariant.toString();
 
-            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            Set<String> versions = new LinkedHashSet<>(Arrays.asList(content.split("\n")));
-
             Set<String> previousVersionsStrings = previousVersions.stream()
                     .map(IKey::toString)
                     .collect(Collectors.toSet());
@@ -309,7 +306,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             removeHeads(invariant, previousVersionsStrings);
 
 
-        } catch (DataStorageException | DataException e) {
+        } catch (DataStorageException e) {
             e.printStackTrace();
         }
     }
@@ -335,7 +332,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             String newContent;
             try {
                 String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-                List<String> versions = content.isEmpty() ? new LinkedList<>() : new LinkedList<>(Arrays.asList(content.split("\n")));
+                Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));
                 versions.add(version.toString());
 
                 newContent = versions.stream().collect(Collectors.joining( "\n" ));
@@ -365,7 +362,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             String filename = HEAD_TAG + invariant.toString();
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            List<String> versions = content.isEmpty() ? new LinkedList<>() : new LinkedList<>(Arrays.asList(content.split("\n")));
+            Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));
             versions.removeAll(versionsToRemove);
 
             String newContent = versions.stream().collect(Collectors.joining( "\n" ));

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.impl.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -34,7 +35,12 @@ public abstract class SignedManifest extends BasicManifest {
      * @return the GUID for the signer
      */
     public IGUID getSigner() {
-        return this.signer.guid();
+
+        if (this.signer != null) {
+            return this.signer.guid();
+
+        } return new InvalidID();
+
     }
 
     /**
