@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.impl.InvalidID;
+import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.ManifestType;

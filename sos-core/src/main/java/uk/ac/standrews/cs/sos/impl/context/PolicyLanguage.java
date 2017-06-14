@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.Storage;
@@ -52,13 +53,24 @@ public class PolicyLanguage {
         }
     }
 
-    public void replicateData(Data data, NodesCollection nodes, int replicationFactor) {
+    public void replicateData(Data data, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
-        storage.addData(new AtomBuilder().setData(data), nodes, replicationFactor);
+        try {
+            AtomBuilder atomBuilder = new AtomBuilder().setData(data);
+            storage.addData(atomBuilder, nodes, replicationFactor);
+        } catch (StorageException e) {
+            throw new PolicyException("Unable to replicate data");
+        }
     }
 
     public void deleteData(IGUID guid, IGUID node) {
         // TODO - there is not such method yet as I have not thought of a way of removing data/content/assets yet
+    }
+
+    public boolean nodeHasManifest(IGUID node, IGUID guid) {
+
+        // TODO - this will make a challenge/check/verify call to the node
+        return false;
     }
 
     public boolean nodeHasData(IGUID node, IGUID guid) {

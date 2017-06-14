@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.impl.InvalidID;
+import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -62,6 +62,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
                 throw new ManifestPersistException("Manifest not valid");
             }
         } catch (ManifestsDirectoryException e) {
+            e.printStackTrace();
             throw new ManifestPersistException("Unable to save manifest " + manifest);
         }
     }
@@ -224,8 +225,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             IFile manifestFileToBackup = getManifestFile(manifestGUID);
 
             IDirectory manifestsDirectory = localStorage.getManifestsDirectory();
-            IFile backupManifest = localStorage.createFile(manifestsDirectory,
-                    manifestFileToBackup.getName() + BACKUP_EXTENSION, manifestFileToBackup.getData());
+            IFile backupManifest = localStorage.createFile(manifestsDirectory, manifestFileToBackup.getName() + BACKUP_EXTENSION, manifestFileToBackup.getData());
             backupManifest.persist();
 
             return backupManifest;

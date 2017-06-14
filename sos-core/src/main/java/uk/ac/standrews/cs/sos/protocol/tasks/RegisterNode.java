@@ -48,7 +48,7 @@ public class RegisterNode extends Task {
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
 
         } catch (SOSURLException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to perform node registration");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to perform node registration to node " + ndsNode.toString() );
         }
     }
 

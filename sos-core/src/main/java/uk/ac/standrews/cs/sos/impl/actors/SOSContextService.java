@@ -212,7 +212,7 @@ public class SOSContextService implements ContextService {
     private void getDataPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "N/A yet - Get data from other nodes - this is a periodic background thread");
+            SOS_LOG.log(LEVEL.WARN, "N/A yet - Get data from other nodes - this is a periodic background thread");
 
             // TODO - iterate over context
             // TODO - for each context, context sources
@@ -226,7 +226,7 @@ public class SOSContextService implements ContextService {
     private void spawnContextsPeriodic() {
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "N/A yet - Spawn contexts to other nodes - this is a periodic background thread");
+            SOS_LOG.log(LEVEL.WARN, "N/A yet - Spawn contexts to other nodes - this is a periodic background thread");
 
             // Get contexts that have to be spawned
             // spawn contexts
@@ -291,7 +291,7 @@ public class SOSContextService implements ContextService {
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 policy.apply(manifest);
 
-                System.out.println("Policy result should be updated for context " + contextGUID + " and content " + guid);
+                SOS_LOG.log(LEVEL.WARN, "Policy result should be updated for context " + contextGUID + " and content " + guid);
                 // TODO - update contextsContents
             }
         } catch (ContextNotFoundException | ManifestNotFoundException | PolicyException e) {

@@ -58,7 +58,10 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) {
+    public Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException {
+
+        // TODO - add the data to the nodes in the collection
+
         return null;
     }
 

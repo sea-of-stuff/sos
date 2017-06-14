@@ -35,7 +35,7 @@ public interface Storage extends SeaOfStuff {
      */
     Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException;
 
-    Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor);
+    Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException;
 
     /**
      * Get an atom's data given an AtomManifest.
