@@ -26,7 +26,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -93,9 +92,10 @@ public class SOSContextService implements ContextService {
 
         // Background CRON processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
-        getDataPeriodic();
         runPredicatesPeriodic();
         runPoliciesPeriodic();
+
+        getDataPeriodic();
         spawnContextsPeriodic();
     }
 
@@ -160,14 +160,13 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
 
-            Iterator<IGUID> it = inMemoryCache.getContexts().iterator();
-            while (it.hasNext()) {
+            for (IGUID iguid : inMemoryCache.getContexts()) {
 
                 try {
-                    Context context = getContext(it.next());
-                    for(IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
+                    Context context = getContext(iguid);
+                    for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
 
-                        for(IGUID tip : dataDiscoveryService.getTips(assetInvariant)) {
+                        for (IGUID tip : dataDiscoveryService.getTips(assetInvariant)) {
 
                             SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + tip.toString());
                             runPredicate(context, tip);
@@ -201,10 +200,7 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
-            Iterator<IGUID> it = inMemoryCache.getContexts().iterator();
-            while (it.hasNext()) {
-
-                IGUID contextGUID = it.next();
+            for (IGUID contextGUID : inMemoryCache.getContexts()) {
 
                 HashMap<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsRows(contextGUID);
                 contentsToProcess.forEach((guid, row) -> {
@@ -274,7 +270,7 @@ public class SOSContextService implements ContextService {
             maxAgeExpired = predicateHasExpired(context, versionGUID);
         }
 
-        if (!alreadyRun && !maxAgeExpired) {
+        if (!alreadyRun || maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
 
