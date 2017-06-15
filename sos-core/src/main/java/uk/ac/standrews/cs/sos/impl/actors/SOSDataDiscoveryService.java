@@ -101,18 +101,32 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             throw new ManifestNotFoundException("GUID was invalid");
         }
 
-        Manifest manifest = findManifest(inMemoryCache, guid);
-        if (manifest == null) {
-            manifest = findManifest(local, guid);
-        }
-        if (manifest == null) {
-            manifest = findManifest(remote, guid);
-        }
-        if (manifest == null) {
-            throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toString());
+        // TODO - improve logic about manifest being added to directories if missing
+        try {
+            Manifest manifest = findManifest(inMemoryCache, guid);
+            if (manifest == null) {
+                manifest = findManifest(local, guid);
+
+                if (manifest != null) inMemoryCache.addManifest(manifest);
+            }
+            if (manifest == null) {
+                manifest = findManifest(remote, guid);
+
+                if (manifest != null) {
+                    inMemoryCache.addManifest(manifest);
+                    local.addManifest(manifest);
+                }
+            }
+            if (manifest == null) {
+                throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toString());
+            }
+
+            return manifest;
+        } catch (ManifestPersistException e) {
+            e.printStackTrace();
         }
 
-        return manifest;
+        throw new ManifestNotFoundException("Manifest not found");
     }
 
     @Override
@@ -211,14 +225,8 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         try {
             manifest = directory.findManifest(guid);
 
-            // Manifest is cached and saved to local disk for faster access in the future
-            inMemoryCache.addManifest(manifest);
-            local.addManifest(manifest);
-
         } catch (ManifestNotFoundException e) {
             SOS_LOG.log(LEVEL.WARN, e.getMessage());
-        } catch (ManifestPersistException e) {
-            SOS_LOG.log(LEVEL.WARN, "ManifestsDirectory :: Unable to save manifest to local directory");
         }
 
         return manifest;

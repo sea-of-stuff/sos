@@ -66,7 +66,7 @@ public class SOSContextService implements ContextService {
      * @param dataDiscoveryService used to discover the data to process and act upon it
      * @param nodeDiscoveryService used to operate on the SOS and its nodes
      * @param usersRolesService uses to perform USER/ROLE operations in the SOS
-     * @param storage used to access the SOS' storage
+     * @param storage used to access the SOS storage
      */
     public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
 
@@ -87,7 +87,7 @@ public class SOSContextService implements ContextService {
 
             addContext(binaryReplicationContext);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO - better exception handling
         }
 
         // Background CRON processes
@@ -139,7 +139,7 @@ public class SOSContextService implements ContextService {
      *
      * Iterate over all active contexts.
      * For each context:
-     * Run all known versions against the predicate of the context.
+     * Run all known tips of assets against the predicate of the context.
      *
      */
     private void runPredicatesPeriodic() {
@@ -268,7 +268,7 @@ public class SOSContextService implements ContextService {
             ContextContent content = new ContextContent();
             content.predicateResult = passed;
             content.timestamp = System.nanoTime();
-            
+
             contextsContents.addMapping(contextGUID, versionGUID, content);
         }
 

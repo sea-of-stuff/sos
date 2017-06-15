@@ -26,9 +26,12 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashSet;
@@ -66,12 +69,15 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.parent = parent;
         this.isCompoundData = false;
 
-        try {
-            InputStream stream = data.getInputStream();
-            AtomBuilder atomBuilder = new AtomBuilder().setInputStream(stream);
+        try (InputStream inputStream = data.getInputStream();
+             ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream);
+             InputStream streamForAtom = new ByteArrayInputStream(baos.toByteArray());
+             InputStream streamForMetadata = new ByteArrayInputStream(baos.toByteArray())) {
+
+            AtomBuilder atomBuilder = new AtomBuilder().setInputStream(streamForAtom);
 
             this.atom = sos.addAtom(atomBuilder); // Atom is saved and manifest returned by the SOS
-            this.metadata = sos.addMetadata(stream); // Metadata is generated, saved and returned by the SOS
+            this.metadata = sos.addMetadata(streamForMetadata); // Metadata is generated, saved and returned by the SOS
 
             VersionBuilder versionBuilder = new VersionBuilder()
                     .setAtomBuilder(atomBuilder)
@@ -249,6 +255,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         try (InputStream stream = sos.getAtomContent(atom)){
 
             return new InputStreamData(stream, size);
+
         } catch (AtomNotFoundException | IOException e) {
             e.printStackTrace(); // TODO - define EmptyDATA() OBJECT
         }
