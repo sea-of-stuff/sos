@@ -36,6 +36,16 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
     }
 
     @Override
+    public Set<User> getUsers() {
+        return users.keySet().stream().map(u -> users.get(u)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Role> getRoles() {
+        return roles.keySet().stream().map(u -> roles.get(u)).collect(Collectors.toSet());
+    }
+
+    @Override
     public void addUser(User user) {
         users.put(user.guid(), user);
     }

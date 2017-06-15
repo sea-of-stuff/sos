@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.web.graph.*;
 import uk.ac.standrews.cs.sos.web.home.WHome;
 import uk.ac.standrews.cs.sos.web.nodes.WNodes;
 import uk.ac.standrews.cs.sos.web.tree.WTree;
+import uk.ac.standrews.cs.sos.web.usro.WUsersRoles;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -51,6 +52,7 @@ public class WebApp {
         get("/tree", (req, res) -> WTree.Render(sos, fileSystem));
         get("/nodes", (req, res) -> WNodes.Render(sos));
         get("/contexts", (req, res) -> WContexts.Render(sos));
+        get("/usro", (req, res) -> WUsersRoles.Render(sos));
 
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
         get("/graph/data/:id", (req, res) -> WData.Render(req, sos));

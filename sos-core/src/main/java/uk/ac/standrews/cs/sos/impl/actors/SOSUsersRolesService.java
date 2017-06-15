@@ -51,6 +51,16 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
+    public Set<User> getUsers() {
+        return inMemoryCache.getUsers();
+    }
+
+    @Override
+    public Set<Role> getRoles() {
+        return inMemoryCache.getRoles();
+    }
+
+    @Override
     public void addUser(User user) throws UserRolePersistException {
 
         inMemoryCache.addUser(user);

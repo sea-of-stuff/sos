@@ -16,6 +16,10 @@ import java.util.Set;
  */
 public interface UsersRolesService {
 
+    Set<User> getUsers();
+
+    Set<Role> getRoles();
+
     /**
      * Add a user to the service
      *

@@ -10,13 +10,26 @@
 <div id="header"></div>
 <div class="container-fluid">
 
-    <ul>
-    #foreach($node in $nodes)
-        <li>
-            <pre style="white-space: pre-wrap; word-wrap: break-word;">$node.toString()</pre>
-        </li>
+    <h1>List of users</h1>
 
-    #end
+    <ul>
+        #foreach($user in $users)
+            <li>
+                <pre style="white-space: pre-wrap; word-wrap: break-word;">$user.toString()</pre>
+            </li>
+
+        #end
+    </ul>
+
+    <h1>List of Roles</h1>
+
+    <ul>
+        #foreach($role in $roles)
+            <li>
+                <pre style="white-space: pre-wrap; word-wrap: break-word;">$role.toString()</pre>
+            </li>
+
+        #end
     </ul>
 
 </div>

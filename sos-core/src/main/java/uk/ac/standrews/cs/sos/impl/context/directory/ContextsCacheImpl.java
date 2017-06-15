@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -26,8 +26,8 @@ public class ContextsCacheImpl {
         return contexts.get(guid);
     }
 
-    public Iterator<IGUID> getContexts() {
-        return contexts.keySet().iterator();
+    public Set<IGUID> getContexts() {
+        return contexts.keySet();
     }
 
 }

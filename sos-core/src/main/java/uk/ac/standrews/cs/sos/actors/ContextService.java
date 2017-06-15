@@ -16,6 +16,8 @@ import java.util.Set;
  */
 public interface ContextService extends SeaOfStuff {
 
+    Set<Context> getContexts();
+
     /**
      * Adds a context to this service.
      * The context is automatically set as active

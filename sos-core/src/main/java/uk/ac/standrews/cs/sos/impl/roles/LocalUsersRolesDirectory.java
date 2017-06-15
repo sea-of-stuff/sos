@@ -37,6 +37,16 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
+    public Set<User> getUsers() {
+        return null;
+    }
+
+    @Override
+    public Set<Role> getRoles() {
+        return null;
+    }
+
+    @Override
     public void addUser(User user) throws UserRolePersistException {
 
         saveToFile(user);
