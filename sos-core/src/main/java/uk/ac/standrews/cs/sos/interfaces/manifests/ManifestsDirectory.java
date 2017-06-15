@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
@@ -20,13 +20,13 @@ public interface ManifestsDirectory {
 
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
-    void advanceHead(Version version);
+    void advanceTip(Version version);
 
-    Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException;
+    Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException;
 
-    IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException;
+    IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException;
 
-    void setCurrent(Role role, Version version);
+    void setHead(Role role, Version version);
 
     void flush();
 }

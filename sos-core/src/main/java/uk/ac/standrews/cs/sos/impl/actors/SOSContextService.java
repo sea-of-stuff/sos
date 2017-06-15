@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
@@ -154,16 +154,16 @@ public class SOSContextService implements ContextService {
                     Context context = getContext(it.next());
                     for(IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
 
-                        for(IGUID head : dataDiscoveryService.getHeads(assetInvariant)) {
+                        for(IGUID tip : dataDiscoveryService.getTips(assetInvariant)) {
 
-                            SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
-                            runPredicate(context, head);
+                            SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + tip.toString());
+                            runPredicate(context, tip);
                         }
                     }
 
                 } catch (ContextNotFoundException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to find context");
-                } catch (HEADNotFoundException e) {
+                } catch (TIPNotFoundException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
                 }
 

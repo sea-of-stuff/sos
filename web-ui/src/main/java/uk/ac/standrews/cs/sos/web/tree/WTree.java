@@ -5,8 +5,8 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
@@ -27,14 +27,14 @@ public class WTree {
 
             model.put("node_id", sos.getNodeGUID().toString());
             model.put("tree", data);
-        } catch (HEADNotFoundException | ManifestNotFoundException e) {
+        } catch (TIPNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();
         }
 
         return VelocityUtils.RenderTemplate("velocity/tree.vm", model);
     }
 
-    private static String getTreeInJson(IFileSystem fileSystem) throws HEADNotFoundException, ManifestNotFoundException {
+    private static String getTreeInJson(IFileSystem fileSystem) throws TIPNotFoundException, ManifestNotFoundException {
 
         IGUID rootGUID = fileSystem.getRootId(); // Version ID for the root
         String children = getChildren(fileSystem.getRootDirectory(), rootGUID);

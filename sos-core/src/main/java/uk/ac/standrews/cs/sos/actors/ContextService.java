@@ -39,7 +39,7 @@ public interface ContextService extends SeaOfStuff {
      * @param context for which we want to find its contents
      * @return the references to the contents of the context
      *
-     * TODO - only the refs of versions that are still HEADS?
+     * TODO - only the refs of versions that are still tips?
      *
      */
     Set<IGUID> getContents(IGUID context);

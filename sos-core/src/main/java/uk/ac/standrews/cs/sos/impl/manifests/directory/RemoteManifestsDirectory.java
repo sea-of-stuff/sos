@@ -99,23 +99,23 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     }
 
     @Override
-    public void advanceHead(IGUID invariant, IGUID version) {}
+    public void advanceTip(IGUID invariant, IGUID version) {}
 
     @Override
-    public void advanceHead(IGUID invariant, Set<IGUID> previousVersion, IGUID newVersion) {}
+    public void advanceTip(IGUID invariant, Set<IGUID> previousVersion, IGUID newVersion) {}
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) {
+    public Set<IGUID> getTips(IGUID invariant) {
         return null;
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) {
+    public IGUID getHead(Role role, IGUID invariant) {
         return null;
     }
 
     @Override
-    public void setCurrent(Role role, Version version) {}
+    public void setHead(Role role, Version version) {}
 
     @Override
     public void flush() {}

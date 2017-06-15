@@ -11,18 +11,18 @@ import java.util.Set;
  */
 public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
 
-    abstract void advanceHead(IGUID invariant, IGUID version);
-    abstract void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion);
+    abstract void advanceTip(IGUID invariant, IGUID version);
+    abstract void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion);
 
     @Override
-    public void advanceHead(Version version) {
+    public void advanceTip(Version version) {
 
         Set<IGUID> previousVersions = version.getPreviousVersions();
 
         if (previousVersions == null || previousVersions.isEmpty()) {
-            advanceHead(version.getInvariantGUID(), version.guid());
+            advanceTip(version.getInvariantGUID(), version.guid());
         } else {
-            advanceHead(version.getInvariantGUID(), version.getPreviousVersions(), version.guid());
+            advanceTip(version.getInvariantGUID(), version.getPreviousVersions(), version.guid());
         }
 
     }

@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
+    private final static String TIP_TAG = "TIP-";
     private final static String HEAD_TAG = "HEAD-";
-    private final static String CURRENT_TAG = "CURRENT-";
 
     final private LocalStorage localStorage;
 
@@ -84,16 +84,16 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     }
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
+    public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
         try {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString();
+            String filename = TIP_TAG + invariant.toString();
 
-            // Make sure that the HEAD file exists
+            // Make sure that the tip file exists
             IFile file = localStorage.createFile(manifestsDir, filename);
             if (!file.exists()) {
-                throw new HEADNotFoundException();
+                throw new TIPNotFoundException();
             }
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
@@ -111,34 +111,34 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             return versionsRefs;
 
         } catch (DataException | DataStorageException e) {
-            throw new HEADNotFoundException();
+            throw new TIPNotFoundException();
         }
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
+    public IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException {
 
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = CURRENT_TAG + invariant.toString() + "-ROLE-" + role.guid();
+            String filename = HEAD_TAG + invariant.toString() + "-ROLE-" + role.guid();
 
             String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
             return GUIDFactory.recreateGUID(guid);
 
         } catch (DataStorageException | DataException | GUIDGenerationException e) {
-            throw new CURRENTNotFoundException();
+            throw new HEADNotFoundException();
         }
 
     }
 
     @Override
-    public void setCurrent(Role role, Version version) {
+    public void setHead(Role role, Version version) {
 
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = CURRENT_TAG + version.getInvariantGUID().toString() + "-ROLE-" + role.guid();
+            String filename = HEAD_TAG + version.getInvariantGUID().toString() + "-ROLE-" + role.guid();
 
             IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toString());
             file.persist();
@@ -286,44 +286,34 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         return manifest.exists();
     }
 
-    public void advanceHead(IGUID invariant, IGUID version) {
+    public void advanceTip(IGUID invariant, IGUID version) {
 
-        appendHead(invariant, version);
+        appendTip(invariant, version);
     }
 
-    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
+    public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
-        try {
+        Set<String> previousVersionsStrings = previousVersions.stream()
+                .map(IKey::toString)
+                .collect(Collectors.toSet());
 
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString();
-
-            Set<String> previousVersionsStrings = previousVersions.stream()
-                    .map(IKey::toString)
-                    .collect(Collectors.toSet());
-
-            appendHead(invariant, newVersion);
-            removeHeads(invariant, previousVersionsStrings);
-
-
-        } catch (DataStorageException e) {
-            e.printStackTrace();
-        }
+        appendTip(invariant, newVersion);
+        removeTips(invariant, previousVersionsStrings);
     }
 
     /**
-     * Append a version to the HEAD file for the specified invariant
+     * Append a version to the tip file for the specified invariant
      * @param invariant
      * @param version
      */
-    private void appendHead(IGUID invariant, IGUID version) {
+    private void appendTip(IGUID invariant, IGUID version) {
 
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString();
+            String filename = TIP_TAG + invariant.toString();
 
-            // Make sure that the HEAD file exists
+            // Make sure that the tip file exists
             IFile file = localStorage.createFile(manifestsDir, filename);
             if (!file.exists()) {
                 file.persist();
@@ -354,12 +344,12 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
      * @param invariant
      * @param versionsToRemove
      */
-    private void removeHeads(IGUID invariant, Set<String> versionsToRemove) {
+    private void removeTips(IGUID invariant, Set<String> versionsToRemove) {
 
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString();
+            String filename = TIP_TAG + invariant.toString();
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
             Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));

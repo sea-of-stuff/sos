@@ -172,8 +172,8 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IDirectory getRootDirectory() {
-        Version head = SOSFileSystemFactory.getRoot(sos, invariant);
-        return new SOSDirectory(sos, head);
+        Version tip = SOSFileSystemFactory.getRoot(sos, invariant);
+        return new SOSDirectory(sos, tip);
     }
 
     @Override

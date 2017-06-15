@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.actors;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -72,16 +72,16 @@ public interface DataDiscoveryService extends SeaOfStuff {
     Set<IGUID> getAllAssets();
 
     /**
-     * Get all the HEADS for the given invariant
+     * Get all the tips for the given invariant
      *
      * @param invariant
      * @return
      */
-    Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException;
+    Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException;
 
     /**
-     * Get the CURRENT version for the role.
-     * The CURRENT does not need to match one of the HEADS
+     * Get the HEAD version for the role.
+     * The HEAD does not need to match one of the TIPS
      *
      * Different roles might have different currents.
      *
@@ -91,15 +91,15 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @param invariant
      * @return
      */
-    IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException;
+    IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException;
 
     /**
-     * Set the specified version as the CURRENT for its asset and for the given role
+     * Set the specified version as the HEAD for its asset and for the given role
      *
      * @param role
      * @param version
      */
-    void setCurrent(Role role, Version version);
+    void setHead(Role role, Version version);
 
     /**
      * Flushes any in-memory information into disk

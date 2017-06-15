@@ -7,10 +7,10 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.actors.Agent;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.Compound;
@@ -47,7 +47,7 @@ public class SOSFileSystemFactoryTest {
     }
 
     @Test
-    public void makeFileSystemTest() throws FileSystemCreationException, HEADNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException, RoleNotFoundException {
+    public void makeFileSystemTest() throws FileSystemCreationException, TIPNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException, RoleNotFoundException {
         IGUID invariant = GUIDFactory.generateRandomGUID();
         IGUID versionGUID = GUIDFactory.generateRandomGUID();
 
@@ -62,7 +62,7 @@ public class SOSFileSystemFactoryTest {
         assertEquals(versionGUID, fileSystem.getRootId());
     }
 
-    private Agent mockAgent(IGUID guid, IGUID versionGUID) throws ManifestPersistException, ManifestNotMadeException, ManifestNotFoundException, HEADNotFoundException, RoleNotFoundException {
+    private Agent mockAgent(IGUID guid, IGUID versionGUID) throws ManifestPersistException, ManifestNotMadeException, ManifestNotFoundException, TIPNotFoundException, RoleNotFoundException {
         Agent mockAgent = mock(Agent.class);
         Compound mockRootFolder = mock(Compound.class);
         Version mockRootVersion = mock(Version.class);

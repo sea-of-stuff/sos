@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
@@ -44,10 +44,10 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     private transient HashMap<IGUID, Manifest> cache;
     private transient ConcurrentLinkedQueue<IGUID> lru;
 
-    private transient HashMap<IGUID, Set<IGUID>> heads;
+    private transient HashMap<IGUID, Set<IGUID>> tips;
 
-    // Invariant --> Role --> Current
-    private transient HashMap<IGUID, HashMap<IGUID, IGUID>> currents;
+    // Invariant --> Role --> HEAD
+    private transient HashMap<IGUID, HashMap<IGUID, IGUID>> heads;
 
     public ManifestsCacheImpl() {
         this(MAX_DEFAULT_SIZE);
@@ -59,8 +59,8 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         cache = new HashMap<>();
         lru = new ConcurrentLinkedQueue<>();
 
+        tips = new HashMap<>();
         heads = new HashMap<>();
-        currents = new HashMap<>();
     }
 
     @Override
@@ -88,37 +88,37 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
+    public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
+
+        if (tips.containsKey(invariant)) {
+            return tips.get(invariant);
+        }
+
+        throw new TIPNotFoundException();
+    }
+
+    @Override
+    public IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException {
 
         if (heads.containsKey(invariant)) {
-            return heads.get(invariant);
+            return heads.get(invariant).get(role.guid());
         }
 
         throw new HEADNotFoundException();
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
-
-        if (currents.containsKey(invariant)) {
-            return currents.get(invariant).get(role.guid());
-        }
-
-        throw new CURRENTNotFoundException();
-    }
-
-    @Override
-    public void setCurrent(Role role, Version version) {
+    public void setHead(Role role, Version version) {
 
         IGUID invariantGUID = version.getInvariantGUID();
         IGUID versionGUID = version.guid();
         IGUID roleGUID = role.guid();
 
-        if (!currents.containsKey(invariantGUID)) {
-            currents.put(invariantGUID, new HashMap<>());
+        if (!heads.containsKey(invariantGUID)) {
+            heads.put(invariantGUID, new HashMap<>());
         }
 
-        currents.get(invariantGUID).put(roleGUID, versionGUID);
+        heads.get(invariantGUID).put(roleGUID, versionGUID);
     }
 
     @Override
@@ -141,21 +141,21 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
                 .collect(Collectors.toSet());
     }
 
-    public void advanceHead(IGUID invariant, IGUID version) {
+    public void advanceTip(IGUID invariant, IGUID version) {
 
-        if (!heads.containsKey(invariant)) {
-            heads.put(invariant, new LinkedHashSet<>());
+        if (!tips.containsKey(invariant)) {
+            tips.put(invariant, new LinkedHashSet<>());
         }
 
-        heads.get(invariant).add(version);
+        tips.get(invariant).add(version);
     }
 
-    public void advanceHead(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
+    public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
-        if (heads.containsKey(invariant) && heads.get(invariant).containsAll(previousVersions)) {
+        if (tips.containsKey(invariant) && tips.get(invariant).containsAll(previousVersions)) {
 
-            advanceHead(invariant, newVersion);
-            heads.get(invariant).removeAll(previousVersions);
+            advanceTip(invariant, newVersion);
+            tips.get(invariant).removeAll(previousVersions);
         }
     }
 
@@ -236,8 +236,8 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         cache = new HashMap<>();
 
-        // TODO - heads and currents should be stored to disk?
+        // TODO - tips and heads should be stored to disk?
+        tips = new HashMap<>();
         heads = new HashMap<>();
-        currents = new HashMap<>();
     }
 }

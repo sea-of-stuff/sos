@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.exceptions.manifest.CURRENTNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocalManifestsDirectory;
@@ -68,12 +68,12 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
             Set<IGUID> previousVersions = version.getPreviousVersions();
             if (previousVersions == null || previousVersions.isEmpty()) {
 
-                inMemoryCache.advanceHead(version);
-                local.advanceHead(version);
+                inMemoryCache.advanceTip(version);
+                local.advanceTip(version);
             } else {
 
-                inMemoryCache.advanceHead(version);
-                local.advanceHead(version);
+                inMemoryCache.advanceTip(version);
+                local.advanceTip(version);
             }
         }
     }
@@ -123,38 +123,38 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public Set<IGUID> getHeads(IGUID invariant) throws HEADNotFoundException {
+    public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
         try {
 
-            return inMemoryCache.getHeads(invariant);
+            return inMemoryCache.getTips(invariant);
+
+        } catch (TIPNotFoundException e) {
+
+            return local.getTips(invariant);
+        }
+
+    }
+
+    @Override
+    public IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException {
+
+        try {
+
+            return inMemoryCache.getHead(role, invariant);
 
         } catch (HEADNotFoundException e) {
 
-            return local.getHeads(invariant);
+            return local.getHead(role, invariant);
         }
 
     }
 
     @Override
-    public IGUID getCurrent(Role role, IGUID invariant) throws CURRENTNotFoundException {
+    public void setHead(Role role, Version version) {
 
-        try {
-
-            return inMemoryCache.getCurrent(role, invariant);
-
-        } catch (CURRENTNotFoundException e) {
-
-            return local.getCurrent(role, invariant);
-        }
-
-    }
-
-    @Override
-    public void setCurrent(Role role, Version version) {
-
-        inMemoryCache.setCurrent(role, version);
-        local.setCurrent(role, version);
+        inMemoryCache.setHead(role, version);
+        local.setHead(role, version);
     }
 
     @Override
