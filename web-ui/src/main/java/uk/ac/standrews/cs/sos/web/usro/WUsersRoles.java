@@ -2,10 +2,17 @@ package uk.ac.standrews.cs.sos.web.usro;
 
 import spark.Request;
 import spark.Response;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
@@ -41,4 +48,25 @@ public class WUsersRoles {
             return VelocityUtils.RenderTemplate("velocity/usro.vm");
         }
     }
+
+    public static String CreateRole(Request request, Response response, SOSLocalNode sos){
+
+        try {
+            IGUID userGUID = GUIDFactory.recreateGUID(request.queryParams("userGUID"));
+            String rolename = request.queryParams("rolename");
+
+            User user = sos.getRMS().getUser(userGUID);
+
+            Role role = new RoleImpl(user, rolename);
+            sos.getRMS().addRole(role);
+
+            response.status(201);
+            return VelocityUtils.RenderTemplate("velocity/usro.vm");
+
+        } catch (SignatureException | UserRolePersistException | UserNotFoundException | GUIDGenerationException | ProtectionException e) {
+            response.status(500);
+            return VelocityUtils.RenderTemplate("velocity/usro.vm");
+        }
+    }
+
 }

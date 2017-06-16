@@ -27,7 +27,7 @@
     <hr>
 
     <form action="/usro/role" method="POST">
-        <input type="text" name="user" /> <!-- THIS SHOULD BE A DROPDOWN -->
+        <input type="text" name="userGUID" /> <!-- THIS SHOULD BE A DROPDOWN -->
         <input type="text" name="rolename" />
         <input type="submit" value="Submit">
     </form>
