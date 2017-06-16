@@ -10,19 +10,29 @@
 <div id="header"></div>
 <div class="container-fluid">
 
-    <h1>List of users</h1>
+    <form action="/usro/user" method="POST">
+        <input type="text" name="username" />
+        <input type="submit" value="Submit">
+    </form>
 
+    <h1>List of users</h1>
     <ul>
         #foreach($user in $users)
             <li>
                 <pre style="white-space: pre-wrap; word-wrap: break-word;">$user.toString()</pre>
             </li>
-
         #end
     </ul>
 
-    <h1>List of Roles</h1>
+    <hr>
 
+    <form action="/usro/role" method="POST">
+        <input type="text" name="user" /> <!-- THIS SHOULD BE A DROPDOWN -->
+        <input type="text" name="rolename" />
+        <input type="submit" value="Submit">
+    </form>
+
+    <h1>List of Roles</h1>
     <ul>
         #foreach($role in $roles)
             <li>
