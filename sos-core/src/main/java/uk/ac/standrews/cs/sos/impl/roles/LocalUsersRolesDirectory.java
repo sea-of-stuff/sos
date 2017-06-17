@@ -103,6 +103,11 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         setActive(user, ACTIVE_USER);
     }
 
+    @Override
+    public void flush() {
+
+    }
+
     private void setActive(User user, String filename) {
 
         try {

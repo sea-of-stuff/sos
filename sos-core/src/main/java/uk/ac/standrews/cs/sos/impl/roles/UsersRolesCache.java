@@ -1,11 +1,15 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,8 +17,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static uk.ac.standrews.cs.sos.utils.FileUtils.RoleFromString;
+import static uk.ac.standrews.cs.sos.utils.FileUtils.UserFromString;
 
 /**
  *
@@ -116,31 +124,83 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
         this.activeUser = user;
     }
 
+    @Override
+    public void flush() {
+        // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
+    }
+
+    public static UsersRolesCache load(IFile file) throws IOException, ClassNotFoundException {
+
+        UsersRolesCache persistedCache = (UsersRolesCache) Persistence.Load(file);
+        if (persistedCache == null) throw new ClassNotFoundException();
+
+        return persistedCache;
+    }
+
     // This method defines how the cache is serialised
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
-//        out.writeInt(lru.size());
-//        for (IGUID guid : lru) {
-//            out.writeUTF(guid.toString());
-//        }
+
+        if (activeUser != null) {
+            out.writeBoolean(true);
+            out.writeUTF(activeUser.toString());
+        } else {
+            out.writeBoolean(false);
+        }
+
+        if (activeRole != null) {
+            out.writeBoolean(true);
+            out.writeUTF(activeRole.toString());
+        } else {
+            out.writeBoolean(false);
+        }
+
+        out.writeInt(users.size());
+        for(Map.Entry<IGUID, User> pair : users.entrySet()) {
+            out.writeUTF(pair.getKey().toString());
+            out.writeUTF(pair.getValue().toString());
+        }
+
+        out.writeInt(roles.size());
+        for(Map.Entry<IGUID, Role> pair : roles.entrySet()) {
+            out.writeUTF(pair.getKey().toString());
+            out.writeUTF(pair.getValue().toString());
+        }
     }
 
     // This method defines how the cache is de-serialised
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-//        int lruSize = in.readInt();
-//        lru = new ConcurrentLinkedQueue<>();
-//        for(int i = 0; i < lruSize; i++) {
-//            String guid = in.readUTF();
-//            try {
-//                lru.add(GUIDFactory.recreateGUID(guid));
-//            } catch (GUIDGenerationException e) {
-//                SOS_LOG.log(LEVEL.WARN, "Manifest cache loading - unable to created GUID for entry: " + guid);
-//            }
-//        }
-//
-//        cache = new HashMap<>();
+        try {
+            if (in.readBoolean()) activeUser = UserFromString(in.readUTF());
+            if (in.readBoolean()) activeRole = RoleFromString(in.readUTF());
+
+            users = new HashMap<>();
+            int noUsers = in.readInt();
+            for(int i = 0; i < noUsers; i++) {
+                IGUID guid = GUIDFactory.recreateGUID(in.readUTF());
+                User user = UserFromString(in.readUTF());
+
+                users.put(guid, user);
+            }
+
+            roles = new HashMap<>();
+            int noRoles = in.readInt();
+            for(int i = 0; i < noRoles; i++) {
+                IGUID guid = GUIDFactory.recreateGUID(in.readUTF());
+                Role role = RoleFromString(in.readUTF());
+
+                roles.put(guid, role);
+            }
+
+
+        } catch (UserNotFoundException | RoleNotFoundException e) {
+            throw new IOException(e);
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        }
+
     }
 }

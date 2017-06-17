@@ -145,6 +145,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public void kill() {
         dataDiscoveryService.flush();
         storage.flush();
+        usersRolesService.flush();
         cacheFlusherService.shutdown();
 
         SOSAgent.destroy();

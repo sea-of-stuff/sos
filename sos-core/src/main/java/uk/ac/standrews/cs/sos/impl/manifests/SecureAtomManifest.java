@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
 import javax.crypto.SecretKey;
+import java.io.InputStream;
 import java.util.Set;
 
 /**
@@ -28,12 +29,12 @@ import java.util.Set;
 public class SecureAtomManifest extends AtomManifest implements Atom, SecureManifest {
 
     private Role role;
-    private String encryptedKey;
 
     /**
      * Creates a valid atom manifest given an atom.
      *
      * TODO - is the data already stored at the specified locations?
+     * TODO - atom should store only GUID to role?
      *
      * @param guid
      * @param locations
@@ -43,6 +44,7 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
         this.manifestType = ManifestType.ATOM_PROTECTED;
         this.role = role;
 
+        // TODO - encrypt the local data!!!
         encrypt("TODO");
     }
 
@@ -57,7 +59,8 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
 
             SecretKey key = SymmetricEncryption.generateRandomKey();
             String encryptedData = SymmetricEncryption.encrypt(key, data);
-            this.encryptedKey = role.encrypt(key);
+            // TODO - save data to disk
+            String encryptedKey = role.encrypt(key);
             this.guid = GUIDFactory.generateGUID(encryptedData);
 
         } catch (CryptoException | ProtectionException | GUIDGenerationException e) {
@@ -67,7 +70,22 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
     }
 
     @Override
+    public InputStream getData() {
+        // Return the encrypted data
+        // maybe there is no need to override this method
+        return null;
+    }
+
+    public InputStream getData(Role role) {
+        // Retruns the unencrypted data
+        return null;
+    }
+
+    @Override
     public Set<Pair<String, IGUID>> keysRoles() {
+
+        // Return the set of (encrypted key, guid of role)
+
         return null;
     }
 }

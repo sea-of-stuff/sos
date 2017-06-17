@@ -1,9 +1,13 @@
 package uk.ac.standrews.cs.sos.impl.actors;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
@@ -14,11 +18,13 @@ import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UsersRolesCache;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.utils.Persistence;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.IOException;
 import java.util.Set;
 
-import static uk.ac.standrews.cs.sos.constants.Internals.DEFAULT_ROLE_NAME;
-import static uk.ac.standrews.cs.sos.constants.Internals.DEFAULT_USER_NAME;
+import static uk.ac.standrews.cs.sos.constants.Internals.*;
 
 /**
  * Service to manage Users and Roles.
@@ -35,9 +41,13 @@ public class SOSUsersRolesService implements UsersRolesService {
     private UsersRolesCache inMemoryCache;
     private LocalUsersRolesDirectory localDirectory;
 
+    private LocalStorage localStorage;
+
     public SOSUsersRolesService(LocalStorage localStorage) {
 
-        inMemoryCache = new UsersRolesCache();
+        this.localStorage = localStorage;
+
+        loadOrCreateCache();
         localDirectory = new LocalUsersRolesDirectory(localStorage);
 
         try {
@@ -115,6 +125,36 @@ public class SOSUsersRolesService implements UsersRolesService {
 
         inMemoryCache.setActiveUser(user);
         localDirectory.setActiveUser(user);
+    }
+
+    @Override
+    public void flush() {
+
+        try {
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+
+            IFile cacheFile = localStorage.createFile(cacheDir, USRO_CACHE_FILE);
+            Persistence.Persist(inMemoryCache, cacheFile);
+
+        } catch (DataStorageException | IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the UserRoleService info inMemoryCache and/or index");
+        }
+    }
+
+    private void loadOrCreateCache() {
+        try {
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            IFile file = localStorage.createFile(cacheDir, USRO_CACHE_FILE);
+            if (file.exists()) {
+                inMemoryCache = UsersRolesCache.load(file);
+            }
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the UserRoleService inMemoryCache");
+        }
+
+        if (inMemoryCache == null) {
+            inMemoryCache = new UsersRolesCache();
+        }
     }
 
     private void manageDefaultUser() throws SignatureException, UserRolePersistException {

@@ -121,10 +121,31 @@ public class FileUtils {
         }
     }
 
+    public static User UserFromString(String json) throws UserNotFoundException {
+
+        try {
+            return JSONHelper.JsonObjMapper().readValue(json, UserImpl.class);
+
+        } catch (IOException e) {
+            throw new UserNotFoundException();
+        }
+    }
+
     public static Role RoleFromFile(IFile file) throws RoleNotFoundException {
 
         try {
             return JSONHelper.JsonObjMapper().readValue(file.toFile(), RoleImpl.class);
+
+        } catch (IOException e) {
+            throw new RoleNotFoundException();
+        }
+    }
+
+
+    public static Role RoleFromString(String json) throws RoleNotFoundException {
+
+        try {
+            return JSONHelper.JsonObjMapper().readValue(json, RoleImpl.class);
 
         } catch (IOException e) {
             throw new RoleNotFoundException();

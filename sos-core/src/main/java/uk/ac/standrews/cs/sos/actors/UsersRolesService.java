@@ -94,4 +94,6 @@ public interface UsersRolesService {
      * @throws UserRolePersistException if the user could not be made active
      */
     void setActiveUser(User user) throws UserRolePersistException;
+
+    void flush();
 }

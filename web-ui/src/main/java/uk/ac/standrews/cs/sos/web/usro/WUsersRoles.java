@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.sos.web.usro;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import spark.Request;
 import spark.Response;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -19,7 +16,6 @@ import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
-import uk.ac.standrews.cs.sos.web.WResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,19 +42,12 @@ public class WUsersRoles {
             sos.getRMS().addUser(user);
 
             response.redirect("/usro");
-            return Json_to_String(new WResponse("Role Created", 201));
+            return "";
 
         } catch (SignatureException | UserRolePersistException e) {
             response.redirect("/usro");
-            return Json_to_String(new WResponse("Role NOT Created", 500));
+            return "";
         }
-    }
-
-    private static String Json_to_String(final Object object) throws JsonProcessingException {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
     public static String CreateRole(Request request, Response response, SOSLocalNode sos) throws JsonProcessingException {
@@ -73,11 +62,11 @@ public class WUsersRoles {
             sos.getRMS().addRole(role);
 
             response.redirect("/usro");
-            return Json_to_String(new WResponse("User Created", 201));
+            return "";
 
         } catch (SignatureException | UserRolePersistException | UserNotFoundException | GUIDGenerationException | ProtectionException e) {
             response.redirect("/usro");
-            return Json_to_String(new WResponse("User NOT Created", 500));
+            return "";
         }
     }
 
