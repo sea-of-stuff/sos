@@ -27,7 +27,13 @@
     <hr>
 
     <form action="/usro/role" method="POST">
-        <input type="text" name="userGUID" /> <!-- THIS SHOULD BE A DROPDOWN -->
+
+        <select name="userGUID">
+            #foreach($user in $users)
+                <option value=$user.guid()>$user.getName() - $user.guid()</option>
+            #end
+
+        </select>
         <input type="text" name="rolename" />
         <input type="submit" value="Submit">
     </form>
