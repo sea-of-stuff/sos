@@ -51,7 +51,9 @@ public class WebApp {
 
         get("/tree", (req, res) -> WTree.Render(sos, fileSystem));
         get("/nodes", (req, res) -> WNodes.Render(sos));
+
         get("/contexts", (req, res) -> WContexts.Render(sos));
+        post("/contexts", (req, res) -> WContexts.CreateContext(req, res, sos));
 
         get("/usro", (req, res) -> WUsersRoles.Render(sos));
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));

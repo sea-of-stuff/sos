@@ -38,7 +38,7 @@ public class ContextLoader {
      * @param path
      * @throws ContextLoaderException
      */
-    public static void Load(String path) throws ContextLoaderException {
+    public static void LoadMultipleContexts(String path) throws ContextLoaderException {
 
         ArrayList<String> notLoaded = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class ContextLoader {
             if (f.isFile()) {
 
                 try {
-                    Load(path);
+                    LoadContextFromPath(path);
                 } catch (ContextLoaderException e) {
                     notLoaded.add(f.getName());
                 }
@@ -68,7 +68,7 @@ public class ContextLoader {
      * @param path
      * @throws ContextLoaderException
      */
-    public static void LoadContext(String path) throws ContextLoaderException {
+    public static void LoadContextFromPath(String path) throws ContextLoaderException {
 
         try {
             File file = new File(path);
@@ -77,6 +77,15 @@ public class ContextLoader {
             LoadContext(node);
 
         } catch (IOException | ContextLoaderException e) {
+            throw new ContextLoaderException(e);
+        }
+    }
+
+    public static void LoadContext(String node) throws ContextLoaderException {
+        try {
+            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(node);
+            LoadContext(jsonNode);
+        } catch (IOException e) {
             throw new ContextLoaderException(e);
         }
     }
@@ -91,6 +100,8 @@ public class ContextLoader {
 
         try {
             String clazzString = ContextClassBuilder.ConstructClass(node);
+
+            System.out.println("CLASS TO BE LOADED IS: \n" + clazzString);
 
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");

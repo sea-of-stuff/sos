@@ -53,7 +53,7 @@ public class ContextClassBuilder {
             "        }\n" +
             "\n" +
             "        return false;\n" +
-            "    });\n" +
+            "    }, PREDICATE_ALWAYS_TRUE);\n" +
             "}" + NEW_LINE;
 
 
@@ -89,7 +89,7 @@ public class ContextClassBuilder {
         clazz.append(NEW_LINE);
 
         /////////////////////////
-        // Class & Constructor //
+        // Class & Constructor // TODO - constructor needs to take some arguments to work
         /////////////////////////
         clazz.append(CLASS_SIGNATURE_TEMPLATE.replace(CLASS_NAME_TAG, className));
         clazz.append(NEW_LINE);

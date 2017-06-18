@@ -10,6 +10,12 @@
 <div id="header"></div>
 <div class="container-fluid">
 
+    <h1>Create context</h1>
+    <form action="/contexts" method="POST">
+        <textarea name="contextJSON">Enter context JSON</textarea>
+        <input type="submit" value="Submit">
+    </form>
+
     <h1>List of contexts</h1>
 
     <ul>

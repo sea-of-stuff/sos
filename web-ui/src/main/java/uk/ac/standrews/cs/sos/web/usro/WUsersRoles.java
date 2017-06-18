@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.web.usro;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import spark.Request;
 import spark.Response;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -33,7 +32,7 @@ public class WUsersRoles {
         return VelocityUtils.RenderTemplate("velocity/usro.vm", model);
     }
 
-    public static String CreateUser(Request request, Response response, SOSLocalNode sos) throws JsonProcessingException {
+    public static String CreateUser(Request request, Response response, SOSLocalNode sos) {
 
         try {
             String username = request.queryParams("username");
@@ -50,7 +49,7 @@ public class WUsersRoles {
         }
     }
 
-    public static String CreateRole(Request request, Response response, SOSLocalNode sos) throws JsonProcessingException {
+    public static String CreateRole(Request request, Response response, SOSLocalNode sos) {
 
         try {
             IGUID userGUID = GUIDFactory.recreateGUID(request.queryParams("userGUID"));
