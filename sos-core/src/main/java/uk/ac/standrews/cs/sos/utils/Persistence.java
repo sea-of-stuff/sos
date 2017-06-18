@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import java.io.*;
 
 /**
+ * Utility methods to facilitate the persistence of objects.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Persistence {

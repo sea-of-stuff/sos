@@ -1,9 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
@@ -158,13 +156,11 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
 
         out.writeInt(users.size());
         for(Map.Entry<IGUID, User> pair : users.entrySet()) {
-            out.writeUTF(pair.getKey().toString());
             out.writeUTF(pair.getValue().toString());
         }
 
         out.writeInt(roles.size());
         for(Map.Entry<IGUID, Role> pair : roles.entrySet()) {
-            out.writeUTF(pair.getKey().toString());
             out.writeUTF(pair.getValue().toString());
         }
     }
@@ -180,26 +176,21 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
             users = new HashMap<>();
             int noUsers = in.readInt();
             for(int i = 0; i < noUsers; i++) {
-                IGUID guid = GUIDFactory.recreateGUID(in.readUTF());
                 User user = UserFromString(in.readUTF());
-
-                users.put(guid, user);
+                addUser(user);
             }
 
             roles = new HashMap<>();
+            usersToRoles = new HashMap<>();
             int noRoles = in.readInt();
             for(int i = 0; i < noRoles; i++) {
-                IGUID guid = GUIDFactory.recreateGUID(in.readUTF());
                 Role role = RoleFromString(in.readUTF());
-
-                roles.put(guid, role);
+                addRole(role);
             }
 
 
         } catch (UserNotFoundException | RoleNotFoundException e) {
             throw new IOException(e);
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
         }
 
     }
