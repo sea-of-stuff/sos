@@ -26,13 +26,12 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * TODO - Load any maven dependencies using Maven Artifact Resolver
+ * TODO - Load any maven dependencies using Maven Artifact Resolver?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextLoader {
 
-    private static final String TEST_RESOURCES_PATH = "src/test/resources/contexts/";
     private static final String TEST_TARGET_PATH = "target/classes/";
 
     /**
@@ -185,6 +184,44 @@ public class ContextLoader {
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
             Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(policyActions, contextName, domain, codomain);
+            return context;
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
+            throw new ContextLoaderException("Unable to create instance for class " + className);
+        }
+    }
+
+    /**
+     * Creates context instance
+     *
+     * @param className
+     * @return
+     * @throws ContextLoaderException
+     */
+    public static Context Instance(String className, PolicyActions policyActions, String contextName, NodesCollection codomain) throws ContextLoaderException {
+
+        try {
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
+            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class, NodesCollection.class);
+            Context context = (Context) constructor.newInstance(policyActions, contextName, codomain);
+            return context;
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
+            throw new ContextLoaderException("Unable to create instance for class " + className);
+        }
+    }
+
+    /**
+     * Creates context instance
+     *
+     * @param className
+     * @return
+     * @throws ContextLoaderException
+     */
+    public static Context Instance(String className, PolicyActions policyActions, String contextName) throws ContextLoaderException {
+
+        try {
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
+            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class);
+            Context context = (Context) constructor.newInstance(policyActions, contextName);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);

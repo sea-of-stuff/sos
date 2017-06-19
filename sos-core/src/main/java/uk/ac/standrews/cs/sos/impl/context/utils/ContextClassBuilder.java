@@ -30,10 +30,10 @@ public class ContextClassBuilder {
     private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
     private static final String CONSTRUCTOR_BODY_1 = "super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), codomain);";
-    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
+    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY_1 + NEW_LINE + "}" + NEW_LINE;
 
     private static final String CONSTRUCTOR_BODY_2 = "super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));";
-    private static final String CONSTRUCTOR_2 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
+    private static final String CONSTRUCTOR_2 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name) {  " + NEW_LINE + CONSTRUCTOR_BODY_2 + NEW_LINE + "}" + NEW_LINE;
 
     private static final String POLICIES_TAG = "_POLICIES_";
 
@@ -81,6 +81,7 @@ public class ContextClassBuilder {
 
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.LEVEL"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.*"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.actors.SOSAgent"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.*"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
 
