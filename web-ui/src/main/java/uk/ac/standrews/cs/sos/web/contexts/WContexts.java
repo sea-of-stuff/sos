@@ -2,9 +2,7 @@ package uk.ac.standrews.cs.sos.web.contexts;
 
 import spark.Request;
 import spark.Response;
-import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 import java.util.HashMap;
@@ -27,10 +25,7 @@ public class WContexts {
 
         try {
             String contextJSON = request.queryParams("contextJSON");
-            ContextLoader.LoadContext(contextJSON);
-
-            Context context = ContextLoader.Instance("Test");
-            sos.getCMS().addContext(context);
+            sos.getCMS().addContext(contextJSON);
 
             response.redirect("/contexts");
             return "";

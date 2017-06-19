@@ -12,7 +12,7 @@
 
     <h1>Create context</h1>
     <form action="/contexts" method="POST">
-        <textarea name="contextJSON">Enter context JSON</textarea>
+        <textarea name="contextJSON" rows="15" cols="80"></textarea>
         <input type="submit" value="Submit">
     </form>
 

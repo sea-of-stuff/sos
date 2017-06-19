@@ -27,6 +27,8 @@ public interface ContextService extends SeaOfStuff {
      */
     void addContext(Context context) throws Exception;
 
+    void addContext(String jsonContext) throws Exception;
+
     /**
      * Get the context given its guid
      *

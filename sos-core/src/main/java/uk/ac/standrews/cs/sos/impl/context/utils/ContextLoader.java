@@ -34,6 +34,7 @@ import java.util.Collections;
 public class ContextLoader {
 
     private static final String TEST_TARGET_PATH = "target/classes/";
+    private static final String TEST_TARGET_PATH_1 = "sos-core/target/classes/";
 
     /**
      * Load multiple contexts at path
@@ -101,6 +102,11 @@ public class ContextLoader {
      */
     public static void LoadContext(JsonNode node) throws ContextLoaderException {
 
+        String targetClassPath = TEST_TARGET_PATH;
+        if (!new File(targetClassPath).exists()) {
+            targetClassPath = TEST_TARGET_PATH_1;
+        }
+
         try {
             String clazzString = ContextClassBuilder.ConstructClass(node);
 
@@ -114,7 +120,7 @@ public class ContextLoader {
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
-            fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(TEST_TARGET_PATH)));
+            fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
 
             // Compile the file
             JavaCompiler.CompilationTask task = compiler.getTask(null,
@@ -126,7 +132,7 @@ public class ContextLoader {
 
             if (task.call()) {
 
-                String path = TEST_TARGET_PATH + ContextClassBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
+                String path = targetClassPath + ContextClassBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
                 File dir = new File(path).getParentFile();
                 Load(dir, clazzName);
 

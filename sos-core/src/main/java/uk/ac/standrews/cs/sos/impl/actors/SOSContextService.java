@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.actors;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
@@ -24,6 +25,7 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -129,6 +131,18 @@ public class SOSContextService implements ContextService {
     public void addContext(Context context) throws Exception {
 
         inMemoryCache.addContext(context);
+    }
+
+    @Override
+    public void addContext(String jsonContext) throws Exception {
+
+        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(jsonContext);
+        String contextName = jsonNode.get("name").textValue();
+
+        ContextLoader.LoadContext(jsonNode);
+        Context context = ContextLoader.Instance(contextName, policyActions, contextName, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        addContext(context);
+
     }
 
     @Override
