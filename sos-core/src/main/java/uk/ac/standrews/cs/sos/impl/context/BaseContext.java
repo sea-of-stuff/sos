@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.model.SOSPredicate;
  */
 public abstract class BaseContext implements Context {
 
-    protected PolicyLanguage policyLanguage;
+    protected PolicyActions policyActions;
 
     protected IGUID guid;
     protected String name;
@@ -27,26 +27,26 @@ public abstract class BaseContext implements Context {
     /**
      * Use this constructor when creating a new context object and its GUID is unknown yet
      *
-     * @param policyLanguage
+     * @param policyActions
      * @param name
      * @param domain
      * @param codomain
      */
-    public BaseContext(PolicyLanguage policyLanguage, String name, NodesCollection domain, NodesCollection codomain) {
-        this(policyLanguage, GUIDFactory.generateRandomGUID(), name, domain, codomain);
+    public BaseContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        this(policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain);
     }
 
     /**
      * Use this constructor when creating an already existing object with its GUID known already
      *
-     * @param policyLanguage
+     * @param policyActions
      * @param guid
      * @param name
      * @param domain
      * @param codomain
      */
-    public BaseContext(PolicyLanguage policyLanguage, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
-        this.policyLanguage = policyLanguage;
+    public BaseContext(PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        this.policyActions = policyActions;
 
         this.guid = guid;
         this.name = name;

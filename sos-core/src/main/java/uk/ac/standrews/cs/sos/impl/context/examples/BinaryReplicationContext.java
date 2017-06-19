@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context.examples;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
-import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
+import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -22,8 +22,8 @@ public class BinaryReplicationContext extends BaseContext {
 
     private static final int NUMBER_OF_REPLICAS = 3;
 
-    public BinaryReplicationContext(PolicyLanguage policyLanguage, String name, NodesCollection domain, NodesCollection codomain) {
-        super(policyLanguage, name, domain, codomain);
+    public BinaryReplicationContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        super(policyActions, name, domain, codomain);
     }
 
     @Override
@@ -55,14 +55,14 @@ public class BinaryReplicationContext extends BaseContext {
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
-            NodesCollection nodes = policyLanguage.getNodes(codomain, NodeType.DDS);
-            policyLanguage.replicateManifest(manifest, nodes, factor);
+            NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
+            policyActions.replicateManifest(manifest, nodes, factor);
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyLanguage.numberOfReplicas(codomain, manifest.guid());
+            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
             return numberReplicas >= factor;
         }
     }

@@ -6,7 +6,9 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.actors.Agent;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -14,6 +16,7 @@ import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -101,8 +104,6 @@ public class ContextLoader {
         try {
             String clazzString = ContextClassBuilder.ConstructClass(node);
 
-            System.out.println("CLASS TO BE LOADED IS: \n" + clazzString);
-
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             sourceClazzFile.deleteOnExit();
@@ -178,14 +179,14 @@ public class ContextLoader {
      * @return
      * @throws ContextLoaderException
      */
-    public static Context Instance(String className) throws ContextLoaderException {
+    public static Context Instance(String className, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
-
-            Context context = (Context) clazz.newInstance(); // FIXME - pass any parameters
+            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
+            Context context = (Context) constructor.newInstance(policyActions, contextName, domain, codomain);
             return context;
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);
         }
     }

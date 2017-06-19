@@ -29,16 +29,15 @@ public class ContextClassBuilderTest {
         String MATCHING_CLAZZ =
                 "package uk.ac.standrews.cs.sos.impl.context;\n" +
                         "\n" +
-                        "import uk.ac.standrews.cs.sos.model.*;\n" +
-                        "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
                         "import uk.ac.standrews.cs.LEVEL;\n" +
                         "import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;\n" +
+                        "import uk.ac.standrews.cs.sos.model.*;\n" +
                         "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
                         "\n" +
-                        "public class Test extends CommonContext {\n" +
+                        "public class Test extends BaseContext {\n" +
                         "\n" +
-                        "public Test ( ) {  \n" +
-                        "name = \"Test\";\n" +
+                        "public Test (PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
+                        "super(policyActions, name, domain, codomain);\n" +
                         "}\n" +
                         "\n" +
                         "@Override\n" +
@@ -54,7 +53,7 @@ public class ContextClassBuilderTest {
                         "        }\n" +
                         "\n" +
                         "        return false;\n" +
-                        "    });\n" +
+                        "    }, PREDICATE_ALWAYS_TRUE);\n" +
                         "}\n" +
                         "\n" +
                         "@Override\n" +

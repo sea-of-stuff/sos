@@ -18,7 +18,7 @@ public class ContextClassBuilder {
     private static final String IMPORTEE_TAG = "_IMPORTEE_";
     private static final String IMPORT = "import " + IMPORTEE_TAG + ";" + NEW_LINE;
     private static final String CLASS_NAME_TAG = "_CLASS_NAME_";
-    private static final String COMMON_CLASS = "CommonContext";
+    private static final String COMMON_CLASS = "BaseContext";
     private static final String CLASS_SIGNATURE_TEMPLATE = "public class " + CLASS_NAME_TAG + " extends " + COMMON_CLASS + " {" + NEW_LINE;
     private static final String CLASS_CLOSING = "}";
 
@@ -26,8 +26,14 @@ public class ContextClassBuilder {
     private static final String VAL = "_VAL_";
     private static final String PRIVATE_STRING_VAR = VAR_NAME + " = \"" + VAL + "\";";
 
-    private static final String CONSTRUCTOR_BODY = "_CONSTRUCTOR_BODY_";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " ( ) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
+    private static final String CONSTRUCTOR_BODY = "super(policyActions, name, domain, codomain);";
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
+
+    private static final String CONSTRUCTOR_BODY_1 = "super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), codomain);";
+    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
+
+    private static final String CONSTRUCTOR_BODY_2 = "super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));";
+    private static final String CONSTRUCTOR_2 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
     private static final String POLICIES_TAG = "_POLICIES_";
 
@@ -73,11 +79,11 @@ public class ContextClassBuilder {
         StringBuilder clazz = new StringBuilder(PACKAGE_DECLARATION);
         clazz.append(NEW_LINE);
 
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.*"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.SOSPredicate"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.LEVEL"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.actors.SOSAgent"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.*"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.*"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
+
 
         if (node.has(JSON_DEPENDENCIES)) {
             JsonNode dependencies = node.get(JSON_DEPENDENCIES);
@@ -88,16 +94,19 @@ public class ContextClassBuilder {
 
         clazz.append(NEW_LINE);
 
-        /////////////////////////
-        // Class & Constructor // TODO - constructor needs to take some arguments to work
-        /////////////////////////
+        //////////////////////////
+        // Class & Constructors //
+        //////////////////////////
         clazz.append(CLASS_SIGNATURE_TEMPLATE.replace(CLASS_NAME_TAG, className));
         clazz.append(NEW_LINE);
 
-        clazz.append(CONSTRUCTOR.replace(CLASS_NAME_TAG, className)
-                                .replace(CONSTRUCTOR_BODY, PRIVATE_STRING_VAR
-                                .replace(VAR_NAME, "name")
-                                .replace(VAL, className)));
+        clazz.append(CONSTRUCTOR.replace(CLASS_NAME_TAG, className));
+        clazz.append(NEW_LINE);
+
+        clazz.append(CONSTRUCTOR_1.replace(CLASS_NAME_TAG, className));
+        clazz.append(NEW_LINE);
+
+        clazz.append(CONSTRUCTOR_2.replace(CLASS_NAME_TAG, className));
         clazz.append(NEW_LINE);
 
         ///////////////

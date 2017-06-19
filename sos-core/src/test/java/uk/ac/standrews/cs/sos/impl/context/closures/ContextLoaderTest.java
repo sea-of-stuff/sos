@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -32,8 +33,10 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        Context context = ContextLoader.Instance("Test");
-        assertEquals(context.toString(), "Context GUID: null, Name: null");
+        Context context = ContextLoader.Instance("Test", null, "Test_context", null, null);
+
+        assertNotNull(context.guid());
+        assertEquals(context.getName(), "Test_context");
 
     }
 

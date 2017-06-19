@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.model.*;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class PolicyLanguage {
+public class PolicyActions {
 
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
@@ -36,7 +36,7 @@ public class PolicyLanguage {
      * @param usersRolesService
      * @param storage
      */
-    public PolicyLanguage(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+    public PolicyActions(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
 
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;

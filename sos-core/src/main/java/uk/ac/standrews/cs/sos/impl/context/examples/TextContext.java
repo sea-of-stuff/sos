@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
-import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
+import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -21,8 +21,8 @@ import java.util.Arrays;
  */
 public class TextContext extends BaseContext {
 
-    public TextContext(PolicyLanguage policyLanguage, String name, NodesCollection domain, NodesCollection codomain) {
-        super(policyLanguage, name, domain, codomain);
+    public TextContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        super(policyActions, name, domain, codomain);
     }
 
     @Override
@@ -50,17 +50,17 @@ public class TextContext extends BaseContext {
 
             IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
 
-            boolean hasData = policyLanguage.nodeHasData(fakeNodeGUID, manifest.guid());
+            boolean hasData = policyActions.nodeHasData(fakeNodeGUID, manifest.guid());
 
             if (hasData) {
-                policyLanguage.deleteData(manifest.guid(), fakeNodeGUID);
+                policyActions.deleteData(manifest.guid(), fakeNodeGUID);
             }
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyLanguage.numberOfReplicas(null, manifest.guid());
+            int numberReplicas = policyActions.numberOfReplicas(null, manifest.guid());
             return numberReplicas == 0;
         }
     }

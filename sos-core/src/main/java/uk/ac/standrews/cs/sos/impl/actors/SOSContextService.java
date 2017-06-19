@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
-import uk.ac.standrews.cs.sos.impl.context.PolicyLanguage;
+import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
@@ -47,7 +47,7 @@ public class SOSContextService implements ContextService {
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
 
-    private PolicyLanguage policyLanguage;
+    private PolicyActions policyActions;
 
     // The inMemoryCache keeps the context objects for this node in memory.
     private ContextsCacheImpl inMemoryCache;
@@ -76,11 +76,11 @@ public class SOSContextService implements ContextService {
         inMemoryCache = new ContextsCacheImpl(); // TODO - load existing contexts into memory via reflection
         contextsContents = new ContextsContents(); // TODO - load mappings/indices
 
-        policyLanguage = new PolicyLanguage(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage); // TODO - the policy language should be made available to all the context instances
+        policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage); // TODO - the policy language should be made available to all the context instances
 
         // FIXME - The following is an hardcoded context, which should instead be loaded from disk
         try {
-            Context binaryReplicationContext = new BinaryReplicationContext(policyLanguage,
+            Context binaryReplicationContext = new BinaryReplicationContext(policyActions,
                     "binary replication context",
                     new NodesCollectionImpl(NodesCollection.TYPE.LOCAL),
                     new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
