@@ -110,6 +110,8 @@ public class ContextLoader {
         try {
             String clazzString = ContextClassBuilder.ConstructClass(node);
 
+            System.out.println(clazzString);
+
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             sourceClazzFile.deleteOnExit();

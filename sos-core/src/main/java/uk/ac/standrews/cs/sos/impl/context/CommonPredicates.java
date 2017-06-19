@@ -35,18 +35,35 @@ public class CommonPredicates {
 
         SOSAgent agent = SOSAgent.instance();
 
+
         return guid -> {
 
-            try {
-                String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
-                return matchingContentTypes.contains(contentType);
-
-            } catch (Exception e) {
-                // This could occur because the metadata could not be found or the type property was not available
-                SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
-            }
-
-            return false;
+            System.out.println("TEST");
+            return test(agent, guid, matchingContentTypes);
+//            try {
+//                String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
+//                return matchingContentTypes.contains(contentType);
+//
+//            } catch (Exception e) {
+//                // This could occur because the metadata could not be found or the type property was not available
+//                SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
+//            }
+//
+//            return false;
         };
+    }
+
+    public static boolean test(SOSAgent agent, IGUID guid, List<String> matchingContentTypes){
+        try {
+            String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
+            System.out.println(contentType);
+            return matchingContentTypes.contains(contentType);
+
+        } catch (Exception e) {
+            // This could occur because the metadata could not be found or the type property was not available
+            SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
+        }
+
+        return false;
     }
 }

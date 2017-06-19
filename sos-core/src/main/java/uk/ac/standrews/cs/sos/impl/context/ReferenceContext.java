@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.util.Collections;
+
 /**
  * NOTE: This context is used as a reference to code the ContextClassBuilder
  *
@@ -31,7 +33,7 @@ public class ReferenceContext extends BaseContext {
 
         return new SOSPredicateImpl(p -> {
             try {
-
+                CommonPredicates.ContentTypePredicate(Collections.singletonList("image/jpeg"));
             } catch (Exception e) {
                 SOS_LOG.log(LEVEL.ERROR, "Predicate could not be applied");
             }
