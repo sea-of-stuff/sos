@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.constants.Threads;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -17,6 +18,7 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
+import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -78,8 +80,20 @@ public class SOSContextService implements ContextService {
 
         policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage); // TODO - the policy language should be made available to all the context instances
 
+
+        try {
+            ContextLoader.LoadMultipleContexts("PATH TO CONTEXTS");
+            // TODO - make instances for all loaded contexts
+            // TODO - need to save GUIDs back to contexts (this is simply part of the JSON)
+
+        } catch (ContextLoaderException e) {
+            e.printStackTrace();
+        }
+
         // FIXME - The following is an hardcoded context, which should instead be loaded from disk
         try {
+
+
             Context binaryReplicationContext = new BinaryReplicationContext(policyActions,
                     "binary replication context",
                     new NodesCollectionImpl(NodesCollection.TYPE.LOCAL),

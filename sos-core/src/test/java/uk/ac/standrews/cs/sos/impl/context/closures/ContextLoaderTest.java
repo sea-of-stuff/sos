@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.impl.context.closures;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
@@ -36,7 +38,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void withNameContextConstructorLoader() throws IOException, ContextLoaderException {
+    public void withGUIDContextConstructorLoader() throws IOException, ContextLoaderException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -48,30 +50,12 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        Context context = ContextLoader.Instance("Test", policyActions, "Test_context");
+        IGUID guid = GUIDFactory.generateRandomGUID();
+        Context context = ContextLoader.Instance("Test", policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
-        assertNotNull(context.guid());
+        assertEquals(context.guid(), guid);
         assertEquals(context.getName(), "Test_context");
 
-    }
-
-    @Test
-    public void withCodomainContextConstructorLoader() throws IOException, ContextLoaderException {
-
-        String JSON_CONTEXT =
-                "{\n" +
-                        "    \"name\": \"Test\",\n" +
-                        "    \"dependencies\": []\n" +
-                        "}";
-
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-
-        ContextLoader.LoadContext(node);
-
-        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-
-        assertNotNull(context.guid());
-        assertEquals(context.getName(), "Test_context");
     }
 
     @Test

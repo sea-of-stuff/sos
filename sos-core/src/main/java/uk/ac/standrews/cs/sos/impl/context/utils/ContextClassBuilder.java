@@ -13,7 +13,7 @@ public class ContextClassBuilder {
 
     private static final String NEW_LINE = "\n";
 
-    public static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
+    static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
     private static final String PACKAGE_DECLARATION = "package " + PACKAGE + ";" + NEW_LINE;
     private static final String IMPORTEE_TAG = "_IMPORTEE_";
     private static final String IMPORT = "import " + IMPORTEE_TAG + ";" + NEW_LINE;
@@ -29,11 +29,9 @@ public class ContextClassBuilder {
     private static final String CONSTRUCTOR_BODY = "super(policyActions, name, domain, codomain);";
     private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
-    private static final String CONSTRUCTOR_BODY_1 = "super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), codomain);";
-    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY_1 + NEW_LINE + "}" + NEW_LINE;
+    private static final String CONSTRUCTOR_BODY_1 = "super(policyActions, guid, name, domain, codomain);";
+    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY_1 + NEW_LINE + "}" + NEW_LINE;
 
-    private static final String CONSTRUCTOR_BODY_2 = "super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));";
-    private static final String CONSTRUCTOR_2 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name) {  " + NEW_LINE + CONSTRUCTOR_BODY_2 + NEW_LINE + "}" + NEW_LINE;
 
     private static final String POLICIES_TAG = "_POLICIES_";
 
@@ -68,7 +66,6 @@ public class ContextClassBuilder {
     private static final String JSON_PREDICATE = "predicate";
     private static final String JSON_POLICIES = "policies";
 
-    // TODO - if guid is known then set, otherwise generate it
     public static String ConstructClass(JsonNode node) throws IOException {
 
         String className = node.get(JSON_NAME).textValue();
@@ -79,6 +76,7 @@ public class ContextClassBuilder {
         StringBuilder clazz = new StringBuilder(PACKAGE_DECLARATION);
         clazz.append(NEW_LINE);
 
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.IGUID"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.LEVEL"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.*"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.actors.SOSAgent"));
@@ -105,9 +103,6 @@ public class ContextClassBuilder {
         clazz.append(NEW_LINE);
 
         clazz.append(CONSTRUCTOR_1.replace(CLASS_NAME_TAG, className));
-        clazz.append(NEW_LINE);
-
-        clazz.append(CONSTRUCTOR_2.replace(CLASS_NAME_TAG, className));
         clazz.append(NEW_LINE);
 
         ///////////////

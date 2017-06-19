@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
@@ -20,12 +20,8 @@ public class ReferenceContext extends BaseContext {
         super(policyActions, name, domain, codomain);
     }
 
-    public ReferenceContext(PolicyActions policyActions, String name, NodesCollection codomain) {
-        super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), codomain);
-    }
-
-    public ReferenceContext(PolicyActions policyActions, String name) {
-        super(policyActions, name, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+    public ReferenceContext(PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        super(policyActions, guid, name, domain, codomain);
     }
 
     @Override
