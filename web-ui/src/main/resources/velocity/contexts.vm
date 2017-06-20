@@ -12,9 +12,28 @@
 
     <h1>Create context</h1>
     <form action="/contexts" method="POST">
-        <textarea name="contextJSON" rows="15" cols="80"></textarea>
+        <textarea id="contextJSON" name="contextJSON" rows="15" cols="80"></textarea>
+        <br>
         <input type="submit" value="Submit">
     </form>
+
+    <br><br>
+    <button onclick="prettyPrint()">Pretty Print</button>
+
+    <br>
+    <strong>Examples</strong>
+    <code style=display:block;white-space:pre-wrap>
+        {
+            "name": "VoidContext",
+        }
+    </code>
+    <br>
+    <code style=display:block;white-space:pre-wrap>
+        {
+            "name": "Simone",
+            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
+        }
+    </code>
 
     <h1>List of contexts</h1>
 
@@ -36,6 +55,13 @@
     $(function(){
         $("#header").load("header.html");
     });
+
+    function prettyPrint() {
+        var ugly = document.getElementById('contextJSON').value;
+        var obj = JSON.parse(ugly);
+        var pretty = JSON.stringify(obj, undefined, 4);
+        document.getElementById('contextJSON').value = pretty;
+    }
 </script>
 </body>
 </html>
