@@ -65,11 +65,6 @@ public abstract class BaseContext implements Context {
     }
 
     @Override
-    public SOSPredicate predicate() {
-        return new SOSPredicateImpl(guid -> false, PREDICATE_ALWAYS_TRUE);
-    }
-
-    @Override
     public Policy[] policies() {
         return new Policy[EMPTY_ARRAY];
     }

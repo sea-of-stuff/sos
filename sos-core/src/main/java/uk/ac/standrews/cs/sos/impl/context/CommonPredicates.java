@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * This class contains useful Predicates that can be used by the contexts, as defined by the Context interface
@@ -31,28 +30,12 @@ public class CommonPredicates {
      * @param matchingContentTypes the content types that should be matched
      * @return the predicate
      */
-    public static Predicate<IGUID> ContentTypePredicate(List<String> matchingContentTypes) {
+    public static boolean ContentTypePredicate(IGUID guid, List<String> matchingContentTypes) {
 
         SOSAgent agent = SOSAgent.instance();
 
-
-        Predicate<IGUID> p = guid -> {
-
-            System.out.println("BEFORE TEST FUNCTION IS CALLED");
-            return test(agent, guid, matchingContentTypes);
-//            try {
-//                String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
-//                return matchingContentTypes.contains(contentType);
-//
-//            } catch (Exception e) {
-//                // This could occur because the metadata could not be found or the type property was not available
-//                SOS_LOG.log(LEVEL.WARN, "Unable to find content type");
-//            }
-//
-//            return false;
-        };
-
-        return p;
+        System.out.println("BEFORE TEST FUNCTION IS CALLED");
+        return test(agent, guid, matchingContentTypes);
     }
 
     public static boolean test(SOSAgent agent, IGUID guid, List<String> matchingContentTypes){

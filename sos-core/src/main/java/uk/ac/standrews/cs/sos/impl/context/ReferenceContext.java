@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
@@ -27,9 +26,19 @@ public class ReferenceContext extends BaseContext {
     @Override
     public SOSPredicate predicate() {
 
-        SOSAgent agent = SOSAgent.instance();
+        return new P(PREDICATE_ALWAYS_TRUE);
+    }
 
-        return new SOSPredicateImpl(CommonPredicates.ContentTypePredicate(Collections.singletonList("image/jpeg")), PREDICATE_ALWAYS_TRUE);
+    class P extends SOSPredicateImpl {
+
+        P(long maxAge) {
+            super(maxAge);
+        }
+
+        @Override
+        public boolean test(IGUID guid) {
+            return CommonPredicates.ContentTypePredicate(guid, Collections.singletonList("image/jpeg"));
+        }
     }
 
     @Override

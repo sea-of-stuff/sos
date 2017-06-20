@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
@@ -29,9 +30,19 @@ public class BinaryReplicationContext extends BaseContext {
     @Override
     public SOSPredicate predicate() {
 
-        return new SOSPredicateImpl(
-                CommonPredicates.ContentTypePredicate(Collections.singletonList("application/octet-stream")),
-                PREDICATE_ALWAYS_TRUE);
+        return new P(PREDICATE_ALWAYS_TRUE);
+    }
+
+    class P extends SOSPredicateImpl {
+
+        P(long maxAge) {
+            super(maxAge);
+        }
+
+        @Override
+        public boolean test(IGUID guid) {
+            return CommonPredicates.ContentTypePredicate(guid, Collections.singletonList("application/octet-stream"));
+        }
     }
 
     @Override

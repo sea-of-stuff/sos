@@ -28,9 +28,19 @@ public class TextContext extends BaseContext {
     @Override
     public SOSPredicate predicate() {
 
-        return new SOSPredicateImpl(
-                CommonPredicates.ContentTypePredicate(Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html")),
-                Long.MAX_VALUE);
+        return new P(PREDICATE_ALWAYS_TRUE);
+    }
+
+    class P extends SOSPredicateImpl {
+
+        P(long maxAge) {
+            super(maxAge);
+        }
+
+        @Override
+        public boolean test(IGUID guid) {
+            return CommonPredicates.ContentTypePredicate(guid, Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html"));
+        }
     }
 
     @Override
