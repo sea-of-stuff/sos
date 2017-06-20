@@ -19,8 +19,7 @@ public class ContextClassBuilderTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\",\n" +
-                        "    \"dependencies\": []\n" +
+                        "    \"name\": \"Test\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
