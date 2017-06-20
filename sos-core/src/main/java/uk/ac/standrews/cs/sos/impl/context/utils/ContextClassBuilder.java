@@ -79,16 +79,12 @@ public class ContextClassBuilder {
 
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.IGUID"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.LEVEL"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.*"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.actors.SOSAgent"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.NodesCollection"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.Policy"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.SOSPredicate"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
-
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.List"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.function.Predicate"));
 
         if (node.has(JSON_DEPENDENCIES)) {
             JsonNode dependencies = node.get(JSON_DEPENDENCIES);

@@ -64,10 +64,7 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param signer
      * @throws ManifestNotMadeException
      */
-    public VersionManifest(IGUID invariant, IGUID content,
-                           Set<IGUID> prevs, IGUID metadata,
-                           Role signer)
-            throws ManifestNotMadeException {
+    public VersionManifest(IGUID invariant, IGUID content, Set<IGUID> prevs, IGUID metadata, Role signer) throws ManifestNotMadeException {
         super(signer, ManifestType.VERSION);
 
         if (invariant != null) {
@@ -86,7 +83,11 @@ public class VersionManifest extends SignedManifest implements Version {
         }
 
         if (signer != null) {
-            this.signature = makeSignature();
+            try {
+                this.signature = makeSignature();
+            } catch (SignatureException e) {
+                // We keep the signature NULL
+            }
         }
     }
 

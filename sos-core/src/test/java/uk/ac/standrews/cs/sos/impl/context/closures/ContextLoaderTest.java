@@ -99,8 +99,6 @@ public class ContextLoaderTest extends SetUpTest {
 
         Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
-        System.out.println("TEST ------> CONTEXT " + context.guid());
-
         assertNotNull(context.guid());
         assertEquals(context.getName(), "Test_context");
 
@@ -117,12 +115,8 @@ public class ContextLoaderTest extends SetUpTest {
                 .setContent(GUIDFactory.generateRandomGUID())
                 .setMetadata(meta));
 
-
         boolean retval = pred.test(version.guid());
-        System.out.println(retval);
         assertTrue(retval);
-
-        // FIXME - the CommonPredicate is never run correctly
     }
 
 

@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 
@@ -70,17 +69,13 @@ public abstract class SignedManifest extends BasicManifest {
      * Generate the signature for this manifest
      *
      * @return the signature for this manifest
-     * @throws ManifestNotMadeException if the manifest could not signed
+     * @throws SignatureException if the manifest could not signed
      */
-    protected String makeSignature() throws ManifestNotMadeException {
-        String signature;
-        try {
-            String manifestToSign = getManifestToSign();
-            signature = generateSignature(manifestToSign);
-        } catch (Exception e) {
-            throw new ManifestNotMadeException("Manifest could not be signed", e);
-        }
-        return signature;
+    protected String makeSignature() throws SignatureException {
+
+        String manifestToSign = getManifestToSign();
+        return generateSignature(manifestToSign);
+
     }
 
     /**

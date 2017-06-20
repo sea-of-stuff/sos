@@ -68,7 +68,11 @@ public class CompoundManifest extends SignedManifest implements Compound {
         this.guid = makeContentGUID();
 
         if (signer != null) {
-            this.signature = makeSignature();
+            try {
+                this.signature = makeSignature();
+            } catch (SignatureException e) {
+                // We keep the signature NULL
+            }
         }
     }
 

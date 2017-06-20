@@ -36,7 +36,6 @@ public class CommonPredicates {
 
         try {
             String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
-            System.out.println(contentType);
             return matchingContentTypes.contains(contentType);
 
         } catch (Exception e) {
