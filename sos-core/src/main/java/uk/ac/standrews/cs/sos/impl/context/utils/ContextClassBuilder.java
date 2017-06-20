@@ -48,16 +48,7 @@ public class ContextClassBuilder {
             "\n" +
             "    SOSAgent agent = SOSAgent.instance();\n" +
             "\n" +
-            "    return new SOSPredicateImpl(p -> {\n" +
-            "        try {\n" +
-            "            " + PREDICATE_TAG +
-            "\n" +
-            "        } catch (Exception e) {\n" +
-            "            SOS_LOG.log(LEVEL.ERROR, \"Predicate could not be apply\");\n" +
-            "        }\n" +
-            "\n" +
-            "        return false;\n" +
-            "    }, PREDICATE_ALWAYS_TRUE);\n" +
+            "    return new SOSPredicateImpl(" + PREDICATE_TAG + ", PREDICATE_ALWAYS_TRUE);\n" +
             "}" + NEW_LINE;
 
 
@@ -80,10 +71,14 @@ public class ContextClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.LEVEL"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.*"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.actors.SOSAgent"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.*"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.NodesCollection"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.Policy"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.SOSPredicate"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
 
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.List"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.function.Predicate"));
 
         if (node.has(JSON_DEPENDENCIES)) {
             JsonNode dependencies = node.get(JSON_DEPENDENCIES);

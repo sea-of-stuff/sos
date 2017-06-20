@@ -36,9 +36,9 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
 
-        return guid -> {
+        Predicate<IGUID> p = guid -> {
 
-            System.out.println("TEST");
+            System.out.println("BEFORE TEST FUNCTION IS CALLED");
             return test(agent, guid, matchingContentTypes);
 //            try {
 //                String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
@@ -51,9 +51,15 @@ public class CommonPredicates {
 //
 //            return false;
         };
+
+        return p;
     }
 
     public static boolean test(SOSAgent agent, IGUID guid, List<String> matchingContentTypes){
+
+        System.out.println("TEST FUNCTION CALLED");
+        System.out.println("Matching types " + matchingContentTypes.get(0));
+
         try {
             String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
             System.out.println(contentType);

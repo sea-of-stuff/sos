@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -26,6 +27,7 @@ import java.lang.reflect.Method;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -83,7 +85,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicate() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
+    public void contextWithPredicate() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -97,6 +99,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
+        System.out.println("TEST ------> CONTEXT " + context.guid());
+
         assertNotNull(context.guid());
         assertEquals(context.getName(), "Test_context");
 
@@ -107,13 +111,16 @@ public class ContextLoaderTest extends SetUpTest {
         BasicMetadata meta = new BasicMetadata();
         meta.addProperty("content-type", "image/jpeg");
         meta.setGUID(GUIDFactory.generateRandomGUID());
+        this.localSOSNode.getMMS().addMetadata(meta);
 
         Version version = this.localSOSNode.getAgent().addVersion(new VersionBuilder()
                 .setContent(GUIDFactory.generateRandomGUID())
                 .setMetadata(meta));
 
+
         boolean retval = pred.test(version.guid());
         System.out.println(retval);
+        assertTrue(retval);
 
         // FIXME - the CommonPredicate is never run correctly
     }

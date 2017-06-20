@@ -1,12 +1,10 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Collections;
 
@@ -31,15 +29,7 @@ public class ReferenceContext extends BaseContext {
 
         SOSAgent agent = SOSAgent.instance();
 
-        return new SOSPredicateImpl(p -> {
-            try {
-                CommonPredicates.ContentTypePredicate(Collections.singletonList("image/jpeg"));
-            } catch (Exception e) {
-                SOS_LOG.log(LEVEL.ERROR, "Predicate could not be applied");
-            }
-
-            return false;
-        }, PREDICATE_ALWAYS_TRUE);
+        return new SOSPredicateImpl(CommonPredicates.ContentTypePredicate(Collections.singletonList("image/jpeg")), PREDICATE_ALWAYS_TRUE);
     }
 
     @Override
