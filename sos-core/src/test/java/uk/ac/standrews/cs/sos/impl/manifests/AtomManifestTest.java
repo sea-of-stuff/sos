@@ -125,7 +125,7 @@ public class AtomManifestTest extends CommonTest {
         assertEquals(atomManifest.isValid(), true);
     }
 
-    @Test // (timeOut = 10000)
+    @Test (timeOut = 10000)
     public void testIsVerified() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ProvenanceLocationBundle(location);
@@ -133,7 +133,7 @@ public class AtomManifestTest extends CommonTest {
         bundles.add(bundle);
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
-        assertEquals(atomManifest.verifySignature(null), true);
+        assertFalse(atomManifest.verifySignature(null));
     }
 
     @Test

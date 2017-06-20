@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -90,8 +91,12 @@ public class SOSAddVersionTest extends AgentTest {
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
+    /**
+     * Verification fails as Role has not private key to generate the signature in the first place
+     * @throws Exception
+     */
     @Test
-    public void testAddVersionAndVerify() throws Exception {
+    public void testAddVersionAndVerifyFails() throws Exception {
         Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
@@ -105,7 +110,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
 
-        assertTrue(agent.verifyManifestSignature(localSOSNode.getRMS().activeRole(), retrievedManifest));
+        assertFalse(agent.verifyManifestSignature(localSOSNode.getRMS().activeRole(), retrievedManifest));
     }
 
     @Test

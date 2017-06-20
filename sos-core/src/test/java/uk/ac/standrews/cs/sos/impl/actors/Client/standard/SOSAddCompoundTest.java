@@ -19,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.assertFalse;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -60,8 +60,12 @@ public class SOSAddCompoundTest extends AgentTest {
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }
 
+    /**
+     * Unable to verify the compound as the role has no private keys to generate the signature in the first place
+     * @throws Exception
+     */
     @Test
-    public void testAddCompoundAndVerify() throws Exception {
+    public void testAddCompoundAndVerifyFails() throws Exception {
         Content cat = new ContentImpl("cat", GUIDFactory.recreateGUID("123"));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
@@ -74,7 +78,7 @@ public class SOSAddCompoundTest extends AgentTest {
 
         Role role = localSOSNode.getRMS().activeRole();
         boolean isVerified = agent.verifyManifestSignature(role, retrievedManifest);
-        assertTrue(isVerified);
+        assertFalse(isVerified);
     }
 
 }

@@ -29,10 +29,14 @@ public class ContextClassBuilderTest {
         String MATCHING_CLAZZ =
                 "package uk.ac.standrews.cs.sos.impl.context;\n" +
                         "\n" +
+                        "import uk.ac.standrews.cs.IGUID;\n" +
                         "import uk.ac.standrews.cs.LEVEL;\n" +
                         "import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;\n" +
-                        "import uk.ac.standrews.cs.sos.model.*;\n" +
+                        "import uk.ac.standrews.cs.sos.model.NodesCollection;\n" +
+                        "import uk.ac.standrews.cs.sos.model.Policy;\n" +
+                        "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
                         "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
+                        "import java.util.Collections;\n" +
                         "\n" +
                         "public class Test extends BaseContext {\n" +
                         "\n" +
@@ -40,23 +44,27 @@ public class ContextClassBuilderTest {
                         "super(policyActions, name, domain, codomain);\n" +
                         "}\n" +
                         "\n" +
-                        "@Override\n" +
-                        "public SOSPredicate predicate() {\n" +
-                        "\n" +
-                        "    SOSAgent agent = SOSAgent.instance();\n" +
-                        "\n" +
-                        "    return new SOSPredicateImpl(p -> {\n" +
-                        "        try {\n" +
-                        "            \n" +
-                        "        } catch (Exception e) {\n" +
-                        "            SOS_LOG.log(LEVEL.ERROR, \"Predicate could not be apply\");\n" +
-                        "        }\n" +
-                        "\n" +
-                        "        return false;\n" +
-                        "    }, PREDICATE_ALWAYS_TRUE);\n" +
+                        "public Test (PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
+                        "super(policyActions, guid, name, domain, codomain);\n" +
                         "}\n" +
                         "\n" +
                         "@Override\n" +
+                        "public SOSPredicate predicate() {\n" +
+                        "\n" +
+                        "    return new P(PREDICATE_ALWAYS_TRUE);\n" +
+                        "}\n" +
+                        "\n" +
+                        "class P extends SOSPredicateImpl {\n" +
+                        "\n" +
+                        "    P(long maxAge) {\n" +
+                        "        super(maxAge);\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    @Override\n" +
+                        "    public boolean test(IGUID guid) {\n" +
+                        "        return \n" +
+                        "    }\n" +
+                        "}@Override\n" +
                         "public Policy[] policies() {\n" +
                         "        return new Policy[]{  };\n" +
                         "}\n" +

@@ -63,7 +63,6 @@ public class ContextLoaderTest extends SetUpTest {
 
         assertEquals(context.guid(), guid);
         assertEquals(context.getName(), "Test_context");
-
     }
 
     @Test
