@@ -46,11 +46,21 @@ public class ContextClassBuilder {
             "@Override\n" +
             "public SOSPredicate predicate() {\n" +
             "\n" +
-            "    SOSAgent agent = SOSAgent.instance();\n" +
-            "\n" +
-            "    return new SOSPredicateImpl(" + PREDICATE_TAG + ", PREDICATE_ALWAYS_TRUE);\n" +
+            "    return new P(PREDICATE_ALWAYS_TRUE);\n" +
             "}" + NEW_LINE;
 
+    private static final String INNER_PREDICATE_CLASS = "" +
+            "class P extends SOSPredicateImpl {\n" +
+            "\n" +
+            "    P(long maxAge) {\n" +
+            "        super(maxAge);\n" +
+            "    }\n" +
+            "\n" +
+            "    @Override\n" +
+            "    public boolean test(IGUID guid) {\n" +
+            "        return " + PREDICATE_TAG + "\n" +
+            "    }\n" +
+            "}";
 
     private static final String JSON_NAME = "name";
     private static final String JSON_DEPENDENCIES = "dependencies";
@@ -105,8 +115,9 @@ public class ContextClassBuilder {
         // Predicate //
         ///////////////
         String predicate = node.has(JSON_PREDICATE) ? node.get(JSON_PREDICATE).asText() : "";
-        clazz.append(PREDICATE_METHOD.replace(PREDICATE_TAG, predicate));
+        clazz.append(PREDICATE_METHOD);
         clazz.append(NEW_LINE);
+        clazz.append(INNER_PREDICATE_CLASS.replace(PREDICATE_TAG, predicate));
 
         //////////////
         // Policies //

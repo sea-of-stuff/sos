@@ -90,7 +90,7 @@ public class ContextLoaderTest extends SetUpTest {
         String JSON_CONTEXT =
                 "{\n" +
                         "    \"name\": \"Test\",\n" +
-                        "    \"predicate\": \"CommonPredicates.ContentTypePredicate(Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
+                        "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
@@ -109,7 +109,7 @@ public class ContextLoaderTest extends SetUpTest {
 
 
         BasicMetadata meta = new BasicMetadata();
-        meta.addProperty("content-type", "image/jpeg");
+        meta.addProperty("Content-Type", "image/jpeg");
         meta.setGUID(GUIDFactory.generateRandomGUID());
         this.localSOSNode.getMMS().addMetadata(meta);
 

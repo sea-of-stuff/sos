@@ -21,7 +21,7 @@ public class CommonPredicates {
     /**
      * This method constructs a predicate that checks that the metadata of some given version matches any of the content-types specified
      *
-     * Usage example:
+     * FIXME - Usage example:
      *
      * return new SOSPredicateImpl(
      *      CommonPredicates.ContentTypePredicate(Collections.singletonList("application/octet-stream")),
@@ -34,15 +34,6 @@ public class CommonPredicates {
 
         SOSAgent agent = SOSAgent.instance();
 
-        System.out.println("BEFORE TEST FUNCTION IS CALLED");
-        return test(agent, guid, matchingContentTypes);
-    }
-
-    public static boolean test(SOSAgent agent, IGUID guid, List<String> matchingContentTypes){
-
-        System.out.println("TEST FUNCTION CALLED");
-        System.out.println("Matching types " + matchingContentTypes.get(0));
-
         try {
             String contentType = (String) agent.getMetaProperty(guid, MetadataConstants.CONTENT_TYPE);
             System.out.println(contentType);
@@ -54,5 +45,7 @@ public class CommonPredicates {
         }
 
         return false;
+
     }
+
 }
