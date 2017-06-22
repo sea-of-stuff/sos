@@ -37,7 +37,7 @@ public class ReferenceContext extends BaseContext {
 
         @Override
         public boolean test(IGUID guid) {
-            return CommonPredicates.MetadataPropertyPredicate(guid, Collections.singletonList("image/jpeg"));
+            return CommonPredicates.ContentTypePredicate(guid, Collections.singletonList("image/jpeg"));
         }
     }
 
