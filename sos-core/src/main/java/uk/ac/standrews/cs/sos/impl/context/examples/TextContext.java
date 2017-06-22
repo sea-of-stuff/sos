@@ -39,7 +39,7 @@ public class TextContext extends BaseContext {
 
         @Override
         public boolean test(IGUID guid) {
-            return CommonPredicates.MetadataPropertyPredicate(guid, Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html"));
+            return CommonPredicates.ContentTypePredicate(guid, Arrays.asList("text", "text/plain", "text/richtext", "text/enriched", "text/html"));
         }
     }
 
