@@ -1,13 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
-import uk.ac.standrews.cs.sos.impl.context.BaseContext;
-import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
-import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.impl.context.SOSPredicateImpl;
-import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.impl.context.*;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
@@ -48,33 +42,8 @@ public class BinaryReplicationContext extends BaseContext {
     @Override
     public Policy[] policies() {
         return new Policy[]{
-                new ManifestReplicationPolicy(NUMBER_OF_REPLICAS)
+                new CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, NUMBER_OF_REPLICAS)
         };
     }
 
-    /**
-     * Replicate manifests at least n-times
-     */
-    private class ManifestReplicationPolicy implements Policy {
-
-        private int factor;
-
-        ManifestReplicationPolicy(int factor) {
-            this.factor = factor;
-        }
-
-        @Override
-        public void apply(Manifest manifest) throws PolicyException {
-
-            NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
-            policyActions.replicateManifest(manifest, nodes, factor);
-        }
-
-        @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
-
-            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
-            return numberReplicas >= factor;
-        }
-    }
 }
