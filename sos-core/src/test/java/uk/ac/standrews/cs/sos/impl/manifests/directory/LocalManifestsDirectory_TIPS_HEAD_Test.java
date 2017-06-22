@@ -63,8 +63,8 @@ public class LocalManifestsDirectory_TIPS_HEAD_Test extends TIPS_HEAD_Test {
     }
 
     @Test
-    public void basicMultiHeadSameVersionTest() throws Exception, HEADNotFoundException {
-        super.basicMultiHeadSameVersionTest(new LocalManifestsDirectory(storage));
+    public void basicOnlyOneHeadSameVersionTest() throws Exception, HEADNotFoundException {
+        super.basicOnlyOneHeadSameVersionTest(new LocalManifestsDirectory(storage));
     }
 
     @Test

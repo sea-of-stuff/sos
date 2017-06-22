@@ -5,10 +5,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.ManifestUtils;
-import uk.ac.standrews.cs.sos.utils.UserRoleUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -91,45 +89,37 @@ public class TIPS_HEAD_Test extends CommonTest {
 
     void basicHeadTest(ManifestsDirectory directory) throws Exception, HEADNotFoundException {
 
-        Role role = UserRoleUtils.BareRoleMock();
         Version versionManifest = ManifestUtils.createDummyVersion();
 
-        directory.setHead(role, versionManifest);
+        directory.setHead(versionManifest);
 
-        IGUID head = directory.getHead(role, versionManifest.getInvariantGUID());
+        IGUID head = directory.getHead(versionManifest.getInvariantGUID());
         assertEquals(head, versionManifest.guid());
     }
 
-    void basicMultiHeadSameVersionTest(ManifestsDirectory directory) throws Exception, HEADNotFoundException {
+    void basicOnlyOneHeadSameVersionTest(ManifestsDirectory directory) throws Exception, HEADNotFoundException {
 
-        Role role = UserRoleUtils.BareRoleMock();
-        Role otherRole = UserRoleUtils.BareRoleMock();
         Version versionManifest = ManifestUtils.createDummyVersion();
 
-        directory.setHead(role, versionManifest);
-        directory.setHead(otherRole, versionManifest);
+        directory.setHead(versionManifest);
+        directory.setHead(versionManifest);
 
-        IGUID head = directory.getHead(role, versionManifest.getInvariantGUID());
+        IGUID head = directory.getHead(versionManifest.getInvariantGUID());
         assertEquals(head, versionManifest.guid());
-
-        IGUID otherHead = directory.getHead(otherRole, versionManifest.getInvariantGUID());
-        assertEquals(otherHead, versionManifest.guid());
     }
 
     void basicMultiHeadDifferentVersionTest(ManifestsDirectory directory) throws Exception, HEADNotFoundException {
 
-        Role role = UserRoleUtils.BareRoleMock();
-        Role otherRole = UserRoleUtils.BareRoleMock();
         Version versionManifest = ManifestUtils.createDummyVersion();
         Version otherVersionManifest = ManifestUtils.createDummyVersion();
 
-        directory.setHead(role, versionManifest);
-        directory.setHead(otherRole, otherVersionManifest);
+        directory.setHead(versionManifest);
+        directory.setHead(otherVersionManifest);
 
-        IGUID head = directory.getHead(role, versionManifest.getInvariantGUID());
+        IGUID head = directory.getHead(versionManifest.getInvariantGUID());
         assertEquals(head, versionManifest.guid());
 
-        IGUID otherHead = directory.getHead(otherRole, otherVersionManifest.getInvariantGUID());
+        IGUID otherHead = directory.getHead(otherVersionManifest.getInvariantGUID());
         assertEquals(otherHead, otherVersionManifest.guid());
     }
 

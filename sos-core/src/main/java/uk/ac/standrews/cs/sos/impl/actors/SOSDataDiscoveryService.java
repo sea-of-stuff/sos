@@ -18,7 +18,10 @@ import uk.ac.standrews.cs.sos.impl.manifests.directory.RemoteManifestsDirectory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -151,24 +154,24 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException {
+    public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
 
         try {
 
-            return inMemoryCache.getHead(role, invariant);
+            return inMemoryCache.getHead(invariant);
 
         } catch (HEADNotFoundException e) {
 
-            return local.getHead(role, invariant);
+            return local.getHead(invariant);
         }
 
     }
 
     @Override
-    public void setHead(Role role, Version version) {
+    public void setHead(Version version) {
 
-        inMemoryCache.setHead(role, version);
-        local.setHead(role, version);
+        inMemoryCache.setHead(version);
+        local.setHead(version);
     }
 
     @Override

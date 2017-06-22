@@ -17,7 +17,10 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 import java.util.*;
@@ -62,7 +65,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
                 throw new ManifestPersistException("Manifest not valid");
             }
         } catch (ManifestsDirectoryException e) {
-            e.printStackTrace();
             throw new ManifestPersistException("Unable to save manifest " + manifest);
         }
     }
@@ -116,12 +118,12 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     }
 
     @Override
-    public IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException {
+    public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
 
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString() + "-ROLE-" + role.guid();
+            String filename = HEAD_TAG + invariant.toString();
 
             String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
             return GUIDFactory.recreateGUID(guid);
@@ -133,12 +135,12 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     }
 
     @Override
-    public void setHead(Role role, Version version) {
+    public void setHead(Version version) {
 
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + version.getInvariantGUID().toString() + "-ROLE-" + role.guid();
+            String filename = HEAD_TAG + version.getInvariantGUID().toString();
 
             IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toString());
             file.persist();

@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.Persistence;
@@ -47,7 +46,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     private transient HashMap<IGUID, Set<IGUID>> tips;
 
     // Invariant --> Role --> HEAD
-    private transient HashMap<IGUID, HashMap<IGUID, IGUID>> heads;
+    private transient HashMap<IGUID, IGUID> heads;
 
     public ManifestsCacheImpl() {
         this(MAX_DEFAULT_SIZE);
@@ -98,27 +97,22 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
-    public IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException {
+    public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
 
         if (heads.containsKey(invariant)) {
-            return heads.get(invariant).get(role.guid());
+            return heads.get(invariant);
         }
 
         throw new HEADNotFoundException();
     }
 
     @Override
-    public void setHead(Role role, Version version) {
+    public void setHead(Version version) {
 
         IGUID invariantGUID = version.getInvariantGUID();
         IGUID versionGUID = version.guid();
-        IGUID roleGUID = role.guid();
 
-        if (!heads.containsKey(invariantGUID)) {
-            heads.put(invariantGUID, new HashMap<>());
-        }
-
-        heads.get(invariantGUID).put(roleGUID, versionGUID);
+        heads.put(invariantGUID, versionGUID);
     }
 
     @Override

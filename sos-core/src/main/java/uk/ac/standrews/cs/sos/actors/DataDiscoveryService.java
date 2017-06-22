@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Set;
@@ -80,26 +79,20 @@ public interface DataDiscoveryService extends SeaOfStuff {
     Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException;
 
     /**
-     * Get the HEAD version for the role.
-     * The HEAD does not need to match one of the TIPS
+     * Get the HEAD version for an asset.
+     * The HEAD does not need to match one of the TIPS.
      *
-     * Different roles might have different currents.
-     *
-     * TODO - what if multiple currents at different nodes?
-     *
-     * @param role
      * @param invariant
      * @return
      */
-    IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException;
+    IGUID getHead(IGUID invariant) throws HEADNotFoundException;
 
     /**
-     * Set the specified version as the HEAD for its asset and for the given role
+     * Set the specified version as the HEAD for its asset
      *
-     * @param role
      * @param version
      */
-    void setHead(Role role, Version version);
+    void setHead(Version version);
 
     /**
      * Flushes any in-memory information into disk

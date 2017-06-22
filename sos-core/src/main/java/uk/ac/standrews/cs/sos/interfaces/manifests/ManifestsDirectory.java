@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Set;
@@ -24,9 +23,9 @@ public interface ManifestsDirectory {
 
     Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException;
 
-    IGUID getHead(Role role, IGUID invariant) throws HEADNotFoundException;
+    IGUID getHead(IGUID invariant) throws HEADNotFoundException;
 
-    void setHead(Role role, Version version);
+    void setHead(Version version);
 
     void flush();
 }

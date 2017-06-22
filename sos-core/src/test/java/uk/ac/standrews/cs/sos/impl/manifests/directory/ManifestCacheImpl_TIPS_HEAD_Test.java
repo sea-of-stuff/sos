@@ -34,8 +34,8 @@ public class ManifestCacheImpl_TIPS_HEAD_Test extends TIPS_HEAD_Test {
     }
 
     @Test
-    public void basicMultiHeadSameVersionTest() throws Exception, HEADNotFoundException {
-        super.basicMultiHeadSameVersionTest(new ManifestsCacheImpl());
+    public void basicOnlyOneHeadSameVersionTest() throws Exception, HEADNotFoundException {
+        super.basicOnlyOneHeadSameVersionTest(new ManifestsCacheImpl());
     }
 
     @Test

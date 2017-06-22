@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchManifest;
@@ -110,12 +109,12 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     }
 
     @Override
-    public IGUID getHead(Role role, IGUID invariant) {
+    public IGUID getHead(IGUID invariant) {
         return null;
     }
 
     @Override
-    public void setHead(Role role, Version version) {}
+    public void setHead(Version version) {}
 
     @Override
     public void flush() {}
