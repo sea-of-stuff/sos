@@ -118,8 +118,16 @@ public class ContextClassBuilder {
         //////////////
         // Policies //
         //////////////
-        String policies = node.has(JSON_POLICIES) ? node.get(JSON_POLICIES).asText() : "";
-        clazz.append(POLICIES_METHODS.replace(POLICIES_TAG, policies));
+        String policies_rpl = "";
+        if (node.has(JSON_POLICIES)) {
+            JsonNode policies = node.get(JSON_POLICIES);
+            for (JsonNode policy : policies) {
+                policies_rpl += "new " + policy.asText() + ",";
+            }
+            policies_rpl = policies_rpl.substring(0, policies_rpl.length() - 1); // remove last comma
+        }
+
+        clazz.append(POLICIES_METHODS.replace(POLICIES_TAG, policies_rpl));
         clazz.append(NEW_LINE);
 
         clazz.append(CLASS_CLOSING);

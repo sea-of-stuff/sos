@@ -16,10 +16,7 @@ import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.SOSPredicate;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -102,7 +99,7 @@ public class ContextLoaderTest extends SetUpTest {
         assertEquals(context.getName(), "Test_context");
 
         SOSPredicate pred = context.predicate();
-        assertNotNull(context.predicate());
+        assertNotNull(pred);
 
 
         BasicMetadata meta = new BasicMetadata();
@@ -116,6 +113,68 @@ public class ContextLoaderTest extends SetUpTest {
 
         boolean retval = pred.test(version.guid());
         assertTrue(retval);
+    }
+
+    @Test
+    public void contextWithPredicateAndPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
+
+        String JSON_CONTEXT =
+                "{\n" +
+                        "    \"name\": \"Test\",\n" +
+                        "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
+                        "  \t\"policies\" : [\n" +
+                        "\t    \"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\"\n" +
+                        "\t  ]\n" +
+                        "}";
+
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+
+        ContextLoader.LoadContext(node);
+
+        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+
+        assertNotNull(context.guid());
+        assertEquals(context.getName(), "Test_context");
+
+        SOSPredicate pred = context.predicate();
+        assertNotNull(pred);
+
+        Policy[] policies = context.policies();
+        assertNotNull(policies);
+        assertEquals(policies.length, 1);
+    }
+
+    @Test
+    public void contextWithPredicateAndMultiPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
+
+        String JSON_CONTEXT =
+                "{\n" +
+                        "\t\"name\": \"Test\",\n" +
+                        "\t\"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
+                        "\t\"policies\": [\n" +
+                        "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\",\n" +
+                        "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\",\n" +
+                        "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\"\n" +
+                        "\t]\n" +
+                        "}";
+
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+
+        ContextLoader.LoadContext(node);
+
+        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+
+        assertNotNull(context.guid());
+        assertEquals(context.getName(), "Test_context");
+
+        SOSPredicate pred = context.predicate();
+        assertNotNull(pred);
+
+        Policy[] policies = context.policies();
+        assertNotNull(policies);
+        assertEquals(policies.length, 3);
     }
 
 

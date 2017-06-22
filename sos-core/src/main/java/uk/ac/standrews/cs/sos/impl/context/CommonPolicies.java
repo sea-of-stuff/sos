@@ -44,6 +44,36 @@ public class CommonPolicies {
     }
 
     /**
+     * Replicate manifests at least n-times
+     */
+    public static class DataReplicationPolicy implements Policy {
+
+        private PolicyActions policyActions;
+        private NodesCollection codomain;
+        private int factor;
+
+        public DataReplicationPolicy(PolicyActions policyActions, NodesCollection codomain, int factor) {
+            this.policyActions = policyActions;
+            this.codomain = codomain;
+            this.factor = factor;
+        }
+
+        @Override
+        public void apply(Manifest manifest) throws PolicyException {
+
+            NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
+            policyActions.replicateData(null, nodes, factor); // FIXME - should be able to get a handle on the data
+        }
+
+        @Override
+        public boolean satisfied(Manifest manifest) throws PolicyException {
+
+            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
+            return numberReplicas >= factor;
+        }
+    }
+
+    /**
      * Delete content from some nodes
      */
     public static class DeletionPolicy implements Policy {
