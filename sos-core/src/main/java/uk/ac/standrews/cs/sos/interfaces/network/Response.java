@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.interfaces.network;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.InputStream;
 
 /**
@@ -10,4 +12,6 @@ public interface Response {
     int getCode();
 
     InputStream getBody();
+
+    JsonNode getJSON();
 }

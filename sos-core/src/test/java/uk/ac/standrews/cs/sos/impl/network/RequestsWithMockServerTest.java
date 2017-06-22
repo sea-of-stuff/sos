@@ -49,9 +49,7 @@ public class RequestsWithMockServerTest {
     @Test
     public void basicMockServerTest() throws IOException {
         SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://0.0.0.0:9998/test"));
-        RequestsManager.getInstance().playSyncRequest(request);
-
-        Response response = request.getResponse();
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
 
         String responseBody = HelperTest.InputStreamToString(response.getBody());

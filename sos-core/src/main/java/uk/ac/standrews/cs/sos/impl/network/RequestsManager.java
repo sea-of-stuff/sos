@@ -1,17 +1,15 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
-import okhttp3.OkHttpClient;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Singleton Class
+ *
+ * If HTTPS requests do not work:
+ * https://docs.oracle.com/cd/E19509-01/820-3503/6nf1il6g1/index.html
+ * TODO - more links on how to install certificate coming soon
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -19,19 +17,9 @@ public class RequestsManager {
 
     private static RequestsManager lazyInstance;
 
-    // Useful resource about OkHttp ciphers
-    // https://docs.google.com/spreadsheets/d/1C3FdZSlCBq_-qrVwG1KDIzNIB3Hyg_rKAcgmSzOsHyQ/edit#gid=0
-    private final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build();
 
     // Ensure that this class cannot be instantiated by other classes by making the constructor private
-    private RequestsManager() {
-        SOS_LOG.log(LEVEL.INFO, "Init OkHttpClient logging");
-        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
-    }
+    private RequestsManager() {}
 
     public static RequestsManager getInstance(){
         if(lazyInstance == null){
@@ -41,17 +29,11 @@ public class RequestsManager {
     }
 
     public void playAsyncRequest(AsyncRequest request) throws IOException {
-        request.play(client);
+        request.play();
     }
 
     public Response playSyncRequest(SyncRequest request) throws IOException {
-        return request.play(client);
-    }
-
-    public void shutdown() {
-        SOS_LOG.log(LEVEL.INFO, "Attempt to shutdown RequestsManager");
-        client.dispatcher().executorService().shutdown();
-        SOS_LOG.log(LEVEL.INFO, "RequestsManager: shutdown finished");
+        return request.play();
     }
 
 }

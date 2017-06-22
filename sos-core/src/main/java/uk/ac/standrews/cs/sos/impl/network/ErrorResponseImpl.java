@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 
@@ -17,5 +18,10 @@ public class ErrorResponseImpl implements Response {
     @Override
     public InputStream getBody() {
         return new NullInputStream(0);
+    }
+
+    @Override
+    public JsonNode getJSON() {
+        return null;
     }
 }

@@ -35,12 +35,11 @@
         <guava.version>21.0-rc2</guava.version>
 
         <typesafe.version>1.3.1</typesafe.version>
-        <okhttp.version>3.8.0</okhttp.version>
 
-        <tika.version>1.14</tika.version>
+        <tika.version>1.15</tika.version>
         <rdf4j.version>2.0.2</rdf4j.version>
 
-        <sqlite.version>3.16.1</sqlite.version>
+        <sqlite.version>3.18.0</sqlite.version>
     </properties>
 
     <dependencies>
@@ -71,9 +70,9 @@
 
         <!-- NETWORK -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.9</version>
         </dependency>
 
         <!-- METADATA -->

@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.actors.*;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
-import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
@@ -149,8 +148,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cacheFlusherService.shutdown();
 
         SOSAgent.destroy();
-
-        RequestsManager.getInstance().shutdown();
     }
 
     /**

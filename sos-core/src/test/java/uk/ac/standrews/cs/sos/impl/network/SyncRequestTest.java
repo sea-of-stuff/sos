@@ -34,10 +34,18 @@ public class SyncRequestTest extends CommonTest {
 
     @Test
     public void testGet() throws Exception {
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/range/10"));
-        RequestsManager.getInstance().playSyncRequest(request);
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/range/10"), "TEXT");
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
+        assertNotNull(response);
 
-        Response response = request.getResponse();
+        String responseBody = HelperTest.InputStreamToString(response.getBody());
+        assertEquals(responseBody, "abcdefghij");
+    }
+
+    @Test
+    public void testGetHTTPS() throws Exception {
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/range/10"), "TEXT");
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
 
         String responseBody = HelperTest.InputStreamToString(response.getBody());
@@ -48,10 +56,10 @@ public class SyncRequestTest extends CommonTest {
     public void testGetOKAYRespondeCode() throws Exception {
         int testCode = 418;
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode));
-        RequestsManager.getInstance().playSyncRequest(request);
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode), "TEXT");
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
 
-        int code = request.getRespondeCode();
+        int code = response.getCode();
         assertEquals(code, testCode);
     }
 
@@ -69,13 +77,11 @@ public class SyncRequestTest extends CommonTest {
 
         SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
         request.setJSONBody(dataToPost);
-        RequestsManager.getInstance().playSyncRequest(request);
-
-        int code = request.getRespondeCode();
-        assertEquals(code, testCode);
-
-        Response response = request.getResponse();
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
+
+        int code = response.getCode();
+        assertEquals(code, testCode);
 
         String responseBody = HelperTest.InputStreamToString(response.getBody());
 
@@ -100,13 +106,11 @@ public class SyncRequestTest extends CommonTest {
 
         SyncRequest request = new SyncRequest(HTTPMethod.PUT, new URL("http://httpbin.org/put"));
         request.setJSONBody(dataToPut);
-        RequestsManager.getInstance().playSyncRequest(request);
-
-        int code = request.getRespondeCode();
-        assertEquals(code, testCode);
-
-        Response response = request.getResponse();
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
+
+        int code = response.getCode();
+        assertEquals(code, testCode);
 
         String responseBody = HelperTest.InputStreamToString(response.getBody());
 
@@ -125,9 +129,9 @@ public class SyncRequestTest extends CommonTest {
         Runnable r = () -> {
             try {
                 SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode));
-                RequestsManager.getInstance().playSyncRequest(request);
+                Response response = RequestsManager.getInstance().playSyncRequest(request);
 
-                int code = request.getRespondeCode();
+                int code = response.getCode();
                 assertEquals(code, testCode);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -151,13 +155,11 @@ public class SyncRequestTest extends CommonTest {
         SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
         InputStream dataStream = HelperTest.StringToInputStream(dataToPost);
         request.setBody(dataStream);
-        RequestsManager.getInstance().playSyncRequest(request);
-
-        int code = request.getRespondeCode();
-        assertEquals(code, testCode);
-
-        Response response = request.getResponse();
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
+
+        int code = response.getCode();
+        assertEquals(code, testCode);
 
         String responseBody = HelperTest.InputStreamToString(response.getBody());
 

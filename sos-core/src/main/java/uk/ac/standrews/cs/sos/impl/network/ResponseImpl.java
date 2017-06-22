@@ -1,7 +1,10 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
+import com.mashape.unirest.http.HttpResponse;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -11,19 +14,29 @@ import java.io.InputStream;
  */
 public class ResponseImpl implements Response {
 
-    private okhttp3.Response response;
+    private HttpResponse<?> response;
 
-    public ResponseImpl(okhttp3.Response response) {
+    public ResponseImpl(HttpResponse<?> response) {
         this.response = response;
     }
 
     @Override
     public int getCode() {
-        return response.code();
+        return response.getStatus();
     }
 
     @Override
     public InputStream getBody() {
-        return response.body().byteStream();
+        return response.getRawBody();
+    }
+
+    @Override
+    public com.fasterxml.jackson.databind.JsonNode getJSON() {
+
+        try {
+            return JSONHelper.JsonObjMapper().readTree(response.getBody().toString());
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

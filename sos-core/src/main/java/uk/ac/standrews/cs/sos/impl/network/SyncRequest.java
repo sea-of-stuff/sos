@@ -1,14 +1,19 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
+
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.BaseRequest;
+import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.body.RawBody;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.URL;
 
 /**
@@ -16,35 +21,41 @@ import java.net.URL;
  */
 public class SyncRequest extends Request {
 
-    private Response response;
+
+    private String expectedOutput; // TODO - use enum
 
     public SyncRequest(HTTPMethod method, URL url) {
-        super(method, url);
+        this(method, url, "JSON"); // FIXME - using this only to avoid too many errors in the code
     }
 
-    public Response play(OkHttpClient client) throws IOException {
+    public SyncRequest(HTTPMethod method, URL url, String expectedOutput) {
+        super(method, url);
+
+        this.expectedOutput = expectedOutput;
+    }
+
+    public Response play() throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
 
-        Response response;
+
         switch(method) {
-            case GET: response = get(client); break;
-            case POST: response = managePOST(client); break;
-            case PUT: response = managePUT(client); break;
+            case GET: return get();
+            case POST: return managePOST();
+            case PUT: return managePUT();
             default:
                 SOS_LOG.log(LEVEL.ERROR, "Unknown Request method while playing a request");
                 throw new IOException("Unknown Request method");
         }
 
-        return response;
     }
 
-    private Response managePOST(OkHttpClient client) throws IOException {
+    private Response managePOST() throws IOException {
 
         Response response;
         if (inputStream != null) {
-            response = postData(client);
+            response = postData();
         } else if (json_body != null) {
-            response = postJSON(client);
+            response = postJSON();
         } else {
             throw new IOException("No body to post");
         }
@@ -52,11 +63,11 @@ public class SyncRequest extends Request {
         return response;
     }
 
-    private Response managePUT(OkHttpClient client) throws IOException {
+    private Response managePUT() throws IOException {
 
         Response response;
         if (json_body != null) {
-            response = putJSON(client);
+            response = putJSON();
         } else {
             throw new IOException("No body to post");
         }
@@ -64,70 +75,63 @@ public class SyncRequest extends Request {
         return response;
     }
 
-    protected Response get(OkHttpClient client) throws IOException {
+    protected Response get() throws IOException {
 
-        request = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("Follow", "1") // TODO
-                .build();
+        GetRequest req = Unirest.get(url.toString());
 
-        makeRequest(client);
-        return response;
+        return makeRequest(req);
     }
 
-    private Response postJSON(OkHttpClient client) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json_body);
+    private Response postJSON() throws IOException {
 
-        request = new okhttp3.Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
+        RequestBodyEntity requestWithBody = Unirest.post(url.toString())
+                .header("accept", "application/json")
+                .body(json_body);
 
-        makeRequest(client);
-        return response;
+        return makeRequest(requestWithBody);
     }
 
-    private Response postData(OkHttpClient client) throws IOException {
+    private Response postData() throws IOException {
 
         // FIXME - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
-        RequestBody body = RequestBody.create(MULTIPART, bytes);
 
-        request = new okhttp3.Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
+        RawBody requestWithRawBody = Unirest.post(url.toString())
+                .body(bytes);
 
-        makeRequest(client);
-        return response;
+        return makeRequest(requestWithRawBody);
     }
 
-    private Response putJSON(OkHttpClient client) throws IOException {
-        RequestBody body = RequestBody.create(JSON, json_body);
+    private Response putJSON() throws IOException {
 
-        request = new okhttp3.Request.Builder()
-                .url(url)
-                .put(body)
-                .build();
+        RequestBodyEntity requestWithBody = Unirest.put(url.toString())
+                .header("accept", "application/json")
+                .body(json_body);
 
-        makeRequest(client);
-        return response;
+        return makeRequest(requestWithBody);
     }
 
-    private void makeRequest(OkHttpClient client) throws IOException {
+    private Response makeRequest(BaseRequest request) throws IOException {
         try {
-            response = new ResponseImpl(client.newCall(request).execute());
-        } catch (ConnectException e) {
-            response = new ErrorResponseImpl();
+            HttpResponse<?> resp = null;
+            switch(expectedOutput) {
+                case "JSON":
+                    resp = request.asJson();
+                    break;
+                case "TEXT":
+                    resp = request.asString();
+                    break;
+                case "BINARY":
+                    resp = request.asBinary();
+                    break;
+            }
+
+            return new ResponseImpl(resp);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            return new ErrorResponseImpl();
         }
 
     }
 
-    public int getRespondeCode() {
-        return response.getCode();
-    }
-
-    public Response getResponse() {
-        return response;
-    }
 }

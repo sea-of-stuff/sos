@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
-import okhttp3.MediaType;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -12,10 +11,6 @@ import java.net.URL;
  */
 public abstract class Request {
 
-    protected static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    protected static final MediaType MULTIPART = MediaType.parse("multipart/form-data data; charset=utf-8");
-
-    protected okhttp3.Request request;
     protected HTTPMethod method;
     protected URL url;
     protected String json_body;
@@ -40,7 +35,7 @@ public abstract class Request {
 
     @Override
     public String toString() {
-        return request.toString();
+        return method.toString() + " " + url.toString();
     }
 
 }
