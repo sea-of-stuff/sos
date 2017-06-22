@@ -34,6 +34,13 @@
             "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
         }
     </code>
+    <br>
+    <code style=display:block;white-space:pre-wrap>
+        {
+        "name": "Binary",
+        "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
+        }
+    </code>
 
     <h1>List of contexts</h1>
 

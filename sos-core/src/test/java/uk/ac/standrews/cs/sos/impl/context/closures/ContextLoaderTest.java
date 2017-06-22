@@ -89,7 +89,7 @@ public class ContextLoaderTest extends SetUpTest {
         String JSON_CONTEXT =
                 "{\n" +
                         "    \"name\": \"Test\",\n" +
-                        "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
+                        "    \"predicate\": \"CommonPredicates.MetadataPropertyPredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
