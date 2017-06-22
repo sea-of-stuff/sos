@@ -52,7 +52,7 @@ public class URILocation implements Location {
 
     private InputStream getHTTPSource() throws IOException {
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL());
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), "BINARY");
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         return response.getBody();
@@ -60,7 +60,7 @@ public class URILocation implements Location {
 
     private InputStream getHTTPSSource() throws IOException {
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL());
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), "BINARY");
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         return response.getBody();

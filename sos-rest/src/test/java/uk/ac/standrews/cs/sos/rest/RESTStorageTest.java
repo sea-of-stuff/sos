@@ -20,31 +20,47 @@ public class RESTStorageTest extends CommonRESTTest {
 
     private final static String TEST_NODE_INFO =
             "{\n" +
-            "  \"Type\": \"Atom\",\n" +
-            "  \"ContentGUID\": \"a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\",\n" +
-            "  \"Locations\": [\n" +
-            "    {\n" +
-            "      \"Type\": \"persistent\",\n" +
-            "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
+                    "  \"Type\": \"Atom\",\n" +
+                    "  \"GUID\": \"a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\",\n" +
+                    "  \"Locations\": [\n" +
+                    "    {\n" +
+                    "      \"Type\": \"persistent\",\n" +
+                    "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
+
+    private final static String TEST_HTTPS_BIN_ATOM_MANIFEST =
+            "{\n" +
+                    "  \"Type\": \"Atom\",\n" +
+                    "  \"GUID\": \"d68c19a0a345b7eab78d5e11e991c026ec60db63\",\n" +
+                    "  \"Locations\": [\n" +
+                    "    {\n" +
+                    "      \"Type\": \"provenance\",\n" +
+                    "      \"Location\": \"https://httpbin.org/range/10\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"Type\": \"persistent\",\n" +
+                    "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
 
     private final static String TEST_HTTP_BIN_ATOM_MANIFEST =
             "{\n" +
-            "  \"Type\": \"Atom\",\n" +
-            "  \"ContentGUID\": \"d68c19a0a345b7eab78d5e11e991c026ec60db63\",\n" +
-            "  \"Locations\": [\n" +
-            "    {\n" +
-            "      \"Type\": \"provenance\",\n" +
-            "      \"Location\": \"https://httpbin.org/range/10\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"Type\": \"persistent\",\n" +
-            "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
+                    "  \"Type\": \"Atom\",\n" +
+                    "  \"GUID\": \"d68c19a0a345b7eab78d5e11e991c026ec60db63\",\n" +
+                    "  \"Locations\": [\n" +
+                    "    {\n" +
+                    "      \"Type\": \"provenance\",\n" +
+                    "      \"Location\": \"http://httpbin.org/range/10\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"Type\": \"persistent\",\n" +
+                    "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
 
     @Test
     public void testStoreInputStream() throws Exception {
@@ -80,7 +96,24 @@ public class RESTStorageTest extends CommonRESTTest {
     }
 
     @Test
-    public void testStoreViaURL() throws Exception {
+    public void testStoreViaHTTPURL() throws Exception {
+
+        String data = "{\n" +
+                "    \"uri\" : \"http://httpbin.org/range/10\"\n" +
+                "}";
+
+        Response response = target("/storage/uri")
+                .request()
+                .post(Entity.json(data));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
+
+        response.close();
+    }
+
+    @Test
+    public void testStoreViaHTTPSURL() throws Exception {
 
         String data = "{\n" +
                 "    \"uri\" : \"https://httpbin.org/range/10\"\n" +
@@ -91,7 +124,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 .post(Entity.json(data));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
+        JSONAssert.assertEquals(TEST_HTTPS_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
 
         response.close();
     }
