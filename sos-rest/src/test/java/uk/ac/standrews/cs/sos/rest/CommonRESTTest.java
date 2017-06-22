@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.rest;
 
 import org.glassfish.jersey.test.JerseyTestNg;
+import org.glassfish.jersey.test.TestProperties;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.RESTConfig;
@@ -39,7 +40,12 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
 
     @Override
     protected Application configure() {
-        return new RESTConfig();
+
+        enable(TestProperties.LOG_TRAFFIC);
+        enable(TestProperties.DUMP_ENTITY);
+
+        config = new RESTConfig();
+        return config;
     }
 
 }

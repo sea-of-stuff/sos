@@ -15,16 +15,16 @@ public class RESTGeneralTest extends CommonRESTTest {
 
     private static final String TEST_NODE_INFO = "{\n" +
             "  \"guid\": \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-            "  \"hostname\": \"localhost\",\n" +
+            "  \"hostname\": \"cs-cole1-024.cs.st-andrews.ac.uk\",\n" +
             "  \"port\": 8080,\n" +
             "  \"roles\": {\n" +
             "    \"agent\": true,\n" +
             "    \"storage\": true,\n" +
             "    \"dds\": true,\n" +
             "    \"nds\": true,\n" +
-            "    \"mms\": false,\n" +
-            "    \"cms\": false,\n" +
-            "    \"rms\": false\n" +
+            "    \"mms\": true,\n" +
+            "    \"cms\": true,\n" +
+            "    \"rms\": true\n" +
             "  }\n" +
             "}";
 

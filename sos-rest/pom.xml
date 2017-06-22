@@ -16,8 +16,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <jersey.version>2.24.1</jersey.version>
-        <javax.version>3.1.0</javax.version>
+        <jersey.version>2.25.1</jersey.version>
     </properties>
 
     <dependencies>
@@ -64,10 +63,12 @@
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- TEST dependencies -->
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-bundle</artifactId>
-            <version>1.18.3</version>
+            <version>1.19.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
