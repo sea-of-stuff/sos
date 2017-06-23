@@ -23,6 +23,7 @@ public class CommonPredicates {
      *
      * @return true
      */
+    @SuppressWarnings("WeakerAccess")
     public static boolean AcceptAll() {
 
         return true;
@@ -34,6 +35,7 @@ public class CommonPredicates {
      * @param matchingContentTypes the content types that should be matched
      * @return the predicate
      */
+    @SuppressWarnings("WeakerAccess")
     public static boolean MetadataPropertyPredicate(IGUID guid, String property, List<String> matchingContentTypes) {
 
         SOSAgent agent = SOSAgent.instance();
@@ -57,6 +59,7 @@ public class CommonPredicates {
 
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean MetadataIntPropertyPredicate(IGUID guid, String property, Integer matchingValue) {
 
         SOSAgent agent = SOSAgent.instance();
@@ -73,6 +76,7 @@ public class CommonPredicates {
         return false;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean MetadataIntGreaterPropertyPredicate(IGUID guid, String property, Integer matchingValue) {
 
         SOSAgent agent = SOSAgent.instance();
@@ -89,6 +93,7 @@ public class CommonPredicates {
         return false;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean MetadataIntLessPropertyPredicate(IGUID guid, String property, Integer matchingValue) {
 
         SOSAgent agent = SOSAgent.instance();
