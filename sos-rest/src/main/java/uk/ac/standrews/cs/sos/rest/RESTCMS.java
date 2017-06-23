@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -22,6 +24,23 @@ import javax.ws.rs.core.Response;
 @Path("/cms/")
 @CMSNode
 public class RESTCMS {
+
+    @GET
+    @Path("/contexts")
+    @Produces({MediaType.TEXT_PLAIN})
+    public Response getAllContext() {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /contexts");
+
+        try {
+            ContextService contextService = RESTConfig.sos.getCMS();
+            Set<Context> contexts = contextService.getContexts();
+            String output = StringUtils.join(contexts, ",\n");
+
+            return HTTPResponses.OK(output);
+        }  catch (Exception e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+    }
 
     @POST
     @Path("/context")
@@ -42,7 +61,7 @@ public class RESTCMS {
     }
 
     @GET
-    @Path("/context/{guid}")
+    @Path("/context/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /context/guid/{guid}");
@@ -66,6 +85,34 @@ public class RESTCMS {
         } catch (ContextNotFoundException e) {
 
             return HTTPResponses.NOT_FOUND("Unable to find context with GUID " + contextGUID.toString());
+        } catch (Exception e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+    }
+
+    @GET
+    @Path("/context/guid/{guid}/contents")
+    @Produces({MediaType.TEXT_PLAIN})
+    public Response findContextContents(@PathParam("guid") String guid) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /context/guid/{guid}/contents");
+
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        IGUID contextGUID;
+        try {
+            contextGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        try {
+            ContextService contextService = RESTConfig.sos.getCMS();
+            Set<IGUID> contents = contextService.getContents(contextGUID); // FIXME - returns both positive and negative results
+            String output = StringUtils.join(contents, ",\n");
+
+            return HTTPResponses.OK(output);
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
