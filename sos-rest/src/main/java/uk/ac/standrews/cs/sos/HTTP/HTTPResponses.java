@@ -49,4 +49,9 @@ public class HTTPResponses {
                 .build();
     }
 
+    public static Response OK() {
+        return Response.status(HTTPStatus.OK)
+                .build();
+    }
+
 }
