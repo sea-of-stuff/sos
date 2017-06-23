@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
+ * TODO - the async request should be re-implemented using Unirest
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AsyncRequest extends Request {

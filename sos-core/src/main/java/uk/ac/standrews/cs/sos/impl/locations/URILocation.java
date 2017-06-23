@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.locations;
 
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
+import uk.ac.standrews.cs.sos.impl.network.ResponseType;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Location;
@@ -52,7 +53,7 @@ public class URILocation implements Location {
 
     private InputStream getHTTPSource() throws IOException {
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), "BINARY");
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), ResponseType.BINARY);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         return response.getBody();
@@ -60,7 +61,7 @@ public class URILocation implements Location {
 
     private InputStream getHTTPSSource() throws IOException {
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), "BINARY");
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), ResponseType.BINARY);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         return response.getBody();

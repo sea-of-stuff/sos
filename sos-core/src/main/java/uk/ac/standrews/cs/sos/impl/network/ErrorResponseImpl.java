@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -22,6 +23,11 @@ public class ErrorResponseImpl implements Response {
 
     @Override
     public JsonNode getJSON() {
+        return null;
+    }
+
+    @Override
+    public String getStringBody() throws IOException {
         return null;
     }
 }

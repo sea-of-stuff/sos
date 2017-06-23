@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
@@ -34,21 +33,21 @@ public class SyncRequestTest extends CommonTest {
 
     @Test
     public void testGet() throws Exception {
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/range/10"), "TEXT");
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/range/10"), ResponseType.TEXT);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
 
-        String responseBody = HelperTest.InputStreamToString(response.getBody());
+        String responseBody = response.getStringBody();
         assertEquals(responseBody, "abcdefghij");
     }
 
     @Test
     public void testGetHTTPS() throws Exception {
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/range/10"), "TEXT");
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://httpbin.org/range/10"), ResponseType.TEXT);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
 
-        String responseBody = HelperTest.InputStreamToString(response.getBody());
+        String responseBody = response.getStringBody();
         assertEquals(responseBody, "abcdefghij");
     }
 
@@ -56,7 +55,7 @@ public class SyncRequestTest extends CommonTest {
     public void testGetOKAYRespondeCode() throws Exception {
         int testCode = 418;
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode), "TEXT");
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("http://httpbin.org/status/" + testCode), ResponseType.TEXT);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         int code = response.getCode();
@@ -75,7 +74,7 @@ public class SyncRequestTest extends CommonTest {
         int testCode = 200;
         String dataToPost = "test-data";
 
-        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
+        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"), ResponseType.JSON);
         request.setJSONBody(dataToPost);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
@@ -83,10 +82,7 @@ public class SyncRequestTest extends CommonTest {
         int code = response.getCode();
         assertEquals(code, testCode);
 
-        String responseBody = HelperTest.InputStreamToString(response.getBody());
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode responseJSON = mapper.readTree(responseBody);
+        JsonNode responseJSON = response.getJSON();
         String postedData = responseJSON.get("data").asText();
 
         assertEquals(postedData, dataToPost);
@@ -104,7 +100,7 @@ public class SyncRequestTest extends CommonTest {
         int testCode = 200;
         String dataToPut = "test-data";
 
-        SyncRequest request = new SyncRequest(HTTPMethod.PUT, new URL("http://httpbin.org/put"));
+        SyncRequest request = new SyncRequest(HTTPMethod.PUT, new URL("http://httpbin.org/put"), ResponseType.JSON);
         request.setJSONBody(dataToPut);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
         assertNotNull(response);
@@ -112,10 +108,7 @@ public class SyncRequestTest extends CommonTest {
         int code = response.getCode();
         assertEquals(code, testCode);
 
-        String responseBody = HelperTest.InputStreamToString(response.getBody());
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode responseJSON = mapper.readTree(responseBody);
+        JsonNode responseJSON = response.getJSON();
         String putData = responseJSON.get("data").asText();
 
         assertEquals(putData, dataToPut);
@@ -152,7 +145,7 @@ public class SyncRequestTest extends CommonTest {
         int testCode = 200;
         String dataToPost = "test-data";
 
-        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"));
+        SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"), ResponseType.JSON);
         InputStream dataStream = HelperTest.StringToInputStream(dataToPost);
         request.setBody(dataStream);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
@@ -161,10 +154,7 @@ public class SyncRequestTest extends CommonTest {
         int code = response.getCode();
         assertEquals(code, testCode);
 
-        String responseBody = HelperTest.InputStreamToString(response.getBody());
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode responseJSON = mapper.readTree(responseBody);
+        JsonNode responseJSON = response.getJSON();
         String postedData = responseJSON.get("data").asText();
 
         assertEquals(postedData, dataToPost);

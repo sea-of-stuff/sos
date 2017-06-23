@@ -18,6 +18,8 @@ public class RequestsManager {
     private static RequestsManager lazyInstance;
 
     static {
+        // MAC SPECIFIC PATH
+        // TODO - have this in the configuration file
         System.setProperty("javax.net.ssl.trustStore","/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts");
     }
 

@@ -22,16 +22,16 @@ import java.net.URL;
 public class SyncRequest extends Request {
 
 
-    private String expectedOutput; // TODO - use enum
+    private ResponseType responseType;
 
     public SyncRequest(HTTPMethod method, URL url) {
-        this(method, url, "JSON"); // FIXME - using this only to avoid too many errors in the code
+        this(method, url, ResponseType.BINARY);
     }
 
-    public SyncRequest(HTTPMethod method, URL url, String expectedOutput) {
+    public SyncRequest(HTTPMethod method, URL url, ResponseType responseType) {
         super(method, url);
 
-        this.expectedOutput = expectedOutput;
+        this.responseType = responseType;
     }
 
     public Response play() throws IOException {
@@ -85,7 +85,6 @@ public class SyncRequest extends Request {
     private Response postJSON() throws IOException {
 
         RequestBodyEntity requestWithBody = Unirest.post(url.toString())
-                .header("accept", "application/json")
                 .body(json_body);
 
         return makeRequest(requestWithBody);
@@ -114,14 +113,14 @@ public class SyncRequest extends Request {
     private Response makeRequest(BaseRequest request) throws IOException {
         try {
             HttpResponse<?> resp = null;
-            switch(expectedOutput) {
-                case "JSON":
+            switch(responseType) {
+                case JSON:
                     resp = request.asJson();
                     break;
-                case "TEXT":
+                case TEXT:
                     resp = request.asString();
                     break;
-                case "BINARY":
+                case BINARY:
                     resp = request.asBinary();
                     break;
             }

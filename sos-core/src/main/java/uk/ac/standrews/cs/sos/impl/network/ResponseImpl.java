@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.network;
 
 import com.mashape.unirest.http.HttpResponse;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -38,5 +39,11 @@ public class ResponseImpl implements Response {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    @Override
+    public String getStringBody() throws IOException {
+
+        return IO.InputStreamToString(getBody());
     }
 }

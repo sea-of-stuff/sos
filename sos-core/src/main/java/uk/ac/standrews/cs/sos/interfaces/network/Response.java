@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.network;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -14,4 +15,6 @@ public interface Response {
     InputStream getBody();
 
     JsonNode getJSON();
+
+    String getStringBody() throws IOException;
 }
