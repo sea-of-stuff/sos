@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.Agent;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -85,6 +83,7 @@ public class ContextLoader {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void LoadContext(String node) throws ContextLoaderException {
         try {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(node);
@@ -213,30 +212,6 @@ public class ContextLoader {
             Context context = (Context) constructor.newInstance(policyActions, guid, contextName, domain, codomain);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ContextLoaderException("Unable to create instance for class " + className);
-        }
-    }
-
-
-    /**
-     * Creates Context instance with constructor params
-     *
-     * @param agent
-     * @param className
-     * @return
-     * @throws ContextLoaderException
-     */
-    public static Context Instance(String className, Agent agent) throws ContextLoaderException {
-
-        try {
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
-
-            Class[] cArg = new Class[1];
-            cArg[0] = SOSAgent.class;
-
-            return (Context) clazz.getDeclaredConstructor(cArg).newInstance(agent);
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException |
-                NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);
         }
     }

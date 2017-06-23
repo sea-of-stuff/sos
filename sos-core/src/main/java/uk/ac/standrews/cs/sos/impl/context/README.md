@@ -22,17 +22,30 @@
 ```
 {
 	"name": "Test",
-	"guid": "6a7d6e5c875ab6ed01665e6aef853b7ce3b74cff",
 	"predicate": "CommonPredicates.ContentTypePredicate(Collections.singletonList(\"image/jpeg\"))"
 }
 
 ```
 
-TODO
+```
+{
+    "name": "All",
+    "predicate": "CommonPredicates.AcceptAll();"
+}
+```
 
 ## With Policy
 
-TODO
+```
+{
+	"name": "Test",
+	"predicate": "CommonPredicates.ContentTypePredicate(Collections.singletonList(\"image/jpeg\"))",
+	"policies" : [
+	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+	]
+}
+
+```
 
 ## With dependencies
 
@@ -43,3 +56,4 @@ TODO
 	"dependencies": [ "uk.ac.standrews.cs.IGUID" ]
 }
 ```
+
