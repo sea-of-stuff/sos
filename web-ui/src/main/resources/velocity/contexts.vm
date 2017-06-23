@@ -14,11 +14,10 @@
     <form action="/contexts" method="POST">
         <textarea id="contextJSON" name="contextJSON" rows="15" cols="80"></textarea>
         <br>
+
+        <button onclick="prettyPrint()">Pretty Print</button>
         <input type="submit" value="Submit">
     </form>
-
-    <br><br>
-    <button onclick="prettyPrint()">Pretty Print</button>
 
     <br>
     <strong>Examples</strong>
