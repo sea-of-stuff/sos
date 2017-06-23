@@ -109,7 +109,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            Set<IGUID> contents = contextService.getContents(contextGUID); // FIXME - returns both positive and negative results
+            Set<IGUID> contents = contextService.getContents(contextGUID);
             String output = StringUtils.join(contents, ",\n");
 
             return HTTPResponses.OK(output);

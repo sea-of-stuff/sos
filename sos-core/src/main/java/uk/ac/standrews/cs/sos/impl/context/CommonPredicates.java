@@ -19,6 +19,16 @@ public class CommonPredicates {
     private CommonPredicates() {}
 
     /**
+     * Accept everything.
+     *
+     * @return true
+     */
+    public static boolean AcceptAll() {
+
+        return true;
+    }
+
+    /**
      * This method constructs a predicate that checks that the metadata of some given version matches any of the properties specified
      *
      * @param matchingContentTypes the content types that should be matched

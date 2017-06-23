@@ -9,7 +9,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The ContextsContents holds all the information regarding contexts and their contents.
@@ -70,7 +72,12 @@ public class ContextsContents implements Serializable  {
         if (contents == null) {
             return Collections.emptySet();
         } else {
-            return contents.keySet();
+            return contents.entrySet()
+                    .stream()
+                    .filter(p -> p.getValue().predicateResult)
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toSet());
+
         }
     }
 

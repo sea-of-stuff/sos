@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.sos.protocol.tasks;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
-import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
-import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
+import uk.ac.standrews.cs.sos.impl.network.*;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
@@ -35,7 +32,7 @@ public class RegisterNode extends Task {
 
         try {
             URL url = SOSURL.NDS_REGISTER_NODE(ndsNode);
-            SyncRequest request = new SyncRequest(HTTPMethod.POST, url);
+            SyncRequest request = new SyncRequest(HTTPMethod.POST, url, ResponseType.JSON);
             request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
