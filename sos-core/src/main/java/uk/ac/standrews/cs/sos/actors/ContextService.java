@@ -25,9 +25,9 @@ public interface ContextService extends SeaOfStuff {
      * @param context to be added
      * @throws Exception if the context could not be added
      */
-    void addContext(Context context) throws Exception;
+    IGUID addContext(Context context) throws Exception;
 
-    void addContext(String jsonContext) throws Exception;
+    IGUID addContext(String jsonContext) throws Exception;
 
     /**
      * Get the context given its guid

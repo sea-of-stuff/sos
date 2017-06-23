@@ -18,8 +18,10 @@ public class ContextsCacheImpl {
         contexts = new HashMap<>();
     }
 
-    public void addContext(Context context) {
+    public IGUID addContext(Context context) {
         contexts.put(context.guid(), context);
+
+        return context.guid();
     }
 
     public Context getContext(IGUID guid) {

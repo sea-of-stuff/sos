@@ -128,21 +128,21 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public void addContext(Context context) throws Exception {
+    public IGUID addContext(Context context) throws Exception {
 
-        inMemoryCache.addContext(context);
+        return inMemoryCache.addContext(context);
     }
 
     @Override
-    public void addContext(String jsonContext) throws Exception {
+    public IGUID addContext(String jsonContext) throws Exception {
 
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(jsonContext);
         String contextName = jsonNode.get("name").textValue();
 
         ContextLoader.LoadContext(jsonNode);
         Context context = ContextLoader.Instance(contextName, policyActions, contextName, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-        addContext(context);
 
+        return addContext(context);
     }
 
     @Override
