@@ -21,6 +21,13 @@ import java.net.URL;
 import java.util.Iterator;
 
 /**
+ * The ManifestReplication task, as the name suggests, replicates a manifest to other nodes.
+ * The manifest can be replicated only to DataDiscoveryServices (DDS).
+ * In doing the replication the caller MUST also specify a wished replication factor for the manifest.
+ *
+ * If the manifest is successfully replicated to a DDS node:
+ * - the local DDS is informed that now that such a manifest is now stored in that node too
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ManifestReplication extends Task {

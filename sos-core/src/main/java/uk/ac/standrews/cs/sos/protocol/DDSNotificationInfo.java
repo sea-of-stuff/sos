@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Global settings about DDS
+ * Global settings about DDS.
+ * These settings apply irrespective of the Contexts.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
