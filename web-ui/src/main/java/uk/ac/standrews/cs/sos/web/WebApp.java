@@ -54,6 +54,7 @@ public class WebApp {
 
         get("/contexts", (req, res) -> WContexts.Render(sos));
         post("/contexts", (req, res) -> WContexts.CreateContext(req, res, sos));
+        post("/preview", (req, res) -> WContexts.PreviewClassContext(req, res));
 
         get("/usro", (req, res) -> WUsersRoles.Render(sos));
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));

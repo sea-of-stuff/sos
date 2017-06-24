@@ -70,6 +70,7 @@ public class ContextClassBuilder {
     public static String ConstructClass(JsonNode node) throws IOException {
 
         String className = node.get(JSON_NAME).textValue();
+        className = className.substring(0, 1).toUpperCase() + className.substring(1); // First char of class name MUST be Capitalised
 
         /////////////////////////
         // Package and Imports //

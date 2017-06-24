@@ -1,36 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
 </head>
 <body>
 <div id="header"></div>
 <div class="container-fluid">
 
-    <h1>Create context</h1>
-    <form action="/contexts" method="POST">
-        <textarea id="contextJSON" name="contextJSON" rows="15" cols="80"></textarea>
-        <br>
+    <div class="row">
+        <div class="col-5">
+            <h1>Create context</h1>
+            <form action="/contexts" method="post">
+                <textarea cols="80" id="contextJSON" name="contextJSON" rows="15"></textarea>
+                <br>
+                <button type="button" class="btn btn-info" id="prettyPrint">Pretty Print</button>
+                <button type="button" class="btn btn-info" id="previewClass">Preview Class</button>
+                <input type="submit" class="btn btn-success" value="Submit">
+            </form>
+        </div>
 
-        <button onclick="prettyPrint()">Pretty Print</button>
-        <input type="submit" value="Submit">
-    </form>
+        <div class="col-7">
+            <h1>Preview</h1>
+            <div style="overflow-y:scroll; height:500px;">
+                <code id="preview" style="white-space: pre-wrap; word-wrap: break-word;"></code>
+            </div>
+        </div>
+    </div>
 
     <br>
     <strong>Examples</strong>
     <code style=display:block;white-space:pre-wrap>
         {
-            "name": "VoidContext",
+        "name": "All",
+        "predicate": "CommonPredicates.AcceptAll();"
         }
     </code>
     <br>
     <code style=display:block;white-space:pre-wrap>
         {
-            "name": "Simone",
-            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
+        "name": "Simone",
+        "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
         }
     </code>
     <br>
@@ -62,12 +74,32 @@
         $("#header").load("header.html");
     });
 
-    function prettyPrint() {
+    $("#prettyPrint").click(function() {
+
         var ugly = document.getElementById('contextJSON').value;
         var obj = JSON.parse(ugly);
         var pretty = JSON.stringify(obj, undefined, 4);
         document.getElementById('contextJSON').value = pretty;
-    }
+    });
+
+    $("#previewClass").click(function() {
+
+        var ugly = document.getElementById('contextJSON').value;
+        var obj = JSON.parse(ugly);
+        var pretty = JSON.stringify(obj, undefined, 4);
+
+        $.ajax({
+            type: 'POST',
+            url: '/preview',
+            data: pretty,
+            success: function(data) {
+                console.log(data);
+                $('#preview').html(data);
+            },
+            contentType: 'application/json'
+        });
+    });
+
 </script>
 </body>
 </html>

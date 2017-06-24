@@ -1,8 +1,11 @@
 package uk.ac.standrews.cs.sos.web.contexts;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import spark.Request;
 import spark.Response;
+import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 import java.util.HashMap;
@@ -22,7 +25,6 @@ public class WContexts {
 
     public static String CreateContext(Request request, Response response, SOSLocalNode sos) {
 
-
         try {
             String contextJSON = request.queryParams("contextJSON");
             sos.getCMS().addContext(contextJSON);
@@ -34,6 +36,25 @@ public class WContexts {
 
             response.redirect("/contexts");
             return "ERROR";
+        }
+
+    }
+
+    public static String PreviewClassContext(Request request, Response response) {
+
+        try {
+            String contextJSON = request.body();
+            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(contextJSON);
+            String clazz = ContextClassBuilder.ConstructClass(jsonNode);
+
+            response.status(200);
+            return clazz;
+
+        } catch (Exception e) {
+
+            // TODO - this is not displayed :/
+            response.status(400);
+            return "Unable to preview class";
         }
 
     }
