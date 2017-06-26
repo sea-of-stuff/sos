@@ -163,3 +163,7 @@ fabric.properties
 scripts/logs*
 experiments/.*
 *.iml
+.idea/inspectionProfiles/
+.idea/snapshots/
+Dockerfile
+sos-core/dump.db
