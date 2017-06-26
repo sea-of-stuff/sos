@@ -180,7 +180,7 @@
     <orderEntry type="library" name="Maven: org.apache.velocity:velocity:1.7" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:fs-sta:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="sos-filesystem" />
+    <orderEntry type="module" module-name="filesystem" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:webdav-server:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: xerces:xercesImpl:2.11.0" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.4.01" level="project" />

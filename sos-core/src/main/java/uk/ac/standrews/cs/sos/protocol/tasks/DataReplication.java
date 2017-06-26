@@ -39,6 +39,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * The DataReplication task, as the name suggests, replicates a data to other nodes.
+ * The data can be replicated only to Storage nodes.
+ * In doing the replication the caller MUST also specify a wished replication factor for the data.
+ *
+ * If the data is successfully replicated to a Storage node:
+ * - TODO - write down how the internal data structures change
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class DataReplication extends Task {
