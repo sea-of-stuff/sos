@@ -36,8 +36,8 @@ public class BasicMetadata extends AbstractMetadata implements Metadata {
 
     @Override
     public Object getProperty(String propertyName) {
-        Object p = metadata.get(propertyName);
-        return p;
+
+        return metadata.get(propertyName);
     }
 
     @Override

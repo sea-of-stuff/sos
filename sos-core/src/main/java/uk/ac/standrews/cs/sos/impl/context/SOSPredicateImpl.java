@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.sos.model.SOSPredicate;
 
+import java.util.Objects;
+
 /**
  * This class acts mainly as a wrapper for the Java Predicate object.
  * The wrapper allows us to cleanly handle the predicate under the test function and to apply it for the and/or operators of the context.
@@ -21,27 +23,22 @@ public abstract class SOSPredicateImpl implements SOSPredicate {
         return maxAge;
     }
 
-//    @Override
-//    public SOSPredicate and(SOSPredicate other) {
-//        Objects.requireNonNull(other);
-//
-//        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
-//
-//        return new SOSPredicateImpl(predicate.and(other.predicate()), newMaxAge);
-//    }
-//
-//    @Override
-//    public SOSPredicate or(SOSPredicate other) {
-//        Objects.requireNonNull(other);
-//
-//        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
-//
-//        return new SOSPredicateImpl(predicate.or(other.predicate()), newMaxAge);
-//    }
+    @Override
+    public SOSPredicate and(SOSPredicate other) {
+        Objects.requireNonNull(other);
 
-//    @Override
-//    public Predicate<IGUID> predicate() {
-//        return predicate;
-//    }
+        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
+
+        return null; // new SOSPredicateImpl(predicate.and(other.predicate()), newMaxAge);
+    }
+
+    @Override
+    public SOSPredicate or(SOSPredicate other) {
+        Objects.requireNonNull(other);
+
+        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
+
+        return null; // new SOSPredicateImpl(predicate.or(other.predicate()), newMaxAge);
+    }
 
 }

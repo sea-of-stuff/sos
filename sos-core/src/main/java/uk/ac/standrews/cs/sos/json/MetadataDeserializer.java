@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 
@@ -56,7 +57,7 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
                 try {
                     return GUIDFactory.recreateGUID(element.asText());
                 } catch (GUIDGenerationException e) {
-                    return null;
+                    return new InvalidID();
                 }
         }
 

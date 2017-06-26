@@ -44,7 +44,8 @@ public class CommonPolicies {
     }
 
     /**
-     * Replicate manifests at least n-times
+     * TODO - need access to the actual data
+     * Replicate data at least n-times
      */
     public static class DataReplicationPolicy implements Policy {
 
@@ -74,7 +75,7 @@ public class CommonPolicies {
     }
 
     /**
-     * Delete content from some nodes
+     * Delete content (data or manifest) from some nodes
      */
     public static class DeletionPolicy implements Policy {
 

@@ -1,7 +1,11 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -50,13 +54,11 @@ public class CommonPredicates {
         }
 
         return false;
-
     }
 
     public static boolean ContentTypePredicate(IGUID guid, List<String> matchingContentTypes) {
 
        return MetadataPropertyPredicate(guid, MetadataConstants.CONTENT_TYPE, matchingContentTypes);
-
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -108,6 +110,28 @@ public class CommonPredicates {
         }
 
         return false;
+    }
+
+    /**
+     * Check if the manifest with the given GUID is signed by a Role matching the signer GUID
+     * @param guid
+     * @param signer
+     * @return
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static boolean SignedBy(IGUID guid, IGUID signer) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            IGUID signerFound = GUIDFactory.recreateGUID((String) agent.getMetaProperty(guid, "signer")); // FIXME - use appropriate method from Metadata obj
+            return signerFound.equals(signer);
+
+        } catch (ManifestNotFoundException | MetadataNotFoundException | GUIDGenerationException e) {
+
+            return false;
+        }
+
     }
 
 }

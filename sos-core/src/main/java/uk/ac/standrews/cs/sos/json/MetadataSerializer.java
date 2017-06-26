@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
@@ -52,6 +53,8 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
     public String getType(Object value) {
         if (value instanceof Integer) {
             return "INT";
+        } else if (value instanceof IGUID) {
+            return "GUID";
         } else {
             return "STRING";
         }
@@ -63,6 +66,9 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
                 jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Integer) value);
                 break;
             case "STRING":
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
+                break;
+            case "GUID":
                 jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
                 break;
         }

@@ -62,7 +62,7 @@
     <br>
     <code style=display:block;white-space:pre-wrap>
         {
-            "name": "Test",
+            "name": "ImageManifestReplication",
             "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
             "policies" : [
                 "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"

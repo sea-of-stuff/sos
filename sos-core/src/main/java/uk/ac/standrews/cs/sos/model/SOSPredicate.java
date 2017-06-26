@@ -23,24 +23,18 @@ public interface SOSPredicate {
      */
     boolean test(IGUID guid);
 
-//    /**
-//     * AND this predicate with another one
-//     * @param other the predicate to AND
-//     * @return the resulting predicate
-//     */
-//    SOSPredicate and(SOSPredicate other);
-//
-//    /**
-//     * OR this predicate with another one
-//     * @param other the predicate to OR
-//     * @return the resulting predicate
-//     */
-//    SOSPredicate or(SOSPredicate other);
+    /**
+     * AND this predicate with another one
+     * @param other the predicate to AND
+     * @return the resulting predicate
+     */
+    SOSPredicate and(SOSPredicate other);
 
     /**
-     * Get the actual predicate. This is needed to implement the AND/OR methods
-     * @return the actual predicate
+     * OR this predicate with another one
+     * @param other the predicate to OR
+     * @return the resulting predicate
      */
-    // Predicate<IGUID> predicate();
+    SOSPredicate or(SOSPredicate other);
 
 }

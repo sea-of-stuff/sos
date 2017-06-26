@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
@@ -38,6 +39,15 @@ public abstract class AbstractMetadata implements Metadata {
 
     public Integer getPropertyAsInteger(String propertyName) {
         return (Integer) getProperty(propertyName);
+    }
+
+    public IGUID getPropertyAsGUID(String propertyName) {
+
+        try {
+            return GUIDFactory.recreateGUID(getPropertyAsString(propertyName));
+        } catch (GUIDGenerationException e) {
+            return new InvalidID();
+        }
     }
 
     @Override
