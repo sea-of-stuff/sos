@@ -37,6 +37,7 @@ public class ReferenceContext extends BaseContext {
 
         @Override
         public boolean test(IGUID guid) {
+
             return CommonPredicates.ContentTypePredicate(guid, Collections.singletonList("image/jpeg"));
         }
     }

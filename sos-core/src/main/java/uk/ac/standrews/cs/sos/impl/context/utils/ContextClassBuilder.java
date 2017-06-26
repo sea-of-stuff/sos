@@ -58,7 +58,7 @@ public class ContextClassBuilder {
             "\n" +
             "    @Override\n" +
             "    public boolean test(IGUID guid) {\n" +
-            "        return " + PREDICATE_TAG + "\n" +
+            "        return " + PREDICATE_TAG + "\n" + // FIXME - the return here is limiting
             "    }\n" +
             "}";
 

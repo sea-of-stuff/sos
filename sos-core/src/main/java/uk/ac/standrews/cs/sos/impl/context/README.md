@@ -6,7 +6,7 @@
 ```
 {
 	"name": "Test",
-	"predicate": "CommonPredicates.ContentTypePredicate(Collections.singletonList(\"image/jpeg\"))"
+	"predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"))"
 }
 
 ```
@@ -33,7 +33,7 @@
 ```
 {
 	"name": "Test",
-	"predicate": "CommonPredicates.ContentTypePredicate(Collections.singletonList(\"image/jpeg\"))",
+	"predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
 	"policies" : [
 	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
 	]

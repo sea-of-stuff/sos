@@ -11,10 +11,10 @@
 <div class="container-fluid">
 
     <div class="row">
-        <div class="col-5">
+        <div class="col-6">
             <h1>Create context</h1>
             <form action="/contexts" method="post">
-                <textarea cols="80" id="contextJSON" name="contextJSON" rows="15"></textarea>
+                <textarea cols="60" id="contextJSON" name="contextJSON" rows="15"></textarea>
                 <br>
                 <button type="button" class="btn btn-info" id="prettyPrint">Pretty Print</button>
                 <button type="button" class="btn btn-info" id="previewClass">Preview Class</button>
@@ -22,7 +22,7 @@
             </form>
         </div>
 
-        <div class="col-7">
+        <div class="col-6">
             <h1>Preview</h1>
             <div style="overflow-y:scroll; height:500px;">
                 <code id="preview" style="white-space: pre-wrap; word-wrap: break-word;"></code>
@@ -30,26 +30,43 @@
         </div>
     </div>
 
-    <br>
     <strong>Examples</strong>
     <code style=display:block;white-space:pre-wrap>
         {
-        "name": "All",
-        "predicate": "CommonPredicates.AcceptAll();"
+            "name": "Allv1",
+            "predicate": "CommonPredicates.AcceptAll();"
         }
     </code>
     <br>
     <code style=display:block;white-space:pre-wrap>
         {
-        "name": "Simone",
-        "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
+        "name": "Allv2",
+        "predicate": "True;"
         }
     </code>
     <br>
     <code style=display:block;white-space:pre-wrap>
         {
-        "name": "Binary",
-        "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
+            "name": "Simone",
+            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
+        }
+    </code>
+    <br>
+    <code style=display:block;white-space:pre-wrap>
+        {
+            "name": "Binary",
+            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
+        }
+    </code>
+
+    <br>
+    <code style=display:block;white-space:pre-wrap>
+        {
+            "name": "Test",
+            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
+            "policies" : [
+                "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+            ]
         }
     </code>
 
