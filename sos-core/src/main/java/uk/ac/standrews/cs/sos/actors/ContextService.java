@@ -27,6 +27,13 @@ public interface ContextService extends SeaOfStuff {
      */
     IGUID addContext(Context context) throws Exception;
 
+    /**
+     * Add a context to this service given a JSON representation of the context
+     *
+     * @param jsonContext
+     * @return
+     * @throws Exception
+     */
     IGUID addContext(String jsonContext) throws Exception;
 
     /**
@@ -36,6 +43,17 @@ public interface ContextService extends SeaOfStuff {
      * @throws ContextNotFoundException if no context could be found
      */
     Context getContext(IGUID contextGUID) throws ContextNotFoundException;
+
+    /**
+     * Get a context given its name
+     *
+     * @param contextName
+     * @return
+     * @throws ContextNotFoundException
+     *
+     * TODO - assuming the the context name is unique
+     */
+    Context getContext(String contextName) throws ContextNotFoundException;
 
     /**
      * Get the set for all content belonging to the specified context

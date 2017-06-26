@@ -14,6 +14,8 @@ public class Threads {
     public static final int PREDICATE_PERIODIC_DELAY_S = 60;
     public static final int POLICIES_PERIODIC_INIT_DELAY_S = 45;
     public static final int POLICIES_PERIODIC_DELAY_S = 60;
+    public static final int POLICIES_CHECK_PERIODIC_INIT_DELAY_S = 45;
+    public static final int POLICIES_CHECK_PERIODIC_DELAY_S = 60;
     public static final int GET_DATA_PERIODIC_INIT_DELAY_S = 60;
     public static final int GET_DATA_PERIODIC_DELAY_S = 60;
     public static final int SPAWN_PERIODIC_INIT_DELAY_S = 60;

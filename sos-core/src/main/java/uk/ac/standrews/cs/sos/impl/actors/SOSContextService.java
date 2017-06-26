@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
-import uk.ac.standrews.cs.sos.impl.context.examples.BinaryReplicationContext;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -92,25 +91,11 @@ public class SOSContextService implements ContextService {
             e.printStackTrace();
         }
 
-        // FIXME - The following is an hardcoded context, which should instead be loaded from disk
-        try {
-
-
-            Context binaryReplicationContext = new BinaryReplicationContext(policyActions,
-                    "binary replication context",
-                    new NodesCollectionImpl(NodesCollection.TYPE.LOCAL),
-                    new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-
-            addContext(binaryReplicationContext);
-        } catch (Exception e) {
-            e.printStackTrace(); // TODO - better exception handling
-        }
-
         // Background CRON processes
         service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
         runPredicatesPeriodic();
         runPoliciesPeriodic();
-
+        checkPoliciesPeriodic();
         getDataPeriodic();
         spawnContextsPeriodic();
     }
@@ -118,13 +103,15 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<Context> getContexts() {
 
-        return inMemoryCache.getContexts().stream().map(c -> {
-            try {
-                return getContext(c);
-            } catch (ContextNotFoundException e) {
-                return null;
-            }
-        }).collect(Collectors.toSet());
+        return inMemoryCache.getContexts()
+                .stream()
+                .map(c -> {
+                    try {
+                        return getContext(c);
+                    } catch (ContextNotFoundException e) {
+                        return null;
+                    }
+                }).collect(Collectors.toSet());
     }
 
     @Override
@@ -149,6 +136,12 @@ public class SOSContextService implements ContextService {
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         return inMemoryCache.getContext(contextGUID);
+    }
+
+    @Override
+    public Context getContext(String contextName) throws ContextNotFoundException {
+        // TODO
+        return null;
     }
 
     @Override
@@ -198,6 +191,7 @@ public class SOSContextService implements ContextService {
 
                             SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + tip.toString());
                             runPredicate(context, tip);
+                            SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + tip.toString());
                         }
                     }
 
@@ -233,13 +227,26 @@ public class SOSContextService implements ContextService {
                 HashMap<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsRows(contextGUID);
                 contentsToProcess.forEach((guid, row) -> {
                     if (row.predicateResult && !row.policySatisfied) {
+
+                        SOS_LOG.log(LEVEL.INFO, "Running policies for context " + contextGUID + " and Version " + guid);
                         runPolicies(contextGUID, guid);
+                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + contextGUID + " and Version " + guid);
                     }
                 });
 
             }
 
         }, POLICIES_PERIODIC_INIT_DELAY_S, POLICIES_PERIODIC_DELAY_S, TimeUnit.SECONDS);
+    }
+
+    private void checkPoliciesPeriodic() {
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.WARN, "N/A yet - Check that policies are still valid");
+
+            // TODO - work in progress
+
+        }, POLICIES_CHECK_PERIODIC_INIT_DELAY_S, POLICIES_CHECK_PERIODIC_INIT_DELAY_S, TimeUnit.SECONDS);
     }
 
     /**
