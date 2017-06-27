@@ -75,7 +75,7 @@
     <ul>
         #foreach($context in $contexts)
             <li>
-                <pre style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
+                <pre style="white-space: pre-wrap; word-wrap: break-word;"><a href="/context/$context.guid()/contents">$context.toString()</a></pre>
             </li>
 
         #end

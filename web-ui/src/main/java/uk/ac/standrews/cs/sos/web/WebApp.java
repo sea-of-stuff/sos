@@ -55,6 +55,7 @@ public class WebApp {
         get("/contexts", (req, res) -> WContexts.Render(sos));
         post("/contexts", (req, res) -> WContexts.CreateContext(req, res, sos));
         post("/preview", (req, res) -> WContexts.PreviewClassContext(req, res));
+        post("/contexts/:id/contents", (req, res) -> WContexts.GetContents(req, sos)); // TODO - further testing
 
         get("/usro", (req, res) -> WUsersRoles.Render(sos));
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));
@@ -64,7 +65,7 @@ public class WebApp {
         get("/graph/data/:id", (req, res) -> WData.Render(req, sos));
         get("/graph/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
-        get("/verifySignature/:id", (req, res) -> WVerify.Render(req, sos));
+        get("/verifySignature/:id", (req, res) -> WVerify.Render(req, sos)); // TODO - further testing
 
         post("/data", (req, res) -> postData(req, sos));
     }

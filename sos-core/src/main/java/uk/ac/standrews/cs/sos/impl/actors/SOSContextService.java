@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -181,27 +181,22 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
 
-            for (IGUID iguid : inMemoryCache.getContexts()) {
+            for (Context context : getContexts()) {
+                for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
 
-                try {
-                    Context context = getContext(iguid);
-                    for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
+                    try {
+                        IGUID head = dataDiscoveryService.getHead(assetInvariant);
 
-                        for (IGUID tip : dataDiscoveryService.getTips(assetInvariant)) {
-
-                            SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + tip.toString());
-                            runPredicate(context, tip);
-                            SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + tip.toString());
-                        }
+                        SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
+                        runPredicate(context, head);
+                        SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
+                    } catch (HEADNotFoundException e) {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
                     }
 
-                } catch (ContextNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to find context");
-                } catch (TIPNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
                 }
-
             }
+
 
         }, PREDICATE_PERIODIC_INIT_DELAY_S, PREDICATE_PERIODIC_DELAY_S, TimeUnit.SECONDS);
 
@@ -222,6 +217,7 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
+            // for (Context context : getContexts()) {
             for (IGUID contextGUID : inMemoryCache.getContexts()) {
 
                 HashMap<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsRows(contextGUID);
@@ -290,9 +286,8 @@ public class SOSContextService implements ContextService {
      *  - Run the predicate of the context against the given version
      *  - Update the contextsContents
      *
-     * @param context
-     * @param versionGUID
-     * @return
+     * @param context for which to run the predicate
+     * @param versionGUID to evaluate
      */
     private void runPredicate(Context context, IGUID versionGUID) {
 
@@ -346,8 +341,8 @@ public class SOSContextService implements ContextService {
     /**
      * Check if the predicate of a context is still valid a given version or not
      *
-     * @param context
-     * @param versionGUID
+     * @param context for which the predicate should be checked
+     * @param versionGUID to evaluate
      * @return true if the predicate is still valid
      */
     private boolean predicateHasExpired(Context context, IGUID versionGUID) {

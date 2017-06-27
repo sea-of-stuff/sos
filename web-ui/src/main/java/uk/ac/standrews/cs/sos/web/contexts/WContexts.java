@@ -3,6 +3,9 @@ package uk.ac.standrews.cs.sos.web.contexts;
 import com.fasterxml.jackson.databind.JsonNode;
 import spark.Request;
 import spark.Response;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -20,6 +23,17 @@ public class WContexts {
         Map<String, Object> model = new HashMap<>();
         model.put("contexts", sos.getCMS().getContexts());
 
+        return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
+    }
+
+    public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException {
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("contents", sos.getCMS().getContents(guid));
+
+        // TODO - test this
         return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
     }
 
