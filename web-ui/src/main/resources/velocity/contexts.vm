@@ -30,56 +30,66 @@
         </div>
     </div>
 
-    <strong>Examples</strong>
-    <code style=display:block;white-space:pre-wrap>
-        {
-            "name": "Allv1",
-            "predicate": "CommonPredicates.AcceptAll();"
-        }
-    </code>
-    <br>
-    <code style=display:block;white-space:pre-wrap>
-        {
-        "name": "Allv2",
-        "predicate": "True;"
-        }
-    </code>
-    <br>
-    <code style=display:block;white-space:pre-wrap>
-        {
-            "name": "Simone",
-            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
-        }
-    </code>
-    <br>
-    <code style=display:block;white-space:pre-wrap>
-        {
-            "name": "Binary",
-            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
-        }
-    </code>
+    <div class="row">
+        <div class="col-6">
+            <strong>Examples</strong>
+            <code style=display:block;white-space:pre-wrap>
+{
+"name": "Allv1",
+"predicate": "CommonPredicates.AcceptAll();"
+}
+            </code>
+            <br>
+            <code style=display:block;white-space:pre-wrap>
+                {
+                "name": "Allv2",
+                "predicate": "True;"
+                }
+            </code>
+            <br>
+            <code style=display:block;white-space:pre-wrap>
+                {
+                "name": "Simone",
+                "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
+                }
+            </code>
+            <br>
+            <code style=display:block;white-space:pre-wrap>
+                {
+                "name": "Binary",
+                "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
+                }
+            </code>
 
-    <br>
-    <code style=display:block;white-space:pre-wrap>
-        {
-            "name": "ImageManifestReplication",
-            "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
-            "policies" : [
+            <br>
+            <code style=display:block;white-space:pre-wrap>
+                {
+                "name": "ImageManifestReplication",
+                "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
+                "policies" : [
                 "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
-            ]
-        }
-    </code>
+                ]
+                }
+            </code>
+        </div>
 
-    <h1>List of contexts</h1>
+        <div class="col-6">
+            <h1>List of contexts</h1>
 
-    <ul>
-        #foreach($context in $contexts)
-            <li>
-                <pre style="white-space: pre-wrap; word-wrap: break-word;"><a href="/context/$context.guid()/contents">$context.toString()</a></pre>
-            </li>
+            <ul>
+                #foreach($context in $contexts)
+                    <li>
+                        <pre style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
+                        <button id="context" value="$context.guid()" type="button"></button>
+                    </li>
 
-        #end
-    </ul>
+                #end
+            </ul>
+
+            <div id="contents"></div>
+
+        </div>
+    </div>
 
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -115,6 +125,16 @@
             },
             contentType: 'application/json'
         });
+    });
+
+    $("#context").click(function() {
+
+        var id = $(this).val();
+        console.log(id);
+
+        $.get("/context/" + id + "/contents" , function(data) {
+            $('#contents').html(data);
+        })
     });
 
 </script>

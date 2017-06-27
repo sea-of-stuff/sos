@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.web.contexts;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import spark.Request;
 import spark.Response;
@@ -26,15 +27,14 @@ public class WContexts {
         return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
     }
 
-    public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException {
+    public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException {
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         Map<String, Object> model = new HashMap<>();
         model.put("contents", sos.getCMS().getContents(guid));
 
-        // TODO - test this
-        return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
+        return JSONHelper.JsonObjMapper().writeValueAsString(model);
     }
 
     public static String CreateContext(Request request, Response response, SOSLocalNode sos) {
