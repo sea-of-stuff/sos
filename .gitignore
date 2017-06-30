@@ -167,3 +167,10 @@ experiments/.*
 .idea/snapshots/
 Dockerfile
 sos-core/dump.db
+*.log
+*.log.*
+sos-core/src/test/resources/*.conf
+
+# Experiments
+experiments/plots
+experiments/processed
