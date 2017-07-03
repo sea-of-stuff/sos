@@ -71,4 +71,6 @@ public interface ContextService extends SeaOfStuff {
      */
     void flush();
 
+    void runPredicates();
+
 }

@@ -21,7 +21,14 @@ public abstract class BaseContext implements Context {
     protected NodesCollection codomain;
 
     private static int EMPTY_ARRAY = 0;
+
+    /**
+     * The predicate is computed once and its result is true forever.
+     */
     protected static final long PREDICATE_ALWAYS_TRUE = Long.MAX_VALUE;
+    /**
+     * The predicate is true only at the time when it is computed.
+     */
     protected static final long PREDICATE_ALWAYS_TO_COMPUTE = 0;
 
     /**
@@ -61,7 +68,7 @@ public abstract class BaseContext implements Context {
 
     @Override
     public String getName() {
-        return name;
+        return name + "-" + guid.toString();
     }
 
     @Override

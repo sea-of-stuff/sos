@@ -180,26 +180,29 @@ public class SOSContextService implements ContextService {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
-
-            for (Context context : getContexts()) {
-                for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
-
-                    try {
-                        IGUID head = dataDiscoveryService.getHead(assetInvariant);
-
-                        SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
-                        runPredicate(context, head);
-                        SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
-                    } catch (HEADNotFoundException e) {
-                        SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
-                    }
-
-                }
-            }
-
+            runPredicates();
 
         }, PREDICATE_PERIODIC_INIT_DELAY_S, PREDICATE_PERIODIC_DELAY_S, TimeUnit.SECONDS);
 
+    }
+
+    public void runPredicates() {
+
+        for (Context context : getContexts()) {
+            for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
+
+                try {
+                    IGUID head = dataDiscoveryService.getHead(assetInvariant);
+
+                    SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
+                    runPredicate(context, head);
+                    SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
+                } catch (HEADNotFoundException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
+                }
+
+            }
+        }
     }
 
     /**
