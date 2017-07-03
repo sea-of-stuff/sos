@@ -13,6 +13,7 @@ public interface Experiment {
 
     void finish();
 
+    // TODO - save stats to file
     void collectStats();
 
 }

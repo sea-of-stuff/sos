@@ -35,8 +35,9 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     @Override
     public void setup() throws Exception {
         // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
+        // TODO - put the results of the experiments in the output folder
         // for example, in this experiment I do not want to run any background threads
-        File configFile = new File("/Users/sic2/config.conf");
+        File configFile = new File("src/main/resources/configurations/pr_1.conf");
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         node = ServerState.init(configuration);
@@ -58,6 +59,8 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         super.finish();
 
         ServerState.kill();
+
+        // TODO - delete all the downloaded content? Or precache it?
     }
 
 
