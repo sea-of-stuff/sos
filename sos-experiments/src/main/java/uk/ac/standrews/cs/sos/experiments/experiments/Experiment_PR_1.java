@@ -57,7 +57,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void finish() {
         super.finish();
 
-        node.kill();
+        ServerState.kill();
     }
 
 

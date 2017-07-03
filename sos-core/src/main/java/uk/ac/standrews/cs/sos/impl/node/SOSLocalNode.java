@@ -81,6 +81,21 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public SOSLocalNode() throws SOSException, GUIDGenerationException {
         super(Builder.configuration);
 
+        // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
+        SOS_LOG.log(LEVEL.INFO,
+                "\n" +
+                        "      ___           ___           ___     \n" +
+                        "     /  /\\         /  /\\         /  /\\    \n" +
+                        "    /  /:/_       /  /::\\       /  /:/_   \n" +
+                        "   /  /:/ /\\     /  /:/\\:\\     /  /:/ /\\  \n" +
+                        "  /  /:/ /::\\   /  /:/  \\:\\   /  /:/ /::\\ \n" +
+                        " /__/:/ /:/\\:\\ /__/:/ \\__\\:\\ /__/:/ /:/\\:\\\n" +
+                        " \\  \\:\\/:/~/:/ \\  \\:\\ /  /:/ \\  \\:\\/:/~/:/\n" +
+                        "  \\  \\::/ /:/   \\  \\:\\  /:/   \\  \\::/ /:/ \n" +
+                        "   \\__\\/ /:/     \\  \\:\\/:/     \\__\\/ /:/  \n" +
+                        "     /__/:/       \\  \\::/        /__/:/   \n" +
+                        "     \\__\\/         \\__\\/         \\__\\/    \n");
+
         SOS_LOG.log(LEVEL.INFO, "Starting up node ");
 
         SOSConfiguration configuration = Builder.configuration;
