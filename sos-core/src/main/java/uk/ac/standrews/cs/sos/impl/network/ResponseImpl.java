@@ -46,4 +46,9 @@ public class ResponseImpl implements Response {
 
         return IO.InputStreamToString(getBody());
     }
+
+    public int getContentLength() {
+
+        return Integer.parseInt(response.getHeaders().getFirst("Content-Length"));
+    }
 }

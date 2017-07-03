@@ -17,4 +17,10 @@ public interface Response {
     JsonNode getJSON();
 
     String getStringBody() throws IOException;
+
+    /**
+     * Content Lenght in bytes
+     * @return
+     */
+    int getContentLength();
 }

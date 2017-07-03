@@ -52,6 +52,17 @@ public class SyncRequestTest extends CommonTest {
     }
 
     @Test
+    public void testGetHTTPSOnImage() throws Exception {
+        SyncRequest request = new SyncRequest(HTTPMethod.GET, new URL("https://www.takemefishing.org/tmf/assets/images/fish/american-shad-464x170.png"), ResponseType.BINARY);
+        Response response = RequestsManager.getInstance().playSyncRequest(request);
+        assertNotNull(response);
+
+        assertEquals(response.getCode(), 200);
+        assertEquals(response.getContentLength(), 100844); // ~ 100KB
+    }
+
+
+    @Test
     public void testGetOKAYRespondeCode() throws Exception {
         int testCode = 418;
 

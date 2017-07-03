@@ -106,6 +106,10 @@ public class SOSAgent implements Agent {
         VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
         addManifest(manifest);
 
+        // NOTE:
+        // Make the added manifest the HEAD by default
+        dataDiscoveryService.setHead(manifest);
+
         return manifest;
     }
 

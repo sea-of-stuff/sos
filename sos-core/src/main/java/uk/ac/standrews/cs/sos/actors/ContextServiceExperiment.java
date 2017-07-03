@@ -5,5 +5,5 @@ package uk.ac.standrews.cs.sos.actors;
  */
 public interface ContextServiceExperiment extends ContextService {
 
-    void runPredicates();
+    int runPredicates();
 }

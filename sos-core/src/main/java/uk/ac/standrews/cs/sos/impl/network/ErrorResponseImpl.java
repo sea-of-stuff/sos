@@ -30,4 +30,9 @@ public class ErrorResponseImpl implements Response {
     public String getStringBody() throws IOException {
         return null;
     }
+
+    @Override
+    public int getContentLength() {
+        return 0;
+    }
 }

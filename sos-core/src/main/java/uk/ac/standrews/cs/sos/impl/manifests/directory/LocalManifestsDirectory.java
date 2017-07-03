@@ -126,6 +126,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             String filename = HEAD_TAG + invariant.toString();
 
             String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
+            guid = guid.replace("\n", "");
             return GUIDFactory.recreateGUID(guid);
 
         } catch (DataStorageException | DataException | GUIDGenerationException e) {

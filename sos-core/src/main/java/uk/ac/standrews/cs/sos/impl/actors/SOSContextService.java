@@ -186,7 +186,9 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
     }
 
-    public void runPredicates() {
+    public int runPredicates() {
+
+        int counter = 0;
 
         for (Context context : getContexts()) {
             for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
@@ -196,6 +198,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
                     SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
                     runPredicate(context, head);
+                    counter++;
+
                     SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
                 } catch (HEADNotFoundException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
@@ -203,6 +207,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
             }
         }
+
+        return counter;
     }
 
     /**
