@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.sos.actors.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -9,10 +10,11 @@ import java.io.File;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_PR_1 implements Experiment {
+public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private SOSLocalNode node;
-    private long start, end, timeToFinish;
+    private ContextServiceExperiment cms;
+
 
     public static void main(String[] args) throws Exception {
 
@@ -30,6 +32,7 @@ public class Experiment_PR_1 implements Experiment {
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         node = ServerState.init(configuration);
+        cms = (ContextServiceExperiment) node.getCMS();
 
         addContentToNode();
         addContexts();
@@ -37,21 +40,9 @@ public class Experiment_PR_1 implements Experiment {
 
     @Override
     public void start() {
+        super.start();
 
-        start = System.nanoTime();
-
-        node.getCMS().runPredicates();
-    }
-
-    @Override
-    public void finish() {
-        end = System.nanoTime();
-    }
-
-    @Override
-    public void collectStats() {
-        timeToFinish = end - start;
-        System.out.println("All predicates run in " + timeToFinish/1000000000.0 + " seconds");
+        cms.runPredicates();
     }
 
     private void addContentToNode() {

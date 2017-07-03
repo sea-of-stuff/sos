@@ -45,7 +45,7 @@ import static uk.ac.standrews.cs.sos.constants.Threads.*;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSContextService implements ContextService {
+public class SOSContextService implements ContextService, ContextServiceExperiment {
 
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
