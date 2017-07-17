@@ -4,11 +4,11 @@ import com.jcraft.jsch.*;
 
 import java.io.*;
 
-// Based on example: http://www.jcraft.com/jsch/examples/ScpTo.java.html
+// Based on the following examples:
+// http://www.jcraft.com/jsch/examples/ScpTo.java.html
 // http://www.jcraft.com/jsch/examples/ScpFrom.java.html
-public class ScpViaSsh {
+public class NetworkOperations {
 
-    // FIXME - do not commit this to git
     public String privateKeyPath;
     public String passphrase;
     public String knownHostsPath = "/Users/sic2/.ssh/known_hosts";
@@ -103,14 +103,19 @@ public class ScpViaSsh {
      * @param jarPath
      * @throws JSchException
      */
-    public void executeJar(String jarPath, String args) throws JSchException {
+    public void executeJar(String jarPath, String args) throws NetworkException {
 
-        String command = "java -jar " + jarPath + " " + args;
+        try {
+            String command = "java -jar " + jarPath + " " + args;
 
-        Channel channel = session.openChannel("exec");
-        ((ChannelExec) channel).setCommand(command);
+            Channel channel = session.openChannel("exec");
+            ((ChannelExec) channel).setCommand(command);
 
-        channel.disconnect();
+            channel.disconnect();
+
+        } catch (JSchException e) {
+            throw new NetworkException();
+        }
     }
 
     private void send(Channel channel, String lfile, boolean ptimestamp) throws IOException {
