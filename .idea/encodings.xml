@@ -7,6 +7,7 @@
     <file url="file://$PROJECT_DIR$/sos-core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-experiments" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-filesystem" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sos-interfaces" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-rest" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-rest-jetty" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sos-web-archive" charset="UTF-8" />

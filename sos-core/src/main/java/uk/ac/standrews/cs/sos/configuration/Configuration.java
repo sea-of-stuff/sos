@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.File;

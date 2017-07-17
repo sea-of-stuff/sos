@@ -112,6 +112,7 @@ public class ContextLoader {
 
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
+            if (sourceClazzFile.exists()) sourceClazzFile.delete();
             sourceClazzFile.deleteOnExit();
             try (PrintWriter out = new PrintWriter(sourceClazzFile)){
                 out.println(clazzString);
@@ -133,7 +134,6 @@ public class ContextLoader {
             if (task.call()) {
 
                 String path = targetClassPath + ContextClassBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
-                System.out.println(path);
                 File dir = new File(path).getParentFile();
                 Load(dir, clazzName);
 

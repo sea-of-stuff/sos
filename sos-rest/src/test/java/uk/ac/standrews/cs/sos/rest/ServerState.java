@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -44,26 +45,27 @@ public class ServerState {
 
     private SOSLocalNode startSOS(String properties) throws SOSException, GUIDGenerationException {
 
-        File configFile = new File(properties);
-        SOSConfiguration configuration = new SOSConfiguration(configFile);
-
         try {
+            File configFile = new File(properties);
+            SOSConfiguration configuration = new SOSConfiguration(configFile);
+
             CastoreBuilder castoreBuilder = configuration.getCastoreBuilder();
             IStorage stor = CastoreFactory.createStorage(castoreBuilder);
             localStorage = new LocalStorage(stor);
-        } catch (StorageException | DataStorageException e) {
+
+            List<Node> bootstrapNodes = configuration.getBootstrapNodes();
+
+            SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+            sos = builder.configuration(configuration)
+                    .internalStorage(localStorage)
+                    .bootstrapNodes(bootstrapNodes)
+                    .build();
+
+            return sos;
+
+        } catch (StorageException | DataStorageException | ConfigurationException e) {
             throw new SOSException(e);
         }
-
-        List<Node> bootstrapNodes = configuration.getBootstrapNodes();
-
-        SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
-        sos = builder.configuration(configuration)
-                .internalStorage(localStorage)
-                .bootstrapNodes(bootstrapNodes)
-                .build();
-
-        return sos;
     }
 
 }

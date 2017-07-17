@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.configuration;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 
 import java.io.File;
 import java.io.IOException;

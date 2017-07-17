@@ -5,8 +5,8 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -107,10 +107,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
 
             database = new DatabaseImpl(file.getPath());
-        } catch (DatabaseException e) {
+        } catch (DatabaseException | ConfigurationException | IOException e) {
             throw new SOSException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         initNDS();

@@ -46,7 +46,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\"\n" +
+                        "    \"name\": \"Test\",\n" +
+                        "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
@@ -66,7 +67,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\"\n" +
+                        "    \"name\": \"Test\",\n" +
+                        "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);

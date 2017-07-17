@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos;
+package uk.ac.standrews.cs.sos.configuration;
 
 import java.io.File;
 import java.io.IOException;
