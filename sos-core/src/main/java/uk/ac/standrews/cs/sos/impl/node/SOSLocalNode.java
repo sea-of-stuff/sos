@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -192,7 +193,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             this.hostAddress = new InetSocketAddress(inetAddress, port);
 
             nodeDiscoveryService.registerNode(this, false);
-        } catch (UnknownHostException | NodeRegistrationException e) {
+        } catch (UnknownHostException | NodeRegistrationException | ConfigurationException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
         }
 

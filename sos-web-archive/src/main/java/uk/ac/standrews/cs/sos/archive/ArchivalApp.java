@@ -6,7 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -31,7 +31,7 @@ public class ArchivalApp {
 
     private static HashMap<String, Long> visitedSites;
 
-    public static void main(String[] args) throws SOSConfigurationException {
+    public static void main(String[] args) throws ConfigurationException {
 
         File configFile = new File(args[0]);
         SOSConfiguration configuration = new SOSConfiguration(configFile);

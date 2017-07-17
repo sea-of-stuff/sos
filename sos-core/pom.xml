@@ -61,13 +61,6 @@
             <version>${guava.version}</version>
         </dependency>
 
-        <!-- CONFIGURATION -->
-        <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
-            <version>${typesafe.version}</version>
-        </dependency>
-
         <!-- NETWORK -->
         <!-- Unirest -->
         <!-- https://github.com/Mashape/unirest-java#installing -->

@@ -31,8 +31,6 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class ContextLoaderTest extends SetUpTest {
 
-    private static final String TEST_CONTEXTS_RESOURCES_PATH = "src/test/resources/contexts/";
-
     private PolicyActions policyActions;
 
     @Override
@@ -59,7 +57,8 @@ public class ContextLoaderTest extends SetUpTest {
         Context context = ContextLoader.Instance("Test", policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertEquals(context.guid(), guid);
-        assertEquals(context.getName(), "Test_context");
+        assertTrue(context.getName().startsWith("Test_context"));
+        assertEquals(context.getName(), "Test_context-" + guid);
     }
 
     @Test
@@ -77,7 +76,7 @@ public class ContextLoaderTest extends SetUpTest {
         Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
-        assertEquals(context.getName(), "Test_context");
+        assertTrue(context.getName().startsWith("Test_context"));
     }
 
     @Test
@@ -96,7 +95,7 @@ public class ContextLoaderTest extends SetUpTest {
         Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
-        assertEquals(context.getName(), "Test_context");
+        assertTrue(context.getName().startsWith("Test_context"));
 
         SOSPredicate pred = context.predicate();
         assertNotNull(pred);
@@ -135,7 +134,7 @@ public class ContextLoaderTest extends SetUpTest {
         Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
-        assertEquals(context.getName(), "Test_context");
+        assertTrue(context.getName().startsWith("Test_context"));
 
         SOSPredicate pred = context.predicate();
         assertNotNull(pred);
@@ -167,7 +166,7 @@ public class ContextLoaderTest extends SetUpTest {
         Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
-        assertEquals(context.getName(), "Test_context");
+        assertTrue(context.getName().startsWith("Test_context"));
 
         SOSPredicate pred = context.predicate();
         assertNotNull(pred);

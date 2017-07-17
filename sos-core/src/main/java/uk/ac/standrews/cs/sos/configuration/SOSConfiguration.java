@@ -1,23 +1,17 @@
 package uk.ac.standrews.cs.sos.configuration;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigValueFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,140 +21,143 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSConfiguration {
+public class SOSConfiguration extends Configuration {
 
     private static final char HOME_SYMBOL = '~';
     private static final String HOME_PATH = System.getProperty("user.home");
-    private Config configuration;
-    private File file;
 
     /**
      * Create a configuration using the specified file (must be accessibly locally)
      * @param file
      */
-    public SOSConfiguration(File file) throws SOSConfigurationException {
-        this.file = file;
-        configuration = ConfigFactory.parseFile(file);
+    public SOSConfiguration(File file) throws ConfigurationException {
+        super(file);
     }
 
     public IGUID getNodeGUID() throws IOException, GUIDGenerationException {
         String randomGuid = GUIDFactory.generateRandomGUID().toString();
 
         String guidString = randomGuid;
-        try {
-            guidString = configuration.getString(PropertyKeys.NODE_GUID);
-            if (useRandomGUID(guidString, randomGuid)) {
-                setProperty(PropertyKeys.NODE_GUID, randomGuid);
-                guidString = randomGuid;
-            }
 
-        } catch (ConfigException.Missing missing) {
-            SOS_LOG.log(LEVEL.INFO, "GUID missing, use random GUID");
+        if (hasProperty(PropertyKeys.NODE_GUID)) {
+            guidString = getString(PropertyKeys.NODE_GUID);
+        }
+
+        if (useRandomGUID(guidString, randomGuid)) {
+            setProperty(PropertyKeys.NODE_GUID, randomGuid);
+            guidString = randomGuid;
         }
 
         return GUIDFactory.recreateGUID(guidString);
     }
 
-    public int getNodePort() {
-        return configuration.getInt(PropertyKeys.NODE_PORT);
+    public int getNodePort() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_PORT);
+        return getInt(PropertyKeys.NODE_PORT);
     }
 
-    public boolean nodeIsAgent() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_AGENT);
+
+
+    public boolean nodeIsAgent() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_AGENT);
+        return getBoolean(PropertyKeys.NODE_IS_AGENT);
     }
 
-    public boolean nodeIsStorage() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_STORAGE);
+    public boolean nodeIsStorage() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_STORAGE);
+        return getBoolean(PropertyKeys.NODE_IS_STORAGE);
     }
 
-    public boolean nodeIsDDS() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_DDS);
+    public boolean nodeIsDDS() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_DDS);
+        return getBoolean(PropertyKeys.NODE_IS_DDS);
     }
 
-    public boolean nodeIsNDS() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_NDS);
+    public boolean nodeIsNDS() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_NDS);
+        return getBoolean(PropertyKeys.NODE_IS_NDS);
     }
 
-    public boolean nodeIsMMS() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_MMS);
+    public boolean nodeIsMMS() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_MMS);
+        return getBoolean(PropertyKeys.NODE_IS_MMS);
     }
 
-    public boolean nodeIsCMS() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_CMS);
+    public boolean nodeIsCMS() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_CMS);
+        return getBoolean(PropertyKeys.NODE_IS_CMS);
     }
 
-    public boolean nodeIsRMS() {
-        return configuration.getBoolean(PropertyKeys.NODE_IS_RMS);
+    public boolean nodeIsRMS() throws ConfigurationException {
+        checkKey(PropertyKeys.NODE_IS_RMS);
+        return getBoolean(PropertyKeys.NODE_IS_RMS);
     }
 
-    public String getDBFilename() {
-        return configuration.getString(PropertyKeys.DB_FILENAME);
+    public String getDBFilename() throws ConfigurationException {
+        checkKey(PropertyKeys.DB_FILENAME);
+        return getString(PropertyKeys.DB_FILENAME);
     }
 
-    public CastoreBuilder getCastoreBuilder() {
+    public CastoreBuilder getCastoreBuilder() throws ConfigurationException {
 
-        CastoreType storageType = CastoreType.getEnum(configuration.getString(PropertyKeys.STORAGE_TYPE));
+        checkKey(PropertyKeys.STORAGE_TYPE);
+        CastoreType storageType = CastoreType.getEnum(getString(PropertyKeys.STORAGE_TYPE));
+
         String root = getStorageLocation();
         return new CastoreBuilder()
                 .setType(storageType)
                 .setRoot(root);
     }
 
-    public String getStorageLocation() {
-        String path = configuration.getString(PropertyKeys.STORAGE_LOCATION);
+    public String getStorageLocation() throws ConfigurationException {
+        checkKey(PropertyKeys.STORAGE_LOCATION);
+        String path = getString(PropertyKeys.STORAGE_LOCATION);
         return absolutePath(path);
     }
 
     public String getKeyFolderPath() {
-        String path = configuration.getString(PropertyKeys.KEYS_FOLDER);
+        String path = getString(PropertyKeys.KEYS_FOLDER);
         return absolutePath(path);
     }
 
     public List<Node> getBootstrapNodes() throws GUIDGenerationException {
 
-        List<? extends Config> bootstrap = configuration.getConfigList(PropertyKeys.BOOTSTRAP_NODES);
-
         List<Node> bootstrapNodes = new ArrayList<>();
-        for(Config bootstrapConfig : bootstrap) {
-            Node node = getNode(bootstrapConfig);
+
+        for (JsonNode jsonNode : getNode(PropertyKeys.BOOTSTRAP_NODES)) {
+            Node node = getNode(jsonNode);
             bootstrapNodes.add(node);
         }
 
         return bootstrapNodes;
     }
 
-    private Node getNode(Config config) throws GUIDGenerationException {
-        String guidString = config.getString(PropertyKeys.BOOTSTRAP_NODE_GUID);
+    private Node getNode(JsonNode nodeConfig) throws GUIDGenerationException {
+        String guidString = getString(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_GUID);
         IGUID guid = GUIDFactory.recreateGUID(guidString);
 
-        String hostname = config.getString(PropertyKeys.BOOTSTRAP_NODE_HOSTNAME);
-        int port = config.getInt(PropertyKeys.BOOTSTRAP_NODE_PORT);
+        String hostname = getString(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_HOSTNAME);
+        int port = getInt(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_PORT);
 
-        boolean isAgent = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_AGENT);
-        boolean isStorage = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_STORAGE);
-        boolean isDDS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_DDS);
-        boolean isNDS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_NDS);
-        boolean isMMS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
-        boolean isCMS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
-        boolean isRMS = config.getBoolean(PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
+        boolean isAgent = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_AGENT);
+        boolean isStorage = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_STORAGE);
+        boolean isDDS = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_DDS);
+        boolean isNDS = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_NDS);
+        boolean isMMS = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
+        boolean isCMS = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
+        boolean isRMS = getBoolean(nodeConfig, PropertyKeys.BOOTSTRAP_NODE_IS_MMS);
 
         return new SOSNode(guid, hostname, port, isAgent, isStorage, isDDS, isNDS, isMMS, isCMS, isRMS);
     }
 
-    public int getWebDAVPort() {
-        return configuration.getInt(PropertyKeys.WEBDAV_PORT);
+    public int getWebDAVPort() throws ConfigurationException {
+        checkKey(PropertyKeys.WEBDAV_PORT);
+        return getInt(PropertyKeys.WEBDAV_PORT);
     }
 
-    public int getWebAppPort() {
-        return configuration.getInt(PropertyKeys.WEBAPP_PORT);
-    }
-
-    private void setProperty(String key, String value) throws IOException {
-        configuration = configuration.withValue(key, ConfigValueFactory.fromAnyRef(value));
-
-        try(PrintWriter out = new PrintWriter(file)){
-            out.println(configuration.root().render());
-        }
+    public int getWebAppPort() throws ConfigurationException {
+        checkKey(PropertyKeys.WEBAPP_PORT);
+        return getInt(PropertyKeys.WEBAPP_PORT);
     }
 
     private boolean useRandomGUID(String guid, String random) {

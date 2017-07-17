@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.actors.Agent;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
-import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,56 +37,56 @@ public class ClientReplicationTest extends SetUpTest {
     private static final String MOCK_PROPERTIES =
             "{\n" +
                     "    \"node\" : {\n" +
-                    "        \"guid\" : \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\"\n" +
-                    "        \"port\" : 8080\n" +
-                    "        \"hostname\" : \"\"\n" +
+                    "        \"guid\" : \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                    "        \"port\" : 8080,\n" +
+                    "        \"hostname\" : \"\",\n" +
                     "        \"is\" : {\n" +
-                    "            \"agent\" : true\n" +
-                    "            \"storage\" : false\n" +
-                    "            \"dds\" : false\n" +
-                    "            \"nds\" : false\n" +
-                    "            \"mms\" : false\n" +
-                    "            \"cms\" : false\n" +
+                    "            \"agent\" : true,\n" +
+                    "            \"storage\" : false,\n" +
+                    "            \"dds\" : false,\n" +
+                    "            \"nds\" : false,\n" +
+                    "            \"mms\" : false,\n" +
+                    "            \"cms\" : false,\n" +
                     "            \"rms\" : false\n" +
                     "        }\n" +
-                    "    }\n" +
+                    "    },\n" +
                     "\n" +
                     "    \"db\" : {\n" +
                     "        \"filename\" : \"dump.db\"\n" +
-                    "    }\n" +
+                    "    },\n" +
                     "\n" +
                     "    \"storage\" : {\n" +
-                    "        \"type\" : \"local\"\n" +
+                    "        \"type\" : \"local\",\n" +
                     "        \"location\" : \"~/sos/\"\n" +
-                    "    }\n" +
+                    "    },\n" +
                     "\n" +
                     "    \"keys\" : {\n" +
                     "        \"folder\" : \"~/sos/keys/\"\n" +
-                    "    }\n" +
+                    "    },\n" +
                     "\n" +
                     "    \"policy\" : {\n" +
                     "        \"replication\" : {\n" +
                     "            \"factor\" : 1\n" +
-                    "        }\n" +
+                    "        },\n" +
                     "        \"manifest\" : {\n" +
-                    "            \"local\" : true\n" +
-                    "            \"remote\" : false\n" +
+                    "            \"local\" : true,\n" +
+                    "            \"remote\" : false,\n" +
                     "            \"replication\" : 0\n" +
                     "        }\n" +
-                    "    }\n" +
+                    "    },\n" +
                     "\n" +
                     "    \"bootstrap\" : [\n" +
                     "        {\n" +
-                    "            \"guid\" : \"" + NODE_ID + "\"\n" +
-                    "            \"port\" : " + MOCK_SERVER_PORT + "\n" +
-                    "            \"hostname\" : \"localhost\"\n" +
+                    "            \"guid\" : \"" + NODE_ID + "\",\n" +
+                    "            \"port\" : " + MOCK_SERVER_PORT + ",\n" +
+                    "            \"hostname\" : \"localhost\",\n" +
                     "            \"is\" : {\n" +
-                    "                \"agent\" : false\n" +
-                    "                \"storage\" : true\n" +
-                    "                \"dds\" : false\n" +
-                    "                \"nds\" : false\n" +
-                    "                \"mms\" : false\n" +
-                    "                \"cms\" : false\n" +
+                    "                \"agent\" : false,\n" +
+                    "                \"storage\" : true,\n" +
+                    "                \"dds\" : false,\n" +
+                    "                \"nds\" : false,\n" +
+                    "                \"mms\" : false,\n" +
+                    "                \"cms\" : false,\n" +
                     "                \"rms\" : false\n" +
                     "            }\n" +
                     "        }\n" +
@@ -151,7 +151,7 @@ public class ClientReplicationTest extends SetUpTest {
     }
 
     @Override
-    protected void createConfiguration() throws SOSConfigurationException, IOException {
+    protected void createConfiguration() throws ConfigurationException, IOException {
         File file = new File(TEST_RESOURCES_PATH + "config-storage.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 

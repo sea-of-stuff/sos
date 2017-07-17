@@ -1,16 +1,16 @@
 package uk.ac.standrews.cs.sos.configuration;
 
-import com.typesafe.config.ConfigException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -22,14 +22,14 @@ public class SOSConfigurationTest {
             "{\n" +
                     "    \"node\" : {\n" +
                     "        \"guid\" : \"6b67f67f31908dd0e574699f163eda2cc117f7f4\",\n" +
-                    "        \"port\" : 8080\n" +
+                    "        \"port\" : 8080,\n" +
                     "        \"is\" : {\n" +
-                    "          \"agent\" : true\n" +
-                    "          \"storage\" : true\n" +
-                    "          \"dds\" : true\n" +
-                    "          \"nds\" : true\n" +
-                    "          \"mms\" : true\n" +
-                    "          \"cms\" : true\n" +
+                    "          \"agent\" : true,\n" +
+                    "          \"storage\" : true,\n" +
+                    "          \"dds\" : true,\n" +
+                    "          \"nds\" : true,\n" +
+                    "          \"mms\" : true,\n" +
+                    "          \"cms\" : true,\n" +
                     "          \"rms\" : true\n" +
                     "        }\n" +
                     "    }\n" +
@@ -41,15 +41,14 @@ public class SOSConfigurationTest {
         file.delete();
     }
 
-    @Test
+    @Test (expectedExceptions = ConfigurationException.class)
     public void testFail() throws Exception {
         File file = new File(TEST_RESOURCES_PATH + "config.conf");
-        SOSConfiguration configuration = new SOSConfiguration(file);
-        assertNotNull(configuration.getNodeGUID());
+        new SOSConfiguration(file);
     }
 
-    @Test (expectedExceptions = ConfigException.Missing.class)
-    public void testEmptyKey() throws IOException, SOSConfigurationException {
+    @Test (expectedExceptions = ConfigurationException.class)
+    public void testEmptyKey() throws IOException, ConfigurationException {
         File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
@@ -58,7 +57,7 @@ public class SOSConfigurationTest {
     }
 
     @Test
-    public void testExistingKey() throws IOException, GUIDGenerationException, SOSConfigurationException {
+    public void testExistingKey() throws IOException, GUIDGenerationException, ConfigurationException {
         File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
@@ -68,7 +67,7 @@ public class SOSConfigurationTest {
     }
 
     @Test
-    public void testBooleanValue() throws IOException, SOSConfigurationException {
+    public void testBooleanValue() throws IOException, ConfigurationException {
         File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
@@ -77,7 +76,7 @@ public class SOSConfigurationTest {
     }
 
     @Test
-    public void testIntValue() throws IOException, SOSConfigurationException {
+    public void testIntValue() throws IOException, ConfigurationException {
         File file = new File(TEST_RESOURCES_PATH + "config.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 

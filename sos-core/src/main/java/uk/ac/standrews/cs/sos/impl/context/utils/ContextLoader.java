@@ -133,6 +133,7 @@ public class ContextLoader {
             if (task.call()) {
 
                 String path = targetClassPath + ContextClassBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
+                System.out.println(path);
                 File dir = new File(path).getParentFile();
                 Load(dir, clazzName);
 

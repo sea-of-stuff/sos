@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.configuration.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
 import uk.ac.standrews.cs.sos.model.Node;
 
@@ -75,7 +76,7 @@ public class SOSNode implements Node {
             this.DB_is_mms = configuration.nodeIsMMS();
             this.DB_is_cms = configuration.nodeIsCMS();
             this.DB_is_rms = configuration.nodeIsRMS();
-        } catch (GUIDGenerationException | IOException e) {
+        } catch (GUIDGenerationException | ConfigurationException | IOException e) {
             throw new NodeException(e);
         }
     }
