@@ -18,7 +18,6 @@
 
 - [core](#sos-core)
 - [rest](#sos-rest)
-- [configuration](#sos-configuration)
 - [web-ui](#web-ui)
 
 
@@ -55,23 +54,7 @@ The WebDAV server exposes the sos-fs to the OS as well as to any other applicati
 The web-ui exposes the sos-filesystem, similarly to the WebDAV server. However, here we are not constrained by the WebDAV protocol, thus
 we are able to demonstrate additional features of the SOS.
 
-
-## sos-configuration
-
-This is a simple command line tool that creates a template file for an SOS node configuration.
-
-```
-$ mvn package -pl sos-configuration -am -DskipTests
-$ java -jar sos-configuration/target/configuration-1.0-SNAPSHOT.jar (PARAMS <- define them here!)
-```
-
-
 ## Running a SOS node
-
-
-### Configuration file
-
-Use the sos-configuration CLI to start with a fresh template.
 
 ### Packaging
 
