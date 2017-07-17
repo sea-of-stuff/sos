@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -44,7 +45,7 @@ class ServerState {
             CastoreBuilder builder = configuration.getCastoreBuilder();
             IStorage storage = CastoreFactory.createStorage(builder);
             localStorage = new LocalStorage(storage);
-        } catch (StorageException | DataStorageException e) {
+        } catch (StorageException | DataStorageException | ConfigurationException e) {
             throw new SOSException(e);
         }
 
