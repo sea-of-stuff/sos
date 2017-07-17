@@ -20,6 +20,10 @@ public class ExperimentConfiguration extends Configuration {
         super(file);
     }
 
+    public String getExperimentName() {
+        return "";
+    }
+
     public List<NodeConfiguration> getNodesConfigurations() {
         return null;
     }

@@ -19,7 +19,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     private SOSLocalNode node;
     private ContextServiceExperiment cms;
 
-
     private int counter;
 
     public static void main(String[] args) throws Exception {
@@ -34,6 +33,8 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     @Override
     public void setup() throws Exception {
+        super.setup();
+
         // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
         // TODO - put the results of the experiments in the output folder
         // for example, in this experiment I do not want to run any background threads
