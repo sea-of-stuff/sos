@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments;
+package uk.ac.standrews.cs.sos.experiments.old;
 
 import uk.ac.standrews.cs.sos.model.Node;
 

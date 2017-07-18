@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface NodeDiscoveryService extends SeaOfStuff {
+public interface NodeDiscoveryService {
 
     /**
      * Get a node object for the local node

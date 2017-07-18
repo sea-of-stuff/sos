@@ -20,7 +20,7 @@ import java.util.Iterator;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Storage extends SeaOfStuff {
+public interface Storage {
 
     /**
      * Adds data to the Sea of Stuff as an atom.

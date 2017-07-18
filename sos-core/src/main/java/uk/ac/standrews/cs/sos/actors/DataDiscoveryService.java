@@ -23,23 +23,23 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface DataDiscoveryService extends SeaOfStuff {
+public interface DataDiscoveryService {
 
     /**
      * Add a manifest to the sea of stuff.
      *
      * @param manifest to add to the sea of stuff
-     * @return Manifest - the returned manifests might differ from the one passed to the sea of stuff {@code manifest}
-     * @throws ManifestPersistException
+     * @throws ManifestPersistException if the manifest could not be added correctly
      */
     void addManifest(Manifest manifest) throws ManifestPersistException;
 
     /**
      * Adds a manifest to the specified nodes using the replication factor as an AT_LEAST restriction
      *
-     * @param manifest
-     * @param nodes
-     * @param replication
+     * @param manifest to be added
+     * @param nodes where to add the manifest
+     * @param replication suggested replication factor for the manifest
+     * @throws ManifestPersistException if the manifest could not be added correctly
      */
     void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException;
 
@@ -50,7 +50,6 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * @return Manifest             the manifest associated with the GUID.
      * @throws ManifestNotFoundException if the GUID is not known within the currently
      *                              explorable Sea of Stuff.
-     *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
@@ -58,8 +57,8 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * Map the GUID of a manifest with the GUID of a DDS node.
      * This mapping will be used when trying to get the manifest via #getManifest(guid)
      *
-     * @param manifest
-     * @param ddsNode
+     * @param manifest for which to add a DDSnode ref
+     * @param ddsNode the DDS node ref
      */
     void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
 
@@ -71,10 +70,11 @@ public interface DataDiscoveryService extends SeaOfStuff {
     Set<IGUID> getAllAssets();
 
     /**
-     * Get all the tips for the given invariant
+     * Get all the tips for the given invariant.
+     * The tips are the leaves in the DAG of the asset.
      *
-     * @param invariant
-     * @return
+     * @param invariant for which to get the tips
+     * @return the tips of the asset identified by the invariant
      */
     Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException;
 
@@ -82,15 +82,17 @@ public interface DataDiscoveryService extends SeaOfStuff {
      * Get the HEAD version for an asset.
      * The HEAD does not need to match one of the TIPS.
      *
-     * @param invariant
-     * @return
+     * The HEAD is the version of the asset that is currently active for this node.
+     *
+     * @param invariant for which to get the head
+     * @return the reference of the HEAD version
      */
     IGUID getHead(IGUID invariant) throws HEADNotFoundException;
 
     /**
      * Set the specified version as the HEAD for its asset
      *
-     * @param version
+     * @param version the version to set as HEAD for its asset
      */
     void setHead(Version version);
 

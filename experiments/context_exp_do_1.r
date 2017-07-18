@@ -34,7 +34,7 @@ phc_symbol <- 19
 
 plot(x, avg, 
      type="p", pch=phc_symbol, # The phc param specified the symbol used for the data point
-     xlab="Cardinality",
+     xlab="Cardinality (number of contents in the domain)",
      ylab="Time (seconds)", 
      ylim=range(c(0, avg+sdev)), # yAxis starts from 0. Alternatively c(avg-sdev, avg+sdev)
      main="Cardinality over Time")

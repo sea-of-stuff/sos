@@ -14,7 +14,7 @@ import java.io.InputStream;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface MetadataService extends SeaOfStuff {
+public interface MetadataService {
 
     /**
      * Computes the metadata for a given input stream

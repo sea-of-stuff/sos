@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.sos.actors.ContextServiceExperiment;
+import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;

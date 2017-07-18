@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ContextService extends SeaOfStuff {
+public interface ContextService {
 
     Set<Context> getContexts();
 
