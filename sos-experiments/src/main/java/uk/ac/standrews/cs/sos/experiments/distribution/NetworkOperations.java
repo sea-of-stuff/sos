@@ -9,11 +9,7 @@ import java.io.*;
 // http://www.jcraft.com/jsch/examples/ScpFrom.java.html
 public class NetworkOperations {
 
-    public String privateKeyPath;
-    public String passphrase;
-    public String knownHostsPath = "/Users/sic2/.ssh/known_hosts";
-    public String user;
-    public String host;
+    public ExperimentConfiguration.Experiment.Node.SSH ssh;
 
     private Session session;
 
@@ -26,13 +22,23 @@ public class NetworkOperations {
 
         try {
             JSch jsch = new JSch();
-            jsch.addIdentity(privateKeyPath, passphrase);
-            jsch.setKnownHosts(knownHostsPath);
+            jsch.setKnownHosts(ssh.getKnown_hosts());
 
-            session = jsch.getSession(user, host, 22);
+            if (ssh.getType() == 1) {
+                jsch.addIdentity(ssh.getPrivateKeyPath(), ssh.getPassphrase());
+            }
+
+            session = jsch.getSession(ssh.getUser(), ssh.getHost(), 22);
+            session.setConfig("StrictHostKeyChecking", "no");
+
+            if (ssh.getType() == 0) {
+                session.setPassword(ssh.getPassword());
+            }
+
             session.connect();
 
         } catch (JSchException e) {
+            e.printStackTrace();
             throw new NetworkException();
         }
     }
@@ -53,6 +59,7 @@ public class NetworkOperations {
      * @throws NetworkException
      */
     public void sendFile(String lfile, String rfile) throws NetworkException {
+        System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
 
         try {
             // exec 'scp -t rfile' remotely
@@ -68,6 +75,7 @@ public class NetworkOperations {
             channel.disconnect();
 
         } catch (JSchException | IOException e) {
+            e.printStackTrace();
             throw new NetworkException();
         }
     }
@@ -104,16 +112,25 @@ public class NetworkOperations {
      * @throws JSchException
      */
     public void executeJar(String jarPath, String args) throws NetworkException {
+        System.out.println("NETWORK - Executing jar file " + jarPath);
 
         try {
-            String command = "java -jar " + jarPath + " " + args;
+            String command = "java -jar " + jarPath + " " + args + " > out 2>&1 & echo $! > sos.pid";
+            exec(command);
 
-            Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(command);
+        } catch (JSchException | IOException e) {
+            throw new NetworkException();
+        }
+    }
 
-            channel.disconnect();
+    public void killProcess(String pidFile) throws NetworkException {
+        System.out.println("NETWORK - Killing process with pidfile " + pidFile);
 
-        } catch (JSchException e) {
+        try {
+            String command = "kill -15 `cat " + pidFile + "`";
+            exec(command);
+
+        } catch (JSchException | IOException e) {
             throw new NetworkException();
         }
     }
@@ -257,6 +274,37 @@ public class NetworkOperations {
                 out.flush();
             }
         }
+    }
+
+    private void exec(String command) throws IOException, JSchException {
+
+        Channel channel = session.openChannel("exec");
+        ((ChannelExec) channel).setCommand(command);
+
+        channel.setInputStream(null);
+
+        ((ChannelExec)channel).setErrStream(System.err);
+
+        InputStream in=channel.getInputStream();
+
+        channel.connect();
+
+        byte[] tmp=new byte[1024];
+        while(true){
+            while(in.available()>0){
+                int i=in.read(tmp, 0, 1024);
+                if(i<0)break;
+                System.out.print(new String(tmp, 0, i));
+            }
+            if(channel.isClosed()){
+                if(in.available()>0) continue;
+                System.out.println("exit-status: "+channel.getExitStatus());
+                break;
+            }
+            try{Thread.sleep(1000);}catch(Exception ee){}
+        }
+
+        channel.disconnect();
     }
 
     private int checkAck(InputStream in) throws IOException{

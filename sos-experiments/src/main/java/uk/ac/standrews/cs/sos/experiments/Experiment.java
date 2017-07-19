@@ -11,7 +11,7 @@ public interface Experiment {
 
     void start();
 
-    void finish();
+    void finish() throws Exception;
 
     // TODO - save stats to file
     void collectStats();

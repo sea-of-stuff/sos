@@ -15,6 +15,7 @@ import java.io.IOException;
 public class Configuration {
 
     private File file;
+
     private JsonNode config;
 
     /**
@@ -29,6 +30,10 @@ public class Configuration {
         } catch (IOException e) {
             throw new ConfigurationException("Unable to read configuration");
         }
+    }
+
+    public JsonNode getConfig() {
+        return config;
     }
 
     protected String getString(String key) {

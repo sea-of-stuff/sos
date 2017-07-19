@@ -23,10 +23,10 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     public void setup() throws Exception {
-        System.out.println("SETTING UP EXPERIMENT: " + experimentConfiguration.getExperimentName());
+        System.out.println("SETTING UP EXPERIMENT: " + experimentConfiguration.getExperimentObj().getName());
 
         System.out.println("Distributing the SOS app to nodes in the network");
-        new SOSDistribution().distribute(experimentConfiguration);
+        SOSDistribution.distribute(experimentConfiguration);
 
         System.out.println("Finished to distribute the SOS app to nodes in the network");
     }
@@ -37,8 +37,10 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() {
+    public void finish() throws Exception {
         end = System.nanoTime();
+
+        SOSDistribution.stopAllApplications(experimentConfiguration);
     }
 
     @Override

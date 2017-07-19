@@ -51,7 +51,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() {
+    public void finish() throws Exception {
         super.finish();
 
         ServerState.kill();

@@ -1,0 +1,49 @@
+// The following is an example template for the node distribution for an experiment
+// This is not valid JSON (valid JSONs do not have comments, such as this one)
+
+{
+	"experiment": {
+		"name": "Experiment PR 1",
+		"setup": {
+			"app": "sos-app/target/sos-with-dependencies.jar",
+			"iterations": 10
+		},
+		"nodes": [{
+				"id": 1,
+				"ssh": {
+					"host": "sic2.host.cs.st-andrews.ac.uk",
+					"user": "sic2",
+					"private_key": "/Users/sic2/.ssh/id_rsa",
+					"known_hosts": "/Users/sic2/.ssh/known_hosts",
+					"passphrase": "PASSWORD"
+				},
+				"configuration" : "PATH TO CONFIG FILE",
+				"behaviour": {
+					"start": 0,
+					"stop": -1, // The node is stopped only when killed by an external command
+					"pause": [], // The node is never paused
+					"operations": [{
+						"example_op": [100, 200] // The example operation is executed after 100ms and 200ms
+					}]
+				}
+			},
+			{
+				"id": 2,
+				"ssh": {
+					"host": "tv.local",
+					"user": "lorna",
+					"private_key": "/Users/sic2/.ssh/id_rsa",
+					"known_hosts": "/Users/sic2/.ssh/known_hosts"
+				},
+				"configuration" : "PATH TO CONFIG FILE",
+				"behaviour": {
+					"start": 400, // The node is started with a delay of 400ms
+					"stop": 300000,
+					"pause": [1500, 45000], // The node is paused after 1500ms and after 45000 (TODO - need to state for how long it is paused)
+					"operations": []
+				}
+			}
+		],
+		"stats": "the stats to collect from the node"
+	}
+}
