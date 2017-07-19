@@ -7,5 +7,9 @@ import uk.ac.standrews.cs.sos.actors.ContextService;
  */
 public interface ContextServiceExperiment extends ContextService {
 
+    /**
+     * Run the predicates only against all the versions marked as HEADs in the node
+     * @return the total number of times that any predicate has been run
+     */
     int runPredicates();
 }

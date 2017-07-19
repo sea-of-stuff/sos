@@ -1,9 +1,12 @@
 package uk.ac.standrews.cs.sos.experiments.distribution;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.configuration.Configuration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,11 +24,21 @@ public class ExperimentConfiguration extends Configuration {
     }
 
     public String getExperimentName() {
-        return "";
+        return getString(PropertyKeys.EXPERIMENT_NAME);
     }
 
     public List<NodeConfiguration> getNodesConfigurations() {
-        return null;
+
+        List<NodeConfiguration> retval = new LinkedList<>();
+
+        JsonNode node = getNode(PropertyKeys.EXPERIMENT_NODES);
+        for (JsonNode child : node) {
+
+            NodeConfiguration nodeConfiguration = JSONHelper.JsonObjMapper().convertValue(child, NodeConfiguration.class);
+            retval.add(nodeConfiguration);
+        }
+
+        return retval;
     }
 
     private class PropertyKeys {
@@ -35,12 +48,6 @@ public class ExperimentConfiguration extends Configuration {
         static final String EXPERIMENT_SETUP_APP = "experiment.setup.app";
 
         static final String EXPERIMENT_NODES = "experiment.nodes";
-        static final String NODE_ID = "id";
-        static final String NODE_HOST = "host";
-        static final String NODE_USER = "user";
-        static final String NODE_SSH_KEY = "ssh.key";
-        static final String NODE_PASSPHRASE = "ssh.passphrase";
-        static final String NODE_CONFIG = "configuration";
 
         static final String NODE_BEHAVIOUR = "behaviour";
         static final String NODE_STATS = "stats";

@@ -29,7 +29,7 @@ import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -55,7 +55,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
     // The inMemoryCache keeps the context objects for this node in memory.
     private ContextsCacheImpl inMemoryCache;
-    private ContextsContents contextsContents;
+    private ContextsContents contextsContents; // TODO - rename to something more meaninful?
 
     // TODO - store contexts definitions in local storage
 
@@ -148,7 +148,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
     @Override
     public Set<IGUID> getContents(IGUID context) {
 
-        return contextsContents.getContents(context);
+        return contextsContents.getContentsThatPassedPredicateTest(context);
     }
 
     @Override
@@ -227,10 +227,9 @@ public class SOSContextService implements ContextService, ContextServiceExperime
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
-            // for (Context context : getContexts()) {
             for (IGUID contextGUID : inMemoryCache.getContexts()) {
 
-                HashMap<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsRows(contextGUID);
+                Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(contextGUID);
                 contentsToProcess.forEach((guid, row) -> {
                     if (row.predicateResult && !row.policySatisfied) {
 
@@ -252,7 +251,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
             // TODO - work in progress
 
-        }, POLICIES_CHECK_PERIODIC_INIT_DELAY_S, POLICIES_CHECK_PERIODIC_INIT_DELAY_S, TimeUnit.SECONDS);
+        }, POLICIES_CHECK_PERIODIC_INIT_DELAY_S, POLICIES_CHECK_PERIODIC_DELAY_S, TimeUnit.SECONDS);
     }
 
     /**
@@ -303,7 +302,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
         IGUID contextGUID = context.guid();
 
-        boolean alreadyRun = contextsContents.contentProcessedForContext(contextGUID, versionGUID);
+        boolean alreadyRun = contextsContents.hasBeenProcessed(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {

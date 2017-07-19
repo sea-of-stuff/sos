@@ -15,14 +15,14 @@ import java.net.URISyntaxException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_PR_1 extends BaseExperiment implements Experiment {
+public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
     private SOSLocalNode node;
     private ContextServiceExperiment cms;
 
     private int counter;
 
-    public Experiment_PR_1(String experimentConfigurationPath) throws ConfigurationException {
+    public Experiment_X_1(String experimentConfigurationPath) throws ConfigurationException {
         super(experimentConfigurationPath);
     }
 
@@ -33,7 +33,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
         // TODO - put the results of the experiments in the output folder
         // for example, in this experiment I do not want to run any background threads
-        File configFile = new File(CONFIGURATION_FOLDER + "pr_1/pr_1.json");
+        File configFile = new File(CONFIGURATION_FOLDER + "x_1/x_1.json");
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
         node = ServerState.init(configuration);
@@ -58,6 +58,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         // TODO - delete all the downloaded content, so that the next experiment is run clean
     }
+
 
     @Override
     public void collectStats() {
@@ -86,7 +87,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws Exception {
 
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(CONFIGURATION_FOLDER + "pr_1/pr_1_exp.json");
+        Experiment_X_1 experiment_pr_1 = new Experiment_X_1(CONFIGURATION_FOLDER + "x_1/x_1_exp.json");
         experiment_pr_1.setup();
 
         experiment_pr_1.start();

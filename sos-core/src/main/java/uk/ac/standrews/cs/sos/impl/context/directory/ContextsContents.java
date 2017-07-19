@@ -38,27 +38,27 @@ public class ContextsContents implements Serializable  {
     }
 
     /**
-     * Get the known values for the content at the given context
+     * Get the known values for the version at the given context
      *
      * @param context
-     * @param content
+     * @param version
      * @return
      */
-    public ContextContent get(IGUID context, IGUID content) {
+    public ContextContent get(IGUID context, IGUID version) {
 
-        return mappings.get(context).get(content);
+        return mappings.get(context).get(version);
     }
 
     /**
-     * Checks if the content has already been apply for the given context
+     * Checks if the version has already been apply for the given context
      *
      * @param context
-     * @param content
+     * @param version
      * @return
      */
-    public boolean contentProcessedForContext(IGUID context, IGUID content) {
+    public boolean hasBeenProcessed(IGUID context, IGUID version) {
 
-        return mappings.containsKey(context) && mappings.get(context).containsKey(content);
+        return mappings.containsKey(context) && mappings.get(context).containsKey(version);
     }
 
     /**
@@ -67,7 +67,7 @@ public class ContextsContents implements Serializable  {
      * @param context
      * @return
      */
-    public Set<IGUID> getContents(IGUID context) {
+    public Set<IGUID> getContentsThatPassedPredicateTest(IGUID context) {
         HashMap<IGUID, ContextContent> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptySet();
@@ -81,12 +81,16 @@ public class ContextsContents implements Serializable  {
         }
     }
 
-    public HashMap<IGUID, ContextContent> getContentsRows(IGUID context) {
+    public Map<IGUID, ContextContent> getContentsThatPassedPredicateTestRows(IGUID context) {
         HashMap<IGUID, ContextContent> contents = mappings.get(context);
         if (contents == null) {
             return new HashMap<>();
         } else {
-            return contents;
+            return contents.entrySet()
+                    .stream()
+                    .filter(p -> p.getValue().predicateResult)
+                    .collect(Collectors.toMap( x -> x.getKey(), x -> x.getValue()));
+
         }
     }
 

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution;
@@ -11,14 +12,20 @@ import java.io.File;
  */
 public abstract class BaseExperiment implements Experiment {
 
+    public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/configurations/";
+
     protected ExperimentConfiguration experimentConfiguration;
     private long start, end, timeToFinish;
 
+    public BaseExperiment(String experimentConfigurationPath) throws ConfigurationException {
+        File experimentConfigurationFile = new File(experimentConfigurationPath);
+        experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+    }
+
     public void setup() throws Exception {
-        System.out.println("SETTING UP EXPERIMENT " + experimentConfiguration.getExperimentName());
+        System.out.println("SETTING UP EXPERIMENT: " + experimentConfiguration.getExperimentName());
 
         System.out.println("Distributing the SOS app to nodes in the network");
-        experimentConfiguration = new ExperimentConfiguration(new File("EXP_CONF_FILE"));
         new SOSDistribution().distribute(experimentConfiguration);
 
         System.out.println("Finished to distribute the SOS app to nodes in the network");

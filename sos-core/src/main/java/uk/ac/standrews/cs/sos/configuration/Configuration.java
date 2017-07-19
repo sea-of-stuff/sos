@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * TODO - see if it is possible to get rid of this utilities at all and simply serialise the json into an object via jackson
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Configuration {

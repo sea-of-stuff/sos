@@ -1,0 +1,11 @@
+{
+  "experiment" : {
+    "name" : "Experiment PR 1",
+    "setup" : {
+      "app" : "sos-app/target/sos-with-dependencies.jar",
+      "iterations" : 10
+    },
+    "nodes" : [],
+    "stats" : "Time, CPU, Memory, etc.."
+  }
+}
