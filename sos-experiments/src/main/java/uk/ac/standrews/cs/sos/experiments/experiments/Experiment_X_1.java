@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -22,17 +22,9 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
     private int counter;
 
-    public Experiment_X_1(String experimentConfigurationPath) throws ConfigurationException {
-        super(experimentConfigurationPath);
-    }
-
     @Override
     public void setup() throws Exception {
-        super.setup();
 
-        // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
-        // TODO - put the results of the experiments in the output folder
-        // for example, in this experiment I do not want to run any background threads
         File configFile = new File(CONFIGURATION_FOLDER + "x_1/x_1.json");
         SOSConfiguration configuration = new SOSConfiguration(configFile);
 
@@ -51,14 +43,11 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() throws Exception {
+    public void finish() {
         super.finish();
 
         ServerState.kill();
-
-        // TODO - delete all the downloaded content, so that the next experiment is run clean
     }
-
 
     @Override
     public void collectStats() {
@@ -87,11 +76,12 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws Exception {
 
-        Experiment_X_1 experiment_pr_1 = new Experiment_X_1(CONFIGURATION_FOLDER + "x_1/x_1_exp.json");
-        experiment_pr_1.setup();
+        ChicShock chicShock = new ChicShock(CONFIGURATION_FOLDER + "pr_1/configuration.json");
+        chicShock.chic();
 
-        experiment_pr_1.start();
-        experiment_pr_1.finish();
-        experiment_pr_1.collectStats();
+        Experiment_X_1 experiment_pr_1 = new Experiment_X_1();
+        experiment_pr_1.run();
+
+        chicShock.unChick();
     }
 }

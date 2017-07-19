@@ -1,0 +1,53 @@
+{
+    "node" : {
+        "guid" : "000bfd93ab9a6e2ed501fc583685088cca66bac2",
+        "port" : 8080,
+        "is" : {
+            "agent" : true,
+            "storage" : true,
+            "dds" : true,
+            "nds" : true,
+            "mms" : true,
+            "cms" : true,
+            "rms" : true
+        }
+    },
+
+    "webdav" : {
+      "port" : 8081
+    },
+
+    "webapp" : {
+      "port" : 8082
+    },
+
+    "db" : {
+        "filename" : "dump.db"
+    },
+
+    "storage" : {
+        "type" : "local",
+        "location" : "~/sos/"
+    },
+
+    "keys" : {
+        "folder" : "~/sos/keys/"
+    },
+
+    "policy" : {
+      "replication" : {
+        "factor" : 1
+      },
+      "manifest" : {
+        "local" : true,
+        "remote" : false,
+        "replication" : 1
+      },
+      "metadata" : {
+        "replication" : 1
+      }
+    },
+
+    "bootstrap" : []
+
+}

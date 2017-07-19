@@ -7,13 +7,36 @@ package uk.ac.standrews.cs.sos.experiments;
  */
 public interface Experiment {
 
+    /**
+     * This method should be called to setup the SOS environment before the experiment is run
+     * @throws Exception if the experiment could not be setup
+     */
     void setup() throws Exception;
 
+    /**
+     * Start the actual experiment
+     */
     void start();
 
-    void finish() throws Exception;
+    /**
+     * Mark the end of the experiment
+     */
+    void finish();
 
-    // TODO - save stats to file
+    /**
+     * Cleans up any caches, data, states that are left over from the experiment
+     */
+    void cleanup();
+
+    /**
+     * Collect the wanted stats to a file
+     */
     void collectStats();
+
+    /**
+     * Run all the steps for the experiment, from setup to cleanup
+     * @throws Exception if any of the steps of the experiment could not be run properly
+     */
+    void run() throws Exception;
 
 }

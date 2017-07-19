@@ -17,6 +17,20 @@ public class SOSDistribution {
 
             scp.sendFile(appPath, "Desktop/sos.jar");
             scp.sendFile(node.getConfigurationFilePath(), "Desktop/config.conf");
+
+            scp.disconnect();
+        }
+
+    }
+
+    public static void startAllApplications(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
+
+        for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+
+            NetworkOperations scp = new NetworkOperations();
+            scp.ssh = node.getSsh();
+            scp.connect();
+
             scp.executeJar("Desktop/sos.jar", "-c Desktop/config.conf -j -fs -root 73a7f67f31908dd0e574699f163eda2cc117f7f4");
 
             scp.disconnect();
