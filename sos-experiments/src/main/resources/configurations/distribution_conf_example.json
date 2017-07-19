@@ -11,11 +11,11 @@
 		"nodes": [{
 				"id": 1,
 				"ssh": {
+					"type" : 1,
 					"host": "sic2.host.cs.st-andrews.ac.uk",
 					"user": "sic2",
 					"private_key": "/Users/sic2/.ssh/id_rsa",
-					"known_hosts": "/Users/sic2/.ssh/known_hosts",
-					"passphrase": "PASSWORD"
+					"known_hosts": "/Users/sic2/.ssh/known_hosts"
 				},
 				"configuration" : "PATH TO CONFIG FILE",
 				"behaviour": {
@@ -30,10 +30,11 @@
 			{
 				"id": 2,
 				"ssh": {
-					"host": "tv.local",
-					"user": "lorna",
-					"private_key": "/Users/sic2/.ssh/id_rsa",
-					"known_hosts": "/Users/sic2/.ssh/known_hosts"
+					"type": 0,
+					"host" : "cs-wifi-056.cs.st-andrews.ac.uk",
+					"user" : "lorna",
+					"known_hosts": "/Users/sic2/.ssh/known_hosts",
+					"password" : "LornaMiniTest"
 				},
 				"configuration" : "PATH TO CONFIG FILE",
 				"behaviour": {
