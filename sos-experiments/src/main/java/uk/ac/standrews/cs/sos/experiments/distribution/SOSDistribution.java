@@ -51,4 +51,8 @@ public class SOSDistribution {
         }
 
     }
+
+    public static void runExperiment(ExperimentConfiguration configuration) {
+
+    }
 }

@@ -18,19 +18,18 @@ public class ChicShock {
     private File experimentConfigurationFile;
     private ExperimentConfiguration experimentConfiguration;
 
-    public static void main(String[] args) throws ConfigurationException, NetworkException, InterruptedException {
+    public static void main(String[] args) throws Exception { // FIXME - do not use a generic exception here.
 
         ChicShock chicShock = new ChicShock(args[0]);
 
         chicShock.chic();
-        chicShock.chicExperiment("Experiment_X_1");
+        chicShock.chicExperiment();
 
         chicShock.shock();
-        chicShock.shockExperiment();
+        chicShock.shockExperiment("Experiment_X_1");
 
         // RUN Experiment
         // Stop all nodes when experiment is finished
-
 
         chicShock.unChick();
     }
@@ -53,9 +52,8 @@ public class ChicShock {
     /**
      * Distribute the SOS to the node that will run the experiment
      */
-    public void chicExperiment(String experiment) {
-
-        // This might also be distributed locally
+    public void chicExperiment() throws Exception {
+        // TODO
     }
 
     public void shock() throws NetworkException, InterruptedException {
@@ -65,11 +63,22 @@ public class ChicShock {
     }
 
     /**
-     * Run the experiment from the experiment node
+     * Run the experiment from the experiment node.
+     * This method should return only when the experiment is finished.
      */
-    public void shockExperiment() {
+    public void shockExperiment(String experiment) throws Exception {
 
-        // This might also be run locally
+        // This might also be distributed locally
+        boolean isLocal = true;
+        if (isLocal) {
+            ExperimentManager.runExperiment(experiment);
+        } else {
+            SOSDistribution.runExperiment(experimentConfiguration);
+        }
+
+        // Instruct a remote node to run the experiment
+
+        // Wait for a response back from that node and then return
     }
 
     public void unChick() throws NetworkException, InterruptedException {

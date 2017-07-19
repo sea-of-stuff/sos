@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments.experiments;
+package uk.ac.standrews.cs.sos.experiments;
 
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
@@ -20,11 +20,11 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-class ServerState {
+public class ServerState {
 
     private static SOSLocalNode sos;
 
-    static SOSLocalNode init(SOSConfiguration configuration) {
+    public static SOSLocalNode init(SOSConfiguration configuration) {
         try {
             return ServerState.startSOS(configuration);
         } catch (SOSException | GUIDGenerationException e) {
@@ -34,7 +34,7 @@ class ServerState {
         return null;
     }
 
-    static void kill() {
+    public static void kill() {
         sos.kill();
     }
 
