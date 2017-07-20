@@ -54,7 +54,8 @@ public class ChicShock {
     }
 
     /**
-     * Distribute the SOS to the node that will run the experiment
+     * Distribute the SOS to the node that will run the experiment.
+     * The configuration for the node is also distributed.
      */
     public void chicExperiment() throws ChicShockException {
         // TODO

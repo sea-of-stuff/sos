@@ -25,16 +25,18 @@ Each experiment needs two types of configuration files:
 
 **node configurations**: These are the configuration files for the nodes to be run. It is suggested to call the node configuration files as node_{NODE_ID}.json
 
-Local node configuration file should be called local_node.json
+Local node configuration file should be called node_0.json
 
 
+### Example
 
-For example for the experiment X_1, we have the following configuration files:
+In the **Experiment_X_1** we bootstrap one local SOS node (running the experiment) and one remote SOS node.
+Thus, we need three configuration files: one for describing the experiment and two for the configuration files of the two SOS nodes.
 
 ```
 |-- configurations
     |-- x_1
         |-- configuration.json  // The configuration of the experiment
-        |-- local_node.json     // The configuration for the local node
+        |-- node_0.json     // The configuration for the local node
         |-- node_1.json         // The configuration for one of the remote nodes, as specified in configuration.json
 ```

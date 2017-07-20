@@ -5,6 +5,12 @@ package uk.ac.standrews.cs.sos.experiments.distribution;
  */
 public class SOSDistribution {
 
+    private static final String REMOTE_SOS_JAR_PATH = "Desktop/sos.jar";
+    private static final String REMOTE_SOS_CONFIGURATION_PATH = "Desktop/config.conf";
+    protected static final String REMOTE_SOS_PID_FILE = "Desktop/sos.pid";
+    protected static final String REMOTE_SOS_OUT_FILE = "Desktop/out";
+
+
     // This method distributed the app and starts the app too
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
@@ -12,11 +18,11 @@ public class SOSDistribution {
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             NetworkOperations scp = new NetworkOperations();
-            scp.ssh = node.getSsh();
+            scp.setSsh(node.getSsh());
             scp.connect();
 
-            scp.sendFile(appPath, "Desktop/sos.jar");
-            scp.sendFile(node.getConfigurationFilePath(), "Desktop/config.conf");
+            scp.sendFile(appPath, REMOTE_SOS_JAR_PATH);
+            scp.sendFile(node.getConfigurationFilePath(), REMOTE_SOS_CONFIGURATION_PATH);
 
             scp.disconnect();
         }
@@ -28,10 +34,11 @@ public class SOSDistribution {
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             NetworkOperations scp = new NetworkOperations();
-            scp.ssh = node.getSsh();
+            scp.setSsh(node.getSsh());
             scp.connect();
 
-            scp.executeJar("Desktop/sos.jar", "-c Desktop/config.conf -j -fs -root 73a7f67f31908dd0e574699f163eda2cc117f7f4");
+            // Run the SOS node with the jetty REST server component
+            scp.executeJar(REMOTE_SOS_JAR_PATH, "-c " + REMOTE_SOS_CONFIGURATION_PATH + " -j");
 
             scp.disconnect();
         }
@@ -43,12 +50,16 @@ public class SOSDistribution {
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             NetworkOperations scp = new NetworkOperations();
-            scp.ssh = node.getSsh();
+            scp.setSsh(node.getSsh());
             scp.connect();
 
-            scp.killProcess("sos.pid");
+            scp.killProcess(REMOTE_SOS_PID_FILE);
             scp.disconnect();
         }
+
+    }
+
+    public static void distributeToExperimentNode(ExperimentConfiguration configuration) {
 
     }
 

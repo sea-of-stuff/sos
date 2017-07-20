@@ -30,7 +30,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
             // TODO - put the results of the experiments in the output folder
             // for example, in this experiment I do not want to run any background threads
-            File configFile = new File(CONFIGURATION_FOLDER + "pr_1/local_node.json");
+            File configFile = new File(CONFIGURATION_FOLDER + "pr_1/node_0.json");
             SOSConfiguration configuration = new SOSConfiguration(configFile);
 
             node = ServerState.init(configuration);

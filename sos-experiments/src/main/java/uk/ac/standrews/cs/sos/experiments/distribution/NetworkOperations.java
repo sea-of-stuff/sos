@@ -4,13 +4,18 @@ import com.jcraft.jsch.*;
 
 import java.io.*;
 
+import static uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution.REMOTE_SOS_OUT_FILE;
+import static uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution.REMOTE_SOS_PID_FILE;
+
 // Based on the following examples:
 // http://www.jcraft.com/jsch/examples/ScpTo.java.html
 // http://www.jcraft.com/jsch/examples/ScpFrom.java.html
 public class NetworkOperations {
 
-    public ExperimentConfiguration.Experiment.Node.SSH ssh;
+    private static final String EXEC_CHANNEL = "exec";
+    private static final int PROCESS_KILL_SIGNAL = 15; // Signal name: TERM
 
+    private ExperimentConfiguration.Experiment.Node.SSH ssh;
     private Session session;
 
     /**
@@ -65,7 +70,7 @@ public class NetworkOperations {
             // exec 'scp -t rfile' remotely
             boolean ptimestamp = false; // https://stackoverflow.com/questions/22226440/mtime-sec-is-not-present
             String command = "scp " + (ptimestamp ? "-p" : "") + " -t " + rfile;
-            Channel channel = session.openChannel("exec");
+            Channel channel = session.openChannel(EXEC_CHANNEL);
             ((ChannelExec) channel).setCommand(command);
 
             channel.connect();
@@ -92,7 +97,7 @@ public class NetworkOperations {
         try {
             // exec 'scp -f rfile' remotely
             String command = "scp -f " + rfile;
-            Channel channel = session.openChannel("exec");
+            Channel channel = session.openChannel(EXEC_CHANNEL);
             ((ChannelExec) channel).setCommand(command);
 
             channel.connect();
@@ -115,7 +120,7 @@ public class NetworkOperations {
         System.out.println("NETWORK - Executing jar file " + jarPath);
 
         try {
-            String command = "java -jar " + jarPath + " " + args + " > out 2>&1 & echo $! > sos.pid";
+            String command = "java -jar " + jarPath + " " + args + " > " + REMOTE_SOS_OUT_FILE + " 2>&1 & echo $! > " + REMOTE_SOS_PID_FILE;
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -127,7 +132,7 @@ public class NetworkOperations {
         System.out.println("NETWORK - Killing process with pidfile " + pidFile);
 
         try {
-            String command = "kill -15 `cat " + pidFile + "`";
+            String command = "kill -" + PROCESS_KILL_SIGNAL + " `cat " + pidFile + "`";
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -278,7 +283,7 @@ public class NetworkOperations {
 
     private void exec(String command) throws IOException, JSchException {
 
-        Channel channel = session.openChannel("exec");
+        Channel channel = session.openChannel(EXEC_CHANNEL);
         ((ChannelExec) channel).setCommand(command);
 
         channel.setInputStream(null);
@@ -335,4 +340,7 @@ public class NetworkOperations {
     }
 
 
+    public void setSsh(ExperimentConfiguration.Experiment.Node.SSH ssh) {
+        this.ssh = ssh;
+    }
 }

@@ -26,7 +26,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
 
         try {
-            File configFile = new File(CONFIGURATION_FOLDER + "x_1/x_1.json");
+            File configFile = new File(CONFIGURATION_FOLDER + "x_1/node_0.json");
             SOSConfiguration configuration = new SOSConfiguration(configFile);
 
             node = ServerState.init(configuration);
