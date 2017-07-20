@@ -4,6 +4,8 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.distribution.NetworkException;
 import uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution;
+import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
+import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 import java.io.File;
 
@@ -22,16 +24,17 @@ public class ChicShock {
 
         ChicShock chicShock = new ChicShock(args[0]);
 
+        // DISTRIBUTE PHASE
         chicShock.chic();
         chicShock.chicExperiment();
 
+        // RUNNING PHASE
         chicShock.shock();
-        chicShock.shockExperiment("Experiment_X_1");
+        chicShock.shockExperiment("Experiment_X_1"); // TODO <-- this method should return when experiment is finished
 
-        // RUN Experiment
-
-        // Stop all nodes when experiment is finished
+        // STOP PHASE
         chicShock.unShock();
+        chicShock.unChic();
     }
 
     public ChicShock(String configurationFilePath) throws ConfigurationException {
@@ -41,16 +44,13 @@ public class ChicShock {
 
     // Just distribute the file. It won't do anything else
     public void chic() throws ChicShockException {
-
         System.out.println("SETTING UP EXPERIMENT: " + experimentConfiguration.getExperimentObj().getName());
 
-        System.out.println("Distributing the SOS app to nodes in the network");
         try {
             SOSDistribution.distribute(experimentConfiguration);
         } catch (InterruptedException | NetworkException e) {
             throw new ChicShockException();
         }
-        System.out.println("Finished to distribute the SOS app to nodes in the network");
     }
 
     /**
@@ -58,12 +58,19 @@ public class ChicShock {
      * The configuration for the node is also distributed.
      */
     public void chicExperiment() throws ChicShockException {
-        // TODO
+
+        try {
+            if (experimentConfiguration.getExperimentObj().getExperimentNode().isRemote()) {
+                SOSDistribution.distributeToExperimentNode(experimentConfiguration);
+            }
+        } catch (NetworkException e) {
+            throw new ChicShockException();
+        }
     }
 
     public void shock() throws ChicShockException {
-
         System.out.println("Starting the remote SOS Nodes");
+
         try {
             SOSDistribution.startAllApplications(experimentConfiguration);
         } catch (InterruptedException | NetworkException e) {
@@ -76,25 +83,26 @@ public class ChicShock {
      * This method should return only when the experiment is finished.
      */
     public void shockExperiment(String experiment) throws ChicShockException {
+        System.out.println("Starting the experiment: " + experiment);
 
         try {
-            boolean isLocal = true;
-            if (isLocal) {
-                ExperimentManager.runExperiment(experiment);
-            } else {
+            boolean isRemote = experimentConfiguration.getExperimentObj().getExperimentNode().isRemote();
+            if (isRemote) {
                 SOSDistribution.runExperiment(experimentConfiguration);
+            } else {
+                ExperimentManager.runExperiment(experiment);
             }
         } catch (ExperimentException e) {
             throw new ChicShockException();
         }
 
         // TODO
-        // Wait for a response back from that node and then return
+        // Make sure to wait for a response back from that node and then return
     }
 
     public void unShock() throws ChicShockException {
-
         System.out.println("Stopping the remote SOS Nodes");
+
         try {
             SOSDistribution.stopAllApplications(experimentConfiguration);
         } catch (InterruptedException | NetworkException e) {
@@ -102,7 +110,14 @@ public class ChicShock {
         }
     }
 
-    public void unChic() {
-        // TODO - remove the files from the remote nodes
+    public void unChic() throws ChicShockException {
+        System.out.println("Removing the SOS files from the remote nodes");
+
+        try {
+            SOSDistribution.undoDistribution(experimentConfiguration);
+        } catch (NetworkException | InterruptedException e) {
+            throw new ChicShockException();
+        }
+
     }
 }

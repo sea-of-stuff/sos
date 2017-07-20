@@ -5,16 +5,18 @@ package uk.ac.standrews.cs.sos.experiments.distribution;
  */
 public class SOSDistribution {
 
+    private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/sos-experiments.jar";
     private static final String REMOTE_SOS_JAR_PATH = "Desktop/sos.jar";
     private static final String REMOTE_SOS_CONFIGURATION_PATH = "Desktop/config.conf";
     protected static final String REMOTE_SOS_PID_FILE = "Desktop/sos.pid";
     protected static final String REMOTE_SOS_OUT_FILE = "Desktop/out";
 
 
-    // This method distributed the app and starts the app too
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
         String appPath = configuration.getExperimentObj().getSetup().getApp();
+        System.out.println("Distributing the app at the following path: " + appPath);
+
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             NetworkOperations scp = new NetworkOperations();
@@ -27,6 +29,26 @@ public class SOSDistribution {
             scp.disconnect();
         }
 
+        System.out.println("App distribution finished");
+    }
+
+    public static void undoDistribution(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
+
+        System.out.println("UndoDistribution of the app at the remote nodes");
+
+        for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+
+            NetworkOperations scp = new NetworkOperations();
+            scp.setSsh(node.getSsh());
+            scp.connect();
+
+            scp.deleteFile(REMOTE_SOS_JAR_PATH);
+            scp.deleteFile(REMOTE_SOS_CONFIGURATION_PATH);
+
+            scp.disconnect();
+        }
+
+        System.out.println("App distribution finished");
     }
 
     public static void startAllApplications(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
@@ -59,11 +81,24 @@ public class SOSDistribution {
 
     }
 
-    public static void distributeToExperimentNode(ExperimentConfiguration configuration) {
+    public static void distributeToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
+        System.out.println("Distributing the SOS-Experiment to a remote node");
 
+        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+
+        NetworkOperations scp = new NetworkOperations();
+        scp.setSsh(experimentNode.getSsh());
+        scp.connect();
+
+        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, REMOTE_SOS_JAR_PATH);
+        scp.sendFile(experimentNode.getConfigurationFilePath(), REMOTE_SOS_CONFIGURATION_PATH);
+
+        scp.disconnect();
     }
 
     public static void runExperiment(ExperimentConfiguration configuration) {
 
+        // Run an experiment from a remote node
+        // This will make a call to that node ExperimentManager.java
     }
 }

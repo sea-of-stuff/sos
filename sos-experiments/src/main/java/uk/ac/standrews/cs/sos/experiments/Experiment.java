@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments;
 
+import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+
 /**
  * TODO - must be able to deal with different settings and should be able to run the experiment multiple times
  *

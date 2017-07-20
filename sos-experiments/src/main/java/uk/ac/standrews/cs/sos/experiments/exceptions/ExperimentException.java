@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments;
+package uk.ac.standrews.cs.sos.experiments.exceptions;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

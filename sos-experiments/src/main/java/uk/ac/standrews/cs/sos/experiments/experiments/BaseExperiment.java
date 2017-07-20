@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.experiments.Experiment;
-import uk.ac.standrews.cs.sos.experiments.ExperimentException;
+import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -32,7 +32,7 @@ public abstract class BaseExperiment implements Experiment {
     @Override
     public void collectStats() {
         long timeToFinish = end - start;
-        System.out.println("Experiment run in " + timeToFinish /1000000000.0 + " seconds");
+        System.out.println("Experiment run in " + nanoToSeconds(timeToFinish) + " seconds");
     }
 
     @Override
@@ -44,5 +44,9 @@ public abstract class BaseExperiment implements Experiment {
         collectStats();
 
         cleanup();
+    }
+
+    private double nanoToSeconds(long nano) {
+        return nano /1000000000.0;
     }
 }

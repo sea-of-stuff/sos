@@ -3,7 +3,11 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.experiments.*;
+import uk.ac.standrews.cs.sos.experiments.ChicShock;
+import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.ServerState;
+import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
+import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
@@ -87,5 +91,6 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
         experiment_pr_1.run();
 
         chicShock.unShock();
+        chicShock.unChic();
     }
 }

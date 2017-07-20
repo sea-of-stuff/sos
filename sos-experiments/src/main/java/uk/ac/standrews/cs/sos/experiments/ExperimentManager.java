@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments;
 
+import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+
 import java.lang.reflect.Constructor;
 
 /**

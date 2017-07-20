@@ -64,6 +64,7 @@ public class ExperimentConfiguration {
         private String name;
         private Setup setup;
         private List<Node> nodes;
+        private Node experimentNode;
         private String stats;
 
         public Experiment() {}
@@ -90,6 +91,14 @@ public class ExperimentConfiguration {
 
         public void setNodes(List<Node> nodes) {
             this.nodes = nodes;
+        }
+
+        public Node getExperimentNode() {
+            return experimentNode;
+        }
+
+        public void setExperimentNode(Node experimentNode) {
+            this.experimentNode = experimentNode;
         }
 
         public String getStats() {
@@ -127,6 +136,7 @@ public class ExperimentConfiguration {
         public static class Node {
 
             private int id;
+            private boolean isRemote;
             private String configurationFilePath;
             private SSH ssh;
             private Behaviour behaviour;
@@ -139,6 +149,14 @@ public class ExperimentConfiguration {
 
             public void setId(int id) {
                 this.id = id;
+            }
+
+            public boolean isRemote() {
+                return isRemote;
+            }
+
+            public void setRemote(boolean remote) {
+                isRemote = remote;
             }
 
             public String getConfigurationFilePath() {

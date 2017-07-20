@@ -1,0 +1,35 @@
+{
+  "experiment" : {
+    "name" : "Experiment X 1",
+    "setup" : {
+      "app" : "sos-app/target/sos-app.jar",
+      "iterations" : 10
+    },
+    "nodes" : [
+      {
+        "id" : 1,
+        "isRemote" : true,
+        "ssh" : {
+          "type" : 0,
+          "host" : "cs-wifi-056.cs.st-andrews.ac.uk",
+          "user" : "lorna",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "password" : "LornaMiniFAKE"
+        },
+        "configurationfilepath" : "x_1/node_1.json",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 0,
+      "isRemote" : false,
+      "configurationfilepath" : "x_1/node_0.json"
+    },
+    "stats" : "WIP"
+  }
+}

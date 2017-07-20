@@ -18,6 +18,10 @@ public class NetworkOperations {
     private ExperimentConfiguration.Experiment.Node.SSH ssh;
     private Session session;
 
+    public void setSsh(ExperimentConfiguration.Experiment.Node.SSH ssh) {
+        this.ssh = ssh;
+    }
+
     /**
      * Connect to the remote host via SSH
      *
@@ -70,14 +74,7 @@ public class NetworkOperations {
             // exec 'scp -t rfile' remotely
             boolean ptimestamp = false; // https://stackoverflow.com/questions/22226440/mtime-sec-is-not-present
             String command = "scp " + (ptimestamp ? "-p" : "") + " -t " + rfile;
-            Channel channel = session.openChannel(EXEC_CHANNEL);
-            ((ChannelExec) channel).setCommand(command);
-
-            channel.connect();
-
-            send(channel, lfile, ptimestamp);
-
-            channel.disconnect();
+            send(command, lfile, ptimestamp);
 
         } catch (JSchException | IOException e) {
             e.printStackTrace();
@@ -97,14 +94,19 @@ public class NetworkOperations {
         try {
             // exec 'scp -f rfile' remotely
             String command = "scp -f " + rfile;
-            Channel channel = session.openChannel(EXEC_CHANNEL);
-            ((ChannelExec) channel).setCommand(command);
+            receive(command, lfile);
 
-            channel.connect();
+        } catch (JSchException | IOException e) {
+            throw new NetworkException();
+        }
+    }
 
-            receive(channel, lfile);
+    public void deleteFile(String rfile) throws NetworkException {
 
-            channel.disconnect();
+        try {
+            String command = "rm -f " + rfile;
+            exec(command);
+
         } catch (JSchException | IOException e) {
             throw new NetworkException();
         }
@@ -140,7 +142,11 @@ public class NetworkOperations {
         }
     }
 
-    private void send(Channel channel, String lfile, boolean ptimestamp) throws IOException {
+    private void send(String command, String lfile, boolean ptimestamp) throws IOException, JSchException {
+        Channel channel = session.openChannel(EXEC_CHANNEL);
+        ((ChannelExec) channel).setCommand(command);
+
+        channel.connect();
 
         try (OutputStream out=channel.getOutputStream();
             InputStream in=channel.getInputStream()) {
@@ -151,13 +157,13 @@ public class NetworkOperations {
 
 
             File _lfile = new File(lfile);
-            String command;
+            String internalCommand;
             if (ptimestamp) {
-                command = "T " + (_lfile.lastModified() / 1000) + " 0";
+                internalCommand = "T " + (_lfile.lastModified() / 1000) + " 0";
                 // The access time should be sent here,
                 // but it is not accessible with JavaAPI ;-<
-                command += (" " + (_lfile.lastModified() / 1000) + " 0\n");
-                out.write(command.getBytes());
+                internalCommand += (" " + (_lfile.lastModified() / 1000) + " 0\n");
+                out.write(internalCommand.getBytes());
                 out.flush();
                 if (checkAck(in) != 0) {
                     System.exit(0);
@@ -166,14 +172,14 @@ public class NetworkOperations {
 
             // send "C0644 filesize filename", where filename should not include '/'
             long filesize = _lfile.length();
-            command = "C0644 " + filesize + " ";
+            internalCommand = "C0644 " + filesize + " ";
             if (lfile.lastIndexOf('/') > 0) {
-                command += lfile.substring(lfile.lastIndexOf('/') + 1);
+                internalCommand += lfile.substring(lfile.lastIndexOf('/') + 1);
             } else {
-                command += lfile;
+                internalCommand += lfile;
             }
-            command += "\n";
-            out.write(command.getBytes());
+            internalCommand += "\n";
+            out.write(internalCommand.getBytes());
             out.flush();
             if (checkAck(in) != 0) {
                 System.exit(0);
@@ -199,9 +205,16 @@ public class NetworkOperations {
             }
 
         }
+
+        channel.disconnect();
     }
 
-    private void receive(Channel channel, String lfile) throws IOException {
+    private void receive(String command, String lfile) throws IOException, JSchException {
+
+        Channel channel = session.openChannel(EXEC_CHANNEL);
+        ((ChannelExec) channel).setCommand(command);
+
+        channel.connect();
 
         String prefix=null;
         if(new File(lfile).isDirectory()){
@@ -279,6 +292,8 @@ public class NetworkOperations {
                 out.flush();
             }
         }
+
+        channel.disconnect();
     }
 
     private void exec(String command) throws IOException, JSchException {
@@ -339,8 +354,4 @@ public class NetworkOperations {
         return b;
     }
 
-
-    public void setSsh(ExperimentConfiguration.Experiment.Node.SSH ssh) {
-        this.ssh = ssh;
-    }
 }
