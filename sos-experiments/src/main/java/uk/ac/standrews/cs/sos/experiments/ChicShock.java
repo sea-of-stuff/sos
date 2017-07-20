@@ -18,7 +18,7 @@ public class ChicShock {
     private File experimentConfigurationFile;
     private ExperimentConfiguration experimentConfiguration;
 
-    public static void main(String[] args) throws Exception { // FIXME - do not use a generic exception here.
+    public static void main(String[] args) throws ChicShockException, ConfigurationException {
 
         ChicShock chicShock = new ChicShock(args[0]);
 
@@ -29,8 +29,8 @@ public class ChicShock {
         chicShock.shockExperiment("Experiment_X_1");
 
         // RUN Experiment
-        // Stop all nodes when experiment is finished
 
+        // Stop all nodes when experiment is finished
         chicShock.unChick();
     }
 
@@ -40,50 +40,64 @@ public class ChicShock {
     }
 
     // Just distribute the file. It won't do anything else
-    public void chic() throws NetworkException, InterruptedException {
+    public void chic() throws ChicShockException {
 
         System.out.println("SETTING UP EXPERIMENT: " + experimentConfiguration.getExperimentObj().getName());
 
         System.out.println("Distributing the SOS app to nodes in the network");
-        SOSDistribution.distribute(experimentConfiguration);
+        try {
+            SOSDistribution.distribute(experimentConfiguration);
+        } catch (InterruptedException | NetworkException e) {
+            throw new ChicShockException();
+        }
         System.out.println("Finished to distribute the SOS app to nodes in the network");
     }
 
     /**
      * Distribute the SOS to the node that will run the experiment
      */
-    public void chicExperiment() throws Exception {
+    public void chicExperiment() throws ChicShockException {
         // TODO
     }
 
-    public void shock() throws NetworkException, InterruptedException {
+    public void shock() throws ChicShockException {
 
         System.out.println("Starting the remote SOS Nodes");
-        SOSDistribution.startAllApplications(experimentConfiguration);
+        try {
+            SOSDistribution.startAllApplications(experimentConfiguration);
+        } catch (InterruptedException | NetworkException e) {
+            throw new ChicShockException();
+        }
     }
 
     /**
      * Run the experiment from the experiment node.
      * This method should return only when the experiment is finished.
      */
-    public void shockExperiment(String experiment) throws Exception {
+    public void shockExperiment(String experiment) throws ChicShockException {
 
-        // This might also be distributed locally
-        boolean isLocal = true;
-        if (isLocal) {
-            ExperimentManager.runExperiment(experiment);
-        } else {
-            SOSDistribution.runExperiment(experimentConfiguration);
+        try {
+            boolean isLocal = true;
+            if (isLocal) {
+                ExperimentManager.runExperiment(experiment);
+            } else {
+                SOSDistribution.runExperiment(experimentConfiguration);
+            }
+        } catch (ExperimentException e) {
+            throw new ChicShockException();
         }
 
-        // Instruct a remote node to run the experiment
-
+        // TODO
         // Wait for a response back from that node and then return
     }
 
-    public void unChick() throws NetworkException, InterruptedException {
+    public void unChick() throws ChicShockException {
 
         System.out.println("Stopping the remote SOS Nodes");
-        SOSDistribution.stopAllApplications(experimentConfiguration);
+        try {
+            SOSDistribution.stopAllApplications(experimentConfiguration);
+        } catch (InterruptedException | NetworkException e) {
+            throw new ChicShockException();
+        }
     }
 }

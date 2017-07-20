@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.ExperimentException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -35,7 +36,8 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void run() throws Exception {
+    public void run() throws ExperimentException {
+
         setup();
         start();
         finish();

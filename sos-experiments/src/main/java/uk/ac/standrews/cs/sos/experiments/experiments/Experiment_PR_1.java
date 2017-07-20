@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.ExperimentException;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -23,19 +24,23 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     private int counter;
 
     @Override
-    public void setup() throws Exception {
+    public void setup() throws ExperimentException {
 
-        // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
-        // TODO - put the results of the experiments in the output folder
-        // for example, in this experiment I do not want to run any background threads
-        File configFile = new File(CONFIGURATION_FOLDER + "pr_1/local_node.json");
-        SOSConfiguration configuration = new SOSConfiguration(configFile);
+        try {
+            // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
+            // TODO - put the results of the experiments in the output folder
+            // for example, in this experiment I do not want to run any background threads
+            File configFile = new File(CONFIGURATION_FOLDER + "pr_1/local_node.json");
+            SOSConfiguration configuration = new SOSConfiguration(configFile);
 
-        node = ServerState.init(configuration);
-        cms = (ContextServiceExperiment) node.getCMS();
+            node = ServerState.init(configuration);
+            cms = (ContextServiceExperiment) node.getCMS();
 
-        addContentToNode();
-        addContexts();
+            addContentToNode();
+            addContexts();
+        } catch (Exception e) {
+            throw new ExperimentException();
+        }
     }
 
     @Override
@@ -77,7 +82,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                 "}");
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws ExperimentException {
 
         // TODO - still read the experiment configuration file?
 

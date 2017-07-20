@@ -12,13 +12,17 @@ public class ExperimentManager {
      * @param experiment the name of the class, the package name will be added by this method
      * @throws Exception
      */
-    public static void runExperiment(String experiment) throws Exception {
+    public static void runExperiment(String experiment) throws ExperimentException {
 
-        Class myClass = Class.forName("uk.ac.standrews.cs.sos.experiments.experiments." + experiment);
-        Constructor constructor = myClass.getConstructor();
-        Experiment instanceOfMyClass = (Experiment) constructor.newInstance();
+        try {
+            Class myClass = Class.forName("uk.ac.standrews.cs.sos.experiments.experiments." + experiment);
+            Constructor constructor = myClass.getConstructor();
+            Experiment instanceOfMyClass = (Experiment) constructor.newInstance();
 
-        instanceOfMyClass.run();
+            instanceOfMyClass.run();
+        } catch (Exception e) {
+            throw new ExperimentException();
+        }
     }
 
     public static void main(String[] args) throws Exception {

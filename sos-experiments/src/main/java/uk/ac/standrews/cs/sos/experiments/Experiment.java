@@ -9,9 +9,9 @@ public interface Experiment {
 
     /**
      * This method should be called to setup the SOS environment before the experiment is run
-     * @throws Exception if the experiment could not be setup
+     * @throws ExperimentException if the experiment could not be setup
      */
-    void setup() throws Exception; // FIXME - use a custom made exception
+    void setup() throws ExperimentException;
 
     /**
      * Start the actual experiment
@@ -35,8 +35,8 @@ public interface Experiment {
 
     /**
      * Run all the steps for the experiment, from setup to cleanup
-     * @throws Exception if any of the steps of the experiment could not be run properly
+     * @throws ExperimentException if any of the steps of the experiment could not be run properly
      */
-    void run() throws Exception;
+    void run() throws ExperimentException;
 
 }
