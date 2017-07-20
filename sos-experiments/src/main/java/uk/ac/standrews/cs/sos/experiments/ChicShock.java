@@ -31,7 +31,7 @@ public class ChicShock {
         // RUN Experiment
 
         // Stop all nodes when experiment is finished
-        chicShock.unChick();
+        chicShock.unShock();
     }
 
     public ChicShock(String configurationFilePath) throws ConfigurationException {
@@ -91,7 +91,7 @@ public class ChicShock {
         // Wait for a response back from that node and then return
     }
 
-    public void unChick() throws ChicShockException {
+    public void unShock() throws ChicShockException {
 
         System.out.println("Stopping the remote SOS Nodes");
         try {
@@ -99,5 +99,9 @@ public class ChicShock {
         } catch (InterruptedException | NetworkException e) {
             throw new ChicShockException();
         }
+    }
+
+    public void unChic() {
+        // TODO - remove the files from the remote nodes
     }
 }
