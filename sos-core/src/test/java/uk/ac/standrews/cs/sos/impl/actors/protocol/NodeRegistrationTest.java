@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import static org.mockito.Mockito.mock;
@@ -30,6 +31,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -37,7 +39,6 @@ import static org.testng.Assert.assertNotNull;
 public class NodeRegistrationTest {
 
     private SOSNodeDiscoveryService nds;
-    private SOSConfiguration configurationMock = mock(SOSConfiguration.class);
     private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
 
     private ClientAndServer mockServer;
@@ -115,14 +116,15 @@ public class NodeRegistrationTest {
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
-        when(configurationMock.getDBFilename()).thenReturn(System.getProperty("user.home") + "/sos/db/dump.db");
+
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "PATH TO CONFIGURATION FILE")).getSettingsObj();
 
         // Make sure that the DB path is clean
-        HelperTest.DeletePath(configurationMock.getDBFilename());
+        HelperTest.DeletePath(settings.getDatabase().getFilename());
 
         Database database;
         try {
-            database = new DatabaseImpl(configurationMock.getDBFilename());
+            database = new DatabaseImpl(settings.getDatabase().getFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }

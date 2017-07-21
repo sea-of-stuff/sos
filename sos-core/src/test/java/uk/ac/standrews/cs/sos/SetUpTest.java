@@ -19,6 +19,8 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.List;
 
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -27,7 +29,6 @@ public class SetUpTest extends CommonTest {
     protected SOSLocalNode localSOSNode;
     protected LocalStorage localStorage;
 
-    public static final String TEST_RESOURCES_PATH = "src/test/resources/";
     private static final String MOCK_PROPERTIES =
             "{\n" +
                     "    \"node\" : {\n" +
