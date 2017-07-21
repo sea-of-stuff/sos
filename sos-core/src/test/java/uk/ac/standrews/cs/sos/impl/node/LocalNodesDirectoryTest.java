@@ -37,7 +37,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "PATH TO CONFIGURATION FILE")).getSettingsObj();
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/local_nodes_directory_test.json")).getSettingsObj();
 
         // Make sure that the DB path is clean
         HelperTest.DeletePath(settings.getDatabase().getFilename());

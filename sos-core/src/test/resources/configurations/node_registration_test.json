@@ -1,0 +1,7 @@
+{
+  "settings": {
+    "database": {
+      "filename": "dump.db"
+    }
+  }
+}

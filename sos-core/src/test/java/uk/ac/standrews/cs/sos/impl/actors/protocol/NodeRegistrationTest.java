@@ -117,7 +117,7 @@ public class NodeRegistrationTest {
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
 
-        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "PATH TO CONFIGURATION FILE")).getSettingsObj();
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
 
         // Make sure that the DB path is clean
         HelperTest.DeletePath(settings.getDatabase().getFilename());
