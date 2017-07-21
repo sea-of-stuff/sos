@@ -2,13 +2,14 @@
   "settings" : {
     "guid" : "6b67f67f31908dd0e574699f163eda2cc117f7f4",
     "roles" : {
-      "agent" : true,
-      "storage" : true,
-      "dds" : false,
-      "nds" : false,
-      "mms" : false,
-      "cms" : false,
-      "rms" : true
+      "storage" : {},
+      "cms" : {
+        "automatic" : true,
+        "predicate" : [30, 60],
+        "policies" : [45, 60],
+        "getdata" : [60, 60],
+        "spawn"  : [60, 60]
+      }
     },
     "database" : {
       "filename" : "dump.db"
@@ -25,7 +26,7 @@
     "keys" : {
       "location" : "~/sos/keys/"
     },
-    "storage" : {
+    "store" : {
       "type" : "local",
       "location" : "~/sos/"
     },

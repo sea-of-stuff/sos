@@ -64,7 +64,7 @@ Content-type: application/json
   "port": 8080,
   "roles": {
     "client": true/false,
-    "storage": true/false,
+    "store": true/false,
     "dds": true/false,
     "nds": true/false,
     "mcs": true/false
@@ -83,7 +83,7 @@ Content-type: application/json
   "port": 8080,
   "roles": {
     "client": true,
-    "storage": true,
+    "store": true,
     "dds": false,
     "nds": true,
     "mcs": false
@@ -101,12 +101,12 @@ The client does not provide any access to its data.
 
 ## Storage
 
-The storage node is used solely to store data. The stored data is accessible to other nodes in the SOS.
+The store node is used solely to store data. The stored data is accessible to other nodes in the SOS.
 
 **Get data of a given atom manifest**
 ```
 REQUEST
-GET /storage/data/guid/<ATOM-GUID>
+GET /store/data/guid/<ATOM-GUID>
 
 SUCCESSFUL RESPONSE
 HTTP/1.1 200 OK
@@ -122,7 +122,7 @@ HTTP/1.1 404 NOT FOUND
 **Add data by location**
 ```
 REQUEST
-POST /storage/uri
+POST /store/uri
 
 {
     "uri" : "URI",
@@ -148,7 +148,7 @@ policies:
 
 Example 1
 ```
-POST /storage/uri
+POST /store/uri
 
 {
     "uri" : "http://example.com/bear.jpeg"
@@ -177,7 +177,7 @@ Content-type: application/json
 
 Example 2
 ```
-POST /storage/uri
+POST /store/uri
 
 {
     "uri" : "sos://c6adc7e8-31ee-563a-8d0d-aa230690c296/23cec17e-c246-418a-8e82-fcc97d70adfe"
@@ -193,7 +193,7 @@ Content-type: application/json
     bundles :
         [
             {
-                "type" : "cache", # TODO - cache locations should be stored within clients only, not in the storage nodes. If a node plays both roles, then return different results based on role.
+                "type" : "cache", # TODO - cache locations should be stored within clients only, not in the store nodes. If a node plays both roles, then return different results based on role.
                 "location" : sos://c6adc7e8-31ee-563a-8d0d-aa230690c296/23cec17e-c246-418a-8e82-fcc97d70adfe
             },
             {
@@ -207,7 +207,7 @@ Content-type: application/json
 **Add data by stream**
 ```
 REQUEST
-POST /storage/stream
+POST /store/stream
 
 This is some data in the body...
 

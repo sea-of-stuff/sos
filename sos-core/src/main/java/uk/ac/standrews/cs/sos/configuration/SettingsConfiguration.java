@@ -68,13 +68,13 @@ public class SettingsConfiguration {
     public static class Settings {
 
         private String guid; // TODO - have a way to save the guid to the file if it is not provided
-        private RolesModel roles;
+        private AdvancedRolesSettings roles;
         private DatabaseSettings database;
         private RESTSettings rest;
         private WebDAVSettings webDAV;
         private WebAPPSettings webAPP;
         private KeysSettings keys;
-        private StorageSettings storage;
+        private StoreSettings store;
         private List<NodeSettings> bootstrapNodes;
         // TODO - policy settings
         // TODO - thread settings
@@ -100,11 +100,11 @@ public class SettingsConfiguration {
             }
         }
 
-        public RolesModel getRoles() {
+        public AdvancedRolesSettings getRoles() {
             return roles;
         }
 
-        public void setRoles(RolesModel roles) {
+        public void setRoles(AdvancedRolesSettings roles) {
             this.roles = roles;
         }
 
@@ -148,12 +148,12 @@ public class SettingsConfiguration {
             this.keys = keys;
         }
 
-        public StorageSettings getStorage() {
-            return storage;
+        public StoreSettings getStore() {
+            return store;
         }
 
-        public void setStorage(StorageSettings storage) {
-            this.storage = storage;
+        public void setStore(StoreSettings store) {
+            this.store = store;
         }
 
         public List<NodeSettings> getBootstrapNodes() {
@@ -170,7 +170,7 @@ public class SettingsConfiguration {
             private String guid;
             private String hostname;
             private int port;
-            private RolesModel roles;
+            private RolesSettings roles;
 
             public NodeSettings() {}
 
@@ -250,19 +250,89 @@ public class SettingsConfiguration {
                 this.guid = guid;
             }
 
-            public RolesModel getRoles() {
+            public RolesSettings getRoles() {
                 return roles;
             }
 
-            public void setRoles(RolesModel roles) {
+            public void setRoles(RolesSettings roles) {
                 this.roles = roles;
+            }
+
+            public static class RolesSettings {
+
+                private boolean agent;
+                private boolean storage;
+                private boolean dds;
+                private boolean nds;
+                private boolean mms;
+                private boolean cms;
+                private boolean rms;
+
+                public RolesSettings() {}
+
+                public boolean isAgent() {
+                    return agent;
+                }
+
+                public void setAgent(boolean agent) {
+                    this.agent = agent;
+                }
+
+                public boolean isStorage() {
+                    return storage;
+                }
+
+                public void setStorage(boolean storage) {
+                    this.storage = storage;
+                }
+
+                public boolean isDDS() {
+                    return dds;
+                }
+
+                public void setDDS(boolean DDS) {
+                    dds = DDS;
+                }
+
+                public boolean isNDS() {
+                    return nds;
+                }
+
+                public void setNDS(boolean NDS) {
+                    nds = NDS;
+                }
+
+                public boolean isMMS() {
+                    return mms;
+                }
+
+                public void setMMS(boolean MMS) {
+                    mms = MMS;
+                }
+
+                public boolean isCMS() {
+                    return cms;
+                }
+
+                public void setCMS(boolean CMS) {
+                    cms = CMS;
+                }
+
+                public boolean isRMS() {
+                    return rms;
+                }
+
+                public void setRMS(boolean RMS) {
+                    rms = RMS;
+                }
+
             }
 
         }
 
-        public static class RolesModel {
+        // Settings relative to each Role
+        public static class AdvancedRolesSettings {
 
-            private boolean agent;
             private boolean storage;
             private boolean dds;
             private boolean nds;
@@ -270,62 +340,26 @@ public class SettingsConfiguration {
             private boolean cms;
             private boolean rms;
 
-            public RolesModel() {}
+            public AdvancedRolesSettings() {}
 
-            public boolean isAgent() {
-                return agent;
+            public static class StorageSettings {
+
+                public StorageSettings() {}
             }
 
-            public void setAgent(boolean agent) {
-                this.agent = agent;
-            }
+            public static class CMSSettings {
 
-            public boolean isStorage() {
-                return storage;
-            }
+                private boolean automatic;
 
-            public void setStorage(boolean storage) {
-                this.storage = storage;
-            }
+                // Thread scheduling properties
+                // The first integer is the initial delay for the scheduler.
+                // The second integer is the periodic delay for teh scheduler.
+                private int[] predicate;
+                private int[] policies;
+                private int[] getdata;
+                private int[] spawn;
 
-            public boolean isDDS() {
-                return dds;
-            }
-
-            public void setDDS(boolean DDS) {
-                dds = DDS;
-            }
-
-            public boolean isNDS() {
-                return nds;
-            }
-
-            public void setNDS(boolean NDS) {
-                nds = NDS;
-            }
-
-            public boolean isMMS() {
-                return mms;
-            }
-
-            public void setMMS(boolean MMS) {
-                mms = MMS;
-            }
-
-            public boolean isCMS() {
-                return cms;
-            }
-
-            public void setCMS(boolean CMS) {
-                cms = CMS;
-            }
-
-            public boolean isRMS() {
-                return rms;
-            }
-
-            public void setRMS(boolean RMS) {
-                rms = RMS;
+                public CMSSettings() {}
             }
 
         }
@@ -405,12 +439,15 @@ public class SettingsConfiguration {
             }
         }
 
-        public static class StorageSettings {
+        // These are the settings for the internal store.
+        // The InternalStorage is used by multiple Actors and component to interact with the store of this node.
+        // The InternalStorage differs from the Storage Actor
+        public static class StoreSettings {
 
             private String type;
             private String location;
 
-            public StorageSettings() {}
+            public StoreSettings() {}
 
             public String getType() {
                 return type;
