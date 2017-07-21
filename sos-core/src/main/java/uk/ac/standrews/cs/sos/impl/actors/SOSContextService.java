@@ -91,16 +91,19 @@ public class SOSContextService implements ContextService, ContextServiceExperime
             // TODO - need to save GUIDs back to contexts (this is simply part of the JSON)
 
         } catch (ContextLoaderException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO - proper exception
         }
 
-        // Background CRON processes
-        service = new ScheduledThreadPoolExecutor(CMS_SCHEDULER_PS);
-        runPredicatesPeriodic();
-        runPoliciesPeriodic();
-        checkPoliciesPeriodic();
-        getDataPeriodic();
-        spawnContextsPeriodic();
+        // Run background CRON Jobs if and only if this is set in the node settings file
+        if (SOSLocalNode.settings.getRoles().getCms().isAutomatic()) {
+
+            service = new ScheduledThreadPoolExecutor(CMS_SCHEDULER_PS);
+            runPredicatesPeriodic();
+            runPoliciesPeriodic();
+            checkPoliciesPeriodic();
+            getDataPeriodic();
+            spawnContextsPeriodic();
+        }
     }
 
     @Override
@@ -164,6 +167,10 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
+        }
+
+        if (service != null) {
+            service.shutdown();
         }
     }
 

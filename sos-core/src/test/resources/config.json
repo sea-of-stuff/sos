@@ -73,6 +73,7 @@
         }
       },
       "cacheFlusher": {
+        "enabled" : false,
         "thread": {
           "ps": 1,
           "initialDelay": 0,

@@ -689,7 +689,7 @@ public class SettingsConfiguration {
                 }
             }
 
-            public static class CacheFlusherSettings {
+            public static class CacheFlusherSettings extends ComponentSettings {
 
                 private ThreadSettings thread;
 
@@ -736,6 +736,21 @@ public class SettingsConfiguration {
 
             public void setPeriod(int period) {
                 this.period = period;
+            }
+        }
+
+        public static class ComponentSettings {
+
+            private boolean enabled;
+
+            public ComponentSettings() {}
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
             }
         }
 

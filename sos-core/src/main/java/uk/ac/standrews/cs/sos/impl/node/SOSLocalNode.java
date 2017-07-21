@@ -151,7 +151,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dataDiscoveryService.flush();
         storage.flush();
         usersRolesService.flush();
-        cacheFlusherService.shutdown();
+
+        if (cacheFlusherService != null)
+            cacheFlusherService.shutdown();
 
         SOSAgent.destroy();
     }
@@ -235,10 +237,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void cacheFlusher() {
         SOS_LOG.log(LEVEL.INFO, "Cache Flusher started");
 
-        SettingsConfiguration.Settings.ThreadSettings threadSettings = SOSLocalNode.settings.getGlobal().getCacheFlusher().getThread();
+        SettingsConfiguration.Settings.GlobalSettings.CacheFlusherSettings cacheFlusherSettings = SOSLocalNode.settings.getGlobal().getCacheFlusher();
+
+        if (!cacheFlusherSettings.isEnabled()) return;
+
+        SettingsConfiguration.Settings.ThreadSettings threadSettings = cacheFlusherSettings.getThread();
 
         CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
-
         cacheFlusherService = Executors.newScheduledThreadPool(threadSettings.getPs());
         cacheFlusherService.scheduleAtFixedRate(cacheFlusher, threadSettings.getInitialDelay(), threadSettings.getPeriod(), CACHE_FLUSHER_TIME_UNIT);
     }
@@ -252,6 +257,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         private static LocalStorage localStorage;
         private static List<Node> bootstrapNodes;
 
+        // REMOVEME
         public Builder configuration(SOSConfiguration configuration) {
             Builder.configuration = configuration;
             return this;
