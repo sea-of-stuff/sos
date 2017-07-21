@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -66,7 +67,7 @@ public class SettingsConfiguration {
     ///////////////////////////////////////
     public static class Settings {
 
-        private String guid;
+        private String guid; // TODO - have a way to save the guid to the file if it is not provided
         private RolesModel roles;
         private DatabaseSettings database;
         private RESTSettings rest;
@@ -75,9 +76,9 @@ public class SettingsConfiguration {
         private KeysSettings keys;
         private StorageSettings storage;
         private List<NodeSettings> bootstrapNodes;
-
-        // TODO - storage settings
         // TODO - policy settings
+        // TODO - thread settings
+        // TODO - turn on/off components of node
 
         public Settings() {}
 
@@ -95,10 +96,8 @@ public class SettingsConfiguration {
             try {
                 return GUIDFactory.recreateGUID(getGuid());
             } catch (GUIDGenerationException e) {
-                e.printStackTrace();
+                return new InvalidID();
             }
-
-            return null;
         }
 
         public RolesModel getRoles() {
@@ -429,6 +428,7 @@ public class SettingsConfiguration {
                 this.location = location;
             }
 
+            // NOTE - only local CastoreStorage is supported at the moment.
             @JsonIgnore
             public CastoreBuilder getCastoreBuilder() throws ConfigurationException {
 

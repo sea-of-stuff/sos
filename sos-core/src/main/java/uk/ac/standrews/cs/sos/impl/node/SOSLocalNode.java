@@ -4,12 +4,13 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Threads;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.actors.*;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
@@ -80,7 +81,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * @throws GUIDGenerationException
      */
     public SOSLocalNode() throws SOSException, GUIDGenerationException {
-        super(Builder.configuration);
+        super(Builder.settings);
+        localStorage = Builder.localStorage;
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
         SOS_LOG.log(LEVEL.INFO,
@@ -99,21 +101,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         SOS_LOG.log(LEVEL.INFO, "Starting up node ");
 
-        SOSConfiguration configuration = Builder.configuration;
-        localStorage = Builder.localStorage;
-
-        try {
-            String dbFilename = configuration.getDBFilename();
-            File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
-
-            database = new DatabaseImpl(file.getPath());
-        } catch (DatabaseException | ConfigurationException | IOException e) {
-            throw new SOSException(e);
-        }
-
+        initDB();
         initNDS();
         loadBootstrapNodes(Builder.bootstrapNodes);
-        registerNode(configuration);
+        registerNode();
         initActors();
         cacheFlusher();
 
@@ -164,6 +155,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         SOSAgent.destroy();
     }
 
+    private void initDB() throws SOSException {
+        try {
+            String dbFilename = settings.getDatabase().getFilename();
+            File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
+
+            database = new DatabaseImpl(file.getPath());
+        } catch (DataStorageException | DatabaseException | IOException e) {
+            throw new SOSException(e);
+        }
+    }
+
     /**
      * Load the bootstrap nodes specified in the configuration file into the local NDS.
      *
@@ -180,18 +182,16 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     /**
      * Register this node to the NDS network
-     *
-     * @param configuration
      */
-    private void registerNode(SOSConfiguration configuration) {
+    private void registerNode() {
 
         try {
-            int port = configuration.getNodePort();
+            int port = settings.getRest().getPort();
             InetAddress inetAddress = InetAddress.getLocalHost();
             this.hostAddress = new InetSocketAddress(inetAddress, port);
 
             nodeDiscoveryService.registerNode(this, false);
-        } catch (UnknownHostException | NodeRegistrationException | ConfigurationException e) {
+        } catch (UnknownHostException | NodeRegistrationException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
         }
 
@@ -245,11 +245,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     public static class Builder {
         private static SOSConfiguration configuration;
+        private static SettingsConfiguration.Settings settings;
         private static LocalStorage localStorage;
         private static List<Node> bootstrapNodes;
 
         public Builder configuration(SOSConfiguration configuration) {
             Builder.configuration = configuration;
+            return this;
+        }
+
+        public Builder settings(SettingsConfiguration.Settings settings) {
+            Builder.settings = settings;
             return this;
         }
 

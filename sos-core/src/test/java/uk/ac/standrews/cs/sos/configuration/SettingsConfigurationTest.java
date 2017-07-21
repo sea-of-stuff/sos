@@ -3,9 +3,12 @@ package uk.ac.standrews.cs.sos.configuration;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 
 import java.io.File;
+import java.util.List;
 
 import static org.testng.Assert.*;
 import static uk.ac.standrews.cs.sos.SetUpTest.TEST_RESOURCES_PATH;
@@ -81,7 +84,6 @@ public class SettingsConfigurationTest {
         assertEquals(webDAVSettings.getPort(), 8081);
     }
 
-
     @Test
     public void webAPPTest() throws ConfigurationException {
 
@@ -108,6 +110,20 @@ public class SettingsConfigurationTest {
         SettingsConfiguration.Settings.StorageSettings storageSettings = settings.getSettingsObj().getStorage();
         assertEquals(storageSettings.getType(), "local");
         assertEquals(storageSettings.getLocation(), HOME_PATH + "/sos/");
+
+        assertNotNull(storageSettings.getCastoreBuilder());
+        CastoreBuilder castoreBuilder = storageSettings.getCastoreBuilder();
+        assertEquals(castoreBuilder.getType(), CastoreType.LOCAL);
+        assertEquals(castoreBuilder.getRoot(), HOME_PATH + "/sos/");
+    }
+
+    @Test
+    public void emptyBoostrapNodes() throws ConfigurationException {
+
+        SettingsConfiguration settings = new SettingsConfiguration(configFile);
+
+        List<SettingsConfiguration.Settings.NodeSettings> bootstrap = settings.getSettingsObj().getBootstrapNodes();
+        assertTrue(bootstrap.isEmpty());
     }
 
 }

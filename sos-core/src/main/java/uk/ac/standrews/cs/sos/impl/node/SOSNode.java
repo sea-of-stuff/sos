@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -35,6 +36,8 @@ public class SOSNode implements Node {
     protected boolean DB_is_cms;
     protected boolean DB_is_rms;
 
+    protected SettingsConfiguration.Settings settings;
+
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
 
@@ -56,6 +59,7 @@ public class SOSNode implements Node {
         this.DB_is_rms = isRMS;
     }
 
+    // REMOVEME
     public SOSNode(SOSConfiguration configuration) throws NodeException {
 
         try {
@@ -80,6 +84,34 @@ public class SOSNode implements Node {
             throw new NodeException(e);
         }
     }
+
+    public SOSNode(SettingsConfiguration.Settings settings) throws NodeException {
+        this.settings = settings;
+
+        try {
+            this.nodeGUID = settings.getNodeGUID();
+
+            InetAddress hostname = InetAddress.getLocalHost();
+            int port = settings.getRest().getPort();
+            this.hostAddress = new InetSocketAddress(hostname, port);
+
+            this.DB_nodeid = nodeGUID.toString();
+            this.DB_hostname = hostname.getHostAddress();
+            this.DB_port = port;
+
+            this.DB_is_agent = settings.getRoles().isAgent();
+            this.DB_is_storage = settings.getRoles().isStorage();
+            this.DB_is_dds = settings.getRoles().isDDS();
+            this.DB_is_nds = settings.getRoles().isNDS();
+            this.DB_is_mms = settings.getRoles().isMMS();
+            this.DB_is_cms = settings.getRoles().isCMS();
+            this.DB_is_rms = settings.getRoles().isRMS();
+
+        } catch (IOException e) {
+            throw new NodeException(e);
+        }
+    }
+
 
     // Cloning constructor
     public SOSNode(Node node) {
