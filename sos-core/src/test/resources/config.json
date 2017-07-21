@@ -1,35 +1,82 @@
 {
-  "settings" : {
-    "guid" : "6b67f67f31908dd0e574699f163eda2cc117f7f4",
-    "roles" : {
-      "storage" : {},
-      "cms" : {
-        "automatic" : true,
-        "predicate" : [30, 60],
-        "policies" : [45, 60],
-        "getdata" : [60, 60],
-        "spawn"  : [60, 60]
+  "settings": {
+    "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
+    "roles": {
+      "storage": {
+        "exposed" : true
+      },
+      "cms": {
+        "exposed" : false,
+        "indexFile": "cms.index",
+        "automatic": true,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 60
+        }
+      },
+      "dds": {
+        "exposed" : false,
+        "cacheFile": "manifests.cache",
+        "indexFile": "dds.index"
+      },
+      "rms": {
+        "exposed" : true,
+        "cacheFile": "usro.cache"
+      },
+      "nds": {
+        "exposed" : false
+      },
+      "mms": {
+        "exposed" : false
       }
     },
-    "database" : {
-      "filename" : "dump.db"
+    "database": {
+      "filename": "dump.db"
     },
-    "rest" : {
-      "port" : 8080
+    "rest": {
+      "port": 8080
     },
-    "webDAV" : {
-      "port" : 8081
+    "webDAV": {
+      "port": 8081
     },
-    "webAPP" : {
-      "port" : 8082
+    "webAPP": {
+      "port": 8082
     },
-    "keys" : {
-      "location" : "~/sos/keys/"
+    "keys": {
+      "location": "~/sos/keys/"
     },
-    "store" : {
-      "type" : "local",
-      "location" : "~/sos/"
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
     },
-    "bootstrapNodes" : []
+    "global": {
+
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "cacheFlusher": {
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": []
   }
 }

@@ -47,16 +47,13 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        // FIXME
-//
-//        SettingsConfiguration.Settings.RolesSettings roles = settings.getSettingsObj().getRoles();
-//        assertTrue(roles.isAgent());
-//        assertTrue(roles.isStorage());
-//        assertFalse(roles.isDDS());
-//        assertFalse(roles.isNDS());
-//        assertFalse(roles.isMMS());
-//        assertFalse(roles.isCMS());
-//        assertTrue(roles.isRMS());
+        SettingsConfiguration.Settings.AdvancedRolesSettings roles = settings.getSettingsObj().getRoles();
+        assertTrue(roles.getStorage().isExposed());
+        assertFalse(roles.getDds().isExposed());
+        assertFalse(roles.getNds().isExposed());
+        assertFalse(roles.getMms().isExposed());
+        assertFalse(roles.getCms().isExposed());
+        assertTrue(roles.getRms().isExposed());
     }
 
     @Test
@@ -126,6 +123,28 @@ public class SettingsConfigurationTest {
 
         List<SettingsConfiguration.Settings.NodeSettings> bootstrap = settings.getSettingsObj().getBootstrapNodes();
         assertTrue(bootstrap.isEmpty());
+    }
+
+    @Test
+    public void cmsTest() throws ConfigurationException {
+
+        SettingsConfiguration settings = new SettingsConfiguration(configFile);
+
+        SettingsConfiguration.Settings.AdvancedRolesSettings.CMSSettings cmsSettings = settings.getSettingsObj().getRoles().getCms();
+        assertFalse(cmsSettings.isExposed());
+        assertEquals(cmsSettings.getIndexFile(), "cms.index");
+        assertTrue(cmsSettings.isAutomatic());
+
+        testThreadSettings(cmsSettings.getPredicateThread(), 30, 60);
+        testThreadSettings(cmsSettings.getPoliciesThread(), 45, 60);
+        testThreadSettings(cmsSettings.getGetdataThread(), 60, 60);
+        testThreadSettings(cmsSettings.getSpawnThread(), 90, 60);
+    }
+
+    private void testThreadSettings(SettingsConfiguration.Settings.ThreadSettings threadSettings, int initDelay, int period) {
+
+        assertEquals(threadSettings.getInitialDelay(), initDelay);
+        assertEquals(threadSettings.getPeriod(), period);
     }
 
 }

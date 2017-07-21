@@ -75,7 +75,9 @@ public class SettingsConfiguration {
         private WebAPPSettings webAPP;
         private KeysSettings keys;
         private StoreSettings store;
+        private GlobalSettings global;
         private List<NodeSettings> bootstrapNodes;
+
         // TODO - policy settings
         // TODO - thread settings
         // TODO - turn on/off components of node
@@ -156,6 +158,14 @@ public class SettingsConfiguration {
             this.store = store;
         }
 
+        public GlobalSettings getGlobal() {
+            return global;
+        }
+
+        public void setGlobal(GlobalSettings global) {
+            this.global = global;
+        }
+
         public List<NodeSettings> getBootstrapNodes() {
             return bootstrapNodes;
         }
@@ -193,37 +203,37 @@ public class SettingsConfiguration {
 
             @Override
             public boolean isAgent() {
-                return roles.isAgent();
+                return false; // FIXME - it does not matter, since the agent is not an exposable role
             }
 
             @Override
             public boolean isStorage() {
-                return roles.isStorage();
+                return roles.getStorage().isExposed();
             }
 
             @Override
             public boolean isDDS() {
-                return roles.isDDS();
+                return roles.getDds().isExposed();
             }
 
             @Override
             public boolean isNDS() {
-                return roles.isNDS();
+                return roles.getNds().isExposed();
             }
 
             @Override
             public boolean isMMS() {
-                return roles.isMMS();
+                return roles.getMms().isExposed();
             }
 
             @Override
             public boolean isCMS() {
-                return roles.isCMS();
+                return roles.getCms().isExposed();
             }
 
             @Override
             public boolean isRMS() {
-                return roles.isRMS();
+                return roles.getRms().isExposed();
             }
 
             public String getHostname() {
@@ -260,71 +270,62 @@ public class SettingsConfiguration {
 
             public static class RolesSettings {
 
-                private boolean agent;
-                private boolean storage;
-                private boolean dds;
-                private boolean nds;
-                private boolean mms;
-                private boolean cms;
-                private boolean rms;
+                private RoleSettings storage;
+                private RoleSettings dds;
+                private RoleSettings nds;
+                private RoleSettings mms;
+                private RoleSettings cms;
+                private RoleSettings rms;
 
-                public RolesSettings() {}
-
-                public boolean isAgent() {
-                    return agent;
-                }
-
-                public void setAgent(boolean agent) {
-                    this.agent = agent;
-                }
-
-                public boolean isStorage() {
+                public RoleSettings getStorage() {
                     return storage;
                 }
 
-                public void setStorage(boolean storage) {
+                public void setStorage(RoleSettings storage) {
                     this.storage = storage;
                 }
 
-                public boolean isDDS() {
+                public RoleSettings getDds() {
                     return dds;
                 }
 
-                public void setDDS(boolean DDS) {
-                    dds = DDS;
+                public void setDds(RoleSettings dds) {
+                    this.dds = dds;
                 }
 
-                public boolean isNDS() {
+                public RoleSettings getNds() {
                     return nds;
                 }
 
-                public void setNDS(boolean NDS) {
-                    nds = NDS;
+                public void setNds(RoleSettings nds) {
+                    this.nds = nds;
                 }
 
-                public boolean isMMS() {
+                public RoleSettings getMms() {
                     return mms;
                 }
 
-                public void setMMS(boolean MMS) {
-                    mms = MMS;
+                public void setMms(RoleSettings mms) {
+                    this.mms = mms;
                 }
 
-                public boolean isCMS() {
+                public RoleSettings getCms() {
                     return cms;
                 }
 
-                public void setCMS(boolean CMS) {
-                    cms = CMS;
+                public void setCms(RoleSettings cms) {
+                    this.cms = cms;
                 }
 
-                public boolean isRMS() {
+                public RoleSettings getRms() {
                     return rms;
                 }
 
-                public void setRMS(boolean RMS) {
-                    rms = RMS;
+                public void setRms(RoleSettings rms) {
+                    this.rms = rms;
                 }
+
+                public RolesSettings() {}
 
             }
 
@@ -333,35 +334,198 @@ public class SettingsConfiguration {
         // Settings relative to each Role
         public static class AdvancedRolesSettings {
 
-            private boolean storage;
-            private boolean dds;
-            private boolean nds;
-            private boolean mms;
-            private boolean cms;
-            private boolean rms;
+            private StorageSettings storage;
+            private DDSSettings dds;
+            private NDSSettings nds;
+            private MMSSettings mms;
+            private CMSSettings cms;
+            private RMSSettings rms;
 
             public AdvancedRolesSettings() {}
 
-            public static class StorageSettings {
+            public StorageSettings getStorage() {
+                return storage;
+            }
+
+            public void setStorage(StorageSettings storage) {
+                this.storage = storage;
+            }
+
+            public CMSSettings getCms() {
+                return cms;
+            }
+
+            public void setCms(CMSSettings cms) {
+                this.cms = cms;
+            }
+
+            public DDSSettings getDds() {
+                return dds;
+            }
+
+            public void setDds(DDSSettings dds) {
+                this.dds = dds;
+            }
+
+            public RMSSettings getRms() {
+                return rms;
+            }
+
+            public void setRms(RMSSettings rms) {
+                this.rms = rms;
+            }
+
+            public NDSSettings getNds() {
+                return nds;
+            }
+
+            public void setNds(NDSSettings nds) {
+                this.nds = nds;
+            }
+
+            public MMSSettings getMms() {
+                return mms;
+            }
+
+            public void setMms(MMSSettings mms) {
+                this.mms = mms;
+            }
+
+            ///////////////////////////////
+            ////// SETTING CLASSES ////////
+            ///////////////////////////////
+
+            public static class StorageSettings extends RoleSettings {
 
                 public StorageSettings() {}
             }
 
-            public static class CMSSettings {
+            public static class NDSSettings extends RoleSettings {
 
-                private boolean automatic;
-
-                // Thread scheduling properties
-                // The first integer is the initial delay for the scheduler.
-                // The second integer is the periodic delay for teh scheduler.
-                private int[] predicate;
-                private int[] policies;
-                private int[] getdata;
-                private int[] spawn;
-
-                public CMSSettings() {}
+                public NDSSettings() {}
             }
 
+            public static class MMSSettings extends RoleSettings {
+
+                public MMSSettings() {}
+            }
+
+            public static class DDSSettings extends RoleSettings {
+
+                private String cacheFile;
+                private String indexFile;
+
+                public DDSSettings() {}
+
+                public String getCacheFile() {
+                    return cacheFile;
+                }
+
+                public void setCacheFile(String cacheFile) {
+                    this.cacheFile = cacheFile;
+                }
+
+                public String getIndexFile() {
+                    return indexFile;
+                }
+
+                public void setIndexFile(String indexFile) {
+                    this.indexFile = indexFile;
+                }
+            }
+
+            public static class RMSSettings extends RoleSettings {
+
+                private String cacheFile;
+
+                public RMSSettings() {}
+
+                public String getCacheFile() {
+                    return cacheFile;
+                }
+
+                public void setCacheFile(String cacheFile) {
+                    this.cacheFile = cacheFile;
+                }
+            }
+
+            public static class CMSSettings extends RoleSettings {
+
+                private String indexFile;
+
+                // If true, the CMS will run background processes to classify content and maintain the contexts
+                private boolean automatic;
+                private ThreadSettings predicateThread;
+                private ThreadSettings policiesThread;
+                private ThreadSettings getdataThread;
+                private ThreadSettings spawnThread;
+
+                public CMSSettings() {}
+
+                public String getIndexFile() {
+                    return indexFile;
+                }
+
+                public void setIndexFile(String indexFile) {
+                    this.indexFile = indexFile;
+                }
+
+                public boolean isAutomatic() {
+                    return automatic;
+                }
+
+                public void setAutomatic(boolean automatic) {
+                    this.automatic = automatic;
+                }
+
+                public ThreadSettings getPredicateThread() {
+                    return predicateThread;
+                }
+
+                public void setPredicateThread(ThreadSettings predicateThread) {
+                    this.predicateThread = predicateThread;
+                }
+
+                public ThreadSettings getPoliciesThread() {
+                    return policiesThread;
+                }
+
+                public void setPoliciesThread(ThreadSettings policiesThread) {
+                    this.policiesThread = policiesThread;
+                }
+
+                public ThreadSettings getGetdataThread() {
+                    return getdataThread;
+                }
+
+                public void setGetdataThread(ThreadSettings getdataThread) {
+                    this.getdataThread = getdataThread;
+                }
+
+                public ThreadSettings getSpawnThread() {
+                    return spawnThread;
+                }
+
+                public void setSpawnThread(ThreadSettings spawnThread) {
+                    this.spawnThread = spawnThread;
+                }
+            }
+
+        }
+
+        public static class RoleSettings {
+
+            private boolean exposed;
+
+            public RoleSettings() {}
+
+            public boolean isExposed() {
+                return exposed;
+            }
+
+            public void setExposed(boolean exposed) {
+                this.exposed = exposed;
+            }
         }
 
         public static class DatabaseSettings {
@@ -475,6 +639,95 @@ public class SettingsConfiguration {
                 return new CastoreBuilder()
                         .setType(storageType)
                         .setRoot(root);
+            }
+        }
+
+        public static class GlobalSettings {
+
+            private TasksSettings tasks;
+            private CacheFlusherSettings cacheFlusher;
+
+            public GlobalSettings() {}
+
+            public TasksSettings getTasks() {
+                return tasks;
+            }
+
+            public void setTasks(TasksSettings tasks) {
+                this.tasks = tasks;
+            }
+
+            public CacheFlusherSettings getCacheFlusher() {
+                return cacheFlusher;
+            }
+
+            public void setCacheFlusher(CacheFlusherSettings cacheFlusher) {
+                this.cacheFlusher = cacheFlusher;
+            }
+
+
+            public static class TasksSettings {
+
+                private ThreadSettings thread;
+
+                public TasksSettings() {}
+
+                public ThreadSettings getThread() {
+                    return thread;
+                }
+
+                public void setThread(ThreadSettings thread) {
+                    this.thread = thread;
+                }
+            }
+
+            public static class CacheFlusherSettings {
+
+                private ThreadSettings thread;
+
+                public CacheFlusherSettings() {}
+
+                public ThreadSettings getThread() {
+                    return thread;
+                }
+
+                public void setThread(ThreadSettings thread) {
+                    this.thread = thread;
+                }
+            }
+        }
+
+        public static class ThreadSettings {
+
+            private int ps; // Number of threads
+            private int initialDelay;
+            private int period;
+            // TODO - timeunit
+
+            public ThreadSettings() {}
+
+            public int getPs() {
+                return ps;
+            }
+
+            public void setPs(int ps) {
+                this.ps = ps;
+            }
+
+            public int getInitialDelay() {
+                return initialDelay;
+            }
+
+            public void setInitialDelay(int initialDelay) {
+                this.initialDelay = initialDelay;
+            }
+
+            public int getPeriod() {
+                return period;
+            }
+
+            public void setPeriod(int period) {
+                this.period = period;
             }
         }
 

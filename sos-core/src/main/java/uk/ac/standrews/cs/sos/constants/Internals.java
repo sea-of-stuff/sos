@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Internals {
 
+    // TODO store filenames in settings
     public static final String CACHE_FILE = "manifests.cache";
     public static final String DDS_INDEX_FILE = "dds.index";
     public static final String CMS_INDEX_FILE = "cms.index";

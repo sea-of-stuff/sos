@@ -99,13 +99,13 @@ public class SOSNode implements Node {
             this.DB_hostname = hostname.getHostAddress();
             this.DB_port = port;
 
-            this.DB_is_agent = settings.getRoles().isAgent();
-            this.DB_is_storage = settings.getRoles().isStorage();
-            this.DB_is_dds = settings.getRoles().isDDS();
-            this.DB_is_nds = settings.getRoles().isNDS();
-            this.DB_is_mms = settings.getRoles().isMMS();
-            this.DB_is_cms = settings.getRoles().isCMS();
-            this.DB_is_rms = settings.getRoles().isRMS();
+            this.DB_is_agent = true;
+            this.DB_is_storage = settings.getRoles().getStorage().isExposed();
+            this.DB_is_dds = settings.getRoles().getDds().isExposed();
+            this.DB_is_nds = settings.getRoles().getNds().isExposed();
+            this.DB_is_mms = settings.getRoles().getMms().isExposed();
+            this.DB_is_cms = settings.getRoles().getCms().isExposed();
+            this.DB_is_rms = settings.getRoles().getRms().isExposed();
 
         } catch (IOException e) {
             throw new NodeException(e);

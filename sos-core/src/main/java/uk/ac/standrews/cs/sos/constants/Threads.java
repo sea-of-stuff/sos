@@ -5,11 +5,11 @@ package uk.ac.standrews.cs.sos.constants;
  */
 public class Threads {
 
-    public static final int CACHE_FLUSHER_PS = 1; // PS stands for POOL_SIZE
-    public static final int TASKS_SCHEDULER_PS = 4;
+    public static final int CACHE_FLUSHER_PS = 1; // PS stands for POOL_SIZE // TODO - see globals in settings
+    public static final int TASKS_SCHEDULER_PS = 4; // TODO - see globals in settings
     public static final int CMS_SCHEDULER_PS = 4;
 
-    // Context Service
+    // Context Service - TODO use the settings.json
     public static final int PREDICATE_PERIODIC_INIT_DELAY_S = 30;
     public static final int PREDICATE_PERIODIC_DELAY_S = 60;
     public static final int POLICIES_PERIODIC_INIT_DELAY_S = 45;
