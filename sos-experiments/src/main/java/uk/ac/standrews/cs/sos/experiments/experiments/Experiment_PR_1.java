@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
@@ -31,9 +31,9 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             // TODO - put the results of the experiments in the output folder
             // for example, in this experiment I do not want to run any background threads
             File configFile = new File(CONFIGURATION_FOLDER + "pr_1/node_0.json");
-            SOSConfiguration configuration = new SOSConfiguration(configFile);
+            SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
-            node = ServerState.init(configuration);
+            node = ServerState.init(configuration.getSettingsObj());
             cms = (ContextServiceExperiment) node.getCMS();
 
             addContentToNode();

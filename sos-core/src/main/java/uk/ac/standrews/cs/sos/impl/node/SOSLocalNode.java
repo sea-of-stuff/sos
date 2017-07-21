@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
@@ -175,7 +174,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * @param bootstrapNodes
      * @throws NodeRegistrationException
      */
-    private void loadBootstrapNodes(List<Node> bootstrapNodes)
+    private void loadBootstrapNodes(List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes)
             throws NodeRegistrationException {
 
         for(Node node:bootstrapNodes) {
@@ -255,7 +254,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         private static SOSConfiguration configuration;
         private static SettingsConfiguration.Settings settings;
         private static LocalStorage localStorage;
-        private static List<Node> bootstrapNodes;
+        private static List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes;
 
         // REMOVEME
         public Builder configuration(SOSConfiguration configuration) {
@@ -273,12 +272,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             return this;
         }
 
-        public Builder bootstrapNodes(List<Node> bootstrapNodes) {
+        public Builder bootstrapNodes(List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes) {
             Builder.bootstrapNodes = bootstrapNodes;
             return this;
         }
 
-        public SOSLocalNode build() throws SOSException, GUIDGenerationException {
+        public SOSLocalNode build() throws SOSException {
             return new SOSLocalNode();
         }
     }

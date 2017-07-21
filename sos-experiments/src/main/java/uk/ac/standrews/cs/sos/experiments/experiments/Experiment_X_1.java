@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
@@ -31,9 +31,9 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
         try {
             File configFile = new File(CONFIGURATION_FOLDER + "x_1/node_0.json");
-            SOSConfiguration configuration = new SOSConfiguration(configFile);
+            SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
-            node = ServerState.init(configuration);
+            node = ServerState.init(configuration.getSettingsObj());
             cms = (ContextServiceExperiment) node.getCMS();
 
             addContentToNode();

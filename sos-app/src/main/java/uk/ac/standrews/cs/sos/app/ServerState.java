@@ -4,14 +4,12 @@ import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Node;
 
 import java.util.List;
 
@@ -24,10 +22,10 @@ class ServerState {
 
     private static SOSLocalNode sos;
 
-    static SOSLocalNode init(SOSConfiguration configuration) {
+    static SOSLocalNode init(SettingsConfiguration.Settings settings) {
         try {
-            return ServerState.startSOS(configuration);
-        } catch (SOSException | GUIDGenerationException e) {
+            return ServerState.startSOS(settings);
+        } catch (SOSException e) {
             e.printStackTrace();
         }
 
@@ -38,21 +36,21 @@ class ServerState {
         sos.kill();
     }
 
-    private static SOSLocalNode startSOS(SOSConfiguration configuration) throws SOSException, GUIDGenerationException {
+    private static SOSLocalNode startSOS(SettingsConfiguration.Settings settings) throws SOSException {
 
         LocalStorage localStorage;
         try {
-            CastoreBuilder builder = configuration.getCastoreBuilder();
+            CastoreBuilder builder = settings.getStore().getCastoreBuilder();
             IStorage storage = CastoreFactory.createStorage(builder);
             localStorage = new LocalStorage(storage);
         } catch (StorageException | DataStorageException | ConfigurationException e) {
             throw new SOSException(e);
         }
 
-        List<Node> bootstrapNodes = configuration.getBootstrapNodes();
+        List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes = settings.getBootstrapNodes();
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
-        sos = builder.configuration(configuration)
+        sos = builder.settings(settings)
                 .internalStorage(localStorage)
                 .bootstrapNodes(bootstrapNodes)
                 .build();

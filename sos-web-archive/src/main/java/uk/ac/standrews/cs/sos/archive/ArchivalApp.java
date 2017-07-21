@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
@@ -34,9 +34,9 @@ public class ArchivalApp {
     public static void main(String[] args) throws ConfigurationException {
 
         File configFile = new File(args[0]);
-        SOSConfiguration configuration = new SOSConfiguration(configFile);
+        SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
-        SOSLocalNode sos = ServerState.init(configuration);
+        SOSLocalNode sos = ServerState.init(configuration.getSettingsObj());
 
         visitedSites = new LinkedHashMap<>();
         Queue<String> endPoints = new LinkedList<>();

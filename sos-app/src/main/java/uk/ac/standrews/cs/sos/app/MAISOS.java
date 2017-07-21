@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.sos.actors.Agent;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
@@ -46,9 +46,9 @@ public class MAISOS {
 
         String configFilePath = cli.getOptionValue(CONFIG_OPT);
         File configFile = new File(configFilePath);
-        SOSConfiguration configuration = new SOSConfiguration(configFile);
+        SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
-        SOSLocalNode sos = ServerState.init(configuration);
+        SOSLocalNode sos = ServerState.init(configuration.getSettingsObj());
         assert sos != null;
 
         IGUID root = getRootGUID(cli);
@@ -60,7 +60,7 @@ public class MAISOS {
         }
 
         if (cli.hasOption(FS_OPT)) {
-            HandleFSApp(executorService, sos, root, configuration);
+            HandleFSApp(executorService, sos, root, configuration.getSettingsObj());
         }
 
         HandleExit(executorService);
@@ -144,7 +144,7 @@ public class MAISOS {
     }
 
     private static void HandleFSApp(ExecutorService executorService, SOSLocalNode sos, IGUID root,
-                                    SOSConfiguration configuration) throws FileSystemCreationException {
+                                    SettingsConfiguration.Settings settings) throws FileSystemCreationException {
 
         Agent agent = sos.getAgent();
         if (agent == null) {
@@ -156,9 +156,11 @@ public class MAISOS {
 
         executorService.submit(() -> {
             try {
-                SOS_LOG.log(LEVEL.INFO, "Launching the WebApp on port: " + configuration.getWebAppPort());
-                WebApp.RUN(sos, fileSystem, configuration.getWebAppPort());
-                LaunchWebDAV(fileSystem, configuration.getWebDAVPort());
+                SOS_LOG.log(LEVEL.INFO, "Launching the WebApp on port: " + settings.getWebAPP().getPort());
+                WebApp.RUN(sos, fileSystem, settings.getWebAPP().getPort());
+
+                SOS_LOG.log(LEVEL.INFO, "Launching the WebDAV on port: " + settings.getWebDAV().getPort());
+                LaunchWebDAV(fileSystem, settings.getWebDAV().getPort());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -179,7 +181,6 @@ public class MAISOS {
     private static void LaunchWebDAV(IFileSystem fileSystem, int port) {
 
         try {
-            SOS_LOG.log(LEVEL.INFO, "Launching the WebDAV server on port: " + port);
             WebDAVLauncher.StartWebDAVServer(fileSystem, port);
         } catch (IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Error while starting WebDAV server on port: " + port + " with error: " + e.getMessage());
