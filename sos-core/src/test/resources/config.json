@@ -24,7 +24,7 @@
         },
         "spawnThread": {
           "initialDelay": 90,
-          "period": 60
+          "period": 120
         }
       },
       "dds": {

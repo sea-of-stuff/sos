@@ -138,7 +138,46 @@ public class SettingsConfigurationTest {
         testThreadSettings(cmsSettings.getPredicateThread(), 30, 60);
         testThreadSettings(cmsSettings.getPoliciesThread(), 45, 60);
         testThreadSettings(cmsSettings.getGetdataThread(), 60, 60);
-        testThreadSettings(cmsSettings.getSpawnThread(), 90, 60);
+        testThreadSettings(cmsSettings.getSpawnThread(), 90, 120);
+    }
+
+    @Test
+    public void ddsTest() throws ConfigurationException {
+
+        SettingsConfiguration settings = new SettingsConfiguration(configFile);
+
+        SettingsConfiguration.Settings.AdvancedRolesSettings.DDSSettings ddsSettings = settings.getSettingsObj().getRoles().getDds();
+        assertFalse(ddsSettings.isExposed());
+        assertEquals(ddsSettings.getCacheFile(), "manifests.cache");
+        assertEquals(ddsSettings.getIndexFile(), "dds.index");
+    }
+
+    @Test
+    public void rmsTest() throws ConfigurationException {
+
+        SettingsConfiguration settings = new SettingsConfiguration(configFile);
+
+        SettingsConfiguration.Settings.AdvancedRolesSettings.RMSSettings rmsSettings = settings.getSettingsObj().getRoles().getRms();
+        assertTrue(rmsSettings.isExposed());
+        assertEquals(rmsSettings.getCacheFile(), "usro.cache");
+    }
+
+    @Test
+    public void ndsTest() throws ConfigurationException {
+
+        SettingsConfiguration settings = new SettingsConfiguration(configFile);
+
+        SettingsConfiguration.Settings.AdvancedRolesSettings.NDSSettings ndsSettings = settings.getSettingsObj().getRoles().getNds();
+        assertFalse(ndsSettings.isExposed());
+    }
+
+    @Test
+    public void mmsTest() throws ConfigurationException {
+
+        SettingsConfiguration settings = new SettingsConfiguration(configFile);
+
+        SettingsConfiguration.Settings.AdvancedRolesSettings.MMSSettings mmsSettings = settings.getSettingsObj().getRoles().getMms();
+        assertFalse(mmsSettings.isExposed());
     }
 
     private void testThreadSettings(SettingsConfiguration.Settings.ThreadSettings threadSettings, int initDelay, int period) {
