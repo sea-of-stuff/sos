@@ -1,0 +1,34 @@
+{
+  "settings" : {
+    "guid" : "6b67f67f31908dd0e574699f163eda2cc117f7f4",
+    "roles" : {
+      "agent" : true,
+      "storage" : true,
+      "dds" : false,
+      "nds" : false,
+      "mms" : false,
+      "cms" : false,
+      "rms" : true
+    },
+    "database" : {
+      "filename" : "dump.db"
+    },
+    "rest" : {
+      "port" : 8080
+    },
+    "webDAV" : {
+      "port" : 8081
+    },
+    "webAPP" : {
+      "port" : 8082
+    },
+    "keys" : {
+      "location" : "~/sos/keys/"
+    },
+    "storage" : {
+      "type" : "local",
+      "location" : "~/sos/"
+    },
+    "bootstrapNodes" : []
+  }
+}

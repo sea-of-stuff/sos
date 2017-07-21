@@ -29,7 +29,7 @@ public class SetUpTest extends CommonTest {
     protected SOSLocalNode localSOSNode;
     protected LocalStorage localStorage;
 
-    private static final String TEST_RESOURCES_PATH = "src/test/resources/";
+    public static final String TEST_RESOURCES_PATH = "src/test/resources/";
     private static final String MOCK_PROPERTIES =
             "{\n" +
                     "    \"node\" : {\n" +

@@ -45,7 +45,6 @@ public class ExperimentConfiguration {
 
 
     // POJO for JACKSON
-
     private Experiment experiment;
 
     public Experiment getExperiment() {

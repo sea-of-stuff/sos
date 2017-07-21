@@ -56,8 +56,6 @@ public class SOSConfiguration extends Configuration {
         return getInt(PropertyKeys.NODE_PORT);
     }
 
-
-
     public boolean nodeIsAgent() throws ConfigurationException {
         checkKey(PropertyKeys.NODE_IS_AGENT);
         return getBoolean(PropertyKeys.NODE_IS_AGENT);
