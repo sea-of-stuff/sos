@@ -3,10 +3,10 @@
     "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
     "roles": {
       "storage": {
-        "exposed" : true
+        "exposed": true
       },
       "cms": {
-        "exposed" : false,
+        "exposed": false,
         "indexFile": "cms.index",
         "automatic": true,
         "predicateThread": {
@@ -15,6 +15,10 @@
 
         },
         "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
           "initialDelay": 45,
           "period": 60
         },
@@ -28,19 +32,19 @@
         }
       },
       "dds": {
-        "exposed" : false,
+        "exposed": false,
         "cacheFile": "manifests.cache",
         "indexFile": "dds.index"
       },
       "rms": {
-        "exposed" : true,
+        "exposed": true,
         "cacheFile": "usro.cache"
       },
       "nds": {
-        "exposed" : false
+        "exposed": false
       },
       "mms": {
-        "exposed" : false
+        "exposed": false
       }
     },
     "database": {
@@ -63,7 +67,6 @@
       "location": "~/sos/"
     },
     "global": {
-
       "tasks": {
         "thread": {
           "ps": 4

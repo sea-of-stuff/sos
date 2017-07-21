@@ -79,7 +79,6 @@ public class SettingsConfiguration {
         private List<NodeSettings> bootstrapNodes;
 
         // TODO - policy settings
-        // TODO - thread settings
         // TODO - turn on/off components of node
 
         public Settings() {}
@@ -457,6 +456,7 @@ public class SettingsConfiguration {
                 private boolean automatic;
                 private ThreadSettings predicateThread;
                 private ThreadSettings policiesThread;
+                private ThreadSettings checkPoliciesThread;
                 private ThreadSettings getdataThread;
                 private ThreadSettings spawnThread;
 
@@ -508,6 +508,14 @@ public class SettingsConfiguration {
 
                 public void setSpawnThread(ThreadSettings spawnThread) {
                     this.spawnThread = spawnThread;
+                }
+
+                public ThreadSettings getCheckPoliciesThread() {
+                    return checkPoliciesThread;
+                }
+
+                public void setCheckPoliciesThread(ThreadSettings checkPoliciesThread) {
+                    this.checkPoliciesThread = checkPoliciesThread;
                 }
             }
 

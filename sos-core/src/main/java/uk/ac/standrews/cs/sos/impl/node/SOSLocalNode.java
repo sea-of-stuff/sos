@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.constants.Threads;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_PERIOD;
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT;
 
 /**
@@ -49,6 +47,8 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSLocalNode extends SOSNode implements LocalNode {
+
+    public static SettingsConfiguration.Settings settings;
 
     // The local storage allows data to be written locally to this node.
     // Note, however, that the local storage could the file system of this machine as well as a Dropbox service or an FTP server
@@ -78,10 +78,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * Construct the Node instance for this machine
      *
      * @throws SOSException
-     * @throws GUIDGenerationException
      */
-    public SOSLocalNode() throws SOSException, GUIDGenerationException {
+    public SOSLocalNode() throws SOSException {
         super(Builder.settings);
+
+        SOSLocalNode.settings = Builder.settings;
         localStorage = Builder.localStorage;
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
@@ -234,10 +235,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void cacheFlusher() {
         SOS_LOG.log(LEVEL.INFO, "Cache Flusher started");
 
+        SettingsConfiguration.Settings.ThreadSettings threadSettings = SOSLocalNode.settings.getGlobal().getCacheFlusher().getThread();
+
         CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
 
-        cacheFlusherService = Executors.newScheduledThreadPool(Threads.CACHE_FLUSHER_PS);
-        cacheFlusherService.scheduleAtFixedRate(cacheFlusher, 0, CACHE_FLUSHER_PERIOD, CACHE_FLUSHER_TIME_UNIT);
+        cacheFlusherService = Executors.newScheduledThreadPool(threadSettings.getPs());
+        cacheFlusherService.scheduleAtFixedRate(cacheFlusher, threadSettings.getInitialDelay(), threadSettings.getPeriod(), CACHE_FLUSHER_TIME_UNIT);
     }
 
     /**

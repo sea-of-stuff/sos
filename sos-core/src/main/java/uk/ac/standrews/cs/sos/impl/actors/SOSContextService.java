@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
-import uk.ac.standrews.cs.sos.constants.Threads;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -37,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
-import static uk.ac.standrews.cs.sos.constants.Threads.*;
 
 /**
  * The SOSContextService managed the contexts for this node.
@@ -47,6 +47,8 @@ import static uk.ac.standrews.cs.sos.constants.Threads.*;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSContextService implements ContextService, ContextServiceExperiment {
+
+    private static final int CMS_SCHEDULER_PS = 4;
 
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
@@ -93,7 +95,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
         }
 
         // Background CRON processes
-        service = new ScheduledThreadPoolExecutor(Threads.CMS_SCHEDULER_PS);
+        service = new ScheduledThreadPoolExecutor(CMS_SCHEDULER_PS);
         runPredicatesPeriodic();
         runPoliciesPeriodic();
         checkPoliciesPeriodic();
@@ -179,12 +181,13 @@ public class SOSContextService implements ContextService, ContextServiceExperime
      */
     private void runPredicatesPeriodic() {
 
+        SettingsConfiguration.Settings.ThreadSettings predicateThreadSettings = SOSLocalNode.settings.getRoles().getCms().getPredicateThread();
+
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
             runPredicates();
 
-        }, PREDICATE_PERIODIC_INIT_DELAY_S, PREDICATE_PERIODIC_DELAY_S, TimeUnit.SECONDS);
-
+        }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
     public int runPredicates() {
@@ -224,6 +227,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
      */
     private void runPoliciesPeriodic() {
 
+        SettingsConfiguration.Settings.ThreadSettings policiesThreadSettings = SOSLocalNode.settings.getRoles().getCms().getPoliciesThread();
+
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
@@ -241,17 +246,19 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
             }
 
-        }, POLICIES_PERIODIC_INIT_DELAY_S, POLICIES_PERIODIC_DELAY_S, TimeUnit.SECONDS);
+        }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
     private void checkPoliciesPeriodic() {
+
+        SettingsConfiguration.Settings.ThreadSettings checkPoliciesThreadSettings = SOSLocalNode.settings.getRoles().getCms().getCheckPoliciesThread();
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Check that policies are still valid");
 
             // TODO - work in progress
 
-        }, POLICIES_CHECK_PERIODIC_INIT_DELAY_S, POLICIES_CHECK_PERIODIC_DELAY_S, TimeUnit.SECONDS);
+        }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
     /**
@@ -260,13 +267,15 @@ public class SOSContextService implements ContextService, ContextServiceExperime
      */
     private void getDataPeriodic() {
 
+        SettingsConfiguration.Settings.ThreadSettings getDataPeriodicThreadSettings = SOSLocalNode.settings.getRoles().getCms().getGetdataThread();
+
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Get data from other nodes - this is a periodic background thread");
 
             // TODO - iterate over context
             // TODO - for each context, context sources
 
-        }, GET_DATA_PERIODIC_INIT_DELAY_S, GET_DATA_PERIODIC_DELAY_S, TimeUnit.SECONDS);
+        }, getDataPeriodicThreadSettings.getInitialDelay(), getDataPeriodicThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
     /**
@@ -274,13 +283,15 @@ public class SOSContextService implements ContextService, ContextServiceExperime
      */
     private void spawnContextsPeriodic() {
 
+        SettingsConfiguration.Settings.ThreadSettings spawnThreadSettings = SOSLocalNode.settings.getRoles().getCms().getSpawnThread();
+
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Spawn contexts to other nodes - this is a periodic background thread");
 
             // Get contexts that have to be spawned
             // spawn contexts
 
-        }, SPAWN_PERIODIC_INIT_DELAY_S, SPAWN_PERIODIC_DELAY_S, TimeUnit.SECONDS);
+        }, spawnThreadSettings.getInitialDelay(), spawnThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
     /////////////////////

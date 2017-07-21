@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.sos.protocol;
 
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.constants.Threads;
+import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.concurrent.Executors;
@@ -22,7 +23,8 @@ public class TasksQueue {
 
     private static TasksQueue instance;
     private TasksQueue() {
-        executorService = Executors.newScheduledThreadPool(Threads.TASKS_SCHEDULER_PS);
+        SettingsConfiguration.Settings.ThreadSettings threadSettings = SOSLocalNode.settings.getGlobal().getTasks().getThread();
+        executorService = Executors.newScheduledThreadPool(threadSettings.getPs());
 
         // TODO - load tasks from db
         // for each task, submit it to the executorService

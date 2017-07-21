@@ -13,7 +13,6 @@ public class Internals {
     public static final String CMS_INDEX_FILE = "cms.index";
     public static final String USRO_CACHE_FILE = "usro.cache";
 
-    public static final int CACHE_FLUSHER_PERIOD = 600; // 10 minutes
     public static final TimeUnit CACHE_FLUSHER_TIME_UNIT = TimeUnit.SECONDS;
 
     private static final long ONE_KB = 1024L;

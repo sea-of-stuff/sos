@@ -137,6 +137,7 @@ public class SettingsConfigurationTest {
 
         testThreadSettings(cmsSettings.getPredicateThread(), 30, 60);
         testThreadSettings(cmsSettings.getPoliciesThread(), 45, 60);
+        testThreadSettings(cmsSettings.getCheckPoliciesThread(), 45, 60);
         testThreadSettings(cmsSettings.getGetdataThread(), 60, 60);
         testThreadSettings(cmsSettings.getSpawnThread(), 90, 120);
     }

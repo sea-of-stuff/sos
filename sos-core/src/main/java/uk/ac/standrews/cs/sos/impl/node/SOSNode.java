@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.node;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
@@ -35,8 +36,6 @@ public class SOSNode implements Node {
     protected boolean DB_is_mms;
     protected boolean DB_is_cms;
     protected boolean DB_is_rms;
-
-    protected SettingsConfiguration.Settings settings;
 
     // no-args constructor needed for ORMLite
     protected SOSNode() {}
@@ -86,7 +85,6 @@ public class SOSNode implements Node {
     }
 
     public SOSNode(SettingsConfiguration.Settings settings) throws NodeException {
-        this.settings = settings;
 
         try {
             this.nodeGUID = settings.getNodeGUID();
@@ -127,8 +125,7 @@ public class SOSNode implements Node {
             try {
                 nodeGUID = GUIDFactory.recreateGUID(DB_nodeid);
             } catch (GUIDGenerationException e) {
-                e.printStackTrace();
-                // TODO - throw appropriate exception
+                nodeGUID = new InvalidID();
             }
         }
 
