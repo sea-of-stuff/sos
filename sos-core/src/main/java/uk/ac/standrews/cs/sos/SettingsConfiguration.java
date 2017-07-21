@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.configuration;
+package uk.ac.standrews.cs.sos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;

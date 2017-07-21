@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.configuration;
+package uk.ac.standrews.cs.sos;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 import static uk.ac.standrews.cs.sos.SetUpTest.TEST_RESOURCES_PATH;
-import static uk.ac.standrews.cs.sos.configuration.SettingsConfiguration.HOME_PATH;
+import static uk.ac.standrews.cs.sos.SettingsConfiguration.HOME_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

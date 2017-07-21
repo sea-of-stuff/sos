@@ -4,9 +4,7 @@ import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.impl.keys.InvalidID;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
-import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
 import uk.ac.standrews.cs.sos.model.Node;
 
@@ -56,32 +54,6 @@ public class SOSNode implements Node {
         this.DB_is_mms = isMMS;
         this.DB_is_cms = isCMS;
         this.DB_is_rms = isRMS;
-    }
-
-    // REMOVEME
-    public SOSNode(SOSConfiguration configuration) throws NodeException {
-
-        try {
-            this.nodeGUID = configuration.getNodeGUID();
-
-            InetAddress hostname = InetAddress.getLocalHost();
-            int port = configuration.getNodePort();
-            this.hostAddress = new InetSocketAddress(hostname, port);
-
-            this.DB_nodeid = nodeGUID.toString();
-            this.DB_hostname = hostname.getHostAddress();
-            this.DB_port = port;
-
-            this.DB_is_agent = configuration.nodeIsAgent();
-            this.DB_is_storage = configuration.nodeIsStorage();
-            this.DB_is_dds = configuration.nodeIsDDS();
-            this.DB_is_nds = configuration.nodeIsNDS();
-            this.DB_is_mms = configuration.nodeIsMMS();
-            this.DB_is_cms = configuration.nodeIsCMS();
-            this.DB_is_rms = configuration.nodeIsRMS();
-        } catch (GUIDGenerationException | ConfigurationException | IOException e) {
-            throw new NodeException(e);
-        }
     }
 
     public SOSNode(SettingsConfiguration.Settings settings) throws NodeException {

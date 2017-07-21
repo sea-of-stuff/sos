@@ -7,13 +7,11 @@ import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Node;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +72,7 @@ public class SetUpTest extends CommonTest {
                     "    \"bootstrap\" : []\n" +
                     "}";
 
-    protected SOSConfiguration configuration;
+    protected SettingsConfiguration.Settings settings;
 
     @Override
     @BeforeMethod
@@ -84,17 +82,17 @@ public class SetUpTest extends CommonTest {
         createConfiguration();
 
         try {
-            CastoreBuilder castoreBuilder = configuration.getCastoreBuilder();
+            CastoreBuilder castoreBuilder = settings.getStore().getCastoreBuilder();
             IStorage stor = CastoreFactory.createStorage(castoreBuilder);
             localStorage = new LocalStorage(stor);
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
 
-        List<Node> bootstrapNodes = configuration.getBootstrapNodes();
+        List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes = settings.getBootstrapNodes();
 
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
-        localSOSNode = builder.configuration(configuration)
+        localSOSNode = builder.settings(settings)
                                 .internalStorage(localStorage)
                                 .bootstrapNodes(bootstrapNodes)
                                 .build();
@@ -113,6 +111,6 @@ public class SetUpTest extends CommonTest {
         File file = new File(TEST_RESOURCES_PATH + "config-setup.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        configuration = new SOSConfiguration(file);
+        settings = new SettingsConfiguration(file).getSettingsObj();
     }
 }

@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.actors.Storage;
 
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.actors.Storage;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 
 import java.io.File;
@@ -92,7 +92,7 @@ public class StorageTest extends SetUpTest {
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         System.out.println(MOCK_PROPERTIES);
-        configuration = new SOSConfiguration(file);
+        settings = new SettingsConfiguration(file).getSettingsObj();
     }
 
 }

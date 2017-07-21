@@ -6,8 +6,8 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.actors.Agent;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 
@@ -155,7 +155,7 @@ public class ClientReplicationTest extends SetUpTest {
         File file = new File(TEST_RESOURCES_PATH + "config-storage.conf");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
-        configuration = new SOSConfiguration(file);
+        settings = new SettingsConfiguration(file).getSettingsObj();
     }
 
 }

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
-import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;

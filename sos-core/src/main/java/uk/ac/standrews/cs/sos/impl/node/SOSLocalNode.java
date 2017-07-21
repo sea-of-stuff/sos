@@ -1,9 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.actors.*;
-import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
-import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -251,16 +250,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * This is the builder for the SOSLocalNode.
      */
     public static class Builder {
-        private static SOSConfiguration configuration;
         private static SettingsConfiguration.Settings settings;
         private static LocalStorage localStorage;
         private static List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes;
-
-        // REMOVEME
-        public Builder configuration(SOSConfiguration configuration) {
-            Builder.configuration = configuration;
-            return this;
-        }
 
         public Builder settings(SettingsConfiguration.Settings settings) {
             Builder.settings = settings;

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.protocol;
 
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

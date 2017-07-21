@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
-import uk.ac.standrews.cs.sos.configuration.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
