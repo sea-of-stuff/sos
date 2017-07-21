@@ -43,8 +43,7 @@ public class ExperimentConfiguration {
         return JSONHelper.JsonObjMapper().convertValue(node, ExperimentConfiguration.class).getExperiment();
     }
 
-
-    // POJO for JACKSON
+    // POJO field for JACKSON
     private Experiment experiment;
 
     public Experiment getExperiment() {

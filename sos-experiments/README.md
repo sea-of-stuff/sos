@@ -2,6 +2,20 @@
 
 This module contains the code to run the experiment on the SOS.
 
+## Experiment Setup
+
+An experiment is defined by a Java class and by a bunch of experiment configuration files (see documentation below).
+The experiment class must implement that Experiment interface, which consists of five main methods.
+
+- setup
+- start
+- finish
+- collectStats
+- cleanup
+
+Each method defines a particular phase of the experiment.
+If you are writing a new experiment and extend the BaseExperiment class, then these methods will be execute as in the order above.
+
 
 ## Running an experiment via ChicShock
 
@@ -11,6 +25,7 @@ The ChicShock utility has two types of methods:
 
 - the chic methods distribute SOS application to remote nodes
 - the shock methods start the remote SOS instances
+
 
 ## Running an experiment locally
 
