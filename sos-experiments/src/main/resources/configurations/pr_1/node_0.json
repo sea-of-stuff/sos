@@ -3,12 +3,12 @@
     "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
     "roles": {
       "storage": {
-        "exposed": true
+        "exposed": false
       },
       "cms": {
         "exposed": false,
         "indexFile": "cms.index",
-        "automatic": true,
+        "automatic": false,
         "predicateThread": {
           "initialDelay": 30,
           "period": 60
@@ -41,7 +41,8 @@
         "cacheFile": "usro.cache"
       },
       "nds": {
-        "exposed": false
+        "exposed": false,
+        "startupRegistration" : false
       },
       "mms": {
         "exposed": false
@@ -74,6 +75,7 @@
       },
       "cacheFlusher": {
         "enabled" : false,
+        "maxSize": 1048576,
         "thread": {
           "ps": 1,
           "initialDelay": 0,

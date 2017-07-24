@@ -29,7 +29,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     @Override
     public void setup() throws ExperimentException {
 
-
         try {
             Instrument.instance(MeasureTYPE.CSV, OUTPUT_FOLDER + "pr1.out");
 
