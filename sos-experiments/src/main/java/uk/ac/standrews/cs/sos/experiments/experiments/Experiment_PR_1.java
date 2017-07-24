@@ -9,8 +9,11 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.instrument.Instrument;
+import uk.ac.standrews.cs.sos.instrument.MeasureTYPE;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -26,7 +29,11 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     @Override
     public void setup() throws ExperimentException {
 
+
         try {
+            Instrument.instance(MeasureTYPE.CSV, OUTPUT_FOLDER + "pr1.out");
+
+
             // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
             // TODO - put the results of the experiments in the output folder
             // for example, in this experiment I do not want to run any background threads
@@ -60,6 +67,12 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     @Override
     public void collectStats() {
         super.collectStats();
+
+        try {
+            Instrument.instance().measure("END OF EXPERIMENT PR1");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Number of entities processed by the predicate: " + counter);
     }

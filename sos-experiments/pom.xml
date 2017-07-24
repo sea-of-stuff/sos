@@ -19,6 +19,11 @@
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.standrews.cs.sos</groupId>
+            <artifactId>instrument</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
         <dependency>

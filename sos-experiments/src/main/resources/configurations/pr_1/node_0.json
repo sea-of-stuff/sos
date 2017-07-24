@@ -1,53 +1,86 @@
 {
-    "node" : {
-        "guid" : "3c9bfd93ab9a6e2ed501fc583685088cca66bac2",
-        "port" : 8080,
-        "is" : {
-            "agent" : true,
-            "storage" : true,
-            "dds" : true,
-            "nds" : true,
-            "mms" : true,
-            "cms" : true,
-            "rms" : true
+  "settings": {
+    "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
+    "roles": {
+      "storage": {
+        "exposed": true
+      },
+      "cms": {
+        "exposed": false,
+        "indexFile": "cms.index",
+        "automatic": true,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
         }
-    },
-
-    "webdav" : {
-      "port" : 8081
-    },
-
-    "webapp" : {
-      "port" : 8082
-    },
-
-    "db" : {
-        "filename" : "dump.db"
-    },
-
-    "storage" : {
-        "type" : "local",
-        "location" : "~/sos/"
-    },
-
-    "keys" : {
-        "folder" : "~/sos/keys/"
-    },
-
-    "policy" : {
-      "replication" : {
-        "factor" : 1
       },
-      "manifest" : {
-        "local" : true,
-        "remote" : false,
-        "replication" : 1
+      "dds": {
+        "exposed": false,
+        "cacheFile": "manifests.cache",
+        "indexFile": "dds.index"
       },
-      "metadata" : {
-        "replication" : 1
+      "rms": {
+        "exposed": true,
+        "cacheFile": "usro.cache"
+      },
+      "nds": {
+        "exposed": false
+      },
+      "mms": {
+        "exposed": false
       }
     },
-
-    "bootstrap" : []
-
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "~/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
+    },
+    "global": {
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "cacheFlusher": {
+        "enabled" : false,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": []
+  }
 }

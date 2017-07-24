@@ -12,6 +12,8 @@ public class Instrument {
     private MeasureTYPE measureTYPE;
     private String filename;
 
+    private static Instrument instance;
+
     public Instrument(MeasureTYPE measureTYPE, String filename) throws IOException {
         this.measureTYPE = measureTYPE;
         this.filename = filename;
@@ -25,6 +27,20 @@ public class Instrument {
                 writeHeader(bufferedWriter, new OSMeasures(), true);
             }
         }
+    }
+
+    public static Instrument instance() {
+
+        return instance;
+    }
+
+    public static Instrument instance(MeasureTYPE measureTYPE, String filename) throws IOException {
+
+        if (instance == null) {
+            instance = new Instrument(measureTYPE, filename);
+        }
+
+        return instance;
     }
 
     public void measure(String message) throws IOException {
@@ -42,13 +58,6 @@ public class Instrument {
         // TODO - measure other things...network?
     }
 
-
-
-    public void measure() throws IOException {
-
-        measure("NO MESSAGE");
-    }
-
     private void write(BufferedWriter bufferedWriter, Measure measure, boolean last) throws IOException {
 
         switch (measureTYPE) {
@@ -63,7 +72,6 @@ public class Instrument {
         }
 
         if (last) bufferedWriter.newLine();
-
     }
 
     private void writeHeader(BufferedWriter bufferedWriter, Measure measure, boolean last) throws IOException {
@@ -81,6 +89,9 @@ public class Instrument {
     }
 
     private boolean fileIsEmpty(String filename) throws IOException {
+
+        if (!new File(filename).exists()) return true;
+
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             if (br.readLine() == null) {

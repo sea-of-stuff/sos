@@ -18,22 +18,22 @@ public interface Experiment {
     /**
      * Start the actual experiment
      */
-    void start();
+    void start() throws ExperimentException;
 
     /**
      * Mark the end of the experiment
      */
-    void finish();
+    void finish() throws ExperimentException;
 
     /**
      * Cleans up any caches, data, states that are left over from the experiment
      */
-    void cleanup();
+    void cleanup() throws ExperimentException;
 
     /**
      * Collect the wanted stats to a file
      */
-    void collectStats();
+    void collectStats() throws ExperimentException;
 
     /**
      * Run all the steps for the experiment, from setup to cleanup

@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 public abstract class BaseExperiment implements Experiment {
 
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/configurations/";
+    public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/";
 
     private long start;
     private long end;
