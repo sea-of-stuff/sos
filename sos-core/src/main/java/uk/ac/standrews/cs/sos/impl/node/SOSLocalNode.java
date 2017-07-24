@@ -240,13 +240,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         SettingsConfiguration.Settings.GlobalSettings.CacheFlusherSettings cacheFlusherSettings = SOSLocalNode.settings.getGlobal().getCacheFlusher();
 
-        if (!cacheFlusherSettings.isEnabled()) return;
+        if (cacheFlusherSettings.isEnabled()) {
 
-        SettingsConfiguration.Settings.ThreadSettings threadSettings = cacheFlusherSettings.getThread();
+            SettingsConfiguration.Settings.ThreadSettings threadSettings = cacheFlusherSettings.getThread();
 
-        CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
-        cacheFlusherService = Executors.newScheduledThreadPool(threadSettings.getPs());
-        cacheFlusherService.scheduleAtFixedRate(cacheFlusher, threadSettings.getInitialDelay(), threadSettings.getPeriod(), CACHE_FLUSHER_TIME_UNIT);
+            CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
+            cacheFlusherService = Executors.newScheduledThreadPool(threadSettings.getPs());
+            cacheFlusherService.scheduleAtFixedRate(cacheFlusher, threadSettings.getInitialDelay(), threadSettings.getPeriod(), CACHE_FLUSHER_TIME_UNIT);
+        }
     }
 
     /**
