@@ -149,7 +149,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dataDiscoveryService.flush();
         storage.flush();
         usersRolesService.flush();
-
         contextService.flush();
 
         if (cacheFlusherService != null)
