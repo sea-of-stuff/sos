@@ -150,6 +150,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         storage.flush();
         usersRolesService.flush();
 
+        contextService.flush();
+
         if (cacheFlusherService != null)
             cacheFlusherService.shutdown();
 
