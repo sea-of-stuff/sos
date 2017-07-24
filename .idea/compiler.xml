@@ -12,6 +12,7 @@
         <module name="filesystem" />
         <module name="rest" />
         <module name="rest-jetty" />
+        <module name="sos-instrument" />
         <module name="web-archive" />
         <module name="web-ui" />
       </profile>
@@ -25,6 +26,7 @@
       <module name="rest" target="1.8" />
       <module name="rest-jetty" target="1.8" />
       <module name="sos" target="1.8" />
+      <module name="sos-instrument" target="1.8" />
       <module name="sos-interfaces" target="1.8" />
       <module name="web-archive" target="1.8" />
       <module name="web-ui" target="1.8" />

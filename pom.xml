@@ -18,6 +18,7 @@
         <module>sos-filesystem</module>
         <module>sos-web-archive</module>
         <module>sos-experiments</module>
+        <module>sos-instrument</module>
     </modules>
 
     <properties>
