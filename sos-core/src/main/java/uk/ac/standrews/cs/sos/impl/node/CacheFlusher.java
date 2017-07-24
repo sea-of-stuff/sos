@@ -5,8 +5,6 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_DATA_SIZE_LIMIT;
-
 /**
  * The Cache Flusher deletes all data and manifests that are safe to delete (e.g. content is replicated elsewhere)
  * The Cache Flusher can be apply as a periodic scheduled thread
@@ -16,9 +14,12 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_DATA_SIZE_LIMIT;
 public class CacheFlusher implements Runnable {
 
     private LocalStorage localStorage;
+    private long maxSize;
 
     public CacheFlusher(LocalStorage localStorage) {
         this.localStorage = localStorage;
+
+        maxSize = SOSLocalNode.settings.getGlobal().getCacheFlusher().getMaxSize();
     }
 
     @Override
@@ -41,7 +42,7 @@ public class CacheFlusher implements Runnable {
             long dataSize = datDir.getSize();
             SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Data Directory size is: " + dataSize);
 
-            return dataSize > CACHE_DATA_SIZE_LIMIT;
+            return dataSize > maxSize;
         } catch (DataStorageException e) {
             e.printStackTrace();
         }

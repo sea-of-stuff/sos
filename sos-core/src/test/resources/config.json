@@ -41,7 +41,8 @@
         "cacheFile": "usro.cache"
       },
       "nds": {
-        "exposed": false
+        "exposed": false,
+        "startupRegistration" : true
       },
       "mms": {
         "exposed": false
@@ -74,6 +75,7 @@
       },
       "cacheFlusher": {
         "enabled" : false,
+        "maxSize": 1048576,
         "thread": {
           "ps": 1,
           "initialDelay": 0,

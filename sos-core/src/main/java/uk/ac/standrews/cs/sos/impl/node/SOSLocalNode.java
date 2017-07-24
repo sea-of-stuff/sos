@@ -191,7 +191,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             InetAddress inetAddress = InetAddress.getLocalHost();
             this.hostAddress = new InetSocketAddress(inetAddress, port);
 
-            nodeDiscoveryService.registerNode(this, false);
+            if (settings.getRoles().getNds().isStartupRegistration()) {
+                nodeDiscoveryService.registerNode(this, false);
+            }
+
         } catch (UnknownHostException | NodeRegistrationException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
         }

@@ -401,7 +401,17 @@ public class SettingsConfiguration {
 
             public static class NDSSettings extends RoleSettings {
 
+                private boolean startupRegistration;
+
                 public NDSSettings() {}
+
+                public boolean isStartupRegistration() {
+                    return startupRegistration;
+                }
+
+                public void setStartupRegistration(boolean startupRegistration) {
+                    this.startupRegistration = startupRegistration;
+                }
             }
 
             public static class MMSSettings extends RoleSettings {
@@ -691,6 +701,7 @@ public class SettingsConfiguration {
 
             public static class CacheFlusherSettings extends ComponentSettings {
 
+                private long maxSize; // in Bytes
                 private ThreadSettings thread;
 
                 public CacheFlusherSettings() {}
@@ -701,6 +712,14 @@ public class SettingsConfiguration {
 
                 public void setThread(ThreadSettings thread) {
                     this.thread = thread;
+                }
+
+                public long getMaxSize() {
+                    return maxSize;
+                }
+
+                public void setMaxSize(long maxSize) {
+                    this.maxSize = maxSize;
                 }
             }
         }
