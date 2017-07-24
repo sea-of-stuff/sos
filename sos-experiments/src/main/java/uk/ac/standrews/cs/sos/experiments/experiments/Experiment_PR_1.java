@@ -33,10 +33,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         try {
             Instrument.instance(MeasureTYPE.CSV, OUTPUT_FOLDER + "pr1.out");
 
-
-            // TODO - update the config file so that it is possible to turn on/off some features of the SOSNode
-            // TODO - put the results of the experiments in the output folder
-            // for example, in this experiment I do not want to run any background threads
             File configFile = new File(CONFIGURATION_FOLDER + "pr_1/node_0.json");
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
@@ -96,8 +92,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     }
 
     public static void main(String[] args) throws ExperimentException {
-
-        // TODO - still read the experiment configuration file?
 
         Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1();
         experiment_pr_1.run();
