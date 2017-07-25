@@ -40,7 +40,7 @@
 
     <h1>List of Roles</h1>
     <ul>
-        #foreach($role in $roles)
+        #foreach($role in $services)
             <li>
                 <pre style="white-space: pre-wrap; word-wrap: break-word;">$role.toString()</pre>
             </li>

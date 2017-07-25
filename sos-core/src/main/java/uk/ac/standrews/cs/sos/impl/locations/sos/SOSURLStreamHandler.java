@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.locations.sos;
 
-import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 
 import java.io.IOException;
 import java.net.URL;

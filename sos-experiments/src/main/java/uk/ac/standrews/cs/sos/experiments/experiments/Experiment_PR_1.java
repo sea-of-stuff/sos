@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.actors.experiments.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
@@ -11,6 +10,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.Instrument;
 import uk.ac.standrews.cs.sos.instrument.MeasureTYPE;
+import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
 
 import java.io.File;
 import java.io.IOException;

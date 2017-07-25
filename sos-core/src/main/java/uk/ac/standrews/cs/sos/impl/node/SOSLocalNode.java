@@ -2,19 +2,19 @@ package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.actors.*;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.actors.*;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
+import uk.ac.standrews.cs.sos.impl.services.*;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     // If the restrictions are not satisfied, the background thread will remove any REMOVABLE content
     private ScheduledExecutorService cacheFlusherService;
 
-    // Actors for this node
+    // Services for this node
     private Agent agent;
     private Storage storage;
     private DataDiscoveryService dataDiscoveryService;
@@ -104,7 +104,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         initNDS();
         loadBootstrapNodes(Builder.bootstrapNodes);
         registerNode();
-        initActors();
+        initServices();
         cacheFlusher();
 
         SOS_LOG.log(LEVEL.INFO, "Node started");
@@ -192,7 +192,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             InetAddress inetAddress = InetAddress.getLocalHost();
             this.hostAddress = new InetSocketAddress(inetAddress, port);
 
-            if (settings.getRoles().getNds().isStartupRegistration()) {
+            if (settings.getServices().getNds().isStartupRegistration()) {
                 nodeDiscoveryService.registerNode(this, false);
             }
 
@@ -218,9 +218,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     /**
-     * Initialise all the actors for this node
+     * Initialise all the services for this node
      */
-    private void initActors() {
+    private void initServices() {
 
         dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage); // TODO - will need to pass NDS to discover other roles

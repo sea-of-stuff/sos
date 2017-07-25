@@ -6,8 +6,8 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
+import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.List;

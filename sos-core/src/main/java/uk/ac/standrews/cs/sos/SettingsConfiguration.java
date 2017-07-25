@@ -68,7 +68,7 @@ public class SettingsConfiguration {
     public static class Settings {
 
         private String guid; // TODO - have a way to save the guid to the file if it is not provided
-        private AdvancedRolesSettings roles;
+        private AdvanceServicesSettings services;
         private DatabaseSettings database;
         private RESTSettings rest;
         private WebDAVSettings webDAV;
@@ -101,12 +101,12 @@ public class SettingsConfiguration {
             }
         }
 
-        public AdvancedRolesSettings getRoles() {
-            return roles;
+        public AdvanceServicesSettings getServices() {
+            return services;
         }
 
-        public void setRoles(AdvancedRolesSettings roles) {
-            this.roles = roles;
+        public void setServices(AdvanceServicesSettings services) {
+            this.services = services;
         }
 
         public DatabaseSettings getDatabase() {
@@ -179,7 +179,7 @@ public class SettingsConfiguration {
             private String guid;
             private String hostname;
             private int port;
-            private RolesSettings roles;
+            private ServicesSettings services;
 
             public NodeSettings() {}
 
@@ -207,32 +207,32 @@ public class SettingsConfiguration {
 
             @Override
             public boolean isStorage() {
-                return roles.getStorage().isExposed();
+                return services.getStorage().isExposed();
             }
 
             @Override
             public boolean isDDS() {
-                return roles.getDds().isExposed();
+                return services.getDds().isExposed();
             }
 
             @Override
             public boolean isNDS() {
-                return roles.getNds().isExposed();
+                return services.getNds().isExposed();
             }
 
             @Override
             public boolean isMMS() {
-                return roles.getMms().isExposed();
+                return services.getMms().isExposed();
             }
 
             @Override
             public boolean isCMS() {
-                return roles.getCms().isExposed();
+                return services.getCms().isExposed();
             }
 
             @Override
             public boolean isRMS() {
-                return roles.getRms().isExposed();
+                return services.getRms().isExposed();
             }
 
             public String getHostname() {
@@ -259,15 +259,15 @@ public class SettingsConfiguration {
                 this.guid = guid;
             }
 
-            public RolesSettings getRoles() {
-                return roles;
+            public ServicesSettings getServices() {
+                return services;
             }
 
-            public void setRoles(RolesSettings roles) {
-                this.roles = roles;
+            public void setServices(ServicesSettings services) {
+                this.services = services;
             }
 
-            public static class RolesSettings {
+            public static class ServicesSettings {
 
                 private RoleSettings storage;
                 private RoleSettings dds;
@@ -324,14 +324,14 @@ public class SettingsConfiguration {
                     this.rms = rms;
                 }
 
-                public RolesSettings() {}
+                public ServicesSettings() {}
 
             }
 
         }
 
-        // Settings relative to each Role
-        public static class AdvancedRolesSettings {
+        // Settings relative to each Service
+        public static class AdvanceServicesSettings {
 
             private StorageSettings storage;
             private DDSSettings dds;
@@ -340,7 +340,7 @@ public class SettingsConfiguration {
             private CMSSettings cms;
             private RMSSettings rms;
 
-            public AdvancedRolesSettings() {}
+            public AdvanceServicesSettings() {}
 
             public StorageSettings getStorage() {
                 return storage;
@@ -622,7 +622,7 @@ public class SettingsConfiguration {
         }
 
         // These are the settings for the internal store.
-        // The InternalStorage is used by multiple Actors and component to interact with the store of this node.
+        // The InternalStorage is used by multiple services and component to interact with the store of this node.
         // The InternalStorage differs from the Storage Actor
         public static class StoreSettings {
 

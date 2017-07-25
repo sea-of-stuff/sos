@@ -70,12 +70,12 @@ public class SOSNode implements Node {
             this.DB_port = port;
 
             this.DB_is_agent = true;
-            this.DB_is_storage = settings.getRoles().getStorage().isExposed();
-            this.DB_is_dds = settings.getRoles().getDds().isExposed();
-            this.DB_is_nds = settings.getRoles().getNds().isExposed();
-            this.DB_is_mms = settings.getRoles().getMms().isExposed();
-            this.DB_is_cms = settings.getRoles().getCms().isExposed();
-            this.DB_is_rms = settings.getRoles().getRms().isExposed();
+            this.DB_is_storage = settings.getServices().getStorage().isExposed();
+            this.DB_is_dds = settings.getServices().getDds().isExposed();
+            this.DB_is_nds = settings.getServices().getNds().isExposed();
+            this.DB_is_mms = settings.getServices().getMms().isExposed();
+            this.DB_is_cms = settings.getServices().getCms().isExposed();
+            this.DB_is_rms = settings.getServices().getRms().isExposed();
 
         } catch (IOException e) {
             throw new NodeException(e);

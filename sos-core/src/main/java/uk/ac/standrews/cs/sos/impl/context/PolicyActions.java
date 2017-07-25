@@ -3,10 +3,6 @@ package uk.ac.standrews.cs.sos.impl.context;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
-import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
-import uk.ac.standrews.cs.sos.actors.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.actors.Storage;
-import uk.ac.standrews.cs.sos.actors.UsersRolesService;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -15,6 +11,10 @@ import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.UsersRolesService;
 
 /**
  * Utility methods accessible by the policies
@@ -29,7 +29,7 @@ public class PolicyActions {
     private Storage storage;
 
     /**
-     * Create a policy language utility object using the specified SOS actors
+     * Create a policy language utility object using the specified SOS services
      *
      * @param nodeDiscoveryService
      * @param dataDiscoveryService

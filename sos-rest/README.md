@@ -49,7 +49,7 @@ You can use Postman to test this REST API. A collection of standard requests is 
 
 The REST calls in this section are role-agnostics.
 
-**Get the roles of a node**
+**Get the services of a node**
 ```
 REQUEST
 GET /info
@@ -62,7 +62,7 @@ Content-type: application/json
   "guid": "GUID",
   "hostname": "ip address",
   "port": 8080,
-  "roles": {
+  "services": {
     "client": true/false,
     "store": true/false,
     "dds": true/false,
@@ -81,7 +81,7 @@ Content-type: application/json
   "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
   "hostname": "244:244:43:1",
   "port": 8080,
-  "roles": {
+  "services": {
     "client": true,
     "store": true,
     "dds": false,
@@ -193,7 +193,7 @@ Content-type: application/json
     bundles :
         [
             {
-                "type" : "cache", # TODO - cache locations should be stored within clients only, not in the store nodes. If a node plays both roles, then return different results based on role.
+                "type" : "cache", # TODO - cache locations should be stored within clients only, not in the store nodes. If a node plays both services, then return different results based on role.
                 "location" : sos://c6adc7e8-31ee-563a-8d0d-aa230690c296/23cec17e-c246-418a-8e82-fcc97d70adfe
             },
             {
@@ -239,7 +239,7 @@ PUT /node
     guid : node guid,
     ip : ipv4, ipv6 (or ips?),
     port : port (or ports?),
-    roles : [roles]
+    services : [services]
 }
 
 RESPONSE
@@ -254,7 +254,7 @@ PUT /node
     guid : c6adc7e8-31ee-563a-8d0d-aa230690c296,
     ip : 234:234:20:2,
     port: 8081,
-    roles: [STORAGE]
+    services: [STORAGE]
 }
 
 RESPONSE
@@ -264,7 +264,7 @@ HTTP/1.1 200 OK
 **Get node that matches GUID**
 ```
 REQUEST
-GET /roles?guid=GUID
+GET /services?guid=GUID
 
 RESPONSE
 HTTP/1.1 200 OK
@@ -273,7 +273,7 @@ Content-type: application/json
 {
     [
      guid : guid,
-     roles : [ROLES],
+     services : [ROLES],
      ip : ip,
      port : port
      expire: timestamp # tells the receiver that this info might not be valid after some time. useful to force callers to check on their info (not 100% sure about this)
@@ -284,7 +284,7 @@ Content-type: application/json
 Example:
 ```
 REQUEST
-GET /roles?guid=c6adc7e8-31ee-563a-8d0d-aa230690c296
+GET /services?guid=c6adc7e8-31ee-563a-8d0d-aa230690c296
 
 RESPONSE
 HTTP/1.1 200 OK
@@ -292,7 +292,7 @@ Content-type: application/json
 
 {
      guid : c6adc7e8-31ee-563a-8d0d-aa230690c296,
-     roles : [STORAGE],
+     services : [STORAGE],
      ip : 234:234:20:2,
      port : 8081
 }

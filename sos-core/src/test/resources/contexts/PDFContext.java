@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.defaults;
 
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;
+import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;

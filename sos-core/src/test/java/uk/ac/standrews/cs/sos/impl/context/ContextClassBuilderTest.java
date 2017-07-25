@@ -30,7 +30,7 @@ public class ContextClassBuilderTest {
                         "\n" +
                         "import uk.ac.standrews.cs.IGUID;\n" +
                         "import uk.ac.standrews.cs.LEVEL;\n" +
-                        "import uk.ac.standrews.cs.sos.impl.actors.SOSAgent;\n" +
+                        "import uk.ac.standrews.cs.sos.impl.services.SOSAgent;\n" +
                         "import uk.ac.standrews.cs.sos.model.NodesCollection;\n" +
                         "import uk.ac.standrews.cs.sos.model.Policy;\n" +
                         "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +

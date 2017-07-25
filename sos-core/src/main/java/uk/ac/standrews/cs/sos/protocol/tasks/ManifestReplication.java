@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.sos.actors.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
@@ -13,6 +12,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
+import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;

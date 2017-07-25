@@ -7,10 +7,10 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.actors.ContextService;
 import uk.ac.standrews.cs.sos.bindings.CMSNode;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.*;

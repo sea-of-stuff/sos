@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.actors.Storage;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -16,6 +15,7 @@ import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
+import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.*;

@@ -43,17 +43,17 @@ public class SettingsConfigurationTest {
     }
 
     @Test
-    public void rolesTest() throws ConfigurationException {
+    public void servicesTest() throws ConfigurationException {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvancedRolesSettings roles = settings.getSettingsObj().getRoles();
-        assertTrue(roles.getStorage().isExposed());
-        assertFalse(roles.getDds().isExposed());
-        assertFalse(roles.getNds().isExposed());
-        assertFalse(roles.getMms().isExposed());
-        assertFalse(roles.getCms().isExposed());
-        assertTrue(roles.getRms().isExposed());
+        SettingsConfiguration.Settings.AdvanceServicesSettings services = settings.getSettingsObj().getServices();
+        assertTrue(services.getStorage().isExposed());
+        assertFalse(services.getDds().isExposed());
+        assertFalse(services.getNds().isExposed());
+        assertFalse(services.getMms().isExposed());
+        assertFalse(services.getCms().isExposed());
+        assertTrue(services.getRms().isExposed());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvancedRolesSettings.CMSSettings cmsSettings = settings.getSettingsObj().getRoles().getCms();
+        SettingsConfiguration.Settings.AdvanceServicesSettings.CMSSettings cmsSettings = settings.getSettingsObj().getServices().getCms();
         assertFalse(cmsSettings.isExposed());
         assertEquals(cmsSettings.getIndexFile(), "cms.index");
         assertTrue(cmsSettings.isAutomatic());
@@ -147,7 +147,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvancedRolesSettings.DDSSettings ddsSettings = settings.getSettingsObj().getRoles().getDds();
+        SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings = settings.getSettingsObj().getServices().getDds();
         assertFalse(ddsSettings.isExposed());
         assertEquals(ddsSettings.getCacheFile(), "manifests.cache");
         assertEquals(ddsSettings.getIndexFile(), "dds.index");
@@ -158,7 +158,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvancedRolesSettings.RMSSettings rmsSettings = settings.getSettingsObj().getRoles().getRms();
+        SettingsConfiguration.Settings.AdvanceServicesSettings.RMSSettings rmsSettings = settings.getSettingsObj().getServices().getRms();
         assertTrue(rmsSettings.isExposed());
         assertEquals(rmsSettings.getCacheFile(), "usro.cache");
     }
@@ -168,7 +168,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvancedRolesSettings.NDSSettings ndsSettings = settings.getSettingsObj().getRoles().getNds();
+        SettingsConfiguration.Settings.AdvanceServicesSettings.NDSSettings ndsSettings = settings.getSettingsObj().getServices().getNds();
         assertFalse(ndsSettings.isExposed());
     }
 
@@ -177,7 +177,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvancedRolesSettings.MMSSettings mmsSettings = settings.getSettingsObj().getRoles().getMms();
+        SettingsConfiguration.Settings.AdvanceServicesSettings.MMSSettings mmsSettings = settings.getSettingsObj().getServices().getMms();
         assertFalse(mmsSettings.isExposed());
     }
 
