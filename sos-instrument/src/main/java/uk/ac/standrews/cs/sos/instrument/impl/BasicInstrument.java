@@ -8,8 +8,6 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import java.io.*;
 
 /**
- * TODO - implement singleton pattern
- * TODO - print stats in json or csv format
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class BasicInstrument implements Instrument {
