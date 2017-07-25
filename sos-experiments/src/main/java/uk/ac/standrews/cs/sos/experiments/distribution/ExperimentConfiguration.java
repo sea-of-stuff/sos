@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.experiments.distribution;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.instrument.Statistics;
+import uk.ac.standrews.cs.sos.instrument.impl.Statistics;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.File;

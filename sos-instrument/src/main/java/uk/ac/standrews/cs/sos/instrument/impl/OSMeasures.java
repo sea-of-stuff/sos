@@ -1,9 +1,10 @@
-package uk.ac.standrews.cs.sos.instrument;
+package uk.ac.standrews.cs.sos.instrument.impl;
 
 import com.jezhumble.javasysmon.JavaSysMon;
 import com.jezhumble.javasysmon.MemoryStats;
 import com.jezhumble.javasysmon.OsProcess;
 import com.jezhumble.javasysmon.ProcessInfo;
+import uk.ac.standrews.cs.sos.instrument.Measure;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

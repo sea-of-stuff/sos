@@ -1,4 +1,6 @@
-package uk.ac.standrews.cs.sos.instrument;
+package uk.ac.standrews.cs.sos.instrument.impl;
+
+import uk.ac.standrews.cs.sos.instrument.Measure;
 
 import java.time.Instant;
 
