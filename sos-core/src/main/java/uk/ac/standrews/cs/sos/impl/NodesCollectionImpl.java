@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl;
 
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
@@ -13,17 +14,17 @@ public class NodesCollectionImpl implements NodesCollection {
     private TYPE type;
     private Set<Node> nodes;
 
-    public NodesCollectionImpl(TYPE type) {
-        this.type = type;
+    public NodesCollectionImpl(TYPE type) throws NodesCollectionException {
 
-        // TODO - make sure that type is not specified
+        if (type.equals(TYPE.SPECIFIED)) throw new NodesCollectionException("Cannot use this constructor for Nodes Collection of type SPECIFIED");
+
+        this.type = type;
     }
 
     public NodesCollectionImpl(TYPE type, Set<Node> nodes) {
         this.type = type;
         this.nodes = nodes;
     }
-
 
     @Override
     public Set<Node> nodes() {

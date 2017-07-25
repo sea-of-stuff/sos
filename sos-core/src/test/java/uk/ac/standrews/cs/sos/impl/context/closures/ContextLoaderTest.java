@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -42,7 +43,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void withGUIDContextConstructorLoader() throws IOException, ContextLoaderException {
+    public void withGUIDContextConstructorLoader() throws IOException, ContextLoaderException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -63,7 +64,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void withDomainAndCodomainContextConstructorLoader() throws IOException, ContextLoaderException {
+    public void withDomainAndCodomainContextConstructorLoader() throws IOException, ContextLoaderException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -82,7 +83,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicate() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
+    public void contextWithPredicate() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -117,7 +118,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicateAndPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
+    public void contextWithPredicateAndPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -147,7 +148,7 @@ public class ContextLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicateAndMultiPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
+    public void contextWithPredicateAndMultiPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
