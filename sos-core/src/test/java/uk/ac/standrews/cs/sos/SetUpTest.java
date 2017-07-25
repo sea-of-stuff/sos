@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.List;
 
-import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -109,7 +109,7 @@ public class SetUpTest extends CommonTest {
     }
 
     protected void createConfiguration() throws ConfigurationException, IOException {
-        File file = new File(TEST_RESOURCES_PATH + "config-setup.conf");
+        File file = new File(TEST_CONFIGURATIONS_PATH + "config_setup.json");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         settings = new SettingsConfiguration(file).getSettingsObj();

@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -152,7 +153,7 @@ public class ClientReplicationTest extends SetUpTest {
 
     @Override
     protected void createConfiguration() throws ConfigurationException, IOException {
-        File file = new File(TEST_RESOURCES_PATH + "config-storage.conf");
+        File file = new File(TEST_CONFIGURATIONS_PATH + "config_storage.json");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         settings = new SettingsConfiguration(file).getSettingsObj();

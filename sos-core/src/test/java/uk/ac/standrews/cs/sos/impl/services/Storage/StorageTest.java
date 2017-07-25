@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -88,7 +90,7 @@ public class StorageTest extends SetUpTest {
 
     @Override
     protected void createConfiguration() throws ConfigurationException, IOException {
-        File file = new File(TEST_RESOURCES_PATH + "config-storage.conf");
+        File file = new File(TEST_CONFIGURATIONS_PATH + "config_storage.json");
         Files.write(file.toPath(), MOCK_PROPERTIES.getBytes());
 
         System.out.println(MOCK_PROPERTIES);

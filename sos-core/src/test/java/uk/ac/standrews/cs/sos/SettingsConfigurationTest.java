@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 import static uk.ac.standrews.cs.sos.SettingsConfiguration.HOME_PATH;
-import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -23,7 +23,7 @@ public class SettingsConfigurationTest {
 
     @BeforeMethod
     public void setUp() {
-        configFile = new File(TEST_RESOURCES_PATH + "config.json");
+        configFile = new File(TEST_CONFIGURATIONS_PATH + "config_test.json");
     }
 
     @Test
