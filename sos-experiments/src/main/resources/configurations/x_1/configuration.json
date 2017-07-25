@@ -1,6 +1,7 @@
 {
   "experiment" : {
     "name" : "Experiment X 1",
+    "description" : "UNKNOWN",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
       "iterations" : 10

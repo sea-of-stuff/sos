@@ -60,6 +60,7 @@ public class ExperimentConfiguration {
     public static class Experiment {
 
         private String name;
+        private String description;
         private Setup setup;
         private List<Node> nodes;
         private Node experimentNode;
@@ -73,6 +74,14 @@ public class ExperimentConfiguration {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         public Setup getSetup() {

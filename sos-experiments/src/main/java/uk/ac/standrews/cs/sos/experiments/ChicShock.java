@@ -45,6 +45,7 @@ public class ChicShock {
     // Just distribute the file. It won't do anything else
     public void chic() throws ChicShockException {
         System.out.println("SETTING UP EXPERIMENT: " + experimentConfiguration.getExperimentObj().getName());
+        System.out.println("Description: " + experimentConfiguration.getExperimentObj().getDescription());
 
         try {
             SOSDistribution.distribute(experimentConfiguration);
