@@ -1,0 +1,88 @@
+{
+  "settings": {
+    "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
+    "services": {
+      "storage": {
+        "exposed": true
+      },
+      "cms": {
+        "exposed": true,
+        "indexFile": "cms.index",
+        "automatic": true,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "dds": {
+        "exposed": true,
+        "cacheFile": "manifests.cache",
+        "indexFile": "dds.index"
+      },
+      "rms": {
+        "exposed": true,
+        "cacheFile": "usro.cache"
+      },
+      "nds": {
+        "exposed": true,
+        "startupRegistration" : true
+      },
+      "mms": {
+        "exposed": true
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "~/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
+    },
+    "global": {
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "cacheFlusher": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": []
+  }
+}

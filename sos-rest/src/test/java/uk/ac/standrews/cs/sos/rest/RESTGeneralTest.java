@@ -14,7 +14,7 @@ import static org.testng.Assert.assertEquals;
 public class RESTGeneralTest extends CommonRESTTest {
 
     private static final String TEST_NODE_INFO = "{\n" +
-            "  \"guid\": \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+            "  \"guid\": \"6b67f67f31908dd0e574699f163eda2cc117f7f4\",\n" +
             "  \"hostname\": \"cs-cole1-024.cs.st-andrews.ac.uk\",\n" +
             "  \"port\": 8080,\n" +
             "  \"roles\": {\n" +

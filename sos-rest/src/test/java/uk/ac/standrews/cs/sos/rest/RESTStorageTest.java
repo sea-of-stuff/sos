@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.rest.utils.HelperTest;
 
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,7 +24,7 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  \"Locations\": [\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\"\n" +
+                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -41,7 +40,7 @@ public class RESTStorageTest extends CommonRESTTest {
                     "    },\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -57,7 +56,19 @@ public class RESTStorageTest extends CommonRESTTest {
                     "    },\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
+
+    private final static String TEST_EMPTY_ATOM_MANIFEST =
+            "{\n" +
+                    "  \"Type\": \"Atom\",\n" +
+                    "  \"GUID\": \"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
+                    "  \"Locations\": [\n" +
+                    "    {\n" +
+                    "      \"Type\": \"persistent\",\n" +
+                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/da39a3ee5e6b4b0d3255bfef95601890afd80709\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -77,7 +88,7 @@ public class RESTStorageTest extends CommonRESTTest {
         response.close();
     }
 
-    @Test (expectedExceptions = ProcessingException.class)
+    @Test
     public void testStoreEmptyInputStream() throws Exception {
 
         InputStream testData = HelperTest.StringToInputStream("");
@@ -85,6 +96,15 @@ public class RESTStorageTest extends CommonRESTTest {
         target("/storage/stream")
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        Response response = target("/storage/stream")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        JSONAssert.assertEquals(TEST_EMPTY_ATOM_MANIFEST, response.readEntity(String.class), true);
+
+        response.close();
     }
 
     @Test (expectedExceptions = NullPointerException.class)

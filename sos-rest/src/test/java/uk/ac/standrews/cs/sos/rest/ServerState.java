@@ -25,9 +25,9 @@ public class ServerState {
     public SOSLocalNode sos;
     private LocalStorage localStorage;
 
-    public SOSLocalNode init(String propertyFilePath) {
+    public SOSLocalNode init(File file) {
         try {
-            SettingsConfiguration settingsConfiguration = new SettingsConfiguration(new File(propertyFilePath));
+            SettingsConfiguration settingsConfiguration = new SettingsConfiguration(file);
             return startSOS(settingsConfiguration.getSettingsObj());
 
         } catch (SOSException | ConfigurationException e) {

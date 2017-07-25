@@ -7,11 +7,14 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.RESTConfig;
 
 import javax.ws.rs.core.Application;
+import java.io.File;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest  {
+
+    public static final String TEST_RESOURCES_PATH = "src/test/resources/";
 
     protected ServerState state;
     protected RESTConfig config;
@@ -21,11 +24,10 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
     public void setUp() throws Exception {
         super.setUp();
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        String path = classLoader.getResource("config.conf").getFile();
+        File configFile = new File(TEST_RESOURCES_PATH + "config.json");
 
         state = new ServerState();
-        state.init(path);
+        state.init(configFile);
 
         config.setSOS(state.sos);
     }
