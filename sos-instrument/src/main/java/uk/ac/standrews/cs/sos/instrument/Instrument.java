@@ -5,7 +5,11 @@ package uk.ac.standrews.cs.sos.instrument;
  */
 public interface Instrument {
 
+    // TODO - use the message to instrument sos-core specific information
     void measure(String message);
 
     void measure(StatsTYPE statsTYPE, String message);
+
+    // TODO - maybe pass specific objects to collect stats from sos-core????
+    // for example, we could have a contextInstrument object to pass to the instrument
 }

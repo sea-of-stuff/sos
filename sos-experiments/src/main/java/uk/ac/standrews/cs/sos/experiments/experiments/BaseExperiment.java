@@ -22,7 +22,7 @@ public abstract class BaseExperiment implements Experiment {
 
     public static final String EXPERIMENTS_FOLDER = "sos-experiments/src/main/resources/experiments/";
     public static final String CONFIGURATION_FOLDER = "configuration/";
-    public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/";
+    public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/"; // TODO - change to experiments/data/ where the R scripts are
 
     protected SOSLocalNode node;
 
@@ -64,7 +64,8 @@ public abstract class BaseExperiment implements Experiment {
     public void cleanup() throws ExperimentException {
 
         try {
-            node.cleanup(); // TODO - this delete everything! not sure if this is a good idea ...
+            // TODO - this delete everything! not sure if this is a good idea ...
+            node.cleanup();
         } catch (DataStorageException e) {
             throw new ExperimentException();
         }

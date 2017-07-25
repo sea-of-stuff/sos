@@ -9,6 +9,8 @@ public class Statistics {
 
     private boolean predicate;
     private boolean policies;
+    private boolean io_store; // any IO operations on the store
+    private boolean network; // any network operations
 
     public Statistics() {}
 
@@ -28,6 +30,11 @@ public class Statistics {
         this.policies = policies;
     }
 
+    /**
+     * Returns true if we should collects stats about this statsTYPE
+     * @param statsTYPE
+     * @return
+     */
     public boolean isEnabled(StatsTYPE statsTYPE) {
 
         switch (statsTYPE) {
@@ -38,4 +45,5 @@ public class Statistics {
 
         return false;
     }
+
 }

@@ -55,3 +55,16 @@ Thus, we need three configuration files: one for describing the experiment and t
         |-- node_0.json     // The configuration for the local node
         |-- node_1.json         // The configuration for one of the remote nodes, as specified in configuration.json
 ```
+
+## Instrumentation
+
+Experiments are instrumented using the sos-instrument utility.
+
+It is possible to control what to instrument via the experiment configuration file.
+
+```
+"stats": {
+  "predicate": true,
+  "policies": false
+}
+```

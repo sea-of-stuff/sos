@@ -31,6 +31,11 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
         super.setup();
 
+        // TODO - notes for the experiment
+        // This experiment should be run against different types of contexts
+        // contexts should be loaded from file
+        // Instrumentation code will only measure the time to run the predicates, so we can ignore overhead time
+        // TODO - maybe I do not need the ContextServiceExperiment class anymore
         try {
             cms = (ContextServiceExperiment) node.getCMS();
 
@@ -76,7 +81,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     private void addContexts() throws Exception {
 
         // TODO - good if this is loaded from file!!!!!
-        node.getCMS().addContext("" +
+        cms.addContext("" +
                 "{\n" +
                 "    \"name\": \"All\",\n" +
                 "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
