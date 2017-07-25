@@ -31,6 +31,9 @@
       "isRemote" : false,
       "configurationfilepath" : "x_1/node_0.json"
     },
-    "stats" : "WIP"
+    "stats": {
+      "predicate": true,
+      "policies": false
+    }
   }
 }

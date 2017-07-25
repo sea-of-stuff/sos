@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.Instrument;
-import uk.ac.standrews.cs.sos.instrument.MeasureTYPE;
+import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public abstract class BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
 
         try {
-            Instrument.instance(MeasureTYPE.CSV, OUTPUT_FOLDER + getExperimentResultsFilename());
+            Instrument.instance(experiment.getStats(), OutputTYPE.CSV, OUTPUT_FOLDER + getExperimentResultsFilename());
 
             String configurationNodePath = experiment.getExperimentNode().getConfigurationFilePath();
             File configFile = new File(configurationNodePath);

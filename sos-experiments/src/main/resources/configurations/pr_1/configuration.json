@@ -12,6 +12,9 @@
       "remote": false,
       "configurationfilepath": "pr_1/node_0.json"
     },
-    "stats": "Time, CPU, Memory, etc.."
+    "stats": {
+      "predicate": true,
+      "policies": false
+    }
   }
 }

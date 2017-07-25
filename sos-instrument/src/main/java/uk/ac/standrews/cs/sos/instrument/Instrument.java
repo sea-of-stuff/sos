@@ -9,13 +9,15 @@ import java.io.*;
  */
 public class Instrument {
 
-    private MeasureTYPE measureTYPE;
+    private Statistics statistics;
+    private OutputTYPE outputTYPE;
     private String filename;
 
     private static Instrument instance;
 
-    public Instrument(MeasureTYPE measureTYPE, String filename) throws IOException {
-        this.measureTYPE = measureTYPE;
+    private Instrument(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
+        this.statistics = statistics;
+        this.outputTYPE = outputTYPE;
         this.filename = filename;
 
         boolean fileIsEmpty = fileIsEmpty(filename);
@@ -34,10 +36,10 @@ public class Instrument {
         return instance;
     }
 
-    public static Instrument instance(MeasureTYPE measureTYPE, String filename) throws IOException {
+    public static Instrument instance(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
 
         if (instance == null) {
-            instance = new Instrument(measureTYPE, filename);
+            instance = new Instrument(statistics, outputTYPE, filename);
         }
 
         return instance;
@@ -45,25 +47,34 @@ public class Instrument {
 
     public void measure(String message) {
 
-        try (FileWriter fileWriter = new FileWriter(new File(filename), true);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+       measure(StatsTYPE.any, message);
+    }
 
-            AppMeasure appMeasure = AppMeasure.measure(message);
-            write(bufferedWriter, appMeasure, false);
+    public void measure(StatsTYPE statsTYPE, String message) {
 
-            OSMeasures osMeasures = OSMeasures.measure();
-            write(bufferedWriter, osMeasures, true);
+        if (statistics.isEnabled(statsTYPE)) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            try (FileWriter fileWriter = new FileWriter(new File(filename), true);
+                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+
+                AppMeasure appMeasure = AppMeasure.measure(message);
+                write(bufferedWriter, appMeasure, false);
+
+                OSMeasures osMeasures = OSMeasures.measure();
+                write(bufferedWriter, osMeasures, true);
+
+                // TODO - measure other things...network?
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
-        // TODO - measure other things...network?
     }
 
     private void write(BufferedWriter bufferedWriter, Measure measure, boolean last) throws IOException {
 
-        switch (measureTYPE) {
+        switch (outputTYPE) {
             case STRING:
                 bufferedWriter.write(measure.toString());
                 bufferedWriter.newLine();
@@ -79,7 +90,7 @@ public class Instrument {
 
     private void writeHeader(BufferedWriter bufferedWriter, Measure measure, boolean last) throws IOException {
 
-        switch (measureTYPE) {
+        switch (outputTYPE) {
             case STRING:
                 break;
             case CSV:
@@ -107,7 +118,7 @@ public class Instrument {
 
     public static void main(String[] args) throws IOException {
 
-        new Instrument(MeasureTYPE.CSV, "TEST.json").measure("test message");
+        new Instrument(new Statistics(), OutputTYPE.CSV, "TEST.json").measure("test message");
     }
 
 

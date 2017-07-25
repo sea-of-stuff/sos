@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.Instrument;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -200,7 +201,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
     public int runPredicates() {
 
-        Instrument.instance().measure("runPredicates - START");
+        // FIXME - this should work only if in experiment mode!!!!
+        Instrument.instance().measure(StatsTYPE.predicate, "runPredicates - START");
 
         int counter = 0;
 
@@ -222,7 +224,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
             }
         }
 
-        Instrument.instance().measure("runPredicates - END");
+        // FIXME - this should work only if in experiment mode!!!!
+        Instrument.instance().measure(StatsTYPE.predicate, "runPredicates - END");
 
         return counter;
     }
