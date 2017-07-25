@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONFIGURATION_FOLDER;
+import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.EXPERIMENTS_FOLDER;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -60,7 +60,7 @@ public class ExperimentConfiguration {
     ///////////////////////////////////////
     public static class Experiment {
 
-        private String name;
+        protected String name;
         private String description;
         private Setup setup;
         private List<Node> nodes;
@@ -168,7 +168,7 @@ public class ExperimentConfiguration {
             }
 
             public String getConfigurationFilePath() {
-                return CONFIGURATION_FOLDER + configurationFilePath;
+                return EXPERIMENTS_FOLDER + configurationFilePath;
             }
 
             public void setConfigurationFilePath(String configurationFilePath) {

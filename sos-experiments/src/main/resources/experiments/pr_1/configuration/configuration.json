@@ -10,7 +10,7 @@
     "experimentnode": {
       "id": 0,
       "remote": false,
-      "configurationfilepath": "pr_1/node_0.json"
+      "configurationfilepath": "pr_1/configuration/node_0.json"
     },
     "stats": {
       "predicate": true,

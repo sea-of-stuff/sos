@@ -20,7 +20,8 @@ import java.time.Instant;
  */
 public abstract class BaseExperiment implements Experiment {
 
-    public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/configurations/";
+    public static final String EXPERIMENTS_FOLDER = "sos-experiments/src/main/resources/experiments/";
+    public static final String CONFIGURATION_FOLDER = "configuration/";
     public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/";
 
     protected SOSLocalNode node;
@@ -90,7 +91,7 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     private double nanoToSeconds(long nano) {
-        return nano /1000000000.0;
+        return nano/1000000000.0;
     }
 
     private String getExperimentResultsFilename() {

@@ -85,7 +85,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + "pr_1/configuration.json");
+        File experimentConfigurationFile = new File(EXPERIMENTS_FOLDER + "pr_1/" + CONFIGURATION_FOLDER + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
