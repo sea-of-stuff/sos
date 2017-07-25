@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.instrument.impl.BasicInstrument;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void collectStats() {
         super.collectStats();
 
-        BasicInstrument.instance().measure("END OF EXPERIMENT PR1");
+        InstrumentFactory.instance().measure("END OF EXPERIMENT PR1");
 
         System.out.println("Number of entities processed by the predicate: " + counter);
     }

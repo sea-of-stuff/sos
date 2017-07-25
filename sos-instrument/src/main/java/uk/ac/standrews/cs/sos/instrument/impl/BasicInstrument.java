@@ -16,9 +16,7 @@ public class BasicInstrument implements Instrument {
     private OutputTYPE outputTYPE;
     private String filename;
 
-    private static BasicInstrument instance;
-
-    private BasicInstrument(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
+    public BasicInstrument(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
         this.statistics = statistics;
         this.outputTYPE = outputTYPE;
         this.filename = filename;
@@ -32,24 +30,6 @@ public class BasicInstrument implements Instrument {
                 writeHeader(bufferedWriter, new OSMeasures(), true);
             }
         }
-    }
-
-    public static Instrument instance() {
-
-        if (instance == null) {
-            return new DummyInstrument();
-        }
-
-        return instance;
-    }
-
-    public static Instrument instance(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
-
-        if (instance == null) {
-            instance = new BasicInstrument(statistics, outputTYPE, filename);
-        }
-
-        return instance;
     }
 
     @Override

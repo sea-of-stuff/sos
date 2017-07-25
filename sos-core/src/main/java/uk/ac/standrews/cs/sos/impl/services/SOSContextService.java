@@ -20,8 +20,8 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.instrument.impl.BasicInstrument;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -201,7 +201,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
     public int runPredicates() {
 
-        BasicInstrument.instance().measure(StatsTYPE.predicate, "runPredicates - START");
+        InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - START");
 
         int counter = 0;
 
@@ -223,7 +223,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
             }
         }
 
-        BasicInstrument.instance().measure(StatsTYPE.predicate, "runPredicates - END");
+        InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END");
 
         return counter;
     }
@@ -240,6 +240,7 @@ public class SOSContextService implements ContextService, ContextServiceExperime
      */
     private void runPoliciesPeriodic() {
 
+        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START");
         SettingsConfiguration.Settings.ThreadSettings policiesThreadSettings = SOSLocalNode.settings.getServices().getCms().getPoliciesThread();
 
         service.scheduleWithFixedDelay(() -> {
@@ -260,6 +261,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
             }
 
         }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
+
+        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END");
     }
 
     private void checkPoliciesPeriodic() {
