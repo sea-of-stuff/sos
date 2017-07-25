@@ -144,6 +144,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         return usersRolesService;
     }
 
+
+    public void cleanup() throws DataStorageException {
+
+        localStorage.destroy();
+    }
+
     @Override
     public void kill() {
         dataDiscoveryService.flush();

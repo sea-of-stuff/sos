@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
@@ -9,13 +8,10 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.Instrument;
-import uk.ac.standrews.cs.sos.instrument.MeasureTYPE;
 import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -23,7 +19,6 @@ import java.net.URISyntaxException;
  */
 public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
-    private SOSLocalNode node;
     private ContextServiceExperiment cms;
 
     private int counter;
@@ -34,14 +29,9 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     @Override
     public void setup() throws ExperimentException {
+        super.setup();
 
         try {
-            Instrument.instance(MeasureTYPE.CSV, OUTPUT_FOLDER + "pr1.out");
-
-            File configFile = new File(CONFIGURATION_FOLDER + "pr_1/node_0.json");
-            SettingsConfiguration configuration = new SettingsConfiguration(configFile);
-
-            node = ServerState.init(configuration.getSettingsObj());
             cms = (ContextServiceExperiment) node.getCMS();
 
             addContentToNode();
@@ -69,11 +59,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void collectStats() {
         super.collectStats();
 
-        try {
-            Instrument.instance().measure("END OF EXPERIMENT PR1");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Instrument.instance().measure("END OF EXPERIMENT PR1");
 
         System.out.println("Number of entities processed by the predicate: " + counter);
     }
@@ -89,6 +75,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private void addContexts() throws Exception {
 
+        // TODO - good if this is loaded from file!!!!!
         node.getCMS().addContext("" +
                 "{\n" +
                 "    \"name\": \"All\",\n" +

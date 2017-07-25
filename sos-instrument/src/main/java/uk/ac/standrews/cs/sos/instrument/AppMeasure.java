@@ -54,11 +54,12 @@ public class AppMeasure implements Measure {
 
     @Override
     public String csvHeader() {
-        return "Time,Message,Class Name,Method Name";
+        return "Timestamp (ms),Time(UTC),Message,Class Name,Method Name";
     }
 
     @Override
     public String csv() {
-        return getNow().toString() + COMMA + getMessage() + COMMA + getStackTraceElement().getClassName() + COMMA + getStackTraceElement().getMethodName();
+        return getNow().toEpochMilli() + COMMA + getNow().toString() + COMMA + getMessage() + COMMA +
+                getStackTraceElement().getClassName() + COMMA + getStackTraceElement().getMethodName();
     }
 }

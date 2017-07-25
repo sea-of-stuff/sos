@@ -167,6 +167,9 @@
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:utilities:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: uk.ac.standrews.cs:common-test:2.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.github.mpkorstanje:simmetrics-core:4.1.1" level="project" />
+    <orderEntry type="module" module-name="sos-instrument" />
+    <orderEntry type="library" name="Maven: com.outr.javasysmon:javasysmon_2.10:0.3.4" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.3" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.18.0" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.5" level="project" />

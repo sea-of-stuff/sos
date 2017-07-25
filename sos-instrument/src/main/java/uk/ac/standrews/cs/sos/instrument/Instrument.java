@@ -43,7 +43,7 @@ public class Instrument {
         return instance;
     }
 
-    public void measure(String message) throws IOException {
+    public void measure(String message) {
 
         try (FileWriter fileWriter = new FileWriter(new File(filename), true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
@@ -53,6 +53,9 @@ public class Instrument {
 
             OSMeasures osMeasures = OSMeasures.measure();
             write(bufferedWriter, osMeasures, true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // TODO - measure other things...network?

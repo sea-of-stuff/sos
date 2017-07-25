@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
@@ -11,7 +10,6 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
 
 import java.io.File;
@@ -22,7 +20,6 @@ import java.net.URISyntaxException;
  */
 public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
-    private SOSLocalNode node;
     private ContextServiceExperiment cms;
 
     private int counter;
@@ -35,10 +32,6 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
 
         try {
-            File configFile = new File(CONFIGURATION_FOLDER + "x_1/node_0.json");
-            SettingsConfiguration configuration = new SettingsConfiguration(configFile);
-
-            node = ServerState.init(configuration.getSettingsObj());
             cms = (ContextServiceExperiment) node.getCMS();
 
             addContentToNode();

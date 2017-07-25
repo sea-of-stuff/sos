@@ -143,7 +143,7 @@ public class ExperimentConfiguration {
         public static class Node {
 
             private int id;
-            private boolean isRemote;
+            private boolean remote;
             private String configurationFilePath;
             private SSH ssh;
             private Behaviour behaviour;
@@ -159,11 +159,11 @@ public class ExperimentConfiguration {
             }
 
             public boolean isRemote() {
-                return isRemote;
+                return remote;
             }
 
             public void setRemote(boolean remote) {
-                isRemote = remote;
+                this.remote = remote;
             }
 
             public String getConfigurationFilePath() {

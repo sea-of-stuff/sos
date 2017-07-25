@@ -20,6 +20,7 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.instrument.Instrument;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -199,6 +200,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
     public int runPredicates() {
 
+        Instrument.instance().measure("runPredicates - START");
+
         int counter = 0;
 
         for (Context context : getContexts()) {
@@ -218,6 +221,8 @@ public class SOSContextService implements ContextService, ContextServiceExperime
 
             }
         }
+
+        Instrument.instance().measure("runPredicates - END");
 
         return counter;
     }
