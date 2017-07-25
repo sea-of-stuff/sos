@@ -1,8 +1,10 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
+import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -25,6 +27,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     private ContextServiceExperiment cms;
 
     private int counter;
+
+    public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) {
+        super(experimentConfiguration);
+    }
 
     @Override
     public void setup() throws ExperimentException {
@@ -90,9 +96,12 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                 "}");
     }
 
-    public static void main(String[] args) throws ExperimentException {
+    public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1();
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + "pr_1/configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
         experiment_pr_1.run();
     }
 }

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 /**
@@ -13,6 +14,12 @@ public abstract class BaseExperiment implements Experiment {
 
     private long start;
     private long end;
+
+    private ExperimentConfiguration.Experiment experiment;
+
+    public BaseExperiment(ExperimentConfiguration experimentConfiguration) {
+        this.experiment = experimentConfiguration.getExperimentObj();
+    }
 
     @Override
     public void start() {
@@ -39,12 +46,15 @@ public abstract class BaseExperiment implements Experiment {
     @Override
     public void run() throws ExperimentException {
 
-        setup();
-        start();
-        finish();
-        collectStats();
+        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
 
-        cleanup();
+            setup();
+            start();
+            finish();
+
+            collectStats();
+            cleanup();
+        }
     }
 
     private double nanoToSeconds(long nano) {

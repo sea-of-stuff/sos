@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
+import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
@@ -25,6 +26,10 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     private ContextServiceExperiment cms;
 
     private int counter;
+
+    public Experiment_X_1(ExperimentConfiguration experimentConfiguration) {
+        super(experimentConfiguration);
+    }
 
     @Override
     public void setup() throws ExperimentException {
@@ -84,10 +89,14 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException {
 
-        ChicShock chicShock = new ChicShock(CONFIGURATION_FOLDER + "pr_1/configuration.json");
+
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + "pr_1/configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.chic();
 
-        Experiment_X_1 experiment_pr_1 = new Experiment_X_1();
+        Experiment_X_1 experiment_pr_1 = new Experiment_X_1(experimentConfiguration);
         experiment_pr_1.run();
 
         chicShock.unShock();

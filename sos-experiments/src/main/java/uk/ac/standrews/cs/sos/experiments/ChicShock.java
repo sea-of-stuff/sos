@@ -17,12 +17,14 @@ import java.io.File;
  */
 public class ChicShock {
 
-    private File experimentConfigurationFile;
     private ExperimentConfiguration experimentConfiguration;
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException {
 
-        ChicShock chicShock = new ChicShock(args[0]);
+        File experimentConfigurationFile = new File(args[0]);
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        ChicShock chicShock = new ChicShock(experimentConfiguration);
 
         // DISTRIBUTE PHASE
         chicShock.chic();
@@ -37,9 +39,8 @@ public class ChicShock {
         chicShock.unChic();
     }
 
-    public ChicShock(String configurationFilePath) throws ConfigurationException {
-        experimentConfigurationFile = new File(configurationFilePath);
-        experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+    public ChicShock(ExperimentConfiguration experimentConfiguration) throws ConfigurationException {
+        this.experimentConfiguration = experimentConfiguration;
     }
 
     // Just distribute the file. It won't do anything else
