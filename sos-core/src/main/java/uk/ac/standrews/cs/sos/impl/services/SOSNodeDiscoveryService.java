@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
@@ -18,6 +19,7 @@ import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -116,11 +118,19 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         return Collections.emptySet();
     }
 
+    // TODO - return the requested nodes within that domain
     @Override
     public NodesCollection getNodes(NodesCollection domain, NodeType type) {
 
-        // TODO - return the requested nodes within that domain
-        return null;
+        Set<Node> filteredNodes = new LinkedHashSet<>();
+        for(Node node : domain.nodes()) {
+
+            // COMPARE node's type with type passed in this method
+            // add node to filteredNodes
+        }
+
+        NodesCollection retval = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, filteredNodes);
+        return retval;
     }
 
     @Override

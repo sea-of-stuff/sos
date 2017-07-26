@@ -208,7 +208,6 @@ public class SOSContextService implements ContextService {
 
     public int runPredicates() {
 
-
         int counter = 0;
 
         for (Context context : getContexts()) {
@@ -229,7 +228,6 @@ public class SOSContextService implements ContextService {
                 }
 
             }
-
 
             InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END - for context " + context.guid());
         }
