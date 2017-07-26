@@ -134,4 +134,11 @@ public class CommonPredicates {
 
     }
 
+
+    public static boolean CheckDataOnTheFly() {
+
+        // TODO - make some code that checks the data
+        return false;
+    }
+
 }

@@ -80,13 +80,18 @@ public class CommonPolicies {
     public static class DeletionPolicy implements Policy {
 
         private PolicyActions policyActions;
+        private NodesCollection codomain;
 
-        public DeletionPolicy(PolicyActions policyActions) {
+        public DeletionPolicy(PolicyActions policyActions, NodesCollection codomain) {
             this.policyActions = policyActions;
+            this.codomain = codomain;
         }
 
         @Override
         public void apply(Manifest manifest) throws PolicyException {
+
+            // TODO - change code so that we get all the nodes (within codomain) where data is
+            // and then we delete data from there
 
             IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
 
@@ -100,7 +105,7 @@ public class CommonPolicies {
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyActions.numberOfReplicas(null, manifest.guid());
+            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
             return numberReplicas == 0;
         }
     }
