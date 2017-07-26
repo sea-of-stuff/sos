@@ -154,22 +154,29 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         private void addContexts() throws Exception {
 
             switch(context_type) {
-                case ALL:
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_1.json"));
+                case ALL: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "all.json"));
                     InstrumentFactory.instance().measure("Added context c_1 " + c_1);
-                    break;
 
-                case DATA: // TODO - no idea what to do here...
-                case DATA_AND_METADATA:
-                    break;
-
-                case METADATA:
-                    IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_2.json"));
+                    IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "reject_all.json"));
                     InstrumentFactory.instance().measure("Added context c_2 " + c_2);
 
-                    IGUID c_5 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_5.json"));
-                    InstrumentFactory.instance().measure("Added context c_5 " + c_5);
                     break;
+                }
+
+                case DATA: // TODO - no idea what to do here...
+                case DATA_AND_METADATA: {
+                    break;
+                }
+
+                case METADATA: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_img.json"));
+                    InstrumentFactory.instance().measure("Added context c_1 " + c_1);
+
+                    IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_mp3.json"));
+                    InstrumentFactory.instance().measure("Added context c_2 " + c_2);
+                    break;
+                }
             }
 
         }
