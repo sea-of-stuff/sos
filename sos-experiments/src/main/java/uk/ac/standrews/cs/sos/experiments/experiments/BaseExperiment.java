@@ -20,16 +20,16 @@ import java.time.Instant;
  */
 public abstract class BaseExperiment implements Experiment {
 
-    public static final String EXPERIMENTS_FOLDER = "sos-experiments/src/main/resources/experiments/";
-    public static final String CONFIGURATION_FOLDER = "configuration/";
+    public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
     public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/"; // TODO - change to experiments/data/ where the R scripts are
+    public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
 
     protected SOSLocalNode node;
 
     private long start;
     private long end;
 
-    private ExperimentConfiguration.Experiment experiment;
+    protected ExperimentConfiguration.Experiment experiment;
 
     public BaseExperiment(ExperimentConfiguration experimentConfiguration) {
         this.experiment = experimentConfiguration.getExperimentObj();
@@ -40,7 +40,7 @@ public abstract class BaseExperiment implements Experiment {
         try {
             InstrumentFactory.instance(experiment.getStats(), OutputTYPE.CSV, OUTPUT_FOLDER + getExperimentResultsFilename());
 
-            String configurationNodePath = experiment.getExperimentNode().getConfigurationFilePath();
+            String configurationNodePath = experiment.getExperimentNode().getConfigurationFile(experiment.getName());
             File configFile = new File(configurationNodePath);
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 

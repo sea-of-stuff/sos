@@ -1,6 +1,6 @@
 {
   "experiment" : {
-    "name" : "Experiment X 1",
+    "name" : "x_1",
     "description" : "UNKNOWN",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
@@ -17,7 +17,7 @@
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "password" : "LornaMiniFAKE"
         },
-        "configurationfilepath" : "x_1/node_1.json",
+        "configurationfile" : "node_1.json",
         "behaviour": {
           "start": 0,
           "stop": -1,
@@ -29,7 +29,7 @@
     "experimentnode" : {
       "id" : 0,
       "isRemote" : false,
-      "configurationfilepath" : "x_1/node_0.json"
+      "configurationfile" : "node_0.json"
     },
     "stats": {
       "predicate": true,

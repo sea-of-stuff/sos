@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.EXPERIMENTS_FOLDER;
+import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONFIGURATION_FOLDER;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -145,7 +145,7 @@ public class ExperimentConfiguration {
 
             private int id;
             private boolean remote;
-            private String configurationFilePath;
+            private String configurationFile;
             private SSH ssh;
             private Behaviour behaviour;
 
@@ -167,12 +167,12 @@ public class ExperimentConfiguration {
                 this.remote = remote;
             }
 
-            public String getConfigurationFilePath() {
-                return EXPERIMENTS_FOLDER + configurationFilePath;
+            public String getConfigurationFile(String experimentName) {
+                return CONFIGURATION_FOLDER.replace("{experiment}", experimentName) + configurationFile;
             }
 
-            public void setConfigurationFilePath(String configurationFilePath) {
-                this.configurationFilePath = configurationFilePath;
+            public void setConfigurationFile(String configurationFile) {
+                this.configurationFile = configurationFile;
             }
 
             public SSH getSsh() {

@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
+import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -19,8 +19,7 @@ import java.net.URISyntaxException;
  */
 public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
-    private ContextServiceExperiment cms;
-
+    private ContextService cms;
     private int counter;
 
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) {
@@ -35,13 +34,13 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         // This experiment should be run against different types of contexts
         // contexts should be loaded from file
         // Instrumentation code will only measure the time to run the predicates, so we can ignore overhead time
-        // TODO - maybe I do not need the ContextServiceExperiment class anymore
         try {
-            cms = (ContextServiceExperiment) node.getCMS();
+            cms = node.getCMS();
 
             addContentToNode();
             addContexts();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExperimentException();
         }
     }
@@ -80,17 +79,13 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private void addContexts() throws Exception {
 
-        // TODO - good if this is loaded from file!!!!!
-        cms.addContext("" +
-                "{\n" +
-                "    \"name\": \"All\",\n" +
-                "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
-                "}");
+        cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_1.json"));
+        cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_2.json"));
     }
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(EXPERIMENTS_FOLDER + "pr_1/" + CONFIGURATION_FOLDER + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);

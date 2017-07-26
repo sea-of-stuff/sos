@@ -27,10 +27,10 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.services.*;
-import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -48,7 +48,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSContextService implements ContextService, ContextServiceExperiment {
+public class SOSContextService implements ContextService {
 
     private static final int CMS_SCHEDULER_PS = 4;
 
@@ -138,6 +138,13 @@ public class SOSContextService implements ContextService, ContextServiceExperime
         Context context = ContextLoader.Instance(contextName, policyActions, contextName, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         return addContext(context);
+    }
+
+    @Override
+    public IGUID addContext(File file) throws Exception {
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
+        return addContext(node.toString());
     }
 
     @Override

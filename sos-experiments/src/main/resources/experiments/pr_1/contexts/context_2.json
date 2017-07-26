@@ -1,4 +1,4 @@
 {
-  "name": "IMG/JPEG",
+  "name": "IMG_JPEG",
   "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
 }

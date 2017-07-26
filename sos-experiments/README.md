@@ -52,7 +52,7 @@ Thus, we need three configuration files: one for describing the experiment and t
 |-- configurations
     |-- x_1
         |-- configuration.json  // The configuration of the experiment
-        |-- node_0.json     // The configuration for the local node
+        |-- node_0.json         // The configuration for the local node
         |-- node_1.json         // The configuration for one of the remote nodes, as specified in configuration.json
 ```
 

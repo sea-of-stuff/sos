@@ -1,16 +1,16 @@
 {
   "experiment": {
-    "name": "Experiment PR 1",
+    "name": "pr_1",
     "description": "The experiment PR 1 investigates the performance of predicates when run against different types of contents",
     "setup": {
       "app": "sos-app/target/sos-with-dependencies.jar",
-      "iterations": 10
+      "iterations": 1
     },
     "nodes": [],
     "experimentnode": {
       "id": 0,
       "remote": false,
-      "configurationfilepath": "pr_1/configuration/node_0.json"
+      "configurationfile": "node_0.json"
     },
     "stats": {
       "predicate": true,

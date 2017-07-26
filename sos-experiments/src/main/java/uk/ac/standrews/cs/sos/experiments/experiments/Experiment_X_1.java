@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.services.experiments.ContextServiceExperiment;
+import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -20,8 +20,7 @@ import java.net.URISyntaxException;
  */
 public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
-    private ContextServiceExperiment cms;
-
+    private ContextService cms;
     private int counter;
 
     public Experiment_X_1(ExperimentConfiguration experimentConfiguration) {
@@ -32,7 +31,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
 
         try {
-            cms = (ContextServiceExperiment) node.getCMS();
+            cms = node.getCMS();
 
             addContentToNode();
             addContexts();
@@ -82,7 +81,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException {
 
-        File experimentConfigurationFile = new File(EXPERIMENTS_FOLDER + "x_1/" + CONFIGURATION_FOLDER + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "x_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);

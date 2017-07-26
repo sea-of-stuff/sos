@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
 
+import java.io.File;
 import java.util.Set;
 
 /**
@@ -35,6 +36,15 @@ public interface ContextService {
      * @throws Exception
      */
     IGUID addContext(String jsonContext) throws Exception;
+
+    /**
+     * Add a context from a file
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    IGUID addContext(File file) throws Exception;
 
     /**
      * Get the context given its guid
@@ -70,5 +80,11 @@ public interface ContextService {
      * Flushes any in-memory information into disk
      */
     void flush();
+
+    /**
+     * Run the predicates only against all the versions marked as HEADs in the node
+     * @return the total number of times that any predicate has been run
+     */
+    int runPredicates();
 
 }

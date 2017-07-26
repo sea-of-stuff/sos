@@ -14,6 +14,7 @@ public class SOSDistribution {
 
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
+        String experimentName = configuration.getExperimentObj().getName();
         String appPath = configuration.getExperimentObj().getSetup().getApp();
         System.out.println("Distributing the app at the following path: " + appPath);
 
@@ -24,7 +25,7 @@ public class SOSDistribution {
             scp.connect();
 
             scp.sendFile(appPath, REMOTE_SOS_JAR_PATH);
-            scp.sendFile(node.getConfigurationFilePath(), REMOTE_SOS_CONFIGURATION_PATH);
+            scp.sendFile(node.getConfigurationFile(experimentName), REMOTE_SOS_CONFIGURATION_PATH);
 
             scp.disconnect();
         }
@@ -84,6 +85,7 @@ public class SOSDistribution {
     public static void distributeToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
         System.out.println("Distributing the SOS-Experiment to a remote node");
 
+        String experimentName = configuration.getExperimentObj().getName();
         ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
         NetworkOperations scp = new NetworkOperations();
@@ -91,7 +93,7 @@ public class SOSDistribution {
         scp.connect();
 
         scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, REMOTE_SOS_JAR_PATH);
-        scp.sendFile(experimentNode.getConfigurationFilePath(), REMOTE_SOS_CONFIGURATION_PATH);
+        scp.sendFile(experimentNode.getConfigurationFile(experimentName), REMOTE_SOS_CONFIGURATION_PATH);
 
         scp.disconnect();
     }
