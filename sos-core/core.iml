@@ -29,7 +29,6 @@
     <orderEntry type="library" name="Maven: org.apache.tika:tika-parsers:1.16" level="project" />
     <orderEntry type="library" name="Maven: org.gagravarr:vorbis-java-tika:0.8" level="project" />
     <orderEntry type="library" name="Maven: com.healthmarketscience.jackcess:jackcess:2.1.8" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.healthmarketscience.jackcess:jackcess-encrypt:2.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.tallison:jmatio:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.james:apache-mime4j-core:0.8.1" level="project" />
@@ -199,6 +198,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: ch.qos.logback:logback-core:1.1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: janino:janino:2.5.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mock-server:mockserver-logging:3.10.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.5" level="project" />

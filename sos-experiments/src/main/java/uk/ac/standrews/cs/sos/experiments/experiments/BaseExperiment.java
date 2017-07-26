@@ -23,6 +23,7 @@ public abstract class BaseExperiment implements Experiment {
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
     public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/"; // TODO - change to experiments/data/ where the R scripts are
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
+    public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/data/";
 
     protected SOSLocalNode node;
 
@@ -51,19 +52,15 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void start() {
+    public void run() {
         start = System.nanoTime();
     }
 
     @Override
     public void finish() {
         end = System.nanoTime();
-    }
-
-    @Override
-    public void collectStats() {
         long timeToFinish = end - start;
-        System.out.println("Experiment run in " + nanoToSeconds(timeToFinish) + " seconds");
+        System.out.println("Experiment process in " + nanoToSeconds(timeToFinish) + " seconds");
     }
 
     @Override
@@ -78,18 +75,23 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void run() throws ExperimentException {
+    public void process() throws ExperimentException {
 
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
+        for(int i = 0; i < numberOfTotalIterations(); i++) {
+
+            System.out.println("START ITERATION " + i);
 
             setup();
-            start();
+            run();
             finish();
 
-            collectStats();
             cleanup();
+
+            System.out.println("FINISHED ITERATION " + i);
         }
     }
+
+    public abstract int numberOfTotalIterations();
 
     private double nanoToSeconds(long nano) {
         return nano/1000000000.0;

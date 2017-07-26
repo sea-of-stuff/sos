@@ -349,6 +349,7 @@ public class SOSContextService implements ContextService {
         if (!alreadyRun || maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
+            // REMOVEME - this sysout line is here only for testing and debugging reasons
             System.out.println("\t\tContext " + context.getName() + " for version " + versionGUID + " has passed: " + passed);
 
             ContextContent content = new ContextContent();

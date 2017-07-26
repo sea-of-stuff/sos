@@ -28,7 +28,6 @@
     <orderEntry type="library" name="Maven: org.apache.tika:tika-parsers:1.16" level="project" />
     <orderEntry type="library" name="Maven: org.gagravarr:vorbis-java-tika:0.8" level="project" />
     <orderEntry type="library" name="Maven: com.healthmarketscience.jackcess:jackcess:2.1.8" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.healthmarketscience.jackcess:jackcess-encrypt:2.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.tallison:jmatio:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.james:apache-mime4j-core:0.8.1" level="project" />
@@ -142,6 +141,7 @@
     <orderEntry type="library" name="Maven: com.outr.javasysmon:javasysmon_2.10:0.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.3" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.18.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="module" module-name="rest-jetty" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.3.0.M1" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />

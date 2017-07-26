@@ -21,7 +21,7 @@ public class ExperimentManager {
             Constructor constructor = myClass.getConstructor();
             Experiment instanceOfMyClass = (Experiment) constructor.newInstance();
 
-            instanceOfMyClass.run();
+            instanceOfMyClass.process();
         } catch (Exception e) {
             throw new ExperimentException();
         }

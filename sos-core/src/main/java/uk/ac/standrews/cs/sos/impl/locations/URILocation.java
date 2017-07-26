@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
+import org.apache.commons.lang.StringUtils;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.ResponseType;
@@ -25,9 +26,50 @@ public class URILocation implements Location {
     private URI uri;
 
     public URILocation(String location) throws URISyntaxException {
-        if (location.startsWith("/")) // assume this to be a local path
-            location = FILE_SCHEME + "://" + location;
-        uri = new URI(location);
+        String scheme = getScheme(location);
+        String host = getHost(scheme, location);
+        String path = getPath(scheme, location);
+
+        uri = new URI(scheme, host, path, null);
+    }
+
+    private String getScheme(String location) {
+        if (location.startsWith("/") || location.startsWith("file"))
+            return FILE_SCHEME;
+
+        if (location.startsWith("http"))
+            return HTTP_SCHEME;
+
+        if (location.startsWith("https"))
+            return HTTPS_SCHEME;
+
+        return "";
+    }
+
+    private String getHost(String scheme, String location) {
+
+        switch(scheme) {
+            case FILE_SCHEME:
+                return "localhost";
+            default:
+                return location.split("/")[2];
+        }
+    }
+
+    private String getPath(String scheme, String location) {
+
+        switch(scheme) {
+            case FILE_SCHEME:
+                if (location.startsWith("/"))
+                    return location;
+                else {
+                    int indexOfThirdSlash = StringUtils.ordinalIndexOf(location, "/", 3);
+                    return location.substring(indexOfThirdSlash);
+                }
+            default:
+                int indexOfThirdSlash = StringUtils.ordinalIndexOf(location, "/", 3);
+                return location.substring(indexOfThirdSlash);
+        }
     }
 
     @Override

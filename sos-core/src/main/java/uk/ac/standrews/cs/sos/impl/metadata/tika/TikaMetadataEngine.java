@@ -22,7 +22,7 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
     public TikaMetadata processData(Data data) throws MetadataException {
 
         AutoDetectParser parser = new AutoDetectParser();
-        BodyContentHandler handler = new BodyContentHandler();
+        BodyContentHandler handler = new BodyContentHandler(-1); // NO Limit on how much to process
         Metadata metadata = new Metadata();
 
         try (InputStream stream = data.getInputStream()) {

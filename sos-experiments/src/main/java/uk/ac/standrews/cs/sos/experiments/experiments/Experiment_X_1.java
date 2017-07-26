@@ -41,8 +41,8 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void start() {
-        super.start();
+    public void run() {
+        super.run();
 
         counter = cms.runPredicates();
     }
@@ -51,14 +51,14 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     public void finish() {
         super.finish();
 
+        System.out.println("Number of entities processed by the predicate: " + counter);
+
         ServerState.kill();
     }
 
     @Override
-    public void collectStats() {
-        super.collectStats();
-
-        System.out.println("Number of entities processed by the predicate: " + counter);
+    public int numberOfTotalIterations() {
+        return 0; // FIXME
     }
 
     private void addContentToNode() throws URISyntaxException {
@@ -88,7 +88,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
         chicShock.chic();
 
         Experiment_X_1 experiment_pr_1 = new Experiment_X_1(experimentConfiguration);
-        experiment_pr_1.run();
+        experiment_pr_1.process();
 
         chicShock.unShock();
         chicShock.unChic();
