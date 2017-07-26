@@ -256,15 +256,15 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
 
-            for (IGUID contextGUID : inMemoryCache.getContexts()) {
+            for (Context context : getContexts()) {
 
-                Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(contextGUID);
+                Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
                 contentsToProcess.forEach((guid, row) -> {
                     if (row.predicateResult && !row.policySatisfied) {
 
-                        SOS_LOG.log(LEVEL.INFO, "Running policies for context " + contextGUID + " and Version " + guid);
-                        runPolicies(contextGUID, guid);
-                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + contextGUID + " and Version " + guid);
+                        SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid);
+                        runPolicies(context, guid);
+                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid);
                     }
                 });
 
@@ -282,7 +282,19 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Check that policies are still valid");
 
-            // TODO - work in progress
+            for (Context context : getContexts()) {
+
+                Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+                contentsToProcess.forEach((guid, row) -> {
+                    if (row.predicateResult) {
+
+                        SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid);
+                        checkPolicies(context, guid);
+                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid);
+                    }
+                });
+
+            }
 
         }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
@@ -298,8 +310,19 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Get data from other nodes - this is a periodic background thread");
 
-            // TODO - iterate over context
-            // TODO - for each context, context sources
+            for (Context context : getContexts()) {
+
+                NodesCollection domain = context.domain();
+
+                // First thing to do is to get the GUIDs for that domain
+                // TODO - Not sure how to deal with this, as the domain might be huge
+
+                // TODO - before downloading data, we should check the following:
+                // 1. do we have the data already?
+                // 2. does another node have this data and this context? if so, do we have any results from there?
+                // 3. if the answer to all the above if no, then download data from some known location
+            }
+
 
         }, getDataPeriodicThreadSettings.getInitialDelay(), getDataPeriodicThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
@@ -356,7 +379,7 @@ public class SOSContextService implements ContextService {
             content.predicateResult = passed;
             content.timestamp = System.nanoTime();
 
-            contextsContents.addMapping(contextGUID, versionGUID, content);
+            contextsContents.addUpdateMapping(contextGUID, versionGUID, content);
         }
 
     }
@@ -364,27 +387,58 @@ public class SOSContextService implements ContextService {
     /**
      * Run the policies of a given context for the specified entity
      *
-     * @param contextGUID of the context
+     * @param context
      * @param guid of the entity
      */
-    private void runPolicies(IGUID contextGUID, IGUID guid) {
+    private void runPolicies(Context context, IGUID guid) {
 
         try {
-            Context context = getContext(contextGUID);
-
             Policy[] policies = context.policies();
             for (Policy policy:policies) {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 policy.apply(manifest);
+                boolean policyIsSatisfied = policy.satisfied(manifest);
 
-                SOS_LOG.log(LEVEL.WARN, "Policy result should be updated for context " + contextGUID + " and content " + guid);
-                // TODO - update contextsContents
+                // TODO - this is a naive way to update only the policy result
+                ContextContent prev = contextsContents.get(context.guid(), guid);
+                ContextContent content = new ContextContent();
+                content.predicateResult = prev.predicateResult;
+                content.timestamp = prev.timestamp;
+                content.policySatisfied = policyIsSatisfied;
+
+                contextsContents.addUpdateMapping(context.guid(), guid, content);
             }
-        } catch (ContextNotFoundException | ManifestNotFoundException | PolicyException e) {
+
+        } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
         }
     }
+
+    private void checkPolicies(Context context, IGUID guid) {
+
+        try {
+            Policy[] policies = context.policies();
+            for (Policy policy:policies) {
+
+                Manifest manifest = dataDiscoveryService.getManifest(guid);
+                boolean policyIsSatisfied = policy.satisfied(manifest);
+
+                // TODO - this is a naive way to update only the policy result
+                ContextContent prev = contextsContents.get(context.guid(), guid);
+                ContextContent content = new ContextContent();
+                content.predicateResult = prev.predicateResult;
+                content.timestamp = prev.timestamp;
+                content.policySatisfied = policyIsSatisfied;
+
+                contextsContents.addUpdateMapping(context.guid(), guid, content);
+            }
+
+        } catch (ManifestNotFoundException | PolicyException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Check if the predicate of a context is still valid a given version or not

@@ -14,7 +14,6 @@ import java.util.Collections;
  */
 public class ReferenceContext extends BaseContext {
 
-
     public ReferenceContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
         super(policyActions, name, domain, codomain);
     }

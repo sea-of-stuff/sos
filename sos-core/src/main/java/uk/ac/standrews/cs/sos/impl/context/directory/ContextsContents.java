@@ -28,7 +28,7 @@ public class ContextsContents implements Serializable  {
         mappings = new HashMap<>();
     }
 
-    public void addMapping(IGUID context, IGUID version, ContextContent content) {
+    public void addUpdateMapping(IGUID context, IGUID version, ContextContent content) {
 
         if (!mappings.containsKey(context)) {
             mappings.put(context, new HashMap<>());

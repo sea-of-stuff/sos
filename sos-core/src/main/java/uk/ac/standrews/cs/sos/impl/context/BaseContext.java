@@ -72,6 +72,11 @@ public abstract class BaseContext implements Context {
     }
 
     @Override
+    public NodesCollection domain() {
+        return domain;
+    }
+
+    @Override
     public Policy[] policies() {
         return new Policy[EMPTY_ARRAY];
     }

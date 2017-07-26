@@ -42,6 +42,13 @@ public interface Context {
     String getName();
 
     /**
+     * Return the domain of this context
+     *
+     * @return domain of the context
+     */
+    NodesCollection domain();
+
+    /**
      * Predicate to apply against data.
      * This will define whether data belongs to this context or not
      *

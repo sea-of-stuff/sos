@@ -94,12 +94,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit {
 
-        // What to initialise in the constructor
-        // TYPE OF CONTEXT
-        // Amount of data to add <-- lots of it
-        // Type of data <-- of various kinds (would be good to measure the degree of mix)
-
-
         private CONTEXT_TYPE context_type;
 
         public ExperimentUnit(CONTEXT_TYPE context_type) {
