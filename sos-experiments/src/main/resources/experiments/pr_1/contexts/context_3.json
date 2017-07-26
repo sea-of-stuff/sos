@@ -1,0 +1,4 @@
+{
+  "name": "Greater_than_100_kb",
+  "predicate": "CommonPredicates.MetadataIntGreaterPropertyPredicate(guid, \"Content-Length\", 100000);"
+}

@@ -61,6 +61,12 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
+    public void collectStats() {
+        long timeToFinish = end - start;
+        System.out.println("Experiment run in " + nanoToSeconds(timeToFinish) + " seconds");
+    }
+
+    @Override
     public void cleanup() throws ExperimentException {
 
         try {
@@ -69,12 +75,6 @@ public abstract class BaseExperiment implements Experiment {
         } catch (DataStorageException e) {
             throw new ExperimentException();
         }
-    }
-
-    @Override
-    public void collectStats() {
-        long timeToFinish = end - start;
-        System.out.println("Experiment run in " + nanoToSeconds(timeToFinish) + " seconds");
     }
 
     @Override

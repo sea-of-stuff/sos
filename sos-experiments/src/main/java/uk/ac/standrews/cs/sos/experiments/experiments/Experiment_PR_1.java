@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
@@ -9,9 +11,11 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -68,19 +72,28 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         System.out.println("Number of entities processed by the predicate: " + counter);
     }
 
-    private void addContentToNode() throws URISyntaxException {
+    private void addContentToNode() throws URISyntaxException, MetadataException, IOException {
 
         // Add a bunch of data, versions, and so on here
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation("https://www.takemefishing.org/tmf/assets/images/fish/american-shad-464x170.png"));
-        VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
+        Metadata metadata = node.getAgent().addMetadata(atomBuilder.getLocation().getSource()); // TODO - do this in the version builder?
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadata(metadata);
 
         node.getAgent().addData(versionBuilder);
     }
 
     private void addContexts() throws Exception {
 
-        cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_1.json"));
-        cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_2.json"));
+        IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_1.json"));
+        InstrumentFactory.instance().measure("Added context c_1 " + c_1);
+
+        IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_2.json"));
+        InstrumentFactory.instance().measure("Added context c_2 " + c_2);
+
+        IGUID c_5 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "context_5.json"));
+        InstrumentFactory.instance().measure("Added context c_5 " + c_5);
     }
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {

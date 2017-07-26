@@ -86,6 +86,7 @@ public class ContextClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.SOSPredicate"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
 
         if (node.has(JSON_DEPENDENCIES)) {
             JsonNode dependencies = node.get(JSON_DEPENDENCIES);

@@ -208,11 +208,12 @@ public class SOSContextService implements ContextService {
 
     public int runPredicates() {
 
-        InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - START");
 
         int counter = 0;
 
         for (Context context : getContexts()) {
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - START - for context " + context.guid());
+
             for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
 
                 try {
@@ -228,9 +229,11 @@ public class SOSContextService implements ContextService {
                 }
 
             }
+
+
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END - for context " + context.guid());
         }
 
-        InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END");
 
         return counter;
     }
@@ -346,6 +349,7 @@ public class SOSContextService implements ContextService {
         if (!alreadyRun || maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
+            System.out.println("\t\tContext " + context.getName() + " for version " + versionGUID + " has passed: " + passed);
 
             ContextContent content = new ContextContent();
             content.predicateResult = passed;

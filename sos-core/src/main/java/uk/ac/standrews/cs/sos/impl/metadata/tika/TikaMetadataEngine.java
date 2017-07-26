@@ -38,6 +38,43 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
             throw new MetadataException("Unable to generate metadata from given data", e);
         }
 
+
+
     }
 
 }
+
+/*
+
+        // REST Server must be on:
+        // python tika-parsers/src/main/resources/org/apache/tika/parser/recognition/tf/inceptionapi.py --port 8764
+        // docs: https://wiki.apache.org/tika/TikaAndVision
+        try {
+            ObjectRecognitionParser p = new ObjectRecognitionParser();
+            p.setRecogniser("org.apache.tika.parser.recognition.tf.TensorflowRESTRecogniser");
+
+            Map<String, Param> params = new HashMap<>();
+            params.put("topN", new Param<>("topN", 5));
+            params.put("minConfidence", new Param<>("minConfidence", 0.015));
+            p.initialize(params);
+
+            BodyContentHandler handler = new BodyContentHandler();
+            Metadata metadata = new Metadata();
+
+            InputStream stream = data.getInputStream();
+
+            ParseContext parseContext = new ParseContext();
+            p.parse(stream, handler, metadata, parseContext);
+
+            System.out.println(metadata.toString());
+
+        } catch (TikaConfigException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TikaException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+ */
