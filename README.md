@@ -42,6 +42,16 @@ The sos-core module contains the code to:
 - manage metadata and contexts
 - manage the SOS Roles (agent, storage, nodeDiscoveryService, dataDiscoveryService, metadataService, etc...)
 
+### SOS Model
+
+- Manifests
+- Roles
+- Contexts
+
+### SOS Architecture
+
+- Services
+
 
 ## sos-rest
 
@@ -59,7 +69,7 @@ The mapping used is the following:
 - location :: version manifest -> compound manifest
 
 
-The sos-fs is used in the sos-app. Here, the filesystem is passed to a WebDAV server (https://github.com/stacs-srg/WebDAV-server) and the WebUI project.
+The sos-filesystem is used in the sos-app. Here, the filesystem is passed to a WebDAV server (https://github.com/stacs-srg/WebDAV-server) and the WebUI project.
 The WebDAV server exposes the sos-fs to the OS as well as to any other application that wishes to interact with the SOS.
 
 
@@ -88,7 +98,6 @@ You can also find other useful bash scripts in the script folder.
 ## Experiments
 
 The code for the experiments is found under `sos-experiments/`. Read the relevant [README](sos-experiments/README.md) for more info.
-
 
 
 ## Contributors
