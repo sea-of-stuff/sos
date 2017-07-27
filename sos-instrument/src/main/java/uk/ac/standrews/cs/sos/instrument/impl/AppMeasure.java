@@ -51,7 +51,9 @@ public class AppMeasure implements Measure {
     @Override
     public String toString() {
 
-        return "TODO";
+        return "Timestamp / Time (UTC): " + getNow().toEpochMilli() + " / " + getNow().toString() + "\n" +
+                "Message: " + getMessage() + "\n" +
+                "Class / Method name: " + getStackTraceElement().getClassName() + " / " + getStackTraceElement().getMethodName();
     }
 
     @Override

@@ -71,7 +71,7 @@ public class BasicInstrument implements Instrument {
         switch (outputTYPE) {
             case STRING:
                 bufferedWriter.write(measure.toString());
-                bufferedWriter.newLine();
+                if (last) bufferedWriter.newLine();
                 break;
             case CSV:
                 bufferedWriter.write(measure.csv());
