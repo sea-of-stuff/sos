@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
-import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
@@ -45,7 +44,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             for(int j = 0; j < CONTEXT_TYPE.values().length; j++) {
 
                 CONTEXT_TYPE context_type = CONTEXT_TYPE.values()[j];
-                units.add(new ExperimentUnit_PR1(context_type));
+                units.add(new ExperimentUnit_PR_1(context_type));
             }
         }
         Collections.shuffle(units);
@@ -54,27 +53,8 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void setup() throws ExperimentException {
-        super.setup();
-
-        if (!experimentUnitIterator.hasNext()) throw new ExperimentException();
-
-        currentExperimentUnit = experimentUnitIterator.next();
-        currentExperimentUnit.setup();
-    }
-
-    @Override
-    public void run() throws ExperimentException {
-        super.run();
-
-        currentExperimentUnit.run();
-    }
-
-    @Override
     public void finish() {
         super.finish();
-
-        ServerState.kill();
 
         InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR1. # times a predicate was run: " + counter);
     }
@@ -93,11 +73,11 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         experiment_pr_1.process();
     }
 
-    private class ExperimentUnit_PR1 implements ExperimentUnit {
+    private class ExperimentUnit_PR_1 implements ExperimentUnit {
 
         private CONTEXT_TYPE context_type;
 
-        public ExperimentUnit_PR1(CONTEXT_TYPE context_type) {
+        ExperimentUnit_PR_1(CONTEXT_TYPE context_type) {
             this.context_type = context_type;
         }
 

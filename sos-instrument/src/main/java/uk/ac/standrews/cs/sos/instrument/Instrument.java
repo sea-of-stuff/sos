@@ -5,7 +5,6 @@ package uk.ac.standrews.cs.sos.instrument;
  */
 public interface Instrument {
 
-    // TODO - use the message to instrument sos-core specific information
     void measure(String message);
 
     void measure(StatsTYPE statsTYPE, String message);

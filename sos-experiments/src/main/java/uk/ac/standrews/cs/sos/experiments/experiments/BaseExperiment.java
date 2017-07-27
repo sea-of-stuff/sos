@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.experiments.WarmUp;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Iterator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -30,6 +32,9 @@ public abstract class BaseExperiment implements Experiment {
 
     protected SOSLocalNode node;
     protected ExperimentConfiguration.Experiment experiment;
+
+    protected Iterator<ExperimentUnit> experimentUnitIterator;
+    protected ExperimentUnit currentExperimentUnit;
 
     public BaseExperiment(ExperimentConfiguration experimentConfiguration) {
         this.experiment = experimentConfiguration.getExperimentObj();
@@ -51,11 +56,18 @@ public abstract class BaseExperiment implements Experiment {
         } catch (ConfigurationException | IOException e) {
             throw new ExperimentException();
         }
+
+        if (!experimentUnitIterator.hasNext()) throw new ExperimentException();
+
+        currentExperimentUnit = experimentUnitIterator.next();
+        currentExperimentUnit.setup();
     }
 
     @Override
     public void run() throws ExperimentException {
         start = System.nanoTime();
+
+        currentExperimentUnit.run();
     }
 
     @Override
@@ -63,6 +75,8 @@ public abstract class BaseExperiment implements Experiment {
         long end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("Experiment process in " + nanoToSeconds(timeToFinish) + " seconds");
+
+        ServerState.kill();
     }
 
     @Override
