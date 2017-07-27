@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.json.RoleDeserializer;

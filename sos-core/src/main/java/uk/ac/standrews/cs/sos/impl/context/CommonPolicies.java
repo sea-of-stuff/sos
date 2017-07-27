@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;

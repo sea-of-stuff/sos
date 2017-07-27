@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.IOException;

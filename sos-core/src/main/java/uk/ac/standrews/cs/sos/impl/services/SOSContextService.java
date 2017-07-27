@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
@@ -59,7 +59,6 @@ public class SOSContextService implements ContextService {
 
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
-    private NodeDiscoveryService nodeDiscoveryService;
 
     private PolicyActions policyActions;
 
@@ -86,7 +85,6 @@ public class SOSContextService implements ContextService {
 
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
-        this.nodeDiscoveryService = nodeDiscoveryService;
 
         inMemoryCache = new ContextsCacheImpl(); // TODO - load existing contexts into memory via reflection
         contextsContents = new ContextsContents(); // TODO - load mappings/indices
@@ -228,7 +226,7 @@ public class SOSContextService implements ContextService {
                     IGUID head = dataDiscoveryService.getHead(assetInvariant);
 
                     SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
-                    runPredicate(context, head);
+                    runPredicate(context, assetInvariant, head);
                     counter++;
 
                     SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
@@ -363,10 +361,11 @@ public class SOSContextService implements ContextService {
      *  - Update the contextsContents
      *
      * @param context for which to run the predicate
+     * @param assetInvariant
      * @param versionGUID to evaluate
      */
-    private void runPredicate(Context context, IGUID versionGUID) {
-
+    private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
+        
         IGUID contextGUID = context.guid();
 
         boolean alreadyRun = contextsContents.hasBeenProcessed(contextGUID, versionGUID);
@@ -379,12 +378,13 @@ public class SOSContextService implements ContextService {
         if (!alreadyRun || maxAgeExpired) {
 
             boolean passed = context.predicate().test(versionGUID);
-            // REMOVEME - this sysout line is here only for testing and debugging reasons
-            System.out.println("\t\tContext " + context.getName() + " for version " + versionGUID + " has passed: " + passed);
+            SOS_LOG.log(LEVEL.INFO, "Context " + context.getName() + " for version " + versionGUID + " has passed: " + passed);
 
             ContextContent content = new ContextContent();
             content.predicateResult = passed;
             content.timestamp = System.nanoTime();
+
+            // TODO - if there is another entry for this asset, then remove it
 
             contextsContents.addUpdateMapping(contextGUID, versionGUID, content);
         }

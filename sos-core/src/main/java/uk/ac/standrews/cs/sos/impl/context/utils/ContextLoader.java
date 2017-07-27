@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.context.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.model.Context;

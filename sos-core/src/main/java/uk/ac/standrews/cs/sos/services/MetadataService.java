@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.services;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;

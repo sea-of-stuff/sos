@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 

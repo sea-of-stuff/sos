@@ -12,7 +12,6 @@
     <groupId>uk.ac.standrews.cs.sos</groupId>
     <artifactId>instrument</artifactId>
 
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.outr.javasysmon/javasysmon_2.10 -->
         <!-- https://github.com/jezhumble/javasysmon/ -->

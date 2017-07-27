@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.metadata;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
 /**

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 

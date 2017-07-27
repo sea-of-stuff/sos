@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.interfaces.manifests;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;

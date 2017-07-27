@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.directory;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.IGUID;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -47,6 +47,11 @@ public class ContextsContents implements Serializable  {
     public ContextContent get(IGUID context, IGUID version) {
 
         return mappings.get(context).get(version);
+    }
+
+    public void remove(IGUID context, IGUID version) {
+
+        mappings.get(context).remove(version);
     }
 
     /**

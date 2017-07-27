@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.utils;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.Logger;
+import uk.ac.standrews.cs.guid.IGUID;
 
 /**
  * This is a SOS LOG wrapper.

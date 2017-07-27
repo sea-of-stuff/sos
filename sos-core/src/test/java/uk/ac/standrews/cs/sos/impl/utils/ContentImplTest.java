@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.sos.impl.utils;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.impl.keys.KeyImpl;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.impl.keys.KeyImpl;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;

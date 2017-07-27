@@ -28,7 +28,7 @@ public class ContextClassBuilderTest {
         String MATCHING_CLAZZ =
                 "package uk.ac.standrews.cs.sos.impl.context;\n" +
                         "\n" +
-                        "import uk.ac.standrews.cs.IGUID;\n" +
+                        "import uk.ac.standrews.cs.guid.IGUID;\n" +
                         "import uk.ac.standrews.cs.LEVEL;\n" +
                         "import uk.ac.standrews.cs.sos.impl.services.SOSAgent;\n" +
                         "import uk.ac.standrews.cs.sos.model.NodesCollection;\n" +

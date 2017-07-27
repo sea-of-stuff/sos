@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.model;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 
 /**
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;

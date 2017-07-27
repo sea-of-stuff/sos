@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

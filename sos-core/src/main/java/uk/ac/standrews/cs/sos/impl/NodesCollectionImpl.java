@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 

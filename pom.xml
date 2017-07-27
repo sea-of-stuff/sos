@@ -95,6 +95,7 @@
             <groupId>uk.ac.standrews.cs</groupId>
             <artifactId>guid-sta</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>uk.ac.standrews.cs</groupId>

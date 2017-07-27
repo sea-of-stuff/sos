@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;

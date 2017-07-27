@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.filesystem.utils;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Role;
 

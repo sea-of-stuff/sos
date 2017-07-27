@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.impl.network;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.HelperTest;

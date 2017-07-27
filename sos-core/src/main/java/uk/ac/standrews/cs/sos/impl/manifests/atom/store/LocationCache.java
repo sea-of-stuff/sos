@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.atom.store;
 
-import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;

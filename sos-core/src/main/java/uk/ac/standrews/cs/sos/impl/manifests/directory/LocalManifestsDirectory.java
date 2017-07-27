@@ -1,8 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
-import uk.ac.standrews.cs.GUIDFactory;
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.IKey;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
@@ -10,8 +7,10 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.impl.keys.InvalidID;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -297,7 +296,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
         Set<String> previousVersionsStrings = previousVersions.stream()
-                .map(IKey::toString)
+                .map(IGUID::toString)
                 .collect(Collectors.toSet());
 
         appendTip(invariant, newVersion);
