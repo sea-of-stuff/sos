@@ -1,4 +1,6 @@
-# sos - Sea of Stuff
+# SOS - Sea of Stuff
+
+This is a prototype of a distributed autonomic personal data storage system.
 
 ```
       ___           ___           ___
@@ -14,11 +16,23 @@
      \__\/         \__\/         \__\/
 ```
 
-**Index**
+### Repo Organisation
 
-- [core](#sos-core)
-- [rest](#sos-rest)
-- [web-ui](#web-ui)
+```
+|-- sos
+    |-- sos-core            // The core of the SOS
+    |-- sos-rest            // REST interface for the SOS
+    |-- sos-rest-jetty      // Jetty server
+    |-- sos-filesystem      // File system used for the WebDAV server
+    |-- web-ui              // Web UI for the SOS
+    |-- sos-app             // Basic application to run a SOS node (with webui and WebDAV)
+    |-- sos-web-archive     // Example of an application using the SOS
+    |-- sos-experiments     // Code with configurations files for the experiments
+    |-- experiments         // Scripts to analyse experiments results
+    |-- sos-instrument      // Instrumentation code. Useful to get results for the experiments.
+    |-- scripts             // A bunch of useful scripts
+    |-- README.md           // This README file
+```
 
 
 ## sos-core
@@ -29,7 +43,7 @@ The sos-core module contains the code to:
 - manage the SOS Roles (agent, storage, nodeDiscoveryService, dataDiscoveryService, metadataService, etc...)
 
 
-## sos-rest and sos-rest-jetty
+## sos-rest
 
 The sos-rest project defines the REST API. This is server-agnostic.
 We provide a server implementation on top of the jersey REST API (see the sos-rest-jetty module).
@@ -54,7 +68,7 @@ The WebDAV server exposes the sos-fs to the OS as well as to any other applicati
 The web-ui exposes the sos-filesystem, similarly to the WebDAV server. However, here we are not constrained by the WebDAV protocol, thus
 we are able to demonstrate additional features of the SOS.
 
-## Running a SOS node
+## Running a SOS node via the SOS-APP
 
 ### Packaging
 
@@ -71,12 +85,14 @@ You can bootstrap multiple nodes using the `experiments.sh` bash script (see scr
 You can also find other useful bash scripts in the script folder.
 
 
+## Experiments
 
-## Ideas
+The code for the experiments is found under `sos-experiments/`. Read the relevant [README](sos-experiments/README.md) for more info.
 
-- can get geo-location using the service ipinfo.io
-example:
-curl ipinfo.io
-curl ipinfo.io/138.250.10.10
 
-more here: https://ipinfo.io/developers
+
+## Contributors
+
+This work is developed by Simone Ivan Conte ([@sic2](https://github.com/sic2)) as part of his PhD thesis.
+
+Simone is supervised by Prof. Alan Dearle and Dr. Graham Kirby, at the University of St Andrews.

@@ -51,3 +51,39 @@
 }
 ```
 
+
+
+## With custom domain
+
+```
+{
+    "name": "All",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "domain": {
+        "type" : "LOCAL",
+        "nodes" : []
+    }
+}
+```
+
+```
+{
+    "name": "All",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "domain": {
+        "type" : "SPECIFIED",
+        "nodes" : [ "0099af5c875ab6ed01665e6aef853b7ce3b74cff", "0000006e5c875ab6ed01665e6aef853b7ce3b74000"]
+    }
+}
+```
+
+```
+{
+    "name": "All",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "domain": {
+        "type" : "ANY",
+        "nodes" : []
+    }
+}
+```
