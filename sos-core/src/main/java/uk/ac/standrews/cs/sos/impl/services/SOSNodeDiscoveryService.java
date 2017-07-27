@@ -118,7 +118,6 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         return Collections.emptySet();
     }
 
-    // TODO - return the requested nodes within that domain
     @Override
     public NodesCollection getNodes(NodesCollection domain, NodeType type) {
 
@@ -127,10 +126,28 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
             // COMPARE node's type with type passed in this method
             // add node to filteredNodes
+            try {
+                Node node = getNode(nodeRef);
+                switch(type) {
+                    case STORAGE:
+                        if (node.isStorage()) filteredNodes.add(nodeRef);
+                    case NDS:
+                        if (node.isNDS()) filteredNodes.add(nodeRef);
+                    case CMS:
+                        if (node.isCMS()) filteredNodes.add(nodeRef);
+                    case DDS:
+                        if (node.isDDS()) filteredNodes.add(nodeRef);
+                    case RMS:
+                        if (node.isRMS()) filteredNodes.add(nodeRef);
+                    case MMS:
+                        if (node.isMMS()) filteredNodes.add(nodeRef);
+                }
+            } catch (NodeNotFoundException e) {
+                SOS_LOG.log(LEVEL.WARN, "Unable to get node with ref: " + nodeRef);
+            }
         }
 
-        NodesCollection retval = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, filteredNodes);
-        return retval;
+        return new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, filteredNodes);
     }
 
     @Override
