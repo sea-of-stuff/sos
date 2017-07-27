@@ -48,6 +48,9 @@ The sos-core module contains the code to:
 - Roles
 - Contexts
 
+
+Example of contexts in JSON formats can be found [here](sos-core/src/main/java/uk/ac/standrews/cs/sos/impl/context/README.md).
+
 ### SOS Architecture
 
 - Services

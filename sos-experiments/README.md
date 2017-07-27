@@ -28,7 +28,7 @@ The ChicShock utility has two types of methods:
 
 ## Running an experiment locally
 
-The experiment can also be run locally, by running the main methods for the experiments.
+The experiment can also be run locally, by running its main method.
 
 
 ## Experiment Configuration
@@ -39,9 +39,35 @@ Each experiment needs two types of configuration files:
 the application for the experiment PLUS generic information about the actual experiment
 
 **node configurations**: These are the configuration files for the nodes to be run.
-It is suggested to call the node configuration files as node_{NODE_ID}.json
+It is suggested to call the node configuration files as `node_{NODE_ID}.json`
 
-Local node configuration file should be called node_0.json
+The node where the experiment is run is configured inside of the `configuration.json` file as follows:
+
+```
+"experimentnode": {
+      "id": 0,
+      "remote": false,
+      "configurationfile": "node_0.json"
+    },
+```
+
+
+If the remote opetion is **true**, then the **ChicShock** utility will distribute it to the specified node. The configuration will then change as follows:
+
+```
+"experimentnode": {
+      "id": 0,
+      "remote": true,
+      "configurationfile": "node_0.json",
+      "ssh" : {
+                "type" : 0,
+                "host" : "cs-wifi-056.cs.st-andrews.ac.uk",
+                "user" : "lorna",
+                "known_hosts": "/Users/sic2/.ssh/known_hosts",
+                "password" : "PASSWORD"
+              }
+    },
+```
 
 
 ### Example
@@ -65,7 +91,14 @@ It is possible to control what to instrument via the experiment configuration fi
 
 ```
 "stats": {
+  "experiment": true,
   "predicate": true,
   "policies": false
 }
 ```
+
+**Available Stats**:
+
+- experiment: to enable instrument calls inside sos-instrument
+- predicate
+- policies
