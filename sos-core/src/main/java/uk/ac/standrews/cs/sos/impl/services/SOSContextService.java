@@ -1,16 +1,20 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -32,6 +36,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -54,6 +59,7 @@ public class SOSContextService implements ContextService {
 
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
+    private NodeDiscoveryService nodeDiscoveryService;
 
     private PolicyActions policyActions;
 
@@ -80,6 +86,7 @@ public class SOSContextService implements ContextService {
 
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
+        this.nodeDiscoveryService = nodeDiscoveryService;
 
         inMemoryCache = new ContextsCacheImpl(); // TODO - load existing contexts into memory via reflection
         contextsContents = new ContextsContents(); // TODO - load mappings/indices
@@ -133,9 +140,11 @@ public class SOSContextService implements ContextService {
 
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(jsonContext);
         String contextName = jsonNode.get("name").textValue();
+        NodesCollection domain = makeNodesCollection(jsonNode, "domain");
+        NodesCollection codomain = makeNodesCollection(jsonNode, "codomain");
 
         ContextLoader.LoadContext(jsonNode);
-        Context context = ContextLoader.Instance(contextName, policyActions, contextName, new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ContextLoader.Instance(contextName, policyActions, contextName, domain, codomain);
 
         return addContext(context);
     }
@@ -453,5 +462,26 @@ public class SOSContextService implements ContextService {
         long now = System.nanoTime();
 
         return (now - contentLastRun) > maxage;
+    }
+
+    private NodesCollection makeNodesCollection(JsonNode jsonNode, String tag) throws GUIDGenerationException, NodeNotFoundException, NodesCollectionException {
+        NodesCollection retval;
+        NodesCollection.TYPE type = NodesCollection.TYPE.LOCAL;
+        Set<IGUID> nodes = new LinkedHashSet<>();
+        if (jsonNode.has(tag)) {
+            type = NodesCollection.TYPE.valueOf(jsonNode.get(tag).get("type").asText());
+            JsonNode nodeRefs = jsonNode.get(tag).get("nodes");
+
+            for(JsonNode nodeRef:nodeRefs) {
+                IGUID ref = GUIDFactory.recreateGUID(nodeRef.asText());
+                nodes.add(ref);
+            }
+
+            retval = new NodesCollectionImpl(type, nodes);
+        } else {
+            retval = new NodesCollectionImpl(type);
+        }
+
+        return retval;
     }
 }

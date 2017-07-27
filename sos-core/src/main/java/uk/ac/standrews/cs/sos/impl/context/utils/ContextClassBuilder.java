@@ -66,6 +66,8 @@ public class ContextClassBuilder {
     private static final String JSON_DEPENDENCIES = "dependencies";
     private static final String JSON_PREDICATE = "predicate";
     private static final String JSON_POLICIES = "policies";
+    private static final String JSON_DOMAIN = "domain";
+    private static final String JSON_CODOMAIN = "codomain";
 
     public static String ConstructClass(JsonNode node) throws IOException {
 

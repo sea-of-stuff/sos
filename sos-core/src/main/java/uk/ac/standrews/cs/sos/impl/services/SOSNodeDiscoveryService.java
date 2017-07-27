@@ -122,8 +122,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public NodesCollection getNodes(NodesCollection domain, NodeType type) {
 
-        Set<Node> filteredNodes = new LinkedHashSet<>();
-        for(Node node : domain.nodes()) {
+        Set<IGUID> filteredNodes = new LinkedHashSet<>();
+        for(IGUID nodeRef : domain.nodesRefs()) {
 
             // COMPARE node's type with type passed in this method
             // add node to filteredNodes

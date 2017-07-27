@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
+import uk.ac.standrews.cs.IGUID;
+
 import java.util.Set;
 
 /**
@@ -8,14 +10,14 @@ import java.util.Set;
 public interface NodesCollection {
 
     /**
-     * Returns the nodes available from within this scope
+     * Returns the refs of the nodes available from within this scope
      * if the type is SPECIFIED
      *
      * If the type is LOCAL or ANY, the set of nodes returned is empty.
      *
-     * @return a set of nodes
+     * @return a set of refs to nodes
      */
-    Set<Node> nodes();
+    Set<IGUID> nodesRefs();
 
     /**
      * Get the type of the collection.

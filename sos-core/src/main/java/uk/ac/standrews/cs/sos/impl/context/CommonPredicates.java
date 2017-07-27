@@ -142,3 +142,16 @@ public class CommonPredicates {
     }
 
 }
+
+
+/**
+
+ ## Ideas for advanced predicates
+
+ - can get geo-location using the service ipinfo.io
+ example:
+ curl ipinfo.io
+ curl ipinfo.io/138.250.10.10
+
+ more here: https://ipinfo.io/developers
+ */

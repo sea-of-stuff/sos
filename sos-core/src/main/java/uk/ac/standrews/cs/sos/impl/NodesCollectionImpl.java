@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
-import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
 public class NodesCollectionImpl implements NodesCollection {
 
     private TYPE type;
-    private Set<Node> nodes;
+    private Set<IGUID> nodesRefs;
 
     public NodesCollectionImpl(TYPE type) throws NodesCollectionException {
 
@@ -21,14 +21,14 @@ public class NodesCollectionImpl implements NodesCollection {
         this.type = type;
     }
 
-    public NodesCollectionImpl(TYPE type, Set<Node> nodes) {
+    public NodesCollectionImpl(TYPE type, Set<IGUID> nodesRefs) {
         this.type = type;
-        this.nodes = nodes;
+        this.nodesRefs = nodesRefs;
     }
 
     @Override
-    public Set<Node> nodes() {
-        return nodes;
+    public Set<IGUID> nodesRefs() {
+        return nodesRefs;
     }
 
     @Override
