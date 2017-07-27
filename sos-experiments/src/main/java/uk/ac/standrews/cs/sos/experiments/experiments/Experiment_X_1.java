@@ -16,6 +16,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 /**
+ * TODO - change experiments as in PR_1, where we use ExperimentUnits and load contexts and contents from files
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Experiment_X_1 extends BaseExperiment implements Experiment {

@@ -103,8 +103,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
-
-            System.out.println("SETTING UP EXPERIMENT with context type " + context_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with context type " + context_type.name());
 
             // TODO - notes for the experiment
             // This experiment should be process against different types of contexts
@@ -123,6 +122,8 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with context type " + context_type.name());
+
             counter = cms.runPredicates();
         }
 
@@ -131,10 +132,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             File[] listOfFiles = folder.listFiles();
 
             assert listOfFiles != null;
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile()) {
 
-                    String fileLocation = listOfFiles[i].getAbsolutePath();
+                    String fileLocation = listOfFile.getAbsolutePath();
                     AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(fileLocation));
                     Metadata metadata = node.getAgent().addMetadata(atomBuilder.getLocation().getSource()); // TODO - do this in the version builder?
                     VersionBuilder versionBuilder = new VersionBuilder()
