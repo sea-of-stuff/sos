@@ -174,3 +174,4 @@ sos-core/src/test/resources/*.conf
 # Experiments
 experiments/plots
 experiments/processed
+sos-experiments/src/main/resources/output/
