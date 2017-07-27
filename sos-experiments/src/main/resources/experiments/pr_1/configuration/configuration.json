@@ -13,8 +13,10 @@
       "configurationfile": "node_0.json"
     },
     "stats": {
+      "experiment": true,
       "predicate": true,
       "policies": false
+
     }
   }
 }

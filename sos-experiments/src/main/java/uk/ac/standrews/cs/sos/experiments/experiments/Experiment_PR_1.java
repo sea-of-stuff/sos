@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
@@ -11,6 +12,7 @@ import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.services.ContextService;
@@ -43,7 +45,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             for(int j = 0; j < CONTEXT_TYPE.values().length; j++) {
 
                 CONTEXT_TYPE context_type = CONTEXT_TYPE.values()[j];
-                units.add(new ExperimentUnit(context_type));
+                units.add(new ExperimentUnit_PR1(context_type));
             }
         }
         Collections.shuffle(units);
@@ -62,7 +64,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void run() {
+    public void run() throws ExperimentException {
         super.run();
 
         currentExperimentUnit.run();
@@ -72,10 +74,9 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void finish() {
         super.finish();
 
-        System.out.println("Number of entities processed by the predicates (across all contexts): " + counter);
-        InstrumentFactory.instance().measure("END OF EXPERIMENT PR1");
-
         ServerState.kill();
+
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR1. # times a predicate was run: " + counter);
     }
 
     @Override
@@ -92,14 +93,15 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         experiment_pr_1.process();
     }
 
-    private class ExperimentUnit {
+    private class ExperimentUnit_PR1 implements ExperimentUnit {
 
         private CONTEXT_TYPE context_type;
 
-        public ExperimentUnit(CONTEXT_TYPE context_type) {
+        public ExperimentUnit_PR1(CONTEXT_TYPE context_type) {
             this.context_type = context_type;
         }
 
+        @Override
         public void setup() throws ExperimentException {
 
             System.out.println("SETTING UP EXPERIMENT with context type " + context_type.name());
@@ -119,6 +121,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             }
         }
 
+        @Override
         public void run() {
             counter = cms.runPredicates();
         }
@@ -139,7 +142,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                             .setMetadata(metadata);
 
                     Version version = node.getAgent().addData(versionBuilder);
-                    InstrumentFactory.instance().measure("Added version " + version.guid() + " from URI " + fileLocation);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid() + " from URI " + fileLocation);
                 }
             }
 
@@ -150,10 +153,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             switch(context_type) {
                 case ALL: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "all.json"));
-                    InstrumentFactory.instance().measure("Added context c_1 " + c_1);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1);
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "reject_all.json"));
-                    InstrumentFactory.instance().measure("Added context c_2 " + c_2);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2);
 
                     break;
                 }
@@ -165,10 +168,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
                 case METADATA: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_img.json"));
-                    InstrumentFactory.instance().measure("Added context c_1 " + c_1);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1);
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_mp3.json"));
-                    InstrumentFactory.instance().measure("Added context c_2 " + c_2);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2);
                     break;
                 }
             }

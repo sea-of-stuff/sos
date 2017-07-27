@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ServerState;
+import uk.ac.standrews.cs.sos.experiments.WarmUp;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -25,15 +26,16 @@ public abstract class BaseExperiment implements Experiment {
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
     public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/data/";
 
-    protected SOSLocalNode node;
-
     private long start;
-    private long end;
 
+    protected SOSLocalNode node;
     protected ExperimentConfiguration.Experiment experiment;
 
     public BaseExperiment(ExperimentConfiguration experimentConfiguration) {
         this.experiment = experimentConfiguration.getExperimentObj();
+
+        // WarmUp the JVM for the experiments to be run
+        WarmUp.run();
     }
 
     public void setup() throws ExperimentException {
@@ -52,13 +54,13 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void run() {
+    public void run() throws ExperimentException {
         start = System.nanoTime();
     }
 
     @Override
     public void finish() {
-        end = System.nanoTime();
+        long end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("Experiment process in " + nanoToSeconds(timeToFinish) + " seconds");
     }
@@ -79,15 +81,11 @@ public abstract class BaseExperiment implements Experiment {
 
         for(int i = 0; i < numberOfTotalIterations(); i++) {
 
-            System.out.println("START ITERATION " + i);
-
             setup();
             run();
             finish();
 
             cleanup();
-
-            System.out.println("FINISHED ITERATION " + i);
         }
     }
 

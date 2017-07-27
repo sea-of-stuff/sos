@@ -8,9 +8,8 @@ An experiment is defined by a Java class and by a bunch of experiment configurat
 The experiment class must implement that Experiment interface, which consists of five main methods.
 
 - setup
-- start
+- run
 - finish
-- collectStats
 - cleanup
 
 Each method defines a particular phase of the experiment.
@@ -29,7 +28,7 @@ The ChicShock utility has two types of methods:
 
 ## Running an experiment locally
 
-The experiment can also be run locally, by running main methods for the experiments.
+The experiment can also be run locally, by running the main methods for the experiments.
 
 
 ## Experiment Configuration

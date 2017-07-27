@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
  */
 public class Statistics {
 
+    private boolean experiment;
     private boolean predicate;
     private boolean policies;
     private boolean io_store; // any IO operations on the store
@@ -30,6 +31,14 @@ public class Statistics {
         this.policies = policies;
     }
 
+    public boolean isExperiment() {
+        return experiment;
+    }
+
+    public void setExperiment(boolean experiment) {
+        this.experiment = experiment;
+    }
+
     /**
      * Returns true if we should collects stats about this statsTYPE
      * @param statsTYPE
@@ -39,11 +48,11 @@ public class Statistics {
 
         switch (statsTYPE) {
             case any: return true;
+            case experiment: return isExperiment();
             case predicate: return isPredicate();
             case policies: return isPolicies();
         }
 
         return false;
     }
-
 }

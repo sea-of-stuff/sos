@@ -41,7 +41,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void run() {
+    public void run() throws ExperimentException {
         super.run();
 
         counter = cms.runPredicates();
