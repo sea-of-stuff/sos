@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -26,8 +27,8 @@ public class DataDiscoveryServiceIndexTest {
 
     @Test
     public void basicTest() {
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
         DDSIndex index = new DDSIndex();
         index.addEntry(manifestGUID, nodeGUID);
@@ -40,7 +41,7 @@ public class DataDiscoveryServiceIndexTest {
 
     @Test
     public void nullTest() {
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
         DDSIndex index = new DDSIndex();
         Set<IGUID> nodesGUIDs = index.getDDSRefs(manifestGUID);
@@ -49,8 +50,8 @@ public class DataDiscoveryServiceIndexTest {
 
     @Test
     public void evictTest() {
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
         DDSIndex index = new DDSIndex();
         index.addEntry(manifestGUID, nodeGUID);
@@ -75,8 +76,8 @@ public class DataDiscoveryServiceIndexTest {
         LocalStorage localStorage = new LocalStorage(stor);
         IDirectory cachesDir = localStorage.getNodeDirectory();
 
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
         DDSIndex ddsIndex = new DDSIndex();
         ddsIndex.addEntry(manifestGUID, nodeGUID);
@@ -112,7 +113,7 @@ public class DataDiscoveryServiceIndexTest {
         Persistence.Persist(ddsIndex, file);
 
         DDSIndex persistedIndex = (DDSIndex) Persistence.Load(file);
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
         assertNull(nodesGUIDs);
     }

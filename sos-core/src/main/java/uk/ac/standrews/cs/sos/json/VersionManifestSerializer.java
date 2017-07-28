@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
@@ -22,12 +23,12 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.VERSION.toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, versionManifest.getVersionGUID().toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_INVARIANT, versionManifest.getInvariantGUID().toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_CONTENT_GUID, versionManifest.getContentGUID().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, versionManifest.getVersionGUID().toMultiHash(BASE.HEX));
+        jsonGenerator.writeStringField(JSONConstants.KEY_INVARIANT, versionManifest.getInvariantGUID().toMultiHash(BASE.HEX));
+        jsonGenerator.writeStringField(JSONConstants.KEY_CONTENT_GUID, versionManifest.getContentGUID().toMultiHash(BASE.HEX));
 
         if (versionManifest.getMetadata() != null) {
-            jsonGenerator.writeStringField(JSONConstants.KEY_METADATA_GUID, versionManifest.getMetadata().toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_METADATA_GUID, versionManifest.getMetadata().toMultiHash(BASE.HEX));
         }
 
         if (versionManifest.getPreviousVersions() != null) {
@@ -40,7 +41,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
         String signature = versionManifest.getSignature();
         IGUID signer = versionManifest.getSigner();
         if (signature != null && !signature.isEmpty() && signer != null && !signer.isInvalid()) {
-            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNER, signer.toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNER, signer.toMultiHash(BASE.HEX));
             jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE, signature);
         }
 
@@ -50,7 +51,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
     private void serializePrevious(VersionManifest versionManifest, JsonGenerator jsonGenerator) throws IOException {
         Set<IGUID> previous = versionManifest.getPreviousVersions();
         for(IGUID prev:previous) {
-            jsonGenerator.writeString(prev.toString());
+            jsonGenerator.writeString(prev.toMultiHash(BASE.HEX));
         }
     }
 

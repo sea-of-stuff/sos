@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
@@ -22,7 +23,7 @@ public class AtomManifestSerializer extends JsonSerializer<AtomManifest> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.ATOM.toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toMultiHash(BASE.HEX));
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_LOCATIONS);
         jsonGenerator.writeStartArray();

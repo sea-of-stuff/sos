@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -55,7 +56,7 @@ public class VerifyData extends Task {
         List<InputStream> streams = Arrays.asList(challengedStream, new ByteArrayInputStream(challenge.getBytes()));
         InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
         try {
-            challengedEntity = GUIDFactory.generateGUID(stream);
+            challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
         } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }

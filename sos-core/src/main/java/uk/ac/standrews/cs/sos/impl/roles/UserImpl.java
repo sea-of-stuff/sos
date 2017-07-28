@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.impl.roles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
@@ -37,7 +39,7 @@ public class UserImpl implements User {
     private PrivateKey signaturePrivateKey;
 
     public UserImpl(String name) throws SignatureException {
-        this(GUIDFactory.generateRandomGUID(), name);
+        this(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), name);
     }
 
     UserImpl(IGUID guid, String name) throws SignatureException {
@@ -109,12 +111,12 @@ public class UserImpl implements User {
     private void manageSignatureKeys(boolean loadOnly) throws SignatureException {
 
         try {
-            File publicKeyFile = new File(KEYS_FOLDER + guid() + DigitalSignature.CERTIFICATE_EXTENSION);
+            File publicKeyFile = new File(KEYS_FOLDER + guid().toMultiHash(BASE.HEX) + DigitalSignature.CERTIFICATE_EXTENSION);
             if (signatureCertificate == null && publicKeyFile.exists()) {
                 signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
             }
 
-            File privateKeyFile = new File(KEYS_FOLDER + guid() + DigitalSignature.PRIVATE_KEY_EXTENSION);
+            File privateKeyFile = new File(KEYS_FOLDER + guid().toMultiHash(BASE.HEX) + DigitalSignature.PRIVATE_KEY_EXTENSION);
             if (signaturePrivateKey == null && privateKeyFile.exists()) {
                 signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
             }
@@ -126,7 +128,7 @@ public class UserImpl implements User {
                 signatureCertificate = keys.getPublic();
                 signaturePrivateKey = keys.getPrivate();
 
-                DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + guid()), Paths.get(KEYS_FOLDER + guid()));
+                DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + guid().toMultiHash(BASE.HEX)), Paths.get(KEYS_FOLDER + guid().toMultiHash(BASE.HEX)));
             }
 
         } catch (CryptoException e) {

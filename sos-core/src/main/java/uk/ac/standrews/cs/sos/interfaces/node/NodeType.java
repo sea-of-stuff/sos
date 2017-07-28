@@ -13,7 +13,6 @@ public enum NodeType {
     RMS("rms"),
     STORAGE("storage");
 
-
     private final String text;
 
     /**

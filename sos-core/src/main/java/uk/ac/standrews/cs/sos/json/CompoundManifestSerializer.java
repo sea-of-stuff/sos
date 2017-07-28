@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
@@ -24,7 +25,7 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
 
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.COMPOUND.toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_COMPOUND_TYPE, compoundManifest.getCompoundType().toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, compoundManifest.guid().toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, compoundManifest.guid().toMultiHash(BASE.HEX));
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_CONTENTS);
         jsonGenerator.writeStartArray();
@@ -34,7 +35,7 @@ public class CompoundManifestSerializer extends JsonSerializer<CompoundManifest>
         String signature = compoundManifest.getSignature();
         IGUID signer = compoundManifest.getSigner();
         if (signature != null && !signature.isEmpty() && signer != null && !signer.isInvalid()) {
-            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNER, signer.toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNER, signer.toMultiHash(BASE.HEX));
             jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE, signature);
         }
 

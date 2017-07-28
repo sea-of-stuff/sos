@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.utils;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
@@ -20,7 +21,7 @@ public class ManifestUtils {
 
     public static Version createDummyVersion() throws Exception {
         Role roleMocked = UserRoleUtils.BareRoleMock();
-        Version version = ManifestFactory.createVersionManifest(GUIDFactory.generateRandomGUID(), null, null, null, roleMocked);
+        Version version = ManifestFactory.createVersionManifest(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), null, null, null, roleMocked);
 
         return version;
     }
@@ -48,7 +49,7 @@ public class ManifestUtils {
 
     public static Manifest createMockManifestTypeAtom() {
         Manifest manifest = mock(Manifest.class);
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         when(manifest.guid()).thenReturn(guid);
         when(manifest.guid()).thenReturn(guid);
         when(manifest.isValid()).thenReturn(true);

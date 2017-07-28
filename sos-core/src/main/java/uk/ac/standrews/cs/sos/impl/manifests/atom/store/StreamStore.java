@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -39,7 +40,7 @@ public abstract class StreamStore extends CommonLocalStore {
 
             // TODO - this code could be improved a lot, by not opening stream twice!
             try {
-                IGUID tmpGUID = GUIDFactory.generateRandomGUID();
+                IGUID tmpGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
                 storeData(tmpGUID, new InputStreamData(inputStream));
 
                 IFile tmpCachedLocation = getAtomLocation(tmpGUID);

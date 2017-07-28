@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -38,7 +39,7 @@ public class TIPS_HEAD_Test extends CommonTest {
         directory.advanceTip(versionManifest);
 
         // Create new version for same asset and advance the tip
-        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.recreateGUID("456"), Collections.singleton(versionManifest.guid()), versionManifest.getInvariantGUID());
+        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), Collections.singleton(versionManifest.guid()), versionManifest.getInvariantGUID());
 
         directory.advanceTip(newVersionManifest);
 
@@ -52,7 +53,7 @@ public class TIPS_HEAD_Test extends CommonTest {
     void multipleTipsTest(ManifestsDirectory directory) throws Exception {
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), versionManifest.getInvariantGUID());
+        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), versionManifest.getInvariantGUID());
 
         directory.advanceTip(versionManifest);
         directory.advanceTip(siblingVersionManifest);
@@ -68,13 +69,13 @@ public class TIPS_HEAD_Test extends CommonTest {
     void advanceMultipleTipsTest(ManifestsDirectory directory) throws Exception {
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), versionManifest.getInvariantGUID());
+        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), versionManifest.getInvariantGUID());
 
         directory.advanceTip(versionManifest);
         directory.advanceTip(siblingVersionManifest);
 
         // Create new version for same asset and advance the tip
-        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.recreateGUID("789"),
+        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 new HashSet<>(Arrays.asList(versionManifest.guid(), siblingVersionManifest.guid())),
                 versionManifest.getInvariantGUID());
 

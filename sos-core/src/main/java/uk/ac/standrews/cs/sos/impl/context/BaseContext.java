@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -40,7 +41,7 @@ public abstract class BaseContext implements Context {
      * @param codomain
      */
     public BaseContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
-        this(policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain);
+        this(policyActions, GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), name, domain, codomain);
     }
 
     /**

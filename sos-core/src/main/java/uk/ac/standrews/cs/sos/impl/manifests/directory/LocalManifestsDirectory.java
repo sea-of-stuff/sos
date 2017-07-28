@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -89,7 +90,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
         try {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = TIP_TAG + invariant.toString();
+            String filename = TIP_TAG + invariant.toMultiHash(BASE.HEX);
 
             // Make sure that the tip file exists
             IFile file = localStorage.createFile(manifestsDir, filename);
@@ -122,7 +123,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toString();
+            String filename = HEAD_TAG + invariant.toMultiHash(BASE.HEX);
 
             String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
             guid = guid.replace("\n", "");
@@ -140,15 +141,14 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + version.getInvariantGUID().toString();
+            String filename = HEAD_TAG + version.getInvariantGUID().toMultiHash(BASE.HEX);
 
-            IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toString());
+            IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getInvariantGUID().toMultiHash(BASE.HEX));
             file.persist();
 
         } catch (DataStorageException | PersistenceException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -215,7 +215,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
             FileUtils.DeleteFile(backupFile);
         } catch (ManifestNotFoundException e) {
-            throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toString() + " and " + manifest.guid().toString() + "could not be merged", e);
+            throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toMultiHash(BASE.HEX) + " and " + manifest.guid().toMultiHash(BASE.HEX) + "could not be merged", e);
         }
 
     }
@@ -240,7 +240,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     private void saveToFile(Manifest manifest) throws ManifestsDirectoryException {
 
         try {
-            String manifestGUID = manifest.guid().toString();
+            String manifestGUID = manifest.guid().toMultiHash(BASE.HEX);
             IFile manifestTempFile = getManifestTempFile(manifestGUID);
 
             Data manifestData = new StringData(manifest.toString());
@@ -256,7 +256,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
     private IFile getManifestFile(IGUID guid) throws ManifestNotFoundException {
         try {
-            return getManifestFile(guid.toString());
+            return getManifestFile(guid.toMultiHash(BASE.HEX));
         } catch (DataStorageException e) {
             throw new ManifestNotFoundException("Unable to find manifest file for GUID: " + guid.toShortString());
         }
@@ -296,7 +296,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
         Set<String> previousVersionsStrings = previousVersions.stream()
-                .map(IGUID::toString)
+                .map(g -> g.toMultiHash(BASE.HEX))
                 .collect(Collectors.toSet());
 
         appendTip(invariant, newVersion);
@@ -313,7 +313,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = TIP_TAG + invariant.toString();
+            String filename = TIP_TAG + invariant.toMultiHash(BASE.HEX);
 
             // Make sure that the tip file exists
             IFile file = localStorage.createFile(manifestsDir, filename);
@@ -325,12 +325,12 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             try {
                 String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
                 Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));
-                versions.add(version.toString());
+                versions.add(version.toMultiHash(BASE.HEX));
 
                 newContent = versions.stream().collect(Collectors.joining( "\n" ));
 
             } catch (DataStorageException | DataException e) {
-                newContent = version.toString();
+                newContent = version.toMultiHash(BASE.HEX);
             }
 
             IFile fileWithContent = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
@@ -351,7 +351,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         try {
 
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = TIP_TAG + invariant.toString();
+            String filename = TIP_TAG + invariant.toMultiHash(BASE.HEX);
 
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
             Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));

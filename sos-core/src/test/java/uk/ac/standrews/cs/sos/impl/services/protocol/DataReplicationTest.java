@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -56,7 +57,7 @@ public class DataReplicationTest extends SetUpTest {
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -119,7 +120,7 @@ public class DataReplicationTest extends SetUpTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
         mockDataDiscoveryService = mock(DataDiscoveryService.class);
@@ -133,10 +134,10 @@ public class DataReplicationTest extends SetUpTest {
 
     @Test
     public void basicMockServerTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -158,10 +159,10 @@ public class DataReplicationTest extends SetUpTest {
 
     @Test
     public void replicateToNoStorageNodeTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
 
@@ -179,15 +180,15 @@ public class DataReplicationTest extends SetUpTest {
 
     @Test
     public void replicateOnlyOnceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
 
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -212,19 +213,19 @@ public class DataReplicationTest extends SetUpTest {
 
     @Test
     public void replicateOnlyOnceSecondTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
 
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
-        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true, false, false); // Won't replicate to non-storage
 
@@ -250,16 +251,16 @@ public class DataReplicationTest extends SetUpTest {
 
     @Test
     public void replicateToSameNodeTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
-        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -284,7 +285,7 @@ public class DataReplicationTest extends SetUpTest {
 
     @Test // FIXME - this test fails sometimes. Index does nt seem to be update consistently
     public void replicateSameDataTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
 

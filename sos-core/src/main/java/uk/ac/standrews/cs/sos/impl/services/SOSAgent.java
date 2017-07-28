@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -186,7 +187,7 @@ public class SOSAgent implements Agent {
         IGUID guidToCheck = manifest.guid();
         try(InputStream inputStream = manifest.contentToHash()) {
 
-            IGUID guidGenerated = GUIDFactory.generateGUID(inputStream);
+            IGUID guidGenerated = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
 
             return guidGenerated.equals(guidToCheck);
 

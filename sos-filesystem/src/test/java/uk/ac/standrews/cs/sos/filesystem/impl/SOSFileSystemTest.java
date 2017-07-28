@@ -4,6 +4,7 @@ package uk.ac.standrews.cs.sos.filesystem.impl;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.StringData;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
@@ -30,12 +31,12 @@ import static org.testng.Assert.assertNull;
  */
 public class SOSFileSystemTest {
 
-    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID());
+    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
 
     @Test
     public void constructorTest() throws Exception {
-        IGUID invariant = GUIDFactory.generateRandomGUID();
-        IGUID versionGUID = GUIDFactory.generateRandomGUID();
+        IGUID invariant = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID versionGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         Agent mockAgent = mockAgent(invariant, versionGUID);
 
         SOSFileSystem sosFS = new SOSFileSystem(mockAgent, (Version) mockAgent.getManifest(versionGUID));
@@ -44,8 +45,8 @@ public class SOSFileSystemTest {
 
     @Test
     public void newFileTest() throws Exception {
-        IGUID invariant = GUIDFactory.generateRandomGUID();
-        IGUID versionGUID = GUIDFactory.generateRandomGUID();
+        IGUID invariant = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID versionGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         Agent mockAgent = mockAgent(invariant, versionGUID);
 
         SOSFileSystem sosFS = new SOSFileSystem(mockAgent, (Version) mockAgent.getManifest(versionGUID));

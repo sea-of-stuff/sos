@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -57,7 +58,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void cacheMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         cache.findManifest(guid);
     }
 

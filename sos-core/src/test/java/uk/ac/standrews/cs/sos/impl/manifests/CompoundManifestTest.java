@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -27,7 +28,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"GUID\":\"44ebfc76e2671daf7f1e1b02c9538e5fe1e44995\"," +
+                    "\"GUID\":\"SHA256_16_751ca025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
@@ -39,7 +40,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"GUID\":\"32096c2e0eff33d844ee6d675407ace18289357d\"," +
+                    "\"GUID\":\"SHA256_16_6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
@@ -49,7 +50,7 @@ public class CompoundManifestTest extends CommonTest {
     @Test
     public void testToStringContents() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
@@ -64,7 +65,7 @@ public class CompoundManifestTest extends CommonTest {
     @Test
     public void testGetContents() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
@@ -104,7 +105,7 @@ public class CompoundManifestTest extends CommonTest {
     @Test
     public void testIsValidManifest() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();

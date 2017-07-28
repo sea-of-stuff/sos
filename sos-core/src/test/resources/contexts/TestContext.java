@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.defaults;
 
-import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.impl.context.BaseContext;
+import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.function.Predicate;

@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
@@ -26,7 +27,7 @@ public class ContentSerializer extends JsonSerializer<ContentImpl> {
             jsonGenerator.writeStringField(JSONConstants.CONTENT_KEY_LABEL, label);
         }
 
-        jsonGenerator.writeStringField(JSONConstants.CONTENT_KEY_GUID, guid.toString());
+        jsonGenerator.writeStringField(JSONConstants.CONTENT_KEY_GUID, guid.toMultiHash(BASE.HEX));
 
         jsonGenerator.writeEndObject();
     }

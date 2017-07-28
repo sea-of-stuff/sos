@@ -9,6 +9,8 @@ import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -90,7 +92,8 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void addCompoundManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
-        Role roleMocked = UserRoleUtils.BareRoleMock();        Content content = new ContentImpl("Cat", GUIDFactory.recreateGUID("123"));
+        Role roleMocked = UserRoleUtils.BareRoleMock();
+        Content content = new ContentImpl("Cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
@@ -112,7 +115,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void noCompoundTypeYieldsNotValidManifestTest() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
@@ -126,7 +129,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void addVersionManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
-        IGUID contentGUID = GUIDFactory.recreateGUID("123");
+        IGUID contentGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         Version versionManifest = ManifestUtils.createDummyVersion(contentGUID);
 
         IGUID guid = versionManifest.getVersionGUID();
@@ -198,7 +201,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         try {
             manifestsDirectory.addManifest(atomManifest);
-            storage.getManifestsDirectory().remove(guid.toString() + ".json");
+            storage.getManifestsDirectory().remove(guid.toMultiHash(BASE.HEX) + ".json");
 
             manifestsDirectory.addManifest(anotherManifest);
             AtomManifest manifest = (AtomManifest) manifestsDirectory.findManifest(guid);

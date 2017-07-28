@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -107,7 +108,7 @@ public class DataReplicationServerFailureTest extends SetUpTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
         mockDataDiscoveryService = mock(DataDiscoveryService.class);
@@ -120,10 +121,10 @@ public class DataReplicationServerFailureTest extends SetUpTest {
 
     @Test
     public void replicationFailsTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -141,10 +142,10 @@ public class DataReplicationServerFailureTest extends SetUpTest {
 
     @Test
     public void replicationFails400ErrorTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_MORE_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_MORE_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_MORE_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -162,10 +163,10 @@ public class DataReplicationServerFailureTest extends SetUpTest {
 
     @Test
     public void replicationNoDataFailsErrorTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_EMPTY_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_EMPTY_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_EMPTY_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -183,10 +184,10 @@ public class DataReplicationServerFailureTest extends SetUpTest {
 
     @Test
     public void replicationNoResponseFailsErrorTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_NO_RESPONSE_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_NO_RESPONSE_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_NO_RESPONSE_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -204,10 +205,10 @@ public class DataReplicationServerFailureTest extends SetUpTest {
 
     @Test
     public void badHostnameTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_RANDOM_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_RANDOM_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_RANDOM_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "badhostname", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 

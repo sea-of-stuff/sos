@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -62,7 +63,7 @@ public class VersionManifestTest extends CommonTest {
     @Test
     public void testBasicConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(null, guid, null, null, roleMocked);
@@ -77,10 +78,10 @@ public class VersionManifestTest extends CommonTest {
     @Test
     public void testMetadataConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
+        IGUID metadataGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, metadataStreamFake);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, roleMocked);
@@ -95,13 +96,13 @@ public class VersionManifestTest extends CommonTest {
     @Test
     public void testPreviousVersionConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         InputStream invariantStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
+        IGUID invariantGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, invariantStreamFake);
 
         InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
+        IGUID previousGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, previousStreamFake);
         Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
@@ -118,18 +119,18 @@ public class VersionManifestTest extends CommonTest {
     @Test
     public void testMetadataAndPreviousVersionConstructor() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         InputStream invariantStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
+        IGUID invariantGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, invariantStreamFake);
 
         InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
+        IGUID previousGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, previousStreamFake);
         Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
+        IGUID metadataGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, metadataStreamFake);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
@@ -144,18 +145,18 @@ public class VersionManifestTest extends CommonTest {
     @Test
     public void testGetters() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
 
         InputStream invariantStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID invariantGUID = GUIDFactory.generateGUID(invariantStreamFake);
+        IGUID invariantGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, invariantStreamFake);
 
         InputStream previousStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID previousGUID = GUIDFactory.generateGUID(previousStreamFake);
+        IGUID previousGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, previousStreamFake);
         Set<IGUID> previous = new LinkedHashSet<>();
         previous.add(previousGUID);
 
         InputStream metadataStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID metadataGUID = GUIDFactory.generateGUID(metadataStreamFake);
+        IGUID metadataGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, metadataStreamFake);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);

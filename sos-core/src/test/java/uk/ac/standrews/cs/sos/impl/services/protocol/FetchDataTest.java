@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -36,7 +37,7 @@ public class FetchDataTest {
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -63,11 +64,11 @@ public class FetchDataTest {
     @Test
     public void basicDataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         FetchData fetchData = new FetchData(node, testGUID);
         TasksQueue.instance().performSyncTask(fetchData);
@@ -82,11 +83,11 @@ public class FetchDataTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
 
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         FetchData fetchData = new FetchData(node, testGUID);
     }
@@ -94,7 +95,7 @@ public class FetchDataTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchANullGUIDTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
@@ -93,7 +94,7 @@ public class CommonPolicies {
             // TODO - change code so that we get all the nodes (within codomain) where data is
             // and then we delete data from there
 
-            IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
+            IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256); // FIXME - have a sensible Node GUID
 
             boolean hasData = policyActions.nodeHasData(fakeNodeGUID, manifest.guid());
 

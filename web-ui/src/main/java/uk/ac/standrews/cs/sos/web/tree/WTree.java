@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
@@ -25,7 +26,7 @@ public class WTree {
         try {
             String data = getTreeInJson(fileSystem);
 
-            model.put("node_id", sos.getNodeGUID().toString());
+            model.put("node_id", sos.getNodeGUID().toMultiHash(BASE.HEX));
             model.put("tree", data);
         } catch (TIPNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();

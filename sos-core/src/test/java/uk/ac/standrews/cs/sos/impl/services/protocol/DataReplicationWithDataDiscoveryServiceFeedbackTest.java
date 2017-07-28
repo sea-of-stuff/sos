@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -55,7 +56,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -105,7 +106,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
         mockDataDiscoveryService = mock(DataDiscoveryService.class);
@@ -118,10 +119,10 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
 
     @Test
     public void registeringNDSFeedbackTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException, SOSProtocolException, NodeRegistrationException {
-        IGUID testGUID = GUIDFactory.generateGUID(TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -148,7 +149,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
     public void failWithNoIndexNDSNotCalledTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -163,7 +164,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
     public void failWithNullNDSTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -180,7 +181,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
     public void failWithNullDDSTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -17,8 +18,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class SOSLocationTest extends SetUpTest {
 
-    private static IGUID NODE_GUID = GUIDFactory.generateRandomGUID();
-    private static IGUID DATA_GUID = GUIDFactory.generateRandomGUID();
+    private static IGUID NODE_GUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+    private static IGUID DATA_GUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
     @Test
     public void testGetURI() throws Exception {

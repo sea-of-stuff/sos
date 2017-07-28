@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context.closures;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -55,7 +56,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         Context context = ContextLoader.Instance("Test", policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertEquals(context.guid(), guid);
@@ -106,11 +107,11 @@ public class ContextLoaderTest extends SetUpTest {
 
         BasicMetadata meta = new BasicMetadata();
         meta.addProperty("Content-Type", "image/jpeg");
-        meta.setGUID(GUIDFactory.generateRandomGUID());
+        meta.setGUID(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
         this.localSOSNode.getMMS().addMetadata(meta);
 
         Version version = this.localSOSNode.getAgent().addVersion(new VersionBuilder()
-                .setContent(GUIDFactory.generateRandomGUID())
+                .setContent(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256))
                 .setMetadata(meta));
 
         boolean retval = pred.test(version.guid());

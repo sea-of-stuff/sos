@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -208,14 +209,14 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     private IGUID makeInvariant() {
-        return GUIDFactory.generateRandomGUID();
+        return GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
     }
 
     private IGUID makeVersionGUID() throws GUIDGenerationException {
 
         try (InputStream inputStream = contentToHash()) {
 
-            return GUIDFactory.generateGUID(inputStream);
+            return GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
 
         } catch (IOException e) {
             throw new GUIDGenerationException();

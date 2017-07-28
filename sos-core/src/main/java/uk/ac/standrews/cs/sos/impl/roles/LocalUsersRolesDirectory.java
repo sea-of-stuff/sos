@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -21,6 +22,7 @@ import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 import java.util.Set;
 
+import static uk.ac.standrews.cs.guid.BASE.HEX;
 import static uk.ac.standrews.cs.sos.constants.Internals.ACTIVE_ROLE;
 import static uk.ac.standrews.cs.sos.constants.Internals.ACTIVE_USER;
 
@@ -113,7 +115,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
         try {
             IFile file = makeFile(filename);
 
-            file.setData(new StringData(user.guid().toString()));
+            file.setData(new StringData(user.guid().toMultiHash(HEX)));
             file.persist();
 
         } catch (DataStorageException | PersistenceException | DataException e) {
@@ -139,7 +141,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     private void saveToFile(User user) throws UserRolePersistException {
 
         try {
-            String userGUID = user.guid().toString();
+            String userGUID = user.guid().toMultiHash(BASE.HEX);
 
             Data data = new StringData(user.toString());
 
@@ -166,7 +168,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     // TODO - attempt to get also keys?????
     private User getUserFromGUID(IGUID guid) throws UserNotFoundException {
         try {
-            IFile file = makeJSONFile(guid.toString());
+            IFile file = makeJSONFile(guid.toMultiHash(BASE.HEX));
 
             return FileUtils.UserFromFile(file);
 
@@ -177,7 +179,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
 
     private Role getRoleFromGUID(IGUID guid) throws RoleNotFoundException {
         try {
-            IFile file = makeJSONFile(guid.toString());
+            IFile file = makeJSONFile(guid.toMultiHash(BASE.HEX));
 
             return FileUtils.RoleFromFile(file);
 

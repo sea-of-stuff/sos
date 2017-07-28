@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -41,7 +42,7 @@ public class NodeDiscoveryTest {
 
     private SOSNodeDiscoveryService nds;
     private Node localNode;
-    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
+    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
     private ClientAndServer mockServer;
 
@@ -71,8 +72,8 @@ public class NodeDiscoveryTest {
         nds = new SOSNodeDiscoveryService(localNode, database);
 
         // MOCK SERVER SETUP
-        nodeFound = GUIDFactory.generateRandomGUID();
-        nodeNotFound = GUIDFactory.generateRandomGUID();
+        nodeFound = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        nodeNotFound = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
         mockServer = startClientAndServer(NODE_PORT);
         mockServer.dumpToLog();
@@ -129,14 +130,14 @@ public class NodeDiscoveryTest {
     @Test (expectedExceptions = NodeNotFoundException.class)
     public void findUnknownNodeTest() throws NodeNotFoundException {
 
-        nds.getNode(GUIDFactory.generateRandomGUID());
+        nds.getNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
     }
 
     @Test
     public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);
@@ -150,7 +151,7 @@ public class NodeDiscoveryTest {
     public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);

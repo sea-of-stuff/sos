@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -39,7 +40,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 public class NodeRegistrationTest {
 
     private SOSNodeDiscoveryService nds;
-    private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
+    private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10007;
@@ -173,6 +174,6 @@ public class NodeRegistrationTest {
     }
 
     private Node makeMockNode() {
-        return new SOSNode(GUIDFactory.generateRandomGUID(), "localhost", 8090, true, true, true, true, true, true, true);
+        return new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), "localhost", 8090, true, true, true, true, true, true, true);
     }
 }

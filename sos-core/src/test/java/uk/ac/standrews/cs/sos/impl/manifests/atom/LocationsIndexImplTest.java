@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -34,7 +35,7 @@ public class LocationsIndexImplTest {
     public void addGetLocationsTest() throws URISyntaxException {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
 
         locationsIndex.addLocation(guid, locationBundle);
@@ -50,7 +51,7 @@ public class LocationsIndexImplTest {
     public void noLocationsTest() throws URISyntaxException {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
 
         Iterator<LocationBundle> it = locationsIndex.findLocations(guid);
         assertFalse(it.hasNext());
@@ -69,7 +70,7 @@ public class LocationsIndexImplTest {
 
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
 
         locationsIndex.addLocation(guid, locationBundle);
@@ -91,7 +92,7 @@ public class LocationsIndexImplTest {
     public void iteratorOrderingTest() throws URISyntaxException {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
         LocationBundle locationBundlePersist = new PersistLocationBundle(new URILocation("http://example.org/persist"));
 

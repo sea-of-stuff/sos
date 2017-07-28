@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import spark.Request;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -47,7 +48,7 @@ public class WGraph {
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
 
-            ObjectNode node = ManifestNode(version, version.getInvariantGUID().toString());
+            ObjectNode node = ManifestNode(version, version.getInvariantGUID().toMultiHash(BASE.HEX));
             arrayNode.add(node);
 
             // Content
@@ -61,7 +62,7 @@ public class WGraph {
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
                     Manifest previousManifest = agent.getManifest(prev);
-                    ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toString());
+                    ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toMultiHash(BASE.HEX));
                     arrayNode.add(prevNode);
                 }
             }
@@ -146,8 +147,8 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", manifest.guid().toString());
-        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
+        objectNode.put("id", manifest.guid().toMultiHash(BASE.HEX));
+        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash(BASE.HEX).substring(0, 5));
         objectNode.put("group", manifest.getType().toString());
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
@@ -159,8 +160,8 @@ public class WGraph {
         ObjectMapper mapper = new ObjectMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", manifest.guid().toString());
-        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toString().substring(0, 5));
+        objectNode.put("id", manifest.guid().toMultiHash(BASE.HEX));
+        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash(BASE.HEX).substring(0, 5));
         objectNode.put("group", group);
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));

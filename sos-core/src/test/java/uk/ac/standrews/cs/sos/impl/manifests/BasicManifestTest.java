@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
@@ -14,7 +16,7 @@ public class BasicManifestTest extends CommonTest {
 
     @Test
     public void testGenerateGUID() throws Exception {
-        assertEquals(GUIDFactory.generateGUID(Hashes.TEST_STRING).toString(), Hashes.TEST_STRING_HASHED);
+        assertEquals(GUIDFactory.generateGUID(ALGORITHM.SHA256, Hashes.TEST_STRING).toMultiHash(BASE.HEX), Hashes.TEST_STRING_HASHED);
     }
     
 }

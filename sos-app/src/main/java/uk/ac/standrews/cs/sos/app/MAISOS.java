@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.app;
 import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -193,7 +194,7 @@ public class MAISOS {
             String rootGUID = line.getOptionValue(ROOT_OPT);
             root = GUIDFactory.recreateGUID(rootGUID);
         } else {
-            root = GUIDFactory.generateRandomGUID();
+            root = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
         }
 
         return root;

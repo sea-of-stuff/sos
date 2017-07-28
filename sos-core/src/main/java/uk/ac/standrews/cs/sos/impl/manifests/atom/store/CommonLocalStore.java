@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -35,7 +36,7 @@ public abstract class CommonLocalStore implements Store {
 
     protected IGUID generateGUID(InputStream inputStream) throws GUIDGenerationException {
         IGUID retval;
-        retval = GUIDFactory.generateGUID(inputStream);
+        retval = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
 
         return retval;
     }

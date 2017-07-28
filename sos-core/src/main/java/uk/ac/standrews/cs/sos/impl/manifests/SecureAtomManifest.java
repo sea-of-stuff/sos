@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -61,7 +62,7 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
             String encryptedData = SymmetricEncryption.encrypt(key, data);
             // TODO - save data to disk
             String encryptedKey = role.encrypt(key);
-            this.guid = GUIDFactory.generateGUID(encryptedData);
+            this.guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, encryptedData);
 
         } catch (CryptoException | ProtectionException | GUIDGenerationException e) {
             e.printStackTrace();
