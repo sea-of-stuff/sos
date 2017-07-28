@@ -17,13 +17,13 @@ public class URILocationTest extends SetUpTest {
     @Test
     public void testConstructorLocalURL() throws URISyntaxException, IOException {
         Location location = new URILocation("/sos/data/test.txt");
-        assertEquals(location.getURI().toString(), "file:///sos/data/test.txt");
+        assertEquals(location.getURI().toString(), "file://localhost/sos/data/test.txt");
     }
 
     @Test
     public void testConstructorLocalFileURL() throws URISyntaxException, IOException {
         Location location = new URILocation("file:///sos/data/test.txt");
-        assertEquals(location.getURI().toString(), "file:///sos/data/test.txt");
+        assertEquals(location.getURI().toString(), "file://localhost/sos/data/test.txt");
     }
 
     @Test

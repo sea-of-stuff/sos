@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol;
 
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -21,14 +22,14 @@ public class SOSURL {
 
     public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/dds/manifest/guid/" + guid.toString();
+                "/dds/manifest/guid/" + guid.toMultiHash(BASE.HEX);
 
         return makeURL(url);
     }
 
     public static URL MMS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/mms/metadata/guid/" + guid.toString();
+                "/mms/metadata/guid/" + guid.toMultiHash(BASE.HEX);
 
         return makeURL(url);
     }
@@ -49,7 +50,7 @@ public class SOSURL {
 
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/storage/data/guid/" + guid.toString();
+                "/storage/data/guid/" + guid.toMultiHash(BASE.HEX);
 
         return makeURL(url);
     }
@@ -63,7 +64,7 @@ public class SOSURL {
 
     public static URL CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/challenge/" + guid + "/" + challenge;
+                "/challenge/" + guid.toMultiHash(BASE.HEX) + "/" + challenge;
 
         return makeURL(url);
     }
@@ -77,7 +78,7 @@ public class SOSURL {
 
     public static URL NDS_GET_NODE(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/guid/" + guid.toString();
+                "/nds/guid/" + guid.toMultiHash(BASE.HEX);
 
         return makeURL(url);
     }

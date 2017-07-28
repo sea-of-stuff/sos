@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -66,7 +67,7 @@ public class SOSLocation implements Location {
     @Override
     public String toString() {
         return SOS_SCHEME + SCHEME_DIVIDER +
-                machineID.toString() + "/" + entity.toString();
+                machineID.toMultiHash(BASE.HEX) + "/" + entity.toMultiHash(BASE.HEX);
     }
 
     @Override
