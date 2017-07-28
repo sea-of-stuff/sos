@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
+import static uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder.*;
 
 /**
  * The SOSContextService managed the contexts for this node.
@@ -137,9 +138,9 @@ public class SOSContextService implements ContextService {
     public IGUID addContext(String jsonContext) throws Exception {
 
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(jsonContext);
-        String contextName = jsonNode.get("name").textValue();
-        NodesCollection domain = makeNodesCollection(jsonNode, "domain");
-        NodesCollection codomain = makeNodesCollection(jsonNode, "codomain");
+        String contextName = jsonNode.get(CONTEXT_JSON_NAME).textValue();
+        NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
+        NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
         ContextLoader.LoadContext(jsonNode);
         Context context = ContextLoader.Instance(contextName, policyActions, contextName, domain, codomain);
@@ -225,11 +226,11 @@ public class SOSContextService implements ContextService {
                 try {
                     IGUID head = dataDiscoveryService.getHead(assetInvariant);
 
-                    SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
+                    SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
                     runPredicate(context, assetInvariant, head);
                     counter++;
 
-                    SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.guid() + " and Version-HEAD " + head.toString());
+                    SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
                 } catch (HEADNotFoundException e) {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
                 }
@@ -267,9 +268,9 @@ public class SOSContextService implements ContextService {
                 contentsToProcess.forEach((guid, row) -> {
                     if (row.predicateResult && !row.policySatisfied) {
 
-                        SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid);
+                        SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid.toShortString());
                         runPolicies(context, guid);
-                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid);
+                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid.toShortString());
                     }
                 });
 
@@ -293,9 +294,9 @@ public class SOSContextService implements ContextService {
                 contentsToProcess.forEach((guid, row) -> {
                     if (row.predicateResult) {
 
-                        SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid);
+                        SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid.toShortString());
                         checkPolicies(context, guid);
-                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid);
+                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid.toShortString());
                     }
                 });
 

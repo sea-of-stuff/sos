@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,9 +30,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private ContextService cms;
     private int counter;
-
-    private Iterator<ExperimentUnit> experimentUnitIterator;
-    private ExperimentUnit currentExperimentUnit;
 
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) {
         super(experimentConfiguration);
@@ -64,13 +60,8 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations() * CONTEXT_TYPE.values().length;
     }
 
-    public static void main(String[] args) throws ExperimentException, ConfigurationException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
-        experiment_pr_1.process();
+    public enum CONTEXT_TYPE {
+        ALL, DATA, METADATA, DATA_AND_METADATA
     }
 
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
@@ -161,7 +152,12 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     }
 
-    public enum CONTEXT_TYPE {
-        ALL, DATA, METADATA, DATA_AND_METADATA
+    public static void main(String[] args) throws ExperimentException, ConfigurationException {
+
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
+        experiment_pr_1.process();
     }
 }

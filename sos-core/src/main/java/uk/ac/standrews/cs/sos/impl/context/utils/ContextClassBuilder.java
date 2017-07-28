@@ -62,16 +62,16 @@ public class ContextClassBuilder {
             "    }\n" +
             "}";
 
-    private static final String JSON_NAME = "name";
-    private static final String JSON_DEPENDENCIES = "dependencies";
-    private static final String JSON_PREDICATE = "predicate";
-    private static final String JSON_POLICIES = "policies";
-    private static final String JSON_DOMAIN = "domain";
-    private static final String JSON_CODOMAIN = "codomain";
+    public static final String CONTEXT_JSON_NAME = "name";
+    private static final String CONTEXT_JSON_DEPENDENCIES = "dependencies";
+    private static final String CONTEXT_JSON_PREDICATE = "predicate";
+    private static final String CONTEXT_JSON_POLICIES = "policies";
+    public static final String CONTEXT_JSON_DOMAIN = "domain";
+    public static final String CONTEXT_JSON_CODOMAIN = "codomain";
 
     public static String ConstructClass(JsonNode node) throws IOException {
 
-        String className = node.get(JSON_NAME).textValue();
+        String className = node.get(CONTEXT_JSON_NAME).textValue();
         className = className.substring(0, 1).toUpperCase() + className.substring(1); // First char of class name MUST be Capitalised
 
         /////////////////////////
@@ -80,7 +80,7 @@ public class ContextClassBuilder {
         StringBuilder clazz = new StringBuilder(PACKAGE_DECLARATION);
         clazz.append(NEW_LINE);
 
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.IGUID"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.guid.IGUID"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.LEVEL"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.services.SOSAgent"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.NodesCollection"));
@@ -90,8 +90,8 @@ public class ContextClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
 
-        if (node.has(JSON_DEPENDENCIES)) {
-            JsonNode dependencies = node.get(JSON_DEPENDENCIES);
+        if (node.has(CONTEXT_JSON_DEPENDENCIES)) {
+            JsonNode dependencies = node.get(CONTEXT_JSON_DEPENDENCIES);
             for (JsonNode dependency : dependencies) {
                 clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
             }
@@ -114,7 +114,7 @@ public class ContextClassBuilder {
         ///////////////
         // Predicate //
         ///////////////
-        String predicate = node.has(JSON_PREDICATE) ? node.get(JSON_PREDICATE).asText() : "";
+        String predicate = node.has(CONTEXT_JSON_PREDICATE) ? node.get(CONTEXT_JSON_PREDICATE).asText() : "";
         clazz.append(PREDICATE_METHOD);
         clazz.append(NEW_LINE);
         clazz.append(INNER_PREDICATE_CLASS.replace(PREDICATE_TAG, predicate));
@@ -123,8 +123,8 @@ public class ContextClassBuilder {
         // Policies //
         //////////////
         String policies_rpl = "";
-        if (node.has(JSON_POLICIES)) {
-            JsonNode policies = node.get(JSON_POLICIES);
+        if (node.has(CONTEXT_JSON_POLICIES)) {
+            JsonNode policies = node.get(CONTEXT_JSON_POLICIES);
             for (JsonNode policy : policies) {
                 policies_rpl += "new " + policy.asText() + ",";
             }

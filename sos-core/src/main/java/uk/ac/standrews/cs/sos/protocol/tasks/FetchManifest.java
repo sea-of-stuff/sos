@@ -46,7 +46,7 @@ public class FetchManifest extends Task {
     @Override
     public void performAction() {
 
-        SOS_LOG.log(LEVEL.INFO, "Manifest will be fetched from node " + node.getNodeGUID());
+        SOS_LOG.log(LEVEL.INFO, "Manifest will be fetched from node " + node.getNodeGUID().toShortString());
 
         try {
             URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
@@ -64,7 +64,7 @@ public class FetchManifest extends Task {
                 }
 
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID());
+                SOS_LOG.log(LEVEL.WARN, "Manifest was not fetched successfully from node " + node.getNodeGUID().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
