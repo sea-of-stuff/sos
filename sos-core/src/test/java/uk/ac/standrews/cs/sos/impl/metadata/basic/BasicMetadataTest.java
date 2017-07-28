@@ -19,7 +19,7 @@ public class BasicMetadataTest {
 
         String testMetadata =
                 "{\n" +
-                        "    \"GUID\": \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
+                        "    \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                         "    \"Properties\": [\n" +
                         "        {\n" +
                         "            \"Key\": \"X-Parsed-By\",\n" +

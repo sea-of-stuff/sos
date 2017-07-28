@@ -26,7 +26,8 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         BasicMetadata basicMetadata = new BasicMetadata();
         try {
             // TODO - should not trust this GUID. Better to recreate it?
-            basicMetadata.setGUID(GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_GUID).asText()));
+            String guidS = node.get(JSONConstants.KEY_GUID).asText();
+            basicMetadata.setGUID(GUIDFactory.recreateGUID(guidS));
         } catch (GUIDGenerationException e) {
             throw new IOException(e);
         }

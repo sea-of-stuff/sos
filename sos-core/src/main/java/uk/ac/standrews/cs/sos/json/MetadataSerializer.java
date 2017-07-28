@@ -70,7 +70,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
                 jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
                 break;
             case "GUID":
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, ((IGUID) value).toMultiHash(BASE.HEX)); // TODO - this line is not tested, I better should do so
                 break;
         }
     }

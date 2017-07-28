@@ -23,6 +23,7 @@ public class LocalManifestsDirectory_TIPS_HEAD_Test extends TIPS_HEAD_Test {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
+        // TODO - load from settings
         String root = System.getProperty("user.home") + "/sos/";
 
         CastoreBuilder castoreBuilder = new CastoreBuilder()
