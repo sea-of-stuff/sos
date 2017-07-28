@@ -121,7 +121,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
                 }
             }
             if (manifest == null) {
-                throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toString());
+                throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toShortString());
             }
 
             return manifest;

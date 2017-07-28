@@ -36,7 +36,7 @@ public class MAISOS {
 
     /**
      *
-     * Example: java -jar sos.jar -c config.conf -j -fs -root 73a7f67f31908dd0e574699f163eda2cc117f7f4
+     * Example: java -jar sos.jar -c /Users/sic2/config.json -j -fs -root 73a7f67f31908dd0e574699f163eda2cc117f7f4
      *
      * @param args
      * @throws Exception

@@ -258,7 +258,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         try {
             return getManifestFile(guid.toString());
         } catch (DataStorageException e) {
-            throw new ManifestNotFoundException("Unable to find manifest file for GUID: " + guid);
+            throw new ManifestNotFoundException("Unable to find manifest file for GUID: " + guid.toShortString());
         }
     }
 

@@ -78,7 +78,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         }
 
         if (!cache.containsKey(guid)) {
-            throw new ManifestNotFoundException("Unable to find manifest for GUID: " + guid.toString() + " in the cache");
+            throw new ManifestNotFoundException("Unable to find manifest for GUID: " + guid.toShortString() + " in the cache");
         }
 
         applyReadLRU(guid);
