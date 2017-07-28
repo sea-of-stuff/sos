@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
@@ -8,6 +7,7 @@ import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;

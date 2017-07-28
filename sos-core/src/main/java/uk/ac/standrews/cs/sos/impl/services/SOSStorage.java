@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import org.apache.commons.io.input.NullInputStream;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;

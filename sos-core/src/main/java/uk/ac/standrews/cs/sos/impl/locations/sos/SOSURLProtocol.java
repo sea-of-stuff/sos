@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.locations.sos;
 
-import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;

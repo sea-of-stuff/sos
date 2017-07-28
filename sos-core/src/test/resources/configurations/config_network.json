@@ -1,8 +1,5 @@
 {
   "settings": {
-    "database": {
-      "filename": "dump.db"
-    },
     "global": {
       "ssl_trust_store": "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts"
     }

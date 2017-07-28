@@ -662,6 +662,7 @@ public class SettingsConfiguration {
 
         public static class GlobalSettings {
 
+            private String ssl_trust_store;
             private TasksSettings tasks;
             private CacheFlusherSettings cacheFlusher;
 
@@ -681,6 +682,15 @@ public class SettingsConfiguration {
 
             public void setCacheFlusher(CacheFlusherSettings cacheFlusher) {
                 this.cacheFlusher = cacheFlusher;
+            }
+
+            public String getSsl_trust_store() {
+                return ssl_trust_store;
+            }
+
+            public void setSsl_trust_store(String ssl_trust_store) {
+                this.ssl_trust_store = ssl_trust_store;
+                System.setProperty("javax.net.ssl.trustStore", ssl_trust_store);
             }
 
 

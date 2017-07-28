@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.utils;
 
-import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.Logger;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.logger.Logger;
 
 /**
  * This is a SOS LOG wrapper.
@@ -12,13 +12,13 @@ import uk.ac.standrews.cs.guid.IGUID;
  */
 public class SOS_LOG {
 
-    private static uk.ac.standrews.cs.LOG log;
+    private static uk.ac.standrews.cs.logger.LOG log;
     private static IGUID nodeGUID;
 
     public SOS_LOG(IGUID guid) {
         nodeGUID = guid;
 
-        log = Logger.LOG(Logger.STOUT_LOGGER);
+        log = Logger.LOG(Logger.LOG4J_LOGGER, "logs/sos.log");
     }
 
     public static void log(LEVEL level, String message) {

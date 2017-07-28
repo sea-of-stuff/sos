@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
-import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;

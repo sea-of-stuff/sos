@@ -9,7 +9,7 @@ import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.body.RawBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.apache.commons.io.IOUtils;
-import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

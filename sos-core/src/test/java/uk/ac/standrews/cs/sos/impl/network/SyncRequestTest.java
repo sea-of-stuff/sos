@@ -5,10 +5,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.CommonTest;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -29,6 +32,9 @@ public class SyncRequestTest extends CommonTest {
         super.setUp(testMethod);
 
         new SOS_LOG(GUIDFactory.generateRandomGUID());
+
+        // Read the settings configuration. This will set the SSL Store path.
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_CONFIGURATIONS_PATH + "config_network.json")).getSettingsObj();
     }
 
     @Test

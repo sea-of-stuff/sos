@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 

@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;

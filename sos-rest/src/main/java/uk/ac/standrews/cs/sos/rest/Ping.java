@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import uk.ac.standrews.cs.LEVEL;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.GET;

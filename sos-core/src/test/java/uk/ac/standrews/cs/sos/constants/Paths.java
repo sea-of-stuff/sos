@@ -5,6 +5,6 @@ package uk.ac.standrews.cs.sos.constants;
  */
 public class Paths {
 
-    public static final String TEST_RESOURCES_PATH = "src/test/resources/";
-    public static final String TEST_CONFIGURATIONS_PATH = "src/test/resources/configurations/";
+    public static final String TEST_RESOURCES_PATH = "sos-core/src/test/resources/";
+    public static final String TEST_CONFIGURATIONS_PATH = "sos-core/src/test/resources/configurations/";
 }

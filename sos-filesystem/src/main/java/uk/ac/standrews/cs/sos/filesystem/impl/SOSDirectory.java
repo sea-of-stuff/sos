@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.fs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
@@ -11,6 +10,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;

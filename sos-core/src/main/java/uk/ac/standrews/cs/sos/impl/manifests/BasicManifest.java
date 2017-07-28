@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
