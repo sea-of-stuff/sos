@@ -5,10 +5,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
@@ -23,7 +25,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.File;
-import java.lang.reflect.Method;
+import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,7 +49,7 @@ public class NodeRegistrationTest {
 
     private static final String TEST_DATA =
             "{\n" +
-                    "\t\"guid\": \"" + localNodeGUID.toString() + "\",\n" +
+                    "\t\"guid\": \"" + localNodeGUID.toMultiHash(BASE.HEX) + "\",\n" +
                     "\t\"hostname\": \"localhost\",\n" +
                     "\t\"port\": 8080,\n" +
                     "\t\"roles\": {\n" +
@@ -63,7 +65,7 @@ public class NodeRegistrationTest {
 
     private static final String TEST_DATA_FAIL =
             "{\n" +
-                    "\t\"guid\": \"" + localNodeGUID.toString() + "\",\n" +
+                    "\t\"guid\": \"" + localNodeGUID.toMultiHash(BASE.HEX) + "\",\n" +
                     "\t\"hostname\": \"localhost\",\n" +
                     "\t\"port\": 8081,\n" +
                     "\t\"roles\": {\n" +
@@ -79,7 +81,25 @@ public class NodeRegistrationTest {
 
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException {
+    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException, IOException, SOSException {
+
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
+        SOSLocalNode.settings = settings;
+
+        // Make sure that the DB path is clean
+        HelperTest.DeletePath(settings.getDatabase().getFilename());
+
+        Database database;
+        try {
+            database = new DatabaseImpl(settings.getDatabase().getFilename());
+        } catch (DatabaseException e) {
+            throw new SOSException(e);
+        }
+
+        Node localNode = mock(SOSLocalNode.class);
+        when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
+
+        nds = new SOSNodeDiscoveryService(localNode, database);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -115,26 +135,6 @@ public class NodeRegistrationTest {
         mockServer.stop();
     }
 
-    @BeforeMethod
-    public void setUp(Method testMethod) throws Exception {
-
-        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
-
-        // Make sure that the DB path is clean
-        HelperTest.DeletePath(settings.getDatabase().getFilename());
-
-        Database database;
-        try {
-            database = new DatabaseImpl(settings.getDatabase().getFilename());
-        } catch (DatabaseException e) {
-            throw new SOSException(e);
-        }
-
-        Node localNode = mock(SOSLocalNode.class);
-        when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
-
-        nds = new SOSNodeDiscoveryService(localNode, database);
-    }
 
     @Test
     public void basicRegistrationTest() throws NodeRegistrationException {
