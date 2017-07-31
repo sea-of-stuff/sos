@@ -5,6 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -68,6 +69,7 @@ public class NodeDiscoveryTest {
         }
 
         localNode = mock(SOSLocalNode.class);
+        SOSLocalNode.settings = settings;
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
         nds = new SOSNodeDiscoveryService(localNode, database);
 
@@ -81,14 +83,14 @@ public class NodeDiscoveryTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/nds/guid/" + nodeFound.toString())
+                                .withPath("/nds/guid/" + nodeFound.toMultiHash(BASE.HEX))
                 )
                 .respond(
                         response()
                                 .withStatusCode(200)
                                 .withBody(
                                         "{\n" +
-                                                "    \"" + SOSConstants.GUID +"\": \"" +  nodeFound.toString() + "\",\n" +
+                                                "    \"" + SOSConstants.GUID +"\": \"" +  nodeFound.toMultiHash(BASE.HEX) + "\",\n" +
                                                 "    \"" + SOSConstants.HOSTNAME + "\": \"localhost\",\n" +
                                                 "    \"" + SOSConstants.PORT + "\": 12345\n" +
                                                 "}"
@@ -99,7 +101,7 @@ public class NodeDiscoveryTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/nds/guid/" + nodeNotFound.toString())
+                                .withPath("/nds/guid/" + nodeNotFound.toMultiHash(BASE.HEX))
                 )
                 .respond(
                         response()
