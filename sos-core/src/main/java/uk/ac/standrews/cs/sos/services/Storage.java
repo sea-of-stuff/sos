@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 
 import java.io.InputStream;
 import java.util.Iterator;
@@ -27,13 +26,12 @@ public interface Storage {
      *
      * @param atomBuilder defines the sources for the atom to be added
      * @param persist if true the atom is persisted in this node, otherwise it is cached (e.g. it can be later purged)
-     * @param ddsNotificationInfo information used by the storage actor to notify any DDS services about the atom manifest
      * @return The generated atom manifest. This will contain the locations known to this node prior to any replication.
      *
      * @throws StorageException
      * @throws ManifestPersistException
      */
-    Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException;
 
     Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException;
 

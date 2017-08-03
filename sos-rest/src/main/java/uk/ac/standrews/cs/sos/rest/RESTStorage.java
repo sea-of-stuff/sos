@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -81,7 +80,7 @@ public class RESTStorage {
 
         try {
             AtomBuilder builder = new AtomBuilder().setLocation(location);
-            Atom atom = storage.addAtom(builder, true, new DDSNotificationInfo());
+            Atom atom = storage.addAtom(builder, true);
 
             return HTTPResponses.CREATED(atom.toString());
         } catch (StorageException | ManifestPersistException e) {
@@ -102,9 +101,7 @@ public class RESTStorage {
         Atom atom;
         try {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
-            atom = storage.addAtom(builder, true, new DDSNotificationInfo()
-                    .setNotifyDDSNodes(true)
-                    .setUseDefaultDDSNodes(true)); // TODO - must be configurable from config file
+            atom = storage.addAtom(builder, true);
 
         } catch (StorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();

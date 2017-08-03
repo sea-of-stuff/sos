@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -43,7 +42,7 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder, boolean persist, DDSNotificationInfo ddsNotificationInfo) throws StorageException, ManifestPersistException {
+    public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);

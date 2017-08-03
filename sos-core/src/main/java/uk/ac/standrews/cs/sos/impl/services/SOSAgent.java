@@ -21,7 +21,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.protocol.DDSNotificationInfo;
 import uk.ac.standrews.cs.sos.services.*;
 
 import java.io.IOException;
@@ -70,7 +69,7 @@ public class SOSAgent implements Agent {
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
 
-        Atom manifest = storage.addAtom(atomBuilder, false, new DDSNotificationInfo().setNotifyDDSNodes(true));
+        Atom manifest = storage.addAtom(atomBuilder, false);
         return manifest;
     }
 
