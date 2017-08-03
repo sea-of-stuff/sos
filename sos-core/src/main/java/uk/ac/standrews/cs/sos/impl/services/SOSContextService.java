@@ -293,21 +293,28 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Check that policies are still valid");
 
-            for (Context context : getContexts()) {
-
-                Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
-                contentsToProcess.forEach((guid, row) -> {
-                    if (row.predicateResult) {
-
-                        SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid.toShortString());
-                        checkPolicies(context, guid);
-                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid.toShortString());
-                    }
-                });
-
-            }
+            checkPolicies();
 
         }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
+    }
+
+    public void checkPolicies() {
+
+        for (Context context : getContexts()) {
+            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
+
+            Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+            contentsToProcess.forEach((guid, row) -> {
+                if (row.predicateResult) {
+
+                    SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid.toShortString());
+                    checkPolicies(context, guid);
+                    SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid.toShortString());
+                }
+            });
+
+            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - END - for context " + context.getName());
+        }
     }
 
     /**
@@ -371,7 +378,7 @@ public class SOSContextService implements ContextService {
      * @param versionGUID to evaluate
      */
     private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
-        
+
         IGUID contextGUID = context.guid();
 
         boolean alreadyRun = contextsContents.hasBeenProcessed(contextGUID, versionGUID);

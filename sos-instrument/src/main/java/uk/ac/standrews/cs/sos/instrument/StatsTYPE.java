@@ -6,6 +6,6 @@ package uk.ac.standrews.cs.sos.instrument;
 public enum StatsTYPE {
 
     any,
-    predicate, policies,
+    predicate, policies, checkPolicies,
     experiment
 }

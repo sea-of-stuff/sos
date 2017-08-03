@@ -10,6 +10,7 @@ public class Statistics {
     private boolean experiment;
     private boolean predicate;
     private boolean policies;
+    private boolean checkPolicies;
     private boolean io_store; // any IO operations on the store
     private boolean network; // any network operations
 
@@ -29,6 +30,14 @@ public class Statistics {
 
     public void setPolicies(boolean policies) {
         this.policies = policies;
+    }
+
+    public boolean isCheckPolicies() {
+        return checkPolicies;
+    }
+
+    public void setCheckPolicies(boolean checkPolicies) {
+        this.checkPolicies = checkPolicies;
     }
 
     public boolean isExperiment() {
@@ -51,6 +60,7 @@ public class Statistics {
             case experiment: return isExperiment();
             case predicate: return isPredicate();
             case policies: return isPolicies();
+            case checkPolicies: return isCheckPolicies();
         }
 
         return false;
