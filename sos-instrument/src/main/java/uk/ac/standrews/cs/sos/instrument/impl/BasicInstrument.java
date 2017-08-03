@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import java.io.*;
 
 import static uk.ac.standrews.cs.sos.instrument.Measure.COMMA;
+import static uk.ac.standrews.cs.sos.instrument.Measure.TAB;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -28,7 +29,14 @@ public class BasicInstrument implements Instrument {
             try (FileWriter fileWriter = new FileWriter(new File(filename), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
-                bufferedWriter.write("StatsTYPE" + COMMA);
+                switch (outputTYPE) {
+                    case CSV:
+                        bufferedWriter.write("StatsTYPE" + COMMA);
+                        break;
+                    case TSV:
+                        bufferedWriter.write("StatsTYPE" + TAB);
+                }
+
                 writeHeader(bufferedWriter, new AppMeasure(), false);
                 writeHeader(bufferedWriter, new OSMeasures(), true);
             }
@@ -51,7 +59,13 @@ public class BasicInstrument implements Instrument {
             try (FileWriter fileWriter = new FileWriter(new File(filename), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
-                bufferedWriter.write(statsTYPE.toString() + COMMA);
+                switch (outputTYPE) {
+                    case CSV:
+                        bufferedWriter.write(statsTYPE.toString() + COMMA);
+                        break;
+                    case TSV:
+                        bufferedWriter.write(statsTYPE.toString() + TAB);
+                }
 
                 AppMeasure appMeasure = AppMeasure.measure(message);
                 write(bufferedWriter, appMeasure, false);
@@ -79,6 +93,10 @@ public class BasicInstrument implements Instrument {
                 bufferedWriter.write(measure.csv());
                 if (!last) bufferedWriter.write(COMMA);
                 break;
+            case TSV:
+                bufferedWriter.write(measure.tsv());
+                if (!last) bufferedWriter.write(TAB);
+                break;
         }
 
         if (last) bufferedWriter.newLine();
@@ -92,6 +110,10 @@ public class BasicInstrument implements Instrument {
             case CSV:
                 bufferedWriter.write(measure.csvHeader());
                 if (!last) bufferedWriter.write(COMMA);
+                break;
+            case TSV:
+                bufferedWriter.write(measure.tsvHeader());
+                if (!last) bufferedWriter.write(TAB);
                 break;
         }
 
@@ -114,7 +136,7 @@ public class BasicInstrument implements Instrument {
 
     public static void main(String[] args) throws IOException {
 
-        new BasicInstrument(new Statistics(), OutputTYPE.CSV, "TEST.json").measure("test message");
+        new BasicInstrument(new Statistics(), OutputTYPE.CSV, "TEST.csv").measure("test message");
     }
 
 }

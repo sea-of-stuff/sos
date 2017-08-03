@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.File;
 import java.util.Collections;
@@ -24,7 +26,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         // Prepare the experiments to be run
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-                units.add(new ExperimentUnit_PO_1());
+                units.add(new ExperimentUnit_PO_1(i));
         }
         Collections.shuffle(units);
 
@@ -47,8 +49,10 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit_PO_1 implements ExperimentUnit {
 
-        ExperimentUnit_PO_1() {
+        private int id;
 
+        ExperimentUnit_PO_1(int id) {
+            this.id = id;
         }
 
         @Override
@@ -57,6 +61,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT Unit " + id);
         }
 
     }

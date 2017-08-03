@@ -49,7 +49,7 @@ public abstract class BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
 
         try {
-            InstrumentFactory.instance(experiment.getStats(), OutputTYPE.CSV, OUTPUT_FOLDER + getExperimentResultsFilename());
+            InstrumentFactory.instance(experiment.getStats(), OutputTYPE.TSV, OUTPUT_FOLDER + getExperimentResultsFilename());
 
             String configurationNodePath = experiment.getExperimentNode().getConfigurationFile(experiment.getName());
             File configFile = new File(configurationNodePath);
@@ -120,7 +120,7 @@ public abstract class BaseExperiment implements Experiment {
                 .replace("-", "_")
                 .replace(":", "_")
                 .replace(".", "_");
-        String extension = ".csv";
+        String extension = ".tsv";
 
         return name + "__" + now + extension;
     }

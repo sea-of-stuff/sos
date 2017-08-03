@@ -163,4 +163,16 @@ public class OSMeasures implements Measure {
                 getProcessPID() + COMMA + getProcessName() + COMMA + getResidentBytes() + COMMA + getTotalBytes() + COMMA +
                 getUserUptime() + COMMA + getSysUptime();
     }
+
+    @Override
+    public String tsvHeader() {
+        return "OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Free Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+"Resident Bytes"+TAB+"Total Bytes"+TAB+"User Uptime"+TAB+"System Uptime";
+    }
+
+    @Override
+    public String tsv() {
+        return getOsName() + TAB + getNoCPUs() + TAB + getCpuHZ() + TAB + getMemFreeBytes() + TAB + getMemTotalBytes() + TAB +
+                getProcessPID() + TAB + getProcessName() + TAB + getResidentBytes() + TAB + getTotalBytes() + TAB +
+                getUserUptime() + TAB + getSysUptime();
+    }
 }

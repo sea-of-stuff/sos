@@ -66,4 +66,15 @@ public class AppMeasure implements Measure {
         return getNow().toEpochMilli() + COMMA + getNow().toString() + COMMA + getMessage() + COMMA +
                 getStackTraceElement().getClassName() + COMMA + getStackTraceElement().getMethodName();
     }
+
+    @Override
+    public String tsvHeader() {
+        return "Timestamp (ms)"+TAB+"Time(UTC)"+TAB+"Message"+TAB+"Class Name"+TAB+"Method Name";
+    }
+
+    @Override
+    public String tsv() {
+        return getNow().toEpochMilli() + TAB + getNow().toString() + TAB + getMessage() + TAB +
+                getStackTraceElement().getClassName() + TAB + getStackTraceElement().getMethodName();
+    }
 }

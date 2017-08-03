@@ -6,7 +6,11 @@ package uk.ac.standrews.cs.sos.instrument;
 public interface Measure {
 
     String COMMA = ",";
+    String TAB = "\t";
 
     String csvHeader();
     String csv();
+
+    String tsvHeader();
+    String tsv();
 }

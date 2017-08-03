@@ -5,5 +5,5 @@ package uk.ac.standrews.cs.sos.instrument;
  */
 public enum OutputTYPE {
 
-    STRING, CSV
+    STRING, CSV, TSV
 }
