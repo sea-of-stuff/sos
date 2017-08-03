@@ -87,4 +87,6 @@ public interface ContextService {
      */
     int runPredicates();
 
+    void runPolicies();
+
 }

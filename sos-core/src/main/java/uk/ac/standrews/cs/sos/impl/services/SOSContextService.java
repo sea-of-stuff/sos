@@ -256,29 +256,34 @@ public class SOSContextService implements ContextService {
      */
     private void runPoliciesPeriodic() {
 
-        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START");
         SettingsConfiguration.Settings.ThreadSettings policiesThreadSettings = SOSLocalNode.settings.getServices().getCms().getPoliciesThread();
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
-
-            for (Context context : getContexts()) {
-
-                Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
-                contentsToProcess.forEach((guid, row) -> {
-                    if (row.predicateResult && !row.policySatisfied) {
-
-                        SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid.toShortString());
-                        runPolicies(context, guid);
-                        SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid.toShortString());
-                    }
-                });
-
-            }
+            runPolicies();
 
         }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
+    }
 
-        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END");
+    @Override
+    public void runPolicies() {
+
+        for (Context context : getContexts()) {
+            InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
+
+            Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+            contentsToProcess.forEach((guid, row) -> {
+                if (row.predicateResult && !row.policySatisfied) {
+
+                    SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid.toShortString());
+                    runPolicies(context, guid);
+                    SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid.toShortString());
+                }
+            });
+
+            InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END - for context " + context.getName());
+        }
+
     }
 
     private void checkPoliciesPeriodic() {

@@ -74,6 +74,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         @Override
         public void run() {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT Unit " + id);
+
+            cms.runPolicies();
         }
 
     }
