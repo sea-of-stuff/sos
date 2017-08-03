@@ -36,8 +36,11 @@ public abstract class BaseExperiment implements Experiment {
     protected Iterator<ExperimentUnit> experimentUnitIterator;
     protected ExperimentUnit currentExperimentUnit;
 
+    private int iteration;
+
     public BaseExperiment(ExperimentConfiguration experimentConfiguration) {
         this.experiment = experimentConfiguration.getExperimentObj();
+        this.iteration = 0;
 
         // WarmUp the JVM for the experiments to be run
         WarmUp.run();
@@ -74,7 +77,7 @@ public abstract class BaseExperiment implements Experiment {
     public void finish() {
         long end = System.nanoTime();
         long timeToFinish = end - start;
-        System.out.println("Experiment finished in " + nanoToSeconds(timeToFinish) + " seconds");
+        System.out.println("Experiment iteration {" + iteration + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
 
         ServerState.kill();
     }
@@ -93,7 +96,7 @@ public abstract class BaseExperiment implements Experiment {
     @Override
     public void process() throws ExperimentException {
 
-        for(int i = 0; i < numberOfTotalIterations(); i++) {
+        for(iteration = 0; iteration < numberOfTotalIterations(); iteration++) {
 
             setup();
             run();

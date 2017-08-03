@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 
 /**
  * TODO - change experiments as in PR_1, where we use ExperimentUnits and load contexts and contents from files
+ * TODO - rename to Scale_1
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Experiment_X_1 extends BaseExperiment implements Experiment {

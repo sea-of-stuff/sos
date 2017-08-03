@@ -33,6 +33,8 @@ public class BasicInstrument implements Instrument {
                 writeHeader(bufferedWriter, new OSMeasures(), true);
             }
         }
+
+        System.out.println("Instrumentation output will be collected at the file: " + filename + " - The output will be of type: " + outputTYPE);
     }
 
     @Override

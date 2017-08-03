@@ -9,11 +9,11 @@ public class WarmUp {
 
     public static void run() {
         long start = System.nanoTime();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             Clazz clazz = new Clazz();
             clazz.method();
         }
-        System.out.println("WarmUp step finished in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        System.out.println("JVM WarmUp finished in " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
 
     private static class Clazz {

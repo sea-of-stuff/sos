@@ -7,7 +7,17 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
  */
 public interface ExperimentUnit {
 
+    /**
+     * The setup for the experiment unit
+     *
+     * @throws ExperimentException
+     */
     void setup() throws ExperimentException;
 
+    /**
+     * The code that runs the actual experiment for this unit
+     *
+     * @throws ExperimentException
+     */
     void run() throws ExperimentException;;
 }

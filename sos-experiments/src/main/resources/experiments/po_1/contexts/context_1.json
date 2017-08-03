@@ -1,0 +1,7 @@
+{
+  "name": "All",
+  "predicate": "CommonPredicates.AcceptAll();",
+  "policies" : [
+    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+  ]
+}
