@@ -38,7 +38,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "do_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         Experiment_DO_1 experiment_pr_1 = new Experiment_DO_1(experimentConfiguration);

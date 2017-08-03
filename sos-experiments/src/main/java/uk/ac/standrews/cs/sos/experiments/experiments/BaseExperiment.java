@@ -74,7 +74,7 @@ public abstract class BaseExperiment implements Experiment {
     public void finish() {
         long end = System.nanoTime();
         long timeToFinish = end - start;
-        System.out.println("Experiment process in " + nanoToSeconds(timeToFinish) + " seconds");
+        System.out.println("Experiment finished in " + nanoToSeconds(timeToFinish) + " seconds");
 
         ServerState.kill();
     }

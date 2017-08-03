@@ -1,0 +1,22 @@
+{
+  "experiment": {
+    "name": "do_1",
+    "description": "The experiment DO 1 investigates ....",
+    "setup": {
+      "app": "sos-app/target/sos-with-dependencies.jar",
+      "iterations": 1
+    },
+    "nodes": [],
+    "experimentnode": {
+      "id": 0,
+      "remote": false,
+      "configurationfile": "node_0.json"
+    },
+    "stats": {
+      "experiment": true,
+      "predicate": true,
+      "policies": false
+
+    }
+  }
+}

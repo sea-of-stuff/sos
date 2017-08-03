@@ -114,7 +114,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                             .setMetadata(metadata);
 
                     Version version = node.getAgent().addData(versionBuilder);
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid() + " from URI " + fileLocation);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid().toShortString() + " from URI " + fileLocation);
                 }
             }
 
@@ -125,10 +125,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             switch(context_type) {
                 case ALL: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "all.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "reject_all.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
 
                     break;
                 }
@@ -140,10 +140,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
                 case METADATA: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_img.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_mp3.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
                     break;
                 }
             }

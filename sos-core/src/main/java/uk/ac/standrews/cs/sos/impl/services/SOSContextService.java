@@ -219,7 +219,7 @@ public class SOSContextService implements ContextService {
         int counter = 0;
 
         for (Context context : getContexts()) {
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - START - for context " + context.guid());
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - START - for context " + context.getName());
 
             for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
 
@@ -237,7 +237,7 @@ public class SOSContextService implements ContextService {
 
             }
 
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END - for context " + context.guid());
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END - for context " + context.getName());
         }
 
 
