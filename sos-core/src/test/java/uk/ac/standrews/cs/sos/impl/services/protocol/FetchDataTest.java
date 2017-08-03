@@ -5,6 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -45,7 +46,7 @@ public class FetchDataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/storage/data/guid/" + testGUID)
+                                .withPath("/storage/data/guid/" + testGUID.toMultiHash(BASE.HEX))
                 )
                 .respond(
                         response()

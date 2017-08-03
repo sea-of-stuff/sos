@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -57,11 +58,11 @@ public class DDSIndex implements Serializable {
             IGUID key = entry.getKey();
             Set<IGUID> values = entry.getValue();
 
-            out.writeUTF(key.toString());
+            out.writeUTF(key.toMultiHash(BASE.HEX));
             out.writeInt(values.size());
 
             for(IGUID value:values) {
-                out.writeUTF(value.toString());
+                out.writeUTF(value.toMultiHash(BASE.HEX));
             }
         }
 

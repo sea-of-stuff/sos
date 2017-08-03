@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -195,8 +196,8 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
     private static Manifest loadManifest(LocalStorage storage, IDirectory manifestsDir, IGUID guid) {
         try {
-            IFile file = FileUtils.CreateFile(storage, manifestsDir, guid.toString(), FileUtils.JSON_EXTENSION);
-            return FileUtils.ManifestFromFile(file);
+            IFile fileRef = FileUtils.CreateFile(storage, manifestsDir, guid.toMultiHash(BASE.HEX), FileUtils.JSON_EXTENSION);
+            return FileUtils.ManifestFromFile(fileRef);
         } catch (DataStorageException | ManifestNotFoundException e) {
             return null;
         }
@@ -209,7 +210,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         out.writeInt(lru.size());
         for (IGUID guid : lru) {
-            out.writeUTF(guid.toString());
+            out.writeUTF(guid.toMultiHash(BASE.HEX));
         }
     }
 

@@ -4,6 +4,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -32,7 +33,7 @@ public class ClientReplicationTest extends SetUpTest {
     private static final int MOCK_SERVER_PORT = 8110;
 
     protected static final String TEST_DATA = "test-data";
-    private static final String NODE_ID = "22aafd93ab9a6e2ed501fc583685088cca66bac2";
+    private static final String NODE_ID = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
 
     @Override
     @BeforeMethod
@@ -60,12 +61,12 @@ public class ClientReplicationTest extends SetUpTest {
                                                 "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                                 "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
-                                                "        \"ContentGUID\" : \"" + testGUID + "\",\n" +
+                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash(BASE.HEX) + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
                                                 "                \"Type\" : \"persistent\",\n" +
-                                                "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
+                                                "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX) + "\"\n" +
                                                 "            } \n" +
                                                 "        ]\n" +
                                                 "    }\n" +
@@ -77,7 +78,7 @@ public class ClientReplicationTest extends SetUpTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/storage/data/guid/" + testGUID)
+                                .withPath("/storage/data/guid/" + testGUID.toMultiHash(BASE.HEX))
                 )
                 .respond(
                         response()

@@ -36,6 +36,7 @@ public class ContextClassBuilderTest {
                         "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
                         "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
                         "import java.util.Collections;\n" +
+                        "import java.util.Arrays;\n" +
                         "\n" +
                         "public class Test extends BaseContext {\n" +
                         "\n" +

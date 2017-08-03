@@ -143,7 +143,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
             String filename = HEAD_TAG + version.getInvariantGUID().toMultiHash(BASE.HEX);
 
-            IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getInvariantGUID().toMultiHash(BASE.HEX));
+            IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toMultiHash(BASE.HEX));
             file.persist();
 
         } catch (DataStorageException | PersistenceException e) {

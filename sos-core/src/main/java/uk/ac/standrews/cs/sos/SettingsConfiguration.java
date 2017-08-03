@@ -333,6 +333,7 @@ public class SettingsConfiguration {
         // Settings relative to each Service
         public static class AdvanceServicesSettings {
 
+            private RoleSettings agent;
             private StorageSettings storage;
             private DDSSettings dds;
             private NDSSettings nds;
@@ -388,6 +389,14 @@ public class SettingsConfiguration {
 
             public void setMms(MMSSettings mms) {
                 this.mms = mms;
+            }
+
+            public RoleSettings getAgent() {
+                return agent;
+            }
+
+            public void setAgent(RoleSettings agent) {
+                this.agent = agent;
             }
 
             ///////////////////////////////

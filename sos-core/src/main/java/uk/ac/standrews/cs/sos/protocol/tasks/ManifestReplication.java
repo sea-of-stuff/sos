@@ -3,10 +3,7 @@ package uk.ac.standrews.cs.sos.protocol.tasks;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
-import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
-import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
+import uk.ac.standrews.cs.sos.impl.network.*;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -74,7 +71,7 @@ public class ManifestReplication extends Task {
 
         try {
             URL url = SOSURL.DDS_POST_MANIFEST(node);
-            SyncRequest request = new SyncRequest(HTTPMethod.POST, url);
+            SyncRequest request = new SyncRequest(HTTPMethod.POST, url, ResponseType.JSON);
             request.setJSONBody(manifest.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

@@ -92,7 +92,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     }
 
     @Test
-    public void persistCacheTest() throws IOException, ClassNotFoundException, ManifestPersistException, StorageException,
+    public void persistCacheTest() throws IOException, ClassNotFoundException, StorageException,
             DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException, ManifestNotFoundException {
 
         String root = System.getProperty("user.home") + "/sos/";

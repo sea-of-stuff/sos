@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -46,7 +47,7 @@ public abstract class StreamStore extends CommonLocalStore {
                 IFile tmpCachedLocation = getAtomLocation(tmpGUID);
                 guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
 
-                tmpCachedLocation.rename(guid.toString());
+                tmpCachedLocation.rename(guid.toMultiHash(BASE.HEX));
 
                 Location location = getLocation(guid);
                 locationBundle = getBundle(location);

@@ -9,7 +9,9 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
@@ -25,6 +27,7 @@ import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -39,6 +42,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -49,13 +53,17 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
     private static final int MOCK_SERVER_PORT = 10003;
 
     private static final String TEST_DATA = "test-data";
-    private static final String NODE_ID = "3c9bfd93ab9a6e2ed501fc583685088cca66bac2";
+    private static final String NODE_ID = "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
 
     private NodeDiscoveryService mockNodeDiscoveryService;
     private DataDiscoveryService mockDataDiscoveryService;
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException {
+    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
+
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
+        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
@@ -87,17 +95,17 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
                                         "    \"" + SOSConstants.DDD_INFO + "\" : \n" +
                                         "        [\n" +
                                         "                {\n" +
-                                        "                        \"" + SOSConstants.GUID + "\" : \"aebbfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "                        \"" + SOSConstants.GUID + "\" : \"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
                                         "                        \"" + SOSConstants.HOSTNAME + "\" : \"http://example1.org\",\n" +
                                         "                        \"" + SOSConstants.PORT + "\" : 12345\n" +
                                         "                },\n" +
                                         "                {\n" +
-                                        "                        \"" + SOSConstants.GUID + "\" : \"5039a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
+                                        "                        \"" + SOSConstants.GUID + "\" : \"SHA256_16_2222a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
                                         "                        \"" + SOSConstants.HOSTNAME + "\" : \"http://example2.org\",\n" +
                                         "                        \"" + SOSConstants.PORT + "\" : 12346\n" +
                                         "                },\n" +
                                         "                {        \n" +
-                                        "                        \"" + SOSConstants.GUID + "\" : \"002bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
+                                        "                        \"" + SOSConstants.GUID + "\" : \"SHA256_16_3333a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
                                         "                        \"" + SOSConstants.HOSTNAME + "\" : \"http://example3.org\",\n" +
                                         "                        \"" + SOSConstants.PORT + "\" : 12347\n" +
                                         "                }\n" +
@@ -106,7 +114,6 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
-        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
         mockDataDiscoveryService = mock(DataDiscoveryService.class);

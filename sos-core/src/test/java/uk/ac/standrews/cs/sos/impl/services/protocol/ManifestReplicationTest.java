@@ -4,15 +4,22 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +28,7 @@ import static org.mockito.Mockito.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -43,7 +51,12 @@ public class ManifestReplicationTest {
     private static final String TEST_BAD_MANIFEST = "BAD Manifest";
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException {
+    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
+
+        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/manifest_replication_test.json")).getSettingsObj();
+        SOSLocalNode.settings = settings;
+
+        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();

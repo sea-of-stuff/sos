@@ -2,6 +2,9 @@
   "settings": {
     "guid": "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
     "services": {
+      "agent": {
+        "exposed": true
+      },
       "storage": {
         "exposed": true
       },

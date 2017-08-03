@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -35,10 +36,8 @@ public abstract class CommonLocalStore implements Store {
     }
 
     protected IGUID generateGUID(InputStream inputStream) throws GUIDGenerationException {
-        IGUID retval;
-        retval = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
 
-        return retval;
+        return GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
     }
 
     protected IGUID generateGUID(Location location) throws GUIDGenerationException, SourceLocationException {
@@ -59,7 +58,7 @@ public abstract class CommonLocalStore implements Store {
         try {
             return new SOSLocation(nodeGUID, guid);
         } catch (MalformedURLException e) {
-            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toString(), e);
+            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toMultiHash(BASE.HEX), e);
         }
 
     }
@@ -68,12 +67,12 @@ public abstract class CommonLocalStore implements Store {
 
     protected IFile getAtomLocation(IGUID guid) throws DataStorageException {
         IDirectory dataDirectory = storage.getDataDirectory();
-        return storage.createFile(dataDirectory, guid.toString());
+        return storage.createFile(dataDirectory, guid.toMultiHash(BASE.HEX));
     }
 
     protected void storeData(IGUID guid, Data data) throws DataStorageException {
         IDirectory dataDirectory = storage.getDataDirectory();
-        IFile file = storage.createFile(dataDirectory, guid.toString(), data);
+        IFile file = storage.createFile(dataDirectory, guid.toMultiHash(BASE.HEX), data);
 
         try {
             file.persist();

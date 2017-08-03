@@ -34,7 +34,7 @@ public class FetchManifestTest {
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10005;
 
-    private static final String GUID_VERSION = "28b7f98d7163d2ef91b3a418316246ba2d76b353";
+    private static final String GUID_VERSION = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
     private static final String TEST_VERSION_MANIFEST = "{\"Type\":\"Version\"," +
             "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "\"GUID\":\""+ GUID_VERSION+"\"," +
@@ -46,7 +46,6 @@ public class FetchManifestTest {
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException {
-        IGUID testGUID = GUIDFactory.recreateGUID(GUID_VERSION);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -54,7 +53,7 @@ public class FetchManifestTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/dds/manifest/guid/" + testGUID)
+                                .withPath("/dds/manifest/guid/" + GUID_VERSION)
                 )
                 .respond(
                         response()

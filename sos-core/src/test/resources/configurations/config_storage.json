@@ -2,6 +2,9 @@
   "settings": {
     "guid": "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
     "services": {
+      "agent": {
+        "exposed": true
+      },
       "storage": {
         "exposed": true
       },
@@ -86,17 +89,28 @@
     },
     "bootstrapNodes": [
       {
-        "guid" : "6b67f67f31908dd0e574699f163eda2cc117f7f4",
-        "hostname" : "cs-wifi-174.cs.st-andrews.ac.uk",
-        "port" : 8080,
+        "guid" : "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
+        "hostname" : "localhost",
+        "port" : 8110,
         "services" : {
-          "agent" : false,
-          "storage" : true,
-          "dds" : false,
-          "nds" : false,
-          "mms" : false,
-          "cms" : false,
-          "rms" : false
+          "storage" : {
+            "exposed": true
+          },
+          "dds" : {
+            "exposed": false
+          },
+          "nds" : {
+            "exposed": false
+          },
+          "mms" : {
+            "exposed": false
+          },
+          "cms" : {
+            "exposed": false
+          },
+          "rms" : {
+            "exposed": false
+          }
         }
       }
     ]

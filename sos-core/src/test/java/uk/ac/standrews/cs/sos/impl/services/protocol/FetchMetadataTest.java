@@ -5,6 +5,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -33,10 +34,10 @@ public class FetchMetadataTest {
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10005;
 
-    private static final String GUID_METADATA = "02f80108b23125787b8bccc2b80ec623e2dffcd6";
+    private static final String GUID_METADATA = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
     private static final String TEST_METADATA =
             "{\n" +
-                    "    \"GUID\": \"02f80108b23125787b8bccc2b80ec623e2dffcd6\",\n" +
+                    "    \"GUID\": \"SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
                     "    \"Properties\": [\n" +
                     "        {\n" +
                     "            \"Key\": \"X-Parsed-By\",\n" +
@@ -76,7 +77,7 @@ public class FetchMetadataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/mms/metadata/guid/" + testGUID.toString())
+                                .withPath("/mms/metadata/guid/" + testGUID.toMultiHash(BASE.HEX))
                 )
                 .respond(
                         response()
