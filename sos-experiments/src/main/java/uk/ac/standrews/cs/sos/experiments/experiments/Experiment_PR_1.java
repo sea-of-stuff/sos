@@ -2,23 +2,15 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.impl.locations.URILocation;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Metadata;
-import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +20,6 @@ import java.util.List;
  */
 public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
-    private ContextService cms;
     private int counter;
 
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) {
@@ -66,6 +57,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
 
+        private ContextService cms;
         private CONTEXT_TYPE context_type;
 
         ExperimentUnit_PR_1(CONTEXT_TYPE context_type) {
@@ -76,14 +68,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         public void setup() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with context type " + context_type.name());
 
-            // TODO - notes for the experiment
-            // This experiment should be process against different types of contexts
-            // contexts should be loaded from file
-            // Instrumentation code will only measure the time to process the predicates, so we can ignore overhead time
             try {
                 cms = node.getCMS();
 
-                addFolderContentToNode(new File(TEST_DATA_FOLDER));
+                addFolderContentToNode(node, new File(TEST_DATA_FOLDER));
                 addContexts();
             } catch (Exception e) {
                 throw new ExperimentException();
@@ -95,28 +83,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with context type " + context_type.name());
 
             counter = cms.runPredicates();
-        }
-
-        private void addFolderContentToNode(File folder) throws URISyntaxException, MetadataException, IOException {
-
-            File[] listOfFiles = folder.listFiles();
-
-            assert listOfFiles != null;
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile()) {
-
-                    String fileLocation = listOfFile.getAbsolutePath();
-                    AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(fileLocation));
-                    Metadata metadata = node.getAgent().addMetadata(atomBuilder.getLocation().getSource()); // TODO - do this in the version builder?
-                    VersionBuilder versionBuilder = new VersionBuilder()
-                            .setAtomBuilder(atomBuilder)
-                            .setMetadata(metadata);
-
-                    Version version = node.getAgent().addData(versionBuilder);
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid().toShortString() + " from URI " + fileLocation);
-                }
-            }
-
         }
 
         private void addContexts() throws Exception {

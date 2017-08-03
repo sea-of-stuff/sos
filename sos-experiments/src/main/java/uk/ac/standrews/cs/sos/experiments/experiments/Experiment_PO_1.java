@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
+import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.util.Collections;
@@ -50,6 +51,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_PO_1 implements ExperimentUnit {
 
         private int id;
+        private ContextService cms;
 
         ExperimentUnit_PO_1(int id) {
             this.id = id;
@@ -57,6 +59,16 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with id " + id);
+
+            try {
+                cms = node.getCMS();
+
+                addFolderContentToNode(node, new File(TEST_DATA_FOLDER));
+                // TODO - add contexts
+            } catch (Exception e) {
+                throw new ExperimentException();
+            }
         }
 
         @Override
