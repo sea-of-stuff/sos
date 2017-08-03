@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -61,7 +62,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         assertEquals(context.guid(), guid);
         assertTrue(context.getName().startsWith("Test_context"));
-        assertEquals(context.getName(), "Test_context-" + guid);
+        assertEquals(context.getName(), "Test_context-" + guid.toMultiHash(BASE.HEX));
     }
 
     @Test

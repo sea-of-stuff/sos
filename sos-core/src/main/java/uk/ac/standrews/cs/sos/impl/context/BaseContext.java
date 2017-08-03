@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -69,7 +70,7 @@ public abstract class BaseContext implements Context {
 
     @Override
     public String getName() {
-        return name + "-" + guid.toString();
+        return name + "-" + guid.toMultiHash(BASE.HEX);
     }
 
     @Override
