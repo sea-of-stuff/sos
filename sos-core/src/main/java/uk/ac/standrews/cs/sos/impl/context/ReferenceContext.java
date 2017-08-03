@@ -43,7 +43,7 @@ public class ReferenceContext extends BaseContext {
 
     @Override
     public Policy[] policies() {
-        return new Policy[]{  };
+        return new Policy[]{ new CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1) };
     }
 
 }

@@ -19,6 +19,7 @@ public class SOS_LOG {
         nodeGUID = guid;
 
         log = Logger.LOG(Logger.LOG4J_LOGGER, "logs/sos.log");
+        log.disable("org.apache.http.wire");
     }
 
     public static void log(LEVEL level, String message) {
