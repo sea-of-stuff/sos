@@ -23,8 +23,8 @@ public class SOSAddSecureAtomTest extends StorageTest {
     @Test
     public void basicAddSecureAtomTest() throws Exception {
 
-        User user = new UserImpl("TEST");
-        Role role = new RoleImpl(user, "ROLE_TEST");
+        User user = new UserImpl("TEST_ADD_SECURE_ATOM");
+        Role role = new RoleImpl(user, "ROLE_TEST_ADD_SECURE_ATOM");
 
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);

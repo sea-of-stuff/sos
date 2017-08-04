@@ -21,10 +21,12 @@ public abstract class LocationStore extends CommonLocalStore {
 
     private Location origin;
     private LocationBundle locationBundle;
+    private boolean persist;
 
-    public LocationStore(IGUID nodeGUID, LocalStorage storage, Location location) {
+    public LocationStore(IGUID nodeGUID, LocalStorage storage, Location location, boolean persist) {
         super(nodeGUID, storage);
         this.origin = location;
+        this.persist = persist;
     }
 
     @Override
@@ -40,9 +42,11 @@ public abstract class LocationStore extends CommonLocalStore {
                 return null;
             }
 
-            // TODO - do not store if data is already in disk
+            if (persist) {
+                // TODO - do not store if data is already in disk
+                storeData(origin, guid);
+            }
 
-            storeData(origin, guid);
             Location location = getLocation(guid);
             locationBundle = getBundle(location);
         } catch (GUIDGenerationException | SourceLocationException e) {

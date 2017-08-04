@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.model.Location;
 public class LocationCache extends LocationStore {
 
     public LocationCache(IGUID nodeGUID, LocalStorage storage, Location location) {
-        super(nodeGUID, storage, location);
+        super(nodeGUID, storage, location, false);
     }
 
     @Override

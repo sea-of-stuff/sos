@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.model.Location;
 public class LocationPersist extends LocationStore {
 
     public LocationPersist(IGUID nodeGUID, LocalStorage storage, Location location) {
-        super(nodeGUID, storage, location);
+        super(nodeGUID, storage, location, true);
     }
 
     @Override

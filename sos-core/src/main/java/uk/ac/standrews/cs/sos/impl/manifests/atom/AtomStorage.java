@@ -101,9 +101,11 @@ public class AtomStorage {
         IGUID guid = store.store();
         if (bundles!= null && guid != null) {
             LocationBundle locationBundle = store.getLocationBundle();
-            bundles.add(locationBundle);
 
-            addLocation(guid, locationBundle);
+            if (locationBundle != null) {
+                bundles.add(locationBundle);
+                addLocation(guid, locationBundle);
+            }
         }
 
         return guid;

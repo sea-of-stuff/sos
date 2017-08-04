@@ -70,7 +70,7 @@ public class SOSStorage implements Storage {
     public SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder, Role role, boolean persist) throws StorageException, ManifestPersistException, ManifestNotMadeException, DataStorageException, IOException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
-        IGUID guid = addAtom(atomBuilder, bundles, persist);
+        IGUID guid = addAtom(atomBuilder, bundles, false);
         if (guid == null || guid.isInvalid()) {
             throw new StorageException();
         }
