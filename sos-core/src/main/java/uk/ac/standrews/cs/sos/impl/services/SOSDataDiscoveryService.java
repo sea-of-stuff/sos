@@ -65,6 +65,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         inMemoryCache.addManifest(manifest);
         local.addManifest(manifest);
 
+        // Add/Update TIP
         if (manifest.getType() == ManifestType.VERSION) {
 
             Version version = (Version) manifest;

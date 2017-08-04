@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.guid.BASE;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -21,19 +24,19 @@ public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManif
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.ATOM.toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toMultiHash(BASE.HEX)); // HASH(d')
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.ATOM_PROTECTED.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toMultiHash(BASE.HEX));
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_LOCATIONS);
         jsonGenerator.writeStartArray();
         serializeLocations(atomManifest, jsonGenerator);
         jsonGenerator.writeEndArray();
 
-        jsonGenerator.writeFieldName(JSONConstants.KEY_KEYS);
+        jsonGenerator.writeFieldName(JSONConstants.KEYS_PROTECTION);
         jsonGenerator.writeStartArray();
-
+        serializeKeys(atomManifest, jsonGenerator);
         jsonGenerator.writeEndArray();
-        serializeKeys();
+
         jsonGenerator.writeEndObject();
     }
 
@@ -44,15 +47,17 @@ public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManif
         }
     }
 
-    /*
-     * [
-     *      {
-     *          "Key" : public-key,
-     *          "Role" : role-guid
-     *      }
-     * ]
-     */
-    private void serializeKeys() {
+    private void serializeKeys(SecureAtomManifest atomManifest, JsonGenerator jsonGenerator) throws IOException {
+        HashMap<IGUID, String> keysRolesMap = atomManifest.keysRoles();
+        for(Map.Entry<IGUID, String> e:keysRolesMap.entrySet()) {
 
+            jsonGenerator.writeStartObject();
+
+            jsonGenerator.writeStringField(JSONConstants.KEYS_PROTECTION_ROLE, e.getKey().toMultiHash(BASE.HEX));
+            jsonGenerator.writeStringField(JSONConstants.KEYS_PROTECTION_KEY, e.getValue());
+
+            jsonGenerator.writeEndObject();
+        }
     }
+
 }

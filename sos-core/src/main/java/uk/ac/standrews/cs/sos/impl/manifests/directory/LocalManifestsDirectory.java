@@ -166,7 +166,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         try {
             IGUID manifestFileGUID = manifest.guid();
 
-            boolean isAtomManifest = manifest.getType().equals(ManifestType.ATOM);
+            boolean isAtomManifest = manifest.getType().equals(ManifestType.ATOM) || manifest.getType().equals(ManifestType.ATOM_PROTECTED);
             boolean manifestExists = manifestExistsInStorage(manifestFileGUID);
 
             if (isAtomManifest && manifestExists) {

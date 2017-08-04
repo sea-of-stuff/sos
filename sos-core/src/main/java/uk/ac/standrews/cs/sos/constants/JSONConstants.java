@@ -23,6 +23,11 @@ public class JSONConstants {
     public static final String KEY_PREVIOUS_GUID = "Previous";
     public static final String KEY_METADATA_GUID = "Metadata";
 
+    // Secure Manifest keys
+    public static final String KEYS_PROTECTION = "Keys";
+    public static final String KEYS_PROTECTION_KEY = "Key";
+    public static final String KEYS_PROTECTION_ROLE = "Role";
+
     // Content keys
     public static final String CONTENT_KEY_GUID = "GUID";
     public static final String CONTENT_KEY_LABEL = "Label";
@@ -36,9 +41,6 @@ public class JSONConstants {
     public static final String KEY_META_KEY = "Key";
     public static final String KEY_META_TYPE = "Type";
     public static final String KEY_META_VALUE = "Value";
-
-    // Protection
-    public static final String KEY_KEYS = "Keys";
 
     // Role/User
     public static final String KEY_USER = "User";
