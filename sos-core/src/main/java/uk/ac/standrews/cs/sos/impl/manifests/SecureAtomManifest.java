@@ -2,11 +2,10 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.GUIDFactory;
+import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
@@ -14,12 +13,15 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
-import uk.ac.standrews.cs.utilities.Pair;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
 import javax.crypto.SecretKey;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -29,7 +31,8 @@ import java.util.Set;
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
 public class SecureAtomManifest extends AtomManifest implements Atom, SecureManifest {
 
-    private Role role;
+    private InputStream encryptedData;
+    private HashMap<IGUID, String> rolesToKeys;
 
     /**
      * Creates a valid atom manifest given an atom.
@@ -40,53 +43,108 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
      * @param guid
      * @param locations
      */
-    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) {
+    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) throws ProtectionException {
         super(guid, locations);
         this.manifestType = ManifestType.ATOM_PROTECTED;
-        this.role = role;
 
-        // TODO - encrypt the local data!!!
-        encrypt("TODO");
+        this.rolesToKeys = new HashMap<>(); // TODO - maybe this already exists, have another constructor?
+        encrypt(role);
     }
 
-    // TODO - use file and inputstream for data
+    private void encrypt(Role role) throws ProtectionException {
+
+        // Encrypt the data from one of the locations
+        for (LocationBundle location : getLocations()) {
+
+            InputStream dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
+
+            if (!(dataStream instanceof NullInputStream)) {
+                // TODO - verify that the data matched the guid?
+                encrypt(role, dataStream);
+                break;
+            }
+        }
+
+    }
+
     // 1. Generate random key K
     // 2. encrypt data with K --> d'
     // 3. encrypt k with pubkey --> (k', pubkey)
     // 4. guid = hash(d')
-    private void encrypt(String data){
+    // Note that the data is not saved to disk, as it is the Storage service duty to save any data to disk
+    private void encrypt(Role role, InputStream originalData) throws ProtectionException {
 
         try {
-
             SecretKey key = SymmetricEncryption.generateRandomKey();
-            String encryptedData = SymmetricEncryption.encrypt(key, data);
-            // TODO - save data to disk
-            String encryptedKey = role.encrypt(key);
-            this.guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, encryptedData);
 
-        } catch (CryptoException | ProtectionException | GUIDGenerationException e) {
-            e.printStackTrace();
+            // How to pipe outputstream to inputstream
+            // http://io-tools.sourceforge.net/easystream/outputstream_to_inputstream/Pipes.html
+            PipedInputStream in = new PipedInputStream();
+            PipedOutputStream out = new PipedOutputStream(in);
+            new Thread(
+                    () -> {
+
+                        try {
+                            SymmetricEncryption.encrypt(key, originalData, out);
+                        } catch (CryptoException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            ).start();
+
+            String encryptedKey = role.encrypt(key);
+            rolesToKeys.put(role.guid(), encryptedKey);
+            encryptedData = in;
+            // The line below will break all existing references, thus we won't use it
+            // guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, in);
+
+        } catch (CryptoException | ProtectionException | IOException e) {
+            throw new ProtectionException(e);
+        }
+
+    }
+
+    /**
+     * Return the encrypted data
+     */
+    @Override
+    public InputStream getData() {
+
+        return encryptedData;
+    }
+
+    // Returns the unencrypted data
+    public InputStream getData(Role role) throws ProtectionException {
+
+        try {
+            String encryptedKey = rolesToKeys.get(role.guid());
+            SecretKey decryptedKey = role.decrypt(encryptedKey);
+
+            PipedInputStream in = new PipedInputStream();
+            PipedOutputStream out = new PipedOutputStream(in);
+            new Thread(
+                    () -> {
+
+                        try {
+                            SymmetricEncryption.decrypt(decryptedKey, encryptedData, out);
+                        } catch (CryptoException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            ).start();
+
+            return in;
+
+        } catch (ProtectionException | IOException e) {
+            throw new ProtectionException(e);
         }
 
     }
 
     @Override
-    public InputStream getData() {
-        // Return the encrypted data
-        // maybe there is no need to override this method
-        return null;
+    public HashMap<IGUID, String> keysRoles() {
+
+        return rolesToKeys;
     }
 
-    public InputStream getData(Role role) {
-        // Retruns the unencrypted data
-        return null;
-    }
-
-    @Override
-    public Set<Pair<String, IGUID>> keysRoles() {
-
-        // Return the set of (encrypted key, guid of role)
-
-        return null;
-    }
 }
