@@ -13,6 +13,8 @@ import java.util.Set;
 // TODO - json serialise/deserialise
 public class SecureCompoundManifest extends CompoundManifest implements Compound, SecureManifest {
 
+    private HashMap<IGUID, String> rolesToKeys;
+
     public SecureCompoundManifest(CompoundType type, Set<Content> contents, Role signer) throws ManifestNotMadeException {
         super(type, contents, signer);
     }
@@ -23,6 +25,6 @@ public class SecureCompoundManifest extends CompoundManifest implements Compound
 
     @Override
     public HashMap<IGUID, String> keysRoles() {
-        return null;
+        return rolesToKeys;
     }
 }

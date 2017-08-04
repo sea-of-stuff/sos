@@ -31,6 +31,11 @@ public class ManifestFactory {
         return new AtomManifest(guid, locations);
     }
 
+    public static SecureAtomManifest createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) throws ManifestNotMadeException {
+
+        return new SecureAtomManifest(guid, locations, role);
+    }
+
     /**
      *
      * @param type

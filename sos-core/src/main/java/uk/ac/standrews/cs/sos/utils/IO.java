@@ -25,4 +25,17 @@ public class IO {
         IOUtils.copy(input, baos);
         return baos;
     }
+
+    public static InputStream OutputStreamToInputStream(ByteArrayOutputStream out) throws IOException {
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    public static InputStream CloneInputStream(InputStream inputStream) throws IOException {
+
+        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
+            return new ByteArrayInputStream(baos.toByteArray());
+        }
+    }
+
 }

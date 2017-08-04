@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
@@ -13,14 +14,14 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
 import javax.crypto.SecretKey;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -43,12 +44,16 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
      * @param guid
      * @param locations
      */
-    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) throws ProtectionException {
+    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) throws ManifestNotMadeException {
         super(guid, locations);
         this.manifestType = ManifestType.ATOM_PROTECTED;
 
         this.rolesToKeys = new HashMap<>(); // TODO - maybe this already exists, have another constructor?
-        encrypt(role);
+        try {
+            encrypt(role);
+        } catch (ProtectionException e) {
+            throw new ManifestNotMadeException("Unable to encrypt content");
+        }
     }
 
     private void encrypt(Role role) throws ProtectionException {
@@ -74,27 +79,16 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
     // Note that the data is not saved to disk, as it is the Storage service duty to save any data to disk
     private void encrypt(Role role, InputStream originalData) throws ProtectionException {
 
-        try {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
             SecretKey key = SymmetricEncryption.generateRandomKey();
 
-            // How to pipe outputstream to inputstream
-            // http://io-tools.sourceforge.net/easystream/outputstream_to_inputstream/Pipes.html
-            PipedInputStream in = new PipedInputStream();
-            PipedOutputStream out = new PipedOutputStream(in);
-            new Thread(
-                    () -> {
-
-                        try {
-                            SymmetricEncryption.encrypt(key, originalData, out);
-                        } catch (CryptoException e) {
-                            e.printStackTrace();
-                        }
-                    }
-            ).start();
+            SymmetricEncryption.encrypt(key, originalData, out);
+            encryptedData = IO.OutputStreamToInputStream(out);
 
             String encryptedKey = role.encrypt(key);
             rolesToKeys.put(role.guid(), encryptedKey);
-            encryptedData = in;
+
             // The line below will break all existing references, thus we won't use it
             // guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, in);
 
@@ -108,34 +102,26 @@ public class SecureAtomManifest extends AtomManifest implements Atom, SecureMani
      * Return the encrypted data
      */
     @Override
-    public InputStream getData() {
+    public InputStream getData() throws IOException {
 
-        return encryptedData;
+        // NOTE: get this from location as in the atom manifest?
+        encryptedData.reset();
+        return IO.CloneInputStream(encryptedData);
     }
 
     // Returns the unencrypted data
     public InputStream getData(Role role) throws ProtectionException {
 
-        try {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
             String encryptedKey = rolesToKeys.get(role.guid());
             SecretKey decryptedKey = role.decrypt(encryptedKey);
 
-            PipedInputStream in = new PipedInputStream();
-            PipedOutputStream out = new PipedOutputStream(in);
-            new Thread(
-                    () -> {
+            SymmetricEncryption.decrypt(decryptedKey, getData(), out);
 
-                        try {
-                            SymmetricEncryption.decrypt(decryptedKey, encryptedData, out);
-                        } catch (CryptoException e) {
-                            e.printStackTrace();
-                        }
-                    }
-            ).start();
+            return IO.OutputStreamToInputStream(out);
 
-            return in;
-
-        } catch (ProtectionException | IOException e) {
+        } catch (CryptoException | ProtectionException | IOException e) {
             throw new ProtectionException(e);
         }
 

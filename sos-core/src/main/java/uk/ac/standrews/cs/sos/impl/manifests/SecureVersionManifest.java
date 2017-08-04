@@ -14,12 +14,14 @@ import java.util.Set;
  */
 public class SecureVersionManifest extends VersionManifest implements Version, SecureManifest {
 
+    private HashMap<IGUID, String> rolesToKeys;
+
     public SecureVersionManifest(IGUID invariant, IGUID content, Set<IGUID> prevs, IGUID metadata, Role signer) throws ManifestNotMadeException {
         super(invariant, content, prevs, metadata, signer);
     }
 
     @Override
     public HashMap<IGUID, String> keysRoles() {
-        return null;
+        return rolesToKeys;
     }
 }

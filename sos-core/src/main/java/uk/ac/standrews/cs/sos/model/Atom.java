@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public interface Atom extends Manifest {
      * Return the atom's data
      * @return
      */
-    InputStream getData();
+    InputStream getData() throws IOException;
 
     CompressionAlgorithms getCompressionAlgorithm();
 }

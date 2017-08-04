@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -56,6 +57,6 @@ public interface Manifest {
      *
      * @return the content used to generate the GUID for this manifest
      */
-    InputStream contentToHash() throws UnsupportedEncodingException;
+    InputStream contentToHash() throws UnsupportedEncodingException, IOException;
 
 }

@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -64,7 +63,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public InputStream getData() {
+    public InputStream getData() throws IOException {
         InputStream dataStream = null;
         for (LocationBundle location : locations) {
 
@@ -94,7 +93,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public InputStream contentToHash() throws UnsupportedEncodingException {
+    public InputStream contentToHash() throws IOException {
         return getData();
     }
 
