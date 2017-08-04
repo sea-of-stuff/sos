@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.network;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -32,7 +31,7 @@ public class SyncRequestTest extends CommonTest {
     public void setUp(java.lang.reflect.Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         // Read the settings configuration. This will set the SSL Store path.
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_CONFIGURATIONS_PATH + "config_network.json")).getSettingsObj();

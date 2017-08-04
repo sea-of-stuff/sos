@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.node;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -51,7 +50,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         }
 
         testNode = mock(SOSLocalNode.class);
-        when(testNode.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        when(testNode.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
         localNodesDirectory = new LocalNodesDirectory(testNode, database);
     }
 
@@ -63,7 +62,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void basicAddGetNodeTest() {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
         localNodesDirectory.addNode(node);
@@ -77,7 +76,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         Set<Node> nodes = localNodesDirectory.getKnownNodes();
         assertEquals(nodes.size(), 0);
 
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
@@ -100,7 +99,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void persistTest() throws GUIDGenerationException, NodesDirectoryException {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
         assertEquals(localNodesDirectory.getKnownNodes().size(), 0);
@@ -114,7 +113,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void getStorageNodesWithLimitTest() {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
@@ -132,7 +131,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void getStorageNodesWithLimitCapTest() {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
@@ -150,7 +149,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void getStorageNodesWithLimitInExcessTest() {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
@@ -168,7 +167,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void getStorageNodesIgnoreNegativeLimitTest() {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
@@ -186,7 +185,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     @Test
     public void nodeIsUpdatedTest() throws NodesDirectoryException {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
         localNodesDirectory.addNode(node);
@@ -209,7 +208,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     }
 
     private void addNode(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS) {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         addNode(guid, isClient, isStorage, isDDS, isNDS, isMCS, isCMS, isRMS);
     }
 }

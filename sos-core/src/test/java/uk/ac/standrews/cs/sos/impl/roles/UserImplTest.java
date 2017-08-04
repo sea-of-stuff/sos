@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
@@ -31,7 +30,7 @@ public class UserImplTest {
     @Test
     public void constructorWithGUIDTest() throws SignatureException {
 
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         User user = new UserImpl(guid,"TEST");
 
         assertEquals(user.getName(), "TEST");
@@ -42,7 +41,7 @@ public class UserImplTest {
     @Test
     public void constructorWithGUIDAndSignatureTest() throws SignatureException, CryptoException {
 
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         PublicKey certificate = DigitalSignature.generateKeys().getPublic();
         User user = new UserImpl(guid,"TEST", certificate);
 

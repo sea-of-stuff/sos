@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -58,7 +57,7 @@ public abstract class CommonLocalStore implements Store {
         try {
             return new SOSLocation(nodeGUID, guid);
         } catch (MalformedURLException e) {
-            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toMultiHash(BASE.HEX), e);
+            throw new SourceLocationException("SOSLocation could not be generated for entity: " + guid.toMultiHash(), e);
         }
 
     }
@@ -67,12 +66,12 @@ public abstract class CommonLocalStore implements Store {
 
     protected IFile getAtomLocation(IGUID guid) throws DataStorageException {
         IDirectory dataDirectory = storage.getDataDirectory();
-        return storage.createFile(dataDirectory, guid.toMultiHash(BASE.HEX));
+        return storage.createFile(dataDirectory, guid.toMultiHash());
     }
 
     protected void storeData(IGUID guid, Data data) throws DataStorageException {
         IDirectory dataDirectory = storage.getDataDirectory();
-        IFile file = storage.createFile(dataDirectory, guid.toMultiHash(BASE.HEX), data);
+        IFile file = storage.createFile(dataDirectory, guid.toMultiHash(), data);
 
         try {
             file.persist();

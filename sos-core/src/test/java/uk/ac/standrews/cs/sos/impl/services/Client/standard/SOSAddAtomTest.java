@@ -6,7 +6,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -151,7 +150,7 @@ public class SOSAddAtomTest extends AgentTest {
         IDirectory dataDir = localStorage.getDataDirectory();
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        IFile file = localStorage.createFile(dataDir, manifest.guid().toMultiHash(BASE.HEX));
+        IFile file = localStorage.createFile(dataDir, manifest.guid().toMultiHash());
         IFile manifestFile = localStorage.createFile(manifestsDir, manifest.guid() + ".json");
         long lmFile = file.lastModified();
         long lmManifestFile = manifestFile.lastModified();
@@ -164,7 +163,7 @@ public class SOSAddAtomTest extends AgentTest {
 
         assertEquals(manifest.guid(), newManifest.guid());
 
-        IFile newFile = localStorage.createFile(dataDir, newManifest.guid().toMultiHash(BASE.HEX));
+        IFile newFile = localStorage.createFile(dataDir, newManifest.guid().toMultiHash());
         IFile newManifestFile = localStorage.createFile(manifestsDir, newManifest.guid() + ".json");
         long newlmFile = newFile.lastModified();
         long newlmManifestFile = newManifestFile.lastModified();

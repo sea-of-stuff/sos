@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -141,7 +140,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     private void saveToFile(User user) throws UserRolePersistException {
 
         try {
-            String userGUID = user.guid().toMultiHash(BASE.HEX);
+            String userGUID = user.guid().toMultiHash();
 
             Data data = new StringData(user.toString());
 
@@ -168,7 +167,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     // TODO - attempt to get also keys?????
     private User getUserFromGUID(IGUID guid) throws UserNotFoundException {
         try {
-            IFile file = makeJSONFile(guid.toMultiHash(BASE.HEX));
+            IFile file = makeJSONFile(guid.toMultiHash());
 
             return FileUtils.UserFromFile(file);
 
@@ -179,7 +178,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
 
     private Role getRoleFromGUID(IGUID guid) throws RoleNotFoundException {
         try {
-            IFile file = makeJSONFile(guid.toMultiHash(BASE.HEX));
+            IFile file = makeJSONFile(guid.toMultiHash());
 
             return FileUtils.RoleFromFile(file);
 

@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -21,7 +20,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, metadata.guid().toMultiHash(BASE.HEX));
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, metadata.guid().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.METADATA.toString());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_META_PROPERTIES);
@@ -70,7 +69,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
                 jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
                 break;
             case "GUID":
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, ((IGUID) value).toMultiHash(BASE.HEX)); // TODO - this line is not tested, I better should do so
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, ((IGUID) value).toMultiHash()); // TODO - this line is not tested, I better should do so
                 break;
         }
     }

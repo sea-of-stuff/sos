@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
@@ -220,7 +219,7 @@ public class SOSStorage implements Storage {
 
         Data data = new InputStreamData(secureAtomManifest.getData());
         IDirectory dataDirectory = storage.getDataDirectory();
-        IFile file = storage.createFile(dataDirectory, secureAtomManifest.guid().toMultiHash(BASE.HEX), data);
+        IFile file = storage.createFile(dataDirectory, secureAtomManifest.guid().toMultiHash(), data);
         file.persist();
     }
 

@@ -5,7 +5,6 @@ import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -90,14 +89,14 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private boolean dataIsStoredLocally(IGUID guid) throws DataStorageException {
-        return localStorage.getDataDirectory().contains(guid.toMultiHash(BASE.HEX));
+        return localStorage.getDataDirectory().contains(guid.toMultiHash());
     }
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
             BindingAbsentException, DataException, IOException {
 
         IDirectory directory = localStorage.getDataDirectory();
-        String filename = entityGUID.toMultiHash(BASE.HEX);
+        String filename = entityGUID.toMultiHash();
         IFile file = (IFile) directory.get(filename);
         Data data = file.getData();
 

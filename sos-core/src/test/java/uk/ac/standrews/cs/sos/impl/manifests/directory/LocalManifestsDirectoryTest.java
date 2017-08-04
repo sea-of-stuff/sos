@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -93,7 +92,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
-        Content content = new ContentImpl("Cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        Content content = new ContentImpl("Cat", GUIDFactory.generateRandomGUID());
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
@@ -129,7 +128,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void addVersionManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
-        IGUID contentGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID contentGUID = GUIDFactory.generateRandomGUID();
         Version versionManifest = ManifestUtils.createDummyVersion(contentGUID);
 
         IGUID guid = versionManifest.getVersionGUID();
@@ -201,7 +200,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
         try {
             manifestsDirectory.addManifest(atomManifest);
-            storage.getManifestsDirectory().remove(guid.toMultiHash(BASE.HEX) + ".json");
+            storage.getManifestsDirectory().remove(guid.toMultiHash() + ".json");
 
             manifestsDirectory.addManifest(anotherManifest);
             AtomManifest manifest = (AtomManifest) manifestsDirectory.findManifest(guid);

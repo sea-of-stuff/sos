@@ -5,7 +5,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -46,7 +45,7 @@ public class FetchDataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/storage/data/guid/" + testGUID.toMultiHash(BASE.HEX))
+                                .withPath("/storage/data/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()
@@ -65,7 +64,7 @@ public class FetchDataTest {
     @Test
     public void basicDataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -84,7 +83,7 @@ public class FetchDataTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
 
@@ -96,7 +95,7 @@ public class FetchDataTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchANullGUIDTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 

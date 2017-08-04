@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
@@ -21,7 +20,7 @@ public class UserSerializer extends JsonSerializer<User> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, user.guid().toMultiHash(BASE.HEX));
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, user.guid().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_NAME, user.getName());
 
         try {

@@ -29,6 +29,9 @@ public class CacheFlusher implements Runnable {
         if (runFlusher) {
             flush();
         }
+
+        // Run the GC while we are at it...
+        System.gc();
     }
 
     /**

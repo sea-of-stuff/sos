@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -25,7 +24,7 @@ public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManif
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.ATOM_PROTECTED.toString());
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toMultiHash(BASE.HEX));
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toMultiHash());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_LOCATIONS);
         jsonGenerator.writeStartArray();
@@ -53,7 +52,7 @@ public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManif
 
             jsonGenerator.writeStartObject();
 
-            jsonGenerator.writeStringField(JSONConstants.KEYS_PROTECTION_ROLE, e.getKey().toMultiHash(BASE.HEX));
+            jsonGenerator.writeStringField(JSONConstants.KEYS_PROTECTION_ROLE, e.getKey().toMultiHash());
             jsonGenerator.writeStringField(JSONConstants.KEYS_PROTECTION_KEY, e.getValue());
 
             jsonGenerator.writeEndObject();

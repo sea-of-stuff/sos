@@ -5,7 +5,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
@@ -41,7 +40,7 @@ public class SOSAddCompoundTest extends AgentTest {
 
     @Test
     public void testAddCompound() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -67,7 +66,7 @@ public class SOSAddCompoundTest extends AgentTest {
      */
     @Test
     public void testAddCompoundAndVerifyFails() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

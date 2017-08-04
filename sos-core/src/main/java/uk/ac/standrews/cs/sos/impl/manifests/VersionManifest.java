@@ -209,7 +209,7 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     private IGUID makeInvariant() {
-        return GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        return GUIDFactory.generateRandomGUID();
     }
 
     private IGUID makeVersionGUID() throws GUIDGenerationException {

@@ -22,7 +22,6 @@ public class WMetadata {
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
-
         Agent agent = sos.getAgent();
 
         Manifest manifest = agent.getManifest(guid);

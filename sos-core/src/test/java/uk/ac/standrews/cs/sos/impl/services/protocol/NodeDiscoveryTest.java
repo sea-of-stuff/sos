@@ -4,8 +4,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -43,7 +41,7 @@ public class NodeDiscoveryTest {
 
     private SOSNodeDiscoveryService nds;
     private Node localNode;
-    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
 
     private ClientAndServer mockServer;
 
@@ -74,8 +72,8 @@ public class NodeDiscoveryTest {
         nds = new SOSNodeDiscoveryService(localNode, database);
 
         // MOCK SERVER SETUP
-        nodeFound = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
-        nodeNotFound = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        nodeFound = GUIDFactory.generateRandomGUID();
+        nodeNotFound = GUIDFactory.generateRandomGUID();
 
         mockServer = startClientAndServer(NODE_PORT);
         mockServer.dumpToLog();
@@ -83,14 +81,14 @@ public class NodeDiscoveryTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/nds/guid/" + nodeFound.toMultiHash(BASE.HEX))
+                                .withPath("/nds/guid/" + nodeFound.toMultiHash())
                 )
                 .respond(
                         response()
                                 .withStatusCode(200)
                                 .withBody(
                                         "{\n" +
-                                                "    \"" + SOSConstants.GUID +"\": \"" +  nodeFound.toMultiHash(BASE.HEX) + "\",\n" +
+                                                "    \"" + SOSConstants.GUID +"\": \"" +  nodeFound.toMultiHash() + "\",\n" +
                                                 "    \"" + SOSConstants.HOSTNAME + "\": \"localhost\",\n" +
                                                 "    \"" + SOSConstants.PORT + "\": 12345\n" +
                                                 "}"
@@ -101,7 +99,7 @@ public class NodeDiscoveryTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/nds/guid/" + nodeNotFound.toMultiHash(BASE.HEX))
+                                .withPath("/nds/guid/" + nodeNotFound.toMultiHash())
                 )
                 .respond(
                         response()
@@ -132,14 +130,14 @@ public class NodeDiscoveryTest {
     @Test (expectedExceptions = NodeNotFoundException.class)
     public void findUnknownNodeTest() throws NodeNotFoundException {
 
-        nds.getNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        nds.getNode(GUIDFactory.generateRandomGUID());
     }
 
     @Test
     public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);
@@ -153,7 +151,7 @@ public class NodeDiscoveryTest {
     public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);

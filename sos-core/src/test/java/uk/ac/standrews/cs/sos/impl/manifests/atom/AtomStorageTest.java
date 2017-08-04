@@ -4,7 +4,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -30,7 +29,7 @@ import static org.testng.AssertJUnit.assertNull;
  */
 public class AtomStorageTest extends SetUpTest {
 
-    private final static IGUID NODE_GUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+    private final static IGUID NODE_GUID = GUIDFactory.generateRandomGUID();
 
     private AtomStorage atomStorage;
 

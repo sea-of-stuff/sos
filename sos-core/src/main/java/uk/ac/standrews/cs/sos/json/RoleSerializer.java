@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
@@ -22,8 +21,8 @@ public class RoleSerializer  extends JsonSerializer<Role> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, role.guid().toMultiHash(BASE.HEX));
-        jsonGenerator.writeStringField(JSONConstants.KEY_USER, role.getUser().toMultiHash(BASE.HEX));
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, role.guid().toMultiHash());
+        jsonGenerator.writeStringField(JSONConstants.KEY_USER, role.getUser().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_NAME, role.getName());
         jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE, role.getSignature());
 

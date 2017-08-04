@@ -4,7 +4,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreType;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 
@@ -41,7 +40,7 @@ public class SettingsConfigurationTest {
         IGUID guid = settings.getSettingsObj().getNodeGUID();
         assertFalse(guid.isInvalid());
         assertEquals(guid.toString(), "0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4");
-        assertEquals(guid.toMultiHash(BASE.HEX), "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4");
+        assertEquals(guid.toMultiHash(), "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4");
     }
 
     @Test

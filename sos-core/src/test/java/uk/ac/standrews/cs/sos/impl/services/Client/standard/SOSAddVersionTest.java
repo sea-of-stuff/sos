@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.services.Client.standard;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
@@ -31,7 +30,7 @@ public class SOSAddVersionTest extends AgentTest {
 
     @Test
     public void testAddVersion() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -52,9 +51,9 @@ public class SOSAddVersionTest extends AgentTest {
 
     @Test
     public void testRetrieveVersionFromFileWithPrevsAndMeta() throws Exception {
-        IGUID invariant = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID invariant = GUIDFactory.generateRandomGUID();
 
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -64,11 +63,11 @@ public class SOSAddVersionTest extends AgentTest {
         Compound compound = agent.addCompound(compoundBuilder);
 
         Set<IGUID> prevs = new LinkedHashSet<>();
-        prevs.add(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
-        prevs.add(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        prevs.add(GUIDFactory.generateRandomGUID());
+        prevs.add(GUIDFactory.generateRandomGUID());
 
         Metadata metaMock = mock(Metadata.class);
-        when(metaMock.guid()).thenReturn(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        when(metaMock.guid()).thenReturn(GUIDFactory.generateRandomGUID());
 
         VersionBuilder builder = new VersionBuilder(compound.guid())
                 .setInvariant(invariant)
@@ -98,7 +97,7 @@ public class SOSAddVersionTest extends AgentTest {
      */
     @Test
     public void testAddVersionAndVerifyFails() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

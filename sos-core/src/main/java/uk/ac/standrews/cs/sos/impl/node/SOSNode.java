@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -45,7 +44,7 @@ public class SOSNode implements Node {
         this.nodeGUID = guid;
         this.hostAddress = new InetSocketAddress(hostname, port);
 
-        this.DB_nodeid = guid.toMultiHash(BASE.HEX);
+        this.DB_nodeid = guid.toMultiHash();
         this.DB_hostname = hostname;
         this.DB_port = port;
         this.DB_is_agent = isAgent;
@@ -66,7 +65,7 @@ public class SOSNode implements Node {
             int port = settings.getRest().getPort();
             this.hostAddress = new InetSocketAddress(hostname, port);
 
-            this.DB_nodeid = nodeGUID.toMultiHash(BASE.HEX);
+            this.DB_nodeid = nodeGUID.toMultiHash();
             this.DB_hostname = hostname.getHostAddress();
             this.DB_port = port;
 

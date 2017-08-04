@@ -4,7 +4,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
@@ -61,12 +60,12 @@ public class ClientReplicationTest extends SetUpTest {
                                                 "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                                 "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
-                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash(BASE.HEX) + "\",\n" +
+                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
                                                 "                \"Type\" : \"persistent\",\n" +
-                                                "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX) + "\"\n" +
+                                                "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
                                                 "            } \n" +
                                                 "        ]\n" +
                                                 "    }\n" +
@@ -78,7 +77,7 @@ public class ClientReplicationTest extends SetUpTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/storage/data/guid/" + testGUID.toMultiHash(BASE.HEX))
+                                .withPath("/storage/data/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()

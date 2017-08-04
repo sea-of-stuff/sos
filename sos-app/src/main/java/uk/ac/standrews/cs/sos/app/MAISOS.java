@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.app;
 import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -37,7 +36,7 @@ public class MAISOS {
 
     /**
      *
-     * Example: java -jar sos.jar -c /Users/sic2/config.json -j -fs -root 73a7f67f31908dd0e574699f163eda2cc117f7f4
+     * Example: java -jar sos.jar -c /Users/sic2/config.json -j -fs -root SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4
      *
      * @param args
      * @throws Exception
@@ -194,7 +193,7 @@ public class MAISOS {
             String rootGUID = line.getOptionValue(ROOT_OPT);
             root = GUIDFactory.recreateGUID(rootGUID);
         } else {
-            root = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+            root = GUIDFactory.generateRandomGUID();
         }
 
         return root;

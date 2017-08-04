@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.services.Client.replication;
 
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -29,8 +28,8 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         assertEquals(1, manifest.getLocations().size());
 
         // Delete atom and atom manifest
-        localStorage.getManifestsDirectory().remove(manifest.guid().toMultiHash(BASE.HEX) + ".json");
-        localStorage.getDataDirectory().remove(manifest.guid().toMultiHash(BASE.HEX));
+        localStorage.getManifestsDirectory().remove(manifest.guid().toMultiHash() + ".json");
+        localStorage.getDataDirectory().remove(manifest.guid().toMultiHash());
 
         // Look at locationIndex in atomStorage
         // Get data from external source (data is never kept in memory, unlike manifests)
@@ -54,7 +53,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         assertEquals(1, manifest.getLocations().size());
 
         // Delete atom ONLY
-        localStorage.getDataDirectory().remove(manifest.guid().toMultiHash(BASE.HEX));
+        localStorage.getDataDirectory().remove(manifest.guid().toMultiHash());
 
         // Manifest is ignored
         // Get data from external source (data is never kept in memory, unlike manifests)

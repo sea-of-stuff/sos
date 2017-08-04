@@ -4,7 +4,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -56,7 +55,7 @@ public class ManifestReplicationTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/manifest_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();

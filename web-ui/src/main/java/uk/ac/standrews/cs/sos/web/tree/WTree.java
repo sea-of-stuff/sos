@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
@@ -26,7 +25,7 @@ public class WTree {
         try {
             String data = getTreeInJson(fileSystem);
 
-            model.put("node_id", sos.getNodeGUID().toMultiHash(BASE.HEX));
+            model.put("node_id", sos.getNodeGUID().toMultiHash());
             model.put("tree", data);
         } catch (TIPNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();
@@ -41,7 +40,7 @@ public class WTree {
         String children = getChildren(fileSystem.getRootDirectory(), rootGUID);
 
         String data = "'data' : [{" +
-                "id: '" + rootGUID.toString() + "', " +
+                "id: '" + rootGUID.toMultiHash() + "', " +
                 "text: " + "'/', " +
                 "parent: '#'" +
                 "}, " +
@@ -80,6 +79,6 @@ public class WTree {
         if (child.getObject() instanceof IFile) {
             icon = "icon: 'fa fa-file'";
         }
-        return "{ id: '" + guid + "', parent: '" + parent + "', text: '" + name + "', " + icon + "}, ";
+        return "{ id: '" + guid.toMultiHash() + "', parent: '" + parent.toMultiHash() + "', text: '" + name + "', " + icon + "}, ";
     }
 }

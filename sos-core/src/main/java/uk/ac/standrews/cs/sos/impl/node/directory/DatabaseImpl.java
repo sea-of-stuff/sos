@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.node.directory;
 
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -96,7 +95,7 @@ public class DatabaseImpl implements Database {
         try (Connection connection = getSQLiteConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_NODE)) {
 
-            preparedStatement.setString(1, node.getNodeGUID().toMultiHash(BASE.HEX));
+            preparedStatement.setString(1, node.getNodeGUID().toMultiHash());
             preparedStatement.setString(2, node.getHostAddress().getHostName());
             preparedStatement.setInt(3, node.getHostAddress().getPort());
             preparedStatement.setBoolean(4, node.isAgent());

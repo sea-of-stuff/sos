@@ -5,7 +5,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -67,7 +66,7 @@ public class DataReplicationTest extends SetUpTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
@@ -88,12 +87,12 @@ public class DataReplicationTest extends SetUpTest {
                                         "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                         "    {\n" +
                                         "        \"Type\" : \"Atom\",\n" +
-                                        "        \"ContentGUID\" : \"" + testGUID.toMultiHash(BASE.HEX) + "\",\n" +
+                                        "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                         "        \"Locations\" : \n" +
                                         "        [\n" +
                                         "              {\n" +
                                         "                \"Type\" : \"persistent\",\n" +
-                                        "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX) + "\"\n" +
+                                        "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
                                         "            } \n" +
                                         "        ]\n" +
                                         "    }\n" +
@@ -118,12 +117,12 @@ public class DataReplicationTest extends SetUpTest {
                                                 "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                                 "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
-                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash(BASE.HEX) + "\",\n" +
+                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
                                                 "                \"Type\" : \"persistent\",\n" +
-                                                "                \"Location\" : \"sos://" + TWIN_NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX) + "\"\n" +
+                                                "                \"Location\" : \"sos://" + TWIN_NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
                                                 "            } \n" +
                                                 "        ]\n" +
                                                 "    }\n" +
@@ -148,7 +147,7 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -165,7 +164,7 @@ public class DataReplicationTest extends SetUpTest {
 
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX));
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash());
     }
 
     @Test
@@ -173,7 +172,7 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
 
@@ -194,12 +193,12 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
 
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -217,7 +216,7 @@ public class DataReplicationTest extends SetUpTest {
 
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX));
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash());
 
         assertFalse(it.hasNext());
     }
@@ -227,16 +226,16 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
 
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
-        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true, false, false); // Won't replicate to non-storage
 
@@ -255,7 +254,7 @@ public class DataReplicationTest extends SetUpTest {
 
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX));
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash());
 
         assertFalse(it.hasNext());
     }
@@ -266,12 +265,12 @@ public class DataReplicationTest extends SetUpTest {
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
-        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -289,7 +288,7 @@ public class DataReplicationTest extends SetUpTest {
 
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
-        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash(BASE.HEX));
+        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash());
 
         assertFalse(it.hasNext());
     }

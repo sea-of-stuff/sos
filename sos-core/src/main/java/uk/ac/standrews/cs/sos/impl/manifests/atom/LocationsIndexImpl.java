@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.manifests.atom;
 
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -125,7 +124,7 @@ public class LocationsIndexImpl implements LocationsIndex {
         out.writeInt(index.size());
         for (IGUID key : index.keySet()) {
 
-            out.writeUTF(key.toMultiHash(BASE.HEX));
+            out.writeUTF(key.toMultiHash());
 
             int numberOfLocations = index.get(key).size();
             out.writeInt(numberOfLocations);

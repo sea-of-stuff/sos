@@ -4,8 +4,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -77,7 +75,7 @@ public class FetchMetadataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/mms/metadata/guid/" + testGUID.toMultiHash(BASE.HEX))
+                                .withPath("/mms/metadata/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()
@@ -96,7 +94,7 @@ public class FetchMetadataTest {
     @Test(timeOut = 10000)
     public void basicMetadataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, true, false, false);
 

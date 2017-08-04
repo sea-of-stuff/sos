@@ -4,7 +4,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -32,7 +31,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class SOSFileSystemFactoryTest {
 
-    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID());
 
     @BeforeMethod
     public void setUp() {
@@ -41,7 +40,7 @@ public class SOSFileSystemFactoryTest {
 
     @Test (expectedExceptions = FileSystemCreationException.class)
     public void makeFileSystemWithGUIDTest() throws FileSystemCreationException {
-        IGUID guid = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID guid = GUIDFactory.generateRandomGUID();
         SOSFileSystemFactory fileSystemFactory = new SOSFileSystemFactory(guid);
 
         fileSystemFactory.makeFileSystem();
@@ -49,8 +48,8 @@ public class SOSFileSystemFactoryTest {
 
     @Test
     public void makeFileSystemTest() throws FileSystemCreationException, TIPNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException, RoleNotFoundException {
-        IGUID invariant = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
-        IGUID versionGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID invariant = GUIDFactory.generateRandomGUID();
+        IGUID versionGUID = GUIDFactory.generateRandomGUID();
 
         SOSFileSystemFactory.WriteCurrentVersion(invariant, versionGUID);
 
@@ -68,7 +67,7 @@ public class SOSFileSystemFactoryTest {
         Compound mockRootFolder = mock(Compound.class);
         Version mockRootVersion = mock(Version.class);
 
-        IGUID contentsGUID = GUIDFactory.generateRandomGUID(ALGORITHM.SHA256);
+        IGUID contentsGUID = GUIDFactory.generateRandomGUID();
 
         when(mockAgent.addCompound(any(CompoundBuilder.class))).thenReturn(mockRootFolder);
         when(mockAgent.addVersion(any())).thenReturn(mockRootVersion);

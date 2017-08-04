@@ -2,8 +2,6 @@ package uk.ac.standrews.cs.sos.impl.roles;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.BASE;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
@@ -45,7 +43,7 @@ public class RoleImpl extends UserImpl implements Role {
      * @throws ProtectionException if the protection keys could not be generated
      */
     public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
-        super(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256), name);
+        super(GUIDFactory.generateRandomGUID(), name);
         this.userGUID = user.guid();
 
         manageProtectionKey(false);
@@ -126,12 +124,12 @@ public class RoleImpl extends UserImpl implements Role {
     private void manageProtectionKey(boolean loadOnly) throws ProtectionException {
 
         try {
-            File publicKeyFile = new File(KEYS_FOLDER + guid().toMultiHash(BASE.HEX) + "_pub" + AsymmetricEncryption.KEY_EXTENSION);
+            File publicKeyFile = new File(KEYS_FOLDER + guid().toMultiHash() + "_pub" + AsymmetricEncryption.KEY_EXTENSION);
             if (protectionPublicKey == null && publicKeyFile.exists()) {
                 protectionPublicKey = AsymmetricEncryption.getPublicKey(publicKeyFile.toPath());
             }
 
-            File privateKeyFile = new File(KEYS_FOLDER + guid().toMultiHash(BASE.HEX) + AsymmetricEncryption.KEY_EXTENSION);
+            File privateKeyFile = new File(KEYS_FOLDER + guid().toMultiHash() + AsymmetricEncryption.KEY_EXTENSION);
             if (protectionPrivateKey == null && privateKeyFile.exists()) {
                 protectionPrivateKey = AsymmetricEncryption.getPrivateKey(privateKeyFile.toPath());
             }
@@ -142,7 +140,7 @@ public class RoleImpl extends UserImpl implements Role {
                 protectionPublicKey = asymmetricKeys.getPublic();
                 protectionPrivateKey = asymmetricKeys.getPrivate();
 
-                AsymmetricEncryption.persist(asymmetricKeys, Paths.get(KEYS_FOLDER + guid().toMultiHash(BASE.HEX)), Paths.get(KEYS_FOLDER + guid().toMultiHash(BASE.HEX) + "_pub"));
+                AsymmetricEncryption.persist(asymmetricKeys, Paths.get(KEYS_FOLDER + guid().toMultiHash()), Paths.get(KEYS_FOLDER + guid().toMultiHash() + "_pub"));
             }
 
         } catch (CryptoException e) {

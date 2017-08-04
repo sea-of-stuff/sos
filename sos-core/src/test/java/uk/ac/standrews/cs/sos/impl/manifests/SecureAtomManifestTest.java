@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -58,7 +57,7 @@ public class SecureAtomManifestTest extends CommonTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/config_setup.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID(ALGORITHM.SHA256));
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
 
         try {
             String root = System.getProperty("user.home") + "/sos/";
