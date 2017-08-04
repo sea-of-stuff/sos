@@ -67,7 +67,7 @@ public class SOSStorage implements Storage {
         return manifest;
     }
 
-    public SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder, Role role, boolean persist) throws StorageException, ManifestPersistException, ManifestNotMadeException, DataStorageException, IOException {
+    public SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder, Role role) throws StorageException, ManifestPersistException, ManifestNotMadeException, DataStorageException, IOException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, false);
@@ -82,6 +82,7 @@ public class SOSStorage implements Storage {
         return manifest;
     }
 
+    // Secure an already existing atom manifest and its data
     public SecureAtomManifest secureAtom(Atom atom, Role role, boolean persist) throws StorageException, ManifestPersistException, ManifestNotMadeException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 

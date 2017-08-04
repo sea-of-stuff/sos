@@ -88,6 +88,7 @@ public class Experiment_X_1 extends BaseExperiment implements Experiment {
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.chic();
+        chicShock.shock();
 
         Experiment_X_1 experiment_pr_1 = new Experiment_X_1(experimentConfiguration);
         experiment_pr_1.process();

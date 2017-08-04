@@ -14,6 +14,7 @@ public class NetworkOperations {
 
     private static final String EXEC_CHANNEL = "exec";
     private static final int PROCESS_KILL_SIGNAL = 15; // Signal name: TERM
+    private static final int BUFFER_SIZE = 8096;
 
     private ExperimentConfiguration.Experiment.Node.SSH ssh;
     private Session session;
@@ -172,6 +173,8 @@ public class NetworkOperations {
 
             // send "C0644 filesize filename", where filename should not include '/'
             long filesize = _lfile.length();
+            System.out.println("File " + lfile + " with size " + filesize/1000000.0 + " MB will be transferred via SSH to remote node");
+
             internalCommand = "C0644 " + filesize + " ";
             if (lfile.lastIndexOf('/') > 0) {
                 internalCommand += lfile.substring(lfile.lastIndexOf('/') + 1);
@@ -187,12 +190,24 @@ public class NetworkOperations {
 
             // send a content of lfile
             FileInputStream fis = new FileInputStream(lfile);
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[BUFFER_SIZE];
+            long dataSent = 0;
+            int printingIndex = 0, printingFrequency = 500; // This is just an arbitrary number to avoid too much printing
+
             while (true) {
                 int len = fis.read(buf, 0, buf.length);
                 if (len <= 0) break;
+
+                dataSent += len;
+                if (printingIndex % printingFrequency == 0) {
+                    String outputToConsole = "Sent " + dataSent / 1000000.0 + " / " + filesize / 1000000.0 + " MB";
+                    System.out.println(outputToConsole);
+                }
+                printingIndex++;
+
                 out.write(buf, 0, len); //out.flush();
             }
+
             fis.close();
             // send '\0'
             buf[0] = 0;
@@ -223,7 +238,7 @@ public class NetworkOperations {
 
         try (OutputStream out=channel.getOutputStream();
              InputStream in=channel.getInputStream()) {
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[BUFFER_SIZE];
 
             // send '\0'
             buf[0] = 0;
@@ -297,6 +312,7 @@ public class NetworkOperations {
     }
 
     private void exec(String command) throws IOException, JSchException {
+        System.out.println("Executing command: " + command);
 
         Channel channel = session.openChannel(EXEC_CHANNEL);
         ((ChannelExec) channel).setCommand(command);
@@ -309,10 +325,10 @@ public class NetworkOperations {
 
         channel.connect();
 
-        byte[] tmp=new byte[1024];
+        byte[] tmp=new byte[BUFFER_SIZE];
         while(true){
             while(in.available()>0){
-                int i=in.read(tmp, 0, 1024);
+                int i=in.read(tmp, 0, BUFFER_SIZE);
                 if(i<0)break;
                 System.out.print(new String(tmp, 0, i));
             }

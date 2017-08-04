@@ -28,7 +28,7 @@ public class SOSAddSecureAtomTest extends StorageTest {
 
         Location location = HelperTest.createDummyDataFile(localStorage);
         AtomBuilder builder = new AtomBuilder().setLocation(location);
-        SecureAtomManifest secureAtomManifest = ((SOSStorage) storage).addSecureAtom(builder, role, true);
+        SecureAtomManifest secureAtomManifest = ((SOSStorage) storage).addSecureAtom(builder, role);
 
         assertNotNull(secureAtomManifest.getData(role));
         assertTrue(IOUtils.contentEquals(secureAtomManifest.getData(role), location.getSource()));

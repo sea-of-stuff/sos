@@ -9,13 +9,13 @@
     "nodes" : [
       {
         "id" : 1,
-        "isRemote" : true,
+        "remote" : true,
         "ssh" : {
           "type" : 0,
-          "host" : "cs-wifi-056.cs.st-andrews.ac.uk",
+          "host" : "cs-wifi-111.cs.st-andrews.ac.uk",
           "user" : "lorna",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
-          "password" : "LornaMiniFAKE"
+          "password" : "LornaMiniTest"
         },
         "configurationfile" : "node_1.json",
         "behaviour": {
@@ -28,7 +28,7 @@
     ],
     "experimentnode" : {
       "id" : 0,
-      "isRemote" : false,
+      "remote" : false,
       "configurationfile" : "node_0.json"
     },
     "stats": {
