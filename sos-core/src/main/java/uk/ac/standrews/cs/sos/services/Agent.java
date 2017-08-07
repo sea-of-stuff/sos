@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
@@ -42,7 +43,7 @@ public interface Agent {
      *
      * @apiNote the data will not processed through contexts
      */
-    Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder) throws ManifestPersistException, DataStorageException;
 
     /**
      * Adds a Compound to the Sea of Stuff.
@@ -141,6 +142,8 @@ public interface Agent {
     /**
      * Get the propery value for the given manifest matching GUID
      * The manifest MUST be a version manifest
+     *
+     * TODO - do not return a simple object, but something custom-made (MetaObject)
      *
      * @param guid
      * @param property

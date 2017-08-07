@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.Hashes;
@@ -40,11 +41,11 @@ public class SOSAddAtomTest extends AgentTest {
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
+        assertEquals(2, manifest.getLocations().size());
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
         assertEquals(ManifestType.ATOM, retrievedManifest.getType());
-        Set<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
-        assertEquals(2, retrievedLocations.size());
+        assertEquals(2, ((AtomManifest) retrievedManifest).getLocations().size());
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), true);
     }
@@ -169,7 +170,7 @@ public class SOSAddAtomTest extends AgentTest {
     public void testAddAtomFromStream() throws Exception {
         String testString = "first line and second line";
         InputStream stream = HelperTest.StringToInputStream(testString);
-        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+        AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
         Atom manifest = agent.addAtom(builder);
         assertNotNull(manifest.guid());
         assertEquals(manifest.getLocations().size(), 1);
@@ -190,7 +191,7 @@ public class SOSAddAtomTest extends AgentTest {
         long start = System.nanoTime();
 
         try (InputStream stream = HelperTest.StringToInputStream(bigString)) {
-            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
             Atom manifest = agent.addAtom(builder);
             assertNotNull(manifest.guid());
         }
@@ -249,7 +250,7 @@ public class SOSAddAtomTest extends AgentTest {
     private void addAtom(ConcurrentLinkedQueue<String> testStrings) {
         try (InputStream stream = HelperTest.StringToInputStream(testStrings.poll());){
 
-            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
             Atom manifest = agent.addAtom(builder);
             assertNotNull(manifest.guid());
 

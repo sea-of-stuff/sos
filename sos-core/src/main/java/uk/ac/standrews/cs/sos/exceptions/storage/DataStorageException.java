@@ -7,7 +7,15 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
  */
 public class DataStorageException extends SOSException {
 
+    public DataStorageException() {
+        super();
+    }
+
     public DataStorageException(Throwable throwable) {
         super(throwable);
+    }
+
+    public DataStorageException(String message) {
+        super(message);
     }
 }

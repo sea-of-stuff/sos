@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 @JsonSerialize(using = LocationBundleSerializer.class)
 @JsonDeserialize(using = LocationBundleDeserializer.class)
-public abstract class LocationBundle {
+public class LocationBundle {
 
     // i.e. cache, prov, chunks, etc.
     final private BundleType type;
@@ -23,7 +23,7 @@ public abstract class LocationBundle {
     // i.e. http://abc.com/123, sos://af318/492jv, etc.
     final private Location location;
 
-    protected LocationBundle(BundleType type, Location location) {
+    public LocationBundle(BundleType type, Location location) {
         this.type = type;
         this.location = location;
     }

@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
-import uk.ac.standrews.cs.guid.ALGORITHM;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -13,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
@@ -23,7 +20,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -67,7 +63,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder) throws StorageException, ManifestPersistException {
+    public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
 
         Atom manifest = storage.addAtom(atomBuilder, true);
         return manifest;
@@ -124,7 +120,7 @@ public class SOSAgent implements Agent {
             Version manifest = addVersion(versionBuilder);
 
             return manifest;
-        } catch (StorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
+        } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
             e.printStackTrace();
             // TODO - throw proper exception
         }
@@ -183,16 +179,7 @@ public class SOSAgent implements Agent {
     @Override
     public boolean verifyManifestIntegrity(Manifest manifest) throws ManifestVerificationException {
 
-        IGUID guidToCheck = manifest.guid();
-        try(InputStream inputStream = manifest.contentToHash()) {
-
-            IGUID guidGenerated = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
-
-            return guidGenerated.equals(guidToCheck);
-
-        } catch (IOException | GUIDGenerationException e) {
-            throw new ManifestVerificationException();
-        }
+        return manifest.verifyIntegrity();
     }
 
     @Override

@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.io.input.NullInputStream;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -75,6 +77,11 @@ public class AtomManifest extends BasicManifest implements Atom {
         }
 
         return dataStream;
+    }
+
+    @Override
+    public Data getDataO() throws IOException {
+        return new InputStreamData(getData());
     }
 
     @Override

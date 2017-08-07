@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 
 import java.io.IOException;
@@ -40,5 +41,12 @@ public interface Atom extends Manifest {
      */
     InputStream getData() throws IOException;
 
+    // TODO - should be renamed to getData and remove the other method called so
+    Data getDataO() throws IOException;
+
+    /**
+     * WIP: Algorithm used to compress data
+     * @return
+     */
     CompressionAlgorithms getCompressionAlgorithm();
 }

@@ -6,6 +6,8 @@ import uk.ac.standrews.cs.sos.model.Location;
 import java.io.InputStream;
 
 /**
+ * TODO - rename to AtomSourceBuilder
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class AtomBuilder {
@@ -14,9 +16,14 @@ public class AtomBuilder {
     private InputStream inputStream; // FIXME - replace with DATA
     private Data data;
 
+    public boolean isBuildIsSet() {
+        return buildIsSet;
+    }
+
     private boolean buildIsSet = false;
     private boolean isLocation = false;
     private boolean isInputStream = false;
+    private boolean isData = false;
 
     public AtomBuilder setLocation(Location location) {
         if (!buildIsSet) {
@@ -39,7 +46,11 @@ public class AtomBuilder {
     }
 
     public AtomBuilder setData(Data data) {
-        this.data = data;
+        if (!buildIsSet) {
+            this.data = data;
+            isData = true;
+            buildIsSet = true;
+        }
 
         return this;
     }
@@ -56,6 +67,10 @@ public class AtomBuilder {
         return data;
     };
 
+    public boolean isData() {
+        return isData;
+    }
+
     public boolean isLocation() {
         return isLocation;
     }
@@ -64,9 +79,4 @@ public class AtomBuilder {
         return isInputStream;
     }
 
-    @Override
-    public String toString() {
-        return "{ 'isLocation' : '" + isLocation() + "', " +
-                "'isInputStream' : " + isInputStream() + "'}";
-    }
 }

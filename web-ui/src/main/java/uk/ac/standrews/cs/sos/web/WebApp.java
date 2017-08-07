@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.web;
 
 import spark.Request;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Atom;
@@ -78,7 +78,7 @@ public class WebApp {
         });
     }
 
-    private static String postData(Request request, SOSLocalNode sos) throws IOException, ServletException, ManifestPersistException, StorageException {
+    private static String postData(Request request, SOSLocalNode sos) throws IOException, ServletException, ManifestPersistException, DataStorageException {
         request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
         try (InputStream is = request.raw().getPart("atom").getInputStream()) {

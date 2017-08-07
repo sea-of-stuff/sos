@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.rest;
 
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -10,6 +9,7 @@ import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.Atom;
@@ -83,7 +83,7 @@ public class RESTStorage {
             Atom atom = storage.addAtom(builder, true);
 
             return HTTPResponses.CREATED(atom.toString());
-        } catch (StorageException | ManifestPersistException e) {
+        } catch (DataStorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
@@ -103,7 +103,7 @@ public class RESTStorage {
             AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
             atom = storage.addAtom(builder, true);
 
-        } catch (StorageException | ManifestPersistException e) {
+        } catch (DataStorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 

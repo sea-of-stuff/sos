@@ -26,7 +26,7 @@ import java.util.Set;
 public interface DataDiscoveryService {
 
     /**
-     * Add a manifest to the sea of stuff.
+     * Add a manifest to the local sea of stuff.
      *
      * @param manifest to add to the sea of stuff
      * @throws ManifestPersistException if the manifest could not be added correctly
@@ -56,6 +56,8 @@ public interface DataDiscoveryService {
     /**
      * Map the GUID of a manifest with the GUID of a DDS node.
      * This mapping will be used when trying to get the manifest via #getManifest(guid)
+     *
+     * TODO - rename to addManifestLocation?
      *
      * @param manifest for which to add a DDSnode ref
      * @param ddsNode the DDS node ref
@@ -97,7 +99,7 @@ public interface DataDiscoveryService {
     void setHead(Version version);
 
     /**
-     * Flushes any in-memory information into disk
+     * Flushes the in-memory caches and indices into disk
      */
     void flush();
 

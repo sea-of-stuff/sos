@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.manifests.atom;
+package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;

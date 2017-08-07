@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
@@ -28,10 +29,10 @@ public interface Storage {
      * @param persist if true the atom is persisted in this node, otherwise it is cached (e.g. it can be later purged)
      * @return The generated atom manifest. This will contain the locations known to this node prior to any replication.
      *
-     * @throws StorageException
+     * @throws DataStorageException
      * @throws ManifestPersistException
      */
-    Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws DataStorageException, ManifestPersistException;
 
     Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException;
 

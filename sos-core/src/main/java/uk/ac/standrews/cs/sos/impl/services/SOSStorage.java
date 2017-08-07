@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import org.apache.commons.io.input.NullInputStream;
-import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
@@ -14,19 +12,23 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.data.DataStorage;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.atom.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,22 +44,38 @@ public class SOSStorage implements Storage {
     private DataDiscoveryService dataDiscoveryService;
 
     private LocalStorage storage;
-    private AtomStorage atomStorage;
+    private DataStorage dataStorage;
+    private LocationsIndex locationIndex;
 
     public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService) {
         this.storage = storage;
         this.dataDiscoveryService = dataDiscoveryService;
 
-        atomStorage = new AtomStorage(localNodeGUID, storage);
+        // Load/Create the locations Index impl
+        try {
+            IDirectory cacheDir = storage.getNodeDirectory();
+            IFile file = storage.createFile(cacheDir, "locations.index");
+            if (file.exists()) {
+                locationIndex = (LocationsIndex) Persistence.Load(file);
+            }
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            e.printStackTrace(); // TODO - throw proper exception
+        }
+
+        if (locationIndex == null) {
+            locationIndex = new LocationsIndexImpl();
+        }
+
+        dataStorage = new DataStorage(localNodeGUID, storage);
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws StorageException, ManifestPersistException {
+    public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws DataStorageException, ManifestPersistException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
 
         IGUID guid = addAtom(atomBuilder, bundles, persist);
         if (guid == null || guid.isInvalid()) {
-            throw new StorageException();
+            throw new DataStorageException();
         }
 
         AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
@@ -119,7 +137,7 @@ public class SOSStorage implements Storage {
     public InputStream getAtomContent(Atom atom) {
         InputStream dataStream = null;
 
-        Iterator<LocationBundle> it = atomStorage.getLocationsIterator(atom.guid());
+        Iterator<LocationBundle> it = findLocations(atom.guid());
         while(it.hasNext()) {
             LocationBundle locationBundle = it.next();
 
@@ -152,12 +170,12 @@ public class SOSStorage implements Storage {
 
     @Override
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
-        atomStorage.addLocation(guid, locationBundle);
+        locationIndex.addLocation(guid, locationBundle);
     }
 
     @Override
     public Iterator<LocationBundle> findLocations(IGUID guid) {
-        return atomStorage.getLocationsIterator(guid);
+        return locationIndex.findLocations(guid);
     }
 
     @Override
@@ -169,57 +187,57 @@ public class SOSStorage implements Storage {
     public void flush() {
 
         try {
-            atomStorage.flush();
-        } catch (DataStorageException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to flush the node internal storage");
+            IDirectory cacheDir = storage.getNodeDirectory();
+            IFile file = storage.createFile(cacheDir, "locations.index");
+            locationIndex.persist(file);
+        } catch (IOException | DataStorageException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to flush LocationIndex");
         }
     }
 
-    private IGUID addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
-        IGUID guid;
+    /**
+     * Adds the data part of the atom to the SOS
+     *
+     * @param atomBuilder
+     * @param bundles
+     * @param persist
+     * @return
+     * @throws StorageException
+     */
+    private IGUID addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws DataStorageException {
+
+        Pair<IGUID, LocationBundle> retval;
+        if (persist) {
+            retval = dataStorage.persist(atomBuilder);
+        } else {
+            retval = dataStorage.cache(atomBuilder);
+        }
+
         if (atomBuilder.isLocation()) {
-            guid = addAtomByLocation(atomBuilder, bundles, persist);
-        } else if (atomBuilder.isInputStream()) {
-            guid = addAtomByStream(atomBuilder, bundles, persist);
-        } else {
-            throw new StorageException("AtomBuilder has not been set correctly");
+            Location provenanceLocation = atomBuilder.getLocation();
+            bundles.add(new ProvenanceLocationBundle(provenanceLocation));
         }
 
-        return guid;
-    }
-
-    private IGUID addAtomByLocation(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
-        Location location = atomBuilder.getLocation();
-        bundles.add(new ProvenanceLocationBundle(location));
-        return store(location, bundles, persist);
-    }
-
-    private IGUID addAtomByStream(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws StorageException {
-        InputStream inputStream = atomBuilder.getInputStream();
-        return store(inputStream, bundles, persist);
-    }
-
-    private IGUID store(Location location, Set<LocationBundle> bundles, boolean persist) throws StorageException {
-        if (persist) {
-            return atomStorage.persistAtomAndUpdateLocationBundles(location, bundles); // FIXME - this should undo the cache locations(and indeX)
-        } else {
-            return atomStorage.cacheAtomAndUpdateLocationBundles(location, bundles);
+        if (bundles != null) {
+            bundles.add(retval.Y());
+            addLocation(retval.X(), retval.Y());
         }
+
+        return retval.X();
     }
 
-    private IGUID store(InputStream inputStream, Set<LocationBundle> bundles, boolean persist) throws StorageException {
-        if (persist) {
-            return atomStorage.persistAtomAndUpdateLocationBundles(inputStream, bundles);
-        } else {
-            return atomStorage.cacheAtomAndUpdateLocationBundles(inputStream, bundles);
-        }
-    }
-
+    /**
+     * Saves the data to disk
+     *
+     * @param secureAtomManifest
+     * @throws DataStorageException
+     * @throws PersistenceException
+     * @throws IOException
+     */
     private void saveData(SecureAtomManifest secureAtomManifest) throws DataStorageException, PersistenceException, IOException {
 
-        Data data = new InputStreamData(secureAtomManifest.getData());
         IDirectory dataDirectory = storage.getDataDirectory();
-        IFile file = storage.createFile(dataDirectory, secureAtomManifest.guid().toMultiHash(), data);
+        IFile file = storage.createFile(dataDirectory, secureAtomManifest.guid().toMultiHash(), secureAtomManifest.getDataO());
         file.persist();
     }
 

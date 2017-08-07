@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
@@ -16,6 +15,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.filesystem.utils.Helper;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
@@ -104,7 +104,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         } catch (IOException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (MetadataException | ManifestPersistException | StorageException e) {
+        } catch (MetadataException | ManifestPersistException | DataStorageException e) {
             e.printStackTrace();
         }
 
@@ -222,7 +222,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             Content content = new ContentImpl(atom.guid());
             atoms.add(content);
 
-        } catch (ManifestPersistException | IOException | StorageException e) {
+        } catch (ManifestPersistException | IOException | DataStorageException e) {
             e.printStackTrace();
         }
     }

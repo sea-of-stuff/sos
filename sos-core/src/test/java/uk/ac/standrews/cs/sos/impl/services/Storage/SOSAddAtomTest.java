@@ -3,9 +3,8 @@ package uk.ac.standrews.cs.sos.impl.services.Storage;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.PersistLocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
@@ -50,10 +49,10 @@ public class SOSAddAtomTest extends StorageTest {
         assertEquals(2, retrievedLocations.size());
 
         LocationBundle firstBundle = bundles.next();
-        assertTrue(firstBundle instanceof ProvenanceLocationBundle);
+        assertEquals(firstBundle.getType(), BundleTypes.PROVENANCE);
 
         LocationBundle secondBundle = bundles.next();
-        assertTrue(secondBundle instanceof PersistLocationBundle);
+        assertEquals(secondBundle.getType(), BundleTypes.PERSISTENT);
     }
 
     @Test
@@ -70,7 +69,7 @@ public class SOSAddAtomTest extends StorageTest {
         assertEquals(1, retrievedLocations.size());
 
         LocationBundle secondBundle = bundles.next();
-        assertTrue(secondBundle instanceof PersistLocationBundle);
+        assertEquals(secondBundle.getType(), BundleTypes.PERSISTENT);
     }
 
     @Test
@@ -86,10 +85,10 @@ public class SOSAddAtomTest extends StorageTest {
         assertEquals(2, retrievedLocations.size());
 
         LocationBundle firstBundle = bundles.next();
-        assertTrue(firstBundle instanceof ProvenanceLocationBundle);
+        assertEquals(firstBundle.getType(), BundleTypes.PROVENANCE);
 
         LocationBundle secondBundle = bundles.next();
-        assertTrue(secondBundle instanceof PersistLocationBundle);
+        assertEquals(secondBundle.getType(), BundleTypes.PERSISTENT);
     }
 
 }
