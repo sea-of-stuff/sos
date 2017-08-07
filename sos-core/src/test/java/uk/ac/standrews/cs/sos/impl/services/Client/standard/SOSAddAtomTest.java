@@ -70,7 +70,8 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
-        assertTrue(retrievedManifest.verifySignature(null));
+        assertFalse(retrievedManifest.verifySignature(null));
+        assertTrue(retrievedManifest.verifyIntegrity());
     }
 
     @Test
@@ -85,7 +86,7 @@ public class SOSAddAtomTest extends AgentTest {
         LocationBundle cachedLocation = retrievedLocations.iterator().next();
 
         HelperTest.appendToFile(cachedLocation.getLocation(), "Data has changed");
-        assertFalse(retrievedManifest.verifySignature(null));
+        assertFalse(retrievedManifest.verifyIntegrity());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -97,8 +98,6 @@ public class SOSAddAtomTest extends AgentTest {
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
         assertEquals(ManifestType.ATOM, retrievedManifest.getType());
-
-        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -110,8 +109,6 @@ public class SOSAddAtomTest extends AgentTest {
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
         assertEquals(ManifestType.ATOM, retrievedManifest.getType());
-
-        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -123,8 +120,6 @@ public class SOSAddAtomTest extends AgentTest {
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
         assertEquals(ManifestType.ATOM, retrievedManifest.getType());
-
-        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     @Test (timeOut = TEST_TIMEOUT)
@@ -136,8 +131,6 @@ public class SOSAddAtomTest extends AgentTest {
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
         assertEquals(ManifestType.ATOM, retrievedManifest.getType());
-
-        System.out.println("SOSAddAtomTest: " + manifest.guid());
     }
 
     // NOTE: this test fails if using mutable internal storage

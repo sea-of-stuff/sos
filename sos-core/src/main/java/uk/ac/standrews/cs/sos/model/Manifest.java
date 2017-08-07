@@ -29,6 +29,10 @@ public interface Manifest {
      */
     boolean verifySignature(Role role) throws SignatureException;
 
+    default boolean verifyIntegrity() {
+        return false;
+    }
+
     /**
      * Check that the key-value pairs contained in the manifest comply to
      * the Sea of Stuff standard and are not malformed.

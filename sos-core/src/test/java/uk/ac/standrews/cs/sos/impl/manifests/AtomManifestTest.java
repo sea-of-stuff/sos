@@ -134,6 +134,7 @@ public class AtomManifestTest extends CommonTest {
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertFalse(atomManifest.verifySignature(null));
+        assertTrue(atomManifest.verifyIntegrity());
     }
 
     @Test
@@ -142,5 +143,6 @@ public class AtomManifestTest extends CommonTest {
         AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
         assertFalse(atomManifest.verifySignature(null));
+        assertTrue(atomManifest.verifyIntegrity());
     }
 }

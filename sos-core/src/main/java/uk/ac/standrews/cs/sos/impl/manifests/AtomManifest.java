@@ -97,30 +97,34 @@ public class AtomManifest extends BasicManifest implements Atom {
         return getData();
     }
 
-    // REMOVEME
-    // TODO - have instead method to verifyIntegrity
     @Override
     public boolean verifySignature(Role role) throws SignatureException {
-        if (guid == null || guid.isInvalid())
-            return false;
+
+        return false;
+    }
+
+    /**
+     * Verifies the integrity of all the available sources
+     *
+     * TODO - choose to have a method where sources can be selected
+     * @return
+     */
+    @Override
+    public boolean verifyIntegrity() {
 
         for(LocationBundle location:locations) {
             try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation())) {
 
-                if (!verifyStream(dataStream)) {
+                if (!(dataStream != null && guid.equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
                     return false;
                 }
 
             } catch (GUIDGenerationException| IOException e) {
-                throw new SignatureException("Unable to verify Atom Manifest", e);
+                return false;
             }
         }
 
         return true;
-    }
-
-    private boolean verifyStream(InputStream inputStream) throws GUIDGenerationException {
-        return inputStream != null && guid.equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream));
     }
 
     @Override
