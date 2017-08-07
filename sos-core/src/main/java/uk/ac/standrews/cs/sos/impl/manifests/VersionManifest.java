@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /**
@@ -175,7 +174,7 @@ public class VersionManifest extends SignedManifest implements Version {
     }
 
     @Override
-    public InputStream contentToHash() throws UnsupportedEncodingException {
+    public InputStream contentToHash() {
 
         String toHash = getType() +
                 "I" + getInvariantGUID() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.

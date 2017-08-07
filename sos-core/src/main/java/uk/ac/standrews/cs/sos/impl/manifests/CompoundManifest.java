@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /**
@@ -117,7 +116,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
     }
 
     @Override
-    public InputStream contentToHash() throws UnsupportedEncodingException {
+    public InputStream contentToHash() {
 
         StringBuilder toHash = new StringBuilder("C");
         for(Content content:contents) {

@@ -30,7 +30,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -125,7 +124,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
     }
 
     @Test
-    public void registeringNDSFeedbackTest() throws GUIDGenerationException, UnsupportedEncodingException, InterruptedException, SOSProtocolException, NodeRegistrationException {
+    public void registeringNDSFeedbackTest() throws GUIDGenerationException, InterruptedException, SOSProtocolException, NodeRegistrationException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);

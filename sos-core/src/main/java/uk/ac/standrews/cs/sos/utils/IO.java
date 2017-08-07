@@ -2,7 +2,10 @@ package uk.ac.standrews.cs.sos.utils;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -16,7 +19,7 @@ public class IO {
         return IOUtils.toString(string, StandardCharsets.UTF_8);
     }
 
-    public static InputStream StringToInputStream(String input) throws UnsupportedEncodingException {
+    public static InputStream StringToInputStream(String input) {
         return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
     }
 

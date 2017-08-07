@@ -5,7 +5,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -13,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class HelperTest {
 
-    public static InputStream StringToInputStream(String input) throws UnsupportedEncodingException {
+    public static InputStream StringToInputStream(String input) {
         return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
     }
 

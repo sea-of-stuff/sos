@@ -23,7 +23,7 @@ import java.util.Base64;
  */
 public class HelperTest {
 
-    public static InputStream StringToInputStream(String input) throws UnsupportedEncodingException {
+    public static InputStream StringToInputStream(String input) {
         return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
     }
 

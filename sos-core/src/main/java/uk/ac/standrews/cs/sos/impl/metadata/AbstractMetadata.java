@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,7 +74,7 @@ public abstract class AbstractMetadata implements Metadata {
     }
 
     @Override
-    public InputStream contentToHash() throws UnsupportedEncodingException {
+    public InputStream contentToHash() {
         return IO.StringToInputStream(metadata());
     }
 

@@ -1,11 +1,13 @@
 package uk.ac.standrews.cs.sos.model;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -29,8 +31,24 @@ public interface Manifest {
      */
     boolean verifySignature(Role role) throws SignatureException;
 
+    /**
+     * Verifies that the GUID of this manifest matches its contents
+     *
+     * This method is different for the Atom Manifest, where we need to get the content from all the available locations
+     *
+     * @return
+     */
     default boolean verifyIntegrity() {
-        return false;
+
+        try (InputStream contentToHash = contentToHash()) {
+            if (!(contentToHash != null && guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, contentToHash)))) {
+                return false;
+            }
+        } catch (IOException | GUIDGenerationException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -61,6 +79,6 @@ public interface Manifest {
      *
      * @return the content used to generate the GUID for this manifest
      */
-    InputStream contentToHash() throws UnsupportedEncodingException, IOException;
+    InputStream contentToHash() throws IOException;
 
 }

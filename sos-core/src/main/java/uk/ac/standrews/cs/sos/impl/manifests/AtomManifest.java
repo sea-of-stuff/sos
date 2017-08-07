@@ -106,7 +106,6 @@ public class AtomManifest extends BasicManifest implements Atom {
     /**
      * Verifies the integrity of all the available sources
      *
-     * TODO - choose to have a method where sources can be selected
      * @return
      */
     @Override
@@ -127,7 +126,27 @@ public class AtomManifest extends BasicManifest implements Atom {
         return true;
     }
 
-    @Override
+    /**
+     * Verifies the integrity for a specific location
+     * @param locationBundle
+     * @return
+     */
+    public boolean verifyIntegrity(LocationBundle locationBundle) {
+
+        try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(locationBundle.getLocation())) {
+
+            if (!(dataStream != null && guid.equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
+                return false;
+            }
+
+        } catch (IOException | GUIDGenerationException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+        @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
