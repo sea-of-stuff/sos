@@ -6,7 +6,7 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;

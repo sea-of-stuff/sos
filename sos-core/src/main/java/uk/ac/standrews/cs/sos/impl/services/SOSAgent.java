@@ -1,12 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -65,8 +61,7 @@ public class SOSAgent implements Agent {
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
 
-        Atom manifest = storage.addAtom(atomBuilder, true);
-        return manifest;
+        return storage.addAtom(atomBuilder, true);
     }
 
     @Override
@@ -117,9 +112,7 @@ public class SOSAgent implements Agent {
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             versionBuilder.setContent(atom.guid());
 
-            Version manifest = addVersion(versionBuilder);
-
-            return manifest;
+            return addVersion(versionBuilder);
         } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
             e.printStackTrace();
             // TODO - throw proper exception
@@ -135,9 +128,7 @@ public class SOSAgent implements Agent {
             Compound compound = addCompound(versionBuilder.getCompoundBuilder());
             versionBuilder.setContent(compound.guid());
 
-            Version manifest = addVersion(versionBuilder);
-
-            return manifest;
+            return addVersion(versionBuilder);
         } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
             e.printStackTrace();
             // TODO - throw proper exception

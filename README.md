@@ -124,7 +124,7 @@ add this parameter when running the java app:
 
 ` -Dlog4j.configuration=file:/path/to/log4j.properties`
 
-**Note* that the property value must be a URL.
+**Note** that the property value must be a valid URL.
 
 
 #### Example of a log4j.properties for both file and stdout

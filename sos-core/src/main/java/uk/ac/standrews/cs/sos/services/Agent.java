@@ -2,12 +2,8 @@ package uk.ac.standrews.cs.sos.services;
 
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;

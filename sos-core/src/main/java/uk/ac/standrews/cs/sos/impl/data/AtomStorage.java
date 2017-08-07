@@ -31,16 +31,14 @@ import java.net.URISyntaxException;
 /*
  * This is the class that will take care of storing atom's data
  *
- * TODO - rename class to AtomStorage once the old class is deleted
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataStorage {
+public class AtomStorage {
 
     private IGUID localNodeGUID;
     private LocalStorage localStorage;
 
-    public DataStorage(IGUID localNodeGUID, LocalStorage storage) {
+    public AtomStorage(IGUID localNodeGUID, LocalStorage storage) {
         this.localNodeGUID = localNodeGUID;
         this.localStorage = storage;
     }

@@ -7,12 +7,13 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.data.DataStorage;
+import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
@@ -44,10 +45,10 @@ public class SOSStorage implements Storage {
     private DataDiscoveryService dataDiscoveryService;
 
     private LocalStorage storage;
-    private DataStorage dataStorage;
+    private AtomStorage atomStorage;
     private LocationsIndex locationIndex;
 
-    public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService) {
+    public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService) throws ServiceException {
         this.storage = storage;
         this.dataDiscoveryService = dataDiscoveryService;
 
@@ -59,14 +60,14 @@ public class SOSStorage implements Storage {
                 locationIndex = (LocationsIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            e.printStackTrace(); // TODO - throw proper exception
+            throw new ServiceException("STORAGE - Unable to create the LocationIndex");
         }
 
         if (locationIndex == null) {
             locationIndex = new LocationsIndexImpl();
         }
 
-        dataStorage = new DataStorage(localNodeGUID, storage);
+        atomStorage = new AtomStorage(localNodeGUID, storage);
     }
 
     @Override
@@ -208,9 +209,9 @@ public class SOSStorage implements Storage {
 
         Pair<IGUID, LocationBundle> retval;
         if (persist) {
-            retval = dataStorage.persist(atomBuilder);
+            retval = atomStorage.persist(atomBuilder);
         } else {
-            retval = dataStorage.cache(atomBuilder);
+            retval = atomStorage.cache(atomBuilder);
         }
 
         if (atomBuilder.isLocation()) {

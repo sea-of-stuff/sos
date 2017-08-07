@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
-import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;

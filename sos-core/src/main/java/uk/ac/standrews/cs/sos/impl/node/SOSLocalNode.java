@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.node;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -226,7 +227,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**
      * Initialise all the services for this node
      */
-    private void initServices() {
+    private void initServices() throws ServiceException {
 
         dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage); // TODO - will need to pass NDS to discover other roles

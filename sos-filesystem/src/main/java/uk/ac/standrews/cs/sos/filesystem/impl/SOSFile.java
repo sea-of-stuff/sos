@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;

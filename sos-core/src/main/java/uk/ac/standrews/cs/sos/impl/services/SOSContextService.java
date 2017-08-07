@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
@@ -82,7 +83,7 @@ public class SOSContextService implements ContextService {
      * @param usersRolesService uses to perform USER/ROLE operations in the SOS
      * @param storage used to access the SOS storage
      */
-    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) throws ServiceException {
 
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
@@ -99,7 +100,7 @@ public class SOSContextService implements ContextService {
             // TODO - need to save GUIDs back to contexts (this is simply part of the JSON)
 
         } catch (ContextLoaderException e) {
-            e.printStackTrace(); // TODO - proper exception
+            throw new ServiceException("ContextService - Unable to load contexts correctly");
         }
 
         // Run background CRON Jobs if and only if this is set in the node settings file

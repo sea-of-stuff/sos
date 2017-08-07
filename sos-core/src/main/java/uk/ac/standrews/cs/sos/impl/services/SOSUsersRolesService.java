@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -43,7 +44,7 @@ public class SOSUsersRolesService implements UsersRolesService {
 
     private LocalStorage localStorage;
 
-    public SOSUsersRolesService(LocalStorage localStorage) {
+    public SOSUsersRolesService(LocalStorage localStorage) throws ServiceException {
 
         this.localStorage = localStorage;
 
@@ -56,7 +57,7 @@ public class SOSUsersRolesService implements UsersRolesService {
             manageDefaultRole();
 
         } catch (SignatureException | UserNotFoundException | ProtectionException | UserRolePersistException e) {
-            e.printStackTrace();
+            throw new ServiceException("USRO - Unable to manage default user/role correctly");
         }
     }
 
