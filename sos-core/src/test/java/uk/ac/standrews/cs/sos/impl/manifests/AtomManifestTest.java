@@ -137,6 +137,22 @@ public class AtomManifestTest extends CommonTest {
         assertTrue(atomManifest.verifyIntegrity());
     }
 
+    @Test (timeOut = 100000)
+    public void testIsVerifiedForLocation() throws Exception {
+        Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
+        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
+        bundles.add(bundle);
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+
+        assertTrue(atomManifest.verifyIntegrity(bundle));
+
+        Location wrongLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL_OTHER);
+        LocationBundle wrongBundle = new ProvenanceLocationBundle(wrongLocation);
+
+        assertFalse(atomManifest.verifyIntegrity(wrongBundle));
+    }
+
     @Test
     public void verifyAtomWithNullGUIDTest() throws SignatureException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();

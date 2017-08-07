@@ -106,7 +106,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     /**
      * Verifies the integrity of all the available sources
      *
-     * @return
+     * @return true if the data at all locations for this atom matches the guid of the manifest
      */
     @Override
     public boolean verifyIntegrity() {
@@ -114,7 +114,7 @@ public class AtomManifest extends BasicManifest implements Atom {
         for(LocationBundle location:locations) {
             try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation())) {
 
-                if (!(dataStream != null && guid.equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
+                if (!(dataStream != null && guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
                     return false;
                 }
 
@@ -135,7 +135,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
         try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(locationBundle.getLocation())) {
 
-            if (!(dataStream != null && guid.equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
+            if (!(dataStream != null && guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
                 return false;
             }
 

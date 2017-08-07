@@ -25,7 +25,7 @@ public interface Manifest {
     /**
      * Verify this manifest's GUID against its content.
      *
-     * @param role
+     * @param role used to sign this manifest
      * @return true if the GUID of the manifest matches the content.
      * @throws SignatureException signature of the manifest could not be verified
      */
@@ -36,7 +36,7 @@ public interface Manifest {
      *
      * This method is different for the Atom Manifest, where we need to get the content from all the available locations
      *
-     * @return
+     * @return true if the guid of the manifest matches its contents
      */
     default boolean verifyIntegrity() {
 
@@ -71,7 +71,7 @@ public interface Manifest {
     /**
      * GUID representing this manifest
      *
-     * @return
+     * @return the guid for this manifest
      */
     IGUID guid();
 

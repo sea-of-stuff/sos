@@ -11,4 +11,6 @@ public class Hashes {
 
     public static final String TEST_HTTP_BIN_URL = "http://httpbin.org/range/10";
     public static final String TEST_HTTP_BIN_HASH = "SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0";
+
+    public static final String TEST_HTTP_BIN_URL_OTHER = "http://httpbin.org/range/11";
 }
