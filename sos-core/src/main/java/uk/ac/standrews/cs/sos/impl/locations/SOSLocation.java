@@ -63,6 +63,11 @@ public class SOSLocation implements Location {
         return connection.getInputStream();
     }
 
+
+    public IGUID getMachineID() {
+        return machineID;
+    }
+
     @Override
     public String toString() {
         return SOS_SCHEME + SCHEME_DIVIDER +

@@ -5,8 +5,10 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -68,8 +70,43 @@ public class LocationsIndexImpl implements LocationsIndex {
 
     }
 
+    /**
+     * Order priority:
+     * local node data first (no matter if cache, persistent or provenance)
+     * cache
+     * persistent
+     * provenance
+     *
+     * @return comparator value
+     */
     private Comparator<LocationBundle> comparator() {
         return (o1, o2) -> {
+
+            if (o1.getLocation() instanceof SOSLocation && o2.getLocation() instanceof SOSLocation) {
+
+                SOSLocation s1 = (SOSLocation) o1.getLocation();
+                SOSLocation s2 = (SOSLocation) o2.getLocation();
+
+                if (isLocalNode(s1.getMachineID()) && isLocalNode(s2.getMachineID())) return 0;
+                if (isLocalNode(s1.getMachineID()) && !isLocalNode(s2.getMachineID())) return -1;
+                if (!isLocalNode(s1.getMachineID()) && isLocalNode(s2.getMachineID())) return 1;
+            }
+
+            if (o1.getLocation() instanceof SOSLocation && !(o2.getLocation() instanceof SOSLocation)) {
+
+                SOSLocation s1 = (SOSLocation) o1.getLocation();
+
+                if (isLocalNode(s1.getMachineID())) return -1;
+            }
+
+            if (!(o1.getLocation() instanceof SOSLocation) && o2.getLocation() instanceof SOSLocation) {
+
+                SOSLocation s2 = (SOSLocation) o2.getLocation();
+
+                if (isLocalNode(s2.getMachineID())) return 1;
+            }
+
+
             if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.CACHE)
                 return 0;
 
@@ -97,6 +134,12 @@ public class LocationsIndexImpl implements LocationsIndex {
 
             return 0;
         };
+    }
+
+    private boolean isLocalNode(IGUID nodeGUID) {
+
+        IGUID localNodeGUID = SOSLocalNode.settings.getNodeGUID();
+        return localNodeGUID.equals(nodeGUID);
     }
 
     @Override
