@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
@@ -120,7 +121,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
 
         try {
-
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
             String filename = HEAD_TAG + invariant.toMultiHash();
 
@@ -295,7 +295,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
         Set<String> previousVersionsStrings = previousVersions.stream()
-                .map(g -> g.toMultiHash())
+                .map(IKey::toMultiHash)
                 .collect(Collectors.toSet());
 
         appendTip(invariant, newVersion);
