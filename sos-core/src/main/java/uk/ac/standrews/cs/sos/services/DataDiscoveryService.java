@@ -53,11 +53,12 @@ public interface DataDiscoveryService {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
+    Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException;
+
     /**
      * Map the GUID of a manifest with the GUID of a DDS node.
      * This mapping will be used when trying to get the manifest via #getManifest(guid)
      *
-     * TODO - rename to addManifestLocation?
      *
      * @param manifest for which to add a DDSnode ref
      * @param ddsNode the DDS node ref

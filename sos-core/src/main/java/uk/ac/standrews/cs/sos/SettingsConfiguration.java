@@ -78,9 +78,6 @@ public class SettingsConfiguration {
         private GlobalSettings global;
         private List<NodeSettings> bootstrapNodes;
 
-        // TODO - policy settings
-        // TODO - turn on/off components of node
-
         public Settings() {}
 
         public String getGuid() {
@@ -202,7 +199,7 @@ public class SettingsConfiguration {
 
             @Override
             public boolean isAgent() {
-                return false; // FIXME - it does not matter, since the agent is not an exposable role
+                return false;
             }
 
             @Override

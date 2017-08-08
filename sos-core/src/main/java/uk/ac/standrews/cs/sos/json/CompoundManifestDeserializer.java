@@ -38,7 +38,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
                 signature = node.get(JSONConstants.KEY_SIGNATURE).textValue();
                 signer = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_SIGNER).textValue());
 
-                // FIXME - recreate Role signer
+                // FIXME - recreate Role signer using USRO Service?
             }
 
             String compoundTypeString = node.get(JSONConstants.KEY_COMPOUND_TYPE).textValue();
