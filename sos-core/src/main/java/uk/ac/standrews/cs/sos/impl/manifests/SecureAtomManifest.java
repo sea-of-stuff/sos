@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.SecureManifest;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -18,7 +18,7 @@ import java.util.Set;
  */
 @JsonSerialize(using = SecureAtomManifestSerializer.class)
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
-public class SecureAtomManifest extends AtomManifest implements SecureManifest {
+public class SecureAtomManifest extends AtomManifest implements SecureAtom {
 
     private HashMap<IGUID, String> rolesToKeys;
 

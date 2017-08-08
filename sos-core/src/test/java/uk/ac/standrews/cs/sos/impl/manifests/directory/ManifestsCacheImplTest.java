@@ -19,10 +19,10 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
+import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.utils.ManifestUtils;
@@ -156,7 +156,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         return atomManifest;
     }

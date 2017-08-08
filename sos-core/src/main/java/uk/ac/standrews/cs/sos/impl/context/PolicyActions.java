@@ -114,12 +114,15 @@ public class PolicyActions {
      *
      * The role must have the secret key to decrypt the secure manifest
      *
-     * @param secureManifest
+     * @param manifest
      * @param role
      */
-    public void unprotect(SecureManifest secureManifest, Role role) {
+    public void unprotect(Manifest manifest, Role role) {
 
-        // TODO - replace encrypted data/manifest with the unencrypted one
+        switch(manifest.getType()) {
+            case ATOM_PROTECTED:
+                // TODO - replace encrypted data/manifest with the unencrypted one
+        }
     }
 
     public Node getNode(IGUID guid) throws NodeNotFoundException {

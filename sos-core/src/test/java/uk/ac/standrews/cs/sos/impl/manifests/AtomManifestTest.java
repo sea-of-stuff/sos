@@ -22,6 +22,7 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -68,7 +69,7 @@ public class AtomManifestTest extends CommonTest {
     @Test
     public void testNoLocations() throws Exception {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 
         Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
@@ -79,7 +80,7 @@ public class AtomManifestTest extends CommonTest {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         Location location = HelperTest.createDummyDataFile(localStorage);
         bundles.add(new CacheLocationBundle(location));
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
         Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
@@ -91,7 +92,7 @@ public class AtomManifestTest extends CommonTest {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         Location location = HelperTest.createDummyDataFile(localStorage);
         bundles.add(new CacheLocationBundle(location));
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED), bundles);
 
         Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
@@ -103,7 +104,7 @@ public class AtomManifestTest extends CommonTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         Set<LocationBundle> newBundles = atomManifest.getLocations();
         assertEquals(newBundles.size(), 1);
@@ -120,7 +121,7 @@ public class AtomManifestTest extends CommonTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertEquals(atomManifest.isValid(), true);
     }
@@ -131,7 +132,7 @@ public class AtomManifestTest extends CommonTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertFalse(atomManifest.verifySignature(null));
         assertTrue(atomManifest.verifyIntegrity());
@@ -143,7 +144,7 @@ public class AtomManifestTest extends CommonTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         assertTrue(atomManifest.verifyIntegrity(bundle));
 
@@ -156,7 +157,7 @@ public class AtomManifestTest extends CommonTest {
     @Test
     public void verifyAtomWithNullGUIDTest() throws SignatureException {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(null, bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
         assertFalse(atomManifest.verifySignature(null));
         assertTrue(atomManifest.verifyIntegrity());

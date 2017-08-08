@@ -2,13 +2,12 @@ package uk.ac.standrews.cs.sos.impl.services.Storage;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
-import uk.ac.standrews.cs.sos.impl.services.SOSStorage;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
@@ -30,7 +29,7 @@ public class SOSAddSecureAtomTest extends StorageTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setRole(role);
-        SecureAtomManifest secureAtomManifest = ((SOSStorage) storage).addSecureAtom(builder);
+        SecureAtom secureAtomManifest = storage.addSecureAtom(builder);
 
         assertNotNull(secureAtomManifest.getData());
         assertFalse(IOUtils.contentEquals(secureAtomManifest.getData().getInputStream(), location.getSource()));

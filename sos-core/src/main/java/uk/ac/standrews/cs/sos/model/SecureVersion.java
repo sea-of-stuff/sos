@@ -5,9 +5,10 @@ import uk.ac.standrews.cs.guid.IGUID;
 import java.util.HashMap;
 
 /**
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SecureManifest extends Manifest {
+public interface SecureVersion extends Version {
 
     HashMap<IGUID, String> keysRoles();
 }

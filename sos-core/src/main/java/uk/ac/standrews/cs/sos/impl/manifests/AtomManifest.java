@@ -131,6 +131,7 @@ public class AtomManifest extends BasicManifest implements Atom {
      * @param locationBundle
      * @return
      */
+    @Override
     public boolean verifyIntegrity(LocationBundle locationBundle) {
 
         try (Data data = LocationUtility.getDataFromLocation(locationBundle.getLocation())) {

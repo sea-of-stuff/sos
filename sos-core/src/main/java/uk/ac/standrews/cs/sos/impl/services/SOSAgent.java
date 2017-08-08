@@ -9,9 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
-import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
-import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
@@ -77,7 +75,7 @@ public class SOSAgent implements Agent {
             role = usersRolesService.activeRole();
         }
 
-        CompoundManifest compound = ManifestFactory.createCompoundManifest(type, contents, role);
+        Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
         addManifest(compound);
 
         return compound;
@@ -96,7 +94,7 @@ public class SOSAgent implements Agent {
             role = usersRolesService.activeRole();
         }
 
-        VersionManifest manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
+        Version manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
         addManifest(manifest);
 
         // NOTE:

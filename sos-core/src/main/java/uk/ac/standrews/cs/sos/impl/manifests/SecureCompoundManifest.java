@@ -11,16 +11,22 @@ import java.util.Set;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 // TODO - json serialise/deserialise
-public class SecureCompoundManifest extends CompoundManifest implements Compound, SecureManifest {
+public class SecureCompoundManifest extends CompoundManifest implements SecureCompound {
 
     private HashMap<IGUID, String> rolesToKeys;
 
-    public SecureCompoundManifest(CompoundType type, Set<Content> contents, Role signer) throws ManifestNotMadeException {
+    public SecureCompoundManifest(CompoundType type, Set<Content> contents, Role signer, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
         super(type, contents, signer);
+
+        this.manifestType = ManifestType.COMPOUND_PROTECTED;
+        this.rolesToKeys = rolesToKeys;
     }
 
-    public SecureCompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature) throws ManifestNotMadeException {
+    public SecureCompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
         super(type, contentGUID, contents, signer, signature);
+
+        this.manifestType = ManifestType.COMPOUND_PROTECTED;
+        this.rolesToKeys = rolesToKeys;
     }
 
     @Override

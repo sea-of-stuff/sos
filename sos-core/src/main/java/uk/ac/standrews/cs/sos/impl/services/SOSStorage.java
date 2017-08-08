@@ -21,7 +21,6 @@ import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
-import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -84,13 +83,13 @@ public class SOSStorage implements Storage {
             throw new DataStorageException();
         }
 
-        AtomManifest manifest = ManifestFactory.createAtomManifest(guid, bundles);
+        Atom manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;
     }
 
-    public SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
+    public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
 
         if (atomBuilder.getRole() == null)
             throw new DataStorageException();
@@ -106,7 +105,7 @@ public class SOSStorage implements Storage {
         HashMap<IGUID, String> rolesToKeys = new HashMap<>();
         rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
 
-        SecureAtomManifest manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
+        SecureAtom manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;

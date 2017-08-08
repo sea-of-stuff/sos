@@ -26,10 +26,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
-import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -97,7 +94,7 @@ public class SecureAtomManifestTest extends CommonTest {
         HashMap<IGUID, String> rolesToKeys = new HashMap<>();
         rolesToKeys.put(role.guid(), "ENCRYPTED_KEY");
 
-        SecureAtomManifest secureAtomManifest = ManifestFactory.createSecureAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles, rolesToKeys);
+        SecureAtom secureAtomManifest = ManifestFactory.createSecureAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles, rolesToKeys);
         assertEquals(secureAtomManifest.getType(), ManifestType.ATOM_PROTECTED);
         assertEquals(secureAtomManifest.getData().toString(), TEST_HTTP_BIN_CONTENT);
     }
@@ -119,7 +116,7 @@ public class SecureAtomManifestTest extends CommonTest {
                 "  } ]\n" +
                 "}";
 
-        SecureAtomManifest secureAtomManifest = JSONHelper.JsonObjMapper().readValue(testSecureAtomJson, SecureAtomManifest.class);
+        SecureAtom secureAtomManifest = JSONHelper.JsonObjMapper().readValue(testSecureAtomJson, SecureAtomManifest.class);
         assertEquals(secureAtomManifest.getType(), ManifestType.ATOM_PROTECTED);
         assertEquals(secureAtomManifest.guid(), GUIDFactory.recreateGUID("SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0"));
 

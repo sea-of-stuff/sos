@@ -3,9 +3,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.CompoundType;
-import uk.ac.standrews.cs.sos.model.Content;
-import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.*;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -27,12 +25,12 @@ public class ManifestFactory {
      * @param locations where the atom resides.
      * @return the manifest for the atom
      */
-    public static AtomManifest createAtomManifest(IGUID guid, Set<LocationBundle> locations) {
+    public static Atom createAtomManifest(IGUID guid, Set<LocationBundle> locations) {
 
         return new AtomManifest(guid, locations);
     }
 
-    public static SecureAtomManifest createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
+    public static SecureAtom createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
 
         return new SecureAtomManifest(guid, locations, rolesToKeys);
     }
@@ -45,7 +43,7 @@ public class ManifestFactory {
      * @return a compound manifest
      * @throws ManifestNotMadeException
      */
-    public static CompoundManifest createCompoundManifest(CompoundType type,
+    public static Compound createCompoundManifest(CompoundType type,
                                                           Set<Content> contents,
                                                           Role role) throws ManifestNotMadeException {
 
@@ -69,7 +67,7 @@ public class ManifestFactory {
      * @return an asset manifest
      * @throws ManifestNotMadeException
      */
-    public static VersionManifest createVersionManifest(IGUID content,
+    public static Version createVersionManifest(IGUID content,
                                                         IGUID invariant,
                                                         Set<IGUID> prevs,
                                                         IGUID metadata,

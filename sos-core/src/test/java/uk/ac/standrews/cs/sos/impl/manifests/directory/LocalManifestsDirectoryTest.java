@@ -72,7 +72,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocationBundle bundle = new ProvenanceLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
         IGUID guid = atomManifest.guid();
         try {
@@ -96,7 +96,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
-        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, roleMocked);
+        Compound compoundManifest = ManifestFactory.createCompoundManifest(CompoundType.DATA, contents, roleMocked);
         IGUID guid = compoundManifest.guid();
         try {
             manifestsDirectory.addManifest(compoundManifest);
@@ -121,7 +121,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         contents.add(cat);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
-        CompoundManifest compoundManifest = ManifestFactory.createCompoundManifest(null, contents, roleMocked);
+        ManifestFactory.createCompoundManifest(null, contents, roleMocked);
     }
 
     @Test
@@ -157,11 +157,11 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new ProvenanceLocationBundle(firstLocation))));
         IGUID guid = atomManifest.guid();
 
-        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+        Atom anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new ProvenanceLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.guid();
 
@@ -185,11 +185,11 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+        Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
         IGUID guid = atomManifest.guid();
 
-        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+        Atom anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.guid();
 

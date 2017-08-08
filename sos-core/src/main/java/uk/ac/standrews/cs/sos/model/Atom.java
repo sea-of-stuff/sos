@@ -46,4 +46,6 @@ public interface Atom extends Manifest {
      * @return
      */
     CompressionAlgorithms getCompressionAlgorithm();
+
+    boolean verifyIntegrity(LocationBundle locationBundle);
 }
