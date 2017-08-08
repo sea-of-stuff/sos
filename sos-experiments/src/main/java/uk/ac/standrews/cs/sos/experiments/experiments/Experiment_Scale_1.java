@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * TODO - change experiments as in PR_1, where we use ExperimentUnits and load contexts and contents from files
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

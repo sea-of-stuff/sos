@@ -38,4 +38,7 @@ public interface Experiment {
 
     int numberOfTotalIterations();
 
+    // NOTE (1) Experiments should have a main method to run as standalone java programs.
+    // NOTE (2) This is important if we want to run the experiment from remote while having control using our local machine
+
 }
