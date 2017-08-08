@@ -1,10 +1,15 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -25,5 +30,14 @@ public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
             advanceTip(version.getInvariantGUID(), version.getPreviousVersions(), version.guid());
         }
 
+    }
+
+    protected Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
+        Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
+
+        locations.addAll(first.getLocations());
+        locations.addAll(second.getLocations());
+
+        return ManifestFactory.createAtomManifest(guid, locations);
     }
 }

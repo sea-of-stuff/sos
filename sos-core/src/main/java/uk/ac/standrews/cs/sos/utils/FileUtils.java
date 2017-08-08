@@ -14,9 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
-import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
+import uk.ac.standrews.cs.sos.impl.manifests.*;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
@@ -66,11 +64,20 @@ public class FileUtils {
                 case ATOM:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
                     break;
+                case ATOM_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureAtomManifest.class);
+                    break;
                 case COMPOUND:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
                     break;
+                case COMPOUND_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureCompoundManifest.class);
+                    break;
                 case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
+                    break;
+                case VERSION_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureVersionManifest.class);
                     break;
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
@@ -92,11 +99,20 @@ public class FileUtils {
                 case ATOM:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, AtomManifest.class);
                     break;
+                case ATOM_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureAtomManifest.class);
+                    break;
                 case COMPOUND:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, CompoundManifest.class);
                     break;
+                case COMPOUND_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureCompoundManifest.class);
+                    break;
                 case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, VersionManifest.class);
+                    break;
+                case VERSION_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureVersionManifest.class);
                     break;
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, BasicMetadata.class);

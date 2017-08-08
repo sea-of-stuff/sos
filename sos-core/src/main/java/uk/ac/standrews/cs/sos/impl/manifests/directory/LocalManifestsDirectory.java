@@ -14,8 +14,6 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -146,7 +144,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             file.persist();
 
         } catch (DataStorageException | PersistenceException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO - proper exception
         }
 
     }
@@ -273,15 +271,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         return FileUtils.CreateTempFile(localStorage, manifestsDir, guid);
     }
 
-    private Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
-        Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
-
-        locations.addAll(first.getLocations());
-        locations.addAll(second.getLocations());
-
-        return ManifestFactory.createAtomManifest(guid, locations);
-    }
-
     private boolean manifestExistsInStorage(IGUID guid) throws ManifestNotFoundException {
         IFile manifest = getManifestFile(guid);
         return manifest.exists();
@@ -336,7 +325,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             fileWithContent.persist();
 
         } catch (DataStorageException | PersistenceException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO - proper exception
         }
     }
 
@@ -362,7 +351,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             fileWithContent.persist();
 
         } catch (DataException | DataStorageException | PersistenceException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO - proper exception
         }
     }
 
