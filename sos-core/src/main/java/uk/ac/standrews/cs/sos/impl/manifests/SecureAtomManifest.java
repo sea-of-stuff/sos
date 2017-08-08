@@ -40,4 +40,9 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
         return rolesToKeys;
     }
 
+    @Override
+    public void setKeysRoles(HashMap<IGUID, String> keysRoles) {
+        this.rolesToKeys = keysRoles;
+    }
+
 }

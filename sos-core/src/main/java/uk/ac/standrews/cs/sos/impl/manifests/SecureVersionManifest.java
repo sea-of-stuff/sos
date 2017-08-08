@@ -1,7 +1,11 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.json.SecureVersionManifestDeserializer;
+import uk.ac.standrews.cs.sos.json.SecureVersionManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureVersion;
@@ -12,6 +16,8 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = SecureVersionManifestSerializer.class)
+@JsonDeserialize(using = SecureVersionManifestDeserializer.class)
 public class SecureVersionManifest extends VersionManifest implements SecureVersion {
 
     private HashMap<IGUID, String> rolesToKeys;
@@ -26,5 +32,10 @@ public class SecureVersionManifest extends VersionManifest implements SecureVers
     @Override
     public HashMap<IGUID, String> keysRoles() {
         return rolesToKeys;
+    }
+
+    @Override
+    public void setKeysRoles(HashMap<IGUID, String> keysRoles) {
+        this.rolesToKeys = keysRoles;
     }
 }

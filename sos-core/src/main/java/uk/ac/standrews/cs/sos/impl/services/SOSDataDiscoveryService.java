@@ -66,7 +66,8 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         local.addManifest(manifest);
 
         // Add/Update TIP
-        if (manifest.getType() == ManifestType.VERSION) {
+        ManifestType manifestType = manifest.getType();
+        if (manifestType.equals(ManifestType.VERSION) || manifestType.equals(ManifestType.VERSION_PROTECTED)) {
 
             Version version = (Version) manifest;
             Set<IGUID> previousVersions = version.getPreviousVersions();
@@ -127,7 +128,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
             return manifest;
         } catch (ManifestPersistException e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "DDS - Unable to persist manifest to cache/local");
         }
 
         throw new ManifestNotFoundException("Manifest not found");

@@ -6,8 +6,11 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.sos.model.Version;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -39,5 +42,14 @@ public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
         locations.addAll(second.getLocations());
 
         return ManifestFactory.createAtomManifest(guid, locations);
+    }
+
+    protected HashMap<IGUID, String> mergeSecureManifestsKeys(SecureManifest first, SecureManifest second) {
+        HashMap<IGUID, String> keysRoles = new LinkedHashMap<>();
+
+        keysRoles.putAll(first.keysRoles());
+        keysRoles.putAll(second.keysRoles());
+
+        return keysRoles;
     }
 }

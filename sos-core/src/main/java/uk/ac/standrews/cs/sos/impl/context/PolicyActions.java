@@ -117,12 +117,10 @@ public class PolicyActions {
      * @param manifest
      * @param role
      */
-    public void unprotect(Manifest manifest, Role role) {
+    public void unprotect(SecureManifest manifest, Role role) {
 
-        switch(manifest.getType()) {
-            case ATOM_PROTECTED:
-                // TODO - replace encrypted data/manifest with the unencrypted one
-        }
+
+        // TODO - replace encrypted data/manifest with the unencrypted one
     }
 
     public Node getNode(IGUID guid) throws NodeNotFoundException {

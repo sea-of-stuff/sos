@@ -1,9 +1,5 @@
 package uk.ac.standrews.cs.sos.model;
 
-import uk.ac.standrews.cs.guid.IGUID;
-
-import java.util.HashMap;
-
 /**
  * This is the interface for the Atom manifest.
  * An atom is the basic building block for the SOS and it is used to abstract data over locations.
@@ -23,7 +19,4 @@ import java.util.HashMap;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SecureAtom extends Atom {
-
-    HashMap<IGUID, String> keysRoles();
-}
+public interface SecureAtom extends Atom, SecureManifest {}

@@ -18,6 +18,7 @@ import java.util.Set;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtomManifest> {
+
     @Override
     public void serialize(SecureAtomManifest atomManifest, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 

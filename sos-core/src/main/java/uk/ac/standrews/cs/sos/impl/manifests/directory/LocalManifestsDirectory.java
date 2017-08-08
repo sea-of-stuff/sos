@@ -99,7 +99,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
             List<String> versions = content.isEmpty() ? new LinkedList<>() : Arrays.asList(content.split("\n"));
 
-            Set<IGUID> versionsRefs =  versions.stream()
+            Set<IGUID> versionsRefs = versions.stream()
                     .map(v -> {
                         try {
                             return GUIDFactory.recreateGUID(v);
@@ -123,7 +123,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             String filename = HEAD_TAG + invariant.toMultiHash();
 
             String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            guid = guid.replace("\n", "");
+            guid = guid.replace("\n", ""); // Remove any newline chars
             return GUIDFactory.recreateGUID(guid);
 
         } catch (DataStorageException | DataException | GUIDGenerationException e) {
@@ -190,7 +190,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         IFile manifestFile = getManifestFile(manifestFileGUID);
         IFile backupFile = backupManifest(manifest);
         FileUtils.DeleteFile(manifestFile);
-
+// TODO - merge ops
         saveToFile(manifest);
 
         FileUtils.DeleteFile(backupFile);
