@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.castore.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
@@ -36,8 +37,9 @@ public class HelperTest {
         return new String(encodedBytes);
     }
 
-    private static String localURItoPath(Location location) throws URISyntaxException {
-        return location.getURI().getPath();
+    private static String localSOSDataPath(LocalStorage localStorage, SOSLocation location) throws DataStorageException {
+
+        return localStorage.getDataDirectory().toString() + location.getEntityID().toMultiHash();
     }
 
     public static Location createDummyDataFile(LocalStorage storage) throws URISyntaxException, StorageException, DataStorageException {
@@ -59,11 +61,13 @@ public class HelperTest {
         return new URILocation("file://" + sosFile.getPathname());
     }
 
-    public static void appendToFile(Location location, String text) throws URISyntaxException, IOException {
+    public static void appendToFile(LocalStorage localStorage, SOSLocation location, String text) throws URISyntaxException, IOException, DataStorageException {
 
-        try (PrintWriter writer = new PrintWriter(
-                new FileOutputStream(
-                        new java.io.File(HelperTest.localURItoPath(location)), true))) {
+        String path = HelperTest.localSOSDataPath(localStorage, location);
+        java.io.File file = new java.io.File(path);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+             PrintWriter writer = new PrintWriter(fileOutputStream)) {
+
             writer.append(text);
         }
     }

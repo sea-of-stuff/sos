@@ -79,15 +79,17 @@ public class LocationsIndexImpl implements LocationsIndex {
      *
      * @return comparator value
      */
-    private Comparator<LocationBundle> comparator() {
+    public static Comparator<LocationBundle> comparator() {
         return (o1, o2) -> {
+
+            if (o1.getLocation().equals(o2.getLocation())) return 0;
 
             if (o1.getLocation() instanceof SOSLocation && o2.getLocation() instanceof SOSLocation) {
 
                 SOSLocation s1 = (SOSLocation) o1.getLocation();
                 SOSLocation s2 = (SOSLocation) o2.getLocation();
 
-                if (isLocalNode(s1.getMachineID()) && isLocalNode(s2.getMachineID())) return 0;
+                if (isLocalNode(s1.getMachineID()) && isLocalNode(s2.getMachineID())) return -1; // Must still be able to distinguish the two locations
                 if (isLocalNode(s1.getMachineID()) && !isLocalNode(s2.getMachineID())) return -1;
                 if (!isLocalNode(s1.getMachineID()) && isLocalNode(s2.getMachineID())) return 1;
             }
@@ -108,13 +110,13 @@ public class LocationsIndexImpl implements LocationsIndex {
 
 
             if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.CACHE)
-                return 0;
+                return -1; // Must still be able to distinguish the two locations
 
             if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.PERSISTENT)
-                return 0;
+                return -1; // Must still be able to distinguish the two locations
 
             if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.PROVENANCE)
-                return 0;
+                return -1; // Must still be able to distinguish the two locations
 
 
             if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.PERSISTENT)
@@ -136,7 +138,7 @@ public class LocationsIndexImpl implements LocationsIndex {
         };
     }
 
-    private boolean isLocalNode(IGUID nodeGUID) {
+    private static boolean isLocalNode(IGUID nodeGUID) {
 
         IGUID localNodeGUID = SOSLocalNode.settings.getNodeGUID();
         return localNodeGUID.equals(nodeGUID);

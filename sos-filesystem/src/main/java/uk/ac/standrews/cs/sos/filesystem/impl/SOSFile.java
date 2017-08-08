@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
@@ -10,7 +11,6 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
@@ -74,10 +74,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
              InputStream streamForAtom = new ByteArrayInputStream(baos.toByteArray());
              InputStream streamForMetadata = new ByteArrayInputStream(baos.toByteArray())) {
 
-            AtomBuilder atomBuilder = new AtomBuilder().setInputStream(streamForAtom);
+            AtomBuilder atomBuilder = new AtomBuilder().setData(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForAtom));
 
             this.atom = sos.addAtom(atomBuilder); // Atom is saved and manifest returned by the SOS
-            this.metadata = sos.addMetadata(streamForMetadata); // Metadata is generated, saved and returned by the SOS
+            this.metadata = sos.addMetadata(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForMetadata)); // Metadata is generated, saved and returned by the SOS
 
             VersionBuilder versionBuilder = new VersionBuilder()
                     .setAtomBuilder(atomBuilder)
@@ -217,7 +217,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             return;
 
         try {
-            AtomBuilder builder = new AtomBuilder().setInputStream(data.getInputStream());
+            AtomBuilder builder = new AtomBuilder().setData(new uk.ac.standrews.cs.castore.data.InputStreamData(data.getInputStream()));
             Atom atom = sos.addAtom(builder);
             Content content = new ContentImpl(atom.guid());
             atoms.add(content);
@@ -252,11 +252,11 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             size = metadata.getPropertyAsInteger(META_SIZE);
         }
 
-        try (InputStream stream = sos.getAtomContent(atom)){
+        try (Data data = sos.getAtomContent(atom)){
 
-            return new InputStreamData(stream, size);
+            return new InputStreamData(data.getInputStream(), size);
 
-        } catch (AtomNotFoundException | IOException e) {
+        } catch (Exception e) {
             e.printStackTrace(); // TODO - define EmptyDATA() OBJECT
         }
 

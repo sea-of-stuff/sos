@@ -1,29 +1,27 @@
 package uk.ac.standrews.cs.sos.services;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
-import java.io.InputStream;
-
 /**
- * Metadata Management Service
- * TODO -> RENAME to metadata discovery service
+ * Metadata Service
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface MetadataService {
 
     /**
-     * Computes the metadata for a given input stream
+     * Computes the metadata for some given data
      *
-     * @param inputStream
+     * @param data
      * @return
      * @throws MetadataException
      */
-    Metadata processMetadata(InputStream inputStream) throws MetadataException;
+    Metadata processMetadata(Data data) throws MetadataException;
 
     /**
      * Add the given metadata to the sea of stuff

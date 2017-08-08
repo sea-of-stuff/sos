@@ -203,7 +203,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
         try {
             IFile manifestFile = getManifestFile(guid);
-
             IFile backupFile = backupManifest(existingManifest);
 
             if (!existingManifest.equals(manifest)) {
@@ -273,9 +272,9 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         return FileUtils.CreateTempFile(localStorage, manifestsDir, guid);
     }
 
-
     private Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
-        HashSet<LocationBundle> locations = new HashSet<>();
+        Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
+
         locations.addAll(first.getLocations());
         locations.addAll(second.getLocations());
 

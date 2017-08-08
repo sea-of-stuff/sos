@@ -54,7 +54,7 @@ public interface ExperimentUnit {
 
                 String fileLocation = listOfFile.getAbsolutePath();
                 AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(fileLocation));
-                Metadata metadata = node.getAgent().addMetadata(atomBuilder.getLocation().getSource()); // TODO - do this in the version builder?
+                Metadata metadata = node.getAgent().addMetadata(atomBuilder.getData()); // TODO - do this in the version builder?
                 VersionBuilder versionBuilder = new VersionBuilder()
                         .setAtomBuilder(atomBuilder)
                         .setMetadata(metadata);

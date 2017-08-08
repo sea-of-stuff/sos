@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.web;
 
 import spark.Request;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -82,7 +83,7 @@ public class WebApp {
         request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
         try (InputStream is = request.raw().getPart("atom").getInputStream()) {
-            AtomBuilder builder = new AtomBuilder().setInputStream(is);
+            AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(is));
             Atom atom = sos.getAgent().addAtom(builder);
         }
         return "CreateFile uploaded";

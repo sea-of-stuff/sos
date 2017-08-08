@@ -146,8 +146,9 @@ public class LocalManifestsDirectoryTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void testAddVersionManifestNullContent() throws Exception {
-        Version versionManifest = ManifestUtils.createDummyVersion(null);
+        ManifestUtils.createDummyVersion(null);
     }
+
 
     @Test
     public void updateAtomManifestTest() throws Exception {
@@ -156,14 +157,12 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+                new LinkedHashSet<>(Collections.singletonList(new ProvenanceLocationBundle(firstLocation))));
         IGUID guid = atomManifest.guid();
 
-        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
+        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+                new LinkedHashSet<>(Collections.singletonList(new ProvenanceLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.guid();
 
         assertEquals(guid, anotherGUID);
@@ -186,13 +185,11 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Location firstLocation = HelperTest.createDummyDataFile(storage, "first.txt");
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
 
-        AtomManifest atomManifest = ManifestFactory.createAtomManifest(
-                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+        AtomManifest atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(firstLocation))));
         IGUID guid = atomManifest.guid();
 
-        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(
-                GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
+        AtomManifest anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
                 new LinkedHashSet<>(Collections.singletonList(new CacheLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.guid();
 

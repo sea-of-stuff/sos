@@ -68,6 +68,10 @@ public class SOSLocation implements Location {
         return machineID;
     }
 
+    public IGUID getEntityID() {
+        return entity;
+    }
+
     @Override
     public String toString() {
         return SOS_SCHEME + SCHEME_DIVIDER +

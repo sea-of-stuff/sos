@@ -4,10 +4,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.constants.Hashes;
+import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
@@ -58,8 +60,8 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
-        try (InputStream inputStream = agent.getAtomContent((AtomManifest) retrievedManifest)) {
-            assertTrue(IOUtils.contentEquals(location.getSource(), inputStream));
+        try (Data data = agent.getAtomContent((AtomManifest) retrievedManifest)) {
+            assertTrue(IOUtils.contentEquals(location.getSource(), data.getInputStream()));
         }
     }
 
@@ -84,9 +86,9 @@ public class SOSAddAtomTest extends AgentTest {
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
         Set<LocationBundle> retrievedLocations = ((AtomManifest) retrievedManifest).getLocations();
-        LocationBundle cachedLocation = retrievedLocations.iterator().next();
+        LocationBundle persistentLocation = retrievedLocations.iterator().next();
 
-        HelperTest.appendToFile(cachedLocation.getLocation(), "Data has changed");
+        HelperTest.appendToFile(localStorage, (SOSLocation) persistentLocation.getLocation(), "Data has changed");
         assertFalse(retrievedManifest.verifyIntegrity());
     }
 
@@ -175,12 +177,12 @@ public class SOSAddAtomTest extends AgentTest {
         assertNotNull(manifest.guid());
         assertEquals(manifest.getLocations().size(), 1);
 
-        InputStream inputStream = agent.getAtomContent(manifest);
-        String resultString = HelperTest.InputStreamToString(inputStream);
+        Data data = agent.getAtomContent(manifest);
+        String resultString = data.toString();
         assertEquals(testString, resultString);
 
         stream.close();
-        inputStream.close();
+        data.close();
     }
 
     @Test

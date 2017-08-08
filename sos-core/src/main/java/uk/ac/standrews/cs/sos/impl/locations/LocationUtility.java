@@ -1,10 +1,11 @@
 package uk.ac.standrews.cs.sos.impl.locations;
 
-import org.apache.commons.io.input.NullInputStream;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.EmptyData;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -12,24 +13,18 @@ import java.io.InputStream;
 public class LocationUtility {
 
     /**
-     * Return an InputStream for the given location.
-     * The method calling this function should ensure that the stream is closed.
+     * Return the data at the given location.
+     * The method calling this function should ensure that the data object is closed.
      *
      * @param location
      * @return
      */
-    public static InputStream getInputStreamFromLocation(Location location) {
-        InputStream stream;
+    public static Data getDataFromLocation(Location location) {
+
         try {
-            stream = location.getSource();
+            return new InputStreamData(location.getSource());
         } catch (IOException e) {
-            return new NullInputStream(0);
+            return new EmptyData();
         }
-
-        if (stream == null) {
-            return new NullInputStream(0);
-        }
-
-        return stream;
     }
 }

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
@@ -7,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
@@ -16,7 +18,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 
-import java.io.InputStream;
 import java.util.Set;
 
 /**
@@ -61,7 +62,8 @@ public class SOSAgent implements Agent {
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
 
-        return storage.addAtom(atomBuilder, true);
+        atomBuilder.setBundleType(BundleTypes.PERSISTENT);
+        return storage.addAtom(atomBuilder);
     }
 
     @Override
@@ -138,7 +140,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public InputStream getData(Version version) throws AtomNotFoundException {
+    public Data getData(Version version) throws AtomNotFoundException {
 
         IGUID content = version.getContentGUID();
         return storage.getAtomContent(content);
@@ -152,7 +154,7 @@ public class SOSAgent implements Agent {
      * @return Input Stream of the data for the given atom
      */
     @Override
-    public InputStream getAtomContent(Atom atom) throws AtomNotFoundException {
+    public Data getAtomContent(Atom atom) throws AtomNotFoundException {
         return storage.getAtomContent(atom);
     }
 
@@ -182,9 +184,9 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Metadata addMetadata(InputStream inputStream) throws MetadataException {
+    public Metadata addMetadata(Data data) throws MetadataException {
 
-        Metadata metadata = metadataService.processMetadata(inputStream);
+        Metadata metadata = metadataService.processMetadata(data);
         metadataService.addMetadata(metadata);
 
         return metadata;

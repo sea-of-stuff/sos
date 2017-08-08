@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Set;
 
 /**
@@ -37,12 +36,10 @@ public interface Atom extends Manifest {
 
     /**
      * Return the atom's data
+     *
      * @return
      */
-    InputStream getData() throws IOException;
-
-    // TODO - should be renamed to getData and remove the other method called so
-    Data getDataO() throws IOException;
+    Data getData() throws IOException;
 
     /**
      * WIP: Algorithm used to compress data

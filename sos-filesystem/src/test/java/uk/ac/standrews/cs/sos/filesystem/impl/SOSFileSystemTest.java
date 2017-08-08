@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.filesystem.impl;
 
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.data.EmptyData;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.StringData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -13,7 +14,6 @@ import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.services.Agent;
-import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.Collections;
@@ -83,7 +83,7 @@ public class SOSFileSystemTest {
 
         Atom mockAtom = mock(Atom.class);
         when(mockAgent.addAtom(anyObject())).thenReturn(mockAtom);
-        when(mockAtom.getData()).thenReturn(IO.StringToInputStream(""));
+        when(mockAtom.getData()).thenReturn(new EmptyData());
 
         Metadata mockMeta = mock(Metadata.class);
         when(mockAgent.addMetadata(mockAtom.getData())).thenReturn(mockMeta);

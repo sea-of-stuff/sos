@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.services.Client.replication;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -19,7 +21,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
     public void replicateDataAndFetchItTest() throws Exception {
 
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
-        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+        AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
         Atom manifest = agent.addAtom(builder);
 
         Thread.sleep(1000); // Let replication happen
@@ -33,18 +35,20 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         // Look at locationIndex in atomStorage
         // Get data from external source (data is never kept in memory, unlike manifests)
-        InputStream inputStream = agent.getAtomContent(manifest);
-        assertNotNull(inputStream);
+        Data data  = agent.getAtomContent(manifest);
+        assertNotNull(data);
 
-        String retrievedData = HelperTest.InputStreamToString(inputStream);
+        String retrievedData = data.toString();
         assertEquals(retrievedData, TEST_DATA);
+
+        data.close();
     }
 
     @Test
     public void fetchReplicatedDataIgnoreManifestTest() throws Exception {
 
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
-        AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+        AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
         Atom manifest = agent.addAtom(builder);
 
         Thread.sleep(1000); // Let replication happen
@@ -57,10 +61,12 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         // Manifest is ignored
         // Get data from external source (data is never kept in memory, unlike manifests)
-        InputStream inputStream = agent.getAtomContent(manifest);
-        assertNotNull(inputStream);
+        Data data = agent.getAtomContent(manifest);
+        assertNotNull(data);
 
-        String retrievedData = HelperTest.InputStreamToString(inputStream);
+        String retrievedData = data.toString();
         assertEquals(retrievedData, TEST_DATA);
+
+        data.close();
     }
 }

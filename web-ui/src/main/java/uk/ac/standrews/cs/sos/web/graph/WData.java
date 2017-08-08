@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.web.graph;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.impl.util.Base64;
 import spark.Request;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -11,11 +11,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.web.Utils;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -70,7 +68,7 @@ public class WData {
         if (manifest.getType() == ManifestType.ATOM) {
             Atom atom = (Atom) manifest;
 
-            InputStream atomContent;
+            Data atomContent;
             try {
                 atomContent = sos.getAgent().getAtomContent(atom);
             } catch (AtomNotFoundException e) {
@@ -82,12 +80,12 @@ public class WData {
                 case "image/png":
                 case "image/jpeg":
                 case "image/jpg":
-                    byte b[] = IOUtils.toByteArray(atomContent);
+                    byte b[] = atomContent.getState();
                     byte[] encodeBase64 = Base64.encode(b);
                     retval = new String(encodeBase64 , StandardCharsets.UTF_8);
                     break;
                 default:
-                    retval = Utils.InputStreamToString(atomContent);
+                    retval = atomContent.toString();
             }
 
             return new Pair<>(type, retval);

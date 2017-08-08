@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.services;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
@@ -10,7 +11,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
-import java.io.InputStream;
 import java.util.Iterator;
 
 /**
@@ -26,13 +26,12 @@ public interface Storage {
      * Adds data to the Sea of Stuff as an atom.
      *
      * @param atomBuilder defines the sources for the atom to be added
-     * @param persist if true the atom is persisted in this node, otherwise it is cached (e.g. it can be later purged)
      * @return The generated atom manifest. This will contain the locations known to this node prior to any replication.
      *
      * @throws DataStorageException
      * @throws ManifestPersistException
      */
-    Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws DataStorageException, ManifestPersistException;
+    Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
 
     Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException;
 
@@ -40,9 +39,9 @@ public interface Storage {
      * Get an atom's data given an AtomManifest.
      *
      * @param atom describing the atom to retrieve.
-     * @return InputStream // TODO - return Data - see Castore
+     * @return Data
      */
-    InputStream getAtomContent(Atom atom);
+    Data getAtomContent(Atom atom);
 
     /**
      * Get the data for the atom with the specified GUID
@@ -51,7 +50,7 @@ public interface Storage {
      * @return
      * @throws AtomNotFoundException
      */
-    InputStream getAtomContent(IGUID guid) throws AtomNotFoundException;
+    Data getAtomContent(IGUID guid) throws AtomNotFoundException;
 
     void addLocation(IGUID guid, LocationBundle locationBundle);
 

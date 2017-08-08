@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -41,11 +43,13 @@ public class RESTMMS {
         MetadataService metadataService = RESTConfig.sos.getMMS();
         try {
             metadataService.addMetadata(metadata);
+            return HTTPResponses.CREATED(metadata.toString());
+
         } catch (MetadataPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-        return HTTPResponses.CREATED(metadata.toString());
+
     }
 
     @GET
@@ -83,14 +87,16 @@ public class RESTMMS {
 
         MetadataService MetadataService = RESTConfig.sos.getMMS();
 
-        Metadata metadata;
         try {
-            metadata = MetadataService.processMetadata(inputStream);
+            Data data = new InputStreamData(inputStream);
+            Metadata metadata = MetadataService.processMetadata(data);
+
+            return HTTPResponses.OK(metadata.toString());
         } catch (MetadataException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-        return HTTPResponses.OK(metadata.toString());
+
     }
 
 }

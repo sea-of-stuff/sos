@@ -1,9 +1,14 @@
 package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.EmptyData;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleType;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.Role;
 
-import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * TODO - rename to AtomSourceBuilder
@@ -13,32 +18,23 @@ import java.io.InputStream;
 public class AtomBuilder {
 
     private Location location;
-    private InputStream inputStream; // FIXME - replace with DATA
     private Data data;
+
+    private boolean buildIsSet = false;
+    private boolean isLocation = false;
+    private boolean isData = false;
+
+    private Role role = null;
+    private BundleType bundleType = BundleTypes.CACHE;
 
     public boolean isBuildIsSet() {
         return buildIsSet;
     }
 
-    private boolean buildIsSet = false;
-    private boolean isLocation = false;
-    private boolean isInputStream = false;
-    private boolean isData = false;
-
     public AtomBuilder setLocation(Location location) {
         if (!buildIsSet) {
             this.location = location;
             isLocation = true;
-            buildIsSet = true;
-        }
-
-        return this;
-    }
-
-    public AtomBuilder setInputStream(InputStream inputStream) {
-        if (!buildIsSet) {
-            this.inputStream = inputStream;
-            isInputStream = true;
             buildIsSet = true;
         }
 
@@ -55,16 +51,37 @@ public class AtomBuilder {
         return this;
     }
 
+    public AtomBuilder setRole(Role role) {
+        this.role = role;
+
+        return this;
+    }
+
+    public AtomBuilder setBundleType(BundleType bundleType) {
+        this.bundleType = bundleType;
+
+        return this;
+    }
+
     public Location getLocation() {
         return location;
     }
 
-    public InputStream getInputStream() {
-        return inputStream;
-    }
-
     public Data getData() {
-        return data;
+
+        try {
+            if (isData) {
+                return data;
+            } else if (isLocation) {
+                return new InputStreamData(location.getSource());
+            } else {
+                return new EmptyData();
+            }
+
+        } catch (IOException e) {
+            return new EmptyData();
+        }
+
     };
 
     public boolean isData() {
@@ -75,8 +92,11 @@ public class AtomBuilder {
         return isLocation;
     }
 
-    public boolean isInputStream() {
-        return isInputStream;
+    public BundleType getBundleType() {
+        return bundleType;
     }
 
+    public Role getRole() {
+        return role;
+    }
 }

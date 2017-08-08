@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -7,9 +9,9 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
-import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.Atom;
@@ -48,14 +50,15 @@ public class RESTStorage {
         }
 
         Storage storage = RESTConfig.sos.getStorage();
-        InputStream inputStream;
-        try {
-            inputStream = storage.getAtomContent(atomGUID);
-        } catch (AtomNotFoundException e) {
+
+        try (Data data = storage.getAtomContent(atomGUID)){
+
+            return HTTPResponses.OK(data.getInputStream());
+
+        } catch (Exception e) {
             return HTTPResponses.NOT_FOUND("Atom not found");
         }
 
-        return HTTPResponses.OK(inputStream);
     }
 
     @POST
@@ -79,8 +82,10 @@ public class RESTStorage {
         }
 
         try {
-            AtomBuilder builder = new AtomBuilder().setLocation(location);
-            Atom atom = storage.addAtom(builder, true);
+            AtomBuilder builder = new AtomBuilder()
+                    .setLocation(location)
+                    .setBundleType(BundleTypes.PERSISTENT);
+            Atom atom = storage.addAtom(builder);
 
             return HTTPResponses.CREATED(atom.toString());
         } catch (DataStorageException | ManifestPersistException e) {
@@ -100,8 +105,10 @@ public class RESTStorage {
 
         Atom atom;
         try {
-            AtomBuilder builder = new AtomBuilder().setInputStream(inputStream);
-            atom = storage.addAtom(builder, true);
+            AtomBuilder builder = new AtomBuilder()
+                    .setData(new InputStreamData(inputStream))
+                    .setBundleType(BundleTypes.PERSISTENT);
+            atom = storage.addAtom(builder);
 
         } catch (DataStorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();

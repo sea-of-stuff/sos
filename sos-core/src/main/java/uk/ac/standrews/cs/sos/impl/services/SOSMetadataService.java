@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
-import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -11,8 +11,6 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.MetadataService;
-
-import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -28,9 +26,8 @@ public class SOSMetadataService implements MetadataService {
     }
 
     @Override
-    public Metadata processMetadata(InputStream inputStream) throws MetadataException {
+    public Metadata processMetadata(Data data) throws MetadataException {
 
-        InputStreamData data = new InputStreamData(inputStream);
         return engine.processData(data);
     }
 

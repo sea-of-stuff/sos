@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.services;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
@@ -12,8 +13,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
-
-import java.io.InputStream;
 
 /**
  * The Agent is one of the node roles within the Sea of Stuff.
@@ -67,7 +66,7 @@ public interface Agent {
     Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
 
     Version addData(VersionBuilder versionBuilder); // TODO - exceptions
-    InputStream getData(Version version) throws AtomNotFoundException;
+    Data getData(Version version) throws AtomNotFoundException;
     Version addCollection(VersionBuilder versionBuilder); // TODO - exceptions
 
     /**
@@ -77,7 +76,7 @@ public interface Agent {
      * @return InputStream
      * @throws AtomNotFoundException
      */
-    InputStream getAtomContent(Atom atom) throws AtomNotFoundException;
+    Data getAtomContent(Atom atom) throws AtomNotFoundException;
 
     /**
      * Get the manifest matching the given GUID.
@@ -97,7 +96,7 @@ public interface Agent {
      * @return the metadata generated
      * @throws MetadataException if the metadata could not be generated
      */
-    Metadata addMetadata(InputStream inputStream) throws MetadataException;
+    Metadata addMetadata(Data data) throws MetadataException;
 
     /**
      * Get the metadata mapped to the specified guid

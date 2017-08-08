@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
@@ -21,8 +22,14 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.utilities.Pair;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 
+import javax.crypto.SecretKey;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -43,14 +50,14 @@ public class AtomStorage {
         this.localStorage = storage;
     }
 
-    public Pair<IGUID, LocationBundle> persist(AtomBuilder atomBuilder) throws DataStorageException {
+    public StoredAtomInfo persist(AtomBuilder atomBuilder) throws DataStorageException {
 
         try {
-            IGUID guid = storeToLocalStorage(atomBuilder);
-            Location localLocation = makeLocalSOSLocation(guid);
+            StoredAtomInfo storedAtomInfo = storeToLocalStorage(atomBuilder);
+            Location localLocation = makeLocalSOSLocation(storedAtomInfo.getGuid());
             LocationBundle bundle = new LocationBundle(BundleTypes.PERSISTENT, localLocation);
 
-            return new Pair<>(guid, bundle);
+            return storedAtomInfo.setLocationBundle(bundle);
 
         } catch (SourceLocationException e) {
             throw new DataStorageException("Unable to persist data properly");
@@ -59,21 +66,35 @@ public class AtomStorage {
     }
 
     // Data is stored in disk, but marked as cached
-    public Pair<IGUID, LocationBundle> cache(AtomBuilder atomBuilder) throws DataStorageException {
+    public StoredAtomInfo cache(AtomBuilder atomBuilder) throws DataStorageException {
 
         try {
-            IGUID guid = storeToLocalStorage(atomBuilder);
-            Location localLocation = makeLocalSOSLocation(guid);
+            StoredAtomInfo storedAtomInfo = storeToLocalStorage(atomBuilder);
+            Location localLocation = makeLocalSOSLocation(storedAtomInfo.getGuid());
             LocationBundle bundle = new LocationBundle(BundleTypes.CACHE, localLocation);
 
-            return new Pair<>(guid, bundle);
+            return storedAtomInfo.setLocationBundle(bundle);
+
         } catch (SourceLocationException e) {
             throw new DataStorageException("Unable to persist data properly");
         }
 
     }
 
-    private IGUID storeToLocalStorage(AtomBuilder atomBuilder) throws DataStorageException {
+    public Data decryptData(Data encryptedData, SecretKey decryptedKey) throws ProtectionException {
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            SymmetricEncryption.decrypt(decryptedKey, encryptedData.getInputStream(), out);
+            return new InputStreamData(IO.OutputStreamToInputStream(out));
+
+        } catch (CryptoException | IOException e) {
+            throw new ProtectionException(e);
+        }
+
+    }
+
+    private StoredAtomInfo storeToLocalStorage(AtomBuilder atomBuilder) throws DataStorageException {
 
         if (!atomBuilder.isBuildIsSet()) {
             throw new DataStorageException("AtomBuilder not set correctly");
@@ -82,13 +103,13 @@ public class AtomStorage {
         // Store data first and then assign valid GUID
         try {
             IGUID tmpGUID = GUIDFactory.generateRandomGUID();
-            persistData(tmpGUID, atomBuilder);
+            StoredAtomInfo storedAtomInfo = persistData(tmpGUID, atomBuilder);
 
             IFile tmpCachedLocation = atomFileInLocalStorage(tmpGUID);
             IGUID guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
             tmpCachedLocation.rename(guid.toMultiHash());
 
-            return guid;
+            return storedAtomInfo.setGuid(guid);
 
         } catch (RenameException | URISyntaxException e) {
             throw new DataStorageException("Unable to persist data properly");
@@ -96,37 +117,66 @@ public class AtomStorage {
 
     }
 
-    private void persistData(IGUID guid, AtomBuilder atomBuilder) throws DataStorageException {
+    private StoredAtomInfo persistData(IGUID guid, AtomBuilder atomBuilder) throws DataStorageException {
 
         if (atomBuilder.isData())
-            persistData(guid, atomBuilder.getData());
+            return persistData(guid, atomBuilder, atomBuilder.getData());
         else if (atomBuilder.isLocation())
-            persistData(guid, atomBuilder.getLocation());
+            return persistDataByLocation(guid, atomBuilder);
         else
             throw new DataStorageException("AtomBuilder not set correctly");
     }
 
-    private void persistData(IGUID guid, Location location) throws DataStorageException {
+    private StoredAtomInfo persistDataByLocation(IGUID guid, AtomBuilder atomBuilder) throws DataStorageException {
 
-        try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location)) {
+        try (Data data = atomBuilder.getData()) {
 
-            InputStreamData data = new InputStreamData(dataStream);
-            persistData(guid, data);
-        } catch (IOException e) {
+            return persistData(guid, atomBuilder, data);
+
+        } catch (Exception e) {
             throw new DataStorageException(e);
         }
     }
 
-    private void persistData(IGUID guid, Data data) throws DataStorageException {
+    private StoredAtomInfo persistData(IGUID guid, AtomBuilder atomBuilder, Data data) throws DataStorageException {
 
         try {
+            StoredAtomInfo storedAtomInfo = new StoredAtomInfo();
+
+            if (atomBuilder.getRole() != null) {
+                Pair<Data, String> encryptionResult = encrypt(data, atomBuilder.getRole());
+                data = encryptionResult.X();
+                storedAtomInfo.setEncryptedKey(encryptionResult.Y());
+            }
+
             IDirectory dataDirectory = localStorage.getDataDirectory();
             IFile file = localStorage.createFile(dataDirectory, guid.toMultiHash(), data);
 
             file.persist();
-        } catch (PersistenceException e) {
+
+            return storedAtomInfo;
+
+        } catch (PersistenceException | ProtectionException e) {
             throw new DataStorageException(e);
         }
+    }
+
+    private Pair<Data, String> encrypt(Data originalData, Role role) throws ProtectionException {
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            SecretKey key = SymmetricEncryption.generateRandomKey();
+
+            SymmetricEncryption.encrypt(key, originalData.getInputStream(), out);
+            InputStream encryptedData = IO.OutputStreamToInputStream(out);
+
+            String encryptedKey = role.encrypt(key);
+
+            return new Pair<>(new InputStreamData(encryptedData), encryptedKey);
+        } catch (CryptoException | ProtectionException | IOException e) {
+            throw new ProtectionException(e);
+        }
+
     }
 
     private IGUID generateGUID(Data data) throws GUIDGenerationException, IOException {
@@ -136,12 +186,11 @@ public class AtomStorage {
 
     private IGUID generateGUID(Location location) {
 
-        try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location)) {
+        try (Data data = LocationUtility.getDataFromLocation(location)) {
 
-            InputStreamData data = new InputStreamData(dataStream);
             return generateGUID(data);
 
-        } catch (IOException | GUIDGenerationException e) {
+        } catch (Exception e) {
             return new InvalidID();
         }
     }

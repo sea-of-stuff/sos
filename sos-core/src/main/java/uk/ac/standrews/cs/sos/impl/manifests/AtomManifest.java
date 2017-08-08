@@ -2,13 +2,11 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.castore.data.EmptyData;
 import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -65,23 +63,18 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public InputStream getData() throws IOException {
-        InputStream dataStream = null;
-        for (LocationBundle location : locations) {
+    public Data getData() throws IOException {
 
-            dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation());
+        for (LocationBundle location : getLocations()) {
 
-            if (!(dataStream instanceof NullInputStream)) {
-                break;
+            Data data = LocationUtility.getDataFromLocation(location.getLocation());
+
+            if (!(data instanceof EmptyData)) {
+                return data;
             }
         }
 
-        return dataStream;
-    }
-
-    @Override
-    public Data getDataO() throws IOException {
-        return new InputStreamData(getData());
+        return new EmptyData();
     }
 
     @Override
@@ -101,7 +94,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     @Override
     public InputStream contentToHash() throws IOException {
-        return getData();
+        return getData().getInputStream();
     }
 
     @Override
@@ -119,13 +112,13 @@ public class AtomManifest extends BasicManifest implements Atom {
     public boolean verifyIntegrity() {
 
         for(LocationBundle location:locations) {
-            try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(location.getLocation())) {
+            try (Data data = LocationUtility.getDataFromLocation(location.getLocation())) {
 
-                if (!(dataStream != null && guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
+                if (!guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream()))) {
                     return false;
                 }
 
-            } catch (GUIDGenerationException| IOException e) {
+            } catch (Exception e) {
                 return false;
             }
         }
@@ -140,20 +133,20 @@ public class AtomManifest extends BasicManifest implements Atom {
      */
     public boolean verifyIntegrity(LocationBundle locationBundle) {
 
-        try (InputStream dataStream = LocationUtility.getInputStreamFromLocation(locationBundle.getLocation())) {
+        try (Data data = LocationUtility.getDataFromLocation(locationBundle.getLocation())) {
 
-            if (!(dataStream != null && guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, dataStream)))) {
+            if (!guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream()))) {
                 return false;
             }
 
-        } catch (IOException | GUIDGenerationException e) {
+        } catch (Exception e) {
             return false;
         }
 
         return true;
     }
 
-        @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

@@ -1,20 +1,24 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
-import org.apache.commons.io.input.NullInputStream;
-import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.EmptyData;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
+import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
@@ -29,13 +33,13 @@ import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.Pair;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -71,10 +75,11 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder, boolean persist) throws DataStorageException, ManifestPersistException {
-        Set<LocationBundle> bundles = new LinkedHashSet<>();
+    public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
 
-        IGUID guid = addAtom(atomBuilder, bundles, persist);
+        Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
+
+        IGUID guid = addAtom(atomBuilder, bundles).getGuid();
         if (guid == null || guid.isInvalid()) {
             throw new DataStorageException();
         }
@@ -85,16 +90,19 @@ public class SOSStorage implements Storage {
         return manifest;
     }
 
-    public SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder, Role role) throws StorageException, ManifestPersistException, ManifestNotMadeException, DataStorageException, IOException {
-        Set<LocationBundle> bundles = new LinkedHashSet<>();
+    public SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
 
-        IGUID guid = addAtom(atomBuilder, bundles, false);
+        if (atomBuilder.getRole() == null)
+            throw new DataStorageException();
+
+        Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
+
+        IGUID guid = addAtom(atomBuilder, bundles).getGuid();
         if (guid == null || guid.isInvalid()) {
-            throw new StorageException();
+            throw new DataStorageException();
         }
 
-        SecureAtomManifest manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, role);
-        saveData(manifest);
+        SecureAtomManifest manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, atomBuilder.getRole());
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;
@@ -135,26 +143,42 @@ public class SOSStorage implements Storage {
      * @return data referenced by the atom
      */
     @Override
-    public InputStream getAtomContent(Atom atom) {
-        InputStream dataStream = null;
+    public Data getAtomContent(Atom atom) {
 
         Iterator<LocationBundle> it = findLocations(atom.guid());
         while(it.hasNext()) {
             LocationBundle locationBundle = it.next();
 
             Location location = locationBundle.getLocation();
-            dataStream = LocationUtility.getInputStreamFromLocation(location);
+            Data data = LocationUtility.getDataFromLocation(location);
 
-            if (!(dataStream instanceof NullInputStream)) {
-                break;
+            if (!(data instanceof EmptyData)) {
+                return data;
             }
         }
 
-        return dataStream;
+        return new EmptyData();
+    }
+
+    public Data getSecureAtomContent(SecureAtom atom, Role role) throws DataNotFoundException {
+
+        try {
+
+            Data encryptedData = getAtomContent(atom);
+            String encryptedKey = atom.keysRoles().get(role.guid());
+            SecretKey decryptedKey = role.decrypt(encryptedKey);
+
+            return atomStorage.decryptData(encryptedData, decryptedKey);
+
+        } catch (ProtectionException e) {
+            throw new DataNotFoundException();
+        }
+
     }
 
     @Override
-    public InputStream getAtomContent(IGUID guid) throws AtomNotFoundException {
+    public Data getAtomContent(IGUID guid) throws AtomNotFoundException {
+
         try {
             Manifest manifest = dataDiscoveryService.getManifest(guid);
 
@@ -166,7 +190,7 @@ public class SOSStorage implements Storage {
             throw new AtomNotFoundException();
         }
 
-        return new NullInputStream(0);
+        return new EmptyData();
     }
 
     @Override
@@ -201,46 +225,33 @@ public class SOSStorage implements Storage {
      *
      * @param atomBuilder
      * @param bundles
-     * @param persist
      * @return
      * @throws StorageException
      */
-    private IGUID addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles, boolean persist) throws DataStorageException {
+    private StoredAtomInfo addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles) throws DataStorageException {
 
-        Pair<IGUID, LocationBundle> retval;
-        if (persist) {
+        StoredAtomInfo retval;
+        if (atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
             retval = atomStorage.persist(atomBuilder);
-        } else {
+        } else if (atomBuilder.getBundleType() == BundleTypes.CACHE) {
             retval = atomStorage.cache(atomBuilder);
+        } else {
+            throw new DataStorageException();
         }
 
+        // FIXME DITTO AS COMMENT BELOW
         if (atomBuilder.isLocation()) {
             Location provenanceLocation = atomBuilder.getLocation();
             bundles.add(new ProvenanceLocationBundle(provenanceLocation));
         }
 
+        // TODO - do this outside of this method
         if (bundles != null) {
-            bundles.add(retval.Y());
-            addLocation(retval.X(), retval.Y());
+            bundles.add(retval.getLocationBundle());
+            addLocation(retval.getGuid(), retval.getLocationBundle());
         }
 
-        return retval.X();
+        return retval;
     }
-
-    /**
-     * Saves the data to disk
-     *
-     * @param secureAtomManifest
-     * @throws DataStorageException
-     * @throws PersistenceException
-     * @throws IOException
-     */
-    private void saveData(SecureAtomManifest secureAtomManifest) throws DataStorageException, PersistenceException, IOException {
-
-        IDirectory dataDirectory = storage.getDataDirectory();
-        IFile file = storage.createFile(dataDirectory, secureAtomManifest.guid().toMultiHash(), secureAtomManifest.getDataO());
-        file.persist();
-    }
-
 
 }
