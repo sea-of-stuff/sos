@@ -72,12 +72,12 @@ If the remote opetion is **true**, then the **ChicShock** utility will distribut
 
 ### Example
 
-In the **Experiment_X_1** we bootstrap one local SOS node (running the experiment) and one remote SOS node.
+In the **Experiment_Scale_1** we bootstrap one local SOS node (running the experiment) and one remote SOS node.
 Thus, we need three configuration files: one for describing the experiment and two for the configuration files of the two SOS nodes.
 
 ```
 |-- configurations
-    |-- x_1
+    |-- scale_1
         |-- configuration.json  // The configuration of the experiment
         |-- node_0.json         // The configuration for the local node
         |-- node_1.json         // The configuration for one of the remote nodes, as specified in configuration.json

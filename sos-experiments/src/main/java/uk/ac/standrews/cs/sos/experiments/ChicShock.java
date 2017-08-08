@@ -32,7 +32,7 @@ public class ChicShock {
 
         // RUNNING PHASE
         chicShock.shock();
-        chicShock.shockExperiment("Experiment_X_1"); // TODO <-- this method should return when experiment is finished
+        chicShock.shockExperiment("Experiment_Scale_1"); // TODO <-- this method should return when experiment is finished
 
         // STOP PHASE
         chicShock.unShock();
