@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.distribution;
 
+import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

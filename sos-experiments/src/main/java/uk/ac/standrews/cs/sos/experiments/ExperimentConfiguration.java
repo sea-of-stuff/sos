@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments.distribution;
+package uk.ac.standrews.cs.sos.experiments;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;

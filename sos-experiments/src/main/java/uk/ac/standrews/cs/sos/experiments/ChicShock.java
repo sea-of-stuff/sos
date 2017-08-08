@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments;
 
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.experiments.distribution.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.distribution.NetworkException;
 import uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;

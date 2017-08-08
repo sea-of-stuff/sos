@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.distribution;
 
 import com.jcraft.jsch.*;
+import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 
 import java.io.*;
 
