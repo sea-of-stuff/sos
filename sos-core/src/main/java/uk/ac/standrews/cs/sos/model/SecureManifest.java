@@ -10,5 +10,4 @@ import java.util.HashMap;
 public interface SecureManifest extends Manifest {
 
     HashMap<IGUID, String> keysRoles();
-
 }

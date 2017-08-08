@@ -155,9 +155,8 @@ public class SOSStorage implements Storage {
 
     public Data getSecureAtomContent(SecureAtom atom, Role role) throws DataNotFoundException {
 
-        try {
+        try (Data encryptedData = getAtomContent(atom)){
 
-            Data encryptedData = getAtomContent(atom);
             if (atom.keysRoles().containsKey(role.guid())) {
                 String encryptedKey = atom.keysRoles().get(role.guid());
                 SecretKey decryptedKey = role.decrypt(encryptedKey);
@@ -167,7 +166,7 @@ public class SOSStorage implements Storage {
                 throw new ProtectionException("Role/key not available for secure atom with GUID " + atom.guid().toShortString());
             }
 
-        } catch (AtomNotFoundException | ProtectionException e) {
+        } catch (Exception e) {
             throw new DataNotFoundException();
         }
 

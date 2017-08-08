@@ -20,6 +20,8 @@ public class SOS_LOG {
 
         log = Logger.LOG(Logger.LOG4J_LOGGER, "logs/sos.log");
         log.disable("org.apache.http.wire");
+        log.disable("o.a.h");
+        log.disable("org.apache.http");
     }
 
     public static void log(LEVEL level, String message) {

@@ -23,10 +23,7 @@ public class SecureAtomManifest extends AtomManifest implements SecureManifest {
     private HashMap<IGUID, String> rolesToKeys;
 
     /**
-     * Creates a valid atom manifest given an atom.
-     *
-     * TODO - is the data already stored at the specified locations?
-     * TODO - atom should store only GUID to role?
+     * Creates a valid secure atom manifest
      *
      * @param guid
      * @param locations
@@ -36,67 +33,6 @@ public class SecureAtomManifest extends AtomManifest implements SecureManifest {
         this.manifestType = ManifestType.ATOM_PROTECTED;
         this.rolesToKeys = rolesToKeys;
     }
-
-//    private void encrypt(Role role) throws ProtectionException {
-//
-//        // Encrypt the data from one of the locations
-//        for (LocationBundle location : getLocations()) {
-//
-//            InputStream dataStream = LocationUtility.getDataFromLocation(location.getLocation());
-//
-//            if (!(dataStream instanceof NullInputStream)) {
-//                // TODO - verify that the data matched the guid?
-//                encrypt(role, dataStream);
-//                break;
-//            }
-//        }
-//
-//    }
-
-    // 1. Generate random key K
-    // 2. encrypt data with K --> d'
-    // 3. encrypt k with pubkey --> (k', pubkey)
-    // 4. guid = hash(d')
-    // Note that the data is not saved to disk, as it is the Storage service duty to save any data to disk
-//    private void encrypt(Role role, InputStream originalData) throws ProtectionException {
-//
-//        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-//
-//            SecretKey key = SymmetricEncryption.generateRandomKey();
-//
-//            SymmetricEncryption.encrypt(key, originalData, out);
-//            encryptedData = IO.OutputStreamToInputStream(out);
-//
-//            String encryptedKey = role.encrypt(key);
-//            rolesToKeys.put(role.guid(), encryptedKey);
-//
-//            // The line below will break all existing references, thus we won't use it
-//            // guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, in);
-//
-//        } catch (CryptoException | ProtectionException | IOException e) {
-//            throw new ProtectionException(e);
-//        }
-//
-//    }
-
-    // NOTE - moved to atom storage?
-    // Returns the unencrypted data
-//    public InputStream getData(Role role) throws ProtectionException {
-//
-//        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-//
-//            String encryptedKey = rolesToKeys.get(role.guid());
-//            SecretKey decryptedKey = role.decrypt(encryptedKey);
-//
-//            SymmetricEncryption.decrypt(decryptedKey, getData(), out);
-//
-//            return IO.OutputStreamToInputStream(out);
-//
-//        } catch (CryptoException | ProtectionException | IOException e) {
-//            throw new ProtectionException(e);
-//        }
-//
-//    }
 
     @Override
     public HashMap<IGUID, String> keysRoles() {
