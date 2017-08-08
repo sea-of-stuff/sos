@@ -8,10 +8,8 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -22,7 +20,6 @@ import java.util.Set;
 @JsonDeserialize(using = SecureAtomManifestDeserializer.class)
 public class SecureAtomManifest extends AtomManifest implements SecureManifest {
 
-    private InputStream encryptedData;
     private HashMap<IGUID, String> rolesToKeys;
 
     /**
@@ -34,16 +31,10 @@ public class SecureAtomManifest extends AtomManifest implements SecureManifest {
      * @param guid
      * @param locations
      */
-    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) throws ManifestNotMadeException {
+    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
         super(guid, locations);
         this.manifestType = ManifestType.ATOM_PROTECTED;
-
-        this.rolesToKeys = new HashMap<>(); // TODO - maybe this already exists, have another constructor?
-//        try {
-//            encrypt(role);
-//        } catch (ProtectionException e) {
-//            throw new ManifestNotMadeException("Unable to encrypt content");
-//        }
+        this.rolesToKeys = rolesToKeys;
     }
 
 //    private void encrypt(Role role) throws ProtectionException {
@@ -88,7 +79,7 @@ public class SecureAtomManifest extends AtomManifest implements SecureManifest {
 //
 //    }
 
-    // TODO - move to atom storage?
+    // NOTE - moved to atom storage?
     // Returns the unencrypted data
 //    public InputStream getData(Role role) throws ProtectionException {
 //

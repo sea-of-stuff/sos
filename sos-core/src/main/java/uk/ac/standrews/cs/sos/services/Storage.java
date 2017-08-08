@@ -4,9 +4,11 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -33,6 +35,8 @@ public interface Storage {
      */
     Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
 
+    SecureAtomManifest addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
+
     Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException;
 
     /**
@@ -41,7 +45,7 @@ public interface Storage {
      * @param atom describing the atom to retrieve.
      * @return Data
      */
-    Data getAtomContent(Atom atom);
+    Data getAtomContent(Atom atom) throws AtomNotFoundException;
 
     /**
      * Get the data for the atom with the specified GUID

@@ -36,8 +36,8 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -96,13 +96,17 @@ public class SOSStorage implements Storage {
             throw new DataStorageException();
 
         Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
+        StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles);
 
-        IGUID guid = addAtom(atomBuilder, bundles).getGuid();
+        IGUID guid = storedAtomInfo.getGuid();
         if (guid == null || guid.isInvalid()) {
             throw new DataStorageException();
         }
 
-        SecureAtomManifest manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, atomBuilder.getRole());
+        HashMap<IGUID, String> rolesToKeys = new HashMap<>();
+        rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
+
+        SecureAtomManifest manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;
@@ -110,16 +114,6 @@ public class SOSStorage implements Storage {
 
     // Secure an already existing atom manifest and its data
     public SecureAtomManifest secureAtom(Atom atom, Role role, boolean persist) throws StorageException, ManifestPersistException, ManifestNotMadeException {
-        Set<LocationBundle> bundles = new LinkedHashSet<>();
-
-//        IGUID guid = addAtom(atomBuilder, bundles, persist);
-//        if (guid == null || guid.isInvalid()) {
-//            throw new StorageException();
-//        }
-//
-//        SecureAtomManifest manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, role);
-//        // TODO - save encrypted data
-//        dataDiscoveryService.addManifest(manifest);
 
         return null;
     }
@@ -137,13 +131,12 @@ public class SOSStorage implements Storage {
      * The caller should ensure that the stream is closed.
      *
      * TODO - find other locations
-     * FIXME - use GUID as param
      *
      * @param atom describing the atom to retrieve.
      * @return data referenced by the atom
      */
     @Override
-    public Data getAtomContent(Atom atom) {
+    public Data getAtomContent(Atom atom) throws AtomNotFoundException {
 
         Iterator<LocationBundle> it = findLocations(atom.guid());
         while(it.hasNext()) {
@@ -157,7 +150,7 @@ public class SOSStorage implements Storage {
             }
         }
 
-        return new EmptyData();
+        throw new AtomNotFoundException();
     }
 
     public Data getSecureAtomContent(SecureAtom atom, Role role) throws DataNotFoundException {
@@ -165,12 +158,16 @@ public class SOSStorage implements Storage {
         try {
 
             Data encryptedData = getAtomContent(atom);
-            String encryptedKey = atom.keysRoles().get(role.guid());
-            SecretKey decryptedKey = role.decrypt(encryptedKey);
+            if (atom.keysRoles().containsKey(role.guid())) {
+                String encryptedKey = atom.keysRoles().get(role.guid());
+                SecretKey decryptedKey = role.decrypt(encryptedKey);
 
-            return atomStorage.decryptData(encryptedData, decryptedKey);
+                return atomStorage.decryptData(encryptedData, decryptedKey);
+            } else {
+                throw new ProtectionException("Role/key not available for secure atom with GUID " + atom.guid().toShortString());
+            }
 
-        } catch (ProtectionException e) {
+        } catch (AtomNotFoundException | ProtectionException e) {
             throw new DataNotFoundException();
         }
 

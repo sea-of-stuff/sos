@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.Role;
 
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -31,9 +32,9 @@ public class ManifestFactory {
         return new AtomManifest(guid, locations);
     }
 
-    public static SecureAtomManifest createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, Role role) throws ManifestNotMadeException {
+    public static SecureAtomManifest createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
 
-        return new SecureAtomManifest(guid, locations, role);
+        return new SecureAtomManifest(guid, locations, rolesToKeys);
     }
 
     /**

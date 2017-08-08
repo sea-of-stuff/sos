@@ -207,6 +207,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
             if (!existingManifest.equals(manifest)) {
                 manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
+                // TODO - merge sets of roles/encrypted keys
                 FileUtils.DeleteFile(manifestFile);
                 saveToFile(manifest);
             }
