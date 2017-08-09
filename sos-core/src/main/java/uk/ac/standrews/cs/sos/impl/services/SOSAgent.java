@@ -64,6 +64,12 @@ public class SOSAgent implements Agent {
     }
 
     @Override
+    public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
+
+        return storage.addSecureAtom(atomBuilder);
+    }
+
+    @Override
     public Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
 
         CompoundType type = compoundBuilder.getType();
@@ -72,6 +78,20 @@ public class SOSAgent implements Agent {
         Role role = activateRole(compoundBuilder);
 
         Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
+        addManifest(compound);
+
+        return compound;
+    }
+
+    @Override
+    public SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
+
+        CompoundType type = compoundBuilder.getType();
+        Set<Content> contents = compoundBuilder.getContents();
+
+        Role role = activateRole(compoundBuilder);
+
+        SecureCompound compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
         addManifest(compound);
 
         return compound;
@@ -182,6 +202,8 @@ public class SOSAgent implements Agent {
 
         return metadata;
     }
+
+    // TODO - add secure metadata method
 
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {

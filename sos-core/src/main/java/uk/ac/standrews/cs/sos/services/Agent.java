@@ -40,6 +40,8 @@ public interface Agent {
      */
     Atom addAtom(AtomBuilder atomBuilder) throws ManifestPersistException, DataStorageException;
 
+    SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
+
     /**
      * Adds a Compound to the Sea of Stuff.
      *
@@ -53,6 +55,8 @@ public interface Agent {
      * @deprecated - use addCollection(VersionBuilder)?
      */
     Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
+
+    SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
 
     /**
      * Adds a version of an asset to the Sea of Stuff.

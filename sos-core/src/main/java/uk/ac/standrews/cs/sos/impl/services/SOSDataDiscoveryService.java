@@ -91,7 +91,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         // TODO - should this be dealt (1) within a scope and (2) by contexts?
         remote.addManifest(manifest); // will apply in async mode
 
-        // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook a page 92
+        // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook at page 92
     }
 
     @Override
