@@ -1,9 +1,11 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.ManifestBuilder;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
@@ -81,6 +83,11 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
         if (!roles.containsKey(roleGUID)) throw new RoleNotFoundException();
 
         return roles.get(roleGUID);
+    }
+
+    @Override
+    public Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
+        throw new NotImplementedException();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
@@ -13,6 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.ManifestBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
@@ -69,6 +71,11 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     public Role getRole(IGUID roleGUID) throws RoleNotFoundException {
 
         return getRoleFromGUID(roleGUID);
+    }
+
+    @Override
+    public Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
+        throw new NotImplementedException();
     }
 
     @Override

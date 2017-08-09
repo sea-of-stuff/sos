@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.json.UserDeserializer;
 import uk.ac.standrews.cs.sos.json.UserSerializer;
 import uk.ac.standrews.cs.sos.model.User;
@@ -28,10 +29,9 @@ import java.security.PublicKey;
 @JsonDeserialize(using = UserDeserializer.class)
 public class UserImpl implements User {
 
-    protected final static String KEYS_FOLDER = System.getProperty("user.home") + "/sos/keys/"; // TODO - this info should be in the constants OR in the LocalStorage.java
-
     private IGUID guid;
     private String name;
+    protected String keysFolder; // TODO - manage from InternalStore?
 
     protected PublicKey signatureCertificate;
     private PrivateKey signaturePrivateKey;
@@ -43,6 +43,7 @@ public class UserImpl implements User {
     UserImpl(IGUID guid, String name) throws SignatureException {
         this.guid = guid;
         this.name = name;
+        this.keysFolder = SOSLocalNode.settings.getKeys().getLocation();
 
         manageSignatureKeys(false);
     }
@@ -109,12 +110,12 @@ public class UserImpl implements User {
     private void manageSignatureKeys(boolean loadOnly) throws SignatureException {
 
         try {
-            File publicKeyFile = new File(KEYS_FOLDER + guid().toMultiHash() + DigitalSignature.CERTIFICATE_EXTENSION);
+            File publicKeyFile = new File(keysFolder + guid().toMultiHash() + DigitalSignature.CERTIFICATE_EXTENSION);
             if (signatureCertificate == null && publicKeyFile.exists()) {
                 signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
             }
 
-            File privateKeyFile = new File(KEYS_FOLDER + guid().toMultiHash() + DigitalSignature.PRIVATE_KEY_EXTENSION);
+            File privateKeyFile = new File(keysFolder + guid().toMultiHash() + DigitalSignature.PRIVATE_KEY_EXTENSION);
             if (signaturePrivateKey == null && privateKeyFile.exists()) {
                 signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toPath());
             }
@@ -126,7 +127,7 @@ public class UserImpl implements User {
                 signatureCertificate = keys.getPublic();
                 signaturePrivateKey = keys.getPrivate();
 
-                DigitalSignature.persist(keys, Paths.get(KEYS_FOLDER + guid().toMultiHash()), Paths.get(KEYS_FOLDER + guid().toMultiHash()));
+                DigitalSignature.persist(keys, Paths.get(keysFolder + guid().toMultiHash()), Paths.get(keysFolder + guid().toMultiHash()));
             }
 
         } catch (CryptoException e) {

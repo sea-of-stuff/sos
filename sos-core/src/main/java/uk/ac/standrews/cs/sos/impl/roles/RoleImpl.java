@@ -124,12 +124,12 @@ public class RoleImpl extends UserImpl implements Role {
     private void manageProtectionKey(boolean loadOnly) throws ProtectionException {
 
         try {
-            File publicKeyFile = new File(KEYS_FOLDER + guid().toMultiHash() + "_pub" + AsymmetricEncryption.KEY_EXTENSION);
+            File publicKeyFile = new File(keysFolder + guid().toMultiHash() + "_pub" + AsymmetricEncryption.KEY_EXTENSION);
             if (protectionPublicKey == null && publicKeyFile.exists()) {
                 protectionPublicKey = AsymmetricEncryption.getPublicKey(publicKeyFile.toPath());
             }
 
-            File privateKeyFile = new File(KEYS_FOLDER + guid().toMultiHash() + AsymmetricEncryption.KEY_EXTENSION);
+            File privateKeyFile = new File(keysFolder + guid().toMultiHash() + AsymmetricEncryption.KEY_EXTENSION);
             if (protectionPrivateKey == null && privateKeyFile.exists()) {
                 protectionPrivateKey = AsymmetricEncryption.getPrivateKey(privateKeyFile.toPath());
             }
@@ -140,7 +140,7 @@ public class RoleImpl extends UserImpl implements Role {
                 protectionPublicKey = asymmetricKeys.getPublic();
                 protectionPrivateKey = asymmetricKeys.getPrivate();
 
-                AsymmetricEncryption.persist(asymmetricKeys, Paths.get(KEYS_FOLDER + guid().toMultiHash()), Paths.get(KEYS_FOLDER + guid().toMultiHash() + "_pub"));
+                AsymmetricEncryption.persist(asymmetricKeys, Paths.get(keysFolder + guid().toMultiHash()), Paths.get(keysFolder + guid().toMultiHash() + "_pub"));
             }
 
         } catch (CryptoException e) {
