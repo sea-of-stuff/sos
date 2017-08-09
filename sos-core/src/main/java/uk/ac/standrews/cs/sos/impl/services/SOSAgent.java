@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.ManifestBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
@@ -75,7 +74,7 @@ public class SOSAgent implements Agent {
         CompoundType type = compoundBuilder.getType();
         Set<Content> contents = compoundBuilder.getContents();
 
-        Role role = activateRole(compoundBuilder);
+        Role role = usersRolesService.getRole(compoundBuilder);
 
         Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
         addManifest(compound);
@@ -89,7 +88,7 @@ public class SOSAgent implements Agent {
         CompoundType type = compoundBuilder.getType();
         Set<Content> contents = compoundBuilder.getContents();
 
-        Role role = activateRole(compoundBuilder);
+        Role role = usersRolesService.getRole(compoundBuilder);
 
         SecureCompound compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
         addManifest(compound);
@@ -105,7 +104,7 @@ public class SOSAgent implements Agent {
         Set<IGUID> prevs = versionBuilder.getPreviousCollection();
         IGUID metadata = versionBuilder.getMetadataCollection();
 
-        Role role = activateRole(versionBuilder);
+        Role role = usersRolesService.getRole(versionBuilder);
 
         Version manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
         addManifest(manifest);
@@ -213,16 +212,6 @@ public class SOSAgent implements Agent {
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {
         dataDiscoveryService.addManifest(manifest);
-    }
-
-    private Role activateRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
-
-        Role role = manifestBuilder.getRole();
-        if (role == null) {
-            role = usersRolesService.activeRole();
-        }
-
-        return role;
     }
 
 }

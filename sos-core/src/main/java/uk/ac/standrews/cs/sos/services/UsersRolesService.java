@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.ManifestBuilder;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 
@@ -53,6 +54,8 @@ public interface UsersRolesService {
      * @throws RoleNotFoundException if the role could not be found
      */
     Role getRole(IGUID roleGUID) throws RoleNotFoundException;
+
+    Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException;
 
     /**
      * Get the roles associated with the given user

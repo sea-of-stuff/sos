@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
@@ -30,6 +31,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -46,14 +48,16 @@ import java.util.TreeSet;
 public class SOSStorage implements Storage {
 
     private DataDiscoveryService dataDiscoveryService;
+    private UsersRolesService usersRolesService;
 
     private LocalStorage storage;
     private AtomStorage atomStorage;
     private LocationsIndex locationIndex;
 
-    public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService) throws ServiceException {
+    public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService) throws ServiceException {
         this.storage = storage;
         this.dataDiscoveryService = dataDiscoveryService;
+        this.usersRolesService = usersRolesService;
 
         // Load/Create the locations Index impl
         try {
@@ -95,7 +99,15 @@ public class SOSStorage implements Storage {
             throw new DataStorageException();
 
         Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
-        // TODO - use default active role otherwise?
+
+        // Make sure that a role is being used
+        try {
+            Role role = usersRolesService.getRole(atomBuilder);
+            atomBuilder.setRole(role);
+        } catch (RoleNotFoundException e) {
+            throw new ManifestNotMadeException("Unable to set Role when creating Secure Atom");
+        }
+
         StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles); // The atom will be encrypted using the Role of the atom builder
 
         IGUID guid = storedAtomInfo.getGuid();

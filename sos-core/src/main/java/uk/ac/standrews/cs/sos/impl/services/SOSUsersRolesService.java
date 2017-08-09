@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.ManifestBuilder;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.roles.LocalUsersRolesDirectory;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
@@ -95,6 +96,17 @@ public class SOSUsersRolesService implements UsersRolesService {
     public Role getRole(IGUID roleGUID) throws RoleNotFoundException {
 
         return inMemoryCache.getRole(roleGUID);
+    }
+
+    @Override
+    public Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
+
+        Role role = manifestBuilder.getRole();
+        if (role == null) {
+            role = activeRole();
+        }
+
+        return role;
     }
 
     @Override
