@@ -101,11 +101,10 @@ public class VersionManifest extends SignedManifest implements Version {
      * @param signer
      * @param signature
      */
-    public VersionManifest(IGUID invariant, IGUID version, IGUID content,
-                           Set<IGUID> prevs, IGUID metadata,
-                           Role signer,
-                           String signature) {
+    public VersionManifest(IGUID invariant, IGUID version, IGUID content, Set<IGUID> prevs, IGUID metadata,
+                           Role signer, String signature) {
         super(signer, ManifestType.VERSION);
+
         this.invariant = invariant;
         this.version = version;
         this.guid = content;

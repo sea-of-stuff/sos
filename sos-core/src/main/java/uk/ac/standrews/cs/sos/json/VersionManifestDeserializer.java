@@ -44,6 +44,7 @@ public class VersionManifestDeserializer extends JsonDeserializer<VersionManifes
             }
 
             return new VersionManifest(invariant, version, content, prevs, metadata, null, signature);
+
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         }

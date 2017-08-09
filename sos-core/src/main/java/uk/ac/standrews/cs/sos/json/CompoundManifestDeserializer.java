@@ -54,10 +54,11 @@ public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManif
             }
 
             return new CompoundManifest(compoundType, contentGUID, contents, null, signature);
+
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         } catch (ManifestNotMadeException e) {
-            throw new IOException("Unable to recreate Compound Manifest");
+            throw new IOException("Unable to recreate Secure Compound Manifest");
         }
 
     }

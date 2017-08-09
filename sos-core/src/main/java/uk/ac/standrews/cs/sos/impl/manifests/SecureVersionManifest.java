@@ -29,6 +29,14 @@ public class SecureVersionManifest extends VersionManifest implements SecureVers
         this.rolesToKeys = rolesToKeys;
     }
 
+    public SecureVersionManifest(IGUID invariant, IGUID version, IGUID content, Set<IGUID> prevs, IGUID metadata,
+                                 Role signer, String signature, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
+        super(invariant, version, content, prevs, metadata, signer, signature);
+
+        this.manifestType = ManifestType.VERSION_PROTECTED;
+        this.rolesToKeys = rolesToKeys;
+    }
+
     @Override
     public HashMap<IGUID, String> keysRoles() {
         return rolesToKeys;
