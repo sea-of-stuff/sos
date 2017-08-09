@@ -54,6 +54,19 @@ public class ManifestFactory {
         return new CompoundManifest(type, contents, role);
     }
 
+    public static SecureCompound createSecureCompoundManifest(CompoundType type,
+                                                  Set<Content> contents,
+                                                  Role role) throws ManifestNotMadeException {
+
+        if (type == null) {
+            throw new ManifestNotMadeException("No compound type specified");
+        }
+
+        return new SecureCompoundManifest(type, contents, role);
+    }
+
+
+
     /**
      * Creates an VersionManifest given the content of the asset,
      * the GUID of a previous asset's version, the GUID of metadata associated to this

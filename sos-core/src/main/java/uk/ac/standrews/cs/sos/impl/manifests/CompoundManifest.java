@@ -49,8 +49,15 @@ import java.util.Set;
 @JsonDeserialize(using = CompoundManifestDeserializer.class)
 public class CompoundManifest extends SignedManifest implements Compound {
 
-    final private Set<Content> contents;
-    final private CompoundType type;
+    protected Set<Content> contents;
+    protected CompoundType type;
+
+    // Needed for SecureCompoundManifest (a bit of a hack)
+    protected CompoundManifest(CompoundType compoundType, Role signer, ManifestType type) {
+        super(signer, type);
+
+        this.type = compoundType;
+    }
 
     /**
      * Creates a valid compound manifest given a collection of contents and an
@@ -136,7 +143,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
         }
     }
 
-    private IGUID makeContentGUID() throws ManifestNotMadeException {
+    protected IGUID makeContentGUID() throws ManifestNotMadeException {
         IGUID guid;
         try {
             guid = generateContentGUID();
