@@ -129,11 +129,14 @@ public class SOSStorage implements Storage {
     @Override
     public SecureAtom secureAtom(Atom atom, Role role) throws StorageException, ManifestPersistException, ManifestNotMadeException {
 
+        if (atom.getType().equals(ManifestType.ATOM_PROTECTED))
+            return (SecureAtom) atom;
+
         IGUID guid = atom.guid();
         Set<LocationBundle> bundles = atom.getLocations();
 
         try {
-            Pair<Data, String> retval = atomStorage.encrypt(atom.getData(), role); // TODO - encrypt atom
+            Pair<Data, String> retval = atomStorage.encrypt(atom.getData(), role);
             HashMap<IGUID, String> rolesToKeys = new HashMap<>();
             rolesToKeys.put(role.guid(), retval.Y());
 
