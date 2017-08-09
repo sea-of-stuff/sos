@@ -64,6 +64,7 @@ public class WUsersRoles {
             return "";
 
         } catch (SignatureException | UserRolePersistException | UserNotFoundException | GUIDGenerationException | ProtectionException e) {
+            e.printStackTrace();
             response.redirect("/usro");
             return "";
         }

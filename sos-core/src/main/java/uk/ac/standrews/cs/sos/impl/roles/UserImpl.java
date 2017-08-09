@@ -51,6 +51,7 @@ public class UserImpl implements User {
     public UserImpl(IGUID guid, String name, PublicKey signatureCertificate) throws SignatureException {
         this.guid = guid;
         this.name = name;
+        this.keysFolder = SOSLocalNode.settings.getKeys().getLocation();
         this.signatureCertificate = signatureCertificate;
 
         manageSignatureKeys(true);

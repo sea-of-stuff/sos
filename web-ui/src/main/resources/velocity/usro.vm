@@ -5,6 +5,12 @@
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
 </head>
 <body>
 <div id="header"></div>
@@ -16,13 +22,10 @@
     </form>
 
     <h1>List of users</h1>
-    <ul>
-        #foreach($user in $users)
-            <li>
-                <pre style="white-space: pre-wrap; word-wrap: break-word;">$user.toString()</pre>
-            </li>
-        #end
-    </ul>
+    #foreach($user in $users)
+        <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json">$user.toString()</code></pre>
+        <br>
+    #end
 
     <hr>
 
@@ -30,7 +33,7 @@
 
         <select name="userGUID">
             #foreach($user in $users)
-                <option value=$user.guid()>$user.getName() - $user.guid()</option>
+                <option value=$user.guid().toMultiHash()>$user.getName() - $user.guid().toShortString()</option>
             #end
 
         </select>
@@ -39,14 +42,9 @@
     </form>
 
     <h1>List of Roles</h1>
-    <ul>
-        #foreach($role in $services)
-            <li>
-                <pre style="white-space: pre-wrap; word-wrap: break-word;">$role.toString()</pre>
-            </li>
-
-        #end
-    </ul>
+    #foreach($role in $roles)
+        <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json">$role.toString()</code></pre>
+    #end
 
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

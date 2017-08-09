@@ -5,6 +5,7 @@
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" />
+
 </head>
 <body>
 <div id="header"></div>
@@ -25,52 +26,52 @@
         <div class="col-6">
             <h1>Preview</h1>
             <div style="overflow-y:scroll; height:500px;">
-                <code id="preview" style="white-space: pre-wrap; word-wrap: break-word;"></code>
+                <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="preview"></code></pre>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-6">
-            <strong>Examples</strong>
-            <code style=display:block;white-space:pre-wrap>
+<strong>Examples</strong>
+<code style=display:block;white-space:pre-wrap>
 {
-"name": "Allv1",
-"predicate": "CommonPredicates.AcceptAll();"
+    "name": "Allv1",
+    "predicate": "CommonPredicates.AcceptAll();"
 }
-            </code>
-            <br>
-            <code style=display:block;white-space:pre-wrap>
-                {
-                "name": "Allv2",
-                "predicate": "True;"
-                }
-            </code>
-            <br>
-            <code style=display:block;white-space:pre-wrap>
-                {
-                "name": "Simone",
-                "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
-                }
-            </code>
-            <br>
-            <code style=display:block;white-space:pre-wrap>
-                {
-                "name": "Binary",
-                "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
-                }
-            </code>
+</code>
+<br>
+<code style=display:block;white-space:pre-wrap>
+{
+    "name": "Allv2",
+    "predicate": "True;"
+}
+</code>
+<br>
+<code style=display:block;white-space:pre-wrap>
+{
+    "name": "Simone",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
+}
+</code>
+<br>
+<code style=display:block;white-space:pre-wrap>
+{
+    "name": "Binary",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
+}
+</code>
 
-            <br>
-            <code style=display:block;white-space:pre-wrap>
-                {
-                "name": "ImageManifestReplication",
-                "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
-                "policies" : [
-                "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
-                ]
-                }
-            </code>
+<br>
+<code style=display:block;white-space:pre-wrap>
+{
+    "name": "ImageManifestReplication",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
+    "policies" : [
+        "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+    ]
+}
+</code>
         </div>
 
         <div class="col-6">
@@ -80,7 +81,7 @@
                 #foreach($context in $contexts)
                     <li>
                         <pre style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
-                        <button id="context" value="$context.guid()" type="button"></button>
+                        <button id="context" value="$context.guid().toMultiHash()" type="button" class="btn">View</button>
                     </li>
 
                 #end
