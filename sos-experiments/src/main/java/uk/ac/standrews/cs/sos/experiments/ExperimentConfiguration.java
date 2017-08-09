@@ -198,6 +198,7 @@ public class ExperimentConfiguration {
                 private String privateKeyPath;
                 private String passphrase;
                 private String known_hosts;
+                private String config;
                 private String password;
 
                 public SSH() {}
@@ -256,6 +257,14 @@ public class ExperimentConfiguration {
 
                 public void setPassword(String password) {
                     this.password = password;
+                }
+
+                public String getConfig() {
+                    return config;
+                }
+
+                public void setConfig(String config) {
+                    this.config = config;
                 }
             }
 

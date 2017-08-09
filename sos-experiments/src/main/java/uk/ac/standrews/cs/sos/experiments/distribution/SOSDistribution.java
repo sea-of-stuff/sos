@@ -8,11 +8,10 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 public class SOSDistribution {
 
     private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/sos-experiments.jar";
-    private static final String REMOTE_SOS_JAR_PATH = "Desktop/sos.jar";
-    private static final String REMOTE_SOS_CONFIGURATION_PATH = "Desktop/config.conf";
-    protected static final String REMOTE_SOS_PID_FILE = "Desktop/sos.pid";
-    protected static final String REMOTE_SOS_OUT_FILE = "Desktop/out";
-
+    private static final String REMOTE_SOS_JAR_PATH = "sos.jar";
+    private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.conf";
+    protected static final String REMOTE_SOS_PID_FILE = "sos.pid";
+    protected static final String REMOTE_SOS_OUT_FILE = "out";
 
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 

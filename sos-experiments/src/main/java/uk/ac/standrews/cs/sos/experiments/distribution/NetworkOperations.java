@@ -33,7 +33,14 @@ public class NetworkOperations {
 
         try {
             JSch jsch = new JSch();
-            jsch.setKnownHosts(ssh.getKnown_hosts());
+            if (!ssh.getKnown_hosts().isEmpty()) {
+                jsch.setKnownHosts(ssh.getKnown_hosts());
+            }
+
+            if (!ssh.getConfig().isEmpty()) {
+                ConfigRepository configRepository = com.jcraft.jsch.OpenSSHConfig.parseFile(ssh.getConfig());
+                jsch.setConfigRepository(configRepository);
+            }
 
             if (ssh.getType() == 1) {
                 jsch.addIdentity(ssh.getPrivateKeyPath(), ssh.getPassphrase());
@@ -48,7 +55,7 @@ public class NetworkOperations {
 
             session.connect();
 
-        } catch (JSchException e) {
+        } catch (JSchException | IOException e) {
             e.printStackTrace();
             throw new NetworkException();
         }
@@ -71,6 +78,8 @@ public class NetworkOperations {
      */
     public void sendFile(String lfile, String rfile) throws NetworkException {
         System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
+
+        if (!new File(lfile).exists()) throw new NetworkException("The local file " + lfile + " does not exist.");
 
         try {
             // exec 'scp -t rfile' remotely
