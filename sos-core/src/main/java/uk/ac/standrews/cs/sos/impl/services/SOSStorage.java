@@ -95,7 +95,8 @@ public class SOSStorage implements Storage {
             throw new DataStorageException();
 
         Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
-        StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles);
+        // TODO - use default active role otherwise?
+        StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles); // The atom will be encrypted using the Role of the atom builder
 
         IGUID guid = storedAtomInfo.getGuid();
         if (guid == null || guid.isInvalid()) {

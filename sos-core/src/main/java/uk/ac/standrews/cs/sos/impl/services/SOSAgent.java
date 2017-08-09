@@ -8,10 +8,10 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.ManifestBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
@@ -60,7 +60,6 @@ public class SOSAgent implements Agent {
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
 
-        atomBuilder.setBundleType(BundleTypes.PERSISTENT);
         return storage.addAtom(atomBuilder);
     }
 
@@ -70,10 +69,7 @@ public class SOSAgent implements Agent {
         CompoundType type = compoundBuilder.getType();
         Set<Content> contents = compoundBuilder.getContents();
 
-        Role role = compoundBuilder.getRole();
-        if (role == null) {
-            role = usersRolesService.activeRole();
-        }
+        Role role = activateRole(compoundBuilder);
 
         Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
         addManifest(compound);
@@ -89,10 +85,7 @@ public class SOSAgent implements Agent {
         Set<IGUID> prevs = versionBuilder.getPreviousCollection();
         IGUID metadata = versionBuilder.getMetadataCollection();
 
-        Role role = versionBuilder.getRole();
-        if (role == null) {
-            role = usersRolesService.activeRole();
-        }
+        Role role = activateRole(versionBuilder);
 
         Version manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
         addManifest(manifest);
@@ -198,6 +191,16 @@ public class SOSAgent implements Agent {
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {
         dataDiscoveryService.addManifest(manifest);
+    }
+
+    private Role activateRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
+
+        Role role = manifestBuilder.getRole();
+        if (role == null) {
+            role = usersRolesService.activeRole();
+        }
+
+        return role;
     }
 
 }

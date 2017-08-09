@@ -2,14 +2,13 @@ package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Metadata;
-import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionBuilder {
+public class VersionBuilder extends ManifestBuilder {
 
     private IGUID content;
     private Metadata metadata;
@@ -17,7 +16,6 @@ public class VersionBuilder {
     private Set<IGUID> previousCollection;
     private AtomBuilder atomBuilder;
     private CompoundBuilder compoundBuilder;
-    private Role role;
 
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
@@ -102,13 +100,4 @@ public class VersionBuilder {
         return compoundBuilder;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public VersionBuilder setRole(Role role) {
-        this.role = role;
-
-        return this;
-    }
 }

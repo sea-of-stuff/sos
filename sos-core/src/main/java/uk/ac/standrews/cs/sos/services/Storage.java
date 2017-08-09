@@ -37,6 +37,16 @@ public interface Storage {
      */
     Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
 
+    /**
+     * Adds an atom to the SOS as a secure encrypted entity.
+     * The Role used for encryption will be the one specified within the builder OR the current active role.
+     *
+     * @param atomBuilder
+     * @return
+     * @throws ManifestPersistException
+     * @throws ManifestNotMadeException
+     * @throws DataStorageException
+     */
     SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
 
     Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException;

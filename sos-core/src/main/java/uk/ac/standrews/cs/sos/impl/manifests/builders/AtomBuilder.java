@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleType;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.Location;
-import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 
@@ -15,7 +14,7 @@ import java.io.IOException;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomBuilder {
+public class AtomBuilder extends ManifestBuilder {
 
     private Location location;
     private Data data;
@@ -24,7 +23,6 @@ public class AtomBuilder {
     private boolean isLocation = false;
     private boolean isData = false;
 
-    private Role role = null;
     private BundleType bundleType = BundleTypes.CACHE;
 
     public boolean isBuildIsSet() {
@@ -47,12 +45,6 @@ public class AtomBuilder {
             isData = true;
             buildIsSet = true;
         }
-
-        return this;
-    }
-
-    public AtomBuilder setRole(Role role) {
-        this.role = role;
 
         return this;
     }
@@ -96,7 +88,4 @@ public class AtomBuilder {
         return bundleType;
     }
 
-    public Role getRole() {
-        return role;
-    }
 }
