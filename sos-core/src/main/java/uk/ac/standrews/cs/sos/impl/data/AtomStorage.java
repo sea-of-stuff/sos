@@ -161,7 +161,7 @@ public class AtomStorage {
         }
     }
 
-    private Pair<Data, String> encrypt(Data originalData, Role role) throws ProtectionException {
+    public Pair<Data, String> encrypt(Data originalData, Role role) throws ProtectionException {
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 

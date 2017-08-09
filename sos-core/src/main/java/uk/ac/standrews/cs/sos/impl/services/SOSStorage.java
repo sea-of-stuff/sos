@@ -23,7 +23,6 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
-import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -34,6 +33,7 @@ import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
@@ -93,6 +93,7 @@ public class SOSStorage implements Storage {
         return manifest;
     }
 
+    @Override
     public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
 
         if (atomBuilder.getRole() == null)
@@ -125,11 +126,26 @@ public class SOSStorage implements Storage {
     }
 
     // Secure an already existing atom manifest and its data
-    public SecureAtomManifest secureAtom(Atom atom, Role role, boolean persist) throws StorageException, ManifestPersistException, ManifestNotMadeException {
+    @Override
+    public SecureAtom secureAtom(Atom atom, Role role) throws StorageException, ManifestPersistException, ManifestNotMadeException {
 
-        // TODO
+        IGUID guid = atom.guid();
+        Set<LocationBundle> bundles = atom.getLocations();
 
-        return null;
+        try {
+            Pair<Data, String> retval = atomStorage.encrypt(atom.getData(), role); // TODO - encrypt atom
+            HashMap<IGUID, String> rolesToKeys = new HashMap<>();
+            rolesToKeys.put(role.guid(), retval.Y());
+
+            SecureAtom manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
+            dataDiscoveryService.addManifest(manifest); // TODO - manifest should be updated differently?
+
+            return manifest;
+
+        } catch (ProtectionException | IOException e) {
+            throw new ManifestNotMadeException("Unable to protect existing atom with guid " + guid.toShortString());
+        }
+
     }
 
     @Override
