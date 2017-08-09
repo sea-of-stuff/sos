@@ -7,13 +7,9 @@ import uk.ac.standrews.cs.sos.model.Role;
  */
 public abstract class ManifestBuilder {
 
-    private Role role = null;
+    protected Role role = null;
 
-    public ManifestBuilder setRole(Role role) {
-        this.role = role;
-
-        return this;
-    }
+    public abstract ManifestBuilder setRole(Role role);
 
     public Role getRole() {
         return role;

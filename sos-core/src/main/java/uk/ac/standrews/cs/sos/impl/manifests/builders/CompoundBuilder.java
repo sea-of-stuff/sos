@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
 import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
+import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.Set;
 
@@ -29,6 +30,13 @@ public class CompoundBuilder extends ManifestBuilder {
 
     public CompoundBuilder setType(CompoundType type) {
         this.type = type;
+
+        return this;
+    }
+
+    @Override
+    public CompoundBuilder setRole(Role role) {
+        this.role = role;
 
         return this;
     }

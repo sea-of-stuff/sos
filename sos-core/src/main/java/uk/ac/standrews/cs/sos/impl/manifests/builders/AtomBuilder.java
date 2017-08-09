@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleType;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 
@@ -88,4 +89,10 @@ public class AtomBuilder extends ManifestBuilder {
         return bundleType;
     }
 
+    @Override
+    public AtomBuilder setRole(Role role) {
+        this.role = role;
+
+        return this;
+    }
 }

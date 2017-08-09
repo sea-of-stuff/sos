@@ -76,9 +76,6 @@ public class FileUtils {
                 case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
                     break;
-                case VERSION_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureVersionManifest.class);
-                    break;
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
                     break;
@@ -110,9 +107,6 @@ public class FileUtils {
                     break;
                 case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, VersionManifest.class);
-                    break;
-                case VERSION_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureVersionManifest.class);
                     break;
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, BasicMetadata.class);

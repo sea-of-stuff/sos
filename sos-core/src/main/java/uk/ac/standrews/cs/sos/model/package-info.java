@@ -16,7 +16,6 @@
  * - protected ones:
  *  - SecureAtom
  *  - SecureCompound
- *  - SecureVersion
  *
  *
  * - Contexts

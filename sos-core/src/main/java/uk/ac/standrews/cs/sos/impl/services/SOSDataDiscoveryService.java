@@ -67,7 +67,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
         // Add/Update TIP
         ManifestType manifestType = manifest.getType();
-        if (manifestType.equals(ManifestType.VERSION) || manifestType.equals(ManifestType.VERSION_PROTECTED)) {
+        if (manifestType.equals(ManifestType.VERSION)) {
 
             Version version = (Version) manifest;
             Set<IGUID> previousVersions = version.getPreviousVersions();

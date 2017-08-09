@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests.builders;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.Set;
 
@@ -100,4 +101,10 @@ public class VersionBuilder extends ManifestBuilder {
         return compoundBuilder;
     }
 
+    @Override
+    public VersionBuilder setRole(Role role) {
+        this.role = role;
+
+        return this;
+    }
 }
