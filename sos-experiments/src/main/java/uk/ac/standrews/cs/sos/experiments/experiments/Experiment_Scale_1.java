@@ -1,12 +1,17 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.experiments.*;
+import uk.ac.standrews.cs.sos.experiments.ChicShock;
+import uk.ac.standrews.cs.sos.experiments.Experiment;
+import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
+import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
@@ -38,32 +43,10 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void setup() throws ExperimentException {
-
-        try {
-            cms = node.getCMS();
-
-            addContentToNode();
-            addContexts();
-        } catch (Exception e) {
-            throw new ExperimentException();
-        }
-    }
-
-    @Override
-    public void run() throws ExperimentException {
-        super.run();
-
-        counter = cms.runPredicates();
-    }
-
-    @Override
     public void finish() {
         super.finish();
 
-        System.out.println("Number of entities processed by the predicate: " + counter);
-
-        ServerState.kill();
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT Scale_1. # times a predicate was run: " + counter);
     }
 
     @Override
@@ -93,12 +76,23 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT");
 
+            try {
+                cms = node.getCMS();
+
+                addContentToNode();
+                addContexts();
+            } catch (Exception e) {
+                throw new ExperimentException();
+            }
         }
 
         @Override
         public void run() throws ExperimentException {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT");
 
+            counter = cms.runPredicates();
         }
     }
 

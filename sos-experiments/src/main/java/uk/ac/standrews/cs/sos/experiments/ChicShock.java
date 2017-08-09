@@ -31,7 +31,7 @@ public class ChicShock {
 
         // RUNNING PHASE
         chicShock.shock();
-        chicShock.shockExperiment("Experiment_Scale_1"); // TODO <-- this method should return when experiment is finished
+        chicShock.shockExperiment("Experiment_Scale_1"); // TODO <-- this method should return when experiment is finished, USE ARGS
 
         // STOP PHASE
         chicShock.unShock();

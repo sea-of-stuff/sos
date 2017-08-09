@@ -43,7 +43,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void finish() {
         super.finish();
 
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR1. # times a predicate was run: " + counter);
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR_1. # times a predicate was run: " + counter);
     }
 
     @Override

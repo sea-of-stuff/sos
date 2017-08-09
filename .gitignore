@@ -175,3 +175,4 @@ sos-core/src/test/resources/*.conf
 experiments/plots
 experiments/processed
 sos-experiments/src/main/resources/output/
+*-hogun.json
