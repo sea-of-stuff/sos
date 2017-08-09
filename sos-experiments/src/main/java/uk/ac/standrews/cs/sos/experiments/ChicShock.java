@@ -91,7 +91,7 @@ public class ChicShock {
             if (isRemote) {
                 SOSDistribution.runExperiment(experimentConfiguration);
             } else {
-                ExperimentManager.runExperiment(experiment);
+                ExperimentManager.runExperiment(experimentConfiguration, experiment);
             }
         } catch (ExperimentException e) {
             throw new ChicShockException();
