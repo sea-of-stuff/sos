@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.StorageNode;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
@@ -16,6 +17,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -32,6 +34,12 @@ import java.io.InputStream;
 @StorageNode
 public class RESTStorage {
 
+    /**
+     * Get the data as a stream of bytes
+     *
+     * @param guid matching the Atom of the data
+     * @return a response with a body containing a stream of bytes
+     */
     @GET
     @Path("/data/guid/{guid}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
@@ -61,11 +69,18 @@ public class RESTStorage {
 
     }
 
+    /**
+     * Example of body:
+     *
+     * { "uri": "http://image.flaticon.com/teams/new/1-freepik.jpg"}
+     * @param locationModel JSON for URI
+     * @return Response to the HTTP request
+     */
     @POST
     @Path("/uri")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postDataByLocation(LocationModel locationModel) {
+    public Response postDataByLocation(final LocationModel locationModel) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/uri");
 
         if (locationModel == null) {
@@ -94,6 +109,12 @@ public class RESTStorage {
 
     }
 
+    /**
+     * Add an atom to the SOS node
+     *
+     * @param inputStream the bytes of the atom
+     * @return the Response to the http request
+     */
     @POST
     @Path("/stream")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -116,5 +137,34 @@ public class RESTStorage {
 
         return HTTPResponses.CREATED(atom.toString());
     }
+
+    @POST
+    @Path("/stream/protected")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addSecureAtomStream(final InputStream inputStream, final String role /* rolemodel*/) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
+
+        Storage storage = RESTConfig.sos.getStorage();
+
+        SecureAtom atom;
+        try {
+            AtomBuilder builder = new AtomBuilder()
+                    .setData(new InputStreamData(inputStream))
+                    .setBundleType(BundleTypes.PERSISTENT)
+                    .setRole(null); // FIXME
+
+            atom = storage.addSecureAtom(builder);
+
+        } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+
+        return HTTPResponses.CREATED(atom.toString());
+    }
+
+    // TODO
+    // GET /protect/guid - maybe in dds? not sure
+
 
 }

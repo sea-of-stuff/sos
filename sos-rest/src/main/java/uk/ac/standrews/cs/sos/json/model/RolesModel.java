@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.json.model;
 
 /**
+ * TODO - see config settings
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class RolesModel {

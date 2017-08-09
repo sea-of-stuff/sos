@@ -124,7 +124,7 @@ public class SOSStorage implements Storage {
 
         return manifest;
     }
-
+    
     // Secure an already existing atom manifest and its data
     @Override
     public SecureAtom secureAtom(Atom atom, Role role) throws StorageException, ManifestPersistException, ManifestNotMadeException {

@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.RESTConfig;
-import uk.ac.standrews.cs.sos.bindings.MCSNode;
+import uk.ac.standrews.cs.sos.bindings.MMSNode;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
@@ -28,7 +28,7 @@ import java.io.InputStream;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @Path("/mms/")
-@MCSNode
+@MMSNode
 public class RESTMMS {
 
     @POST

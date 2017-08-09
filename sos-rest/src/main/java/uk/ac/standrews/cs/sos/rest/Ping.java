@@ -15,12 +15,12 @@ import javax.ws.rs.core.Response;
 public class Ping {
 
     @GET
-    @Path("/{param}")
-    public Response getMsg(@PathParam("param") String msg) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /ping/{params}");
+    @Path("/{msg: .*}") // Accept both empty and non-empty param
+    public Response getMsg(@PathParam("msg") String msg) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /ping/{msg}");
 
         if (msg == null || msg.isEmpty()) {
-            msg = "What? Please give me a message.";
+            msg = "What? Please give me a message to Pong -- GET /ping/{msg}";
         }
 
         String output = "Pong : " + msg;

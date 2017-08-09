@@ -8,8 +8,6 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 import java.io.File;
 
-import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONFIGURATION_FOLDER;
-
 /**
  * ChicShock does not mean anything. This is simply a word I invented and I like, so here it is.
  * Boom.
@@ -22,7 +20,7 @@ public class ChicShock {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration-hogun.json");
+        File experimentConfigurationFile = new File(args[1]);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
