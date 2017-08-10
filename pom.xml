@@ -67,6 +67,18 @@
         </plugins>
     </build>
 
+    <repositories>
+
+        <!-- Repository to which this module is deployed, and others retrieved from.                 -->
+        <!-- This has to be replicated from the parent POM so the parent POM can be found.           -->
+        <repository>
+            <id>uk.ac.standrews.cs.maven.repository</id>
+            <name>School of Computer Science Maven Repository</name>
+            <url>http://maven.cs.st-andrews.ac.uk/</url>
+        </repository>
+
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>

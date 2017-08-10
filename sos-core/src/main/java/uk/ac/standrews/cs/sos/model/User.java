@@ -1,7 +1,11 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.json.UserDeserializer;
+import uk.ac.standrews.cs.sos.json.UserSerializer;
 
 import java.security.PublicKey;
 
@@ -11,6 +15,8 @@ import java.security.PublicKey;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = UserSerializer.class)
+@JsonDeserialize(using = UserDeserializer.class)
 public interface User {
 
     /**

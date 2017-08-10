@@ -1,13 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.json.RoleDeserializer;
-import uk.ac.standrews.cs.sos.json.RoleSerializer;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
@@ -23,8 +19,6 @@ import java.security.PublicKey;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = RoleSerializer.class)
-@JsonDeserialize(using = RoleDeserializer.class)
 public class RoleImpl extends UserImpl implements Role {
 
     private IGUID userGUID;

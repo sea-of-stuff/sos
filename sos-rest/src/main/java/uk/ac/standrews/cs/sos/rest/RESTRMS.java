@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -9,15 +10,17 @@ import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.RMSNode;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -59,7 +62,7 @@ public class RESTRMS {
     @Path("/role/{guid}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRole(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /user/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /role/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -82,6 +85,77 @@ public class RESTRMS {
             return HTTPResponses.NOT_FOUND("Could not find role with guid: " + userGUID.toMultiHash());
         }
 
+    }
+
+    @GET
+    @Path("/user/{guid}/roles")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getUserRoles(@PathParam("guid") String guid) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /user/{guid}/roles");
+
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        IGUID userGUID;
+        try {
+            userGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        UsersRolesService usro = RESTConfig.sos.getRMS();
+
+        try {
+            Set<Role> roles = usro.getRoles(userGUID);
+
+            String out = JSONHelper.JsonObjMapper().writeValueAsString(roles);
+            return HTTPResponses.OK(out);
+
+        } catch (RoleNotFoundException | JsonProcessingException e) {
+            return HTTPResponses.NOT_FOUND("Could not find user with guid: " + userGUID.toMultiHash());
+        }
+
+    }
+
+    @POST
+    @Path("/user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_HTML)
+    public Response postUser(final User user) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /user");
+
+
+        UsersRolesService usro = RESTConfig.sos.getRMS();
+
+        try {
+            usro.addUser(user);
+            return HTTPResponses.OK();
+
+        } catch (UserRolePersistException e) {
+
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+    }
+
+    @POST
+    @Path("/role")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_HTML)
+    public Response postRole(final Role role) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /role");
+
+
+        UsersRolesService usro = RESTConfig.sos.getRMS();
+
+        try {
+            usro.addRole(role);
+            return HTTPResponses.OK();
+
+        } catch (UserRolePersistException e) {
+
+            return HTTPResponses.INTERNAL_SERVER();
+        }
     }
 
 }
