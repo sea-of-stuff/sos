@@ -52,7 +52,7 @@ The node where the experiment is run is configured inside of the `configuration.
 ```
 
 
-If the remote opetion is **true**, then the **ChicShock** utility will distribute it to the specified node. The configuration will then change as follows:
+If the remote option is **true**, then the **ChicShock** utility will distribute it to the specified node. The configuration will then change as follows:
 
 ```
 "experimentnode": {
@@ -69,6 +69,43 @@ If the remote opetion is **true**, then the **ChicShock** utility will distribut
     },
 ```
 
+
+Note that you can specify two types of SSH connection configurations for a node.
+
+### SSH Type 0
+
+SSH Type 0 connections should be used when no passphrase is required. I use
+this type of connection with an SSH enabled Mini-MAC.
+
+The user should have connected to the host via SSH at least once before being able to use this configuration.
+
+```
+"ssh" : {
+        "type" : 0,
+        "host" : "cs-wifi-056.cs.st-andrews.ac.uk",
+        "user" : "lorna",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "password" : "PASSWORD"
+      }
+```
+
+### SSH Type 1
+
+SSH Type 1 connection should be used when private key with passphrase are required.
+
+The user should have connected to the host via SSH at least once before being able to use this configuration.
+
+```
+"ssh" : {
+        "type" : 1,
+        "host" : "hogun-10.cluster",
+        "user" : "sic2",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "config": "/Users/sic2/.ssh/config",
+        "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+        "passphrase" : "PASSSPHRASE"
+    }
+```
 
 ### Example
 
