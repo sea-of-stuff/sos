@@ -21,7 +21,6 @@ import javax.ws.rs.core.Response;
 import java.util.Set;
 
 /**
- * https://quicksilver.host.cs.st-andrews.ac.uk/sos/api.html#node-discovery-service
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @Path("/nds/")

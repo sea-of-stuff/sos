@@ -16,12 +16,12 @@ import java.io.IOException;
  */
 @Provider
 @RMSNode
-public class CMSFilter implements ContainerRequestFilter {
+public class RMSFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        if (!RESTConfig.sos.isCMS()) {
-            Response response = HTTPResponses.BAD_REQUEST("I am not a CMS node");
+        if (!RESTConfig.sos.isRMS()) {
+            Response response = HTTPResponses.BAD_REQUEST("I am not an RMS node");
             throw new WebApplicationException(response);
         }
 
