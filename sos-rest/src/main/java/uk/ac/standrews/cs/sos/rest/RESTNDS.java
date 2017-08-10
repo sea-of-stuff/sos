@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -13,6 +14,7 @@ import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.*;
@@ -39,7 +41,7 @@ public class RESTNDS {
         try {
             Node registeredNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on local configuration (see settings)
             if (registeredNode != null) {
-                return HTTPResponses.OK(registeredNode.toString());
+                return HTTPResponses.CREATED(registeredNode.toString());
             } else {
                 return HTTPResponses.INTERNAL_SERVER();
             }
@@ -85,25 +87,19 @@ public class RESTNDS {
     public Response findByService(@PathParam("service") String service) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/service/{service}");
 
-        NodeType nodeType = NodeType.get(service.toLowerCase());
+        try {
+            NodeType nodeType = NodeType.get(service.toLowerCase());
 
-        NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
-        Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
+            NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
+            Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
+            String out = JSONHelper.JsonObjMapper().writeValueAsString(nodes);
 
-        String json = collectionToJson(nodes);
-        return HTTPResponses.OK(json);
-    }
+            return HTTPResponses.OK(out);
 
-    // FIXME!
-    private String collectionToJson(Set<Node> nodes) {
+        } catch (JsonProcessingException e) {
 
-        StringBuilder json = new StringBuilder("[");
-        for(Node node:nodes) {
-            json.append(node.toString()).append(", ");
+            return HTTPResponses.INTERNAL_SERVER();
         }
-        json = new StringBuilder(json.substring(0, json.length() - 2));
-
-        json.append("]");
-        return json.toString();
     }
+
 }

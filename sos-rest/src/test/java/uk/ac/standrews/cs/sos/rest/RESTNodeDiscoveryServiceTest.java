@@ -14,34 +14,6 @@ import static org.testng.Assert.assertEquals;
  */
 public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
 
-    private final static String TEST_NODE_INFO = "" +
-            "{" +
-            "    \"guid\": \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
-            "    \"hostname\": \"Simones-MacBook-Pro.local\"," +
-            "    \"port\": 8080," +
-            "    \"services\": {" +
-            "        \"storage\": {" +
-            "            \"exposed\": true" +
-            "        }," +
-            "        \"cms\": {" +
-            "            \"exposed\": true" +
-            "        }," +
-            "        \"dds\": {" +
-            "            \"exposed\": true" +
-            "        }," +
-            "        \"nds\": {" +
-            "            \"exposed\": true" +
-            "        }," +
-            "        \"rms\": {" +
-            "            \"exposed\": true" +
-            "        }," +
-            "        \"mms\": {" +
-            "            \"exposed\": true" +
-            "        }" +
-            "    }" +
-            "}";
-
-
     @Test
     public void testRegister() throws Exception {
 
@@ -76,8 +48,8 @@ public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
                 .request()
                 .post(Entity.json(data));
 
-        assertEquals(response.getStatus(), HTTPStatus.OK);
-        JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        JSONAssert.assertEquals(data, response.readEntity(String.class), true);
 
         response.close();
     }

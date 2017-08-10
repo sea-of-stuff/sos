@@ -1,11 +1,7 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
@@ -26,6 +22,11 @@ import java.net.URL;
 import java.util.Iterator;
 
 /**
+ * The GetNode task simply attempts to search info about a specific SOS Node by contacting NDS Nodes in the network.
+ * This is done by simply iterating over known NDS nodes for a max of NUMBER_OF_TRIALS times.
+ *
+ * Not attempt to build a P2P structured network has been done for the moment being.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class GetNode extends Task {
@@ -37,8 +38,6 @@ public class GetNode extends Task {
     private static int NUMBER_OF_TRIALS = 3;
 
     public GetNode(IGUID nodeGUID, Iterator<Node> knownNDSNodes) {
-        // TODO - perform checks
-
         this.nodeId = nodeGUID;
         this.knownNDSNodes = knownNDSNodes;
     }
@@ -76,23 +75,14 @@ public class GetNode extends Task {
             return null;
         }
 
-        Node retval;
-
         try (InputStream inputStream = response.getBody()){
+
             String body = IO.InputStreamToString(inputStream);
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
+            return JSONHelper.JsonObjMapper().readValue(body, SOSNode.class);
 
-            IGUID nodeGUID = GUIDFactory.recreateGUID(jsonNode.get(SOSConstants.GUID).asText());
-            String hostname = jsonNode.get(SOSConstants.HOSTNAME).asText();
-            int port = jsonNode.get(SOSConstants.PORT).asInt();
-
-            // TODO - roles are not managed correctly
-            retval = new SOSNode(nodeGUID, hostname, port, false, true, false, false, false, false, false);
-        } catch (GUIDGenerationException | IOException e) {
+        } catch (IOException e) {
             throw new IOException(e);
         }
-
-        return retval;
     }
 
     public Node getFoundNode() {

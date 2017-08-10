@@ -84,7 +84,7 @@ public class SOSURL {
 
     public static URL NDS_GET_NODE(Node node, String role) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/role/" + role;
+                "/nds/service/" + role;
 
         return makeURL(url);
     }
