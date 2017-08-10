@@ -34,14 +34,14 @@ public class URILocation implements Location {
     }
 
     private String getScheme(String location) {
-        if (location.startsWith("/") || location.startsWith("file"))
+        if (location.startsWith("/") || location.startsWith("file://"))
             return FILE_SCHEME;
 
-        if (location.startsWith("http"))
-            return HTTP_SCHEME;
-
-        if (location.startsWith("https"))
+        if (location.startsWith("https://"))
             return HTTPS_SCHEME;
+
+        if (location.startsWith("http://"))
+            return HTTP_SCHEME;
 
         return "";
     }

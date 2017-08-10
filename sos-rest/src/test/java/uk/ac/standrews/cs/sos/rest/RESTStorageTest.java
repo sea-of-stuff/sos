@@ -20,11 +20,11 @@ public class RESTStorageTest extends CommonRESTTest {
     private final static String TEST_NODE_INFO =
             "{\n" +
                     "  \"Type\": \"Atom\",\n" +
-                    "  \"GUID\": \"a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\",\n" +
+                    "  \"GUID\": \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/a17c9aaa61e80a1bf71d0d850af4e5baa9800bbd\"\n" +
+                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -32,7 +32,7 @@ public class RESTStorageTest extends CommonRESTTest {
     private final static String TEST_HTTPS_BIN_ATOM_MANIFEST =
             "{\n" +
                     "  \"Type\": \"Atom\",\n" +
-                    "  \"GUID\": \"d68c19a0a345b7eab78d5e11e991c026ec60db63\",\n" +
+                    "  \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
                     "      \"Type\": \"provenance\",\n" +
@@ -40,7 +40,7 @@ public class RESTStorageTest extends CommonRESTTest {
                     "    },\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -48,7 +48,7 @@ public class RESTStorageTest extends CommonRESTTest {
     private final static String TEST_HTTP_BIN_ATOM_MANIFEST =
             "{\n" +
                     "  \"Type\": \"Atom\",\n" +
-                    "  \"GUID\": \"d68c19a0a345b7eab78d5e11e991c026ec60db63\",\n" +
+                    "  \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
                     "      \"Type\": \"provenance\",\n" +
@@ -56,7 +56,7 @@ public class RESTStorageTest extends CommonRESTTest {
                     "    },\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/d68c19a0a345b7eab78d5e11e991c026ec60db63\"\n" +
+                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -64,11 +64,11 @@ public class RESTStorageTest extends CommonRESTTest {
     private final static String TEST_EMPTY_ATOM_MANIFEST =
             "{\n" +
                     "  \"Type\": \"Atom\",\n" +
-                    "  \"GUID\": \"da39a3ee5e6b4b0d3255bfef95601890afd80709\",\n" +
+                    "  \"GUID\": \"SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
                     "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://6b67f67f31908dd0e574699f163eda2cc117f7f4/da39a3ee5e6b4b0d3255bfef95601890afd80709\"\n" +
+                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -127,7 +127,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 .post(Entity.json(data));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
+        JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), false);
 
         response.close();
     }
@@ -144,7 +144,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 .post(Entity.json(data));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        JSONAssert.assertEquals(TEST_HTTPS_BIN_ATOM_MANIFEST, response.readEntity(String.class), true);
+        JSONAssert.assertEquals(TEST_HTTPS_BIN_ATOM_MANIFEST, response.readEntity(String.class), false);
 
         response.close();
     }
