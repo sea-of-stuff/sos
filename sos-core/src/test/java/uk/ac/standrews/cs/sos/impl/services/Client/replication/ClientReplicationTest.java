@@ -64,8 +64,8 @@ public class ClientReplicationTest extends SetUpTest {
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
-                                                "                \"Type\" : \"persistent\",\n" +
-                                                "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
+                                                "                \"type\" : \"persistent\",\n" +
+                                                "                \"location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
                                                 "            } \n" +
                                                 "        ]\n" +
                                                 "    }\n" +

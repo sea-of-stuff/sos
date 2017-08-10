@@ -86,8 +86,8 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
                                         "        \"Locations\" : \n" +
                                         "        [\n" +
                                         "              {\n" +
-                                        "                \"Type\" : \"persistent\",\n" +
-                                        "                \"Location\" : \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
+                                        "                \"type\" : \"persistent\",\n" +
+                                        "                \"location\" : \"sos://" + NODE_ID + "/" + testGUID + "\"\n" +
                                         "            } \n" +
                                         "        ]\n" +
                                         "    },\n" +

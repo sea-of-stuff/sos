@@ -33,8 +33,8 @@ public class JSONConstants {
     public static final String CONTENT_KEY_LABEL = "Label";
 
     // Location bundle keys
-    public static final String BUNDLE_TYPE = "Type";
-    public static final String BUNDLE_LOCATION = "Location";
+    public static final String BUNDLE_TYPE = "type";
+    public static final String BUNDLE_LOCATION = "location";
 
     // Metadata
     public static final String KEY_META_PROPERTIES = "Properties";

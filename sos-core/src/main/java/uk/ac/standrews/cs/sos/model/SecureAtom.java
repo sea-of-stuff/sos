@@ -11,8 +11,8 @@ package uk.ac.standrews.cs.sos.model;
  *  "GUID" : "da39a3ee5e6b4b0d3255bfef95601890afd80709",
  *  "Locations" : [
  *      {
- *      "Type" : "cache",
- *      "Location" : "sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/da39a3ee5e6b4b0d3255bfef95601890afd80709"
+ *      "type" : "cache",
+ *      "location" : "sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/da39a3ee5e6b4b0d3255bfef95601890afd80709"
  *      }
  *  ]
  * }

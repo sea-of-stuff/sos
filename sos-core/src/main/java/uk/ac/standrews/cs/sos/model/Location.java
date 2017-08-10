@@ -1,5 +1,8 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import uk.ac.standrews.cs.sos.json.LocationDeserializer;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -8,6 +11,7 @@ import java.net.URISyntaxException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonDeserialize(using = LocationDeserializer.class)
 public interface Location {
 
     /**

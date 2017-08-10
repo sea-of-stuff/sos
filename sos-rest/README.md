@@ -125,7 +125,7 @@ REQUEST
 POST /store/uri
 
 {
-    "uri" : "URI",
+    "location" : "URI",
 }
 
 RESPONSE
@@ -151,7 +151,7 @@ Example 1
 POST /store/uri
 
 {
-    "uri" : "http://example.com/bear.jpeg"
+    "location" : "http://example.com/bear.jpeg"
 }
 
 RESPONSE
@@ -180,7 +180,7 @@ Example 2
 POST /store/uri
 
 {
-    "uri" : "sos://c6adc7e8-31ee-563a-8d0d-aa230690c296/23cec17e-c246-418a-8e82-fcc97d70adfe"
+    "location" : "sos://c6adc7e8-31ee-563a-8d0d-aa230690c296/23cec17e-c246-418a-8e82-fcc97d70adfe"
 }
 
 RESPONSE

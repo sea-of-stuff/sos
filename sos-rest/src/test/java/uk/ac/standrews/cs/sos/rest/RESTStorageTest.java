@@ -23,8 +23,8 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  \"GUID\": \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
-                    "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\"\n" +
+                    "      \"type\": \"persistent\",\n" +
+                    "      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -35,12 +35,12 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
-                    "      \"Type\": \"provenance\",\n" +
-                    "      \"Location\": \"https://httpbin.org/range/10\"\n" +
+                    "      \"type\": \"provenance\",\n" +
+                    "      \"location\": \"https://httpbin.org/range/10\"\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
+                    "      \"type\": \"persistent\",\n" +
+                    "      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -51,12 +51,12 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
-                    "      \"Type\": \"provenance\",\n" +
-                    "      \"Location\": \"http://httpbin.org/range/10\"\n" +
+                    "      \"type\": \"provenance\",\n" +
+                    "      \"location\": \"http://httpbin.org/range/10\"\n" +
                     "    },\n" +
                     "    {\n" +
-                    "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
+                    "      \"type\": \"persistent\",\n" +
+                    "      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -67,8 +67,8 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  \"GUID\": \"SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
-                    "      \"Type\": \"persistent\",\n" +
-                    "      \"Location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n" +
+                    "      \"type\": \"persistent\",\n" +
+                    "      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
@@ -119,7 +119,7 @@ public class RESTStorageTest extends CommonRESTTest {
     public void testStoreViaHTTPURL() throws Exception {
 
         String data = "{\n" +
-                "    \"uri\" : \"http://httpbin.org/range/10\"\n" +
+                "    \"location\" : \"http://httpbin.org/range/10\"\n" +
                 "}";
 
         Response response = target("/storage/uri")
@@ -136,7 +136,7 @@ public class RESTStorageTest extends CommonRESTTest {
     public void testStoreViaHTTPSURL() throws Exception {
 
         String data = "{\n" +
-                "    \"uri\" : \"https://httpbin.org/range/10\"\n" +
+                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
                 "}";
 
         Response response = target("/storage/uri")

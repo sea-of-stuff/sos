@@ -17,12 +17,12 @@ import java.net.URISyntaxException;
 public class LocationBundleTest extends SetUpTest {
 
     private static final String EXPECTED_LOCATION =
-            "{\"Type\":\"cache\"," +
-                    "\"Location\":\"http://abc.com/123\"}";
+            "{\"type\":\"cache\"," +
+                    "\"location\":\"http://abc.com/123\"}";
 
     private static final String EXPECTED_PROV_LOCATION =
-            "{\"Type\":\"provenance\"," +
-                    "\"Location\":\"http://abc.com/123/1\"}";
+            "{\"type\":\"provenance\"," +
+                    "\"location\":\"http://abc.com/123/1\"}";
 
     @Test
     public void toStringTest() throws URISyntaxException, JSONException {

@@ -117,7 +117,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"uri\": \"http://image.flaticon.com/teams/new/1-freepik.jpg\"\n}\n"
+					"raw": "{\n\t\"location\": \"http://image.flaticon.com/teams/new/1-freepik.jpg\"\n}\n"
 				},
 				"description": ""
 			},
@@ -137,7 +137,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"uri\": \"http://image.flaticon.com/teams/new/1-freepik.jpg\"\n}\n"
+					"raw": "{\n\t\"location\": \"http://image.flaticon.com/teams/new/1-freepik.jpg\"\n}\n"
 				},
 				"description": ""
 			},

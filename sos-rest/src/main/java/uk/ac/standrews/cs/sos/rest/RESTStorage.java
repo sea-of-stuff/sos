@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.json.model.LocationModel;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
@@ -24,7 +23,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -72,29 +70,22 @@ public class RESTStorage {
     /**
      * Example of body:
      *
-     * { "uri": "http://image.flaticon.com/teams/new/1-freepik.jpg"}
-     * @param locationModel JSON for URI
+     * { "location": "http://image.flaticon.com/teams/new/1-freepik.jpg"}
+     * @param location JSON for URI
      * @return Response to the HTTP request
      */
     @POST
     @Path("/uri")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postDataByLocation(final LocationModel locationModel) { // TODO - use LocationBundle as in sos-core
+    public Response postDataByLocation(final Location location) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/uri");
 
-        if (locationModel == null) {
+        if (location == null) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
         Storage storage = RESTConfig.sos.getStorage();
-
-        Location location;
-        try {
-            location = locationModel.getLocation();
-        } catch (IOException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
-        }
 
         try {
             AtomBuilder builder = new AtomBuilder()
