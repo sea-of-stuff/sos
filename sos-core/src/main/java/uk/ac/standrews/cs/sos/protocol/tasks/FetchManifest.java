@@ -57,8 +57,10 @@ public class FetchManifest extends Task {
                 SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
 
                 try (InputStream inputStream = response.getBody()) {
+
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.manifest = FileUtils.ManifestFromJson(responseBody);
+
                 } catch (ManifestNotFoundException e) {
                     throw new IOException("Unable to parse manifest with GUID " + manifestId);
                 }
