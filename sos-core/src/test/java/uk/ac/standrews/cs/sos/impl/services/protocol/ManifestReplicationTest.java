@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
@@ -37,14 +38,16 @@ public class ManifestReplicationTest {
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10002;
 
-    private static final String TEST_MANIFEST =
-            "{\n" +
-            "  \"Type\" : \"Version\",\n" +
-            "  \"ContentGUID\" : \"27c5a764bb09f0d737fbce4daaedb4f8b8d4ade0\",\n" +
-            "  \"Invariant\" : \"5f6953558817f20a99194fde4d8d5365cef30225\",\n" +
-            "  \"GUID\" : \"2dcfc250dda1df3e50fac249af6df531d486e7e3\",\n" +
-            "  \"Previous\" : [ \"dcb0cece956ead212dcd99458408534d25a94da9\" ],\n" +
-            "  \"Signature\" : \"MCwCFBEWwqB+/f7s5iCzdxFc/N4FrIQtAhRB07czCQZ+G6dnlM6XrXTb1jqXeA==\"\n" +
+    private static final String GUID_VERSION = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
+    private static final String TEST_MANIFEST = "" +
+            "{" +
+            "  \"Type\":\"Version\"," +
+            "  \"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"GUID\":\""+ GUID_VERSION+"\"," +
+            "  \"Signature\":\"AAAB\"," +
+            "  \"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+            "  \"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}";
 
     private static final String TEST_BAD_MANIFEST = "BAD Manifest";
@@ -89,6 +92,13 @@ public class ManifestReplicationTest {
     @AfterMethod
     public void tearDown() {
         mockServer.stop();
+
+        // Let the mock server stop properly
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
