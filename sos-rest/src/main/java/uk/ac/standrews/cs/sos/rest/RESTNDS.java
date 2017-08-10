@@ -38,7 +38,7 @@ public class RESTNDS {
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 
         try {
-            Node registeredNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on configuration
+            Node registeredNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on local configuration (see settings)
             if (registeredNode != null) {
                 return HTTPResponses.OK(registeredNode.toString());
             } else {
@@ -81,12 +81,12 @@ public class RESTNDS {
     }
 
     @GET
-    @Path("/role/{role}")
+    @Path("/service/{service}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response findByRole(@PathParam("role") String role) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/role/{role}");
+    public Response findByService(@PathParam("service") String service) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/service/{service}");
 
-        NodeType nodeType = NodeType.get(role.toLowerCase());
+        NodeType nodeType = NodeType.get(service.toLowerCase());
 
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
         Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
@@ -95,6 +95,7 @@ public class RESTNDS {
         return HTTPResponses.OK(json);
     }
 
+    // FIXME!
     private String collectionToJson(Set<Node> nodes) {
 
         StringBuilder json = new StringBuilder("[");
