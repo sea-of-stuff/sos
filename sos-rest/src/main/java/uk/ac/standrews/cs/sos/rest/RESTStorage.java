@@ -80,7 +80,7 @@ public class RESTStorage {
     @Path("/uri")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postDataByLocation(final LocationModel locationModel) {
+    public Response postDataByLocation(final LocationModel locationModel) { // TODO - use LocationBundle as in sos-core
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/uri");
 
         if (locationModel == null) {

@@ -1,5 +1,9 @@
 package uk.ac.standrews.cs.sos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -7,7 +11,9 @@ import uk.ac.standrews.cs.sos.filters.DDSFilter;
 import uk.ac.standrews.cs.sos.filters.NDSFilter;
 import uk.ac.standrews.cs.sos.filters.StorageFilter;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.json.JacksonProvider;
+
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -31,5 +37,27 @@ public class RESTConfig extends ResourceConfig {
 
     public void setSOS(SOSLocalNode sos) {
         RESTConfig.sos = sos;
+    }
+
+    @Provider
+    public static class JacksonProvider implements ContextResolver<ObjectMapper> {
+
+        private static final ObjectMapper MAPPER = new ObjectMapper();
+
+        static {
+            MAPPER.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+            MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
+            MAPPER.disable(MapperFeature.USE_GETTERS_AS_SETTERS);
+            MAPPER.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        }
+
+        public JacksonProvider() {
+            System.out.println("Instantiate JacksonProvider");
+        }
+
+        @Override
+        public ObjectMapper getContext(Class<?> type) {
+            return MAPPER;
+        }
     }
 }
