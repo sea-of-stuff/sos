@@ -130,7 +130,7 @@ public class RESTRMS {
 
         try {
             usro.addUser(user);
-            return HTTPResponses.OK();
+            return HTTPResponses.CREATED("User with GUID " + user.guid().toMultiHash() + " added");
 
         } catch (UserRolePersistException e) {
 
@@ -150,7 +150,7 @@ public class RESTRMS {
 
         try {
             usro.addRole(role);
-            return HTTPResponses.OK();
+            return HTTPResponses.CREATED("Role with GUID " + role.guid().toMultiHash() + " added");
 
         } catch (UserRolePersistException e) {
 
