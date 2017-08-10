@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -87,10 +86,30 @@ public class NodeDiscoveryTest {
                         response()
                                 .withStatusCode(200)
                                 .withBody(
-                                        "{\n" +
-                                                "    \"" + SOSConstants.GUID +"\": \"" +  nodeFound.toMultiHash() + "\",\n" +
-                                                "    \"" + SOSConstants.HOSTNAME + "\": \"localhost\",\n" +
-                                                "    \"" + SOSConstants.PORT + "\": 12345\n" +
+                                        "{" +
+                                                "    \"guid\": \"" + nodeFound.toMultiHash()  + "\"," +
+                                                "    \"hostname\": \"localhost\"," +
+                                                "    \"port\": 12345," +
+                                                "    \"services\": {" +
+                                                "        \"storage\": {" +
+                                                "            \"exposed\": true" +
+                                                "        }," +
+                                                "        \"cms\": {" +
+                                                "            \"exposed\": true" +
+                                                "        }," +
+                                                "        \"dds\": {" +
+                                                "            \"exposed\": true" +
+                                                "        }," +
+                                                "        \"nds\": {" +
+                                                "            \"exposed\": true" +
+                                                "        }," +
+                                                "        \"rms\": {" +
+                                                "            \"exposed\": true" +
+                                                "        }," +
+                                                "        \"mms\": {" +
+                                                "            \"exposed\": true" +
+                                                "        }" +
+                                                "    }" +
                                                 "}"
                                 )
                 );
