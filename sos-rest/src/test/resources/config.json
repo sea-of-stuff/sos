@@ -1,7 +1,10 @@
 {
   "settings": {
-    "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
+    "guid": "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
     "services": {
+      "agent": {
+        "exposed": true
+      },
       "storage": {
         "exposed": true
       },
@@ -68,6 +71,7 @@
       "location": "~/sos/"
     },
     "global": {
+      "ssl_trust_store" : "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts",
       "tasks": {
         "thread": {
           "ps": 4

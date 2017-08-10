@@ -4,7 +4,9 @@ import org.glassfish.jersey.test.JerseyTestNg;
 import org.glassfish.jersey.test.TestProperties;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.RESTConfig;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.core.Application;
 import java.io.File;
@@ -12,18 +14,22 @@ import java.io.File;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest  {
+public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest {
 
-    public static final String TEST_RESOURCES_PATH = "src/test/resources/";
+    public static final String TEST_RESOURCES_PATH = "sos-rest/src/test/resources/";
 
     protected ServerState state;
     protected RESTConfig config;
+
+    static {
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
+    }
 
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
         super.setUp();
-
+        
         File configFile = new File(TEST_RESOURCES_PATH + "config.json");
 
         state = new ServerState();

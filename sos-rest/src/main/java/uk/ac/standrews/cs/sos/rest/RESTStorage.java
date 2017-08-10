@@ -142,7 +142,7 @@ public class RESTStorage {
     @Path("/stream/protected")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSecureAtomStream(final InputStream inputStream, final String role /* rolemodel*/) {
+    public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
 
         Storage storage = RESTConfig.sos.getStorage();

@@ -14,32 +14,62 @@ import static org.testng.Assert.assertEquals;
  */
 public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
 
-    private final static String TEST_NODE_INFO = "{\n" +
-            "    \"guid\": \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-            "    \"hostname\": \"dyn-209-236.cs.st-andrews.ac.uk\",\n" +
-            "    \"port\": 8080,\n" +
-            "    \"roles\": {\n" +
-            "        \"agent\": true,\n" +
-            "        \"storage\": true,\n" +
-            "        \"dds\": false,\n" +
-            "        \"nds\": false,\n" +
-            "        \"mms\": false,\n" +
-            "        \"cms\": false,\n" +
-            "        \"rms\": false\n" +
-            "    }\n" +
-            "}\n";
+    private final static String TEST_NODE_INFO = "" +
+            "{" +
+            "    \"guid\": \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
+            "    \"hostname\": \"Simones-MacBook-Pro.local\"," +
+            "    \"port\": 8080," +
+            "    \"services\": {" +
+            "        \"storage\": {" +
+            "            \"exposed\": true" +
+            "        }," +
+            "        \"cms\": {" +
+            "            \"exposed\": true" +
+            "        }," +
+            "        \"dds\": {" +
+            "            \"exposed\": true" +
+            "        }," +
+            "        \"nds\": {" +
+            "            \"exposed\": true" +
+            "        }," +
+            "        \"rms\": {" +
+            "            \"exposed\": true" +
+            "        }," +
+            "        \"mms\": {" +
+            "            \"exposed\": true" +
+            "        }" +
+            "    }" +
+            "}";
+
 
     @Test
     public void testRegister() throws Exception {
 
-        String data = "{\n" +
-                "\t\"guid\": \"3c9bfd93ab9a6e2ed501fc583685088cca66bac2\",\n" +
-                "\t\"hostname\": \"dyn-209-236.cs.st-andrews.ac.uk\",\n" +
-                "\t\"port\": 8080,\n" +
-                "\t\"roles\": {\n" +
-                "\t\t\"agent\": true,\n" +
-                "\t\t\"storage\": true\n" +
-                "\t}\n" +
+        String data = "" +
+                "{" +
+                "    \"guid\": \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
+                "    \"hostname\": \"Simones-MacBook-Pro.local\"," +
+                "    \"port\": 8080," +
+                "    \"services\": {" +
+                "        \"storage\": {" +
+                "            \"exposed\": true" +
+                "        }," +
+                "        \"cms\": {" +
+                "            \"exposed\": true" +
+                "        }," +
+                "        \"dds\": {" +
+                "            \"exposed\": true" +
+                "        }," +
+                "        \"nds\": {" +
+                "            \"exposed\": true" +
+                "        }," +
+                "        \"rms\": {" +
+                "            \"exposed\": true" +
+                "        }," +
+                "        \"mms\": {" +
+                "            \"exposed\": true" +
+                "        }" +
+                "    }" +
                 "}";
 
         Response response = target("/nds/register")

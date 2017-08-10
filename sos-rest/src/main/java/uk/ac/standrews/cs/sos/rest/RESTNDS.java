@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.sos.RESTConfig;
 import uk.ac.standrews.cs.sos.bindings.NDSNode;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
+import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.json.model.NodeModel;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -32,15 +32,15 @@ public class RESTNDS {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response register(NodeModel node) {
+    public Response register(SOSNode node) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /nds/register");
 
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 
         try {
-            Node registerNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on configuration
-            if (registerNode != null) {
-                return HTTPResponses.OK(registerNode.toString());
+            Node registeredNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on configuration
+            if (registeredNode != null) {
+                return HTTPResponses.OK(registeredNode.toString());
             } else {
                 return HTTPResponses.INTERNAL_SERVER();
             }

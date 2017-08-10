@@ -34,6 +34,7 @@ public class SettingsConfiguration {
         try {
             node = JSONHelper.JsonObjMapper().readTree(file);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new ConfigurationException("Unable to read configuration properly");
         }
     }

@@ -1,12 +1,20 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
+import uk.ac.standrews.cs.sos.json.SOSNodeDeserializer;
+import uk.ac.standrews.cs.sos.json.SOSNodeSerializer;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,6 +24,8 @@ import java.util.Objects;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = SOSNodeSerializer.class)
+@JsonDeserialize(using = SOSNodeDeserializer.class)
 public class SOSNode implements Node {
 
     private IGUID nodeGUID;
@@ -149,31 +159,16 @@ public class SOSNode implements Node {
         return DB_is_rms;
     }
 
-    // TODO - use json-deser via jackson
     @Override
     public String toString() {
-        String json = "{ ";
-        {
-            json += "\"guid\" : \"" + getNodeGUID() + "\", ";
-            json += "\"hostname\" : \"" + getHostAddress().getHostName() + "\", ";
-            json += "\"port\" : " + getHostAddress().getPort() + ", ";
-
-            json += "\"roles\" : ";
-            json += "{";
-            {
-                json += "\"agent\" : " + isAgent() + ", ";
-                json += "\"storage\" : " + isStorage() + ", ";
-                json += "\"dds\" : " + isDDS() + ", ";
-                json += "\"nds\" : " + isNDS() + ", ";
-                json += "\"mms\" : " + isMMS() + ", ";
-                json += "\"cms\" : " + isCMS() + ", ";
-                json += "\"rms\" : " + isRMS();
-            }
-            json += "}";
+        try {
+            return JSONHelper.JsonObjMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for node" + this.getNodeGUID().toShortString());
+            return "";
         }
-        json += " }";
 
-        return json;
     }
 
     @Override

@@ -47,4 +47,18 @@ public class JSONConstants {
     public static final String KEY_NAME = "Name";
     public static final String KEY_SIGNATURE_CERTIFICATE = "Certificate";
     public static final String KEY_PUBLIC_KEY = "PublicKey";
+
+    // Node
+    public static final String KEY_NODE_GUID = "guid";
+    public static final String KEY_NODE_HOSTNAME = "hostname";
+    public static final String KEY_NODE_PORT = "port";
+    public static final String KEY_NODE_SERVICES = "services";
+    public static final String KEY_NODE_SERVICES_STORAGE = "storage";
+    public static final String KEY_NODE_SERVICES_CMS = "cms";
+    public static final String KEY_NODE_SERVICES_DDS = "dds";
+    public static final String KEY_NODE_SERVICES_NDS = "nds";
+    public static final String KEY_NODE_SERVICES_RMS = "rms";
+    public static final String KEY_NODE_SERVICES_MMS = "mms";
+
+    public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 }

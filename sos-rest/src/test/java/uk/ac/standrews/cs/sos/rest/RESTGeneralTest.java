@@ -13,18 +13,30 @@ import static org.testng.Assert.assertEquals;
  */
 public class RESTGeneralTest extends CommonRESTTest {
 
-    private static final String TEST_NODE_INFO = "{\n" +
-            "  \"guid\": \"6b67f67f31908dd0e574699f163eda2cc117f7f4\",\n" +
-            "  \"hostname\": \"cs-cole1-024.cs.st-andrews.ac.uk\",\n" +
-            "  \"port\": 8080,\n" +
-            "  \"roles\": {\n" +
-            "    \"agent\": true,\n" +
-            "    \"storage\": true,\n" +
-            "    \"dds\": true,\n" +
-            "    \"nds\": true,\n" +
-            "    \"mms\": true,\n" +
-            "    \"cms\": true,\n" +
-            "    \"rms\": true\n" +
+    private static final String TEST_NODE_INFO = "" +
+            "{\n" +
+            "  \"guid\" : \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
+            /* "  \"hostname\" : \"Simones-MacBook-Pro.local\",\n" + */ // Ignoring the hostname, as this depends on the running machine
+            "  \"port\" : 8080,\n" +
+            "  \"services\" : {\n" +
+            "    \"storage\" : {\n" +
+            "      \"exposed\" : true\n" +
+            "    },\n" +
+            "    \"cms\" : {\n" +
+            "      \"exposed\" : true\n" +
+            "    },\n" +
+            "    \"dds\" : {\n" +
+            "      \"exposed\" : true\n" +
+            "    },\n" +
+            "    \"nds\" : {\n" +
+            "      \"exposed\" : true\n" +
+            "    },\n" +
+            "    \"rms\" : {\n" +
+            "      \"exposed\" : true\n" +
+            "    },\n" +
+            "    \"mms\" : {\n" +
+            "      \"exposed\" : true\n" +
+            "    }\n" +
             "  }\n" +
             "}";
 
@@ -34,7 +46,8 @@ public class RESTGeneralTest extends CommonRESTTest {
         Response response = target("/info").request().get();
         assertEquals(response.getStatus(), HTTPStatus.OK);
 
-        JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
+        System.out.println(response.readEntity(String.class));
+        JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), false);
 
         response.close();
     }
