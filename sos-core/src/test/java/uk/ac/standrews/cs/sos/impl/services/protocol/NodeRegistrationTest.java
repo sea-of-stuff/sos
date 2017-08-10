@@ -46,35 +46,57 @@ public class NodeRegistrationTest {
     private static final int MOCK_SERVER_PORT = 10007;
 
     private static final String TEST_DATA =
-            "{\n" +
-                    "\t\"guid\": \"" + localNodeGUID.toMultiHash() + "\",\n" +
-                    "\t\"hostname\": \"localhost\",\n" +
-                    "\t\"port\": 8080,\n" +
-                    "\t\"roles\": {\n" +
-                    "\t\t\"agent\": true,\n" +
-                    "\t\t\"storage\": true,\n" +
-                    "\t\t\"dds\": false,\n" +
-                    "\t\t\"nds\": false,\n" +
-                    "\t\t\"mms\": false,\n" +
-                    "\t\t\"cms\": false,\n" +
-                    "\t\t\"rms\": false\n" +
-                    "\t}\n" +
+            "{" +
+                    "    \"guid\": \"" + localNodeGUID.toMultiHash()  + "\"," +
+                    "    \"hostname\": \"localhost\"," +
+                    "    \"port\": 8080," +
+                    "    \"services\": {" +
+                    "        \"storage\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"cms\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"dds\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"nds\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"rms\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"mms\": {" +
+                    "            \"exposed\": true" +
+                    "        }" +
+                    "    }" +
                     "}";
 
     private static final String TEST_DATA_FAIL =
-            "{\n" +
-                    "\t\"guid\": \"" + localNodeGUID.toMultiHash() + "\",\n" +
-                    "\t\"hostname\": \"localhost\",\n" +
-                    "\t\"port\": 8081,\n" +
-                    "\t\"roles\": {\n" +
-                    "\t\t\"agent\": true,\n" +
-                    "\t\t\"storage\": true,\n" +
-                    "\t\t\"dds\": false,\n" +
-                    "\t\t\"nds\": false,\n" +
-                    "\t\t\"mms\": false,\n" +
-                    "\t\t\"cms\": false,\n" +
-                    "\t\t\"rms\": false\n" +
-                    "\t}\n" +
+            "{" +
+                    "    \"guid\": \"" + localNodeGUID.toMultiHash()  + "\"," +
+                    "    \"hostname\": \"localhost\"," +
+                    "    \"port\": 8081," +
+                    "    \"services\": {" +
+                    "        \"storage\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"cms\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"dds\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"nds\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"rms\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"mms\": {" +
+                    "            \"exposed\": true" +
+                    "        }" +
+                    "    }" +
                     "}";
 
 
