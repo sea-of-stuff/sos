@@ -28,6 +28,9 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 /**
+ * NOTE: when writing tests for contexts, make sure that you use different context name.
+ * The reason is that we use the same JVM instance across all tests, so we cannot "easily" unload classes loaded in other tests
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextLoaderTest extends SetUpTest {
@@ -47,7 +50,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\",\n" +
+                        "    \"name\": \"Test1\",\n" +
                         "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
                         "}";
 
@@ -56,7 +59,7 @@ public class ContextLoaderTest extends SetUpTest {
         ContextLoader.LoadContext(node);
 
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Context context = ContextLoader.Instance("Test", policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ContextLoader.Instance("Test1", policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertEquals(context.guid(), guid);
         assertTrue(context.getName().startsWith("Test_context"));
@@ -68,7 +71,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\",\n" +
+                        "    \"name\": \"Test2\",\n" +
                         "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
                         "}";
 
@@ -76,7 +79,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ContextLoader.Instance("Test2", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
@@ -87,7 +90,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\",\n" +
+                        "    \"name\": \"Test3\",\n" +
                         "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
                         "}";
 
@@ -95,7 +98,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ContextLoader.Instance("Test3", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
@@ -122,7 +125,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test\",\n" +
+                        "    \"name\": \"Test4\",\n" +
                         "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
                         "  \t\"policies\" : [\n" +
                         "\t    \"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\"\n" +
@@ -134,7 +137,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ContextLoader.Instance("Test4", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
@@ -152,7 +155,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "\t\"name\": \"Test\",\n" +
+                        "\t\"name\": \"Test5\",\n" +
                         "\t\"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
                         "\t\"policies\": [\n" +
                         "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\",\n" +
@@ -166,7 +169,7 @@ public class ContextLoaderTest extends SetUpTest {
 
         ContextLoader.LoadContext(node);
 
-        Context context = ContextLoader.Instance("Test", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ContextLoader.Instance("Test5", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
