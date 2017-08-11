@@ -117,12 +117,12 @@ public class AtomStorage {
 
     }
 
-    private StoredAtomInfo persistData(IGUID guid, AtomBuilder atomBuilder) throws DataStorageException {
+    private StoredAtomInfo persistData(IGUID tmpGUID, AtomBuilder atomBuilder) throws DataStorageException {
 
         if (atomBuilder.isData())
-            return persistData(guid, atomBuilder, atomBuilder.getData());
+            return persistData(tmpGUID, atomBuilder, atomBuilder.getData());
         else if (atomBuilder.isLocation())
-            return persistDataByLocation(guid, atomBuilder);
+            return persistDataByLocation(tmpGUID, atomBuilder);
         else
             throw new DataStorageException("AtomBuilder not set correctly");
     }
@@ -138,7 +138,7 @@ public class AtomStorage {
         }
     }
 
-    private StoredAtomInfo persistData(IGUID guid, AtomBuilder atomBuilder, Data data) throws DataStorageException {
+    private StoredAtomInfo persistData(IGUID tmpGUID, AtomBuilder atomBuilder, Data data) throws DataStorageException {
 
         try {
             StoredAtomInfo storedAtomInfo = new StoredAtomInfo();
@@ -146,11 +146,13 @@ public class AtomStorage {
             if (atomBuilder.getRole() != null) {
                 Pair<Data, String> encryptionResult = encrypt(data, atomBuilder.getRole());
                 data = encryptionResult.X();
+
+                storedAtomInfo.setRole(atomBuilder.getRole().guid());
                 storedAtomInfo.setEncryptedKey(encryptionResult.Y());
             }
 
             IDirectory dataDirectory = localStorage.getDataDirectory();
-            IFile file = localStorage.createFile(dataDirectory, guid.toMultiHash(), data);
+            IFile file = localStorage.createFile(dataDirectory, tmpGUID.toMultiHash(), data);
 
             file.persist();
 

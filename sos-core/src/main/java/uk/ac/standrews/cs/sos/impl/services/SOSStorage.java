@@ -33,7 +33,6 @@ import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.Pair;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
@@ -123,32 +122,6 @@ public class SOSStorage implements Storage {
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;
-    }
-    
-    // Secure an already existing atom manifest and its data
-    @Override
-    public SecureAtom secureAtom(Atom atom, Role role) throws StorageException, ManifestPersistException, ManifestNotMadeException {
-
-        if (atom.getType().equals(ManifestType.ATOM_PROTECTED))
-            return (SecureAtom) atom;
-
-        IGUID guid = atom.guid();
-        Set<LocationBundle> bundles = atom.getLocations();
-
-        try {
-            Pair<Data, String> retval = atomStorage.encrypt(atom.getData(), role);
-            HashMap<IGUID, String> rolesToKeys = new HashMap<>();
-            rolesToKeys.put(role.guid(), retval.Y());
-
-            SecureAtom manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
-            dataDiscoveryService.addManifest(manifest); // TODO - manifest should be updated differently?
-
-            return manifest;
-
-        } catch (ProtectionException | IOException e) {
-            throw new ManifestNotMadeException("Unable to protect existing atom with guid " + guid.toShortString());
-        }
-
     }
 
     @Override

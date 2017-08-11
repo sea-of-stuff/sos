@@ -43,8 +43,8 @@ public class SOSDistribution {
             scp.setSsh(node.getSsh());
             scp.connect();
 
-            scp.deleteFile(REMOTE_SOS_JAR_PATH);
-            scp.deleteFile(REMOTE_SOS_CONFIGURATION_PATH);
+            // scp.deleteFile(REMOTE_SOS_JAR_PATH);
+            // scp.deleteFile(REMOTE_SOS_CONFIGURATION_PATH);
             scp.deleteFile(REMOTE_SOS_OUT_FILE);
             scp.deleteFile(REMOTE_SOS_PID_FILE);
 

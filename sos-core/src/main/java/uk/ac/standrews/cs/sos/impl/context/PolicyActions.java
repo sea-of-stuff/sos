@@ -111,7 +111,8 @@ public class PolicyActions {
      */
     public SecureAtom protect(Atom atom, Role role) throws ManifestPersistException, StorageException, ManifestNotMadeException {
 
-        return storage.secureAtom(atom, role);
+        return null;
+        //return storage.secureAtom(atom, role);
     }
 
     /**
