@@ -4,6 +4,8 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
@@ -11,6 +13,8 @@ import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.tasks.CheckReplica;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
@@ -81,20 +85,22 @@ public class PolicyActions {
 
     public int numberOfReplicas(NodesCollection codomain, IGUID guid) {
 
-        // TODO - contact DDS/Storage?
-        return -1;
+        CheckReplica checkReplica = new CheckReplica(codomain, guid);
+        TasksQueue.instance().performSyncTask(checkReplica);
+
+        return checkReplica.getNumberOfReplicas();
     }
 
-    public Data getData(NodesCollection codomain, IGUID guid) {
+    public Data getData(NodesCollection codomain, IGUID guid) throws AtomNotFoundException {
 
         // Check DDS, Storage restricting the request with the codomain
-        return null;
+        // TODO Restrict by codomain
+        return storage.getAtomContent(guid);
     }
 
-    public Manifest getManifest(NodesCollection codomain, IGUID guid) {
+    public Manifest getManifest(NodesCollection codomain, IGUID guid) throws ManifestNotFoundException {
 
-        // See getData()
-        return null;
+        return dataDiscoveryService.getManifest(codomain, guid);
     }
 
     /**
@@ -118,7 +124,6 @@ public class PolicyActions {
      * @param role
      */
     public void unprotect(SecureManifest manifest, Role role) {
-
 
         // TODO - replace encrypted data/manifest with the unencrypted one
     }

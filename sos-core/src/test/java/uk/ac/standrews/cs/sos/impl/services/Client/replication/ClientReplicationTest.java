@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.services.Agent;
 
@@ -56,8 +55,7 @@ public class ClientReplicationTest extends SetUpTest {
                         response()
                                 .withStatusCode(201)
                                 .withBody(
-                                        "{\n" +
-                                                "    \"" + SOSConstants.MANIFEST + "\" : \n" +
+
                                                 "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
                                                 "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
@@ -68,8 +66,7 @@ public class ClientReplicationTest extends SetUpTest {
                                                 "                \"location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
                                                 "            } \n" +
                                                 "        ]\n" +
-                                                "    }\n" +
-                                                "}"
+                                                "    }\n"
                                 )
                 );
 
@@ -87,8 +84,11 @@ public class ClientReplicationTest extends SetUpTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws InterruptedException {
         mockServer.stop();
+
+        // Let the mock server stop cleanly
+        Thread.sleep(2000);
     }
 
     @Override

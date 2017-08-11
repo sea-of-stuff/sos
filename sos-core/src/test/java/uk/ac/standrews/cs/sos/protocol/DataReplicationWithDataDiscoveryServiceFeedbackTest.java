@@ -122,7 +122,8 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
         mockServer.stop();
     }
 
-    @Test
+    // TODO - re-enable test
+    @Test (enabled = false)
     public void registeringNDSFeedbackTest() throws GUIDGenerationException, InterruptedException, SOSProtocolException, NodeRegistrationException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
