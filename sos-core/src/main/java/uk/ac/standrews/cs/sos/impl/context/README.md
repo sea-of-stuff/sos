@@ -1,6 +1,5 @@
 # Examples of Contexts as JSON strings
 
-
 ## With Predicate
 
 ```

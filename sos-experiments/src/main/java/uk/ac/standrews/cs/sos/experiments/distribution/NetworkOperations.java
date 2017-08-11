@@ -82,7 +82,10 @@ public class NetworkOperations {
     public void sendFile(String lfile, String rfile) throws NetworkException {
         System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
 
-        if (!new File(lfile).exists()) throw new NetworkException("The local file " + lfile + " does not exist.");
+        if (!new File(lfile).exists()) {
+            System.out.println("The local file " + lfile + " does not exist.");
+            throw new NetworkException();
+        }
 
         try {
             InputStream inputStream = new FileInputStream(new File(lfile));

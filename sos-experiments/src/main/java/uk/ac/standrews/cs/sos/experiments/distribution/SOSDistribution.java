@@ -35,7 +35,6 @@ public class SOSDistribution {
     }
 
     public static void undoDistribution(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
-
         System.out.println("UndoDistribution of the app at the remote nodes");
 
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
@@ -46,6 +45,8 @@ public class SOSDistribution {
 
             scp.deleteFile(REMOTE_SOS_JAR_PATH);
             scp.deleteFile(REMOTE_SOS_CONFIGURATION_PATH);
+            scp.deleteFile(REMOTE_SOS_OUT_FILE);
+            scp.deleteFile(REMOTE_SOS_PID_FILE);
 
             scp.disconnect();
         }
@@ -101,6 +102,7 @@ public class SOSDistribution {
 
     public static void runExperiment(ExperimentConfiguration configuration) {
 
+        // TODO
         // Run an experiment from a remote node
         // This will make a call to that node ExperimentManager.java
     }

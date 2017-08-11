@@ -6,10 +6,10 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.impl.manifests.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
@@ -109,10 +109,9 @@ public class PolicyActions {
      * @param atom
      * @param role
      */
-    public SecureAtomManifest protect(Atom atom, Role role) {
+    public SecureAtom protect(Atom atom, Role role) throws ManifestPersistException, StorageException, ManifestNotMadeException {
 
-        // TODO - encrypt data and generate secure atom manifest
-        return null;
+        return storage.secureAtom(atom, role);
     }
 
     /**
