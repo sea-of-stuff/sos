@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.services.protocol;
+package uk.ac.standrews.cs.sos.protocol;
 
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;

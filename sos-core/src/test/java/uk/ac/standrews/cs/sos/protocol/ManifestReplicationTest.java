@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.services.protocol;
+package uk.ac.standrews.cs.sos.protocol;
 
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
