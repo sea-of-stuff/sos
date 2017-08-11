@@ -176,3 +176,4 @@ experiments/plots
 experiments/processed
 sos-experiments/src/main/resources/output/
 *-hogun.json
+*-raspberry.json

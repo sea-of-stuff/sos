@@ -98,7 +98,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration-raspberry.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
@@ -108,7 +108,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
         experiment_pr_1.process();
 
-        chicShock.unShock();
-        chicShock.unChic();
+        // chicShock.unShock();
+        // chicShock.unChic();
     }
 }

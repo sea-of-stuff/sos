@@ -1,6 +1,9 @@
 package uk.ac.standrews.cs.sos.experiments.distribution;
 
 import com.jcraft.jsch.*;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 
 import java.io.*;
@@ -33,11 +36,11 @@ public class NetworkOperations {
 
         try {
             JSch jsch = new JSch();
-            if (!ssh.getKnown_hosts().isEmpty()) {
+            if (ssh.getKnown_hosts() != null && !ssh.getKnown_hosts().isEmpty()) {
                 jsch.setKnownHosts(ssh.getKnown_hosts());
             }
 
-            if (!ssh.getConfig().isEmpty()) {
+            if (ssh.getConfig() != null && !ssh.getConfig().isEmpty()) {
                 ConfigRepository configRepository = com.jcraft.jsch.OpenSSHConfig.parseFile(ssh.getConfig());
                 jsch.setConfigRepository(configRepository);
             }
@@ -82,13 +85,27 @@ public class NetworkOperations {
         if (!new File(lfile).exists()) throw new NetworkException("The local file " + lfile + " does not exist.");
 
         try {
+            InputStream inputStream = new FileInputStream(new File(lfile));
+            String lCheckum = GUIDFactory.generateGUID(ALGORITHM.SHA1, inputStream).toString();
+            String rChecksum = checkSum(rfile);
+
+            if (lCheckum.equals(rChecksum)) {
+                System.out.println("Remote file " + rfile + " and local file " + lfile + " have the same SHA1 checksum " + lCheckum);
+                System.out.println("File will not be sent to the node");
+                return;
+            }
+        } catch (FileNotFoundException | GUIDGenerationException e) {
+            throw new NetworkException();
+        }
+
+
+        try {
             // exec 'scp -t rfile' remotely
             boolean ptimestamp = false; // https://stackoverflow.com/questions/22226440/mtime-sec-is-not-present
             String command = "scp " + (ptimestamp ? "-p" : "") + " -t " + rfile;
             send(command, lfile, ptimestamp);
 
         } catch (JSchException | IOException e) {
-            e.printStackTrace();
             throw new NetworkException();
         }
     }
@@ -151,6 +168,25 @@ public class NetworkOperations {
         } catch (JSchException | IOException e) {
             throw new NetworkException();
         }
+    }
+
+    public String checkSum(String rfile) throws NetworkException {
+        System.out.println("NETWORK - Remote check sum for remote file " + rfile);
+
+        try {
+            String command = "sha1sum " + rfile;
+            String checksum = exec(command);
+
+            if (checksum != null && !checksum.isEmpty()) {
+                return checksum.split(" ")[0];
+            } else {
+                return "";
+            }
+
+        } catch (JSchException | IOException e) {
+            throw new NetworkException();
+        }
+
     }
 
     private void send(String command, String lfile, boolean ptimestamp) throws IOException, JSchException {
@@ -321,26 +357,28 @@ public class NetworkOperations {
         channel.disconnect();
     }
 
-    private void exec(String command) throws IOException, JSchException {
+    private String exec(String command) throws IOException, JSchException {
         System.out.println("Executing command: " + command);
 
         Channel channel = session.openChannel(EXEC_CHANNEL);
         ((ChannelExec) channel).setCommand(command);
-
         channel.setInputStream(null);
-
         ((ChannelExec)channel).setErrStream(System.err);
-
         InputStream in=channel.getInputStream();
 
         channel.connect();
+
+        String retval = "";
 
         byte[] tmp=new byte[BUFFER_SIZE];
         while(true){
             while(in.available()>0){
                 int i=in.read(tmp, 0, BUFFER_SIZE);
                 if(i<0)break;
-                System.out.print(new String(tmp, 0, i));
+
+                String out = new String(tmp, 0, i);
+                retval += out;
+                System.out.print(out);
             }
             if(channel.isClosed()){
                 if(in.available()>0) continue;
@@ -351,6 +389,8 @@ public class NetworkOperations {
         }
 
         channel.disconnect();
+
+        return retval;
     }
 
     private int checkAck(InputStream in) throws IOException{

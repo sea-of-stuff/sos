@@ -66,7 +66,7 @@ public class SOSContextService implements ContextService {
 
     // The inMemoryCache keeps the context objects for this node in memory.
     private ContextsCacheImpl inMemoryCache;
-    private ContextsContents contextsContents; // TODO - rename to something more meaninful?
+    private ContextsContents contextsContents; // TODO - rename to something more meaningful?
 
     // TODO - store contexts definitions in local storage
 
@@ -95,7 +95,7 @@ public class SOSContextService implements ContextService {
 
 
         try {
-            ContextLoader.LoadMultipleContexts("PATH TO CONTEXTS");
+            ContextLoader.LoadMultipleContexts("PATH TO CONTEXTS"); // TODO - path from settings
             // TODO - make instances for all loaded contexts
             // TODO - need to save GUIDs back to contexts (this is simply part of the JSON)
 
