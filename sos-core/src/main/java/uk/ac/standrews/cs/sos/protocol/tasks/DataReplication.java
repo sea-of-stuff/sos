@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -36,9 +35,26 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * The DataReplication task, as the name suggests, replicates a data to other nodes.
+ * The DataReplication task, as the name suggests, replicates data to other nodes.
  * The data can be replicated only to Storage nodes.
  * In doing the replication the caller MUST also specify a wished replication factor for the data.
+ *
+ *
+ * Input for the DataReplication task:
+ * - data to be replicated
+ * - list of nodes where the data CAN be replicated
+ * - replication factor to satisfy
+ *
+ * Additionally, the task needs access to the following SOS local services:
+ * - storage
+ * - node discovery
+ * - data discovery
+ *
+ *
+ * When data is replicated successfully to a node
+ * - the storage service is informed about the new location for the data
+ * -
+ *
  *
  * If the data is successfully replicated to a Storage node:
  * - TODO - write down how the internal data structures change
@@ -91,6 +107,7 @@ public class DataReplication extends Task {
 
                 Node node = nodes.next();
                 if (node.isStorage()) {
+
                     try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
                         boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage, nodeDiscoveryService, dataDiscoveryService);
 
@@ -101,6 +118,7 @@ public class DataReplication extends Task {
                     } catch (IOException e) {
                         SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
                     }
+
                 }
             }
 
@@ -111,6 +129,7 @@ public class DataReplication extends Task {
 
     /**
      * Transfer a stream of data to a given node and update this node state
+     *
      * @param data
      * @param node
      * @param storage
@@ -122,43 +141,39 @@ public class DataReplication extends Task {
                                                           NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
-        Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>>> tuple;
+        Pair<IGUID, Set<LocationBundle>> tuple;
         try {
             tuple = transferDataRequest(data, node);
+            SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
+
         } catch (SOSProtocolException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
             return false;
         }
 
-        if (tuple == null) {
-            SOS_LOG.log(LEVEL.ERROR, "Error while trasnfering data to other nodes");
-            return false;
-        }
 
-        SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
-        for(LocationBundle locationBundle:tuple.Y().X()) {
+        for(LocationBundle locationBundle:tuple.Y()) {
             storage.addLocation(tuple.X(), locationBundle);
         }
 
-        for(Node ddsNode:tuple.Y().Y()) {
-            try {
-                SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
-                nodeDiscoveryService.registerNode(ddsNode, true);
-            } catch (NodeRegistrationException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
-            }
-        }
-
-        for(Node ddsNode:tuple.Y().Y()) {
-            dataDiscoveryService.addManifestDDSMapping(tuple.X(), ddsNode.getNodeGUID());
-        }
+        // TODO - where is the atom manifest stored?
+//        for(Node ddsNode:tuple.Y().Y()) {
+//            try {
+//                SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
+//                nodeDiscoveryService.registerNode(ddsNode, true);
+//            } catch (NodeRegistrationException e) {
+//                SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
+//            }
+//        }
+//
+//        for(Node ddsNode:tuple.Y().Y()) {
+//            dataDiscoveryService.addManifestDDSMapping(tuple.X(), ddsNode.getNodeGUID());
+//        }
 
         return true;
     }
 
-    private static Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
-
-        Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > retval;
+    private static Pair<IGUID, Set<LocationBundle>> transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
@@ -166,15 +181,15 @@ public class DataReplication extends Task {
             request.setBody(data);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            retval = parseResponse(response);
+            return parseResponse(response);
+
         } catch (IOException | SOSURLException e) {
             throw new SOSProtocolException("Unable to transfer DATA", e);
         }
 
-        return retval;
     }
 
-    private static Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > parseResponse(Response response) throws SOSProtocolException {
+    private static Pair<IGUID, Set<LocationBundle>> parseResponse(Response response) throws SOSProtocolException {
 
         if (response.getCode() != HTTPStatus.CREATED) {
 
@@ -190,18 +205,12 @@ public class DataReplication extends Task {
 
         try (InputStream body = response.getBody()) {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-            JsonNode manifestNode = jsonNode.get(SOSConstants.MANIFEST);
-            JsonNode ddsInfo = jsonNode.has(SOSConstants.DDD_INFO) ? jsonNode.get(SOSConstants.DDD_INFO) : null;
 
-            Pair<IGUID, Set<LocationBundle>> manifestNodeInfo = getManifestNode(manifestNode);
-            Set<Node> ddsNodes = getDDSInfoFeedback(ddsInfo);
+            return getManifestNode(jsonNode);
 
-            retval = new Pair<>(manifestNodeInfo.X(), new Pair<>(manifestNodeInfo.Y(), ddsNodes));
         } catch (IOException | GUIDGenerationException e) {
             throw new SOSProtocolException("Unable to parse response from slave replication node", e);
         }
-
-        return retval;
     }
 
     private static Pair<IGUID, Set<LocationBundle>> getManifestNode(JsonNode manifestNode) throws GUIDGenerationException {

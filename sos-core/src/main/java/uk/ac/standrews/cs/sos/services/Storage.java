@@ -70,6 +70,7 @@ public interface Storage {
      */
     Data getAtomContent(IGUID guid) throws AtomNotFoundException;
 
+    // TODO - does this defeat the purpose of locations in atom manifests?
     void addLocation(IGUID guid, LocationBundle locationBundle);
 
     Iterator<LocationBundle> findLocations(IGUID guid);

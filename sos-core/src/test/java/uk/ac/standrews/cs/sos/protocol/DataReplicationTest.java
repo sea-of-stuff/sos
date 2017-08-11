@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
@@ -82,20 +81,17 @@ public class DataReplicationTest extends SetUpTest {
                         response()
                                 .withStatusCode(201)
                                 .withBody(
-                                        "{\n" +
-                                        "    \"" + SOSConstants.MANIFEST + "\" : \n" +
                                         "    {\n" +
-                                        "        \"Type\" : \"Atom\",\n" +
-                                        "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
-                                        "        \"Locations\" : \n" +
-                                        "        [\n" +
-                                        "              {\n" +
-                                        "                \"type\" : \"persistent\",\n" +
-                                        "                \"location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
-                                        "            } \n" +
-                                        "        ]\n" +
-                                        "    }\n" +
-                                        "}"
+                                                "        \"Type\" : \"Atom\",\n" +
+                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"Locations\" : \n" +
+                                                "        [\n" +
+                                                "              {\n" +
+                                                "                \"type\" : \"persistent\",\n" +
+                                                "                \"location\" : \"sos://" + NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
+                                                "            } \n" +
+                                                "        ]\n" +
+                                                "    }\n"
                                 )
                 );
 
@@ -112,9 +108,7 @@ public class DataReplicationTest extends SetUpTest {
                         response()
                                 .withStatusCode(201)
                                 .withBody(
-                                        "{\n" +
-                                                "    \"" + SOSConstants.MANIFEST + "\" : \n" +
-                                                "    {\n" +
+                                        "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
                                                 "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
@@ -124,8 +118,7 @@ public class DataReplicationTest extends SetUpTest {
                                                 "                \"location\" : \"sos://" + TWIN_NODE_ID + "/" + testGUID.toMultiHash() + "\"\n" +
                                                 "            } \n" +
                                                 "        ]\n" +
-                                                "    }\n" +
-                                                "}"
+                                                "    }\n"
                                 )
                 );
 
@@ -136,9 +129,12 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown() throws InterruptedException {
         mockServer.stop();
         mockServerTwin.stop();
+
+        // Let the mockServer stop cleanly (it takes some time)
+        Thread.sleep(5000);
     }
 
     @Test
