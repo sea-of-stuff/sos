@@ -15,7 +15,8 @@
 					"host": "sic2.host.cs.st-andrews.ac.uk",
 					"user": "sic2",
 					"private_key": "/Users/sic2/.ssh/id_rsa",
-					"known_hosts": "/Users/sic2/.ssh/known_hosts"
+					"known_hosts": "/Users/sic2/.ssh/known_hosts",
+					"passphrase" : "PASSPHRASE"
 				},
 				"configuration" : "PATH TO CONFIG FILE",
 				"behaviour": {

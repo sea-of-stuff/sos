@@ -108,7 +108,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
         experiment_pr_1.process();
 
-        // chicShock.unShock();
-        // chicShock.unChic();
+        chicShock.unShock();
+        chicShock.unChic();
     }
 }
