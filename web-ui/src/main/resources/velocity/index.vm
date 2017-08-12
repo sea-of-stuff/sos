@@ -35,7 +35,6 @@
         }
 
 
-
         /* The total progress gets shown by event listeners */
         #total-progress {
             opacity: 0;

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.web.home;
 
+import org.apache.xmlbeans.impl.util.Base64;
 import spark.Request;
 import spark.Response;
 import uk.ac.standrews.cs.castore.data.Data;
@@ -8,14 +9,17 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -33,7 +37,6 @@ public class WHome {
         // TODO - show node configuration and stats?
 
         Map<String, Object> model = new HashMap<>();
-        // model.put("assets",sos.getDDS().getAllAssets());
 
         Set<Map<String, Object> > assets = new LinkedHashSet<>();
 
@@ -48,7 +51,33 @@ public class WHome {
                 if (manifest.getType().equals(ManifestType.ATOM)) {
                     Data data = sos.getStorage().getAtomContent(manifest.guid());
 
-                    String outputData = (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + ".... OTHER DATA FOLLOWING" : data.toString());
+                    String type = "Raw";
+                    try {
+                        if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
+                            Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                            type = metadata.getPropertyAsString("Content-Type");
+                        }
+                    } catch (MetadataNotFoundException ignored) { }
+
+                    String outputData = "Cannot render";
+                    switch (type) {
+                        case "Raw":
+                        case "application/octet-stream":
+                        case "text/plain":
+                        case "text/plain; charset=ISO-8859-1":
+                            outputData = (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + ".... OTHER DATA FOLLOWING" : data.toString());
+                            break;
+                        case "image/png":
+                        case "image/jpeg":
+                        case "image/jpg":
+                        case "image/gif":
+                            byte b[] = data.getState();
+                            byte[] encodeBase64 = Base64.encode(b);
+                            String encodedData = new String(encodeBase64, StandardCharsets.UTF_8);
+                            outputData = "<img style=\"max-width:500px;\" src=\"data:" + type + ";base64," + encodedData + "\">";
+                            break;
+                    }
+
                     versionModel.put("data", outputData);
                 }
 
@@ -56,9 +85,7 @@ public class WHome {
                 versionModel.put("version", version.getVersionGUID());
                 versionModel.put("content", version.getContentGUID());
 
-            } catch (ManifestNotFoundException | HEADNotFoundException e) {
-                e.printStackTrace();
-            } catch (AtomNotFoundException e) {
+            } catch (ManifestNotFoundException | HEADNotFoundException | AtomNotFoundException e) {
                 e.printStackTrace();
             }
 

@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -122,12 +123,19 @@ public class SOSAgent implements Agent {
         try {
 
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
+            Metadata metadata = addMetadata(atom.getData());
+
             versionBuilder.setContent(atom.guid());
+            versionBuilder.setMetadata(metadata);
 
             return addVersion(versionBuilder);
         } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
             e.printStackTrace();
             // TODO - throw proper exception
+        } catch (MetadataException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return null;
