@@ -23,6 +23,7 @@ public class SOS_LOG {
         log.disable("org.apache.http.wire");
         log.disable("org.eclipse.jetty");
         log.disable("o.a.h");
+        log.disable("spark");
     }
 
     public static void log(LEVEL level, String message) {

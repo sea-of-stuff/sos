@@ -10,14 +10,10 @@
 <div id="header"></div>
 <div class="container-fluid">
 
-    <ul>
     #foreach($node in $nodes)
-        <li>
-            <pre style="white-space: pre-wrap; word-wrap: break-word;">$node.toString()</pre>
-        </li>
-
+        <pre style="white-space: pre-wrap; word-wrap: break-word;">$node.toString()</pre>
+        <hr>
     #end
-    </ul>
 
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

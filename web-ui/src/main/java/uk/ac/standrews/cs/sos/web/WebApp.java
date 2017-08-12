@@ -27,6 +27,8 @@ import static uk.ac.standrews.cs.sos.RESTConfig.sos;
 
 public class WebApp {
 
+    public static final int DATA_LIMIT = 256;
+
     public static void RUN(SOSLocalNode sos, IFileSystem fileSystem, int port) {
 
         SOS_LOG.log(LEVEL.INFO, "Starting WEB APP on port: " + port);
@@ -49,6 +51,7 @@ public class WebApp {
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
         get("/", (req, res) -> WHome.Render(sos));
+        post("/atom", (req, res) -> WHome.UploadAtom(req, res, sos));
 
         get("/tree", (req, res) -> WTree.Render(sos, fileSystem));
         get("/nodes", (req, res) -> WNodes.Render(sos));

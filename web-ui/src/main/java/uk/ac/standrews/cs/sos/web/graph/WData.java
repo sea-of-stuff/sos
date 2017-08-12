@@ -16,6 +16,8 @@ import uk.ac.standrews.cs.utilities.Pair;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static uk.ac.standrews.cs.sos.web.WebApp.DATA_LIMIT;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -41,7 +43,7 @@ public class WData {
             case "text/plain":
             case "text/plain; charset=ISO-8859-1":
                 return "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">" +
-                        (data.Y().length() > 1024 ? data.Y().substring(0, 1024) + ".... OTHER DATA FOLLOWING" : data.Y()) +
+                        (data.Y().length() > DATA_LIMIT ? data.Y().substring(0, DATA_LIMIT) + ".... OTHER DATA FOLLOWING" : data.Y()) +
                         "</pre>";
             case "image/png":
             case "image/jpeg":

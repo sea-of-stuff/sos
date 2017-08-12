@@ -96,7 +96,7 @@ public interface Agent {
     /**
      * Generate and add metadata for this atom
      *
-     * @param inputStream used to generate the metadata
+     * @param data used to generate the metadata
      * @return the metadata generated
      * @throws MetadataException if the metadata could not be generated
      */
