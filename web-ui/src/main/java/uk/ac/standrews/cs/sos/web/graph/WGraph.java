@@ -147,7 +147,7 @@ public class WGraph {
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toMultiHash());
-        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 5));
+        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 15));
         objectNode.put("group", manifest.getType().toString());
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
@@ -160,7 +160,7 @@ public class WGraph {
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toMultiHash());
-        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 5));
+        objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 15));
         objectNode.put("group", group);
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));

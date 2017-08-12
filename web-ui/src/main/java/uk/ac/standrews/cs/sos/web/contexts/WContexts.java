@@ -6,6 +6,7 @@ import spark.Request;
 import spark.Response;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -14,6 +15,7 @@ import uk.ac.standrews.cs.sos.web.VelocityUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -32,7 +34,10 @@ public class WContexts {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         Map<String, Object> model = new HashMap<>();
-        model.put("contents", sos.getCMS().getContents(guid));
+
+        model.put("contents", sos.getCMS().getContents(guid).stream()
+                .map(IKey::toMultiHash)
+                .collect(Collectors.toSet()));
 
         return JSONHelper.JsonObjMapper().writeValueAsString(model);
     }

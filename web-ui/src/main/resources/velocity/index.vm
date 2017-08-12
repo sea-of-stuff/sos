@@ -5,15 +5,17 @@
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" />
 </head>
 <body>
 <div id="header"></div>
 <div class="container-fluid">
 
-    <form action="/data" method="POST" enctype="multipart/form-data">
-        <input type="file" name="atom" accept="*/*">
-        <input type="submit">
+    <form action="/data" method="POST" enctype="multipart/form-data"
+          class="dropzone" id="my-awesome-dropzone">
+        <input type="file" name="file" />
     </form>
+    <button id="upload" class="btn btn-success">Upload</button>
 
     <br>
     <h2>SOS operations</h2>
@@ -25,14 +27,14 @@
         #foreach($version in $assets)
             <div class="card">
                 <div class="card-block">
-                    <h4 class="card-title">Version: $version.VersionGUID.toString().substring(0, 5)</h4>
+                    <h4 class="card-title">Version: TODO</h4>
                     <p class="card-text">
                         <ul>
                             <li>
-                                <strong>Invariant</strong> $version.InvariantGUID.toString().substring(0, 5)
+                                <strong>Invariant</strong> $version.toMultiHash()
                             </li>
                             <li>
-                                <strong>Content</strong> $version.ContentGUID.toString().substring(0, 5)
+                                <strong>Content</strong> TODO
                             </li>
                         </ul>
                     </p>
@@ -45,6 +47,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
 
 <script type="text/javascript">
     $(function(){

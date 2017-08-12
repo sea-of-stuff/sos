@@ -26,7 +26,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-4">
-            <h4>Node GUID (short): ${node_id.substring(0, 6)}</h4>
+            <h4>Node GUID (short): ${node_id.substring(0, 15)}</h4>
         </div>
         <div class="col-2">
             <button id="verify" type="button" class="btn btn-primary">Verify</button>

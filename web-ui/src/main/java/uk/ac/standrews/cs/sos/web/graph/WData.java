@@ -41,7 +41,7 @@ public class WData {
             case "text/plain":
             case "text/plain; charset=ISO-8859-1":
                 return "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">" +
-                        (data.Y().length() > 140 ? data.Y().substring(0, 140) + ".... OTHER DATA FOLLOWING" : data.Y()) +
+                        (data.Y().length() > 1024 ? data.Y().substring(0, 1024) + ".... OTHER DATA FOLLOWING" : data.Y()) +
                         "</pre>";
             case "image/png":
             case "image/jpeg":
