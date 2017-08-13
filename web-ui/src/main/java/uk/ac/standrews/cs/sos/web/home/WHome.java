@@ -90,7 +90,6 @@ public class WHome {
             }
 
             assets.add(versionModel);
-
         }
 
         model.put("assets", assets);

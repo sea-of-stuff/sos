@@ -36,7 +36,7 @@ public class WebApp {
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         port(port);
 
-        staticFiles.location("/public");
+        staticFiles.location("/velocity");
         staticFiles.expireTime(0L);
 
         // Set up before-filters (called before each get/post)
