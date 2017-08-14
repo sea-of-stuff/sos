@@ -5,6 +5,8 @@
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 
 </head>
 <body>
@@ -124,6 +126,7 @@
             success: function(data) {
                 console.log(data);
                 $('#preview').html(data);
+                hljs.highlightBlock($('#preview')[0]);
             },
             contentType: 'application/json'
         });
