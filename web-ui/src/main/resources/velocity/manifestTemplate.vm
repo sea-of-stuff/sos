@@ -2,9 +2,31 @@
 <div id="sos-graph"></div>
 <br>
 <h2>Manifest</h2>
+<div class="row">
+    <div class="col-6">
+        <button id="verify" type="button" class="btn btn-primary">Verify Signature</button>
+    </div>
+    <div class="col-6">
+        <select name="userGUID">
+            #foreach($role in $roles)
+                <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+            #end
+        </select>
+    </div>
+</div>
 <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
 <br>
 <h2>Data</h2>
+<div class="col-6">
+    <button id="verify" type="button" class="btn btn-primary">Verify Integrity</button>
+</div>
+<div class="col-6">
+    <select name="userGUID">
+        #foreach($role in $roles)
+            <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+        #end
+    </select>
+</div>
 <div id="data"></div>
 <br>
 <h2>Metadata</h2>

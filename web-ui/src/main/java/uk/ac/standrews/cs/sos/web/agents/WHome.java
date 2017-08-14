@@ -56,6 +56,7 @@ public class WHome {
         }
 
         model.put("assets", assets);
+        model.put("roles", sos.getRMS().getRoles());
 
         return VelocityUtils.RenderTemplate("velocity/index.vm", model);
     }

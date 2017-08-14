@@ -212,6 +212,7 @@ When a SOS node is instantiated, the following directory structure is created.
 
 ## Useful tools
 
+- Online JSON Linter (and more) - https://jsoncompare.com/#!/simple/
 - Online hex dump inspector - https://hexed.it/
 - File to SHA values - https://md5file.com/calculator
 

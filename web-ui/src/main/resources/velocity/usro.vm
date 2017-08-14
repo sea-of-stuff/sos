@@ -35,7 +35,6 @@
             #foreach($user in $users)
                 <option value=$user.guid().toMultiHash()>$user.getName() - $user.guid().toShortString()</option>
             #end
-
         </select>
         <input type="text" name="rolename" />
         <input type="submit" value="Submit">
