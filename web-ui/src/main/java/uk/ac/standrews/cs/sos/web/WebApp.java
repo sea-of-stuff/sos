@@ -46,6 +46,7 @@ public class WebApp {
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
         get("/", (req, res) -> WHome.Render(sos));
+        get("/settings", (req, res) -> WSettings.Render(sos));
         post("/atom", (req, res) -> WData.AddAtom(req, sos));
 
         get("/data/:id", (req, res) -> WData.Render(req, sos));

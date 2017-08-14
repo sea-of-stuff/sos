@@ -14,26 +14,21 @@
 <body>
 <div id="header"></div>
 
-<div class="row">
-    <div class="col-4">
-        <h4>Node GUID (short): ${node_id.substring(0, 15)}</h4>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            <h4>Local Node GUID: $node_id</h4>
+        </div>
     </div>
-    <div class="col-2">
-        <button id="verify" type="button" class="btn btn-primary">Verify</button>
-    </div>
-    <div class="col-2">
-        <pre id="verify-result" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
-    </div>
-</div>
+    <hr>
 
-<hr>
-
-<div class="row">
-    <div class="col-6">
-        <div id="jstree"></div>
-    </div>
-    <div class="col-6">
-        <div id="manifestTemplate"></div>
+    <div class="row">
+        <div class="col-6">
+            <div id="jstree"></div>
+        </div>
+        <div class="col-6">
+            <div id="manifestTemplate"></div>
+        </div>
     </div>
 </div>
 
@@ -44,6 +39,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/jstree.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
 
+<script src="js/sos.js"></script>
 <script>
     $(function(){
         $("#header").load("header.html");
@@ -66,55 +62,7 @@
                 $('#data').html(data);
             })
 
-            $.get("/graph/" + data.selected[0] , function(data) {
-                buildAndRenderGraph(data);
-            });
-
-            function buildAndRenderGraph(data) {
-                data = JSON.parse(data);
-                var nodes = new vis.DataSet(data['nodes']);
-                var edges = new vis.DataSet(data['edges']);
-
-                // create a network
-                var container = $('#sos-graph')[0];
-                var graphData = {
-                    nodes: nodes,
-                    edges: edges
-                };
-                var options = {
-                    layout: {
-                        improvedLayout:true
-                    }
-                };
-
-                var network = new vis.Network(container, graphData, options);
-
-                network.on("click", function (params) {
-                    id = params['nodes'][0];
-
-                    if (id.startsWith('DATA-')) {
-                        return;
-                    }
-
-                    $.get("/manifest/" + id , function(data) {
-                        $('#manifest').html(data);
-                    })
-
-                    $.get("/metadata/" + id , function(data) {
-                        $('#metadata').html(data);
-                    })
-
-                    $.get("/data/" + id , function(data) {
-                        $('#data').html(data);
-                    })
-
-                    $.get("/graph/" + id , function(data) {
-                        buildAndRenderGraph(data);
-                    });
-
-                });
-            }
-
+            evaluateGraph(data.selected[0]);
         });
 
     });

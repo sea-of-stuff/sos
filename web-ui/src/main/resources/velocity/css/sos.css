@@ -3,14 +3,6 @@
     height: 100%;
 }
 
-#sos-graph {
-    height: 1000px;
-    border: 1px solid lightgray;
-}
-#row-hidden {
-    height: 400px;
-}
-
 /* BOOTSTRAP OVERRIDES */
 .card-columns .card {
     display: inline-block

@@ -16,6 +16,7 @@ function evaluateGraph(id) {
             edges: edges
         };
         var options = {
+            height: '500px',
             layout: {
                 improvedLayout: true
             }
