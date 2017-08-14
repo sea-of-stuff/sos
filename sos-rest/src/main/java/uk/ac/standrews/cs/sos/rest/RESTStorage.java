@@ -75,14 +75,18 @@ public class RESTStorage {
      * @return Response to the HTTP request
      */
     @POST
-    @Path("/uri")
+    @Path("/uri/replicas/{replicas}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response postDataByLocation(final Location location) {
+    public Response postDataByLocation(final Location location, @PathParam("replicas") int replicas) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/uri");
 
         if (location == null) {
             return HTTPResponses.INTERNAL_SERVER();
+        }
+
+        if (replicas < 0 || replicas > 3 /* TODO - this should be based on some settings */) {
+            return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
         }
 
         Storage storage = RESTConfig.sos.getStorage();
@@ -107,26 +111,30 @@ public class RESTStorage {
      * @return the Response to the http request
      */
     @POST
-    @Path("/stream")
+    @Path("/stream/replicas/{replicas}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomStream(final InputStream inputStream) {
+    public Response addAtomStream(final InputStream inputStream, @PathParam("replicas") int replicas) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
+
+        if (replicas < 0 || replicas > 3 /* TODO - this should be based on some settings */) {
+            return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
+        }
 
         Storage storage = RESTConfig.sos.getStorage();
 
-        Atom atom;
         try {
             AtomBuilder builder = new AtomBuilder()
                     .setData(new InputStreamData(inputStream))
                     .setBundleType(BundleTypes.PERSISTENT);
-            atom = storage.addAtom(builder);
+            Atom atom = storage.addAtom(builder); // TODO - pass replication factor here
+
+            return HTTPResponses.CREATED(atom.toString());
 
         } catch (DataStorageException | ManifestPersistException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-        return HTTPResponses.CREATED(atom.toString());
     }
 
     @POST

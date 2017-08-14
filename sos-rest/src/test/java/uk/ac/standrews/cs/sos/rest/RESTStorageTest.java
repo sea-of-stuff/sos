@@ -78,7 +78,7 @@ public class RESTStorageTest extends CommonRESTTest {
 
         InputStream testData = HelperTest.StringToInputStream("data");
 
-        Response response = target("/storage/stream")
+        Response response = target("/storage/stream/replicas/0")
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
 
@@ -93,11 +93,11 @@ public class RESTStorageTest extends CommonRESTTest {
 
         InputStream testData = HelperTest.StringToInputStream("");
 
-        target("/storage/stream")
+        target("/storage/stream/replicas/0")
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
 
-        Response response = target("/storage/stream")
+        Response response = target("/storage/stream/replicas/0")
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
 
@@ -110,7 +110,7 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test (expectedExceptions = NullPointerException.class)
     public void testStoreNullInputStream() throws Exception {
 
-        target("/storage/stream")
+        target("/storage/stream/replicas/0")
                 .request()
                 .post(Entity.entity(null, MediaType.MULTIPART_FORM_DATA_TYPE));
     }
@@ -122,7 +122,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 "    \"location\" : \"http://httpbin.org/range/10\"\n" +
                 "}";
 
-        Response response = target("/storage/uri")
+        Response response = target("/storage/uri/replicas/0")
                 .request()
                 .post(Entity.json(data));
 
@@ -139,7 +139,7 @@ public class RESTStorageTest extends CommonRESTTest {
                 "    \"location\" : \"https://httpbin.org/range/10\"\n" +
                 "}";
 
-        Response response = target("/storage/uri")
+        Response response = target("/storage/uri/replicas/0")
                 .request()
                 .post(Entity.json(data));
 
@@ -147,6 +147,58 @@ public class RESTStorageTest extends CommonRESTTest {
         JSONAssert.assertEquals(TEST_HTTPS_BIN_ATOM_MANIFEST, response.readEntity(String.class), false);
 
         response.close();
+    }
+
+    @Test
+    public void negativeReplicasStream() throws Exception {
+
+        InputStream testData = HelperTest.StringToInputStream("data");
+
+        Response response = target("/storage/stream/replicas/-1")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void excessiveReplicasStream() throws Exception {
+
+        InputStream testData = HelperTest.StringToInputStream("data");
+
+        Response response = target("/storage/stream/replicas/100")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void negativeReplicasURI() throws Exception {
+
+        String data = "{\n" +
+                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
+                "}";
+
+        Response response = target("/storage/uri/replicas/-1")
+                .request()
+                .post(Entity.json(data));
+
+        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void excessiveReplicasURI() throws Exception {
+
+        String data = "{\n" +
+                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
+                "}";
+
+        Response response = target("/storage/uri/replicas/100")
+                .request()
+                .post(Entity.json(data));
+
+        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
 
 }
