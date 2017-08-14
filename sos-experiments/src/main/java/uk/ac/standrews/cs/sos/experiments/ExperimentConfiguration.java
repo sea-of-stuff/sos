@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.instrument.impl.Statistics;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import static uk.ac.standrews.cs.sos.experiments.KeyGenerator.pass;
 import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONFIGURATION_FOLDER;
 
 /**
@@ -236,7 +239,12 @@ public class ExperimentConfiguration {
                 }
 
                 public String getPassphrase() {
-                    return passphrase;
+
+                    try {
+                        return pass(passphrase);
+                    } catch (CryptoException | FileNotFoundException e) {
+                        return "INVALID";
+                    }
                 }
 
                 public void setPassphrase(String passphrase) {
@@ -252,7 +260,12 @@ public class ExperimentConfiguration {
                 }
 
                 public String getPassword() {
-                    return password;
+
+                    try {
+                        return pass(password);
+                    } catch (CryptoException | FileNotFoundException e) {
+                        return "INVALID";
+                    }
                 }
 
                 public void setPassword(String password) {

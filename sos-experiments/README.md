@@ -107,6 +107,36 @@ The user should have connected to the host via SSH at least once before being ab
     }
 ```
 
+### Passwords and Passphrases
+
+As you might have noticed, when specifying the SSH configuration for a node,
+you also need to provide the password/passphrase for the SSH connection.
+
+The passwords and passphrases in the configuration files must be encrypted using a symmetric key stored in `.key`
+
+The `KeyGenerator` utility can be used to generate such key and to generate the encrypted passkeys.
+
+#### Generating a symmetric key
+
+```
+$ run the main in uk.ac.standrews.cs.sos.experiments.KeyGenerator
+$ K to generate key and E to encrypt password/passphrase
+$ K
+$ cat .key
+$ Tcyaw+WWIDRp9HB66UbgbQ==
+```
+
+#### Generating the encrypted passkey
+
+```
+$ run the main in uk.ac.standrews.cs.sos.experiments.KeyGenerator
+$ K to generate key and E to encrypt password/passphrase
+$ E
+$ Input the password/passphrase
+$ ThisIsAWeakPassword
+$ Encrypted key is: a6B2FS3Lu7Gff8HJ3cS/nov3LDsE5b1yniBQs+Gb9eMU2/cIrvs5wWxeFI7U9GbQrCTaIpsS+lbQ+Ks3yVrJtA==
+```
+
 ### Example
 
 In the **Experiment_Scale_1** we bootstrap one local SOS node (running the experiment) and one remote SOS node.

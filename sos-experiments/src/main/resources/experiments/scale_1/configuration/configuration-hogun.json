@@ -1,0 +1,61 @@
+{
+  "experiment" : {
+    "name" : "Scale_1",
+    "description" : "Scale experiment. We run a local node and a few remote nodes.",
+    "setup" : {
+      "app" : "sos-app/target/sos-app.jar",
+      "iterations" : 10
+    },
+    "nodes" : [
+      {
+        "id" : 1,
+        "remote" : true,
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-10.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_10.json",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 1,
+        "remote" : true,
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-9.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_9.json",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 0,
+      "remote" : false,
+      "configurationfile" : "node_0.json"
+    },
+    "stats": {
+      "predicate": true,
+      "policies": false
+    }
+  }
+}

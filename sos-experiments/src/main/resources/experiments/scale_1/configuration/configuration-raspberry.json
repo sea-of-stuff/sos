@@ -12,12 +12,12 @@
         "remote" : true,
         "ssh" : {
           "type" : 0,
-          "host" : "cs-wifi-111.cs.st-andrews.ac.uk",
-          "user" : "lorna",
+          "host" : "192.168.0.7",
+          "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
-          "password" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRaEPMH9A2mbFN8mQT0AIiBD5SP97zM7pBeYuF4GqcpepA=="
+          "password": "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRaEF9oBgFnGNy9OqfnuZzM3"
         },
-        "configurationfile" : "node_1.json",
+        "configurationfile" : "node_1_raspberry.json",
         "behaviour": {
           "start": 0,
           "stop": -1,
@@ -32,8 +32,10 @@
       "configurationfile" : "node_0.json"
     },
     "stats": {
+      "experiment": true,
       "predicate": true,
-      "policies": false
+      "policies": true,
+      "checkPolicies": true
     }
   }
 }

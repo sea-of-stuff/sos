@@ -172,8 +172,7 @@ sos-core/dump.db
 sos-core/src/test/resources/*.conf
 
 # Experiments
+.key
 experiments/plots
 experiments/processed
 sos-experiments/src/main/resources/output/
-*-hogun.json
-*-raspberry.json

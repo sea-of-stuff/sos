@@ -61,11 +61,11 @@
       "port": 8082
     },
     "keys": {
-      "location": "/cs/scratch/sic2/sos/keys/"
+      "location": "/cs/scratch/sic2/hogun10/sos/keys/"
     },
     "store": {
       "type": "local",
-      "location": "/cs/scratch/sic2/sos/"
+      "location": "/cs/scratch/sic2/hogun10/sos/"
     },
     "global": {
       "ssl_trust_store" : "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts",
