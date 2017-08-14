@@ -27,6 +27,7 @@ function evaluateGraph(id) {
         network.on("click", function (params) {
             id = params['nodes'][0];
 
+            console.log("network id " + id);
             if (id.startsWith('DATA-')) {
                 return;
             }

@@ -1,21 +1,10 @@
 package uk.ac.standrews.cs.sos.web;
 
-import spark.Request;
-import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.agents.*;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static spark.Spark.*;
 import static uk.ac.standrews.cs.sos.RESTConfig.sos;
@@ -47,7 +36,8 @@ public class WebApp {
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
         get("/", (req, res) -> WHome.Render(sos));
         get("/settings", (req, res) -> WSettings.Render(sos));
-        post("/atom", (req, res) -> WData.AddAtom(req, sos));
+        post("/version", (req, res) -> WData.AddAtomVersion(req, sos));
+        post("/updateVersion/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.Render(req, sos));
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
@@ -68,8 +58,6 @@ public class WebApp {
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
 
         get("/verifySignature/:id", (req, res) -> WVerify.Render(req, sos)); // TODO - further testing
-
-        post("/data", (req, res) -> postData(req, sos));
     }
 
     private static void registerPostActionRoutes() {
@@ -78,16 +66,6 @@ public class WebApp {
                 res.body(WHome.Render(sos));
             }
         });
-    }
-
-    private static String postData(Request request, SOSLocalNode sos) throws IOException, ServletException, ManifestPersistException, DataStorageException {
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-
-        try (InputStream is = request.raw().getPart("atom").getInputStream()) {
-            AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(is));
-            Atom atom = sos.getAgent().addAtom(builder);
-        }
-        return "CreateFile uploaded";
     }
 
 }

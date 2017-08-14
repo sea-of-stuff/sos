@@ -18,8 +18,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-6">
-
+        <div class="col-6" id="uploadingZone">
             <div class="row">
                 <div class="col-6">
                     <div class="form-check">
@@ -54,6 +53,13 @@
                         #end
                     </select>
                 </div>
+            </div>
+
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <strong>Update</strong> SELECTED (see right pane)
+                </label>
             </div>
 
             <!-- The global file processing state -->
@@ -163,11 +169,11 @@
     var previewTemplate = previewNode.parentNode.innerHTML;
     previewNode.parentNode.removeChild(previewNode);
 
-    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-        url: "/atom", // Set the url
-        thumbnailWidth: 80,
-        thumbnailHeight: 80,
-        parallelUploads: 20,
+    var myDropzone = new Dropzone($('#uploadingZone')[0], { // Make the whole body a dropzone
+        url: "/version", // Set the url
+        thumbnailWidth: 100,
+        thumbnailHeight: 100,
+        parallelUploads: 5,
         previewTemplate: previewTemplate,
         autoQueue: false, // Make sure the files aren't queued until manually added
         previewsContainer: "#previews", // Define the container to display the previews

@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.web.agents;
 
 import org.apache.xmlbeans.impl.util.Base64;
 import spark.Request;
-import uk.ac.standrews.cs.castore.data.ByteData;
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -18,8 +18,13 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.web.WebApp.DATA_LIMIT;
 
@@ -28,7 +33,7 @@ import static uk.ac.standrews.cs.sos.web.WebApp.DATA_LIMIT;
  */
 public class WData {
 
-    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, IOException, MetadataNotFoundException, AtomNotFoundException {
+    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
@@ -46,39 +51,42 @@ public class WData {
         return "N/A";
     }
 
-    public static String AddAtom(Request request, SOSLocalNode sos) {
+    public static String AddAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException {
 
-        String contentType = request.headers("Content-Type");
-        String delimiter = "--" + contentType.substring(contentType.indexOf("boundary=") + "boundary=".length());
-        byte[] out = processPOSTData(request.bodyAsBytes(), delimiter);
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder().setData(new InputStreamData(is));
+            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
 
-        AtomBuilder atomBuilder = new AtomBuilder().setData(new ByteData(out));
-        VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
+            sos.getAgent().addData(versionBuilder);
+        }
 
-        sos.getAgent().addData(versionBuilder);
-
-        return "";
+        return "Atom Added";
     }
 
-    private static byte[] processPOSTData(byte[] data, String delimiter) {
+    public static Object UpdateAtomVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, IOException, ServletException, ManifestNotFoundException {
 
-        int bodyIndex = 0;
-        for(int i = 0; i < data.length; i++) {
-            // 13 --> \r
-            // 10 --> \n
-            if (data[i] == (byte) 13 && data[i+1] == (byte) 10 && data[i+2] == (byte) 13 && data[i+3] == (byte) 10) {
-                bodyIndex = i + 4;
-                break;
-            }
+
+
+        IGUID prev = GUIDFactory.recreateGUID(request.params("prev"));
+        Version version = (Version) sos.getDDS().getManifest(prev);
+
+        Set<IGUID> prevs = new LinkedHashSet<>();
+        prevs.add(prev);
+
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder().setData(new InputStreamData(is));
+            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder)
+                    .setInvariant(version.getInvariantGUID())
+                    .setPrevious(prevs);
+
+            sos.getAgent().addData(versionBuilder);
         }
 
-        int endDelimiterLength = 2 /* \r\n */ + ("--" + delimiter + "--").length();
-        byte[] out = new byte[data.length - bodyIndex - endDelimiterLength];
-        for(int i = bodyIndex, j = 0; j < out.length; i++, j++) {
-            out[j] = data[i];
-        }
-
-        return out;
+        return "Atom Added";
     }
 
     public static String GetData(SOSLocalNode sos, Version version, boolean thumbnail) throws AtomNotFoundException {
@@ -106,6 +114,7 @@ public class WData {
             case "multipart/appledouble":
             case "text/plain":
             case "text/plain; charset=ISO-8859-1":
+            case "text/plain; charset=UTF-8":
                 outputData = "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">";
                 outputData += (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + ".... OTHER DATA FOLLOWING" : data.toString());
                 outputData += "</pre>";
@@ -118,7 +127,7 @@ public class WData {
                 byte[] encodeBase64 = Base64.encode(b);
                 String encodedData = new String(encodeBase64, StandardCharsets.UTF_8);
 
-                int width = thumbnail ? 100 : 500;
+                int width = thumbnail ? 100 : 800;
                 outputData = "<img style=\"max-width:" + width+ "px;\" src=\"data:" + type + ";base64," + encodedData + "\">";
                 break;
         }
