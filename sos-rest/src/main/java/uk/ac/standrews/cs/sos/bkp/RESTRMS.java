@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest;
+package uk.ac.standrews.cs.sos.bkp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
