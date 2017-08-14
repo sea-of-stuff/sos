@@ -53,30 +53,72 @@ Example of contexts in JSON formats can be found [here](sos-core/src/main/java/u
 
 ### SOS Architecture
 
-- Services
+Each SOS node consists of a collection of services that manage specific aspects of the node itself and its behaviour.
+
+The services are:
+
+- agent
+- storage
+- data discovery
+- node discovery
+- metadata
+- user and role
+- context
+
+Each service, except for the agent one, can be exposed to the outside world by running a REST server.
+You should set the service to be exposed in the node configuration:
+
+```
+"services": {
+      "context": {
+        "exposed": false
+      },
+      "storage": {
+        "exposed": true
+      },
+      ...
+}
+```
+
+The SOS_APP (see the **sos-app** module) should be run with the following parameters: `java -jar sos.jar -c CONFIGURATION -j`,
+with the `-j` option enabling the Jetty REST server.
 
 
-## sos-rest
+## SOS Modules
+
+In this section we provide a brief insight to some of the modules of the SOS project.
+
+### sos-rest
 
 The sos-rest project defines the REST API. This is server-agnostic.
 We provide a server implementation on top of the jersey REST API (see the sos-rest-jetty module).
 
 
-## sos-filesystem
+### sos-filesystem
 
 The sos-filesystem is a very basic example of how the SOS model can be mapped to a real world application.
 
 The mapping used is the following:
 
 - file :: version manifest -> atom manifest -> atom data
-- location :: version manifest -> compound manifest
+- directory :: version manifest -> compound manifest
 
 
 The sos-filesystem is used in the sos-app. Here, the filesystem is passed to a WebDAV server (https://github.com/stacs-srg/WebDAV-server) and the WebUI project.
 The WebDAV server exposes the sos-fs to the OS as well as to any other application that wishes to interact with the SOS.
 
 
-## web-ui
+## Applications
+
+### Webdav
+
+TODO
+
+### Web archive
+
+TODO
+
+### web-ui
 
 The web-ui exposes the sos-filesystem, similarly to the WebDAV server. However, here we are not constrained by the WebDAV protocol, thus
 we are able to demonstrate additional features of the SOS.
