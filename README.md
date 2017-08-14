@@ -208,3 +208,10 @@ When a SOS node is instantiated, the following directory structure is created.
     |-- usro            // Manifests for Users and Roles in JSON
     |-- node            // Indices, caches, dbs for the node
 ```
+
+
+## Useful tools
+
+- Online hex dump inspector - https://hexed.it/
+- File to SHA values - https://md5file.com/calculator
+

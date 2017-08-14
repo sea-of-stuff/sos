@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.web.tree;
+package uk.ac.standrews.cs.sos.web.agents;
 
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class WTree {
+public class WWebDAV {
 
     public static String Render(SOSLocalNode sos, IFileSystem fileSystem){
         Map<String, Object> model = new HashMap<>();
@@ -31,7 +31,7 @@ public class WTree {
             e.printStackTrace();
         }
 
-        return VelocityUtils.RenderTemplate("velocity/tree.vm", model);
+        return VelocityUtils.RenderTemplate("velocity/webdav.vm", model);
     }
 
     private static String getTreeInJson(IFileSystem fileSystem) throws TIPNotFoundException, ManifestNotFoundException {
@@ -51,20 +51,20 @@ public class WTree {
     }
 
     private static String getChildren(IDirectory parent, IGUID parentGUID) throws ManifestNotFoundException {
-        String retval = "";
+        StringBuilder retval = new StringBuilder();
 
         Iterator<NameAttributedPersistentObjectBinding> it = parent.iterator();
         while(it.hasNext()) {
             NameAttributedPersistentObjectBinding child = it.next();
-            retval += getChild(parentGUID, child);
+            retval.append(getChild(parentGUID, child));
 
             // Recursively look for children in subdirectories
             if (child.getObject() instanceof IDirectory) {
-                retval += getChildren((IDirectory) child.getObject(), child.getObject().getGUID());
+                retval.append(getChildren((IDirectory) child.getObject(), child.getObject().getGUID()));
             }
         }
 
-        return retval;
+        return retval.toString();
     }
 
     private static String getChild(IGUID parent, NameAttributedPersistentObjectBinding child) {

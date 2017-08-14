@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.web.usro;
+package uk.ac.standrews.cs.sos.web.agents;
 
 import spark.Request;
 import spark.Response;

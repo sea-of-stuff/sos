@@ -4,93 +4,21 @@
     <meta charset="utf-8">
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css" />
+    <link href="css/sos.css" />
 
-    <style>
-        /*http://jsfiddle.net/wQ6WQ/1/*/
-        #content, html, body {
-            height: 100%;
-        }
-        #left {
-            float: left;
-            width: 50%;
-            height: 100%;
-            overflow: scroll;
-        }
-        #right {
-            float: left;
-            width: 50%;
-            height: 100%;
-            overflow: scroll;
-        }
-    </style>
-
-    <style>
-        #actions {
-            margin: 2em 0;
-        }
-
-        /* Mimic table appearance */
-        div.table {
-            display: table;
-        }
-        div.table .file-row {
-            display: table-row;
-        }
-        div.table .file-row > div {
-            display: table-cell;
-            vertical-align: top;
-            border-top: 1px solid #ddd;
-            padding: 8px;
-        }
-        div.table .file-row:nth-child(odd) {
-            background: #f9f9f9;
-        }
-
-
-        /* The total progress gets shown by event listeners */
-        #total-progress {
-            opacity: 0;
-            transition: opacity 0.3s linear;
-        }
-
-        /* Hide the progress bar when finished */
-        #previews .file-row.dz-success .progress {
-            opacity: 0;
-            transition: opacity 0.3s linear;
-        }
-
-        /* Hide the delete button initially */
-        #previews .file-row .delete {
-            display: none;
-        }
-
-        /* Hide the start and cancel buttons and show the delete button */
-
-        #previews .file-row.dz-success .start,
-        #previews .file-row.dz-success .cancel {
-            display: none;
-        }
-        #previews .file-row.dz-success .delete {
-            display: block;
-        }
-
-    </style>
-
-    <style>
-        .card-columns .card {
-            display: inline-block
-        }
-    </style>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/json.min.js"></script>
 </head>
 <body>
 <div id="header"></div>
-<div class="container-fluid">
 
-    <div id="content">
-        <div id="left">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
 
             <div id="actions" class="row">
                 <div class="col-lg-7">
@@ -115,7 +43,7 @@
                     <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                         <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
                     </div>
-                    </span>
+                </span>
                 </div>
             </div>
 
@@ -157,36 +85,35 @@
 
             <div class="card-columns">
                 #foreach($version in $assets)
-                    <div class="card">
+                    <div class="card card-outline-primary">
                         <div class="card-body">
                             <h4 class="card-title">Version: $version.version.toShortString()</h4>
-##                            <p class="card-text">
-##                                <strong>Invariant</strong> $version.invariant.toShortString()
-##                                <br>
-##                                <strong>Content</strong> $version.content.toShortString()
-##                            </p>
+                            <p class="card-text">
+                                <strong>Invariant</strong> $version.invariant.toShortString()
+                            </p>
+                            <div class="card">
+                                #if($version.data)
+                                $version.data
+                            #end
+                            </div>
+                            <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-primary">More info</button>
                         </div>
-##                        <div class="card-body">
-##                        <p class="card-text">
-##                            #if($version.data)
-##                                <pre>$version.data</pre>
-##                            #end
-##                            </p>
-##                        </div>
+
                     </div>
                 #end
             </div>
         </div>
-        <div id="right">
+
+        <div class="col-6">
             <div id="manifestTemplate"></div>
         </div>
     </div>
-
 </div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.1/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
 
 <script type="text/javascript">
@@ -246,5 +173,33 @@
         myDropzone.removeAllFiles(true);
     };
 </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
+<script src="js/sos.js"></script>
+<script type="text/javascript">
+
+    $('button[id^="more"').click(function() {
+        id = $(this).val();
+
+        $.get("/manifest/" + id , function(data) {
+            $('#manifest').html(data);
+            hljs.highlightBlock($('#manifest')[0]);
+        })
+
+        $.get("/metadata/" + id , function(data) {
+            $('#metadata').html(data);
+            hljs.highlightBlock($('#metadata')[0]);
+        })
+
+        $.get("/data/" + id , function(data) {
+            $('#data').html(data);
+        })
+
+        evaluateGraph(id);
+
+    });
+
+</script>
+
 </body>
 </html>

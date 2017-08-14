@@ -1,11 +1,14 @@
+<h2>DAG</h2>
+<div id="sos-graph"></div>
+<br>
 <h2>Manifest</h2>
-<pre id="manifest" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+<pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
 <br>
 <h2>Data</h2>
 <div id="data"></div>
 <br>
 <h2>Metadata</h2>
-<pre id="metadata" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
+<pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="metadata" class="json"></code></pre>
 <br>
 <h2>Data Stored</h2>
 here list of other nodes where this entity is stored

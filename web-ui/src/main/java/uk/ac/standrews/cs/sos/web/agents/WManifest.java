@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.web.graph;
+package uk.ac.standrews.cs.sos.web.agents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import spark.Request;

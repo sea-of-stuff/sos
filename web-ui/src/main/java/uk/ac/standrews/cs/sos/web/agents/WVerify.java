@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.web.graph;
+package uk.ac.standrews.cs.sos.web.agents;
 
 import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;

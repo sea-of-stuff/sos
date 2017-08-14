@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.web.contexts;
+package uk.ac.standrews.cs.sos.web.agents;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
