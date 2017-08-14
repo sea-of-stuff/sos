@@ -126,6 +126,8 @@ $ cat .key
 $ Tcyaw+WWIDRp9HB66UbgbQ==
 ```
 
+The `.key` file is added to the `.gitignore` list and **MUST NEVER** be committed to the repository.
+
 #### Generating the encrypted passkey
 
 ```
