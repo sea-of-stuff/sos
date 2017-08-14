@@ -11,7 +11,7 @@
 <div class="container-fluid">
 
     <h1>Local Node</h1>
-    $thisNode.toString()
+    <pre style="white-space: pre-wrap; word-wrap: break-word;">$thisNode.toString()</pre>
 
     <hr>
 
