@@ -197,6 +197,10 @@ public class ExperimentConfiguration {
                 this.remote = remote;
             }
 
+            public String getConfigurationFile() {
+                return configurationFile;
+            }
+
             public String getConfigurationFile(String experimentName) {
                 return CONFIGURATION_FOLDER.replace("{experiment}", experimentName) + configurationFile;
             }

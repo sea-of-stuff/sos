@@ -21,8 +21,7 @@ public class KeyGenerator {
         Scanner in = new Scanner(System.in);
         String option = in.nextLine();
         switch(option) {
-            case "k":
-            case "K":
+            case "k": case "K":
                 SecretKey key = SymmetricEncryption.generateRandomKey();
 
                 File keyFile = new File(".key");
@@ -30,8 +29,8 @@ public class KeyGenerator {
                     printWriter.write(SymmetricEncryption.keyToString(key));
                 }
                 break;
-            case "e":
-            case "E":
+
+            case "e": case "E":
                 System.out.println("Input the password/passphrase");
                 String pass = in.nextLine();
 

@@ -7,28 +7,7 @@
       "app" : "sos-app/target/sos-app.jar",
       "iterations" : 10
     },
-    "nodes" : [
-      {
-        "id" : 1,
-        "name" : "minimac",
-        "path" : "",
-        "remote" : true,
-        "ssh" : {
-          "type" : 0,
-          "host" : "cs-wifi-111.cs.st-andrews.ac.uk",
-          "user" : "lorna",
-          "known_hosts": "/Users/sic2/.ssh/known_hosts",
-          "password" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRaEPMH9A2mbFN8mQT0AIiBD5SP97zM7pBeYuF4GqcpepA=="
-        },
-        "configurationfile" : "node_1.json",
-        "behaviour": {
-          "start": 0,
-          "stop": -1,
-          "pause": [],
-          "operations": [ "WIP" ]
-        }
-      }
-    ],
+    "nodes" : [],
     "experimentnode" : {
       "id" : 0,
       "name" : "local",

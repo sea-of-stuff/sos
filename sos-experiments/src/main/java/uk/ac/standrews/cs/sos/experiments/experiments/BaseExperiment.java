@@ -20,7 +20,7 @@ import java.util.Iterator;
 public abstract class BaseExperiment implements Experiment {
 
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
-    public static final String OUTPUT_FOLDER = "sos-experiments/src/main/resources/output/"; // TODO - change to experiments/data/ where the R scripts are
+    public static final String OUTPUT_FOLDER = "experiments/output/"; // TODO - specify in experiment config
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
     public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/data/";
 
@@ -49,10 +49,16 @@ public abstract class BaseExperiment implements Experiment {
 
             String configurationNodePath = experiment.getExperimentNode().getConfigurationFile(experiment.getName());
             File configFile = new File(configurationNodePath);
+            if (!configFile.exists()) {
+                configFile = new File(experiment.getExperimentNode().getConfigurationFile());
+            }
+            System.out.println("CONFIG FILE " + configFile.getAbsolutePath());
+
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
             node = ServerState.init(configuration.getSettingsObj());
         } catch (ConfigurationException | IOException e) {
+            e.printStackTrace();
             throw new ExperimentException();
         }
 

@@ -112,19 +112,17 @@ public class SOSDistribution {
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
-        File temp = File.createTempFile("temp-file-name", ".tmp");
+        File temp = File.createTempFile("experiment_configuration", ".json");
         temp.deleteOnExit();
         try (PrintWriter printWriter = new PrintWriter(temp)) {
             printWriter.write(configuration.toString());
         }
 
         scp.makePath(path);
+        scp.makePath(path + "experiments/output");
         scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, path + REMOTE_SOS_EXPERIMENTS_JAR_PATH);
-
-
-
         scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
-        scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
+        scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile());
 
         scp.disconnect();
     }
@@ -170,9 +168,9 @@ public class SOSDistribution {
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
-        scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
-        scp.deleteFile(path + REMOTE_SOS_PID_FILE);
-        scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
+        //scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
+        //scp.deleteFile(path + REMOTE_SOS_PID_FILE);
+        //scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
 
         scp.disconnect();
     }

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
@@ -20,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -85,6 +85,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
                 addContentToNode();
                 addContexts();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new ExperimentException();
             }
         }
@@ -97,7 +98,33 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         }
     }
 
-    public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException, JsonProcessingException {
+    public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
+
+        System.out.println("L/l for Local run and H/h for hogun cluster run");
+
+        Scanner in = new Scanner(System.in);
+        String option = in.nextLine();
+        switch(option) {
+            case "l": case "L":
+                runLocal();
+                break;
+
+            case "h": case "H":
+                runHogun();
+                break;
+        }
+    }
+
+    private static void runLocal() throws ConfigurationException, ExperimentException {
+
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
+        experiment_pr_1.process();
+    }
+
+    private static void runHogun() throws ConfigurationException, ChicShockException, InterruptedException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration-hogun.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
@@ -109,9 +136,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         chicShock.shock();
         chicShock.shockExperiment();
 
-        Thread.sleep(10000);
-//        Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
-//        experiment_pr_1.process();
+        Thread.sleep(20000);
 
         chicShock.unShockExperiment();
         chicShock.unChicExperiment();
