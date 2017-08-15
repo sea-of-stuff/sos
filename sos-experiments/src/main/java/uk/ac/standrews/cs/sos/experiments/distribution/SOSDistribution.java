@@ -52,7 +52,7 @@ public class SOSDistribution {
 
             scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
             scp.deleteFile(path + REMOTE_SOS_PID_FILE);
-            scp.deleteFile(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
+            scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
 
             scp.disconnect();
         }
