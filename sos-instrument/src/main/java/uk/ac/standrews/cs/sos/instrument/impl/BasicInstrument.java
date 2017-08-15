@@ -24,9 +24,11 @@ public class BasicInstrument implements Instrument {
         this.outputTYPE = outputTYPE;
         this.filename = filename;
 
+        measureNodeInstance();
+
         boolean fileIsEmpty = fileIsEmpty(filename);
         if (fileIsEmpty) {
-            try (FileWriter fileWriter = new FileWriter(new File(filename), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name()), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 switch (outputTYPE) {
@@ -46,6 +48,17 @@ public class BasicInstrument implements Instrument {
     }
 
     @Override
+    public void measureNodeInstance() throws IOException {
+
+        try (FileWriter fileWriter = new FileWriter(new File(filename + "_node"), true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+
+            ImmutableOSMeasures osMeasures = ImmutableOSMeasures.measure();
+            bufferedWriter.write(osMeasures.toString());
+        }
+    }
+
+    @Override
     public void measure(String message) {
 
        measure(StatsTYPE.any, message);
@@ -56,7 +69,7 @@ public class BasicInstrument implements Instrument {
 
         if (statistics.isEnabled(statsTYPE)) {
 
-            try (FileWriter fileWriter = new FileWriter(new File(filename), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name()), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 switch (outputTYPE) {
@@ -136,7 +149,8 @@ public class BasicInstrument implements Instrument {
 
     public static void main(String[] args) throws IOException {
 
-        new BasicInstrument(new Statistics(), OutputTYPE.CSV, "TEST.csv").measure("test message");
+        Instrument instrument = new BasicInstrument(new Statistics(), OutputTYPE.TSV, "TEST");
+        instrument.measure("test message");
     }
 
 }

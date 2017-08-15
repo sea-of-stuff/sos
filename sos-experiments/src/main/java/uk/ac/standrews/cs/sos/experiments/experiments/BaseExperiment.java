@@ -116,8 +116,7 @@ public abstract class BaseExperiment implements Experiment {
                 .replace("-", "_")
                 .replace(":", "_")
                 .replace(".", "_");
-        String extension = ".tsv";
 
-        return name + "__" + now + extension;
+        return name + "__" + now;
     }
 }

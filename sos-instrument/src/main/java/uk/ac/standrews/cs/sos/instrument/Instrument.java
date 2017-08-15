@@ -1,9 +1,13 @@
 package uk.ac.standrews.cs.sos.instrument;
 
+import java.io.IOException;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Instrument {
+
+    void measureNodeInstance() throws IOException;
 
     void measure(String message);
 
