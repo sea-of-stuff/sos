@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * TODO - get result method
- *
  * Other node should return hash(data + random string)
  * Other node can return the right hash only if it really has the data
  *
