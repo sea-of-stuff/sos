@@ -124,6 +124,8 @@ public class SOSDistribution {
         scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
         scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile());
 
+        // TODO - copy all necessary stuff for the experiment + data!!!!
+
         scp.disconnect();
     }
 

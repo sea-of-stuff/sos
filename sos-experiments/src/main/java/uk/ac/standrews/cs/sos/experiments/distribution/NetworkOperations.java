@@ -91,7 +91,7 @@ public class NetworkOperations {
 
             if (lCheckum.equals(rChecksum)) {
                 System.out.println("Remote file " + rfile + " and local file " + lfile + " have the same SHA1 checksum " + lCheckum);
-                System.out.println("File will not be sent to the node");
+                System.out.println("File will not be sent to the remote node");
                 return;
             }
         } catch (FileNotFoundException | GUIDGenerationException e) {
@@ -107,6 +107,24 @@ public class NetworkOperations {
 
         } catch (JSchException | IOException e) {
             throw new NetworkException();
+        }
+    }
+
+    // TODO - work in progress
+    public void sendDirectory(String lDirectory, String rDirectory) throws NetworkException {
+
+        makePath(rDirectory);
+
+        File[] files = new File(lDirectory).listFiles();
+        if (files == null) return;
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                System.out.println("Send sub-directory: " + file.getName());
+                sendDirectory(file.getAbsolutePath(), "TODO");
+            } else {
+                sendFile("", "");
+            }
         }
     }
 
