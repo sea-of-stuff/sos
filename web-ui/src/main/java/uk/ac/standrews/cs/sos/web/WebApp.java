@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.agents.*;
 
 import static spark.Spark.*;
-import static uk.ac.standrews.cs.sos.RESTConfig.sos;
+import static uk.ac.standrews.cs.sos.rest.RESTConfig.sos;
 
 public class WebApp {
 

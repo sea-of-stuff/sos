@@ -12,7 +12,6 @@
         <module name="filesystem" />
         <module name="instrument" />
         <module name="rest" />
-        <module name="rest-jetty" />
         <module name="web-archive" />
         <module name="web-ui" />
       </profile>

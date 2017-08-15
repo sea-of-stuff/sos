@@ -24,6 +24,24 @@
           "pause": [],
           "operations": [ "WIP" ]
         }
+      },
+      {
+        "id" : 2,
+        "remote" : true,
+        "ssh" : {
+          "type" : 0,
+          "host" : "192.168.0.13",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "password": "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRaEF9oBgFnGNy9OqfnuZzM3"
+        },
+        "configurationfile" : "node_2_raspberry.json",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
       }
     ],
     "experimentnode" : {

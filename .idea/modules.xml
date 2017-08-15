@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/sos-filesystem/filesystem.iml" filepath="$PROJECT_DIR$/sos-filesystem/filesystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-instrument/instrument.iml" filepath="$PROJECT_DIR$/sos-instrument/instrument.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-rest/rest.iml" filepath="$PROJECT_DIR$/sos-rest/rest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" filepath="$PROJECT_DIR$/sos-rest-jetty/rest-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos.iml" filepath="$PROJECT_DIR$/sos.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-web-archive/web-archive.iml" filepath="$PROJECT_DIR$/sos-web-archive/web-archive.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-ui/web-ui.iml" filepath="$PROJECT_DIR$/web-ui/web-ui.iml" />

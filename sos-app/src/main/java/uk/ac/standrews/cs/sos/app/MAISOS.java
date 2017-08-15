@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.jetty.JettyApp;
+import uk.ac.standrews.cs.sos.rest.JettyApp;
 import uk.ac.standrews.cs.sos.services.Agent;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.WebApp;
