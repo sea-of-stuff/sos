@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.experiments;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.instrument.impl.Statistics;
@@ -47,6 +49,17 @@ public class ExperimentConfiguration {
         return JSONHelper.JsonObjMapper().convertValue(node, ExperimentConfiguration.class).getExperiment();
     }
 
+    @Override
+    public String toString() {
+        try {
+            return JSONHelper.JsonObjMapper().writeValueAsString(node);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
     // POJO field for JACKSON
     private Experiment experiment;
 
@@ -61,9 +74,11 @@ public class ExperimentConfiguration {
     ///////////////////////////////////////
     // POJO for Jackson serialisation /////
     ///////////////////////////////////////
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public static class Experiment {
 
-        protected String name;
+        private String name;
+        private String experimentClass;
         private String description;
         private Setup setup;
         private List<Node> nodes;
@@ -120,6 +135,15 @@ public class ExperimentConfiguration {
             this.stats = stats;
         }
 
+        public String getExperimentClass() {
+            return experimentClass;
+        }
+
+        public void setExperimentClass(String experimentClass) {
+            this.experimentClass = experimentClass;
+        }
+
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class Setup {
 
             private String app;
@@ -144,6 +168,7 @@ public class ExperimentConfiguration {
             }
         }
 
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class Node {
 
             private int id;
@@ -212,6 +237,7 @@ public class ExperimentConfiguration {
                 this.name = name;
             }
 
+            @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class SSH {
                 private int type;
                 private String host;
@@ -299,6 +325,7 @@ public class ExperimentConfiguration {
                 }
             }
 
+            @JsonInclude(JsonInclude.Include.NON_DEFAULT)
             public static class Behaviour {
 
                 private long start;

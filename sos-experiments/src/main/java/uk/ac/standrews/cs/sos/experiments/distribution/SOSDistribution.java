@@ -2,6 +2,10 @@ package uk.ac.standrews.cs.sos.experiments.distribution;
 
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -12,6 +16,8 @@ public class SOSDistribution {
     private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.json";
     private static final String REMOTE_SOS_PID_FILE =  "sos.pid";
     private static final String REMOTE_SOS_OUT_FILE = "out";
+    private static final String REMOTE_SOS_EXPERIMENTS_JAR_PATH =  "sos-experiments.jar";
+    private static final String REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH = "experiment.json";
 
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
@@ -38,7 +44,7 @@ public class SOSDistribution {
         System.out.println("App distribution finished");
     }
 
-    public static void undoDistribution(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
+    public static void undoDistribution(ExperimentConfiguration configuration) throws NetworkException {
         System.out.println("UndoDistribution of the app at the remote nodes");
 
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
@@ -94,7 +100,7 @@ public class SOSDistribution {
 
     }
 
-    public static void distributeToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
+    public static void distributeToExperimentNode(ExperimentConfiguration configuration) throws NetworkException, IOException {
         System.out.println("Distributing the SOS-Experiment to a remote node");
 
         String experimentName = configuration.getExperimentObj().getName();
@@ -106,17 +112,68 @@ public class SOSDistribution {
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
+        File temp = File.createTempFile("temp-file-name", ".tmp");
+        temp.deleteOnExit();
+        try (PrintWriter printWriter = new PrintWriter(temp)) {
+            printWriter.write(configuration.toString());
+        }
+
         scp.makePath(path);
-        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, path + REMOTE_SOS_JAR_PATH);
+        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, path + REMOTE_SOS_EXPERIMENTS_JAR_PATH);
+
+
+
+        scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
         scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
 
         scp.disconnect();
     }
 
-    public static void runExperiment(ExperimentConfiguration configuration) {
+    public static void runExperiment(ExperimentConfiguration configuration) throws NetworkException {
+        System.out.println("Running the SOS-Experiment from a remote node");
 
-        // TODO
-        // Run an experiment from a remote node
-        // This will make a call to that node ExperimentManager.java
+        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+
+        String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
+
+        NetworkOperations scp = new NetworkOperations();
+        scp.setSsh(experimentNode.getSsh());
+        scp.connect();
+
+        scp.executeJar(path, REMOTE_SOS_EXPERIMENTS_JAR_PATH, "", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
+
+        scp.disconnect();
+    }
+
+    public static void stopExperiment(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
+
+        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+
+        String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
+
+        NetworkOperations scp = new NetworkOperations();
+        scp.setSsh(experimentNode.getSsh());
+        scp.connect();
+
+        scp.killProcess(path + REMOTE_SOS_PID_FILE);
+        scp.disconnect();
+    }
+
+    public static void undoDistributionToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
+        System.out.println("Distributing the SOS-Experiment to a remote node");
+
+        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+
+        String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
+
+        NetworkOperations scp = new NetworkOperations();
+        scp.setSsh(experimentNode.getSsh());
+        scp.connect();
+
+        scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
+        scp.deleteFile(path + REMOTE_SOS_PID_FILE);
+        scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
+
+        scp.disconnect();
     }
 }

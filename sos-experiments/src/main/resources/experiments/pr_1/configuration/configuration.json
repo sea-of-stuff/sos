@@ -1,6 +1,7 @@
 {
   "experiment": {
     "name": "pr_1",
+    "experimentClass": "Experiment_PR_1",
     "description": "The experiment PR 1 investigates the performance of predicates when run against different types of contents",
     "setup": {
       "app": "sos-app/target/sos-with-dependencies.jar",

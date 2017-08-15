@@ -1,6 +1,7 @@
 {
   "experiment" : {
     "name" : "Scale_1",
+    "experimentClass": "Experiment_Scale_1",
     "description" : "Scale experiment. We run a local node and a few remote nodes.",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",

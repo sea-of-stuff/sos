@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
@@ -96,17 +97,24 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         }
     }
 
-    public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException {
+    public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException, JsonProcessingException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration-hogun.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.chic();
-        chicShock.shock();
+        chicShock.chicExperiment();
 
-        Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
-        experiment_pr_1.process();
+        chicShock.shock();
+        chicShock.shockExperiment();
+
+        Thread.sleep(10000);
+//        Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
+//        experiment_pr_1.process();
+
+        chicShock.unShockExperiment();
+        chicShock.unChicExperiment();
 
         chicShock.unShock();
         chicShock.unChic();

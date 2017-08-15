@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * ChicShock does not mean anything. This is simply a word I invented and I like, so here it is.
@@ -20,7 +21,7 @@ public class ChicShock {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(args[1]);
+        File experimentConfigurationFile = new File(args[0]);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
@@ -31,7 +32,7 @@ public class ChicShock {
 
         // RUNNING PHASE
         chicShock.shock();
-        chicShock.shockExperiment("Experiment_Scale_1"); // TODO <-- this method should return when experiment is finished, USE ARGS
+        chicShock.shockExperiment(); // TODO <-- this method should return when experiment is finished, USE ARGS
 
         // STOP PHASE
         chicShock.unShock();
@@ -64,7 +65,7 @@ public class ChicShock {
             if (experimentConfiguration.getExperimentObj().getExperimentNode().isRemote()) {
                 SOSDistribution.distributeToExperimentNode(experimentConfiguration);
             }
-        } catch (NetworkException e) {
+        } catch (NetworkException | IOException e) {
             throw new ChicShockException();
         }
     }
@@ -83,17 +84,17 @@ public class ChicShock {
      * Run the experiment from the experiment node.
      * This method should return only when the experiment is finished.
      */
-    public void shockExperiment(String experiment) throws ChicShockException {
-        System.out.println("Starting the experiment: " + experiment);
+    public void shockExperiment() throws ChicShockException {
+        System.out.println("Starting the experiment remotely");
 
         try {
             boolean isRemote = experimentConfiguration.getExperimentObj().getExperimentNode().isRemote();
             if (isRemote) {
                 SOSDistribution.runExperiment(experimentConfiguration);
             } else {
-                ExperimentManager.runExperiment(experimentConfiguration, experiment);
+                ExperimentManager.runExperiment(experimentConfiguration);
             }
-        } catch (ExperimentException e) {
+        } catch (ExperimentException | NetworkException e) {
             throw new ChicShockException();
         }
 
@@ -111,12 +112,33 @@ public class ChicShock {
         }
     }
 
+    public void unShockExperiment() throws ChicShockException {
+        System.out.println("Stopping the remote SOS Nodes");
+
+        try {
+            SOSDistribution.stopExperiment(experimentConfiguration);
+        } catch (InterruptedException | NetworkException e) {
+            throw new ChicShockException();
+        }
+    }
+
     public void unChic() throws ChicShockException {
         System.out.println("Removing the SOS files from the remote nodes");
 
         try {
             SOSDistribution.undoDistribution(experimentConfiguration);
-        } catch (NetworkException | InterruptedException e) {
+        } catch (NetworkException e) {
+            throw new ChicShockException();
+        }
+
+    }
+
+    public void unChicExperiment() throws ChicShockException {
+        System.out.println("Removing the SOS files from the remote nodes");
+
+        try {
+            SOSDistribution.undoDistributionToExperimentNode(experimentConfiguration);
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
 
