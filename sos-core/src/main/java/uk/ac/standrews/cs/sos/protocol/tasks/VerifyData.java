@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -25,12 +26,11 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * challenge another node to verifySignature the data
- * GET /verifySignature?guid=GUID&challenge=Random string
+ * TODO - get result method
+ *
  * Other node should return hash(data + random string)
  * Other node can return the right hash only if it really has the data
  *
@@ -45,45 +45,38 @@ public class VerifyData extends Task {
     private IGUID challengedEntity;
 
     private IGUID entity;
-    private Iterator<Node> nodes;
+    private Node challengedNode;
 
+    private boolean challengePassed;
 
-    public VerifyData(InputStream challengedStream, IGUID entity, Iterator<Node> nodes) {
+    public VerifyData(IGUID entity, Data challengedData, Node challengedNode) throws GUIDGenerationException, IOException {
         this.entity = entity;
-        this.nodes = nodes;
+        this.challengedNode = challengedNode;
 
+        // Calculate the result of the challenge in advance
         this.challenge = new BigInteger(130, random).toString(32);
-        List<InputStream> streams = Arrays.asList(challengedStream, new ByteArrayInputStream(challenge.getBytes()));
+        List<InputStream> streams = Arrays.asList(challengedData.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
         InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
-        try {
-            challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-        }
-
+        challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
     }
 
     @Override
     public void performAction() {
 
-        while(nodes.hasNext()) {
+        try {
+            challengePassed = challenge(challengedNode);
 
-            Node node = nodes.next();
-            try {
-                boolean verified = challenge(node);
-
-                if (verified) {
-                    SOS_LOG.log(LEVEL.INFO, "Data with GUID " + entity + " was verified against node " + node);
-                } else {
-                    SOS_LOG.log(LEVEL.WARN, "Data with GUID " + entity + " failed to be verified against node " + node);
-                }
-            } catch (SOSURLException | IOException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to verifySignature data with GUID " + entity + " against node " + node);
+            // TODO - update data structures in this node?
+            if (challengePassed) {
+                SOS_LOG.log(LEVEL.INFO, "Data with GUID " + entity + " was verified against node " + challengedNode);
+            } else {
+                SOS_LOG.log(LEVEL.WARN, "Data with GUID " + entity + " failed to be verified against node " + challengedNode);
             }
+        } catch (SOSURLException |IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to verify data with GUID " + entity + " against node " + challengedNode);
         }
     }
 
-    // TODO - we do not have this REST end-point yet
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
         URL url = SOSURL.CHALLENGE(node, entity, challenge);
@@ -104,5 +97,9 @@ public class VerifyData extends Task {
     @Override
     public String toString() {
         return "VerifyData with guid" + entity + " with challenge " + challenge;
+    }
+
+    public boolean isChallengePassed() {
+        return challengePassed;
     }
 }

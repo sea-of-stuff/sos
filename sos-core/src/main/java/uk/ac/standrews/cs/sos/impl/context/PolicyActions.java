@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -15,10 +16,13 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.CheckReplica;
+import uk.ac.standrews.cs.sos.protocol.tasks.VerifyData;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
+
+import java.io.IOException;
 
 /**
  * Utility methods accessible by the policies
@@ -77,10 +81,20 @@ public class PolicyActions {
         return false;
     }
 
-    public boolean nodeHasData(IGUID node, IGUID guid) {
+    public boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
 
-        // TODO - this will make a challenge/check/verify call to the node
-        return false;
+        try {
+            Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
+            VerifyData verifyData = new VerifyData(guid, storage.getAtomContent(guid), nodeToBeChallenged);
+
+            TasksQueue.instance().performSyncTask(verifyData);
+            return verifyData.isChallengePassed();
+
+        } catch (NodeNotFoundException | GUIDGenerationException | AtomNotFoundException | IOException e) {
+
+            return false;
+        }
+
     }
 
     public int numberOfReplicas(NodesCollection codomain, IGUID guid) {

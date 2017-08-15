@@ -64,7 +64,7 @@ public class SOSURL {
 
     public static URL CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
-                "challenge/" + guid.toMultiHash() + "/" + challenge;
+                "storage/data/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
 
         return makeURL(url);
     }
