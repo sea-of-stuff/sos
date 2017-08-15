@@ -2,12 +2,16 @@ package uk.ac.standrews.cs.sos.rest.api;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.rest.api.utils.HelperTest;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.InputStream;
 
 import static org.testng.Assert.assertEquals;
@@ -199,6 +203,71 @@ public class RESTStorageTest extends CommonRESTTest {
                 .post(Entity.json(data));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void challengeForNoAtomFails() throws GUIDGenerationException {
+
+        Response response = target("/sos/storage/data/guid/SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/challenge/NOT_IMPORTANT")
+                .request().get();
+
+        assertEquals(response.getStatus(), HTTPStatus.OK);
+        assertEquals(response.readEntity(String.class), "INVALID_16_null");
+    }
+
+    @Test
+    public void challengeForAtomWorks() throws GUIDGenerationException, IOException {
+
+        InputStream testData = HelperTest.StringToInputStream("data");
+
+        Response response = target("/sos/storage/stream/replicas/0")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
+
+        Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/THIS_IS_MY_CHALLENGE")
+                .request().get();
+
+        assertEquals(challengeResponse.getStatus(), HTTPStatus.OK);
+        assertEquals(challengeResponse.readEntity(String.class), "SHA256_16_83941ab394968e84292a106b8df43a0d9cc12b4481c2de85d56f9db483cde28b" /* Generated using https://quickhash.com/ */);
+    }
+
+    @Test
+    public void noChallengeForAtomDoesNotWork() throws GUIDGenerationException, IOException {
+
+        InputStream testData = HelperTest.StringToInputStream("data");
+
+        Response response = target("/sos/storage/stream/replicas/0")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
+
+        Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/")
+                .request().get();
+
+        assertEquals(challengeResponse.getStatus(), HTTPStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void spaceChallengeForAtomDoesNotWork() throws GUIDGenerationException, IOException {
+
+        InputStream testData = HelperTest.StringToInputStream("data");
+
+        Response response = target("/sos/storage/stream/replicas/0")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
+
+        Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/ ")
+                .request().get();
+
+        assertEquals(challengeResponse.getStatus(), HTTPStatus.BAD_REQUEST);
     }
 
 }

@@ -56,7 +56,6 @@ public class RESTStorage {
         }
 
         Storage storage = RESTConfig.sos.getStorage();
-
         try (Data data = storage.getAtomContent(atomGUID)){
 
             return HTTPResponses.OK(data.getInputStream());
@@ -89,12 +88,12 @@ public class RESTStorage {
             return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
         }
 
-        Storage storage = RESTConfig.sos.getStorage();
-
         try {
             AtomBuilder builder = new AtomBuilder()
                     .setLocation(location)
                     .setBundleType(BundleTypes.PERSISTENT);
+
+            Storage storage = RESTConfig.sos.getStorage();
             Atom atom = storage.addAtom(builder);
 
             return HTTPResponses.CREATED(atom.toString());
@@ -121,12 +120,13 @@ public class RESTStorage {
             return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
         }
 
-        Storage storage = RESTConfig.sos.getStorage();
 
         try {
             AtomBuilder builder = new AtomBuilder()
                     .setData(new InputStreamData(inputStream))
                     .setBundleType(BundleTypes.PERSISTENT);
+
+            Storage storage = RESTConfig.sos.getStorage();
             Atom atom = storage.addAtom(builder); // TODO - pass replication factor here
 
             return HTTPResponses.CREATED(atom.toString());
@@ -144,26 +144,46 @@ public class RESTStorage {
     public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
 
-        Storage storage = RESTConfig.sos.getStorage();
-
-        SecureAtom atom;
         try {
             AtomBuilder builder = new AtomBuilder()
                     .setData(new InputStreamData(inputStream))
                     .setBundleType(BundleTypes.PERSISTENT)
                     .setRole(null); // FIXME
 
-            atom = storage.addSecureAtom(builder);
+            Storage storage = RESTConfig.sos.getStorage();
+            SecureAtom atom = storage.addSecureAtom(builder);
+            return HTTPResponses.CREATED(atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-        return HTTPResponses.CREATED(atom.toString());
+
     }
 
     // TODO
     // GET /protect/guid - maybe in dds? not sure
 
 
+    @GET
+    @Path("/data/guid/{guid}/challenge/{challenge: .*}")
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    public Response getData(@PathParam("guid") final String guid, @PathParam("challenge") final String challenge) {
+
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /data/guid/" + guid + "/challenge/" + challenge);
+
+        IGUID atomGUID;
+        try {
+            atomGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST("Bad input");
+        }
+
+        if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST("Challenge is empty");
+
+        Storage storage = RESTConfig.sos.getStorage();
+        IGUID challengeResult = storage.challenge(atomGUID, challenge);
+
+        return HTTPResponses.OK(challengeResult.toMultiHash());
+    }
 }

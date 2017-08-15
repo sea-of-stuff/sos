@@ -26,6 +26,7 @@ public class RESTConfig extends ResourceConfig {
 
     public RESTConfig() {
         packages(REST_PACKAGE);
+
         register(LoggingFeature.class);
         register(JacksonProvider.class);
         register(JacksonFeature.class);

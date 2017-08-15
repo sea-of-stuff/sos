@@ -325,7 +325,7 @@ log4j.appender.console.layout.ConversionPattern=%d{dd-MM-yyyy HH:mm:ss} [ %-5p ]
 - Online JSON Linter (and more) - https://jsoncompare.com/#!/simple/
 - Online hex dump inspector - https://hexed.it/
 - File to SHA values - https://md5file.com/calculator
-
+- Hash Online - https://quickhash.com
 
 ## Contributors
 

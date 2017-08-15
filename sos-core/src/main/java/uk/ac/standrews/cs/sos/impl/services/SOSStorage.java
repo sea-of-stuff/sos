@@ -5,7 +5,11 @@ import uk.ac.standrews.cs.castore.data.EmptyData;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
@@ -35,11 +39,11 @@ import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.crypto.SecretKey;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -206,8 +210,19 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public boolean challenge(IGUID guid, String challenge) {
-        return false;
+    public IGUID challenge(IGUID guid, String challenge) {
+
+        try {
+            Data data = getAtomContent(guid);
+
+            List<InputStream> streams = Arrays.asList(data.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
+            InputStream combinedStream = new SequenceInputStream(Collections.enumeration(streams));
+
+            return GUIDFactory.generateGUID(ALGORITHM.SHA256, combinedStream);
+
+        } catch (AtomNotFoundException | IOException | GUIDGenerationException e) {
+            return new InvalidID();
+        }
     }
 
     @Override
