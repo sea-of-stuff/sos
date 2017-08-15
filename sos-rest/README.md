@@ -52,7 +52,7 @@ The REST calls in this section are role-agnostics.
 **Get the services of a node**
 ```
 REQUEST
-GET /info
+GET /sos/info
 
 RESPONSE
 HTTP/1.1 200 OK
@@ -106,7 +106,7 @@ The store node is used solely to store data. The stored data is accessible to ot
 **Get data of a given atom manifest**
 ```
 REQUEST
-GET /store/data/guid/<ATOM-GUID>
+GET /sos/storage/data/guid/<ATOM-GUID>
 
 SUCCESSFUL RESPONSE
 HTTP/1.1 200 OK
@@ -122,7 +122,7 @@ HTTP/1.1 404 NOT FOUND
 **Add data by location**
 ```
 REQUEST
-POST /store/uri
+POST /sos/storage/uri
 
 {
     "location" : "URI",
@@ -148,7 +148,7 @@ policies:
 
 Example 1
 ```
-POST /store/uri
+POST /sos/storage/uri
 
 {
     "location" : "http://example.com/bear.jpeg"
@@ -177,7 +177,7 @@ Content-type: application/json
 
 Example 2
 ```
-POST /store/uri
+POST /sos/storage/uri
 
 {
     "location" : "sos://c6adc7e8-31ee-563a-8d0d-aa230690c296/23cec17e-c246-418a-8e82-fcc97d70adfe"
@@ -207,7 +207,7 @@ Content-type: application/json
 **Add data by stream**
 ```
 REQUEST
-POST /store/stream
+POST /sos/storage/stream
 
 This is some data in the body...
 
@@ -233,7 +233,7 @@ The NDS nodes allow nodes to join the SOS and discovery other nodes.
 **Node joins**
 ```
 REQUEST
-PUT /node
+PUT /sos/nds/register
 
 {
     guid : node guid,
@@ -248,7 +248,7 @@ HTTP/1.1 200 OK
 
 Example:
 ```
-PUT /node
+PUT /sos/nds/register
 
 {
     guid : c6adc7e8-31ee-563a-8d0d-aa230690c296,
