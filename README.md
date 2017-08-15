@@ -112,23 +112,23 @@ The WebDAV server exposes the sos-fs to the OS as well as to any other applicati
 
 ### Webdav
 
-TODO
+This is a WebDAV server running on top of the SOS.
 
 ### Web archive
 
-TODO
+This is a very very simple web crawler that added web content to the SOS.
 
 ### web-ui
 
-The web-ui exposes the sos-filesystem, similarly to the WebDAV server. However, here we are not constrained by the WebDAV protocol, thus
-we are able to demonstrate additional features of the SOS.
+The web-ui exposes the sos-filesystem, similarly to the WebDAV server.
+However, here we are not constrained by the WebDAV protocol, thus we are able to demonstrate additional features of the SOS.
 
 ## Running a SOS node via the SOS-APP
 
 ### Packaging
 
 ```
-$ mvn package # use -DskipTests` to skip the tests during the packaging process
+$ mvn package # or `mvn package -DskipTests` to skip the tests during the packaging process
 $ mv target/app-1.0-SNAPSHOT.jar sos.jar
 $ java -jar sos.jar -c configuration.conf ARGS
 ```
@@ -145,11 +145,138 @@ You can also find other useful bash scripts in the script folder.
 The code for the experiments is found under `sos-experiments/`. Read the relevant [README](sos-experiments/README.md) for more info.
 
 
-## Contributors
+## SOS Internals
 
-This work is developed by Simone Ivan Conte ([@sic2](https://github.com/sic2)) as part of his PhD thesis.
+When a SOS node is instantiated, the following directory structure is created.
 
-Simone is supervised by Prof. Alan Dearle and Dr. Graham Kirby, at the University of St Andrews.
+```
+|-- sos
+    |-- context         // Contains
+    |-- data            // Atoms (clear and protected)
+    |-- keys            // Keys for Users and Roles
+                        // Users have Private Key and Certificate for Digital Signature (.key, .crt)
+                        // Roles have Private/Public Asymmetric keys for data protection (.pem, _pub.pem)
+                        //       + Digital Signature keys/cert as for the User
+    |-- manifests       // Manifests for Atoms, Compounds, Versions and Metadata in JSON
+    |-- usro            // Manifests for Users and Roles in JSON
+    |-- node            // Indices, caches, dbs for the node
+```
+
+
+## SOS Node Configuration
+
+The configuration of a SOS node is specified using a simple JSON structure.
+
+### Example
+
+```
+{
+  "settings": {
+    "guid": "SHA256_16_9999a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00bb",
+    "services": {
+      "storage": {
+        "exposed": true
+      },
+      "cms": {
+        "exposed": false,
+        "indexFile": "cms.index",
+        "automatic": true,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "dds": {
+        "exposed": false,
+        "cacheFile": "manifests.cache",
+        "indexFile": "dds.index"
+      },
+      "rms": {
+        "exposed": false,
+        "cacheFile": "usro.cache"
+      },
+      "nds": {
+        "exposed": false,
+        "startupRegistration" : true
+      },
+      "mms": {
+        "exposed": false
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "~/sos/keys"
+    },
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
+    },
+    "global": {
+      "ssl_trust_store" : "PATH TO THE JAVA SECURITY CACERTS",
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "cacheFlusher": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": []
+  }
+}
+```
+
+
+### Finding the Java cacerts path
+
+The cacerts file is a collection of trusted certificate authority (CA) certificates.
+Sun Microsystems™ includes a cacerts file with its SSL support in the Java™ Secure Socket Extension (JSSE) tool kit and JDK 1.4.x.
+It contains certificate references for well-known Certificate authorities, such as VeriSign™.
+
+The cacerts file is needed to allow the node to make HTTPS (HTTP with SSL) requests.
+
+#### Linux
+`$(readlink -f /usr/bin/java | sed "s:bin/java::")lib/security/cacerts`
+
+#### MacOSX
+
+`$(/usr/libexec/java_home)/jre/lib/security/cacerts`
+
 
 
 ## More stuff
@@ -192,38 +319,17 @@ log4j.appender.console.layout.ConversionPattern=%d{dd-MM-yyyy HH:mm:ss} [ %-5p ]
 ```
 
 
-## SOS Internals
-
-When a SOS node is instantiated, the following directory structure is created.
-
-```
-|-- sos
-    |-- context         // Contains
-    |-- data            // Atoms (clear and protected)
-    |-- keys            // Keys for Users and Roles
-                        // Users have Private Key and Certificate for Digital Signature (.key, .crt)
-                        // Roles have Private/Public Asymmetric keys for data protection (.pem, _pub.pem)
-                        //       + Digital Signature keys/cert as for the User
-    |-- manifests       // Manifests for Atoms, Compounds, Versions and Metadata in JSON
-    |-- usro            // Manifests for Users and Roles in JSON
-    |-- node            // Indices, caches, dbs for the node
-```
-
-
-## SOS Node Configuration
-
-### Java cacerts path (needed for SSL HTTP requests)
-
-#### Linux
-`$(readlink -f /usr/bin/java | sed "s:bin/java::")lib/security/cacerts`
-
-#### MacOSX
-
-`$(/usr/libexec/java_home)/jre/lib/security/cacerts`
 
 ## Useful tools
 
 - Online JSON Linter (and more) - https://jsoncompare.com/#!/simple/
 - Online hex dump inspector - https://hexed.it/
 - File to SHA values - https://md5file.com/calculator
+
+
+## Contributors
+
+This work is developed by Simone Ivan Conte ([@sic2](https://github.com/sic2)) as part of his PhD thesis.
+
+Simone is supervised by Prof. Alan Dearle and Dr. Graham Kirby, at the University of St Andrews.
 
