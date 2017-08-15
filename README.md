@@ -210,6 +210,17 @@ When a SOS node is instantiated, the following directory structure is created.
 ```
 
 
+## SOS Node Configuration
+
+### Java cacerts path (needed for SSL HTTP requests)
+
+#### Linux
+`$(readlink -f /usr/bin/java | sed "s:bin/java::")lib/security/cacerts`
+
+#### MacOSX
+
+`$(/usr/libexec/java_home)/jre/lib/security/cacerts`
+
 ## Useful tools
 
 - Online JSON Linter (and more) - https://jsoncompare.com/#!/simple/
