@@ -171,3 +171,7 @@ It is possible to control what to instrument via the experiment configuration fi
 - experiment: to enable instrument calls inside sos-instrument
 - predicate
 - policies
+
+
+**Killing all sos jar applications**
+`for pid in $(ps -ef | grep "sos.jar" | awk '{print $2}'); do kill -9 $pid; done`

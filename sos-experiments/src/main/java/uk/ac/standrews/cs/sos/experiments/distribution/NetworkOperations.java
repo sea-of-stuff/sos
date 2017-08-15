@@ -8,9 +8,6 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 
 import java.io.*;
 
-import static uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution.REMOTE_SOS_OUT_FILE;
-import static uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution.REMOTE_SOS_PID_FILE;
-
 // Based on the following examples:
 // http://www.jcraft.com/jsch/examples/ScpTo.java.html
 // http://www.jcraft.com/jsch/examples/ScpFrom.java.html
@@ -143,17 +140,32 @@ public class NetworkOperations {
         }
     }
 
+    public void deleteFolder(String rFolder) throws NetworkException {
+
+        try {
+            String command = "rm -rf " + rFolder;
+            exec(command);
+
+        } catch (JSchException | IOException e) {
+            throw new NetworkException();
+        }
+    }
+
     /**
      * Execute the Jar at the remote location
      *
+     * @param basePath
      * @param jarPath
-     * @throws JSchException
+     * @param args
+     * @param outFile
+     * @param pidFile
+     * @throws NetworkException
      */
-    public void executeJar(String jarPath, String args) throws NetworkException {
+    public void executeJar(String basePath, String jarPath, String args, String outFile, String pidFile) throws NetworkException {
         System.out.println("NETWORK - Executing jar file " + jarPath);
 
         try {
-            String command = "java -jar " + jarPath + " " + args + " > " + REMOTE_SOS_OUT_FILE + " 2>&1 & echo $! > " + REMOTE_SOS_PID_FILE;
+            String command = "cd " + basePath + "; java -jar " + jarPath + " " + args + " > " + outFile + " 2>&1 & echo $! > " + pidFile;
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -190,6 +202,18 @@ public class NetworkOperations {
             throw new NetworkException();
         }
 
+    }
+
+    public void makePath(String path) throws NetworkException {
+        System.out.println("NETWORK - Making remote path " + path);
+
+        try {
+            String command = "mkdir -p " + path;
+            exec(command);
+
+        } catch (JSchException | IOException e) {
+            throw new NetworkException();
+        }
     }
 
     private void send(String command, String lfile, boolean ptimestamp) throws IOException, JSchException {

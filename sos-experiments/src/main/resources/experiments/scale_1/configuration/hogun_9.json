@@ -61,11 +61,11 @@
       "port": 8082
     },
     "keys": {
-      "location": "/cs/scratch/sic2/hogun9/sos/keys/"
+      "location": "/cs/scratch/sic2/sos/keys/"
     },
     "store": {
       "type": "local",
-      "location": "/cs/scratch/sic2/hogun9/sos/"
+      "location": "/cs/scratch/sic2/sos/"
     },
     "global": {
       "ssl_trust_store" : "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/security/cacerts",

@@ -9,6 +9,7 @@
     "nodes": [],
     "experimentnode": {
       "id": 0,
+      "name" : "local",
       "remote": false,
       "configurationfile": "node_0.json"
     },

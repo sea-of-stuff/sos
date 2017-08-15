@@ -9,6 +9,8 @@
     "nodes" : [
       {
         "id" : 1,
+        "name" : "pi2B",
+        "path" : "",
         "remote" : true,
         "ssh" : {
           "type" : 0,
@@ -27,6 +29,8 @@
       },
       {
         "id" : 2,
+        "name" : "pi3B",
+        "path" : "",
         "remote" : true,
         "ssh" : {
           "type" : 0,
@@ -46,6 +50,7 @@
     ],
     "experimentnode" : {
       "id" : 0,
+      "name" : "local",
       "remote" : false,
       "configurationfile" : "node_0.json"
     },

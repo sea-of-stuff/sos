@@ -8,10 +8,10 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 public class SOSDistribution {
 
     private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/sos-experiments.jar";
-    private static final String REMOTE_SOS_JAR_PATH = "sos.jar";
-    private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.conf";
-    protected static final String REMOTE_SOS_PID_FILE = "sos.pid";
-    protected static final String REMOTE_SOS_OUT_FILE = "out";
+    private static final String REMOTE_SOS_JAR_PATH =  "sos.jar";
+    private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.json";
+    private static final String REMOTE_SOS_PID_FILE =  "sos.pid";
+    private static final String REMOTE_SOS_OUT_FILE = "out";
 
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
@@ -21,12 +21,16 @@ public class SOSDistribution {
 
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
+            System.out.println("Sending files for node " + node.getName());
+            String path = node.getPath() + node.getSsh().getUser() + "/";
+
             NetworkOperations scp = new NetworkOperations();
             scp.setSsh(node.getSsh());
             scp.connect();
 
-            scp.sendFile(appPath, REMOTE_SOS_JAR_PATH);
-            scp.sendFile(node.getConfigurationFile(experimentName), REMOTE_SOS_CONFIGURATION_PATH);
+            scp.makePath(path);
+            scp.sendFile(appPath, path + REMOTE_SOS_JAR_PATH);
+            scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
 
             scp.disconnect();
         }
@@ -39,14 +43,16 @@ public class SOSDistribution {
 
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
+            System.out.println("Deleting files for node " + node.getName());
+            String path = node.getPath() + node.getSsh().getUser() + "/";
+
             NetworkOperations scp = new NetworkOperations();
             scp.setSsh(node.getSsh());
             scp.connect();
 
-            // scp.deleteFile(REMOTE_SOS_JAR_PATH);
-            // scp.deleteFile(REMOTE_SOS_CONFIGURATION_PATH);
-            scp.deleteFile(REMOTE_SOS_OUT_FILE);
-            scp.deleteFile(REMOTE_SOS_PID_FILE);
+            scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
+            scp.deleteFile(path + REMOTE_SOS_PID_FILE);
+            scp.deleteFile(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
 
             scp.disconnect();
         }
@@ -58,12 +64,14 @@ public class SOSDistribution {
 
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
+            String path = node.getPath() + node.getSsh().getUser() + "/";
+
             NetworkOperations scp = new NetworkOperations();
             scp.setSsh(node.getSsh());
             scp.connect();
 
             // Run the SOS node with the jetty REST server component
-            scp.executeJar(REMOTE_SOS_JAR_PATH, "-c " + REMOTE_SOS_CONFIGURATION_PATH + " -j");
+            scp.executeJar(path, REMOTE_SOS_JAR_PATH, "-c " + REMOTE_SOS_CONFIGURATION_PATH + " -j", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
 
             scp.disconnect();
         }
@@ -74,11 +82,13 @@ public class SOSDistribution {
 
         for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
+            String path = node.getPath() + node.getSsh().getUser() + "/";
+
             NetworkOperations scp = new NetworkOperations();
             scp.setSsh(node.getSsh());
             scp.connect();
 
-            scp.killProcess(REMOTE_SOS_PID_FILE);
+            scp.killProcess(path + REMOTE_SOS_PID_FILE);
             scp.disconnect();
         }
 
@@ -90,12 +100,15 @@ public class SOSDistribution {
         String experimentName = configuration.getExperimentObj().getName();
         ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
+        String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
+
         NetworkOperations scp = new NetworkOperations();
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
-        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, REMOTE_SOS_JAR_PATH);
-        scp.sendFile(experimentNode.getConfigurationFile(experimentName), REMOTE_SOS_CONFIGURATION_PATH);
+        scp.makePath(path);
+        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, path + REMOTE_SOS_JAR_PATH);
+        scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
 
         scp.disconnect();
     }

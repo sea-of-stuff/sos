@@ -9,6 +9,8 @@
     "nodes" : [
       {
         "id" : 1,
+        "name" : "hogun10",
+        "path" : "/cs/scratch/",
         "remote" : true,
         "ssh" : {
           "type" : 1,
@@ -29,6 +31,8 @@
       },
       {
         "id" : 1,
+        "name" : "hogun9",
+        "path" : "/cs/scratch/",
         "remote" : true,
         "ssh" : {
           "type" : 1,
@@ -50,6 +54,7 @@
     ],
     "experimentnode" : {
       "id" : 0,
+      "name" : "local",
       "remote" : false,
       "configurationfile" : "node_0.json"
     },

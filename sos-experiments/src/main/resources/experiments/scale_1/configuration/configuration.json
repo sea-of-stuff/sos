@@ -9,6 +9,8 @@
     "nodes" : [
       {
         "id" : 1,
+        "name" : "minimac",
+        "path" : "",
         "remote" : true,
         "ssh" : {
           "type" : 0,
@@ -28,6 +30,7 @@
     ],
     "experimentnode" : {
       "id" : 0,
+      "name" : "local",
       "remote" : false,
       "configurationfile" : "node_0.json"
     },

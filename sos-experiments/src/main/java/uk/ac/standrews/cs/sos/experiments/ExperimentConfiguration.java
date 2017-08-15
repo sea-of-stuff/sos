@@ -147,6 +147,8 @@ public class ExperimentConfiguration {
         public static class Node {
 
             private int id;
+            private String name;
+            private String path = "";
             private boolean remote;
             private String configurationFile;
             private SSH ssh;
@@ -192,6 +194,22 @@ public class ExperimentConfiguration {
 
             public void setBehaviour(Behaviour behaviour) {
                 this.behaviour = behaviour;
+            }
+
+            public String getPath() {
+                return path;
+            }
+
+            public void setPath(String path) {
+                this.path = path;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
             }
 
             public static class SSH {

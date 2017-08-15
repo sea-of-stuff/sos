@@ -164,7 +164,7 @@ as providing a new `log4j.properties` file.
 To explicitly instruct the SOS application to use a non-default properties file, you must
 add this parameter when running the java app:
 
-` -Dlog4j.configuration=file:/path/to/log4j.properties`
+`-Dlog4j.configuration=file:/path/to/log4j.properties`
 
 **Note** that the property value must be a valid URL.
 
