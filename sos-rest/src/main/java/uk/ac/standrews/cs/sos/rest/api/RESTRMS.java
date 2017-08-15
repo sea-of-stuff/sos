@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest.bkp;
+package uk.ac.standrews.cs.sos.rest.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/usro/")
+@Path("/sos/usro/")
 @RMSNode
 public class RESTRMS {
 
@@ -125,7 +125,6 @@ public class RESTRMS {
     public Response postUser(final User user) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /user");
 
-
         UsersRolesService usro = RESTConfig.sos.getRMS();
 
         try {
@@ -144,7 +143,6 @@ public class RESTRMS {
     @Produces(MediaType.TEXT_HTML)
     public Response postRole(final Role role) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /role");
-
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 

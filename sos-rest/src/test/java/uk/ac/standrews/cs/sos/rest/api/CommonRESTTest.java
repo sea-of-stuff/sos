@@ -29,7 +29,7 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        
+
         File configFile = new File(TEST_RESOURCES_PATH + "config.json");
 
         state = new ServerState();
@@ -55,5 +55,24 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
         config = new RESTConfig();
         return config;
     }
+
+
+//    @Override
+//    public TestContainerFactory getTestContainerFactory() {
+//        return new ExternalTestContainerFactory(){
+//
+//            @Override
+//            public TestContainer create(URI baseUri, DeploymentContext context)
+//                    throws IllegalArgumentException {
+//                try {
+//                    baseUri = new URI("http://localhost:9998/sos");
+//                } catch (URISyntaxException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//                return super.create(baseUri, context);
+//            }
+//        };
+//    }
 
 }

@@ -44,7 +44,7 @@ public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
                 "    }" +
                 "}";
 
-        Response response = target("/nds/register")
+        Response response = target("/sos/nds/register")
                 .request()
                 .post(Entity.json(data));
 

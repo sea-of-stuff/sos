@@ -1,39 +1,37 @@
-package uk.ac.standrews.cs.sos.rest;
+package uk.ac.standrews.cs.sos.jetty;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Logger;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
+import uk.ac.standrews.cs.sos.rest.RESTConfig;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class JettyApp {
 
-    private static UriBuilder uriBuilder = UriBuilder.fromUri("http://0.0.0.0/");
+    private static Server startServer(SOSLocalNode sos) throws Exception {
 
-    private static Server startServer(SOSLocalNode sos, int port) throws Exception {
+        assert sos != null;
+        int port = sos.getHostAddress().getPort();
 
-        final ResourceConfig rc = new RESTConfig().setSOS(sos);
-        URI baseUri = uriBuilder.port(port).build();
+        RESTConfig restConfig = new RESTConfig();
+        restConfig.setSOS(sos);
 
-        return JettyHttpContainerFactory.createServer(baseUri, rc);
+        ServletHolder servlet = new ServletHolder(new ServletContainer(restConfig));
+        Server server = new Server(port);
+        ServletContextHandler context = new ServletContextHandler(server, "/*");
+        context.addServlet(servlet, "/*");
+
+        return server;
     }
 
     public static void RUN(SOSLocalNode sos) throws Exception  {
-        assert sos != null;
-
-        int port = sos.getHostAddress().getPort();
-        System.out.println("SOS REST will run at localhost:" + port);
-        System.out.println("REST API documentation available at localhost:" + port +
-                "/swagger.json OR localhost:" + port + "/swagger.yaml");
-
-        //org.eclipse.jetty.util.log.Log.setLog(new NoLogging());
-        Server server = startServer(sos, port);
+        org.eclipse.jetty.util.log.Log.setLog(new NoLogging());
+        Server server = startServer(sos);
 
         try {
             server.start();
@@ -42,6 +40,7 @@ public class JettyApp {
             server.destroy();
         }
     }
+
 
     /**
      * Enable logging by overriding the functions below and setting the LOG level in

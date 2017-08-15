@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest.bkp;
+package uk.ac.standrews.cs.sos.rest.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/dds/")
+@Path("/sos/dds/")
 @DDSNode
 public class RESTDDS {
 

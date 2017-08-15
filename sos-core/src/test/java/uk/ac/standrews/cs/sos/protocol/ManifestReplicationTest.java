@@ -65,7 +65,7 @@ public class ManifestReplicationTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/dds/manifest")
+                                .withPath("/sos/dds/manifest")
                                 .withBody(TEST_MANIFEST)
                 )
                 .respond(
@@ -77,7 +77,7 @@ public class ManifestReplicationTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/dds/manifest")
+                                .withPath("/sos/dds/manifest")
                                 .withBody(TEST_BAD_MANIFEST)
                 )
                 .respond(

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest.bkp;
+package uk.ac.standrews.cs.sos.rest.api;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
@@ -28,7 +28,7 @@ import java.io.InputStream;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/storage/")
+@Path("/sos/storage/")
 @StorageNode
 public class RESTStorage {
 

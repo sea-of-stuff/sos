@@ -61,7 +61,7 @@ public class FetchManifestTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/dds/manifest/guid/" + GUID_VERSION)
+                                .withPath("/sos/dds/manifest/guid/" + GUID_VERSION)
                 )
                 .respond(
                         response()

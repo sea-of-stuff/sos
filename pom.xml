@@ -12,6 +12,7 @@
     <modules>
         <module>sos-core</module>
         <module>sos-rest</module>
+        <module>sos-rest-jetty</module>
         <module>web-ui</module>
         <module>sos-app</module>
         <module>sos-filesystem</module>

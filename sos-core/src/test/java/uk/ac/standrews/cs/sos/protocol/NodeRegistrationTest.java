@@ -127,7 +127,7 @@ public class NodeRegistrationTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/nds/register")
+                                .withPath("/sos/nds/register")
                                 .withBody(TEST_DATA)
                 )
                 .respond(
@@ -139,7 +139,7 @@ public class NodeRegistrationTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/nds/register")
+                                .withPath("/sos/nds/register")
                                 .withBody(TEST_DATA_FAIL)
                 )
                 .respond(

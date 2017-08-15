@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest.bkp;
+package uk.ac.standrews.cs.sos.rest.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/nds/")
+@Path("/sos/nds/")
 @NDSNode
 public class RESTNDS {
 

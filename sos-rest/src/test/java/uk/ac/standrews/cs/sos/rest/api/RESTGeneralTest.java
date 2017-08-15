@@ -43,7 +43,7 @@ public class RESTGeneralTest extends CommonRESTTest {
     @Test
     public void testGetInfo() throws Exception {
 
-        Response response = target("/info").request().get();
+        Response response = target("/sos/info").request().get();
         assertEquals(response.getStatus(), HTTPStatus.OK);
 
         System.out.println(response.readEntity(String.class));

@@ -25,16 +25,15 @@ public class ServerState {
     public SOSLocalNode sos;
     private LocalStorage localStorage;
 
-    public SOSLocalNode init(File file) {
+    public void init(File file) {
         try {
             SettingsConfiguration settingsConfiguration = new SettingsConfiguration(file);
-            return startSOS(settingsConfiguration.getSettingsObj());
+            startSOS(settingsConfiguration.getSettingsObj());
 
         } catch (SOSException | ConfigurationException e) {
             e.printStackTrace();
         }
 
-        return null;
     }
 
     public void kill() throws DataStorageException {
@@ -43,7 +42,7 @@ public class ServerState {
         localStorage.destroy();
     }
 
-    private SOSLocalNode startSOS(SettingsConfiguration.Settings settings) throws SOSException {
+    private void startSOS(SettingsConfiguration.Settings settings) throws SOSException {
 
         try {
             CastoreBuilder builder = settings.getStore().getCastoreBuilder();
@@ -61,7 +60,6 @@ public class ServerState {
                 .bootstrapNodes(bootstrapNodes)
                 .build();
 
-        return sos;
     }
 
 }

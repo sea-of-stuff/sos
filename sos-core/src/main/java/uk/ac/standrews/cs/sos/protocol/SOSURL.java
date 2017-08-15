@@ -18,73 +18,74 @@ import java.net.URL;
 public class SOSURL {
 
     private static final String HTTP_SCHEME = "http://";
+    private static final String BASE_PATH = "/sos/";
 
     public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/dds/manifest/guid/" + guid.toMultiHash();
+                "dds/manifest/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL MMS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/mms/metadata/guid/" + guid.toMultiHash();
+                "mms/metadata/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL DDS_POST_MANIFEST(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/dds/manifest";
+                "dds/manifest";
 
         return makeURL(url);
     }
 
     public static URL MMS_POST_METADATA(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/mms/metadata";
+                "mms/metadata";
 
         return makeURL(url);
     }
 
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/storage/data/guid/" + guid.toMultiHash();
+                "storage/data/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL STORAGE_POST_DATA(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/storage/stream";
+                "storage/stream";
 
         return makeURL(url);
     }
 
     public static URL CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/challenge/" + guid.toMultiHash() + "/" + challenge;
+                "challenge/" + guid.toMultiHash() + "/" + challenge;
 
         return makeURL(url);
     }
 
     public static URL NDS_REGISTER_NODE(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/register/";
+                "nds/register/";
 
         return makeURL(url);
     }
 
     public static URL NDS_GET_NODE(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/guid/" + guid.toMultiHash();
+                "nds/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL NDS_GET_NODE(Node node, String role) throws SOSURLException {
         String url = buildURLBase(node) +
-                "/nds/service/" + role;
+                "nds/service/" + role;
 
         return makeURL(url);
     }
@@ -103,6 +104,6 @@ public class SOSURL {
 
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
-        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort();
+        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort() + BASE_PATH;
     }
 }

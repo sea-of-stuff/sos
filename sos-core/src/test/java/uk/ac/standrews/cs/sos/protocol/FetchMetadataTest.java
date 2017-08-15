@@ -83,7 +83,7 @@ public class FetchMetadataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/mms/metadata/guid/" + testGUID.toMultiHash())
+                                .withPath("/sos/mms/metadata/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()

@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest.bkp;
+package uk.ac.standrews.cs.sos.rest.api;
 
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -15,14 +15,14 @@ import javax.ws.rs.core.Response;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/")
+@Path("/sos")
 public class RESTGeneral {
 
     @GET
     @Path("/info")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getInfo() {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /info");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/info");
 
         SOSLocalNode sos = RESTConfig.sos;
         return Response.status(HTTPStatus.OK)

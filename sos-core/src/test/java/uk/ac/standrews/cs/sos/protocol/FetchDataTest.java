@@ -56,7 +56,7 @@ public class FetchDataTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/storage/data/guid/" + testGUID.toMultiHash())
+                                .withPath("/sos/storage/data/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()

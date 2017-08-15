@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.rest.bkp;
+package uk.ac.standrews.cs.sos.rest.api;
 
 import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/cms/")
+@Path("/sos/cms/")
 @CMSNode
 public class RESTCMS {
 

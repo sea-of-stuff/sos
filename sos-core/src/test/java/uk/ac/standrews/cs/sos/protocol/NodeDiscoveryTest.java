@@ -80,7 +80,7 @@ public class NodeDiscoveryTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/nds/guid/" + nodeFound.toMultiHash())
+                                .withPath("/sos/nds/guid/" + nodeFound.toMultiHash())
                 )
                 .respond(
                         response()
@@ -118,7 +118,7 @@ public class NodeDiscoveryTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/nds/guid/" + nodeNotFound.toMultiHash())
+                                .withPath("/sos/nds/guid/" + nodeNotFound.toMultiHash())
                 )
                 .respond(
                         response()

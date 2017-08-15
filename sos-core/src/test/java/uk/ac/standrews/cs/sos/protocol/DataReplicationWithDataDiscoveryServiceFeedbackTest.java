@@ -70,7 +70,7 @@ public class DataReplicationWithDataDiscoveryServiceFeedbackTest extends SetUpTe
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/storage/stream")
+                                .withPath("/sos/storage/stream")
                                 .withBody(TEST_DATA)
                 )
                 .respond(
