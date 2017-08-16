@@ -8,14 +8,15 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.DDSIndex;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocalManifestsDirectory;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.ManifestsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.RemoteManifestsDirectory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
-import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
 import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
+import static uk.ac.standrews.cs.sos.model.NodesCollection.TYPE.LOCAL;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -99,26 +101,39 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
+        try {
+            return getManifest(new NodesCollectionImpl(LOCAL), guid);
+        } catch (NodesCollectionException e) {
+            throw new ManifestNotFoundException("Manifest not found");
+        }
+    }
+
+    @Override
+    public Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException {
+
         if (guid == null || guid.isInvalid()) {
             throw new ManifestNotFoundException("GUID was invalid");
         }
 
-        // TODO - improve logic about manifest being added to directories if missing
         try {
-            Manifest manifest = findManifest(inMemoryCache, guid);
+            Manifest manifest = inMemoryCache.findManifest(guid);
             if (manifest == null) {
-                manifest = findManifest(local, guid);
 
-                if (manifest != null) inMemoryCache.addManifest(manifest);
+                manifest = local.findManifest(guid);
+                if (manifest != null) {
+                    inMemoryCache.addManifest(manifest);
+                }
             }
-            if (manifest == null) {
-                manifest = findManifest(remote, guid);
 
+            if (manifest == null && !nodes.type().equals(LOCAL)) {
+
+                manifest = remote.findManifest(guid, nodes);
                 if (manifest != null) {
                     inMemoryCache.addManifest(manifest);
                     local.addManifest(manifest);
                 }
             }
+
             if (manifest == null) {
                 throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toShortString());
             }
@@ -132,14 +147,6 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException {
-
-        // TODO - this should be the generic method for the above
-
-        return null;
-    }
-
-    @Override
     public Set<IGUID> getAllAssets() {
 
         // NOTE - returning only the ones from the inMemoryCache for the moment
@@ -148,6 +155,8 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
     @Override
     public Set<IGUID> getAllAssets(NodesCollection nodesCollection) {
+
+        // TODO
         return null;
     }
 
@@ -235,15 +244,4 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         }
     }
 
-    private Manifest findManifest(ManifestsDirectory directory, IGUID guid) {
-        Manifest manifest = null;
-        try {
-            manifest = directory.findManifest(guid);
-
-        } catch (ManifestNotFoundException e) {
-            SOS_LOG.log(LEVEL.WARN, e.getMessage());
-        }
-
-        return manifest;
-    }
 }

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.REPLICATION_FACTOR_MULTIPLIER;
+import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
 /**
  * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
@@ -76,35 +77,46 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
-        Manifest retval = null;
+        try {
+            return findManifest(guid, new NodesCollectionImpl(NodesCollection.TYPE.ANY));
+        } catch (NodesCollectionException e) {
+            return null;
+        }
 
-        Set<IGUID> guids = ddsIndex.getDDSRefs(guid); // TODO - do not just use nodes in the index, since it may not be sufficient
-        if (guids == null) {
+    }
+
+    public Manifest findManifest(IGUID guid, NodesCollection nodesCollection) throws ManifestNotFoundException {
+
+        Set<IGUID> ddsGUIDsToCheck;
+        if (nodesCollection.type().equals(NodesCollection.TYPE.SPECIFIED)) {
+            NodesCollection ddsNodesOnly = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, NO_LIMIT);
+            ddsGUIDsToCheck = ddsNodesOnly.nodesRefs();
+        } else {
+            ddsGUIDsToCheck = ddsIndex.getDDSRefs(guid);
+        }
+
+        if (ddsGUIDsToCheck == null) {
             throw new ManifestNotFoundException("Unable to find manifest because there are no known DDS nodes");
         }
 
-        for(IGUID g:guids) {
+        for(IGUID ddsGUID : ddsGUIDsToCheck) {
+
             try {
-                Node node = nodeDiscoveryService.getNode(g);
+                Node node = nodeDiscoveryService.getNode(ddsGUID);
 
                 FetchManifest fetchManifest = new FetchManifest(node, guid); // FIXME - use different end-points for context, metadata, etc
                 TasksQueue.instance().performSyncTask(fetchManifest);
 
-                retval = fetchManifest.getManifest();
-                if (retval != null) {
-                    break;
-                }
+                Manifest retval = fetchManifest.getManifest();
+                return retval;
+
             } catch (NodeNotFoundException | IOException e) {
-                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid + " from Node with GUID " + g);
+                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid .toMultiHash()+ " from Node with GUID " + ddsGUID.toMultiHash());
             }
 
         }
 
-        if (retval == null) {
-            throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");
-        }
-
-        return retval;
+        throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");
     }
 
     @Override
