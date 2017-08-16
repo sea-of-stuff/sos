@@ -53,6 +53,14 @@ public interface DataDiscoveryService {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
+    /**
+     * Get the manifest matching the given GUID from the nodes collection
+     *
+     * @param nodes
+     * @param guid
+     * @return
+     * @throws ManifestNotFoundException
+     */
     Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException;
 
     /**
@@ -66,11 +74,14 @@ public interface DataDiscoveryService {
     void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
 
     /**
-     * Get all known versions to this DDS node
+     * Get all known assets to this DDS node.
+     * The assets are returned as a set of invariant GUIDs.
      *
      * @return list of DDS versions's invariants
      */
     Set<IGUID> getAllAssets();
+
+    Set<IGUID> getAllAssets(NodesCollection nodesCollection);
 
     /**
      * Get all the tips for the given invariant.

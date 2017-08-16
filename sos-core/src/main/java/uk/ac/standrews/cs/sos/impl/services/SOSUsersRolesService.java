@@ -124,6 +124,8 @@ public class SOSUsersRolesService implements UsersRolesService {
     @Override
     public void setActiveRole(Role role) throws UserRolePersistException {
 
+        if (!role.hasPrivateKeys()) throw new UserRolePersistException("You do not own the private keys to set the Role " + role.guid() + " as active");
+
         inMemoryCache.setActiveRole(role);
         localDirectory.setActiveRole(role);
     }
@@ -135,6 +137,8 @@ public class SOSUsersRolesService implements UsersRolesService {
 
     @Override
     public void setActiveUser(User user) throws UserRolePersistException {
+
+        if (!user.hasPrivateKeys()) throw new UserRolePersistException("You do not own the private keys to set the User " + user.guid() + " as active");
 
         inMemoryCache.setActiveUser(user);
         localDirectory.setActiveUser(user);

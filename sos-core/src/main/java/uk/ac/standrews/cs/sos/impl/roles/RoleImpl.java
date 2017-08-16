@@ -86,6 +86,18 @@ public class RoleImpl extends UserImpl implements Role {
     }
 
     @Override
+    public boolean hasPrivateKeys() {
+
+        if (protectionPrivateKey == null) return false;
+
+        try {
+            return AsymmetricEncryption.verifyKeyPair(protectionPublicKey, protectionPrivateKey);
+        } catch (CryptoException e) {
+            return false;
+        }
+    }
+
+    @Override
     public String encrypt(SecretKey key) throws ProtectionException {
 
         try {

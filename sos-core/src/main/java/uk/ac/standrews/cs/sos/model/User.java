@@ -60,4 +60,6 @@ public interface User {
      */
     boolean verify(String text, String signatureToVerify) throws SignatureException;
 
+    boolean hasPrivateKeys();
+
 }

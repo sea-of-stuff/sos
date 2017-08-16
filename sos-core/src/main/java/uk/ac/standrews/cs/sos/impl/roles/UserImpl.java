@@ -86,6 +86,18 @@ public class UserImpl implements User {
     }
 
     @Override
+    public boolean hasPrivateKeys() {
+
+        if (signaturePrivateKey == null) return false;
+
+        try {
+            return DigitalSignature.verifyKeyPair(signatureCertificate, signaturePrivateKey);
+        } catch (CryptoException e) {
+            return false;
+        }
+    }
+
+    @Override
     public String toString() {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);

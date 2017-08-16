@@ -133,6 +133,9 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
     @Override
     public Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException {
+
+        // TODO - this should be the generic method for the above
+
         return null;
     }
 
@@ -141,6 +144,11 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
         // NOTE - returning only the ones from the inMemoryCache for the moment
         return inMemoryCache.getAllAssets();
+    }
+
+    @Override
+    public Set<IGUID> getAllAssets(NodesCollection nodesCollection) {
+        return null;
     }
 
     @Override

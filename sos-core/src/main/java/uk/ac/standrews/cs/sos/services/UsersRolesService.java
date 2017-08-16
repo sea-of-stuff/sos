@@ -85,8 +85,6 @@ public interface UsersRolesService {
     /**
      * Sets the active role for this node
      *
-     * TODO - should be able to active role only if private key is known
-     *
      * @param role to be made active
      * @throws UserRolePersistException if the role could not be made active
      */
@@ -94,8 +92,6 @@ public interface UsersRolesService {
 
     /**
      * Returns the active user
-     *
-     * TODO - should be able to active user only if private key is known
      *
      * @return the active user
      * @throws UserNotFoundException if no active user is found
