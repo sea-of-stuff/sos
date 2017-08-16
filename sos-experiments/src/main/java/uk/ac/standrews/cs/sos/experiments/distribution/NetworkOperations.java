@@ -110,7 +110,7 @@ public class NetworkOperations {
         }
     }
 
-    // TODO - work in progress
+    // TODO - This method must be tested
     public void sendDirectory(String lDirectory, String rDirectory) throws NetworkException {
 
         makePath(rDirectory);
@@ -121,9 +121,9 @@ public class NetworkOperations {
         for (File file : files) {
             if (file.isDirectory()) {
                 System.out.println("Send sub-directory: " + file.getName());
-                sendDirectory(file.getAbsolutePath(), "TODO");
+                sendDirectory(file.getAbsolutePath(), rDirectory + "/" + file.getName());
             } else {
-                sendFile("", "");
+                sendFile(file.getAbsolutePath(), rDirectory + "/" + file.getName());
             }
         }
     }

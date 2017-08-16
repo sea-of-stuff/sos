@@ -18,9 +18,6 @@ import java.util.Set;
  * - managing the manifests in the SOS
  * - track where the data is and help nodes to find the data
  *
- * TODO - pass param to methods so that it is possible to restrict the scope:
- * e.g. get manifest from this node, vs from all the nodes in the world
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface DataDiscoveryService {
@@ -81,6 +78,14 @@ public interface DataDiscoveryService {
      */
     Set<IGUID> getAllAssets();
 
+    /**
+     * Returns all the invariant references for the assets at the nodes within the nodes collection.
+     *
+     * TODO - this method has not been implemented yet
+     *
+     * @param nodesCollection
+     * @return
+     */
     Set<IGUID> getAllAssets(NodesCollection nodesCollection);
 
     /**

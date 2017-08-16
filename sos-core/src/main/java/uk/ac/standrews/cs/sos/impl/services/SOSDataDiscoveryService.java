@@ -156,7 +156,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     @Override
     public Set<IGUID> getAllAssets(NodesCollection nodesCollection) {
 
-        // TODO
+        // TODO - this requires some HTTP request to other nodes
         return null;
     }
 
