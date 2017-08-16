@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
+import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -73,7 +74,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void persistMultipleNodesTest() throws GUIDGenerationException, NodesDirectoryException {
 
-        Set<Node> nodes = localNodesDirectory.getKnownNodes();
+        Set<Node> nodes = localNodesDirectory.getNodes(p -> true, NO_LIMIT);
         assertEquals(nodes.size(), 0);
 
         IGUID guid = GUIDFactory.generateRandomGUID();
@@ -88,13 +89,13 @@ public class LocalNodesDirectoryTest extends CommonTest {
         addNode(true, true, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false);
 
-        assertEquals(localNodesDirectory.getKnownNodes().size(), 8);
+        assertEquals(localNodesDirectory.getNodes(p -> true, NO_LIMIT).size(), 8);
         assertEquals(localNodesDirectory.getNode(guid), node);
 
-        assertEquals(localNodesDirectory.getNodes(Node::isStorage, LocalNodesDirectory.NO_LIMIT).size(), 3);
-        assertEquals(localNodesDirectory.getNodes(Node::isDDS, LocalNodesDirectory.NO_LIMIT).size(), 2);
-        assertEquals(localNodesDirectory.getNodes(Node::isNDS, LocalNodesDirectory.NO_LIMIT).size(), 2);
-        assertEquals(localNodesDirectory.getNodes(Node::isMMS, LocalNodesDirectory.NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNodes(Node::isStorage, NO_LIMIT).size(), 3);
+        assertEquals(localNodesDirectory.getNodes(Node::isDDS, NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNodes(Node::isNDS, NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNodes(Node::isMMS, NO_LIMIT).size(), 2);
     }
 
     @Test
@@ -102,13 +103,13 @@ public class LocalNodesDirectoryTest extends CommonTest {
         IGUID guid = GUIDFactory.generateRandomGUID();
         Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
 
-        assertEquals(localNodesDirectory.getKnownNodes().size(), 0);
+        assertEquals(localNodesDirectory.getNodes(p -> true, NO_LIMIT).size(), 0);
 
         localNodesDirectory.addNode(node);
-        assertEquals(localNodesDirectory.getKnownNodes().size(), 1);
+        assertEquals(localNodesDirectory.getNodes(p -> true, NO_LIMIT).size(), 1);
 
         localNodesDirectory.persistNodesTable();
-        assertEquals(localNodesDirectory.getKnownNodes().size(), 1);
+        assertEquals(localNodesDirectory.getNodes(p -> true, NO_LIMIT).size(), 1);
     }
 
     @Test

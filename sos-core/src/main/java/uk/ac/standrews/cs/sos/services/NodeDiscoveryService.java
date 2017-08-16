@@ -74,6 +74,15 @@ public interface NodeDiscoveryService {
      *
      * @return set of nodes
      */
-    Set<Node> getAllKnownNodes();
+    Set<Node> getNodes();
+
+    /**
+     * Returns a set of known nodes.
+     * The limit constrains the maximum number of nodes returned.
+     *
+     * @param limit
+     * @return
+     */
+    Set<Node> getNodes(int limit);
 
 }

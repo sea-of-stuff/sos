@@ -122,6 +122,9 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public Set<Node> getNodes(NodesCollection nodesCollection, int limit) {
 
+        if (nodesCollection.type().equals(NodesCollection.TYPE.ANY))
+            return getNodes(limit);
+
         Set<Node> retval = new LinkedHashSet<>();
         for(IGUID guid : nodesCollection.nodesRefs()) {
 
@@ -177,8 +180,13 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
-    public Set<Node> getAllKnownNodes() {
-        return localNodesDirectory.getKnownNodes();
+    public Set<Node> getNodes() {
+        return getNodes(NO_LIMIT);
+    }
+
+    @Override
+    public Set<Node> getNodes(int limit) {
+        return localNodesDirectory.getNodes(p -> true, limit);
     }
 
     /**

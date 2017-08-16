@@ -53,15 +53,6 @@ public class LocalNodesDirectory {
     }
 
     /**
-     * Get all known nodes.
-     *
-     * @return set of known nodes
-     */
-    public Set<Node> getKnownNodes() {
-        return knownNodes;
-    }
-
-    /**
      * Get a Node node given its guid identifier.
      *
      * @param guid for the node
