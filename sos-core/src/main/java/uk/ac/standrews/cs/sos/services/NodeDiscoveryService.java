@@ -46,7 +46,7 @@ public interface NodeDiscoveryService {
      * @param type of request nodes
      * @return set of nodes
      */
-    Set<Node> getNodes(NodeType type); // TODO - use method below ?!?
+    Set<Node> getNodes(NodeType type);
 
     /**
      * Get a set of nodes from a nodes collection.

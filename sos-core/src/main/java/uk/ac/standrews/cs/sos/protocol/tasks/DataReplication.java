@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.network.*;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
-import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
@@ -103,7 +102,7 @@ public class DataReplication extends Task {
         this.dataDiscoveryService = dataDiscoveryService;
 
         this.data = data;
-        this.nodesCollection = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.STORAGE, 10); // FIXME
+        this.nodesCollection = nodesCollection; // TODO - nodes should be filtered already!
         this.replicationFactor = replicationFactor;
     }
 
@@ -116,9 +115,12 @@ public class DataReplication extends Task {
             Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();
             while (nodeRefs.hasNext() && successfulReplicas < replicationFactor) {
 
+                IGUID ref = nodeRefs.next();
                 try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
 
-                    Node node = nodeDiscoveryService.getNode(nodeRefs.next());
+                    Node node = nodeDiscoveryService.getNode(ref);
+                    if (!node.isStorage()) continue;
+
                     boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage, nodeDiscoveryService, dataDiscoveryService);
 
                     if (transferWasSuccessful) {
@@ -126,7 +128,7 @@ public class DataReplication extends Task {
                     }
 
                 } catch (IOException | NodeNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + ref);
                 }
 
 

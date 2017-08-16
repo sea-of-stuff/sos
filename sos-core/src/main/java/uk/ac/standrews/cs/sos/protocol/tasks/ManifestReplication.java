@@ -1,15 +1,19 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.network.*;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -30,40 +34,51 @@ import java.util.Iterator;
 public class ManifestReplication extends Task {
 
     private Manifest manifest;
-    private Iterator<Node> nodes;
+    private NodesCollection nodesCollection;
     private int replicationFactor;
+    private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
 
-    public ManifestReplication(Manifest manifest, Iterator<Node> nodes, int replicationFactor, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
+    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
 
-        if (dataDiscoveryService == null) {
-            throw new SOSProtocolException("DDS is null. Manifest replication process is aborted.");
+        if (dataDiscoveryService == null || nodeDiscoveryService == null) {
+            throw new SOSProtocolException("DDS and/or NDS are null. Manifest replication process is aborted.");
         }
 
-        this.manifest = manifest;
-        this.nodes = nodes;
-        this.replicationFactor = replicationFactor;
+        this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;
+
+        this.manifest = manifest;
+        this.nodesCollection = nodesCollection;
+        this.replicationFactor = replicationFactor;
     }
 
     @Override
     public void performAction() {
 
         int successfulReplicas = 0;
-        while(nodes.hasNext() && successfulReplicas < replicationFactor) {
-            Node node = nodes.next();
+        Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();
+        while(nodeRefs.hasNext() && successfulReplicas < replicationFactor) {
 
-            if (node.isDDS()) {
+            IGUID ref = nodeRefs.next();
+            try {
+                Node node = nodeDiscoveryService.getNode(ref);
+                if (!node.isDDS()) continue;
+
                 boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
                 if (transferWasSuccessful) {
                     SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.toString());
-                    dataDiscoveryService.addManifestDDSMapping(manifest.guid(), node.getNodeGUID());
+                    dataDiscoveryService.addManifestDDSMapping(manifest.guid(), ref);
                     successfulReplicas++;
                 } else {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
                 }
+
+            } catch (NodeNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to get node with ref: " + ref);
             }
+
         }
     }
 

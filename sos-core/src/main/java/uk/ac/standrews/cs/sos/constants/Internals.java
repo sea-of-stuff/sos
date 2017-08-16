@@ -19,4 +19,9 @@ public class Internals {
     public static final String DEFAULT_ROLE_NAME = "DEFAULT_ROLE";
     public static final String ACTIVE_USER = "ACTIVE_USER";
     public static final String ACTIVE_ROLE = "ACTIVE_ROLE";
+
+    /**
+     * Use this multiplier to make sure that the NDS attempts to return about 3 times as many nodes as requested for a LIMITED nodes' request
+     */
+    public static final int REPLICATION_FACTOR_MULTIPLIER = 3;
 }

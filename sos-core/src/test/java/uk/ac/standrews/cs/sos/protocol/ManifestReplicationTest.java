@@ -5,17 +5,22 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
@@ -101,21 +106,26 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicManifestReplicationTest() throws InterruptedException, SOSProtocolException {
+    public void basicManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
 
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(nodeGUID);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+
+        NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
+        when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
 
         DataDiscoveryService dataDiscoveryServiceMock = mock(DataDiscoveryService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, dataDiscoveryServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, dataDiscoveryServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
@@ -125,20 +135,25 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws InterruptedException, SOSProtocolException {
+    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
 
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
         when(node.isDDS()).thenReturn(false);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(nodeGUID);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+
+        NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
+        when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
 
         DataDiscoveryService dataDiscoveryServiceMock = mock(DataDiscoveryService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, dataDiscoveryServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, dataDiscoveryServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
@@ -153,32 +168,39 @@ public class ManifestReplicationTest {
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
 
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(nodeGUID);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, null);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, null, null);
     }
 
     @Test
-    public void badManifestReplicationTest() throws InterruptedException, SOSProtocolException {
+    public void badManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);
 
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(nodeGUID);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+
+        NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
+        when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
 
         DataDiscoveryService dataDiscoveryServiceMock = mock(DataDiscoveryService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodes.iterator(), 1, dataDiscoveryServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, dataDiscoveryServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();

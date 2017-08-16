@@ -5,11 +5,14 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchManifest;
@@ -19,8 +22,9 @@ import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.REPLICATION_FACTOR_MULTIPLIER;
 
 /**
  * The remote manifest directory allows the node to replicate manifests to other nodes in the SOS
@@ -48,19 +52,25 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
-        // FIXME - metadata and context should be replicated at different end-points
-        // TODO - Policy based on context?
-
-        Iterator<Node> nodes = nodeDiscoveryService.getNodes(NodeType.STORAGE).iterator();
-        int replicationFactor = 1; // FIXME - do not hardcode replication-factor. use context
-
         try {
-            ManifestReplication replicationTask = new ManifestReplication(manifest, nodes, replicationFactor, dataDiscoveryService);
+            NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollection.TYPE.ANY), NodeType.DDS, 1);
+            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, dataDiscoveryService);
+            TasksQueue.instance().performAsyncTask(replicationTask);
+        } catch (SOSProtocolException | NodesCollectionException e) {
+            throw new ManifestPersistException("Unable to persist node to remote nodes");
+        }
+
+    }
+
+    public void addManifest(Manifest manifest, NodesCollection nodesCollection, int replicationFactor) throws ManifestPersistException {
+
+        NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
+        try {
+            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, nodeDiscoveryService, dataDiscoveryService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
         }
-
     }
 
     @Override

@@ -11,13 +11,16 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -33,6 +36,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -138,20 +142,22 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @Test
-    public void basicMockServerTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void basicMockServerTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodesCollection, 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -163,20 +169,22 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @Test
-    public void replicateToNoStorageNodeTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void replicateToNoStorageNodeTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodesCollection, 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -184,26 +192,28 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @Test
-    public void replicateOnlyOnceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void replicateOnlyOnceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
-
+        when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
-        nodes.add(storageNode);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.getNodeGUID());
+        nodes.add(storageNode.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodesCollection, 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -217,31 +227,34 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @Test
-    public void replicateOnlyOnceSecondTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void replicateOnlyOnceSecondTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
-
+        when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
         Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true, false, false); // Won't replicate to non-storage
+        when(mockNodeDiscoveryService.getNode(anotherNode.getNodeGUID())).thenReturn(anotherNode);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(node);
-        nodes.add(storageNode);
-        nodes.add(anotherNode);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.getNodeGUID());
+        nodes.add(storageNode.getNodeGUID());
+        nodes.add(anotherNode.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 3, storage, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - test with different replication factor
+        DataReplication replicationTask = new DataReplication(inputStream, nodesCollection, 3, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false); // TODO - test with different replication factor
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -255,7 +268,7 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @Test
-    public void replicateToSameNodeTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void replicateToSameNodeTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
@@ -263,19 +276,22 @@ public class DataReplicationTest extends SetUpTest {
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
         Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(twinStorageNode.getNodeGUID())).thenReturn(twinStorageNode);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(storageNode);
-        nodes.add(twinStorageNode);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(storageNode.getNodeGUID());
+        nodes.add(twinStorageNode.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService); // TODO - rep factor 1
+        DataReplication replicationTask = new DataReplication(inputStream, nodesCollection, 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -289,7 +305,7 @@ public class DataReplicationTest extends SetUpTest {
     }
 
     @Test // FIXME - this test fails sometimes. Index does nt seem to be update consistently
-    public void replicateSameDataTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
+    public void replicateSameDataTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
@@ -297,17 +313,20 @@ public class DataReplicationTest extends SetUpTest {
         Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID),
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
         Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID),
                 "localhost", MOCK_TWIN_SERVER_PORT,
                 false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(twinStorageNode.getNodeGUID())).thenReturn(twinStorageNode);
 
-        Set<Node> nodes = new HashSet<>();
-        nodes.add(storageNode);
-        nodes.add(twinStorageNode);
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(storageNode.getNodeGUID());
+        nodes.add(twinStorageNode.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
-        DataReplication replicationTask = new DataReplication(inputStream, nodes.iterator(), 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService);
+        DataReplication replicationTask = new DataReplication(inputStream, nodesCollection, 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);

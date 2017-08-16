@@ -87,10 +87,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException {
         addManifest(manifest);
 
-        // TODO - is a manifest replicated to a remote node based on what? based on a context? or something else?
-        // TODO - should this be dealt (1) within a scope and (2) by contexts?
-        remote.addManifest(manifest); // will apply in async mode
-
+        remote.addManifest(manifest, nodes, replication); // TODO will apply in async mode
         // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook at page 92
     }
 
