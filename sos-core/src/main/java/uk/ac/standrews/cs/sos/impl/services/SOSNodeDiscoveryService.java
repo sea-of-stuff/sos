@@ -120,7 +120,29 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
-    public NodesCollection getNodes(NodesCollection nodesCollection, NodeType type, int limit) {
+    public Set<Node> getNodes(NodesCollection nodesCollection, int limit) {
+
+        Set<Node> retval = new LinkedHashSet<>();
+        for(IGUID guid : nodesCollection.nodesRefs()) {
+
+            try {
+                retval.add(getNode(guid));
+            } catch (NodeNotFoundException e) {
+                continue;
+            }
+
+            if (retval.size() > limit) break;
+        }
+
+
+        return retval;
+    }
+
+    @Override
+    public NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit) {
+
+        if (nodesCollection.type().equals(NodesCollection.TYPE.ANY) && limit == NO_LIMIT) return nodesCollection;
+
 
         Set<IGUID> filteredNodes = new LinkedHashSet<>();
         for(IGUID nodeRef : nodesCollection.nodesRefs()) {

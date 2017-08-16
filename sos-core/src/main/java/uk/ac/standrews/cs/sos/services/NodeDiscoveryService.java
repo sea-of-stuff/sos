@@ -35,7 +35,7 @@ public interface NodeDiscoveryService {
     /**
      * Get a known node to this Sea Of Stuff
      *
-     * @param guid
+     * @param guid of the node to find
      * @return the noda with the given guid
      */
     Node getNode(IGUID guid) throws NodeNotFoundException;
@@ -46,7 +46,17 @@ public interface NodeDiscoveryService {
      * @param type of request nodes
      * @return set of nodes
      */
-    Set<Node> getNodes(NodeType type);
+    Set<Node> getNodes(NodeType type); // TODO - use method below ?!?
+
+    /**
+     * Get a set of nodes from a nodes collection.
+     * The limit parameters will constrain the size of the set.
+     *
+     * @param nodesCollection
+     * @param limit
+     * @return
+     */
+    Set<Node> getNodes(NodesCollection nodesCollection, int limit);
 
     /**
      * Returns a set of node refs matching the NodesCollection and NodeType constraints.
@@ -55,9 +65,9 @@ public interface NodeDiscoveryService {
      * @param nodesCollection
      * @param type
      * @param limit
-     * @return
+     * @return the filtered nodes collection
      */
-    NodesCollection getNodes(NodesCollection nodesCollection, NodeType type, int limit);
+    NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit);
 
     /**
      * Get all known nodes

@@ -103,7 +103,7 @@ public class DataReplication extends Task {
         this.dataDiscoveryService = dataDiscoveryService;
 
         this.data = data;
-        this.nodesCollection = nodeDiscoveryService.getNodes(nodesCollection, NodeType.STORAGE, 10); // FIXME
+        this.nodesCollection = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.STORAGE, 10); // FIXME
         this.replicationFactor = replicationFactor;
     }
 

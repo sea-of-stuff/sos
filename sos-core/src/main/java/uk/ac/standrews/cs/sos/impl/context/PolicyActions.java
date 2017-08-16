@@ -151,7 +151,7 @@ public class PolicyActions {
 
     public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
-        return nodeDiscoveryService.getNodes(codomain, type, NO_LIMIT);
+        return nodeDiscoveryService.filterNodesCollection(codomain, type, NO_LIMIT);
     }
 
     public Role getRole(IGUID guid) throws RoleNotFoundException {
