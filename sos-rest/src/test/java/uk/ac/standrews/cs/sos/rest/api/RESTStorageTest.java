@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.rest.api;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -212,7 +215,8 @@ public class RESTStorageTest extends CommonRESTTest {
                 .request().get();
 
         assertEquals(response.getStatus(), HTTPStatus.OK);
-        assertEquals(response.readEntity(String.class), "INVALID_16_null");
+        IGUID guid = GUIDFactory.recreateGUID(response.readEntity(String.class));
+        assertTrue(guid.isInvalid());
     }
 
     @Test

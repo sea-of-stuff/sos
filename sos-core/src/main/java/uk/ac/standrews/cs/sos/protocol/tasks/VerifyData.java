@@ -55,7 +55,7 @@ public class VerifyData extends Task {
         this.challenge = new BigInteger(130, random).toString(32);
         List<InputStream> streams = Arrays.asList(challengedData.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
         InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
-        challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
+        this.challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
     }
 
     @Override
