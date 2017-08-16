@@ -27,7 +27,7 @@ public interface NodeDiscoveryService {
      * Registers a node to the SOS
      *
      * @param node to register
-     * @param localOnly if false, the node will be registered to other known NDS nodes
+     * @param localOnly if true, the node will be registered to this node only. Otherwise, if false, the node will be registered to other known NDS nodes
      * @return registered node
      */
     Node registerNode(Node node, boolean localOnly) throws NodeRegistrationException;
@@ -49,19 +49,21 @@ public interface NodeDiscoveryService {
     Set<Node> getNodes(NodeType type);
 
     /**
-     * Get a collection of nodes within the given domain and matching the specified type
+     * Returns a set of node refs matching the NodesCollection and NodeType constraints.
+     * This method returns a maximum number of nodes as specified by the limit parameter.
      *
-     * @param domain
+     * @param nodesCollection
      * @param type
+     * @param limit
      * @return
      */
-    NodesCollection getNodes(NodesCollection domain, NodeType type);
+    NodesCollection getNodes(NodesCollection nodesCollection, NodeType type, int limit);
 
     /**
      * Get all known nodes
      *
      * @return set of nodes
      */
-    Set<Node> getAllNodes();
+    Set<Node> getAllKnownNodes();
 
 }

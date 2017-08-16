@@ -16,7 +16,7 @@ public class WNodes {
         Map<String, Object> model = new HashMap<>();
 
         model.put("thisNode", sos.getNDS().getThisNode());
-        model.put("nodes", sos.getNDS().getAllNodes());
+        model.put("nodes", sos.getNDS().getAllKnownNodes());
 
         return VelocityUtils.RenderTemplate("velocity/nodes.vm", model);
     }

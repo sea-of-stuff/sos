@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
 /**
  * The nodes directory which keeps track of the known nodes at this given node
@@ -19,8 +20,6 @@ import static java.util.stream.Collectors.toList;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class LocalNodesDirectory {
-
-    public static final int NO_LIMIT = 0;
 
     private Node localNode;
     private Database database;

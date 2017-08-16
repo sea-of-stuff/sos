@@ -32,6 +32,7 @@ import java.util.Set;
  */
 public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
+    public static final int NO_LIMIT = 0;
     private LocalNodesDirectory localNodesDirectory;
 
     public SOSNodeDiscoveryService(Node localNode, Database database) throws NodesDirectoryException {
@@ -102,27 +103,27 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
         switch(type) {
             case STORAGE:
-                return localNodesDirectory.getNodes(Node::isStorage, LocalNodesDirectory.NO_LIMIT);
+                return localNodesDirectory.getNodes(Node::isStorage, NO_LIMIT);
             case NDS:
-                return localNodesDirectory.getNodes(Node::isNDS, LocalNodesDirectory.NO_LIMIT);
+                return localNodesDirectory.getNodes(Node::isNDS, NO_LIMIT);
             case CMS:
-                return localNodesDirectory.getNodes(Node::isCMS, LocalNodesDirectory.NO_LIMIT);
+                return localNodesDirectory.getNodes(Node::isCMS, NO_LIMIT);
             case DDS:
-                return localNodesDirectory.getNodes(Node::isDDS, LocalNodesDirectory.NO_LIMIT);
+                return localNodesDirectory.getNodes(Node::isDDS, NO_LIMIT);
             case RMS:
-                return localNodesDirectory.getNodes(Node::isRMS, LocalNodesDirectory.NO_LIMIT);
+                return localNodesDirectory.getNodes(Node::isRMS, NO_LIMIT);
             case MMS:
-                return localNodesDirectory.getNodes(Node::isMMS, LocalNodesDirectory.NO_LIMIT);
+                return localNodesDirectory.getNodes(Node::isMMS, NO_LIMIT);
         }
 
         return Collections.emptySet();
     }
 
     @Override
-    public NodesCollection getNodes(NodesCollection domain, NodeType type) {
+    public NodesCollection getNodes(NodesCollection nodesCollection, NodeType type, int limit) {
 
         Set<IGUID> filteredNodes = new LinkedHashSet<>();
-        for(IGUID nodeRef : domain.nodesRefs()) {
+        for(IGUID nodeRef : nodesCollection.nodesRefs()) {
 
             // COMPARE node's type with type passed in this method
             // add node to filteredNodes
@@ -145,13 +146,16 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
             } catch (NodeNotFoundException e) {
                 SOS_LOG.log(LEVEL.WARN, "Unable to get node with ref: " + nodeRef);
             }
+
+            if (filteredNodes.size() == limit && limit != NO_LIMIT)
+                break;
         }
 
         return new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, filteredNodes);
     }
 
     @Override
-    public Set<Node> getAllNodes() {
+    public Set<Node> getAllKnownNodes() {
         return localNodesDirectory.getKnownNodes();
     }
 

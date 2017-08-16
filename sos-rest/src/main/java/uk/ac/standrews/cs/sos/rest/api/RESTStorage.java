@@ -32,6 +32,8 @@ import java.io.InputStream;
 @StorageNode
 public class RESTStorage {
 
+    // TODO - replica with suggested nodes
+
     /**
      * Get the data as a stream of bytes
      *
@@ -66,6 +68,14 @@ public class RESTStorage {
 
     }
 
+    @POST
+    @Path("/uri")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response postDataByLocation(final Location location) {
+        return postDataByLocation(location, 1);
+    }
+
     /**
      * Example of body:
      *
@@ -84,7 +94,7 @@ public class RESTStorage {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
-        if (replicas < 0 || replicas > 3 /* TODO - this should be based on some settings */) {
+        if (replicas < 1 || replicas > 3 /* TODO - this should be based on some settings */) {
             return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
         }
 
@@ -110,13 +120,27 @@ public class RESTStorage {
      * @return the Response to the http request
      */
     @POST
+    @Path("/stream")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addAtomStream(final InputStream inputStream) {
+        return addAtomStream(inputStream, 1);
+    }
+
+    /**
+     * Add an atom to the SOS node
+     *
+     * @param inputStream the bytes of the atom
+     * @return the Response to the http request
+     */
+    @POST
     @Path("/stream/replicas/{replicas}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final InputStream inputStream, @PathParam("replicas") int replicas) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
 
-        if (replicas < 0 || replicas > 3 /* TODO - this should be based on some settings */) {
+        if (replicas < 1 || replicas > 3 /* TODO - this should be based on some settings */) {
             return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
         }
 

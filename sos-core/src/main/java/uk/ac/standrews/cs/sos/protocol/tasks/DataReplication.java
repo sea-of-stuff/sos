@@ -7,13 +7,16 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.constants.SOSConstants;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.network.*;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
@@ -64,37 +67,44 @@ import java.util.Set;
 public class DataReplication extends Task {
 
     private InputStream data;
-    private Iterator<Node> nodes;
+    private NodesCollection nodesCollection;
     private int replicationFactor;
     private Storage storage;
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
 
     /**
+     * Replicates the data at least n times within the specified nodes collection.
+     * If the delegateReplication parameter is true, then the data is sent to a storage node (within the nodes collection),
+     * which will take care of replicating the data on behalf of this node. This storage node will replicate the data
+     * to the nodes specified in the nodesCollection.
+     *
+     *
      * Construct the data replication task.
      * The data, nodes and replication factor paramters are needed to carry out the task
      * The index, nds and dds are needed to promptly update this node about the new replicated content
      *
      * @param data
-     * @param nodes
+     * @param nodesCollection
      * @param replicationFactor
      * @param storage
      * @param nodeDiscoveryService
      * @param dataDiscoveryService
      * @throws SOSProtocolException
      */
-    public DataReplication(InputStream data, Iterator<Node> nodes, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
+    public DataReplication(InputStream data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
 
         if (storage == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
-        this.data = data;
-        this.nodes = nodes;
-        this.replicationFactor = replicationFactor;
         this.storage = storage;
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;
+
+        this.data = data;
+        this.nodesCollection = nodeDiscoveryService.getNodes(nodesCollection, NodeType.STORAGE, 10); // FIXME
+        this.replicationFactor = replicationFactor;
     }
 
     @Override
@@ -103,23 +113,23 @@ public class DataReplication extends Task {
         try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data)) {
 
             int successfulReplicas = 0;
-            while (nodes.hasNext() && successfulReplicas < replicationFactor) {
+            Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();
+            while (nodeRefs.hasNext() && successfulReplicas < replicationFactor) {
 
-                Node node = nodes.next();
-                if (node.isStorage()) {
+                try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
 
-                    try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
-                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage, nodeDiscoveryService, dataDiscoveryService);
+                    Node node = nodeDiscoveryService.getNode(nodeRefs.next());
+                    boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage, nodeDiscoveryService, dataDiscoveryService);
 
-                        if (transferWasSuccessful) {
-                            successfulReplicas++;
-                        }
-
-                    } catch (IOException e) {
-                        SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
+                    if (transferWasSuccessful) {
+                        successfulReplicas++;
                     }
 
+                } catch (IOException | NodeNotFoundException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication");
                 }
+
+
             }
 
         } catch (IOException e) {

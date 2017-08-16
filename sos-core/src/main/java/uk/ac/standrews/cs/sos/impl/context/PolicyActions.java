@@ -24,6 +24,8 @@ import uk.ac.standrews.cs.sos.services.UsersRolesService;
 
 import java.io.IOException;
 
+import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
+
 /**
  * Utility methods accessible by the policies
  *
@@ -149,7 +151,7 @@ public class PolicyActions {
 
     public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
-        return nodeDiscoveryService.getNodes(codomain, type);
+        return nodeDiscoveryService.getNodes(codomain, type, NO_LIMIT);
     }
 
     public Role getRole(IGUID guid) throws RoleNotFoundException {

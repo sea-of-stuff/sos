@@ -62,6 +62,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL STORAGE_POST_REPLICATE_DATA(Node node, int replicas) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "storage/stream/replicas/" + replicas;
+
+        return makeURL(url);
+    }
+
     public static URL CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
@@ -104,6 +111,7 @@ public class SOSURL {
 
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
+        // FIXME - use address.toString()
         return HTTP_SCHEME + address.getHostName() + ":" + address.getPort() + BASE_PATH;
     }
 }
