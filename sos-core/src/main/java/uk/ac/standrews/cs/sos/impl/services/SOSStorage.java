@@ -111,10 +111,10 @@ public class SOSStorage implements Storage {
         if (replicationFactor > 0) {
 
             try {
-                DataReplication dataReplication = new DataReplication(manifest.getData(), atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, dataDiscoveryService, false);
+                DataReplication dataReplication = new DataReplication(atomBuilder.getData(), atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, dataDiscoveryService, atomBuilder.isDelegateReplication());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
-            } catch (SOSProtocolException | IOException e) {
+            } catch (SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");
             }
         }
@@ -152,14 +152,6 @@ public class SOSStorage implements Storage {
         dataDiscoveryService.addManifest(manifest);
 
         return manifest;
-    }
-
-    @Override
-    public Atom addData(AtomBuilder atomBuilder, NodesCollection nodes, int replicationFactor) throws StorageException {
-
-        // TODO - add the data to the nodes in the collection
-
-        return null;
     }
 
     /**

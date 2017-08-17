@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
@@ -63,12 +64,24 @@ public class PolicyActions {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @param nodes
+     * @param replicationFactor a value of 1 will make sure that the data is stored locally. A value of n, will replicate the data to n-1 storage nodes.
+     * @throws PolicyException
+     */
     public void replicateData(Data data, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
         try {
-            AtomBuilder atomBuilder = new AtomBuilder().setData(data);
-            storage.addData(atomBuilder, nodes, replicationFactor);
-        } catch (StorageException e) {
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setData(data)
+                    .setReplicationNodes(nodes)
+                    .setReplicationFactor(replicationFactor);
+
+            storage.addAtom(atomBuilder);
+
+        } catch (DataStorageException | ManifestPersistException e) {
             throw new PolicyException("Unable to replicate data");
         }
     }

@@ -26,8 +26,9 @@ public class AtomBuilder extends ManifestBuilder {
 
     private BundleType bundleType = BundleTypes.CACHE;
 
-    private int replicationFactor = 1;
+    private int replicationFactor = 1; // A replication factor of 1, means that data is stored in this node only
     private NodesCollection replicationNodes;
+    private boolean delegateReplication = false;
 
     public boolean isBuildIsSet() {
         return buildIsSet;
@@ -115,6 +116,16 @@ public class AtomBuilder extends ManifestBuilder {
 
     public AtomBuilder setReplicationNodes(NodesCollection replicationNodes) {
         this.replicationNodes = replicationNodes;
+
+        return this;
+    }
+
+    public boolean isDelegateReplication() {
+        return delegateReplication;
+    }
+
+    public AtomBuilder setDelegateReplication(boolean delegateReplication) {
+        this.delegateReplication = delegateReplication;
 
         return this;
     }

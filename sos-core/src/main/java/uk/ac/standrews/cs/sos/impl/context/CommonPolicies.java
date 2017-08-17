@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.model.*;
+
+import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -44,7 +45,6 @@ public class CommonPolicies {
     }
 
     /**
-     * TODO - need access to the actual data
      * Replicate data at least n-times
      */
     public static class DataReplicationPolicy implements Policy {
@@ -62,8 +62,16 @@ public class CommonPolicies {
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
-            NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
-            policyActions.replicateData(null, nodes, factor); // FIXME - should be able to get a handle on the data
+            try {
+                if (manifest.getType().equals(ManifestType.ATOM)) {
+                    Data data = ((Atom) manifest).getData();
+
+                    NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
+                    policyActions.replicateData(data, nodes, factor);
+                }
+            } catch (IOException e) {
+                throw new PolicyException("Policy was unable to replicate data for manifest with guid " + manifest.guid());
+            }
         }
 
         @Override
