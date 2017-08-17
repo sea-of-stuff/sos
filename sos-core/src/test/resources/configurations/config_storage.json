@@ -6,7 +6,9 @@
         "exposed": true
       },
       "storage": {
-        "exposed": true
+        "exposed": true,
+        "canPersist": true,
+        "maxReplication": 1
       },
       "cms": {
         "exposed": false,
