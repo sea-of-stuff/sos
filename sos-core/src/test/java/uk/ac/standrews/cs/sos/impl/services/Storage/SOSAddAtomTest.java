@@ -58,7 +58,7 @@ public class SOSAddAtomTest extends StorageTest {
         assertEquals(firstBundle.getType(), BundleTypes.PERSISTENT);
 
         LocationBundle secondBundle = bundles.next();
-        assertEquals(secondBundle.getType(), BundleTypes.PROVENANCE);
+        assertEquals(secondBundle.getType(), BundleTypes.EXTERNAL);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class SOSAddAtomTest extends StorageTest {
         assertEquals(firstBundle.getType(), BundleTypes.PERSISTENT);
 
         LocationBundle secondBundle = bundles.next();
-        assertEquals(secondBundle.getType(), BundleTypes.PROVENANCE);
+        assertEquals(secondBundle.getType(), BundleTypes.EXTERNAL);
     }
 
 }

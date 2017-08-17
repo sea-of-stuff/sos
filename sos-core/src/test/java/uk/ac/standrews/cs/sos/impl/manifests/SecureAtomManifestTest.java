@@ -20,8 +20,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
@@ -87,7 +87,7 @@ public class SecureAtomManifestTest extends CommonTest {
     public void basicTest() throws DataStorageException, StorageException, URISyntaxException, GUIDGenerationException, ManifestNotMadeException, IOException, ProtectionException {
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
 
@@ -107,7 +107,7 @@ public class SecureAtomManifestTest extends CommonTest {
                 "  \"Type\" : \"AtomP\",\n" +
                 "  \"GUID\" : \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                 "  \"Locations\" : [ {\n" +
-                "    \"type\" : \"provenance\",\n" +
+                "    \"type\" : \"external\",\n" +
                 "    \"location\" : \"http://httpbin.org/range/10\"\n" +
                 "  } ],\n" +
                 "  \"Keys\" : [ {\n" +
@@ -122,7 +122,7 @@ public class SecureAtomManifestTest extends CommonTest {
 
         assertEquals(secureAtomManifest.getLocations().size(), 1);
         LocationBundle bundle = secureAtomManifest.getLocations().iterator().next();
-        assertEquals(bundle.getType(), BundleTypes.PROVENANCE);
+        assertEquals(bundle.getType(), BundleTypes.EXTERNAL);
         assertEquals(bundle.getLocation().toString(), "http://httpbin.org/range/10");
 
         assertEquals(secureAtomManifest.keysRoles().size(), 1);

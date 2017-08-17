@@ -22,6 +22,9 @@ public class NodesCollectionImpl implements NodesCollection {
     }
 
     public NodesCollectionImpl(TYPE type, Set<IGUID> nodesRefs) {
+
+        // TODO - this must be used for type specified only
+
         this.type = type;
         this.nodesRefs = nodesRefs;
     }

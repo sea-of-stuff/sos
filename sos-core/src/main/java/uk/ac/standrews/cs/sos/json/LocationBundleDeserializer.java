@@ -33,8 +33,8 @@ public class LocationBundleDeserializer extends JsonDeserializer<LocationBundle>
         LocationBundle ret;
         if (type.equals(BundleTypes.CACHE.toString())) {
             ret = new CacheLocationBundle(location);
-        } else if (type.equals(BundleTypes.PROVENANCE.toString())) {
-            ret = new ProvenanceLocationBundle(location);
+        } else if (type.equals(BundleTypes.EXTERNAL.toString())) {
+            ret = new ExternalLocationBundle(location);
         } else if (type.equals(BundleTypes.PERSISTENT.toString())) {
             ret = new PersistLocationBundle(location);
         } else {

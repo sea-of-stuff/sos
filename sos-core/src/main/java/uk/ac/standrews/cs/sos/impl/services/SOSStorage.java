@@ -26,8 +26,8 @@ import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl;
@@ -279,8 +279,8 @@ public class SOSStorage implements Storage {
 
         // FIXME DITTO AS COMMENT BELOW
         if (atomBuilder.isLocation()) {
-            Location provenanceLocation = atomBuilder.getLocation();
-            bundles.add(new ProvenanceLocationBundle(provenanceLocation));
+            Location location = atomBuilder.getLocation();
+            bundles.add(new ExternalLocationBundle(location));
         }
 
         // TODO - do this outside of this method

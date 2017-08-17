@@ -17,8 +17,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
@@ -153,7 +153,7 @@ public class ManifestsCacheImplTest extends CommonTest {
 
     private Manifest getValidManifest() throws GUIDGenerationException, URISyntaxException {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);

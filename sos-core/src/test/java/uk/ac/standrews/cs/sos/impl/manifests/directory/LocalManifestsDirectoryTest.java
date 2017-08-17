@@ -19,8 +19,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.*;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
@@ -69,7 +69,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
@@ -158,11 +158,11 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         Location secondLocation = HelperTest.createDummyDataFile(storage, "second.txt");
 
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new LinkedHashSet<>(Collections.singletonList(new ProvenanceLocationBundle(firstLocation))));
+                new LinkedHashSet<>(Collections.singletonList(new ExternalLocationBundle(firstLocation))));
         IGUID guid = atomManifest.guid();
 
         Atom anotherManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_STRING_HASHED),
-                new LinkedHashSet<>(Collections.singletonList(new ProvenanceLocationBundle(secondLocation))));
+                new LinkedHashSet<>(Collections.singletonList(new ExternalLocationBundle(secondLocation))));
         IGUID anotherGUID = anotherManifest.guid();
 
         assertEquals(guid, anotherGUID);

@@ -72,10 +72,10 @@ public class LocationsIndexImpl implements LocationsIndex {
 
     /**
      * Order priority:
-     * local node data first (no matter if cache, persistent or provenance)
+     * local node data first (no matter if cache, persistent or external)
      * cache
      * persistent
-     * provenance
+     * external
      *
      * @return comparator value
      */
@@ -115,7 +115,7 @@ public class LocationsIndexImpl implements LocationsIndex {
             if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.PERSISTENT)
                 return -1; // Must still be able to distinguish the two locations
 
-            if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.PROVENANCE)
+            if (o1.getType() == BundleTypes.EXTERNAL && o2.getType() == BundleTypes.EXTERNAL)
                 return -1; // Must still be able to distinguish the two locations
 
 
@@ -124,14 +124,14 @@ public class LocationsIndexImpl implements LocationsIndex {
             if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.CACHE)
                 return 1;
 
-            if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.PROVENANCE)
+            if (o1.getType() == BundleTypes.CACHE && o2.getType() == BundleTypes.EXTERNAL)
                 return -1;
-            if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.CACHE)
+            if (o1.getType() == BundleTypes.EXTERNAL && o2.getType() == BundleTypes.CACHE)
                 return 1;
 
-            if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.PROVENANCE)
+            if (o1.getType() == BundleTypes.PERSISTENT && o2.getType() == BundleTypes.EXTERNAL)
                 return -1;
-            if (o1.getType() == BundleTypes.PROVENANCE && o2.getType() == BundleTypes.PERSISTENT)
+            if (o1.getType() == BundleTypes.EXTERNAL && o2.getType() == BundleTypes.PERSISTENT)
                 return 1;
 
             return 0;

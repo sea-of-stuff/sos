@@ -19,8 +19,8 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ProvenanceLocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
@@ -101,7 +101,7 @@ public class AtomManifestTest extends CommonTest {
     @Test (timeOut = 10000)
     public void testToJSON() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
@@ -118,7 +118,7 @@ public class AtomManifestTest extends CommonTest {
     @Test (timeOut = 10000)
     public void testIsValid() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
@@ -129,7 +129,7 @@ public class AtomManifestTest extends CommonTest {
     @Test (timeOut = 10000)
     public void testIsVerified() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
@@ -141,7 +141,7 @@ public class AtomManifestTest extends CommonTest {
     @Test (timeOut = 100000)
     public void testIsVerifiedForLocation() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
-        LocationBundle bundle = new ProvenanceLocationBundle(location);
+        LocationBundle bundle = new ExternalLocationBundle(location);
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
@@ -149,7 +149,7 @@ public class AtomManifestTest extends CommonTest {
         assertTrue(atomManifest.verifyIntegrity(bundle));
 
         Location wrongLocation = new URILocation(Hashes.TEST_HTTP_BIN_URL_OTHER);
-        LocationBundle wrongBundle = new ProvenanceLocationBundle(wrongLocation);
+        LocationBundle wrongBundle = new ExternalLocationBundle(wrongLocation);
 
         assertFalse(atomManifest.verifyIntegrity(wrongBundle));
     }

@@ -168,7 +168,7 @@ Content-type: application/json
                 "location" : sos://c00dc7e8-c689-494e-8d0d-b96bb690c164/23cec17e-c246-418a-8e82-fcc97d70adfe
             },
             {
-                "type" : "provenance",
+                "type" : "external",
                 "location" : http://example.com/bear.jpeg
             }
         ]
@@ -361,7 +361,7 @@ POST /coordinator/manifest
   "ContentGUID": "42b3edd482b3dfdbc5adc683840c21db06f00b78",
   "Locations": [
     {
-    "Type" : "provenance",
+    "Type" : "external",
     "Location" : "http://example.com/bear.jpeg"
     },
     {
