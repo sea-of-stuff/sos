@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.services;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -84,5 +85,7 @@ public interface Storage {
      * Flush all indexes and caches managed by the storage actor
      */
     void flush();
+
+    SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings getStorageSettings();
 
 }

@@ -120,7 +120,9 @@ public class RESTStorage {
     public Response addAtomStream(final InputStream inputStream, @PathParam("replicas") int replicas) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
 
-        if (replicas < 1 || replicas > 3 /* TODO - this should be based on some settings */) {
+        Storage storage = RESTConfig.sos.getStorage();
+
+        if (replicas < 1 || replicas > storage.getStorageSettings().getMaxReplication()) {
             return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
         }
 
@@ -128,9 +130,12 @@ public class RESTStorage {
         try {
             AtomBuilder builder = new AtomBuilder()
                     .setData(new InputStreamData(inputStream))
-                    .setBundleType(BundleTypes.PERSISTENT);
+                    .setBundleType(BundleTypes.PERSISTENT)
+                    .setReplicationNodes(null) // FIXME
+                    .setReplicationFactor(replicas)
+                    .setDelegateReplication(true); // This will be ignored anyway if replicas == 1
 
-            Storage storage = RESTConfig.sos.getStorage();
+
             Atom atom = storage.addAtom(builder); // TODO - pass replication factor here
 
             return HTTPResponses.CREATED(atom.toString());

@@ -61,6 +61,8 @@ public class DataReplication extends Task {
     private Data data;
     private NodesCollection nodesCollection;
     private int replicationFactor;
+    private boolean delegateReplication;
+
     private Storage storage;
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
@@ -97,6 +99,7 @@ public class DataReplication extends Task {
         this.data = data;
         this.nodesCollection = nodesCollection;
         this.replicationFactor = replicationFactor;
+        this.delegateReplication = delegateReplication;
     }
 
     @Override

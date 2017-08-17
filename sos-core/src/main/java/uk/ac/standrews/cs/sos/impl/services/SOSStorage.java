@@ -255,6 +255,11 @@ public class SOSStorage implements Storage {
         }
     }
 
+    @Override
+    public SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings getStorageSettings() {
+        return storageSettings;
+    }
+
     /**
      * Adds the data part of the atom to the SOS
      *
