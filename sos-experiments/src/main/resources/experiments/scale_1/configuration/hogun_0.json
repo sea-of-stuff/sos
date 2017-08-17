@@ -8,6 +8,7 @@
       "cms": {
         "exposed": false,
         "indexFile": "cms.index",
+        "loadedPath": "sos/contexts/",
         "automatic": true,
         "predicateThread": {
           "initialDelay": 30,
