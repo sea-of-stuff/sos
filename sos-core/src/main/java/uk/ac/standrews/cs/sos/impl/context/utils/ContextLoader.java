@@ -6,8 +6,10 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -30,9 +32,6 @@ import java.util.Collections;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextLoader {
-
-    private static final String TEST_TARGET_PATH = "target/classes/";
-    private static final String TEST_TARGET_PATH_1 = "sos-core/target/classes/";
 
     /**
      * Load multiple contexts at path
@@ -101,9 +100,10 @@ public class ContextLoader {
      */
     public static void LoadContext(JsonNode node) throws ContextLoaderException {
 
-        String targetClassPath = TEST_TARGET_PATH;
+        String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
+
         if (!new File(targetClassPath).exists()) {
-            targetClassPath = TEST_TARGET_PATH_1;
+            FileUtils.MakePath(targetClassPath);
         }
 
         try {

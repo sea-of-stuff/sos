@@ -28,7 +28,8 @@
           "stop": -1,
           "pause": [],
           "operations": [ "WIP" ]
-        }
+        },
+        "dataDirectories" : []
       },
       {
         "id" : 9,

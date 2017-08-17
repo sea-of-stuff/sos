@@ -487,6 +487,7 @@ public class SettingsConfiguration {
             public static class CMSSettings extends RoleSettings {
 
                 private String indexFile;
+                private String loadedPath;
 
                 // If true, the CMS will run background processes to classify content and maintain the contexts
                 private boolean automatic;
@@ -552,6 +553,14 @@ public class SettingsConfiguration {
 
                 public void setCheckPoliciesThread(ThreadSettings checkPoliciesThread) {
                     this.checkPoliciesThread = checkPoliciesThread;
+                }
+
+                public String getLoadedPath() {
+                    return loadedPath;
+                }
+
+                public void setLoadedPath(String loadedPath) {
+                    this.loadedPath = loadedPath;
                 }
             }
 

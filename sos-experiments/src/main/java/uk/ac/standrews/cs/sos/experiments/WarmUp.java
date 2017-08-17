@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments;
 
 /**
- * Code to warm up the JVM
+ * Code to warm up the JVM.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

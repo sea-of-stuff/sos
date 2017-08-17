@@ -226,6 +226,9 @@ public class FileUtils {
         java.io.File parent = file.getParentFile();
         if (parent != null)
             parent.mkdirs();
+
+        if (path.endsWith("/"))
+            file.mkdir();
     }
 
 }

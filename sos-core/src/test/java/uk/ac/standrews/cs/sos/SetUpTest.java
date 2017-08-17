@@ -59,6 +59,7 @@ public class SetUpTest extends CommonTest {
         localStorage.destroy();
 
         FileUtils.deleteDirectory(new File(System.getProperty("user.home") + "/sos/keys/"));
+        FileUtils.deleteDirectory(new File("sos-core/src/test/resources/contexts/"));
 
         localSOSNode.kill();
     }
