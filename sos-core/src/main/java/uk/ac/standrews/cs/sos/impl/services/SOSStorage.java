@@ -30,6 +30,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
@@ -247,13 +248,13 @@ public class SOSStorage implements Storage {
      */
     private StoredAtomInfo addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles) throws DataStorageException {
 
+        boolean canPersist = SOSLocalNode.settings.getServices().getStorage().isCanPersist(); // TODO - PASS SETTINGS TO THIS CLASS
+
         StoredAtomInfo retval;
-        if (atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
+        if (canPersist && atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
             retval = atomStorage.persist(atomBuilder);
-        } else if (atomBuilder.getBundleType() == BundleTypes.CACHE) {
-            retval = atomStorage.cache(atomBuilder);
         } else {
-            throw new DataStorageException();
+            retval = atomStorage.cache(atomBuilder);
         }
 
         // FIXME DITTO AS COMMENT BELOW
