@@ -404,8 +404,6 @@ public class SettingsConfiguration {
 
             public static class StorageSettings extends RoleSettings {
 
-                // TODO - make sure that these settings are applied
-
                 @JsonView(Views.Public.class)
                 private boolean canPersist = false;
 

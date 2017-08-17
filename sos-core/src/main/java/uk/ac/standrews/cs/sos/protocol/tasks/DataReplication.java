@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
@@ -57,7 +58,7 @@ import java.util.Iterator;
  */
 public class DataReplication extends Task {
 
-    private InputStream data;
+    private Data data;
     private NodesCollection nodesCollection;
     private int replicationFactor;
     private Storage storage;
@@ -83,27 +84,25 @@ public class DataReplication extends Task {
      * @param dataDiscoveryService
      * @throws SOSProtocolException
      */
-    public DataReplication(InputStream data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
+    public DataReplication(Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
 
         if (storage == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
-
-        // TODO - adjust replication factor to match the node settings - MUST BE DONE BY THE CALLER
 
         this.storage = storage;
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;
 
         this.data = data;
-        this.nodesCollection = nodesCollection; // TODO - make sure that nodes should be filtered already!
+        this.nodesCollection = nodesCollection;
         this.replicationFactor = replicationFactor;
     }
 
     @Override
     public void performAction() {
 
-        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data)) {
+        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data.getInputStream())) {
 
             int successfulReplicas = 0;
             Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();

@@ -232,7 +232,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage); // TODO - will need to pass NDS to discover other roles
 
-        storage = new SOSStorage(getNodeGUID(), localStorage, dataDiscoveryService, usersRolesService);
+        storage = new SOSStorage(settings.getServices().getStorage(), getNodeGUID(), localStorage, dataDiscoveryService, usersRolesService, nodeDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), dataDiscoveryService);
         contextService = new SOSContextService(localStorage, dataDiscoveryService, nodeDiscoveryService, usersRolesService, storage);
 

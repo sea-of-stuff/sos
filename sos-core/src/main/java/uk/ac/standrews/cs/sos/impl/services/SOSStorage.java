@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
@@ -18,6 +19,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
@@ -30,10 +32,12 @@ import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
@@ -51,17 +55,25 @@ import java.util.*;
  */
 public class SOSStorage implements Storage {
 
+    private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
+
     private DataDiscoveryService dataDiscoveryService;
     private UsersRolesService usersRolesService;
+    private NodeDiscoveryService nodeDiscoveryService;
 
     private LocalStorage storage;
     private AtomStorage atomStorage;
     private LocationsIndex locationIndex;
 
-    public SOSStorage(IGUID localNodeGUID, LocalStorage storage, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService) throws ServiceException {
+    public SOSStorage(SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings, IGUID localNodeGUID, LocalStorage storage,
+                      DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
+
+        this.storageSettings = storageSettings;
+
         this.storage = storage;
         this.dataDiscoveryService = dataDiscoveryService;
         this.usersRolesService = usersRolesService;
+        this.nodeDiscoveryService = nodeDiscoveryService;
 
         // Load/Create the locations Index impl
         try {
@@ -93,6 +105,19 @@ public class SOSStorage implements Storage {
 
         Atom manifest = ManifestFactory.createAtomManifest(guid, bundles);
         dataDiscoveryService.addManifest(manifest);
+
+        // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
+        int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
+        if (replicationFactor > 0) {
+
+            try {
+                DataReplication dataReplication = new DataReplication(manifest.getData(), atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, dataDiscoveryService, false);
+                TasksQueue.instance().performAsyncTask(dataReplication);
+
+            } catch (SOSProtocolException | IOException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");
+            }
+        }
 
         return manifest;
     }
@@ -248,10 +273,8 @@ public class SOSStorage implements Storage {
      */
     private StoredAtomInfo addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles) throws DataStorageException {
 
-        boolean canPersist = SOSLocalNode.settings.getServices().getStorage().isCanPersist(); // TODO - PASS SETTINGS TO THIS CLASS
-
         StoredAtomInfo retval;
-        if (canPersist && atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
+        if (storageSettings.isCanPersist() && atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
             retval = atomStorage.persist(atomBuilder);
         } else {
             retval = atomStorage.cache(atomBuilder);

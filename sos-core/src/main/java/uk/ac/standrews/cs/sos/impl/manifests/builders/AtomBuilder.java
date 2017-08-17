@@ -6,12 +6,12 @@ import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleType;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 
 /**
- * TODO - rename to AtomSourceBuilder
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -25,6 +25,9 @@ public class AtomBuilder extends ManifestBuilder {
     private boolean isData = false;
 
     private BundleType bundleType = BundleTypes.CACHE;
+
+    private int replicationFactor = 1;
+    private NodesCollection replicationNodes;
 
     public boolean isBuildIsSet() {
         return buildIsSet;
@@ -92,6 +95,26 @@ public class AtomBuilder extends ManifestBuilder {
     @Override
     public AtomBuilder setRole(Role role) {
         this.role = role;
+
+        return this;
+    }
+
+    public int getReplicationFactor() {
+        return replicationFactor;
+    }
+
+    public AtomBuilder setReplicationFactor(int replicationFactor) {
+        this.replicationFactor = replicationFactor;
+
+        return this;
+    }
+
+    public NodesCollection getReplicationNodes() {
+        return replicationNodes;
+    }
+
+    public AtomBuilder setReplicationNodes(NodesCollection replicationNodes) {
+        this.replicationNodes = replicationNodes;
 
         return this;
     }
