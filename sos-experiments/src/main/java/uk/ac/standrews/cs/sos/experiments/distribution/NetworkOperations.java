@@ -110,7 +110,6 @@ public class NetworkOperations {
         }
     }
 
-    // TODO - This method must be tested
     public void sendDirectory(String lDirectory, String rDirectory) throws NetworkException {
 
         makePath(rDirectory);
