@@ -90,6 +90,16 @@ public class RESTDDS {
         }
     }
 
+    @POST
+    @Path("/compound/data")
+    public Response makeCompoundData() {
+
+        // return storage node that should be used to upload the data
+        // then should make a call to /compound/data/finalise (containing json of all components)
+        // storage node should have the "freedom" to delete the data until finalise call
+        return null;
+    }
+
     private Manifest getManifest(ManifestType type, String json) throws IOException {
         Manifest manifest;
         switch(type) {

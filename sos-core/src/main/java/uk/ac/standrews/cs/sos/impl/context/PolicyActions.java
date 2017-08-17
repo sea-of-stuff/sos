@@ -92,7 +92,8 @@ public class PolicyActions {
 
     public boolean nodeHasManifest(IGUID node, IGUID guid) {
 
-        // TODO - this will make a challenge/check/verify call to the node
+        // TODO - this will make a challenge/check/verify call to the node (see Storage)
+
         return false;
     }
 
