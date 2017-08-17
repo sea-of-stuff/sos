@@ -7,14 +7,11 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
-import uk.ac.standrews.cs.sos.rest.api.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -48,14 +45,69 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  ]\n" +
                     "}";
 
+    private final static String BASIC_REQUEST = "" +
+            "{\n" +
+            "  \"data\" : \"{DATA}\"\n" +
+            "}";
+    
+    private final static String REQUEST_WITH_REPLICA_INFO = "" +
+            "{\n" +
+            "  \"metadata\" : {\n" +
+            "    \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
+            "    \"replicationFactor\" : \"2\",\n" +
+            "    \"replicationNodes\" : {\n" +
+            "      \"type\" : \"SPECIFIED\",\n" +
+            "      \"refs\" : [\"SHA256_16_000abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\", \"SHA256_16_111abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\"]\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "}";
+
+    private final static String REQUEST_WITH_NEGATIVE_REPLICA_INFO = "" +
+            "{\n" +
+            "  \"metadata\" : {\n" +
+            "    \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
+            "    \"replicationFactor\" : -1,\n" +
+            "    \"replicationNodes\" : {\n" +
+            "      \"type\" : \"SPECIFIED\",\n" +
+            "      \"refs\" : [\"SHA256_16_000abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\", \"SHA256_16_111abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\"]\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "}";
+
+    private final static String REQUEST_WITH_EXCESSIVE_REPLICA_INFO = "" +
+            "{\n" +
+            "  \"metadata\" : {\n" +
+            "    \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
+            "    \"replicationFactor\" : 100,\n" +
+            "    \"replicationNodes\" : {\n" +
+            "      \"type\" : \"SPECIFIED\",\n" +
+            "      \"refs\" : [\"SHA256_16_000abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\", \"SHA256_16_111abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\"]\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "}";
+
+    private final static String REQUEST_WITH_ZERO_REPLICA_INFO = "" +
+            "{\n" +
+            "  \"metadata\" : {\n" +
+            "    \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
+            "    \"replicationFactor\" : 0,\n" +
+            "    \"replicationNodes\" : {\n" +
+            "      \"type\" : \"SPECIFIED\",\n" +
+            "      \"refs\" : [\"SHA256_16_000abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\", \"SHA256_16_111abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\"]\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "}";
+
     @Test
     public void testStoreInputStream() throws Exception {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(BASIC_REQUEST.replace("{DATA}", "data")));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), true);
@@ -66,15 +118,9 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test
     public void testStoreEmptyInputStream() throws Exception {
 
-        InputStream testData = HelperTest.StringToInputStream("");
-
-        target("/sos/storage/stream")
-                .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
-
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(BASIC_REQUEST.replace("{DATA}", "")));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         JSONAssert.assertEquals(TEST_EMPTY_ATOM_MANIFEST, response.readEntity(String.class), true);
@@ -87,17 +133,27 @@ public class RESTStorageTest extends CommonRESTTest {
 
         target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(null, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(null));
+    }
+
+    @Test
+    public void replicasStream() throws Exception {
+
+        Response response = target("/sos/storage/stream")
+                .request()
+                .post(Entity.json(REQUEST_WITH_REPLICA_INFO));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+
+        // TODO - check if async requests work
     }
 
     @Test
     public void negativeReplicasStream() throws Exception {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
-        Response response = target("/sos/storage/stream/replicas/-1")
+        Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(REQUEST_WITH_NEGATIVE_REPLICA_INFO));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
@@ -105,11 +161,9 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test
     public void zeroReplicasStream() throws Exception {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
-        Response response = target("/sos/storage/stream/replicas/0")
+        Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(REQUEST_WITH_ZERO_REPLICA_INFO));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
@@ -117,11 +171,9 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test
     public void excessiveReplicasStream() throws Exception {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
-        Response response = target("/sos/storage/stream/replicas/100")
+        Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(REQUEST_WITH_EXCESSIVE_REPLICA_INFO));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
@@ -140,11 +192,9 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test
     public void challengeForAtomWorks() throws GUIDGenerationException, IOException {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(BASIC_REQUEST.replace("{DATA}", "data")));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
@@ -159,11 +209,9 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test
     public void noChallengeForAtomDoesNotWork() throws GUIDGenerationException, IOException {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(BASIC_REQUEST.replace("{DATA}", "data")));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
@@ -177,11 +225,9 @@ public class RESTStorageTest extends CommonRESTTest {
     @Test
     public void spaceChallengeForAtomDoesNotWork() throws GUIDGenerationException, IOException {
 
-        InputStream testData = HelperTest.StringToInputStream("data");
-
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+                .post(Entity.json(BASIC_REQUEST.replace("{DATA}", "data")));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);

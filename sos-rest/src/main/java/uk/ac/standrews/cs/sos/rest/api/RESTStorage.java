@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -19,6 +20,7 @@ import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.StorageNode;
+import uk.ac.standrews.cs.sos.rest.json.DataPackage;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -55,9 +57,6 @@ public class RESTStorage {
             return HTTPResponses.INTERNAL_SERVER();
         }
     }
-
-    // TODO - replica with suggested nodes
-
 
     /**
      * Get the data as a stream of bytes
@@ -96,51 +95,41 @@ public class RESTStorage {
     /**
      * Add an atom to the SOS node
      *
-     * @param inputStream the bytes of the atom
+     * @param dataPackage the bytes of the atom
      * @return the Response to the http request
      */
     @POST
     @Path("/stream")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomStream(final InputStream inputStream) {
-        return addAtomStream(inputStream, 1);
-    }
-
-    /**
-     * Add an atom to the SOS node
-     *
-     * @param inputStream the bytes of the atom
-     * @return the Response to the http request
-     */
-    @POST
-    @Path("/stream/replicas/{replicas}")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomStream(final InputStream inputStream, @PathParam("replicas") int replicas) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
-
-        Storage storage = RESTConfig.sos.getStorage();
-
-        if (replicas < 1 || replicas > storage.getStorageSettings().getMaxReplication()) {
-            return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
-        }
-
+    public Response addAtomStream(final DataPackage dataPackage) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
         try {
+            Storage storage = RESTConfig.sos.getStorage();
+
             AtomBuilder builder = new AtomBuilder()
-                    .setData(new InputStreamData(inputStream))
-                    .setBundleType(BundleTypes.PERSISTENT)
-                    .setReplicationNodes(null) // FIXME
-                    .setReplicationFactor(replicas)
-                    .setDelegateReplication(true); // This will be ignored anyway if replicas == 1
+                    .setData(dataPackage.getData())
+                    .setBundleType(BundleTypes.PERSISTENT);
 
+            if (dataPackage.getMetadata() != null) {
 
-            Atom atom = storage.addAtom(builder); // TODO - pass replication factor here
+                int replicationFactor = dataPackage.getMetadata().getReplicationFactor();
+
+                if (replicationFactor < 1 || replicationFactor > storage.getStorageSettings().getMaxReplication()) {
+                    return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
+                }
+
+                builder = builder.setReplicationNodes(dataPackage.getMetadata().getReplicationNodes().getNodesCollection())
+                        .setReplicationFactor(replicationFactor)
+                        .setDelegateReplication(true); // This will be ignored anyway if replicas == 1
+            }
+
+            Atom atom = storage.addAtom(builder);
 
             return HTTPResponses.CREATED(atom.toString());
 
-        } catch (DataStorageException | ManifestPersistException e) {
+        } catch (DataStorageException | ManifestPersistException | NodesCollectionException e) {
             return HTTPResponses.INTERNAL_SERVER();
         }
 
@@ -150,7 +139,7 @@ public class RESTStorage {
     @Path("/stream/protected")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/) {
+    public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/) { // TODO - see add data with metadata method above
         SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
 
         try {
