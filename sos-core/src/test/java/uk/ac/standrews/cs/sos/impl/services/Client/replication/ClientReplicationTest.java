@@ -58,7 +58,7 @@ public class ClientReplicationTest extends SetUpTest {
 
                                                 "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
-                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +

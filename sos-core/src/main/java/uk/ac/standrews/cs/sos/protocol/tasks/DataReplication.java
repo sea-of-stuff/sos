@@ -1,19 +1,15 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.constants.SOSConstants;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.network.*;
-import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
+import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
@@ -24,17 +20,13 @@ import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * The DataReplication task, as the name suggests, replicates data to other nodes.
@@ -55,7 +47,7 @@ import java.util.Set;
  *
  * When data is replicated successfully to a node
  * - the storage service is informed about the new location for the data
- * -
+ * - TODO
  *
  *
  * If the data is successfully replicated to a Storage node:
@@ -97,12 +89,14 @@ public class DataReplication extends Task {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
+        // TODO - adjust replication factor to match the node settings - MUST BE DONE BY THE CALLER
+
         this.storage = storage;
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.dataDiscoveryService = dataDiscoveryService;
 
         this.data = data;
-        this.nodesCollection = nodesCollection; // TODO - nodes should be filtered already!
+        this.nodesCollection = nodesCollection; // TODO - make sure that nodes should be filtered already!
         this.replicationFactor = replicationFactor;
     }
 
@@ -131,7 +125,6 @@ public class DataReplication extends Task {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + ref);
                 }
 
-
             }
 
         } catch (IOException e) {
@@ -153,39 +146,24 @@ public class DataReplication extends Task {
                                                           NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
-        Pair<IGUID, Set<LocationBundle>> tuple;
+
         try {
-            tuple = transferDataRequest(data, node);
+            Atom atom = transferDataRequest(data, node);
             SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
+
+            for(LocationBundle locationBundle:atom.getLocations()) {
+                storage.addLocation(atom.guid(), locationBundle);
+            }
 
         } catch (SOSProtocolException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
             return false;
         }
 
-
-        for(LocationBundle locationBundle:tuple.Y()) {
-            storage.addLocation(tuple.X(), locationBundle);
-        }
-
-        // TODO - where is the atom manifest stored?
-//        for(Node ddsNode:tuple.Y().Y()) {
-//            try {
-//                SOS_LOG.log(LEVEL.DEBUG, "Registering DDSNode: " + ddsNode.toString());
-//                nodeDiscoveryService.registerNode(ddsNode, true);
-//            } catch (NodeRegistrationException e) {
-//                SOS_LOG.log(LEVEL.ERROR, "Error while registering dds node");
-//            }
-//        }
-//
-//        for(Node ddsNode:tuple.Y().Y()) {
-//            dataDiscoveryService.addManifestDDSMapping(tuple.X(), ddsNode.getNodeGUID());
-//        }
-
         return true;
     }
 
-    private static Pair<IGUID, Set<LocationBundle>> transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
+    private static Atom transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
@@ -193,74 +171,24 @@ public class DataReplication extends Task {
             request.setBody(data);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            return parseResponse(response);
+
+            try(InputStream body = response.getBody()) {
+                if (response.getCode() == HTTPStatus.CREATED) {
+                    body.reset();
+                    Atom atom = JSONHelper.JsonObjMapper().readValue(body, AtomManifest.class);
+                    return atom;
+
+                } else {
+                    throw new SOSProtocolException("Unable to transfer DATA");
+                }
+            } catch (IOException e) {
+                throw new SOSProtocolException("Unable to parse response from slave replication node", e);
+            }
 
         } catch (IOException | SOSURLException e) {
             throw new SOSProtocolException("Unable to transfer DATA", e);
         }
 
-    }
-
-    private static Pair<IGUID, Set<LocationBundle>> parseResponse(Response response) throws SOSProtocolException {
-
-        if (response.getCode() != HTTPStatus.CREATED) {
-
-            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
-            catch (IOException e) {
-                throw new SOSProtocolException("Unable to transfer DATA and manage data stream correctly");
-            }
-            throw new SOSProtocolException("Unable to transfer DATA");
-
-        }
-
-        Pair<IGUID, Pair<Set<LocationBundle>, Set<Node>> > retval;
-
-        try (InputStream body = response.getBody()) {
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(body);
-
-            return getManifestNode(jsonNode);
-
-        } catch (IOException | GUIDGenerationException e) {
-            throw new SOSProtocolException("Unable to parse response from slave replication node", e);
-        }
-    }
-
-    private static Pair<IGUID, Set<LocationBundle>> getManifestNode(JsonNode manifestNode) throws GUIDGenerationException {
-        String stringGUID = manifestNode.get("ContentGUID").textValue();
-
-        IGUID guid = GUIDFactory.recreateGUID(stringGUID);
-
-        JsonNode bundlesNode = manifestNode.get(JSONConstants.KEY_LOCATIONS);
-        Set<LocationBundle> bundles = new HashSet<>();
-        if (bundlesNode.isArray()) {
-            for(final JsonNode bundleNode:bundlesNode) {
-                LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
-                bundles.add(bundle);
-            }
-        }
-
-        return new Pair<>(guid, bundles);
-    }
-
-    private static Set<Node> getDDSInfoFeedback(JsonNode ddsInfo) throws GUIDGenerationException {
-        if (ddsInfo == null ||  !ddsInfo.isArray()) {
-            return Collections.emptySet();
-        }
-
-        Set<Node> ddsNodes = new HashSet<>();
-        for(JsonNode entry:ddsInfo) {
-            IGUID nodeGUID = GUIDFactory.recreateGUID(entry.get(SOSConstants.GUID).asText());
-            String hostname = entry.get(SOSConstants.HOSTNAME).asText();
-            int port = entry.get(SOSConstants.PORT).asInt();
-
-            // TODO - what if there is already an entry for this node, but different roles?
-            // FIXME - Do not hard code this bit
-            // need a way to merge roles or override node?
-            Node node = new SOSNode(nodeGUID, hostname, port, false, false, true, false, false, false, false);
-            ddsNodes.add(node);
-        }
-
-        return ddsNodes;
     }
 
     @Override

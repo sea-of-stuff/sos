@@ -87,7 +87,7 @@ public class DataReplicationTest extends SetUpTest {
                                 .withBody(
                                         "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
-                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
@@ -114,7 +114,7 @@ public class DataReplicationTest extends SetUpTest {
                                 .withBody(
                                         "    {\n" +
                                                 "        \"Type\" : \"Atom\",\n" +
-                                                "        \"ContentGUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
@@ -138,7 +138,7 @@ public class DataReplicationTest extends SetUpTest {
         mockServerTwin.stop();
 
         // Let the mockServer stop cleanly (it takes some time)
-        Thread.sleep(5000);
+        Thread.sleep(2000);
     }
 
     @Test
