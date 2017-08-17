@@ -36,38 +36,6 @@ public class RESTStorageTest extends CommonRESTTest {
                     "  ]\n" +
                     "}";
 
-    private final static String TEST_HTTPS_BIN_ATOM_MANIFEST =
-            "{\n" +
-                    "  \"Type\": \"Atom\",\n" +
-                    "  \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
-                    "  \"Locations\": [\n" +
-                    "    {\n" +
-                    "      \"type\": \"provenance\",\n" +
-                    "      \"location\": \"https://httpbin.org/range/10\"\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "      \"type\": \"persistent\",\n" +
-                    "      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}";
-
-    private final static String TEST_HTTP_BIN_ATOM_MANIFEST =
-            "{\n" +
-                    "  \"Type\": \"Atom\",\n" +
-                    "  \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
-                    "  \"Locations\": [\n" +
-                    "    {\n" +
-                    "      \"type\": \"provenance\",\n" +
-                    "      \"location\": \"http://httpbin.org/range/10\"\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "      \"type\": \"persistent\",\n" +
-                    "      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\"\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}";
-
     private final static String TEST_EMPTY_ATOM_MANIFEST =
             "{\n" +
                     "  \"Type\": \"Atom\",\n" +
@@ -123,45 +91,23 @@ public class RESTStorageTest extends CommonRESTTest {
     }
 
     @Test
-    public void testStoreViaHTTPURL() throws Exception {
-
-        String data = "{\n" +
-                "    \"location\" : \"http://httpbin.org/range/10\"\n" +
-                "}";
-
-        Response response = target("/sos/storage/uri")
-                .request()
-                .post(Entity.json(data));
-
-        assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        JSONAssert.assertEquals(TEST_HTTP_BIN_ATOM_MANIFEST, response.readEntity(String.class), false);
-
-        response.close();
-    }
-
-    @Test
-    public void testStoreViaHTTPSURL() throws Exception {
-
-        String data = "{\n" +
-                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
-                "}";
-
-        Response response = target("/sos/storage/uri")
-                .request()
-                .post(Entity.json(data));
-
-        assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        JSONAssert.assertEquals(TEST_HTTPS_BIN_ATOM_MANIFEST, response.readEntity(String.class), false);
-
-        response.close();
-    }
-
-    @Test
     public void negativeReplicasStream() throws Exception {
 
         InputStream testData = HelperTest.StringToInputStream("data");
 
         Response response = target("/sos/storage/stream/replicas/-1")
+                .request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
+
+        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void zeroReplicasStream() throws Exception {
+
+        InputStream testData = HelperTest.StringToInputStream("data");
+
+        Response response = target("/sos/storage/stream/replicas/0")
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
 
@@ -176,48 +122,6 @@ public class RESTStorageTest extends CommonRESTTest {
         Response response = target("/sos/storage/stream/replicas/100")
                 .request()
                 .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA_TYPE));
-
-        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
-    }
-
-    @Test
-    public void negativeReplicasURI() throws Exception {
-
-        String data = "{\n" +
-                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
-                "}";
-
-        Response response = target("/sos/storage/uri/replicas/-1")
-                .request()
-                .post(Entity.json(data));
-
-        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
-    }
-
-    @Test
-    public void zeroReplicasURI() throws Exception {
-
-        String data = "{\n" +
-                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
-                "}";
-
-        Response response = target("/sos/storage/uri/replicas/0")
-                .request()
-                .post(Entity.json(data));
-
-        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
-    }
-
-    @Test
-    public void excessiveReplicasURI() throws Exception {
-
-        String data = "{\n" +
-                "    \"location\" : \"https://httpbin.org/range/10\"\n" +
-                "}";
-
-        Response response = target("/sos/storage/uri/replicas/100")
-                .request()
-                .post(Entity.json(data));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }

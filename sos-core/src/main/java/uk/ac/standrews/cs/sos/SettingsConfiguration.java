@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreType;
@@ -403,7 +404,27 @@ public class SettingsConfiguration {
 
             public static class StorageSettings extends RoleSettings {
 
+                // TODO - make sure that these settings are applied
+
+                @JsonView(Views.Public.class)
+                private boolean canPersist = false;
+
+                @JsonView(Views.Public.class)
+                private int maxReplication = 1; // A value of 1 results in no replication, since this storage service itself will count as replication-1
+
                 public StorageSettings() {}
+
+                public boolean isCanPersist() {
+                    return canPersist;
+                }
+
+                public int getMaxReplication() {
+                    return maxReplication;
+                }
+
+                public void setMaxReplication(int maxReplication) {
+                    this.maxReplication = maxReplication;
+                }
             }
 
             public static class NDSSettings extends RoleSettings {
@@ -790,5 +811,10 @@ public class SettingsConfiguration {
             }
         }
 
+    }
+
+    public static class Views {
+        public static class Public {
+        }
     }
 }

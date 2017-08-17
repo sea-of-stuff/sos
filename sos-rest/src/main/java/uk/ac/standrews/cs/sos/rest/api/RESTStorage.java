@@ -1,23 +1,26 @@
 package uk.ac.standrews.cs.sos.rest.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.StorageNode;
 import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.*;
@@ -32,7 +35,29 @@ import java.io.InputStream;
 @StorageNode
 public class RESTStorage {
 
+    @GET
+    @Path("/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStorageInfo() {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/info");
+
+        try {
+            SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings = SOSLocalNode.settings.getServices().getStorage();
+
+            String storageInfo = JSONHelper.JsonObjMapper()
+                    .writerWithView(SettingsConfiguration.Views.Public.class)
+                    .writeValueAsString(storageSettings);
+
+            return HTTPResponses.OK(storageInfo);
+
+        } catch (JsonProcessingException e) {
+
+            return HTTPResponses.INTERNAL_SERVER();
+        }
+    }
+
     // TODO - replica with suggested nodes
+
 
     /**
      * Get the data as a stream of bytes
@@ -64,51 +89,6 @@ public class RESTStorage {
 
         } catch (Exception e) {
             return HTTPResponses.NOT_FOUND("Atom not found");
-        }
-
-    }
-
-    @POST
-    @Path("/uri")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postDataByLocation(final Location location) {
-        return postDataByLocation(location, 1);
-    }
-
-    /**
-     * Example of body:
-     *
-     * { "location": "http://image.flaticon.com/teams/new/1-freepik.jpg"}
-     * @param location JSON for URI
-     * @return Response to the HTTP request
-     */
-    @POST
-    @Path("/uri/replicas/{replicas}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postDataByLocation(final Location location, @PathParam("replicas") int replicas) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/uri");
-
-        if (location == null) {
-            return HTTPResponses.INTERNAL_SERVER();
-        }
-
-        if (replicas < 1 || replicas > 3 /* TODO - this should be based on some settings */) {
-            return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
-        }
-
-        try {
-            AtomBuilder builder = new AtomBuilder()
-                    .setLocation(location)
-                    .setBundleType(BundleTypes.PERSISTENT);
-
-            Storage storage = RESTConfig.sos.getStorage();
-            Atom atom = storage.addAtom(builder);
-
-            return HTTPResponses.CREATED(atom.toString());
-        } catch (DataStorageException | ManifestPersistException e) {
-            return HTTPResponses.INTERNAL_SERVER();
         }
 
     }
@@ -188,6 +168,22 @@ public class RESTStorage {
     // TODO
     // GET /protect/guid - maybe in dds? not sure
 
+    @GET
+    @Path("/replicas/guid/{guid}")
+    public Response getReplicasInfo(@PathParam("guid") final String guid) {
+
+        /*
+        {
+        "guid" : guid,
+        "processed" : [
+         loc1, loc2, etc
+        ],
+        "toprocess": 2 // Location does not matter
+        }
+         */
+
+        return HTTPResponses.INTERNAL_SERVER();
+    }
 
     @GET
     @Path("/data/guid/{guid}/challenge/{challenge: .*}")

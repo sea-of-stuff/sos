@@ -17,6 +17,7 @@ public class JSONHelper {
         if (mapper == null) {
             mapper = new ObjectMapper()
                     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                    .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
                     .enable(SerializationFeature.INDENT_OUTPUT);
         }
         return mapper;
