@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.protocol.tasks;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -15,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.protocol.json.DataPackage;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.IO;
@@ -65,7 +66,6 @@ public class DataReplication extends Task {
 
     private Storage storage;
     private NodeDiscoveryService nodeDiscoveryService;
-    private DataDiscoveryService dataDiscoveryService;
 
     /**
      * Replicates the data at least n times within the specified nodes collection.
@@ -83,18 +83,16 @@ public class DataReplication extends Task {
      * @param replicationFactor
      * @param storage
      * @param nodeDiscoveryService
-     * @param dataDiscoveryService
      * @throws SOSProtocolException
      */
-    public DataReplication(Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
+    public DataReplication(Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
 
-        if (storage == null || nodeDiscoveryService == null || dataDiscoveryService == null) {
+        if (storage == null || nodeDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
         this.storage = storage;
         this.nodeDiscoveryService = nodeDiscoveryService;
-        this.dataDiscoveryService = dataDiscoveryService;
 
         this.data = data;
         this.nodesCollection = nodesCollection;
@@ -117,7 +115,7 @@ public class DataReplication extends Task {
                     Node node = nodeDiscoveryService.getNode(ref);
                     if (!node.isStorage()) continue;
 
-                    boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage, nodeDiscoveryService, dataDiscoveryService);
+                    boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage);
 
                     if (transferWasSuccessful) {
                         successfulReplicas++;
@@ -132,6 +130,7 @@ public class DataReplication extends Task {
         } catch (IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
         }
+
     }
 
     /**
@@ -140,12 +139,9 @@ public class DataReplication extends Task {
      * @param data
      * @param node
      * @param storage
-     * @param nodeDiscoveryService
-     * @param dataDiscoveryService
      * @return true if the data was transferred successfully.
      */
-    private static boolean transferDataAndUpdateNodeState(InputStream data, Node node, Storage storage,
-                                                          NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
+    private boolean transferDataAndUpdateNodeState(InputStream data, Node node, Storage storage) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
 
 
@@ -165,26 +161,44 @@ public class DataReplication extends Task {
         return true;
     }
 
-    private static Atom transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
+    private Atom transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
             SyncRequest request = new SyncRequest(HTTPMethod.POST, url, ResponseType.JSON);
-            request.setBody(data);
+
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.setData(IO.InputStreamToString(data));
+
+            if (delegateReplication) {
+                DataPackage.Metadata metadata = new DataPackage.Metadata();
+                metadata.setReplicationFactor(replicationFactor);
+
+                DataPackage.Metadata.ReplicationNodes replicationNodes = new DataPackage.Metadata.ReplicationNodes();
+                replicationNodes.setType(nodesCollection.type());
+                replicationNodes.setRefs(nodesCollection.nodesRefs()
+                        .stream()
+                        .map(IKey::toMultiHash)
+                        .toArray( String[]::new ));
+
+                metadata.setReplicationNodes(replicationNodes);
+                dataPackage.setMetadata(metadata);
+            }
+
+            String jsonBody = JSONHelper.JsonObjMapper().writeValueAsString(dataPackage);
+            request.setJSONBody(jsonBody);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-
             try(InputStream body = response.getBody()) {
+
                 if (response.getCode() == HTTPStatus.CREATED) {
-                    body.reset();
+
                     Atom atom = JSONHelper.JsonObjMapper().readValue(body, AtomManifest.class);
                     return atom;
 
                 } else {
                     throw new SOSProtocolException("Unable to transfer DATA");
                 }
-            } catch (IOException e) {
-                throw new SOSProtocolException("Unable to parse response from slave replication node", e);
             }
 
         } catch (IOException | SOSURLException e) {

@@ -17,10 +17,10 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
+import uk.ac.standrews.cs.sos.protocol.json.DataPackage;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.StorageNode;
-import uk.ac.standrews.cs.sos.rest.json.DataPackage;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -105,11 +105,13 @@ public class RESTStorage {
     public Response addAtomStream(final DataPackage dataPackage) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
+        // TODO - verify that data received matched the guid in the metadata?
+
         try {
             Storage storage = RESTConfig.sos.getStorage();
 
             AtomBuilder builder = new AtomBuilder()
-                    .setData(dataPackage.getData())
+                    .setData(dataPackage.getDataObj())
                     .setBundleType(BundleTypes.PERSISTENT);
 
             if (dataPackage.getMetadata() != null) {

@@ -24,7 +24,6 @@ import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -55,12 +54,16 @@ public class DataReplicationTest extends SetUpTest {
     private static final int MOCK_SERVER_PORT = 10001;
     private static final int MOCK_TWIN_SERVER_PORT = 10002;
 
+    private final static String BASIC_REQUEST = "" +
+            "{\n" +
+            "  \"data\" : \"{DATA}\"\n" +
+            "}";
+
     private static final String TEST_DATA = "test-data";
     private static final String NODE_ID = "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
     private static final String TWIN_NODE_ID = "SHA256_16_bbbba025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
 
     private NodeDiscoveryService mockNodeDiscoveryService;
-    private DataDiscoveryService mockDataDiscoveryService;
 
     @BeforeMethod
     public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
@@ -79,7 +82,7 @@ public class DataReplicationTest extends SetUpTest {
                         request()
                                 .withMethod("POST")
                                 .withPath("/sos/storage/stream")
-                                .withBody(TEST_DATA)
+                                .withBody(BASIC_REQUEST.replace("{DATA}", TEST_DATA))
                 )
                 .respond(
                         response()
@@ -106,7 +109,7 @@ public class DataReplicationTest extends SetUpTest {
                         request()
                                 .withMethod("POST")
                                 .withPath("/sos/storage/stream")
-                                .withBody(TEST_DATA)
+                                .withBody(BASIC_REQUEST.replace("{DATA}", TEST_DATA))
                 )
                 .respond(
                         response()
@@ -129,7 +132,6 @@ public class DataReplicationTest extends SetUpTest {
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
-        mockDataDiscoveryService = mock(DataDiscoveryService.class);
     }
 
     @AfterMethod
@@ -157,7 +159,7 @@ public class DataReplicationTest extends SetUpTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -184,7 +186,7 @@ public class DataReplicationTest extends SetUpTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -213,7 +215,7 @@ public class DataReplicationTest extends SetUpTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -254,7 +256,7 @@ public class DataReplicationTest extends SetUpTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 3, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false); // TODO - test with different replication factor
+        DataReplication replicationTask = new DataReplication(data, nodesCollection, 3, storage, mockNodeDiscoveryService, false); // TODO - test with different replication factor
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -291,7 +293,7 @@ public class DataReplicationTest extends SetUpTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false); // TODO - rep factor 1
+        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);
@@ -326,7 +328,7 @@ public class DataReplicationTest extends SetUpTest {
         NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, mockDataDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID);

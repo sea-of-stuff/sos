@@ -1,5 +1,7 @@
-package uk.ac.standrews.cs.sos.rest.json;
+package uk.ac.standrews.cs.sos.protocol.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  */
 public class DataPackage {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Metadata metadata;
     private String data;
 
@@ -32,7 +35,12 @@ public class DataPackage {
         this.metadata = metadata;
     }
 
-    public Data getData() {
+    public String getData() {
+        return data;
+    }
+
+    @JsonIgnore
+    public Data getDataObj() {
         return new StringData(data);
     }
 
@@ -71,7 +79,6 @@ public class DataPackage {
         public void setReplicationNodes(ReplicationNodes replicationNodes) {
             this.replicationNodes = replicationNodes;
         }
-
 
         public static class ReplicationNodes {
 

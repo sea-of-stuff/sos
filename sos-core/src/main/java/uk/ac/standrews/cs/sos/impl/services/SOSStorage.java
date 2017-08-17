@@ -111,7 +111,7 @@ public class SOSStorage implements Storage {
         if (replicationFactor > 0) {
 
             try {
-                DataReplication dataReplication = new DataReplication(atomBuilder.getData(), atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, dataDiscoveryService, atomBuilder.isDelegateReplication());
+                DataReplication dataReplication = new DataReplication(atomBuilder.getData(), atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (SOSProtocolException e) {
