@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class Metrics {
 
     public static void Dataset(File directory) {
 
-        DatasetFileVisitor<Path> fv = new DatasetFileVisitor();
+        DatasetFileVisitor<Path> fv = new DatasetFileVisitor<>();
 
         try {
             Files.walkFileTree(directory.toPath(), fv);
@@ -29,7 +30,7 @@ public class Metrics {
 
             long averageFileSize = fv.totalSize / fv.numberOfFiles;
 
-            System.out.println("Number of files: " + fv.numberOfFiles + " size in bytes: " + fv.totalSize);
+            System.out.println("Number of files: " + fv.numberOfFiles + " for a total size in bytes of: " + fv.totalSize);
             System.out.println("Average file size: " + averageFileSize + "bytes or " + averageFileSize / 1000.0 + " kb");
 
             long variance = 0;
@@ -41,11 +42,14 @@ public class Metrics {
             System.out.println("Variance: " + variance);
             System.out.println("STD Dev: " + stdDev);
 
-            System.out.println("number of directories: " + fv.numberOfDirectories);
-            System.out.println("extensions: ");
+            System.out.println("Largest file: " + Collections.max(fv.filesSize));
+            System.out.println("Smallest file: " + Collections.min(fv.filesSize));
+            System.out.println("Number of directories: " + fv.numberOfDirectories);
+            System.out.print("Extensions: ");
             for(String extension:fv.fileExtensions) {
                 System.out.print(extension + ", ");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,7 +63,7 @@ public class Metrics {
         Set<String> fileExtensions;
         ArrayList<Long> filesSize;
 
-        public DatasetFileVisitor() {
+        DatasetFileVisitor() {
             fileExtensions = new LinkedHashSet<>();
             filesSize = new ArrayList<>();
         }
