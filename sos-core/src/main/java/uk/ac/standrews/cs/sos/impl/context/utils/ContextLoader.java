@@ -108,11 +108,12 @@ public class ContextLoader {
 
         try {
             String clazzString = ContextClassBuilder.ConstructClass(node);
-            // System.out.println(clazzString);
+            System.out.println(clazzString);
 
             // Print class to file
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
+            System.out.println(sourceClazzFile.getAbsolutePath());
             if (sourceClazzFile.exists()) sourceClazzFile.delete();
             sourceClazzFile.deleteOnExit();
             try (PrintWriter out = new PrintWriter(sourceClazzFile)){
@@ -121,6 +122,7 @@ public class ContextLoader {
 
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            System.out.println("COMPILER: " + compiler);
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
 
