@@ -164,9 +164,11 @@ scripts/logs*
 experiments/.*
 *.iml
 .idea/inspectionProfiles/
+.idea/dataSources/
 .idea/snapshots/
 Dockerfile
 sos-core/dump.db
+dump.db
 *.log
 *.log.*
 sos-core/src/test/resources/*.conf
@@ -177,5 +179,5 @@ experiments/plots
 experiments/processed
 experiments/output
 sos-experiments/src/main/resources/output/
-sos-experiments/src/main/resources/datasets/
 !sos-experiments/src/main/resources/datasets/README.md
+sos-experiments/src/main/resources/datasets/
