@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -24,8 +25,22 @@ public class Metrics {
         try {
             Files.walkFileTree(directory.toPath(), fv);
 
-            System.out.println("number of files: " + fv.numberOfFiles + " size in bytes: " + fv.totalSize);
-            System.out.println("average file size: " + fv.totalSize / fv.numberOfFiles + " in kb " + fv.totalSize / (fv.numberOfFiles * 1000.0));
+            System.out.println("==============");
+
+            long averageFileSize = fv.totalSize / fv.numberOfFiles;
+
+            System.out.println("Number of files: " + fv.numberOfFiles + " size in bytes: " + fv.totalSize);
+            System.out.println("Average file size: " + averageFileSize + "bytes or " + averageFileSize / 1000.0 + " kb");
+
+            long variance = 0;
+            for(Long fileSize:fv.filesSize) {
+                variance += Math.pow(fileSize - averageFileSize, 2);
+            }
+            variance = variance / fv.numberOfFiles;
+            double stdDev = Math.sqrt(variance);
+            System.out.println("Variance: " + variance);
+            System.out.println("STD Dev: " + stdDev);
+
             System.out.println("number of directories: " + fv.numberOfDirectories);
             System.out.println("extensions: ");
             for(String extension:fv.fileExtensions) {
@@ -42,9 +57,11 @@ public class Metrics {
         int totalSize = 0;
         int numberOfDirectories = -1; // Do not count the parent directory
         Set<String> fileExtensions;
+        ArrayList<Long> filesSize;
 
         public DatasetFileVisitor() {
             fileExtensions = new LinkedHashSet<>();
+            filesSize = new ArrayList<>();
         }
 
         @Override
@@ -62,6 +79,7 @@ public class Metrics {
 
             numberOfFiles++;
             totalSize += file.toFile().length();
+            filesSize.add(file.toFile().length());
 
             String extension = FilenameUtils.getExtension(file.getFileName().toString());
             fileExtensions.add(extension);

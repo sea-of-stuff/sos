@@ -32,4 +32,10 @@ public class MetricsTest {
 
         Metrics.Dataset(new File("sos-experiments/src/main/resources/datasets/deep"));
     }
+
+    @Test
+    public void sameSizeDatasetMetricsTest() {
+
+        Metrics.Dataset(new File("sos-experiments/src/main/resources/datasets/same"));
+    }
 }
