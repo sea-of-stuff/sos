@@ -41,9 +41,10 @@ public class Metrics {
             double stdDev = Math.sqrt(variance);
             System.out.println("Variance: " + variance);
             System.out.println("STD Dev: " + stdDev);
-
+            System.out.println("Median: " + median(fv.filesSize));
             System.out.println("Largest file: " + Collections.max(fv.filesSize));
             System.out.println("Smallest file: " + Collections.min(fv.filesSize));
+            System.out.println("Range: " + (Collections.max(fv.filesSize) - Collections.min(fv.filesSize)));
             System.out.println("Number of directories: " + fv.numberOfDirectories);
             System.out.print("Extensions: ");
             for(String extension:fv.fileExtensions) {
@@ -53,6 +54,19 @@ public class Metrics {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static double median(ArrayList<Long> arr) {
+
+        Collections.sort(arr);
+        int length = arr.size();
+        double median;
+        if (length % 2 == 0)
+            median = ((double)arr.get(length/2) + (double)arr.get(length/2 - 1))/2;
+        else
+            median = (double) arr.get(length/2);
+
+        return median;
     }
 
     public static class DatasetFileVisitor<T> extends SimpleFileVisitor<Path> {
