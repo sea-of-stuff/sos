@@ -13,6 +13,7 @@
         "name" : "hogun10",
         "path" : "/cs/scratch/",
         "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
           "host" : "hogun-10.cluster",
@@ -35,6 +36,7 @@
         "name" : "hogun9",
         "path" : "/cs/scratch/",
         "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
           "host" : "hogun-9.cluster",
@@ -58,6 +60,7 @@
       "name" : "hogun1",
       "path" : "/cs/scratch/",
       "remote" : true,
+      "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
         "host" : "hogun-1.cluster",

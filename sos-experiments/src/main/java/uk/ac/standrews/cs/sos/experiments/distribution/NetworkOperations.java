@@ -178,11 +178,11 @@ public class NetworkOperations {
      * @param pidFile
      * @throws NetworkException
      */
-    public void executeJar(String basePath, String jarPath, String args, String outFile, String pidFile) throws NetworkException {
+    public void executeJar(String basePath, String java, String jarPath, String args, String outFile, String pidFile) throws NetworkException {
         System.out.println("NETWORK - Executing jar file " + jarPath);
 
         try {
-            String command = "cd " + basePath + "; java -jar " + jarPath + " " + args + " > " + outFile + " 2>&1 & echo $! > " + pidFile;
+            String command = "cd " + basePath + "; " + java + " -jar " + jarPath + " " + args + " > " + outFile + " 2>&1 & echo $! > " + pidFile;
             exec(command);
 
         } catch (JSchException | IOException e) {

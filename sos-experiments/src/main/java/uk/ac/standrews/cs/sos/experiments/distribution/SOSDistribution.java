@@ -11,7 +11,7 @@ import java.io.PrintWriter;
  */
 public class SOSDistribution {
 
-    private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/sos-experiments.jar";
+    private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/experiments-1.0-SNAPSHOT-jar-with-dependencies.jar";
     private static final String REMOTE_SOS_JAR_PATH =  "sos.jar";
     private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.json";
     private static final String REMOTE_SOS_PID_FILE =  "sos.pid";
@@ -77,7 +77,7 @@ public class SOSDistribution {
             scp.connect();
 
             // Run the SOS node with the jetty REST server component
-            scp.executeJar(path, REMOTE_SOS_JAR_PATH, "-c " + REMOTE_SOS_CONFIGURATION_PATH + " -j", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
+            scp.executeJar(path, node.getJava(), REMOTE_SOS_JAR_PATH, "-c " + REMOTE_SOS_CONFIGURATION_PATH + " -j", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
 
             scp.disconnect();
         }
@@ -140,7 +140,7 @@ public class SOSDistribution {
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
-        scp.executeJar(path, REMOTE_SOS_EXPERIMENTS_JAR_PATH, "", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
+        scp.executeJar(path, experimentNode.getJava(), REMOTE_SOS_EXPERIMENTS_JAR_PATH, "", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
 
         scp.disconnect();
     }

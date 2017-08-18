@@ -108,12 +108,11 @@ public class ContextLoader {
 
         try {
             String clazzString = ContextClassBuilder.ConstructClass(node);
-            System.out.println(clazzString);
+            // System.out.println(clazzString);
 
             // Print class to file
             String clazzName = node.get("name").asText();
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
-            System.out.println(sourceClazzFile.getAbsolutePath());
             if (sourceClazzFile.exists()) sourceClazzFile.delete();
             sourceClazzFile.deleteOnExit();
             try (PrintWriter out = new PrintWriter(sourceClazzFile)){
@@ -122,23 +121,22 @@ public class ContextLoader {
 
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            System.out.println("COMPILER: " + compiler);
+            // System.out.println("COMPILER: " + compiler);
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
 
             // Compile the file
-            JavaCompiler.CompilationTask task = compiler.getTask(null,
+            JavaCompiler.CompilationTask task = compiler.getTask(
+                    null,
                     fileManager,
                     diagnostics,
                     null,
                     null,
-                    fileManager.getJavaFileObjectsFromFiles(Collections.singletonList(sourceClazzFile)));
+                    fileManager.getJavaFileObjects(sourceClazzFile));
 
             if (task.call()) {
 
-                String path = targetClassPath + ContextClassBuilder.PACKAGE.replace(".", "/") + "/" + clazzName + ".class";
-                File dir = new File(path).getParentFile();
-                Load(dir, clazzName);
+                Load(clazzName);
 
             } else {
 
@@ -156,27 +154,17 @@ public class ContextLoader {
 
     /**
      * Load context class from path
-     * @param dir
      * @param className
      * @throws ContextLoaderException
      */
-    private static void Load(File dir, String className) throws ContextLoaderException {
-
-        if (!dir.exists()) {
-            throw new ContextLoaderException("CreateFile for class " + className + " was not found");
-        }
+    private static void Load(String className) throws ContextLoaderException {
 
         try {
-            // Convert CreateFile to a URL
-            URL url = dir.toURL();
-            URL[] urls = new URL[]{url};
-
-            // Create a new class loader with the directory
-            ClassLoader cl = new URLClassLoader(urls);
-            Class cls = cl.loadClass(ContextClassBuilder.PACKAGE + "." + className);
+            ClassLoader cl = ClassLoaderForContexts();
+            Class<?> cls = cl.loadClass(ContextClassBuilder.PACKAGE + "." + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
 
-        } catch (MalformedURLException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new ContextLoaderException("Unable to load context for class: " + className);
         }
 
@@ -186,13 +174,18 @@ public class ContextLoader {
      * Creates context instance
      *
      * @param className
+     * @param policyActions
+     * @param contextName
+     * @param domain
+     * @param codomain
      * @return
      * @throws ContextLoaderException
      */
     public static Context Instance(String className, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
+            ClassLoader classLoader = ClassLoaderForContexts();
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(policyActions, contextName, domain, codomain);
             return context;
@@ -205,13 +198,19 @@ public class ContextLoader {
      * Creates context instance
      *
      * @param className
+     * @param policyActions
+     * @param guid
+     * @param contextName
+     * @param domain
+     * @param codomain
      * @return
      * @throws ContextLoaderException
      */
     public static Context Instance(String className, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className);
+            ClassLoader classLoader = ClassLoaderForContexts();
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(policyActions, guid, contextName, domain, codomain);
             return context;
@@ -220,4 +219,25 @@ public class ContextLoader {
         }
     }
 
+
+    private static ClassLoader ClassLoaderForContexts() throws ContextLoaderException {
+
+        String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
+        File contextClassDirectory = new File(targetClassPath);
+
+        if (!contextClassDirectory.exists()) {
+            throw new ContextLoaderException("Cannot find path for context classes");
+        }
+
+        try {
+            URL url = contextClassDirectory.toURL();
+            URL[] urls = new URL[]{url};
+
+            // Create a new class loader with the directory
+            ClassLoader cl = new URLClassLoader(urls);
+            return cl;
+        } catch (MalformedURLException e) {
+            throw new ContextLoaderException("Cannot create class loader for contexts");
+        }
+    }
 }

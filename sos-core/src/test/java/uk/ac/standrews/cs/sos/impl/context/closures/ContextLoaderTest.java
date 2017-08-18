@@ -78,7 +78,6 @@ public class ContextLoaderTest extends SetUpTest {
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
         ContextLoader.LoadContext(node);
-
         Context context = ContextLoader.Instance("Test2", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
@@ -97,7 +96,6 @@ public class ContextLoaderTest extends SetUpTest {
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
         ContextLoader.LoadContext(node);
-
         Context context = ContextLoader.Instance("Test3", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
@@ -136,7 +134,6 @@ public class ContextLoaderTest extends SetUpTest {
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
         ContextLoader.LoadContext(node);
-
         Context context = ContextLoader.Instance("Test4", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
@@ -168,7 +165,6 @@ public class ContextLoaderTest extends SetUpTest {
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
         ContextLoader.LoadContext(node);
-
         Context context = ContextLoader.Instance("Test5", policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());

@@ -556,7 +556,7 @@ public class SettingsConfiguration {
                 }
 
                 public String getLoadedPath() {
-                    return loadedPath;
+                    return absolutePath(loadedPath);
                 }
 
                 public void setLoadedPath(String loadedPath) {
@@ -727,7 +727,6 @@ public class SettingsConfiguration {
                 this.ssl_trust_store = ssl_trust_store;
                 System.setProperty("javax.net.ssl.trustStore", ssl_trust_store);
             }
-
 
             public static class TasksSettings {
 

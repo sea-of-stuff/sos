@@ -175,6 +175,7 @@ public class ExperimentConfiguration {
             private String name;
             private String path = "";
             private boolean remote;
+            private String java = "java";
             private String configurationFile;
             private SSH ssh;
             private Behaviour behaviour;
@@ -239,6 +240,14 @@ public class ExperimentConfiguration {
 
             public void setName(String name) {
                 this.name = name;
+            }
+
+            public String getJava() {
+                return java;
+            }
+
+            public void setJava(String java) {
+                this.java = java;
             }
 
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)

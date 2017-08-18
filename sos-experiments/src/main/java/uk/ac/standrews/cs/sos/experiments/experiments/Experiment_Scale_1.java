@@ -85,7 +85,6 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
                 addContentToNode();
                 addContexts();
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new ExperimentException();
             }
         }
