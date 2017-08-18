@@ -135,7 +135,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         chicShock.shock();
         chicShock.shockExperiment();
 
-        Thread.sleep(20000);
+        Thread.sleep(60000);
 
         chicShock.unShockExperiment();
         chicShock.unChicExperiment();
