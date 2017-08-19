@@ -144,6 +144,8 @@ You can also find other useful bash scripts in the script folder.
 
 The code for the experiments is found under `sos-experiments/`. Read the relevant [README](sos-experiments/README.md) for more info.
 
+The experiments results are located under `experiments/output`.
+
 
 ## SOS Internals
 
@@ -180,6 +182,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
       "cms": {
         "exposed": false,
         "indexFile": "cms.index",
+        "loadedPath": "sos/java/contexts/", // The default path is ~/sos/java/contexts/
         "automatic": true,
         "predicateThread": {
           "initialDelay": 30,
@@ -271,6 +274,7 @@ It contains certificate references for well-known Certificate authorities, such 
 The cacerts file is needed to allow the node to make HTTPS (HTTP with SSL) requests.
 
 #### Linux
+
 `$(readlink -f /usr/bin/java | sed "s:bin/java::")lib/security/cacerts`
 
 #### MacOSX
@@ -281,14 +285,18 @@ The cacerts file is needed to allow the node to make HTTPS (HTTP with SSL) reque
 
 ## More stuff
 
+### Headless Tika
+
+The `sos-core` modules used the Apache Tika utility to extract useful metadata from the atoms.
+The Tika utility may make some calls to the `java.awt` package, so if you want to run a sos node in headless more, you will have
+to specify the following parameter: `-Djava.awt.headless=true`.
+
 ### Logging
 
 The logs are automatically written under the `logs/` folder.
 
 The SOS application uses the log4j logger and changing the logs configuration is as straightforward
-as providing a new `log4j.properties` file.
-
-To explicitly instruct the SOS application to use a non-default properties file, you must
+as providing a new `log4j.properties` file. To explicitly instruct the SOS application to use a non-default properties file, you must
 add this parameter when running the java app:
 
 `-Dlog4j.configuration=file:/path/to/log4j.properties`
@@ -299,7 +307,7 @@ add this parameter when running the java app:
 #### Example of a log4j.properties for both file and stdout
 
 ```
-log4j.rootLogger=DEBUG,file,console
+log4j.rootLogger=file,console
 log4j.appender.console=org.apache.log4j.ConsoleAppender
 log4j.appender.file=org.apache.log4j.RollingFileAppender
 
@@ -317,7 +325,6 @@ log4j.appender.file.layout.ConversionPattern=%d{dd-MM-yyyy HH:mm:ss} [ %-5p ] - 
 log4j.appender.console.layout=org.apache.log4j.PatternLayout
 log4j.appender.console.layout.ConversionPattern=%d{dd-MM-yyyy HH:mm:ss} [ %-5p ] -  %c %x ( %-4r [%t] ) ==> %m%n
 ```
-
 
 
 ## Useful tools
