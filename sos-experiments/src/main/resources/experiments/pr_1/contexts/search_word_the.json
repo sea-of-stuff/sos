@@ -1,0 +1,4 @@
+{
+  "name": "Search_word_the",
+  "predicate": "CommonPredicates.SearchText(guid, \"the\");"
+}

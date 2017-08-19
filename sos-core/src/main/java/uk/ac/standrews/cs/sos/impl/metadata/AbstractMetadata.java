@@ -37,8 +37,8 @@ public abstract class AbstractMetadata implements Metadata {
         return (String) getProperty(propertyName);
     }
 
-    public Integer getPropertyAsInteger(String propertyName) {
-        return (Integer) getProperty(propertyName);
+    public Long getPropertyAsLong(String propertyName) {
+        return (Long) getProperty(propertyName);
     }
 
     public IGUID getPropertyAsGUID(String propertyName) {
@@ -120,11 +120,11 @@ public abstract class AbstractMetadata implements Metadata {
     }
 
     // http://stackoverflow.com/a/5439547/2467938
-    protected static boolean isInteger(String s) {
-        return isInteger(s,10);
+    protected static boolean isNumber(String s) {
+        return isNumber(s,10);
     }
 
-    private static boolean isInteger(String s, int radix) {
+    private static boolean isNumber(String s, int radix) {
         if(s.isEmpty()) return false;
         for(int i = 0; i < s.length(); i++) {
             if(i == 0 && s.charAt(i) == '-') {

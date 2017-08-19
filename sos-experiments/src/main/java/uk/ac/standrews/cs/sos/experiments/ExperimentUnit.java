@@ -14,6 +14,11 @@ import uk.ac.standrews.cs.sos.model.Version;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -46,23 +51,30 @@ public interface ExperimentUnit {
      */
     default void addFolderContentToNode(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
 
-        File[] listOfFiles = folder.listFiles();
+        SimpleFileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
 
-        assert listOfFiles != null;
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile()) {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
-                String fileLocation = listOfFile.getAbsolutePath();
-                AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(fileLocation));
-                Metadata metadata = node.getAgent().addMetadata(atomBuilder.getData()); // TODO - do this in the version builder?
-                VersionBuilder versionBuilder = new VersionBuilder()
-                        .setAtomBuilder(atomBuilder)
-                        .setMetadata(metadata);
+                try {
+                    AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(file.toUri().toString()));
+                    Metadata metadata = node.getAgent().addMetadata(atomBuilder.getData()); // TODO - do this in the version builder?
+                    VersionBuilder versionBuilder = new VersionBuilder()
+                            .setAtomBuilder(atomBuilder)
+                            .setMetadata(metadata);
 
-                Version version = node.getAgent().addData(versionBuilder);
-                InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid().toShortString() + " from URI " + fileLocation);
+                    Version version = node.getAgent().addData(versionBuilder);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
+                } catch (MetadataException | URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                return FileVisitResult.CONTINUE;
             }
-        }
+        };
 
+        long start = System.nanoTime();
+        Files.walkFileTree(folder.toPath(), fv);
+        System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
 }

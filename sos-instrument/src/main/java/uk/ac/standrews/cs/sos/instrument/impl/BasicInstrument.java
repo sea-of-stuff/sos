@@ -77,6 +77,11 @@ public class BasicInstrument implements Instrument {
 
     @Override
     public void measure(StatsTYPE statsTYPE, String message) {
+        measure(statsTYPE, message, -1);
+    }
+
+    @Override
+    public void measure(StatsTYPE statsTYPE, String message, long measure) {
 
         if (statistics.isEnabled(statsTYPE)) {
 
@@ -92,6 +97,7 @@ public class BasicInstrument implements Instrument {
                 }
 
                 AppMetrics appMeasure = AppMetrics.measure(message);
+                appMeasure.setUserMeasure(measure);
                 write(bufferedWriter, appMeasure, false);
 
                 OSMetrics osMetrics = OSMetrics.measure();
@@ -103,7 +109,6 @@ public class BasicInstrument implements Instrument {
             }
 
         }
-
     }
 
     public void measure(Metrics metrics) {

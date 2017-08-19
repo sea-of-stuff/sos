@@ -22,4 +22,7 @@ public class DummyInstrument implements Instrument {
 
     @Override
     public void measure(StatsTYPE statsTYPE, String message) {}
+
+    @Override
+    public void measure(StatsTYPE statsTYPE, String message, long measure) {}
 }

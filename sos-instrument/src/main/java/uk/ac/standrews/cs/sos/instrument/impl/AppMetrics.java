@@ -10,7 +10,8 @@ import java.time.Instant;
 public class AppMetrics implements Metrics {
 
     private Instant now;
-    private String message;
+    private String message = "n/a";
+    private long userMeasure = -1;
     private StackTraceElement stackTraceElement;
 
     public Instant getNow() {
@@ -27,6 +28,14 @@ public class AppMetrics implements Metrics {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public long getUserMeasure() {
+        return userMeasure;
+    }
+
+    public void setUserMeasure(long userMeasure) {
+        this.userMeasure = userMeasure;
     }
 
     public StackTraceElement getStackTraceElement() {
@@ -53,12 +62,13 @@ public class AppMetrics implements Metrics {
 
         return "Timestamp / Time (UTC): " + getNow().toEpochMilli() + " / " + getNow().toString() + "\n" +
                 "Message: " + getMessage() + "\n" +
+                "User Measure: " + getMessage() + "\n" +
                 "Class / Method name: " + getStackTraceElement().getClassName() + " / " + getStackTraceElement().getMethodName();
     }
 
     @Override
     public String csvHeader() {
-        return "Timestamp (ms),Time(UTC),Message,Class Name,Method Name";
+        return "Timestamp (ms),Time(UTC),Message,User Measure,Class Name,Method Name";
     }
 
     @Override
@@ -69,12 +79,13 @@ public class AppMetrics implements Metrics {
 
     @Override
     public String tsvHeader() {
-        return "Timestamp (ms)"+TAB+"Time(UTC)"+TAB+"Message"+TAB+"Class Name"+TAB+"Method Name";
+        return "Timestamp (ms)"+TAB+"Time(UTC)"+TAB+"Message"+TAB+"User Measure"+TAB+"Class Name"+TAB+"Method Name";
     }
 
     @Override
     public String tsv() {
-        return getNow().toEpochMilli() + TAB + getNow().toString() + TAB + getMessage() + TAB +
+        return getNow().toEpochMilli() + TAB + getNow().toString() + TAB + getMessage() + TAB + getUserMeasure() + TAB +
                 getStackTraceElement().getClassName() + TAB + getStackTraceElement().getMethodName();
     }
+
 }

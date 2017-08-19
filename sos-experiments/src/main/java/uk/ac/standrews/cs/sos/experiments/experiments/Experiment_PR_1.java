@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     private int counter;
 
-    public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) {
+    public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
         // Prepare the experiments to be run
@@ -71,7 +72,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             try {
                 cms = node.getCMS();
 
-                InstrumentFactory.instance().measureDataset(new File(TEST_DATA_FOLDER)); // TODO - call this method based on the datasets specified in the experiment settings
                 addFolderContentToNode(node, new File(TEST_DATA_FOLDER));
                 addContexts();
             } catch (Exception e) {
@@ -100,7 +100,15 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                     break;
                 }
 
-                case DATA: // TODO - no idea what to do here...
+                case DATA: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "search_word_the.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
+                    IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_the.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
+
+                    break;
+                }
                 case DATA_AND_METADATA: {
                     break;
                 }
@@ -119,7 +127,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     }
 
-    public static void main(String[] args) throws ExperimentException, ConfigurationException {
+    public static void main(String[] args) throws ExperimentException, ConfigurationException, IOException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);

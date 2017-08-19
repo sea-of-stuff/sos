@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
-    public Experiment_PO_1(ExperimentConfiguration experimentConfiguration) {
+    public Experiment_PO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
         // Prepare the experiments to be run

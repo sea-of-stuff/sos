@@ -50,8 +50,8 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
     private Object getObject(JsonNode element, String type) {
 
         switch(type.toUpperCase()) {
-            case "INT":
-                return element.asInt();
+            case "LONG":
+                return element.asLong();
             case "STRING":
                 return element.asText();
             case "GUID":

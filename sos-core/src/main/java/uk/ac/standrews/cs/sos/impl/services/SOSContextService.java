@@ -220,9 +220,11 @@ public class SOSContextService implements ContextService {
         int counter = 0;
 
         for (Context context : getContexts()) {
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - START - for context " + context.getName());
+            long start = System.nanoTime();
 
-            for (IGUID assetInvariant : dataDiscoveryService.getAllAssets()) {
+            int perContextCounter = 0;
+            Set<IGUID> assets = dataDiscoveryService.getAllAssets();
+            for (IGUID assetInvariant : assets) {
 
                 try {
                     IGUID head = dataDiscoveryService.getHead(assetInvariant);
@@ -230,6 +232,7 @@ public class SOSContextService implements ContextService {
                     SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
                     runPredicate(context, assetInvariant, head);
                     counter++;
+                    perContextCounter++;
 
                     SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
                 } catch (HEADNotFoundException e) {
@@ -238,9 +241,10 @@ public class SOSContextService implements ContextService {
 
             }
 
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, "runPredicates - END - for context " + context.getName());
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, "Predicate for context: " + context.getName() +
+                    " run in " + duration + " nanoseconds or in " + duration / 1000000000.0 + " seconds. Predicate was run over " + perContextCounter + " entities.", duration);
         }
-
 
         return counter;
     }

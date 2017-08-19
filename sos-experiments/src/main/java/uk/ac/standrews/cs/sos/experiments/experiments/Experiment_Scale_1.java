@@ -30,7 +30,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
     private ContextService cms;
     private int counter;
 
-    public Experiment_Scale_1(ExperimentConfiguration experimentConfiguration) {
+    public Experiment_Scale_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
         // Prepare the experiments to be run

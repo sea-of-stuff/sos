@@ -51,8 +51,8 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
 
     // FIXME - type could also be REF/GUID
     public String getType(Object value) {
-        if (value instanceof Integer) {
-            return "INT";
+        if (value instanceof Long) {
+            return "LONG";
         } else if (value instanceof IGUID) {
             return "GUID";
         } else {
@@ -62,8 +62,8 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
 
     private void writeValue(JsonGenerator jsonGenerator, String type, Object value) throws IOException {
         switch(type) {
-            case "INT":
-                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Integer) value);
+            case "LONG":
+                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Long) value);
                 break;
             case "STRING":
                 jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);

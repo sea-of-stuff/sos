@@ -1,0 +1,4 @@
+{
+  "name": "Occurrence_word_the",
+  "predicate": "CommonPredicates.TextOccurrences(guid, \"the\") > 10;"
+}

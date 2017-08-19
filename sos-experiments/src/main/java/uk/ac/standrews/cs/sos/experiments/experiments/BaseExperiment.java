@@ -22,7 +22,7 @@ public abstract class BaseExperiment implements Experiment {
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
     public static final String OUTPUT_FOLDER = "experiments/output/"; // TODO - specify in experiment config
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
-    public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/datasets/text/";
+    public static final String TEST_DATA_FOLDER = "/Users/sic2/Downloads/sostest"; // "sos-experiments/src/main/resources/datasets/text/";
 
     private long start;
 
@@ -34,9 +34,18 @@ public abstract class BaseExperiment implements Experiment {
 
     private int iteration;
 
-    public BaseExperiment(ExperimentConfiguration experimentConfiguration) {
+    public BaseExperiment(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         this.experiment = experimentConfiguration.getExperimentObj();
         this.iteration = 0;
+
+        System.out.println("Total number of iterations for this experiment: " + numberOfTotalIterations());
+
+        try {
+            InstrumentFactory.instance(experiment.getStats(), OutputTYPE.TSV, OUTPUT_FOLDER + getExperimentResultsFilename());
+            InstrumentFactory.instance().measureDataset(new File(TEST_DATA_FOLDER)); // TODO - call this method based on the datasets specified in the experiment settings
+        } catch (IOException e) {
+            throw new ExperimentException("Problems while creating the base experiment");
+        }
 
         // WarmUp the JVM for the experiments to be run
         WarmUp.run();
@@ -45,19 +54,17 @@ public abstract class BaseExperiment implements Experiment {
     public void setup() throws ExperimentException {
 
         try {
-            InstrumentFactory.instance(experiment.getStats(), OutputTYPE.TSV, OUTPUT_FOLDER + getExperimentResultsFilename());
-
             String configurationNodePath = experiment.getExperimentNode().getConfigurationFile(experiment.getName());
             File configFile = new File(configurationNodePath);
             if (!configFile.exists()) {
                 configFile = new File(experiment.getExperimentNode().getConfigurationFile());
             }
-            System.out.println("CONFIG FILE " + configFile.getAbsolutePath());
 
+            System.out.println("CONFIG FILE " + configFile.getAbsolutePath());
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
             node = ServerState.init(configuration.getSettingsObj());
-        } catch (ConfigurationException | IOException e) {
+        } catch (ConfigurationException e) {
             e.printStackTrace();
             throw new ExperimentException();
         }
@@ -98,6 +105,7 @@ public abstract class BaseExperiment implements Experiment {
     @Override
     public void process() throws ExperimentException {
 
+        long start = System.nanoTime();
         for(iteration = 0; iteration < numberOfTotalIterations(); iteration++) {
 
             setup();
@@ -106,6 +114,9 @@ public abstract class BaseExperiment implements Experiment {
 
             cleanup();
         }
+        long end = System.nanoTime();
+        long timeToFinish = end - start;
+        System.out.println("All experiments finished in " + nanoToSeconds(timeToFinish) + " seconds");
     }
 
     public abstract int numberOfTotalIterations();

@@ -25,13 +25,12 @@ public class TikaMetadata extends AbstractMetadata implements Metadata {
     public Object getProperty(String propertyName) {
         boolean ignore = Arrays.asList(ignoreMetadata).contains(propertyName);
 
-
         if (ignore) {
             return null;
         } else {
             String p = tikaMetadata.get(propertyName);
-            if (isInteger(p)) {
-                return Integer.parseInt(p);
+            if (isNumber(p)) {
+                return Long.parseLong(p);
             }
 
             return p;
