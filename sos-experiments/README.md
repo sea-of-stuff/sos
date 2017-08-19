@@ -2,6 +2,22 @@
 
 This module contains the code to run the experiment on the SOS.
 
+## Experiments
+
+Further info about the experiments is found in the experiments chapter of this work.
+
+### PR_1
+
+
+
+### DO_2
+
+### DO_3
+
+### DO_4
+
+### Scale_1
+
 ## Experiment Setup
 
 An experiment is defined by a Java class and by a bunch of experiment configuration files.

@@ -164,6 +164,12 @@ public class SOSAgent implements Agent {
         return storage.getAtomContent(content);
     }
 
+    @Override
+    public Data getData(IGUID atomGUID) throws AtomNotFoundException {
+
+        return storage.getAtomContent(atomGUID);
+    }
+
     /**
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.instrument.impl;
 
-import com.sun.deploy.util.StringUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.sos.instrument.Metrics;
 
 import java.io.File;
@@ -68,25 +68,6 @@ public class DatasetMetrics implements Metrics {
                 getMean(), getMedian(), getMode(), getVariance(), getSTDDev(),
                 getCoefficientOfVariation(), getPearsonFirstSkewness(), getPearsonSecondSkewness(),
                 StringUtils.join(getFileExtensions(), ", "));
-
-
-//        // Pearson's first skewness coefficient
-//        double pearsonFirstSkewness = (mean - mode) / stdDev;
-//        System.out.println("*Pearson's first skewness coefficient: " + pearsonFirstSkewness);
-//
-//        // Pearson's second skewness coefficient
-//        double pearsonSecondSkewness = (3*(mean - median)) / stdDev;
-//        System.out.println("Pearson's second skewness coefficient: " + pearsonSecondSkewness);
-//
-//        System.out.println("Largest file: " + Collections.max(fv.filesSize));
-//        System.out.println("Smallest file: " + Collections.min(fv.filesSize));
-//        System.out.println("Range: " + (Collections.max(fv.filesSize) - Collections.min(fv.filesSize)));
-//        System.out.println("Number of directories: " + fv.numberOfDirectories);
-//        System.out.print("Extensions: ");
-//        for(String extension:fv.fileExtensions) {
-//            System.out.print(extension + ", ");
-//        }
-
         return retval;
     }
 
@@ -196,6 +177,14 @@ public class DatasetMetrics implements Metrics {
         this.directory = directory;
     }
 
+    public ArrayList<Long> getFilesSize() {
+        return filesSize;
+    }
+
+    public void setFilesSize(ArrayList<Long> filesSize) {
+        this.filesSize = filesSize;
+    }
+
     private static double median(ArrayList<Long> arr) {
 
         Collections.sort(arr);
@@ -239,14 +228,6 @@ public class DatasetMetrics implements Metrics {
                 .filter(tuple -> tuple.getValue() == maxFrequency)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-    }
-
-    public ArrayList<Long> getFilesSize() {
-        return filesSize;
-    }
-
-    public void setFilesSize(ArrayList<Long> filesSize) {
-        this.filesSize = filesSize;
     }
 
     private static class DatasetFileVisitor<T> extends SimpleFileVisitor<Path> {

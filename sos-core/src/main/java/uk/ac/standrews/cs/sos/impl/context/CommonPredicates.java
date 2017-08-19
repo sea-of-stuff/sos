@@ -1,9 +1,12 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import org.apache.commons.lang3.StringUtils;
+import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
@@ -141,6 +144,33 @@ public class CommonPredicates {
         return false;
     }
 
+    public static boolean SearchText(IGUID atomGUID, String textToSearch) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(atomGUID);
+            return data.toString().contains(textToSearch);
+
+        } catch (AtomNotFoundException e) {
+
+            return false;
+        }
+    }
+
+    public static int TextOccurrences(IGUID atomGUID, String textToSearch) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(atomGUID);
+            return StringUtils.countMatches(data.toString(), textToSearch);
+            
+        } catch (AtomNotFoundException e) {
+
+            return 0;
+        }
+    }
 }
 
 

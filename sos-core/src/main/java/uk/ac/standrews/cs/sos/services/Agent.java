@@ -82,6 +82,8 @@ public interface Agent {
      */
     Data getAtomContent(Atom atom) throws AtomNotFoundException;
 
+    Data getData(IGUID atomGUID) throws AtomNotFoundException;
+
     /**
      * Get the manifest matching the given GUID.
      *
