@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.instrument;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -8,6 +9,8 @@ import java.io.IOException;
 public interface Instrument {
 
     void measureNodeInstance() throws IOException;
+
+    void measureDataset(File directory) throws IOException;
 
     void measure(String message);
 

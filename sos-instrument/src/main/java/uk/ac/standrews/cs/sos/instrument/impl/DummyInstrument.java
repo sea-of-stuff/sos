@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.instrument.impl;
 import uk.ac.standrews.cs.sos.instrument.Instrument;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -12,6 +13,9 @@ public class DummyInstrument implements Instrument {
 
     @Override
     public void measureNodeInstance() throws IOException {}
+
+    @Override
+    public void measureDataset(File directory) throws IOException {}
 
     @Override
     public void measure(String message) {}

@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.instrument;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Measure {
+public interface Metrics {
 
     String COMMA = ",";
     String TAB = "\t";

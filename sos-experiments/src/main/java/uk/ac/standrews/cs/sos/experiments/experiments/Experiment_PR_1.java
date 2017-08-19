@@ -71,9 +71,11 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             try {
                 cms = node.getCMS();
 
+                InstrumentFactory.instance().measureDataset(new File(TEST_DATA_FOLDER)); // TODO - call this method based on the datasets specified in the experiment settings
                 addFolderContentToNode(node, new File(TEST_DATA_FOLDER));
                 addContexts();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new ExperimentException();
             }
         }

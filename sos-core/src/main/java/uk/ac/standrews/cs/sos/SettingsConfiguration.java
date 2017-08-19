@@ -487,7 +487,7 @@ public class SettingsConfiguration {
             public static class CMSSettings extends RoleSettings {
 
                 private String indexFile;
-                private String loadedPath;
+                private String loadedPath = "~/sos/java/contexts/"; // This is the default path
 
                 // If true, the CMS will run background processes to classify content and maintain the contexts
                 private boolean automatic;

@@ -1,14 +1,14 @@
 package uk.ac.standrews.cs.sos.instrument.impl;
 
 import uk.ac.standrews.cs.sos.instrument.Instrument;
-import uk.ac.standrews.cs.sos.instrument.Measure;
+import uk.ac.standrews.cs.sos.instrument.Metrics;
 import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.*;
 
-import static uk.ac.standrews.cs.sos.instrument.Measure.COMMA;
-import static uk.ac.standrews.cs.sos.instrument.Measure.TAB;
+import static uk.ac.standrews.cs.sos.instrument.Metrics.COMMA;
+import static uk.ac.standrews.cs.sos.instrument.Metrics.TAB;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -39,8 +39,8 @@ public class BasicInstrument implements Instrument {
                         bufferedWriter.write("StatsTYPE" + TAB);
                 }
 
-                writeHeader(bufferedWriter, new AppMeasure(), false);
-                writeHeader(bufferedWriter, new OSMeasures(), true);
+                writeHeader(bufferedWriter, new AppMetrics(), false);
+                writeHeader(bufferedWriter, new OSMetrics(), true);
             }
         }
 
@@ -55,6 +55,17 @@ public class BasicInstrument implements Instrument {
 
             ImmutableOSMeasures osMeasures = ImmutableOSMeasures.measure();
             bufferedWriter.write(osMeasures.toString());
+        }
+    }
+
+    @Override
+    public void measureDataset(File directory) throws IOException {
+
+        try (FileWriter fileWriter = new FileWriter(new File(filename + "_node"), true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+
+            DatasetMetrics datasetMetrics = DatasetMetrics.measure(directory);
+            bufferedWriter.write(datasetMetrics.toString());
         }
     }
 
@@ -80,11 +91,11 @@ public class BasicInstrument implements Instrument {
                         bufferedWriter.write(statsTYPE.toString() + TAB);
                 }
 
-                AppMeasure appMeasure = AppMeasure.measure(message);
+                AppMetrics appMeasure = AppMetrics.measure(message);
                 write(bufferedWriter, appMeasure, false);
 
-                OSMeasures osMeasures = OSMeasures.measure();
-                write(bufferedWriter, osMeasures, true);
+                OSMetrics osMetrics = OSMetrics.measure();
+                write(bufferedWriter, osMetrics, true);
 
                 // TODO - measure other things...network?
             } catch (IOException e) {
@@ -95,19 +106,23 @@ public class BasicInstrument implements Instrument {
 
     }
 
-    private void write(BufferedWriter bufferedWriter, Measure measure, boolean last) throws IOException {
+    public void measure(Metrics metrics) {
+
+    }
+
+    private void write(BufferedWriter bufferedWriter, Metrics metrics, boolean last) throws IOException {
 
         switch (outputTYPE) {
             case STRING:
-                bufferedWriter.write(measure.toString());
+                bufferedWriter.write(metrics.toString());
                 if (last) bufferedWriter.newLine();
                 break;
             case CSV:
-                bufferedWriter.write(measure.csv());
+                bufferedWriter.write(metrics.csv());
                 if (!last) bufferedWriter.write(COMMA);
                 break;
             case TSV:
-                bufferedWriter.write(measure.tsv());
+                bufferedWriter.write(metrics.tsv());
                 if (!last) bufferedWriter.write(TAB);
                 break;
         }
@@ -115,17 +130,17 @@ public class BasicInstrument implements Instrument {
         if (last) bufferedWriter.newLine();
     }
 
-    private void writeHeader(BufferedWriter bufferedWriter, Measure measure, boolean last) throws IOException {
+    private void writeHeader(BufferedWriter bufferedWriter, Metrics metrics, boolean last) throws IOException {
 
         switch (outputTYPE) {
             case STRING:
                 break;
             case CSV:
-                bufferedWriter.write(measure.csvHeader());
+                bufferedWriter.write(metrics.csvHeader());
                 if (!last) bufferedWriter.write(COMMA);
                 break;
             case TSV:
-                bufferedWriter.write(measure.tsvHeader());
+                bufferedWriter.write(metrics.tsvHeader());
                 if (!last) bufferedWriter.write(TAB);
                 break;
         }

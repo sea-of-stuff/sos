@@ -4,12 +4,12 @@ import com.jezhumble.javasysmon.JavaSysMon;
 import com.jezhumble.javasysmon.MemoryStats;
 import com.jezhumble.javasysmon.OsProcess;
 import com.jezhumble.javasysmon.ProcessInfo;
-import uk.ac.standrews.cs.sos.instrument.Measure;
+import uk.ac.standrews.cs.sos.instrument.Metrics;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ImmutableOSMeasures implements Measure {
+public class ImmutableOSMeasures implements Metrics {
 
     private String osName;
     private int noCPUs;

@@ -3,12 +3,12 @@ package uk.ac.standrews.cs.sos.instrument.impl;
 import com.jezhumble.javasysmon.JavaSysMon;
 import com.jezhumble.javasysmon.OsProcess;
 import com.jezhumble.javasysmon.ProcessInfo;
-import uk.ac.standrews.cs.sos.instrument.Measure;
+import uk.ac.standrews.cs.sos.instrument.Metrics;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class OSMeasures implements Measure {
+public class OSMetrics implements Metrics {
 
     private long residentBytes;
     private long totalBytes;
@@ -47,19 +47,19 @@ public class OSMeasures implements Measure {
         this.userUptime = userUptime;
     }
 
-    public static OSMeasures measure() {
+    public static OSMetrics measure() {
         JavaSysMon monitor = new JavaSysMon();
 
-        OSMeasures osMeasures = new OSMeasures();
+        OSMetrics osMetrics = new OSMetrics();
 
         OsProcess process = monitor.processTree().find(monitor.currentPid());
         ProcessInfo processInfo = process.processInfo();
-        osMeasures.setResidentBytes(processInfo.getResidentBytes());
-        osMeasures.setTotalBytes(processInfo.getTotalBytes());
-        osMeasures.setUserUptime(processInfo.getUserMillis());
-        osMeasures.setSysUptime(processInfo.getSystemMillis());
+        osMetrics.setResidentBytes(processInfo.getResidentBytes());
+        osMetrics.setTotalBytes(processInfo.getTotalBytes());
+        osMetrics.setUserUptime(processInfo.getUserMillis());
+        osMetrics.setSysUptime(processInfo.getSystemMillis());
 
-        return osMeasures;
+        return osMetrics;
     }
 
     @Override

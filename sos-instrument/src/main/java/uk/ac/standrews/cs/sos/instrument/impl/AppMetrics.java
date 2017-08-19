@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.sos.instrument.impl;
 
-import uk.ac.standrews.cs.sos.instrument.Measure;
+import uk.ac.standrews.cs.sos.instrument.Metrics;
 
 import java.time.Instant;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AppMeasure implements Measure {
+public class AppMetrics implements Metrics {
 
     private Instant now;
     private String message;
@@ -37,9 +37,9 @@ public class AppMeasure implements Measure {
         this.stackTraceElement = stackTraceElement;
     }
 
-    public static AppMeasure measure(String message) {
+    public static AppMetrics measure(String message) {
 
-        AppMeasure appMeasure = new AppMeasure();
+        AppMetrics appMeasure = new AppMetrics();
         appMeasure.setNow(Instant.now());
         appMeasure.setMessage(message);
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
