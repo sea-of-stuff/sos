@@ -130,6 +130,12 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
                     IGUID c_3 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_text.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_3 " + c_3.toShortString());
+
+                    IGUID c_4 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_pdf.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_4 " + c_4.toShortString());
+
+                    IGUID c_5 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "greater_than_100_kb.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_5 " + c_5.toShortString());
                     break;
                 }
             }
