@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.io.File;
@@ -58,14 +57,12 @@ public interface ExperimentUnit {
 
                 try {
                     AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(file.toUri().toString()));
-                    Metadata metadata = node.getAgent().addMetadata(atomBuilder.getData()); // TODO - do this in the version builder?
                     VersionBuilder versionBuilder = new VersionBuilder()
-                            .setAtomBuilder(atomBuilder)
-                            .setMetadata(metadata);
+                            .setAtomBuilder(atomBuilder);
 
                     Version version = node.getAgent().addData(versionBuilder);
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
-                } catch (MetadataException | URISyntaxException e) {
+                } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
 
@@ -77,4 +74,5 @@ public interface ExperimentUnit {
         Files.walkFileTree(folder.toPath(), fv);
         System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
+
 }

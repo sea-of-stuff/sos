@@ -16,4 +16,10 @@ rm -f keys/*
 echo 'Cleaning up the user/roles'
 rm -f usro/*
 
+echo 'Cleaning up the keys'
+rm -f keys/*
+
+echo 'Cleaning up the java classes'
+rm -rf java/*
+
 

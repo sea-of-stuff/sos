@@ -9,7 +9,7 @@ public class WarmUp {
 
     public static void run() {
         long start = System.nanoTime();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100000000; i++) {
             Clazz clazz = new Clazz();
             clazz.method();
         }

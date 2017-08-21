@@ -153,7 +153,6 @@ public class AtomStorage {
 
             IDirectory dataDirectory = localStorage.getDataDirectory();
             IFile file = localStorage.createFile(dataDirectory, tmpGUID.toMultiHash(), data);
-
             file.persist();
 
             return storedAtomInfo;

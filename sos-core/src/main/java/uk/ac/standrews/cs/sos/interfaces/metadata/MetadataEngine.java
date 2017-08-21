@@ -10,10 +10,4 @@ import uk.ac.standrews.cs.sos.model.Metadata;
 public interface MetadataEngine {
 
     Metadata processData(Data data) throws MetadataException;
-
-    // NOTES
-    // save metadata
-    // link
-    // add/update
-    // get data from metadata?
 }

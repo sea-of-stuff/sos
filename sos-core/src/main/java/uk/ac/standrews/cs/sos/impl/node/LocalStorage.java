@@ -20,6 +20,8 @@ public class LocalStorage {
     private static final String USERS_ROLES_DIRECTORY_NAME = "usro";
     private static final String CONTEXTS_DIRECTORY_NAME = "context";
     private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
+    private static final String JAVA_DIRECTORY_NAME = "java"; // fixme
+    private static final String KEYS_DIRECTORY_NAME = "keys"; // fixme
 
     // The actual storage used by this node
     private IStorage storage;
@@ -146,6 +148,8 @@ public class LocalStorage {
             remove(USERS_ROLES_DIRECTORY_NAME);
             remove(CONTEXTS_DIRECTORY_NAME);
             remove(NODE_DIRECTORY_NAME);
+            remove(JAVA_DIRECTORY_NAME);
+            remove(KEYS_DIRECTORY_NAME);
         } catch (BindingAbsentException e) {
             throw new DataStorageException(e);
         }

@@ -121,7 +121,6 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) {
 
         try {
-
             Atom atom = addAtom(versionBuilder.getAtomBuilder());
             Metadata metadata = addMetadata(atom.getData());
 
