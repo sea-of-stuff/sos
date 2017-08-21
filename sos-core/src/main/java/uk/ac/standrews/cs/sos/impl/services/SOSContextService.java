@@ -242,8 +242,7 @@ public class SOSContextService implements ContextService {
             }
 
             long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, "Predicate for context: " + context.getName() +
-                    " run in " + duration + " nanoseconds or in " + duration / 1000000000.0 + " seconds. Predicate was run over " + perContextCounter + " entities.", duration);
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration);
         }
 
         return counter;

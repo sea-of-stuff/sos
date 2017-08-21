@@ -64,7 +64,7 @@ arrows(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
 
 # Using boxplot
 boxplot(d[,2]~d[,1], data=d,
-        las=2, # Draw x labesl verticall
+        las=2, # Draw x labels vertically
         main="Predicate performance against different settings",
         ylab="Time (s)")
 
