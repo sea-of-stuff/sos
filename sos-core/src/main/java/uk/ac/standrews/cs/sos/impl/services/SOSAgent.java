@@ -164,9 +164,25 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Data getData(IGUID atomGUID) throws AtomNotFoundException {
+    public Data getData(IGUID guid) throws AtomNotFoundException {
 
-        return storage.getAtomContent(atomGUID);
+        try {
+            IGUID atomGUID = guid;
+
+            Manifest manifest = dataDiscoveryService.getManifest(guid);
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+                atomGUID = ((Version) manifest).getContentGUID();
+                if (!dataDiscoveryService.getManifest(atomGUID).getType().equals(ManifestType.ATOM)) {
+                    throw new AtomNotFoundException();
+                }
+            }
+
+            return storage.getAtomContent(atomGUID);
+
+        } catch (ManifestNotFoundException e) {
+            throw new AtomNotFoundException();
+        }
+
     }
 
     /**

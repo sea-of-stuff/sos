@@ -229,7 +229,7 @@ public class SOSContextService implements ContextService {
                 try {
                     IGUID head = dataDiscoveryService.getHead(assetInvariant);
 
-                    SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
+                    // SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
                     runPredicate(context, assetInvariant, head);
                     counter++;
                     perContextCounter++;

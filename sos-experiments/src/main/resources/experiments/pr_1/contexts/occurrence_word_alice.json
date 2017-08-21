@@ -1,0 +1,4 @@
+{
+  "name": "Occurrence_word_alice",
+  "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"alice\") > 100;"
+}

@@ -22,7 +22,7 @@ public abstract class BaseExperiment implements Experiment {
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
     public static final String OUTPUT_FOLDER = "experiments/output/"; // TODO - specify in experiment config
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
-    public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/datasets/images/"; // "/Users/sic2/Downloads/sostest"; // "sos-experiments/src/main/resources/datasets/text/";
+    public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/datasets/masc_500k_texts/"; // "/Users/sic2/Downloads/sostest"; // "sos-experiments/src/main/resources/datasets/text/";
 
     private long start;
 

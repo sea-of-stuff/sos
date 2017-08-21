@@ -137,7 +137,6 @@ public class CommonPredicates {
 
     }
 
-
     public static boolean CheckDataOnTheFly() {
 
         // TODO - make some code that checks the data
@@ -158,6 +157,20 @@ public class CommonPredicates {
         }
     }
 
+    public static boolean SearchTextIgnoreCase(IGUID atomGUID, String textToSearch) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(atomGUID);
+            return data.toString().toLowerCase().contains(textToSearch);
+
+        } catch (AtomNotFoundException e) {
+
+            return false;
+        }
+    }
+
     public static int TextOccurrences(IGUID atomGUID, String textToSearch) {
 
         SOSAgent agent = SOSAgent.instance();
@@ -165,7 +178,19 @@ public class CommonPredicates {
         try {
             Data data = agent.getData(atomGUID);
             return StringUtils.countMatches(data.toString(), textToSearch);
-            
+        } catch (AtomNotFoundException e) {
+
+            return 0;
+        }
+    }
+
+    public static int TextOccurrencesIgnoreCase(IGUID atomGUID, String textToSearch) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(atomGUID);
+            return StringUtils.countMatches(data.toString().toLowerCase(), textToSearch);
         } catch (AtomNotFoundException e) {
 
             return 0;

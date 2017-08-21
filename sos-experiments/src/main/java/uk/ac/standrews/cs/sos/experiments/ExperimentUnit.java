@@ -54,6 +54,7 @@ public interface ExperimentUnit {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                // System.out.println("File " + file.toUri().toString());
 
                 try {
                     AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(file.toUri().toString()));

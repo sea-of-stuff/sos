@@ -1,4 +1,4 @@
 {
   "name": "Occurrence_word_the",
-  "predicate": "CommonPredicates.TextOccurrences(guid, \"the\") > 10;"
+  "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") > 10;"
 }

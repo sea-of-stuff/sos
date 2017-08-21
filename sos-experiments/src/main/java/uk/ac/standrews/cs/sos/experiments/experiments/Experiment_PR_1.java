@@ -106,9 +106,18 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_the.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
 
+                    IGUID c_3 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_alice.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_3 " + c_3.toShortString());
+
+                    IGUID c_4 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "search_sentence_online_marketing.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_4 " + c_4.toShortString());
+
                     break;
                 }
                 case DATA_AND_METADATA: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_the_on_text_only.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
                     break;
                 }
 
@@ -118,6 +127,9 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_mp3.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
+
+                    IGUID c_3 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_text.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_3 " + c_3.toShortString());
                     break;
                 }
             }
