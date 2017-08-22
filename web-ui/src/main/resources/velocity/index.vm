@@ -23,13 +23,13 @@
                 <div class="col-6">
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
+                            <input class="form-check-input" type="checkbox" id="protectData">
                             Protect data with the selected Role
                         </label>
                     </div>
                 </div>
                 <div class="col-6">
-                    <select name="userGUID">
+                    <select name="userGUID" id="roleToProtectData">
                         #foreach($role in $roles)
                             <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
                         #end
@@ -163,7 +163,15 @@
     previewNode.parentNode.removeChild(previewNode);
 
     var myDropzone = new Dropzone($('#uploadingZone')[0], { // Make the whole body a dropzone
-        url: "/version", // Set the url
+        url: function() {
+            c = $("#protectData").is(":checked");
+            if ($("#protectData").is(":checked")) {
+                var roleid = $( "#roleToProtectData option:selected" ).val();
+                return "/version/protected/" + roleid;
+            } else {
+                return "/version"; // Set the url
+            }
+        },
         thumbnailWidth: 100,
         thumbnailHeight: 100,
         parallelUploads: 5,

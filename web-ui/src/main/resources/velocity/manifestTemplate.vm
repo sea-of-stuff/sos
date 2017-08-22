@@ -19,6 +19,7 @@
 <h2>Data</h2>
 <div class="col-6">
     <button id="verify" type="button" class="btn btn-primary">Verify Integrity</button>
+    <button id="verify" type="button" class="btn btn-primary">Show data (if protected)</button>
 </div>
 <div class="col-6">
     <select name="userGUID">

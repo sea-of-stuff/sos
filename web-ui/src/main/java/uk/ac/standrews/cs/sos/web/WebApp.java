@@ -37,6 +37,7 @@ public class WebApp {
         get("/", (req, res) -> WHome.Render(sos));
         get("/settings", (req, res) -> WSettings.Render(sos));
         post("/version", (req, res) -> WData.AddAtomVersion(req, sos));
+        post("/version/protected/:roleid", (req, res) -> WData.AddProtectedAtomVersion(req, sos));
         post("/updateVersion/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.Render(req, sos));

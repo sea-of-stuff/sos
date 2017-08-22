@@ -10,13 +10,11 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Metadata;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -65,9 +63,26 @@ public class WData {
         return "Atom Added";
     }
 
+    public static String AddProtectedAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
+
+        IGUID roleid = GUIDFactory.recreateGUID(request.params("roleid"));
+        Role role = sos.getRMS().getRole(roleid);
+
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setData(new InputStreamData(is))
+                    .setRole(role);
+            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
+
+            sos.getAgent().addData(versionBuilder);
+        }
+
+        return "Atom Added";
+    }
+
     public static Object UpdateAtomVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, IOException, ServletException, ManifestNotFoundException {
-
-
 
         IGUID prev = GUIDFactory.recreateGUID(request.params("prev"));
         Version version = (Version) sos.getDDS().getManifest(prev);
@@ -115,6 +130,7 @@ public class WData {
             case "text/plain":
             case "text/plain; charset=ISO-8859-1":
             case "text/plain; charset=UTF-8":
+            case "text/plain; charset=windows-1252":
                 outputData = "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">";
                 outputData += (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + ".... OTHER DATA FOLLOWING" : data.toString());
                 outputData += "</pre>";
