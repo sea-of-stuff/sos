@@ -41,6 +41,10 @@ public abstract class AbstractMetadata implements Metadata {
         return (Long) getProperty(propertyName);
     }
 
+    public Integer getPropertyAsInteger(String propertyName) {
+        return (Integer) getProperty(propertyName);
+    }
+
     public IGUID getPropertyAsGUID(String propertyName) {
 
         try {

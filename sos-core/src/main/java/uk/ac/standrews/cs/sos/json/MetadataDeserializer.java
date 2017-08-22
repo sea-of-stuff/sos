@@ -52,6 +52,8 @@ public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
         switch(type.toUpperCase()) {
             case "LONG":
                 return element.asLong();
+            case "INT":
+                return element.asInt();
             case "STRING":
                 return element.asText();
             case "GUID":

@@ -32,7 +32,7 @@ public class TikaMetadataEngineTest extends CommonTest {
         assertEquals(4, output.getAllFilteredPropertyNames().length);
         assertEquals("text/plain; charset=ISO-8859-1", output.getProperty("Content-Type"));
         assertEquals("org.apache.tika.parser.DefaultParser", output.getProperty("X-Parsed-By"));
-        assertEquals(26, output.getProperty("Size"));
+        assertEquals(26L, output.getProperty("Size"));
         assertNotNull(output.getProperty("Timestamp"));
     }
 

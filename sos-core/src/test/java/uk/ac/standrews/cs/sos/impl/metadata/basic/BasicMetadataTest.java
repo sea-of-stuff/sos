@@ -33,7 +33,7 @@ public class BasicMetadataTest {
                         "        },\n" +
                         "        {\n" +
                         "            \"Key\": \"Size\",\n" +
-                        "            \"Type\": \"int\",\n" +
+                        "            \"Type\": \"Long\",\n" +
                         "            \"Value\": 26\n" +
                         "        },\n" +
                         "        {\n" +
@@ -53,7 +53,7 @@ public class BasicMetadataTest {
         BasicMetadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, BasicMetadata.class);
 
         assertEquals(metadata.getProperty("X-Parsed-By"), "org.apache.tika.parser.DefaultParser");
-        assertEquals(metadata.getProperty("Size"), 26);
+        assertEquals(metadata.getProperty("Size"), 26L);
         assertEquals(metadata.getProperty("Content-Encoding"), "null");
         assertEquals(metadata.getProperty("Timestamp"), 1484736105);
         assertEquals(metadata.getProperty("Content-Type"), "text/plain; charset=ISO-8859-1");

@@ -49,10 +49,11 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         }
     }
 
-    // FIXME - type could also be REF/GUID
     public String getType(Object value) {
         if (value instanceof Long) {
             return "LONG";
+        } else if (value instanceof Integer) {
+            return "INT";
         } else if (value instanceof IGUID) {
             return "GUID";
         } else {
@@ -65,11 +66,14 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
             case "LONG":
                 jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Long) value);
                 break;
+            case "INT":
+                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Integer) value);
+                break;
             case "STRING":
                 jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
                 break;
             case "GUID":
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, ((IGUID) value).toMultiHash()); // TODO - this line is not tested, I better should do so
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, ((IGUID) value).toMultiHash());
                 break;
         }
     }
