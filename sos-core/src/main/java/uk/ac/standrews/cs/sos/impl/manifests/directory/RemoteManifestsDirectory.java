@@ -13,7 +13,6 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
@@ -118,25 +117,6 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");
     }
-
-    @Override
-    public void advanceTip(IGUID invariant, IGUID version) {}
-
-    @Override
-    public void advanceTip(IGUID invariant, Set<IGUID> previousVersion, IGUID newVersion) {}
-
-    @Override
-    public Set<IGUID> getTips(IGUID invariant) {
-        return null;
-    }
-
-    @Override
-    public IGUID getHead(IGUID invariant) {
-        return null;
-    }
-
-    @Override
-    public void setHead(Version version) {}
 
     @Override
     public void flush() {}

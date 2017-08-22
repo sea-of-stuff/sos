@@ -72,16 +72,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         if (manifestType.equals(ManifestType.VERSION)) {
 
             Version version = (Version) manifest;
-            Set<IGUID> previousVersions = version.getPreviousVersions();
-            if (previousVersions == null || previousVersions.isEmpty()) {
-
-                inMemoryCache.advanceTip(version);
-                local.advanceTip(version);
-            } else {
-
-                inMemoryCache.advanceTip(version);
-                local.advanceTip(version);
-            }
+            inMemoryCache.advanceTip(version);
         }
     }
 
@@ -163,36 +154,19 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     @Override
     public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
-        try {
-
-            return inMemoryCache.getTips(invariant);
-
-        } catch (TIPNotFoundException e) {
-
-            return local.getTips(invariant);
-        }
-
+        return inMemoryCache.getTips(invariant);
     }
 
     @Override
     public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
 
-        try {
-
-            return inMemoryCache.getHead(invariant);
-
-        } catch (HEADNotFoundException e) {
-
-            return local.getHead(invariant);
-        }
-
+        return inMemoryCache.getHead(invariant);
     }
 
     @Override
     public void setHead(Version version) {
 
         inMemoryCache.setHead(version);
-        local.setHead(version);
     }
 
     @Override

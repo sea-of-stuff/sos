@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
@@ -45,8 +46,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     private transient ConcurrentLinkedQueue<IGUID> lru;
 
     private transient HashMap<IGUID, Set<IGUID>> tips;
-
-    // Invariant --> Role --> HEAD
     private transient HashMap<IGUID, IGUID> heads;
 
     public ManifestsCacheImpl() {
@@ -88,6 +87,26 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
+    public void flush() {
+        // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
+    }
+
+    @Override
+    public ConcurrentLinkedQueue<IGUID> getLRU() {
+        return lru;
+    }
+
+    @Override
+    public Set<IGUID> getAllAssets() {
+        return cache.values()
+                .stream()
+                .filter(m -> m.getType() == ManifestType.VERSION)
+                .map(m -> ((Version) m).getInvariantGUID())
+                .distinct()
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
         if (tips.containsKey(invariant)) {
@@ -117,26 +136,19 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
-    public void flush() {
-        // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
+    public void advanceTip(Version version) {
+
+        Set<IGUID> previousVersions = version.getPreviousVersions();
+
+        if (previousVersions == null || previousVersions.isEmpty()) {
+            advanceTip(version.getInvariantGUID(), version.guid());
+        } else {
+            advanceTip(version.getInvariantGUID(), version.getPreviousVersions(), version.guid());
+        }
+
     }
 
-    @Override
-    public ConcurrentLinkedQueue<IGUID> getLRU() {
-        return lru;
-    }
-
-    @Override
-    public Set<IGUID> getAllAssets() {
-        return cache.values()
-                .stream()
-                .filter(m -> m.getType() == ManifestType.VERSION)
-                .map(m -> ((Version) m).getInvariantGUID())
-                .distinct()
-                .collect(Collectors.toSet());
-    }
-
-    public void advanceTip(IGUID invariant, IGUID version) {
+    private void advanceTip(IGUID invariant, IGUID version) {
 
         if (!tips.containsKey(invariant)) {
             tips.put(invariant, new LinkedHashSet<>());
@@ -145,7 +157,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         tips.get(invariant).add(version);
     }
 
-    public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
+    private void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
 
         if (tips.containsKey(invariant) && tips.get(invariant).containsAll(previousVersions)) {
 
@@ -212,27 +224,61 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         for (IGUID guid : lru) {
             out.writeUTF(guid.toMultiHash());
         }
+
+        out.writeInt(tips.size());
+        for(Map.Entry<IGUID, Set<IGUID>> tip : tips.entrySet()) {
+            out.writeUTF(tip.getKey().toMultiHash());
+            out.writeInt(tip.getValue().size());
+
+            for(IGUID t:tip.getValue()) {
+                out.writeUTF(t.toMultiHash());
+            }
+        }
+
+        out.writeInt(heads.size());
+        for(Map.Entry<IGUID, IGUID> head : heads.entrySet()) {
+            out.writeUTF(head.getKey().toMultiHash());
+            out.writeUTF(head.getValue().toMultiHash());
+        }
     }
 
     // This method defines how the cache is de-serialised
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        int lruSize = in.readInt();
-        lru = new ConcurrentLinkedQueue<>();
-        for(int i = 0; i < lruSize; i++) {
-            String guid = in.readUTF();
-            try {
+        try {
+            int lruSize = in.readInt();
+            lru = new ConcurrentLinkedQueue<>();
+            for (int i = 0; i < lruSize; i++) {
+                String guid = in.readUTF();
                 lru.add(GUIDFactory.recreateGUID(guid));
-            } catch (GUIDGenerationException e) {
-                SOS_LOG.log(LEVEL.WARN, "Manifest cache loading - unable to created GUID for entry: " + guid);
             }
+
+            cache = new HashMap<>();
+
+            tips = new HashMap<>();
+            int tipsSize = in.readInt();
+            for (int i = 0; i < tipsSize; i++) {
+                IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
+                tips.put(invariant, new LinkedHashSet<>());
+
+                int numberOfTipsPerInvariant = in.readInt();
+                for (int j = 0; j < numberOfTipsPerInvariant; j++) {
+                    String version = in.readUTF();
+                    tips.get(invariant).add(GUIDFactory.recreateGUID(version));
+                }
+            }
+
+            heads = new HashMap<>();
+            int headsSize = in.readInt();
+            for(int i = 0; i < headsSize; i++) {
+                IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
+                IGUID version = GUIDFactory.recreateGUID(in.readUTF());
+                heads.put(invariant, version);
+            }
+
+        } catch (GUIDGenerationException e) {
+            SOS_LOG.log(LEVEL.WARN, "Manifest cache loading - unable to recreated some of the GUIDs");
         }
-
-        cache = new HashMap<>();
-
-        // TODO - tips and heads should be stored to disk?
-        tips = new HashMap<>();
-        heads = new HashMap<>();
     }
 }

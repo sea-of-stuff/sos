@@ -7,22 +7,16 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.IKey;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * IDirectory for the manifests stored locally to this node
@@ -32,8 +26,6 @@ import java.util.stream.Collectors;
 public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
     private final static String BACKUP_EXTENSION = ".bak";
-    private final static String TIP_TAG = "TIP-";
-    private final static String HEAD_TAG = "HEAD-";
 
     final private LocalStorage localStorage;
 
@@ -84,72 +76,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     }
 
     @Override
-    public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
-
-        try {
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = TIP_TAG + invariant.toMultiHash();
-
-            // Make sure that the tip file exists
-            IFile file = localStorage.createFile(manifestsDir, filename);
-            if (!file.exists()) {
-                throw new TIPNotFoundException();
-            }
-
-            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            List<String> versions = content.isEmpty() ? new LinkedList<>() : Arrays.asList(content.split("\n"));
-
-            Set<IGUID> versionsRefs = versions.stream()
-                    .map(v -> {
-                        try {
-                            return GUIDFactory.recreateGUID(v);
-                        } catch (GUIDGenerationException e) {
-                            return new InvalidID();
-                        }
-                    }).collect(Collectors.toSet());
-
-            return versionsRefs;
-
-        } catch (DataException | DataStorageException e) {
-            throw new TIPNotFoundException();
-        }
-    }
-
-    @Override
-    public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
-
-        try {
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + invariant.toMultiHash();
-
-            String guid = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            guid = guid.replace("\n", ""); // Remove any newline chars
-            return GUIDFactory.recreateGUID(guid);
-
-        } catch (DataStorageException | DataException | GUIDGenerationException e) {
-            throw new HEADNotFoundException();
-        }
-
-    }
-
-    @Override
-    public void setHead(Version version) {
-
-        try {
-
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = HEAD_TAG + version.getInvariantGUID().toMultiHash();
-
-            IFile file = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, version.getVersionGUID().toMultiHash());
-            file.persist();
-
-        } catch (DataStorageException | PersistenceException e) {
-            e.printStackTrace(); // TODO - proper exception
-        }
-
-    }
-
-    @Override
     public void flush() {}
 
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
@@ -190,7 +116,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         IFile manifestFile = getManifestFile(manifestFileGUID);
         IFile backupFile = backupManifest(manifest);
         FileUtils.DeleteFile(manifestFile);
-// TODO - merge ops
+        // TODO - merge ops
         saveToFile(manifest);
 
         FileUtils.DeleteFile(backupFile);
@@ -274,85 +200,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     private boolean manifestExistsInStorage(IGUID guid) throws ManifestNotFoundException {
         IFile manifest = getManifestFile(guid);
         return manifest.exists();
-    }
-
-    public void advanceTip(IGUID invariant, IGUID version) {
-
-        appendTip(invariant, version);
-    }
-
-    public void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
-
-        Set<String> previousVersionsStrings = previousVersions.stream()
-                .map(IKey::toMultiHash)
-                .collect(Collectors.toSet());
-
-        appendTip(invariant, newVersion);
-        removeTips(invariant, previousVersionsStrings);
-    }
-
-    /**
-     * Append a version to the tip file for the specified invariant
-     * @param invariant
-     * @param version
-     */
-    private void appendTip(IGUID invariant, IGUID version) {
-
-        try {
-
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = TIP_TAG + invariant.toMultiHash();
-
-            // Make sure that the tip file exists
-            IFile file = localStorage.createFile(manifestsDir, filename);
-            if (!file.exists()) {
-                file.persist();
-            }
-
-            String newContent;
-            try {
-                String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-                Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));
-                versions.add(version.toMultiHash());
-
-                newContent = versions.stream().collect(Collectors.joining( "\n" ));
-
-            } catch (DataStorageException | DataException e) {
-                newContent = version.toMultiHash();
-            }
-
-            IFile fileWithContent = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
-            fileWithContent.persist();
-
-        } catch (DataStorageException | PersistenceException e) {
-            e.printStackTrace(); // TODO - proper exception
-        }
-    }
-
-    /**
-     * Remove the specified versions from the HEAD file for the specified invariant
-     * @param invariant
-     * @param versionsToRemove
-     */
-    private void removeTips(IGUID invariant, Set<String> versionsToRemove) {
-
-        try {
-
-            IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            String filename = TIP_TAG + invariant.toMultiHash();
-
-            String content = FileUtils.FileContent(localStorage, manifestsDir, filename);
-            Set<String> versions = content.isEmpty() ? new LinkedHashSet<>() : new LinkedHashSet<>(Arrays.asList(content.split("\n")));
-            versions.removeAll(versionsToRemove);
-
-            String newContent = versions.stream().collect(Collectors.joining( "\n" ));
-
-            IFile fileWithContent = FileUtils.CreateFileWithContent(localStorage, manifestsDir, filename, newContent);
-            fileWithContent.persist();
-
-        } catch (DataException | DataStorageException | PersistenceException e) {
-            e.printStackTrace(); // TODO - proper exception
-        }
     }
 
 }
