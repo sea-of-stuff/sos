@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.web;
 
 import spark.ModelAndView;
-import spark.template.velocity.VelocityTemplateEngine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +11,11 @@ import java.util.Map;
 public class VelocityUtils {
 
     public static String RenderTemplate(String template, Map model) {
-        return new VelocityTemplateEngine().render(new ModelAndView(model, template));
+        return new VelocityCustomEngine().render(new ModelAndView(model, template));
     }
 
     public static String RenderTemplate(String template) {
-        return new VelocityTemplateEngine().render(new ModelAndView(new HashMap<>(),template));
+        return new VelocityCustomEngine().render(new ModelAndView(new HashMap<>(),template));
     }
 
 }

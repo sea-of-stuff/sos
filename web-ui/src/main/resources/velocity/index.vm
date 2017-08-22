@@ -14,7 +14,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 </head>
 <body>
-<div id="header"></div>
+#include("header.html")
 
 <div class="container-fluid">
     <div class="row">
@@ -144,7 +144,7 @@
         </div>
 
         <div class="col-6">
-            <div id="manifestTemplate"></div>
+            #parse("manifestTemplate.vm")
         </div>
     </div>
 </div>
@@ -154,13 +154,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.1/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js"></script>
-
-<script type="text/javascript">
-    $(function(){
-        $("#header").load("header.html");
-        $("#manifestTemplate").load("manifestTemplate.vm");
-    });
-</script>
 
 <script type="text/javascript">
     // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument

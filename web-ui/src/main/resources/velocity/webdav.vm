@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/sos.css" />
 </head>
 <body>
-<div id="header"></div>
+#include("header.html")
 
 <div class="container-fluid">
     <div class="row">
@@ -27,7 +27,7 @@
             <div id="jstree"></div>
         </div>
         <div class="col-6">
-            <div id="manifestTemplate"></div>
+            #parse("manifestTemplate.vm")
         </div>
     </div>
 </div>
@@ -41,11 +41,6 @@
 
 <script src="js/sos.js"></script>
 <script>
-    $(function(){
-        $("#header").load("header.html");
-        $("#manifestTemplate").load("manifestTemplate.vm");
-    });
-
     $(function () {
         $('#jstree').jstree({
             'plugins': ["wholerow"],
