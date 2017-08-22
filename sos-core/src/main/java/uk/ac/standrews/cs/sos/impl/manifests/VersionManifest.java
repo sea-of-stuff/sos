@@ -86,7 +86,7 @@ public class VersionManifest extends SignedManifest implements Version {
             try {
                 this.signature = makeSignature();
             } catch (SignatureException e) {
-                // We keep the signature NULL
+                throw new ManifestNotMadeException("Unable to sign the manifest");
             }
         }
     }
@@ -176,8 +176,8 @@ public class VersionManifest extends SignedManifest implements Version {
     public InputStream contentToHash() {
 
         String toHash = getType() +
-                "I" + getInvariantGUID() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
-                "C" + getContentGUID();
+                "I" + getInvariantGUID().toMultiHash() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
+                "C" + getContentGUID().toMultiHash();
 
         toHash += getPreviousToHashOrSign();
         toHash += getMetadataToHashOrSign();
@@ -198,7 +198,7 @@ public class VersionManifest extends SignedManifest implements Version {
     @Override
     protected String getManifestToSign() {
         String toSign = getType() +
-                "C" + getContentGUID();
+                "C" + getContentGUID().toMultiHash();
 
         toSign += getPreviousToHashOrSign();
         toSign += getMetadataToHashOrSign();
@@ -232,15 +232,15 @@ public class VersionManifest extends SignedManifest implements Version {
     private String getMetadataToHashOrSign() {
         String retval = "";
         if (metadata != null && !metadata.isInvalid()) {
-            retval = "M" + metadata.toString();
+            retval = "M" + metadata.toMultiHash();
         }
         return retval;
     }
 
-    private String getCollectionToHashOrSign(Set<?> collection) {
+    private String getCollectionToHashOrSign(Set<IGUID> collection) {
         StringBuilder toHash = new StringBuilder();
-        for(Object obj:collection) {
-            toHash.append(obj.toString()).append(".");
+        for(IGUID obj:collection) {
+            toHash.append(obj.toMultiHash()).append(".");
         }
         return toHash.toString();
     }

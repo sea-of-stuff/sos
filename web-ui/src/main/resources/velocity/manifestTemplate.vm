@@ -7,12 +7,14 @@
         <button id="verify" type="button" class="btn btn-primary">Verify Signature</button>
     </div>
     <div class="col-6">
-        <select name="userGUID">
+        <select name="userGUID" id="roleForSignatureVerification">
             #foreach($role in $roles)
                 <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
             #end
         </select>
     </div>
+    <br>
+    <p>Signature verification result: <strong><span id="signatureResult"></span></strong></p>
 </div>
 <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
 <br>
@@ -35,3 +37,15 @@
 <br>
 <h2>Data Stored</h2>
 here list of other nodes where this entity is stored
+
+<script>
+    $("#verify").click(function() {
+        var manifestJSON = $("#manifest").text();
+        var obj = JSON.parse(manifestJSON);
+
+        var roleid = $("#roleForSignatureVerification option:selected").val();
+        $.get("verifySignature/" + obj.GUID + "/role/" + roleid, function (data) {
+            $("#signatureResult").html(data);
+        });
+    });
+</script>

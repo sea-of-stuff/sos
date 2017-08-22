@@ -74,7 +74,55 @@ public class WData {
             AtomBuilder atomBuilder = new AtomBuilder()
                     .setData(new InputStreamData(is))
                     .setRole(role);
-            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
+
+            VersionBuilder versionBuilder = new VersionBuilder()
+                    .setAtomBuilder(atomBuilder);
+
+            sos.getAgent().addData(versionBuilder);
+        }
+
+        return "Atom Added";
+    }
+
+    public static String AddSignedAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
+
+        IGUID roleidSign = GUIDFactory.recreateGUID(request.params("roleidSign"));
+        Role signer = sos.getRMS().getRole(roleidSign);
+
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setData(new InputStreamData(is));
+            VersionBuilder versionBuilder = new VersionBuilder()
+                    .setAtomBuilder(atomBuilder)
+                    .setRole(signer);
+
+            sos.getAgent().addData(versionBuilder);
+        }
+
+        return "Atom Added";
+    }
+
+
+    public static String AddProtectedAndSignedAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
+
+        IGUID roleid = GUIDFactory.recreateGUID(request.params("roleid"));
+        Role role = sos.getRMS().getRole(roleid);
+
+        IGUID roleidSign = GUIDFactory.recreateGUID(request.params("roleidSign"));
+        Role signer = sos.getRMS().getRole(roleidSign);
+
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setData(new InputStreamData(is))
+                    .setRole(role);
+
+            VersionBuilder versionBuilder = new VersionBuilder()
+                    .setAtomBuilder(atomBuilder)
+                    .setRole(signer);
 
             sos.getAgent().addData(versionBuilder);
         }

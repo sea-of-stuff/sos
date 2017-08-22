@@ -78,7 +78,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
             try {
                 this.signature = makeSignature();
             } catch (SignatureException e) {
-                // We keep the signature NULL
+                throw new ManifestNotMadeException("Unable to generate signature for manifest");
             }
         }
     }
@@ -158,7 +158,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
         return getType() +
                 "T" + getCompoundType() +
-                "C" + guid();
+                "C" + guid().toMultiHash();
     }
 
     private IGUID generateContentGUID() throws GUIDGenerationException {

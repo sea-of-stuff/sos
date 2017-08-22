@@ -6,8 +6,10 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.Agent;
 
 /**
@@ -15,18 +17,21 @@ import uk.ac.standrews.cs.sos.services.Agent;
  */
 public class WVerify {
 
-    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
-        String guidParam = req.params("id");
-        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+    public static String Render(Request request, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, RoleNotFoundException {
 
         Agent agent = sos.getAgent();
-        Manifest manifest = agent.getManifest(guid);
+
+        IGUID manifestId = GUIDFactory.recreateGUID(request.params("id"));
+        Manifest manifest = agent.getManifest(manifestId);
+
+        IGUID roleid = GUIDFactory.recreateGUID(request.params("roleid"));
+        Role role = sos.getRMS().getRole(roleid);
 
         try {
-            if (agent.verifyManifestSignature(null, manifest)) {
-                return "verified";
+            if (agent.verifyManifestSignature(role, manifest)) {
+                return "VERIFIED";
             } else {
-                return "not verified";
+                return "NOT VERIFIED";
             }
         } catch (SignatureException e) {
             return "ManifestVerificationException";

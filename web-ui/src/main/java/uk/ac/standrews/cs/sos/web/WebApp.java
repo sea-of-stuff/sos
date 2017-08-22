@@ -38,6 +38,8 @@ public class WebApp {
         get("/settings", (req, res) -> WSettings.Render(sos));
         post("/version", (req, res) -> WData.AddAtomVersion(req, sos));
         post("/version/protected/:roleid", (req, res) -> WData.AddProtectedAtomVersion(req, sos));
+        post("/version/sign/:roleidSign", (req, res) -> WData.AddSignedAtomVersion(req, sos));
+        post("/version/protected/:roleid/sign/:roleidSign", (req, res) -> WData.AddProtectedAndSignedAtomVersion(req, sos));
         post("/updateVersion/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.Render(req, sos));
@@ -58,7 +60,7 @@ public class WebApp {
 
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
 
-        get("/verifySignature/:id", (req, res) -> WVerify.Render(req, sos)); // TODO - further testing
+        get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.Render(req, sos)); // TODO - further testing
     }
 
     private static void registerPostActionRoutes() {

@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
 #include("header.html")
@@ -41,13 +42,13 @@
                 <div class="col-6">
                     <div class="form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
+                            <input class="form-check-input" type="checkbox" id="signManifest">
                             Sign manifests with the selected Role
                         </label>
                     </div>
                 </div>
                 <div class="col-6">
-                    <select name="userGUID">
+                    <select name="userGUID" id="roleToSignManifest">
                         #foreach($role in $roles)
                             <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
                         #end
@@ -58,7 +59,7 @@
             <div class="form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" value="">
-                    <strong>Update</strong> SELECTED (see right pane)
+                    <strong>Update</strong> the selected version (see right pane)
                 </label>
             </div>
 
@@ -149,7 +150,6 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.1/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
@@ -164,10 +164,22 @@
 
     var myDropzone = new Dropzone($('#uploadingZone')[0], { // Make the whole body a dropzone
         url: function() {
-            c = $("#protectData").is(":checked");
-            if ($("#protectData").is(":checked")) {
+            protectData = $("#protectData").is(":checked");
+            signManifest = $("#signManifest").is(":checked");
+
+            if (protectData && signManifest) {
+                var roleidSign = $( "#roleToSignManifest option:selected" ).val();
+                var roleid = $( "#roleToProtectData option:selected" ).val();
+                return "/version/protected/" + roleid + "/sign/" + roleidSign;
+
+            } else if (protectData) {
                 var roleid = $( "#roleToProtectData option:selected" ).val();
                 return "/version/protected/" + roleid;
+
+            } else if (signManifest) {
+
+                var roleidSign = $( "#roleToSignManifest option:selected" ).val();
+                return "/version/sign/" + roleidSign;
             } else {
                 return "/version"; // Set the url
             }
