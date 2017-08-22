@@ -1,12 +1,12 @@
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
+# pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k)
+# pr_1__2017_08_22T13_46_14_353Z.TSV (on text dataset)
+# pr_1__2017_08_22T13_51_57_484Z.TSV (on random_1)
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_08_21T15_35_33_894Z.TSV", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_08_22T13_51_57_484Z", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), 'SHA'), '[', 1)
-
-a <- data.frame(V1=c(d$ContextName),
-                V2=c(d$User.Measure))
 
 aggr <- aggregate(d$User.Measure ~ d$ContextName,
                   FUN = function(x) c(mean = mean(x), sd = sd(x), n = length(x)))
