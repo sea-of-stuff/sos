@@ -161,22 +161,23 @@ fabric.properties
 
 # SOS Specific
 scripts/logs*
-experiments/.*
+
 *.iml
 .idea/inspectionProfiles/
 .idea/dataSources/
 .idea/snapshots/
 Dockerfile
-sos-core/dump.db
 dump.db
 *.log
 *.log.*
 sos-core/src/test/resources/*.conf
+velocity.log*
 
 # Experiments
 .key
 experiments/plots
 experiments/processed
 experiments/output
+experiments/.*
 !sos-experiments/src/main/resources/datasets/README.md
 sos-experiments/src/main/resources/datasets/

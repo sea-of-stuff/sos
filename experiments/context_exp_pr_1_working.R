@@ -5,10 +5,11 @@ getwd()
 # pr_1__2017_08_22T13_46_14_353Z.TSV (on text dataset)
 # pr_1__2017_08_22T13_51_57_484Z.TSV (on random_1)
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_08_22T13_51_57_484Z", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_08_21T15_35_33_894Z.TSV", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), 'SHA'), '[', 1)
+d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
-aggr <- aggregate(d$User.Measure ~ d$ContextName,
+aggr <- aggregate(d$Measures ~ d$ContextName,
                   FUN = function(x) c(mean = mean(x), sd = sd(x), n = length(x)))
 
 d_processed <- do.call(data.frame, aggr)
@@ -22,7 +23,7 @@ d_processed$names <- d_processed$Config
 
 # Estimate top limit on the y-axis
 plotTop <- max(d_processed$mean) + max(d_processed$se) +
-  d_processed[d_processed$mean == max(d_processed$mean), 5] * 5
+  d_processed[d_processed$mean == max(d_processed$mean), 5] * 2
 
 par(ask=F) # Do not ask to print plot on the console
 par(mar=c(12,4,4,2)+3) # Add space to show all labels
