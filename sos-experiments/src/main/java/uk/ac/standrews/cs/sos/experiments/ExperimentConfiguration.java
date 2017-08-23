@@ -22,6 +22,9 @@ import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONF
  */
 public class ExperimentConfiguration {
 
+    public static final String REPO_DATASETS_PATH = "sos-experiments/src/main/resources/datasets/";
+    public static final String REMOTE_DATASETS_PATH = "experiments/datasets/";
+
     @JsonIgnore
     private JsonNode node;
 
@@ -262,9 +265,9 @@ public class ExperimentConfiguration {
             public String getDatasetPath() {
 
                 if (isRemote()) {
-                    return "experiments/datasets/" + dataset + "/";
+                    return REMOTE_DATASETS_PATH + dataset;
                 } else {
-                    return "sos-experiments/src/main/resources/datasets/" + dataset + "/";
+                    return REPO_DATASETS_PATH + dataset;
                 }
             }
 

@@ -102,7 +102,7 @@ public class NetworkOperations {
         try {
             // exec 'scp -t rfile' remotely
             boolean ptimestamp = false; // https://stackoverflow.com/questions/22226440/mtime-sec-is-not-present
-            String command = "scp " + (ptimestamp ? "-p" : "") + " -t " + rfile;
+            String command = "scp " + (ptimestamp ? "-p" : "") + " -t \"" + rfile + "\"";
             send(command, lfile, ptimestamp);
 
         } catch (JSchException | IOException e) {
@@ -138,7 +138,7 @@ public class NetworkOperations {
 
         try {
             // exec 'scp -f rfile' remotely
-            String command = "scp -f " + rfile;
+            String command = "scp -f \"" + rfile + "\"";
             receive(command, lfile);
 
         } catch (JSchException | IOException e) {
@@ -149,7 +149,7 @@ public class NetworkOperations {
     public void deleteFile(String rfile) throws NetworkException {
 
         try {
-            String command = "rm -f " + rfile;
+            String command = "rm -f \"" + rfile + "\"";
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -160,7 +160,7 @@ public class NetworkOperations {
     public void deleteFolder(String rFolder) throws NetworkException {
 
         try {
-            String command = "rm -rf " + rFolder;
+            String command = "rm -rf \"" + rFolder + "\"";
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -206,7 +206,7 @@ public class NetworkOperations {
         System.out.println("NETWORK - Remote check sum for remote file " + rfile);
 
         try {
-            String command = "sha1sum " + rfile;
+            String command = "sha1sum \"" + rfile + "\"";
             String checksum = exec(command);
 
             if (checksum != null && !checksum.isEmpty()) {
@@ -225,7 +225,7 @@ public class NetworkOperations {
         System.out.println("NETWORK - Making remote path " + path);
 
         try {
-            String command = "mkdir -p " + path;
+            String command = "mkdir -p \"" + path + "\"";
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -263,7 +263,7 @@ public class NetworkOperations {
 
             // send "C0644 filesize filename", where filename should not include '/'
             long filesize = _lfile.length();
-            System.out.println("File " + lfile + " with size " + filesize/1000000.0 + " MB will be transferred via SSH to remote node");
+            System.out.println("File " + lfile + " with size " + filesize / 1000000.0 + " MB will be transferred via SSH to remote node");
 
             internalCommand = "C0644 " + filesize + " ";
             if (lfile.lastIndexOf('/') > 0) {
@@ -354,7 +354,7 @@ public class NetworkOperations {
                     filesize = filesize * 10L + (long) (buf[0] - '0');
                 }
 
-                String file = null;
+                String file;
                 for (int i = 0; ; i++) {
                     in.read(buf, i, 1);
                     if (buf[i] == (byte) 0x0a) {

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration.REPO_DATASETS_PATH;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -37,6 +39,12 @@ public class SOSDistribution {
             scp.makePath(path);
             scp.sendFile(appPath, path + REMOTE_SOS_JAR_PATH);
             scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
+
+            if (node.hasDataset()) {
+                scp.makePath(path + "experiments/datasets");
+                String lDirectoryDataset = REPO_DATASETS_PATH + node.getDataset();
+                scp.sendDirectory(lDirectoryDataset, path + node.getDatasetPath());
+            }
 
             scp.disconnect();
         }
@@ -124,7 +132,11 @@ public class SOSDistribution {
         scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
         scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile());
 
-        // TODO - copy all necessary stuff for the experiment + data!!!!
+        if (experimentNode.hasDataset()) {
+            scp.makePath(path + "experiments/datasets");
+            String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
+            scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath());
+        }
 
         scp.disconnect();
     }
