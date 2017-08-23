@@ -5,7 +5,7 @@
     "description" : "Scale experiment. We run a local node and a few remote nodes.",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
-      "iterations" : 10
+      "iterations" : 1
     },
     "nodes" : [
       {

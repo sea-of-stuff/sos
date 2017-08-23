@@ -36,7 +36,7 @@ public class ExperimentConfiguration {
         try {
             node = JSONHelper.JsonObjMapper().readTree(file);
         } catch (IOException e) {
-            throw new ConfigurationException("Unable to read configuration properly");
+            throw new ConfigurationException("Unable to read configuration properly", e);
         }
     }
 
@@ -179,6 +179,7 @@ public class ExperimentConfiguration {
             private String configurationFile;
             private SSH ssh;
             private Behaviour behaviour;
+            private String dataset;
 
             public Node() {}
 
@@ -248,6 +249,27 @@ public class ExperimentConfiguration {
 
             public void setJava(String java) {
                 this.java = java;
+            }
+
+            public boolean hasDataset() {
+                return dataset != null && !dataset.isEmpty();
+            }
+
+            public String getDataset() {
+                return dataset;
+            }
+
+            public String getDatasetPath() {
+
+                if (isRemote()) {
+                    return "experiments/datasets/" + dataset + "/";
+                } else {
+                    return "sos-experiments/src/main/resources/datasets/" + dataset + "/";
+                }
+            }
+
+            public void setDataset(String dataset) {
+                this.dataset = dataset;
             }
 
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)

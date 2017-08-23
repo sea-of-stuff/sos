@@ -22,7 +22,6 @@ public abstract class BaseExperiment implements Experiment {
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
     public static final String OUTPUT_FOLDER = "experiments/output/"; // TODO - specify in experiment config
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
-    public static final String TEST_DATA_FOLDER = "sos-experiments/src/main/resources/datasets/text/"; // "/Users/sic2/Downloads/sostest"; // "sos-experiments/src/main/resources/datasets/text/";
 
     private long start;
 
@@ -42,9 +41,14 @@ public abstract class BaseExperiment implements Experiment {
 
         try {
             InstrumentFactory.instance(experiment.getStats(), OutputTYPE.TSV, OUTPUT_FOLDER + getExperimentResultsFilename());
-            InstrumentFactory.instance().measureDataset(new File(TEST_DATA_FOLDER)); // TODO - call this method based on the datasets specified in the experiment settings
+
+            if (experiment.getExperimentNode().hasDataset()) {
+                String datasetPath = experiment.getExperimentNode().getDatasetPath();
+                InstrumentFactory.instance().measureDataset(new File(datasetPath));
+            }
+
         } catch (IOException e) {
-            throw new ExperimentException("Problems while creating the base experiment");
+            throw new ExperimentException("Problems while creating the base experiment", e);
         }
 
         // WarmUp the JVM for the experiments to be run
@@ -65,8 +69,7 @@ public abstract class BaseExperiment implements Experiment {
 
             node = ServerState.init(configuration.getSettingsObj());
         } catch (ConfigurationException e) {
-            e.printStackTrace();
-            throw new ExperimentException();
+            throw new ExperimentException("Unable to process configuration properly", e);
         }
 
         if (!experimentUnitIterator.hasNext()) throw new ExperimentException();

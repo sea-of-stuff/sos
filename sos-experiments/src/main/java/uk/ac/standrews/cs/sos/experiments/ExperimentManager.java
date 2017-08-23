@@ -17,20 +17,21 @@ public class ExperimentManager {
     public static void runExperiment(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
 
         try {
-            Class myClass = Class.forName("uk.ac.standrews.cs.sos.experiments.experiments." + experimentConfiguration.getExperimentObj().getExperimentClass());
-            Constructor constructor = myClass.getConstructor(ExperimentConfiguration.class);
+            Class<?> myClass = Class.forName("uk.ac.standrews.cs.sos.experiments.experiments." + experimentConfiguration.getExperimentObj().getExperimentClass());
+            Class<?>[] params = new Class[] {ExperimentConfiguration.class};
+            Constructor<?> constructor = myClass.getConstructor(params);
             Experiment instanceOfMyClass = (Experiment) constructor.newInstance(experimentConfiguration);
 
             instanceOfMyClass.process();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ExperimentException();
+            throw new ExperimentException("Unable to instantiate experiment", e);
         }
     }
 
     public static void main(String[] args) throws Exception {
 
+        // File experimentConfigurationFile = new File("sos-experiments/src/main/resources/experiments/scale_1/configuration/configuration.json");
         File experimentConfigurationFile = new File("experiment.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 

@@ -12,4 +12,8 @@ public class ExperimentException extends Exception {
     public ExperimentException(String s) {
         super(s);
     }
+
+    public ExperimentException(String s, Throwable t) {
+        super(s, t);
+    }
 }
