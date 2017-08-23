@@ -1,4 +1,4 @@
 {
-  "name": "Reject_All",
+  "name": "ALL_Reject_All",
   "predicate": "!CommonPredicates.AcceptAll();"
 }

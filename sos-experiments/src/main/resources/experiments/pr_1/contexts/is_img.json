@@ -1,4 +1,4 @@
 {
-  "name": "IS_IMG",
+  "name": "META_IS_IMG",
   "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/jpeg\", \"image/png\"));"
 }

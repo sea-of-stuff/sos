@@ -2,11 +2,11 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k)
-# pr_1__2017_08_22T13_46_14_353Z.TSV (on text dataset)
+# pr_1__2017_08_23T11_46_18_471Z.TSV (on text dataset)
 # pr_1__2017_08_22T13_51_57_484Z.TSV (on random_1)
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_08_21T15_35_33_894Z.TSV", header=TRUE, sep="\t")
-d$ContextName <- sapply(strsplit(as.character(d$Message), 'SHA'), '[', 1)
+d <- read.csv("output/pr_1__2017_08_23T11_46_18_471Z.TSV", header=TRUE, sep="\t")
+d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
 aggr <- aggregate(d$Measures ~ d$ContextName,

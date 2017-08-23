@@ -12,7 +12,8 @@
       "id": 0,
       "name" : "local",
       "remote": false,
-      "configurationfile": "node_0.json"
+      "configurationfile": "node_0.json",
+      "dataset" : "text"
     },
     "stats": {
       "experiment": false,

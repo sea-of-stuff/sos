@@ -1,4 +1,4 @@
 {
-  "name": "IS_PDF",
+  "name": "META_IS_PDF",
   "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/pdf\"));"
 }

@@ -1,4 +1,4 @@
 {
-  "name": "Occurrence_word_the_text_only",
+  "name": "METAandDATA_Occurrence_word_the_text_only",
   "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"the\");"
 }

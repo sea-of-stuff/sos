@@ -1,4 +1,4 @@
 {
-  "name": "Search_sentence_online_marketing",
+  "name": "DATA_Search_sentence_online_marketing",
   "predicate": "CommonPredicates.SearchText(guid, \"online marketing\");"
 }

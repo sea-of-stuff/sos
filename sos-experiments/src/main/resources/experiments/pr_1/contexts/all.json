@@ -1,4 +1,4 @@
 {
-  "name": "All",
+  "name": "ALL_All",
   "predicate": "CommonPredicates.AcceptAll();"
 }
