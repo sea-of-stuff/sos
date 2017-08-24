@@ -50,7 +50,7 @@ public class WebApp {
         post("/version/protected/:roleid", (req, res) -> WData.AddProtectedAtomVersion(req, sos));
         post("/version/sign/:roleidSign", (req, res) -> WData.AddSignedAtomVersion(req, sos));
         post("/version/protected/:roleid/sign/:roleidSign", (req, res) -> WData.AddProtectedAndSignedAtomVersion(req, sos));
-        post("/updateVersion/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
+        post("/updateVersion/prev/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.GetData(req, sos));
         get("/data/:id/role/:roleid", (req, res) -> WData.GetProtectedData(req, sos));

@@ -47,10 +47,8 @@ here list of other nodes where this entity is stored
 <script src="js/sos.js"></script>
 <script type="text/javascript">
 
-
     function showVersionInfo() {
         id = $(this).val();
-        console.log(id);
 
         // UPDATE THE DAG
         evaluateGraph(id);

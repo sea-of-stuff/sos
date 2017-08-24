@@ -64,7 +64,7 @@
 
             <div class="form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="">
+                    <input class="form-check-input" type="checkbox" id="updateVersion">
                     <strong>Update</strong> the selected version (see right pane)
                 </label>
             </div>
@@ -188,6 +188,16 @@
         url: function() {
             protectData = $("#protectData").is(":checked");
             signManifest = $("#signManifest").is(":checked");
+            updateVersion = $("#updateVersion").is(":checked");
+
+            if (updateVersion) {
+
+                // Get the manifest visualised on the right pane
+                var manifestJSON = $("#manifest").text();
+                var obj = JSON.parse(manifestJSON);
+
+                return "/updateVersion/prev/" + obj.GUID;
+            }
 
             if (protectData && signManifest) {
                 var roleidSign = $( "#roleToSignManifest option:selected" ).val();
