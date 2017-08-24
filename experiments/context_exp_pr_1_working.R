@@ -2,10 +2,10 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k)
-# pr_1__2017_08_23T11_46_18_471Z.TSV (on text dataset)
-# pr_1__2017_08_22T13_51_57_484Z.TSV (on random_1)
+# pr_1__2017_08_23T11_50_08_412Z.TSV (on text dataset) (40 iterations x configuration type)
+# pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_08_23T11_46_18_471Z.TSV", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_08_23T12_03_11_247Z.TSV", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
@@ -23,7 +23,7 @@ d_processed$names <- d_processed$Config
 
 # Estimate top limit on the y-axis
 plotTop <- max(d_processed$mean) + max(d_processed$se) +
-  d_processed[d_processed$mean == max(d_processed$mean), 5] * 2
+  d_processed[d_processed$mean == max(d_processed$mean), 5] * 4
 
 par(ask=F) # Do not ask to print plot on the console
 par(mar=c(12,4,4,2)+3) # Add space to show all labels
@@ -32,7 +32,7 @@ barCenters <- barplot(height = d_processed$mean,
                       beside = true, las =2,
                       ylim = c(0, plotTop),
                       main = "Predicate performance against different settings",
-                      ylab = "Time (s)",
+                      ylab = "Time (s) per X",
                       border = "black",
                       axes = T)
 
