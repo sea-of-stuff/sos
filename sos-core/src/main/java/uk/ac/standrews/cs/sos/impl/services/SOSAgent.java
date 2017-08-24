@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 
-import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -121,6 +120,8 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) {
 
         try {
+            Metadata metadata = addMetadata(versionBuilder.getAtomBuilder().getData());
+
             Atom atom;
             if(versionBuilder.getAtomBuilder().getRole() != null) {
                 atom = addSecureAtom(versionBuilder.getAtomBuilder());
@@ -128,18 +129,11 @@ public class SOSAgent implements Agent {
                 atom = addAtom(versionBuilder.getAtomBuilder());
             }
 
-            Metadata metadata = addMetadata(atom.getData());
-
             versionBuilder.setContent(atom.guid());
             versionBuilder.setMetadata(metadata);
 
             return addVersion(versionBuilder);
-        } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
-            e.printStackTrace();
-            // TODO - throw proper exception
-        } catch (MetadataException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (MetadataException | DataStorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
             e.printStackTrace();
         }
 

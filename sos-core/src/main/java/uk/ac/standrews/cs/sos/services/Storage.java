@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.services;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 
 import java.util.Iterator;
@@ -55,6 +57,8 @@ public interface Storage {
      * @return Data
      */
     Data getAtomContent(Atom atom) throws AtomNotFoundException;
+
+    Data getSecureAtomContent(SecureAtom atom, Role role) throws DataNotFoundException;
 
     /**
      * Get the data for the atom with the specified GUID

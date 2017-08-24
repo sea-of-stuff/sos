@@ -4,7 +4,7 @@
 <h2>Manifest</h2>
 <div class="row">
     <div class="col-6">
-        <button id="verify" type="button" class="btn btn-primary">Verify Signature</button>
+        <button id="verifySignature" type="button" class="btn btn-primary">Verify Signature</button>
     </div>
     <div class="col-6">
         <select name="userGUID" id="roleForSignatureVerification">
@@ -19,16 +19,20 @@
 <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
 <br>
 <h2>Data</h2>
-<div class="col-6">
-    <button id="verify" type="button" class="btn btn-primary">Verify Integrity</button>
-    <button id="verify" type="button" class="btn btn-primary">Show data (if protected)</button>
-</div>
-<div class="col-6">
-    <select name="userGUID">
-        #foreach($role in $roles)
-            <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
-        #end
-    </select>
+<div class="row">
+    <div class="col-6">
+        <button id="verifyIntegrity" type="button" class="btn btn-primary">Verify Integrity</button>
+        <button id="showProtectedData" type="button" class="btn btn-primary">Show data (if protected)</button>
+    </div>
+    <div class="col-6">
+        <select name="userGUID" id="roleForProtectedData">
+            #foreach($role in $roles)
+                <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+            #end
+        </select>
+    </div>
+    <br>
+    <p>Date integrity result: <strong><span id="integrityResult"></span></strong></p>
 </div>
 <div id="data"></div>
 <br>
@@ -39,13 +43,35 @@
 here list of other nodes where this entity is stored
 
 <script>
-    $("#verify").click(function() {
+    $("#verifySignature").click(function() {
+
+        var manifestJSON = $("#manifest").text();
+        var obj = JSON.parse(manifestJSON);
+        var roleid = $("#roleForSignatureVerification option:selected").val();
+
+        $.get("verifySignature/" + obj.GUID + "/role/" + roleid, function (data) {
+            $("#signatureResult").html(data);
+        });
+    });
+
+    $("#verifyIntegrity").click(function() {
+
         var manifestJSON = $("#manifest").text();
         var obj = JSON.parse(manifestJSON);
 
-        var roleid = $("#roleForSignatureVerification option:selected").val();
-        $.get("verifySignature/" + obj.GUID + "/role/" + roleid, function (data) {
-            $("#signatureResult").html(data);
+        $.get("verifyIntegrity/" + obj.GUID, function (data) {
+            $("#integrityResult").html(data);
+        });
+    });
+
+    $("#showProtectedData").click(function() {
+
+        var manifestJSON = $("#manifest").text();
+        var obj = JSON.parse(manifestJSON);
+        var roleid = $("#roleForProtectedData option:selected").val();
+
+        $.get("/data/" + obj.GUID + "/role/" + roleid, function (data) {
+            $("#data").html(data);
         });
     });
 </script>

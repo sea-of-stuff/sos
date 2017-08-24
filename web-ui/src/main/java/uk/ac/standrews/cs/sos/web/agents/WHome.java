@@ -24,8 +24,6 @@ public class WHome {
 
     public static String Render(SOSLocalNode sos) {
 
-        // TODO - show node configuration and stats?
-
         Map<String, Object> model = new HashMap<>();
 
         Set<Map<String, Object> > assets = new LinkedHashSet<>();

@@ -181,6 +181,7 @@ public class SOSStorage implements Storage {
         throw new AtomNotFoundException();
     }
 
+    @Override
     public Data getSecureAtomContent(SecureAtom atom, Role role) throws DataNotFoundException {
 
         try (Data encryptedData = getAtomContent(atom)){

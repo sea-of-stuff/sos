@@ -42,7 +42,8 @@ public class WebApp {
         post("/version/protected/:roleid/sign/:roleidSign", (req, res) -> WData.AddProtectedAndSignedAtomVersion(req, sos));
         post("/updateVersion/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
 
-        get("/data/:id", (req, res) -> WData.Render(req, sos));
+        get("/data/:id", (req, res) -> WData.GetData(req, sos));
+        get("/data/:id/role/:roleid", (req, res) -> WData.GetProtectedData(req, sos));
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 
@@ -52,7 +53,7 @@ public class WebApp {
         get("/contexts", (req, res) -> WContexts.Render(sos));
         post("/contexts", (req, res) -> WContexts.CreateContext(req, res, sos));
         post("/preview", (req, res) -> WContexts.PreviewClassContext(req, res));
-        get("/context/:id/contents", (req, res) -> WContexts.GetContents(req, sos)); // TODO - further testing
+        get("/context/:id/contents", (req, res) -> WContexts.GetContents(req, sos));
 
         get("/usro", (req, res) -> WUsersRoles.Render(sos));
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));
@@ -60,7 +61,9 @@ public class WebApp {
 
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
 
-        get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.Render(req, sos)); // TODO - further testing
+        get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.VerifySignature(req, sos));
+        get("/verifyIntegrity/:id", (req, res) -> WVerify.VerifyIntegrity(req, sos));
+
     }
 
     private static void registerPostActionRoutes() {
