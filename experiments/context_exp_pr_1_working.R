@@ -52,3 +52,16 @@ x <- boxplot(d$User.Measure~d$ContextName, data=d,
              main="Predicate performance against different settings",
              ylab="Time (s)")
 
+
+# CHECKING DISTRIBUTION OF DATA
+x = subset(d, ContextName=="META")
+descdist(x$Measures, discrete = FALSE)
+fit.norm <- fitdist(x$Measures, "norm")
+plot(fit.norm)
+fit.weibull <- fitdist(x$Measures, "weibull")
+plot(fit.weibull)
+
+# P-test for two sets
+x = subset(d, ContextName=="META")
+y = subset(d, ContextName=="ALL")
+t.test(x$Measures, y$Measures)

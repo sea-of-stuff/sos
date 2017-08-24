@@ -36,3 +36,10 @@ Chi Squared Test to test if two categorical variables are dependent, by means of
 
 - http://r-statistics.co/Statistical-Tests-in-R.html
 - http://www.gardenersown.co.uk/education/lectures/r/basics.htm
+
+### Distribution info
+
+Filtering data by label: `subdataset = subset(dataset, ContextName=="DATA")`
+
+https://stats.stackexchange.com/questions/132652/how-to-determine-which-distribution-fits-my-data-best
+
