@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <select name="userGUID" id="roleToProtectData">
+                    <select name="userGUID" id="roleToProtectData" class="custom-select">
                         #foreach($role in $roles)
                             <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
                         #end
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <select name="userGUID" id="roleToSignManifest">
+                    <select name="userGUID" id="roleToSignManifest" class="custom-select">
                         #foreach($role in $roles)
                             <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
                         #end
@@ -60,6 +60,13 @@
                 <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" value="">
                     <strong>Update</strong> the selected version (see right pane)
+                </label>
+            </div>
+
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    <strong>Make Compound - WIP</strong>
                 </label>
             </div>
 
@@ -125,20 +132,20 @@
 
             <div class="card-columns">
                 #foreach($version in $assets)
-                    <div class="card card-outline-primary">
+                    <div class="card border-dark">
                         <div class="card-body">
-                            <h4 class="card-title">Version: $version.version.toShortString()</h4>
+                            <h4 class="card-title">Version: $version.version.toShortString()
+                                <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-outline-dark"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                            </h4>
                             <p class="card-text">
                                 <strong>Invariant</strong> $version.invariant.toShortString()
                             </p>
-                            <div class="card">
+                            <div class="card-text">
                                 #if($version.data)
                                 $version.data
-                            #end
+                                #end
                             </div>
-                            <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-success"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                         </div>
-
                     </div>
                 #end
             </div>

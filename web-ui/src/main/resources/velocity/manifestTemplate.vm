@@ -3,37 +3,38 @@
 <br>
 <h2>Manifest</h2>
 <div class="row">
-    <div class="col-6">
-        <button id="verifySignature" type="button" class="btn btn-primary">Verify Signature</button>
+    <div class="col-8">
+        <button id="verifySignature" type="button" class="btn btn btn-outline-success">Verify Signature</button>
     </div>
-    <div class="col-6">
-        <select name="userGUID" id="roleForSignatureVerification">
+    <div class="col-4">
+        <select name="userGUID" id="roleForSignatureVerification" class="custom-select">
             #foreach($role in $roles)
                 <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
             #end
         </select>
     </div>
-    <br>
-    <p>Signature verification result: <strong><span id="signatureResult"></span></strong></p>
 </div>
+<br>
+<p>Signature verification result: <strong><span id="signatureResult"></span></strong></p>
 <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
 <br>
 <h2>Data</h2>
 <div class="row">
-    <div class="col-6">
-        <button id="verifyIntegrity" type="button" class="btn btn-primary">Verify Integrity</button>
-        <button id="showProtectedData" type="button" class="btn btn-primary">Show data (if protected)</button>
+    <div class="col-8">
+        <button id="verifyIntegrity" type="button" class="btn btn btn-outline-success">Verify Integrity</button>
+        <button id="showData" type="button" class="btn btn btn-outline-dark">Show data</button>
+        <button id="showProtectedData" type="button" class="btn btn btn-outline-dark">Show protected data</button>
     </div>
-    <div class="col-6">
-        <select name="userGUID" id="roleForProtectedData">
+    <div class="col-4">
+        <select name="userGUID" id="roleForProtectedData" class="custom-select">
             #foreach($role in $roles)
                 <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
             #end
         </select>
     </div>
-    <br>
-    <p>Date integrity result: <strong><span id="integrityResult"></span></strong></p>
 </div>
+<br>
+<p>Date integrity result: <strong><span id="integrityResult"></span></strong></p>
 <div id="data"></div>
 <br>
 <h2>Metadata</h2>
@@ -90,6 +91,16 @@ here list of other nodes where this entity is stored
 
         $.get("verifyIntegrity/" + obj.GUID, function (data) {
             $("#integrityResult").html(data);
+        });
+    });
+
+    $("#showData").click(function() {
+
+        var manifestJSON = $("#manifest").text();
+        var obj = JSON.parse(manifestJSON);
+
+        $.get("/data/" + obj.GUID, function (data) {
+            $("#data").html(data);
         });
     });
 

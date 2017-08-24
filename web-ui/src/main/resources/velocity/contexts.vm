@@ -137,7 +137,7 @@
 
             $.each(contexts.contents, function(key, value) {
                 list.append("<li class=\"list-group-item\" id='" + value + "'>" + value +
-                        " <button id=\"more" + value + "\" value=" + value + " type=\"button\" class=\"btn btn-success\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
+                        " <button id=\"more" + value + "\" value=" + value + " type=\"button\" class=\"btn btn-outline-dark\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
                         "</li>" );
             });
 

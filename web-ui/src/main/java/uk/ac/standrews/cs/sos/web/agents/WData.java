@@ -43,7 +43,7 @@ public class WData {
             Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
             if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-                return GetData(sos, version, false);
+                return GetData(sos, version);
             }
         }
 
@@ -65,7 +65,7 @@ public class WData {
             if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
 
                 try {
-                    return GetProtectedData(sos, version, (SecureAtom) contentManifest, role, false);
+                    return GetProtectedData(sos, version, (SecureAtom) contentManifest, role);
                 } catch (DataNotFoundException e) {
 
                     return "Unable to get Protected Data";
@@ -179,7 +179,7 @@ public class WData {
         return "Atom Added";
     }
 
-    public static String GetData(SOSLocalNode sos, Version version, boolean thumbnail) throws AtomNotFoundException {
+    public static String GetData(SOSLocalNode sos, Version version) throws AtomNotFoundException {
 
         Data data = sos.getStorage().getAtomContent(version.getContentGUID());
 
@@ -191,10 +191,10 @@ public class WData {
             }
         } catch (MetadataNotFoundException ignored) { }
 
-        return GetData(type, data, thumbnail);
+        return GetData(type, data);
     }
 
-    public static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role, boolean thumbnail) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
+    public static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
 
         Data data = sos.getStorage().getSecureAtomContent(atom, role);
 
@@ -206,10 +206,10 @@ public class WData {
             }
         } catch (MetadataNotFoundException ignored) { }
 
-        return GetData(type, data, thumbnail);
+        return GetData(type, data);
     }
 
-    private static String GetData(String type, Data data, boolean thumbnail) {
+    private static String GetData(String type, Data data) {
 
         String outputData = "Cannot render this data type";
 
@@ -232,9 +232,7 @@ public class WData {
                 byte b[] = data.getState();
                 byte[] encodeBase64 = Base64.encode(b);
                 String encodedData = new String(encodeBase64, StandardCharsets.UTF_8);
-
-                int width = thumbnail ? 100 : 800;
-                outputData = "<img style=\"max-width:" + width+ "px;\" src=\"data:" + type + ";base64," + encodedData + "\">";
+                outputData = "<img class=\"img-fluid\" src=\"data:" + type + ";base64," + encodedData + "\">";
                 break;
         }
 

@@ -37,9 +37,10 @@ public class WebApp {
 
         // PAGES
         get("/", (req, res) -> WHome.Render(sos));
+        get("/index", (req, res) -> WHome.Render(sos));
         get("/webdav", (req, res) -> WWebDAV.Render(sos, fileSystem));
         get("/nodes", (req, res) -> WNodes.Render(sos));
-        get("/webarchive", (req, res) -> WNodes.Render(sos));
+        get("/webarchive", (req, res) -> WWebArchive.Render());
         get("/settings", (req, res) -> WSettings.Render(sos));
         get("/contexts", (req, res) -> WContexts.Render(sos));
         get("/usro", (req, res) -> WUsersRoles.Render(sos));
@@ -56,11 +57,9 @@ public class WebApp {
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 
-
         post("/contexts", (req, res) -> WContexts.CreateContext(req, res, sos));
         post("/preview", (req, res) -> WContexts.PreviewClassContext(req, res));
         get("/context/:id/contents", (req, res) -> WContexts.GetContents(req, sos));
-
 
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));
         post("/usro/role", (req, res) -> WUsersRoles.CreateRole(req, res, sos));

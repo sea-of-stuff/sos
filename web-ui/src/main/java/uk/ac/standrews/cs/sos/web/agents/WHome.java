@@ -37,8 +37,7 @@ public class WHome {
 
                 Manifest manifest = sos.getDDS().getManifest(version.getContentGUID());
                 if (manifest.getType().equals(ManifestType.ATOM)) {
-
-                    String outputData = GetData(sos, version, true);
+                    String outputData = GetData(sos, version);
                     versionModel.put("data", outputData);
                 }
 

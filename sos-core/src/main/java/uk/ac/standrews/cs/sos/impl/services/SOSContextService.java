@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -139,7 +140,7 @@ public class SOSContextService implements ContextService {
     public IGUID addContext(String jsonContext) throws Exception {
 
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(jsonContext);
-        String contextName = jsonNode.get(CONTEXT_JSON_NAME).textValue();
+        String contextName = WordUtils.capitalize(jsonNode.get(CONTEXT_JSON_NAME).textValue());
         NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
         NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
