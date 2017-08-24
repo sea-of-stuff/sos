@@ -97,9 +97,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         "  \\  \\::/ /:/   \\  \\:\\  /:/   \\  \\::/ /:/ \n" +
                         "   \\__\\/ /:/     \\  \\:\\/:/     \\__\\/ /:/  \n" +
                         "     /__/:/       \\  \\::/        /__/:/   \n" +
-                        "     \\__\\/         \\__\\/         \\__\\/    \n");
-
-        SOS_LOG.log(LEVEL.INFO, "Starting up node ");
+                        "     \\__\\/         \\__\\/         \\__\\/    \n" +
+                "\n\n" +
+                        " --------------------------------------------------------\n" +
+                        "| Warning/Notes:                                         |\n" +
+                        "|   This is a prototype version of the SOS.              |\n" +
+                        "|   Use this software at your own discretion!            |\n" +
+                        "|   There are still bugs and missing features.           |\n" +
+                        "|   Visit https://github.com/stacs-srg/sos for more info |\n" +
+                        " --------------------------------------------------------" +
+                "\n\n" +
+                "Starting up Node with GUID: " + this.getNodeGUID().toMultiHash() + "\n");
 
         initDB();
         initNDS();
