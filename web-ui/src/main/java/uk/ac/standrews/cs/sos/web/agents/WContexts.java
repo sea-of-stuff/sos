@@ -72,7 +72,6 @@ public class WContexts {
 
         } catch (Exception e) {
 
-            // TODO - this is not displayed :/
             response.status(400);
             return "Unable to preview class";
         }

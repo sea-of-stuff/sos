@@ -296,7 +296,6 @@ public class WData {
             case "text/plain; charset=ISO-8859-1":
             case "text/plain; charset=UTF-8":
             case "text/plain; charset=windows-1252":
-            case "application/xhtml+xml; charset=ISO-8859-1":
                 outputData = "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">";
                 outputData += (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + " <br><strong>.... OTHER DATA FOLLOWING</strong>" : data.toString());
                 outputData += "</pre>";
@@ -325,6 +324,8 @@ public class WData {
             case "application/x-7z-compressed":
             case "application/x-rar-compressed":
                 return "<i class=\"fa fa-file-archive-o fa-5x\" aria-hidden=\"true\"></i>";
+            case "application/xhtml+xml; charset=ISO-8859-1":
+                return "<i class=\"fa fa-globe fa-5x\" aria-hidden=\"true\"></i>";
         }
 
         return outputData;

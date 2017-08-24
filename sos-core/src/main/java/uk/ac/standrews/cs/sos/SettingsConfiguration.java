@@ -331,7 +331,7 @@ public class SettingsConfiguration {
         // Settings relative to each Service
         public static class AdvanceServicesSettings {
 
-            private RoleSettings agent;
+            private RoleSettings agent = new RoleSettings();
             private StorageSettings storage;
             private DDSSettings dds;
             private NDSSettings nds;
