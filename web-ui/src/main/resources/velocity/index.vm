@@ -65,7 +65,7 @@
             <div class="form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" id="updateVersion">
-                    <strong>Update</strong> the selected version (see right pane)
+                    <strong>Update</strong> the selected version <span class="manifestid text-success"></span> (see right pane)
                 </label>
             </div>
 

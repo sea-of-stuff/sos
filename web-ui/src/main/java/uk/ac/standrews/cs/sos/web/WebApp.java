@@ -53,7 +53,9 @@ public class WebApp {
         post("/updateVersion/prev/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.GetData(req, sos));
+        get("/data/:id/download", (req, res) -> WData.GetDataDownload(req, res, sos));
         get("/data/:id/role/:roleid", (req, res) -> WData.GetProtectedData(req, sos));
+        get("/data/:id/role/:roleid/download", (req, res) -> WData.GetProtectedDataDownload(req, res, sos));
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 
