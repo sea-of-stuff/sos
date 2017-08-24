@@ -34,8 +34,17 @@ public class WebApp {
     }
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
+
+        // PAGES
         get("/", (req, res) -> WHome.Render(sos));
+        get("/webdav", (req, res) -> WWebDAV.Render(sos, fileSystem));
+        get("/nodes", (req, res) -> WNodes.Render(sos));
+        get("/webarchive", (req, res) -> WNodes.Render(sos));
         get("/settings", (req, res) -> WSettings.Render(sos));
+        get("/contexts", (req, res) -> WContexts.Render(sos));
+        get("/usro", (req, res) -> WUsersRoles.Render(sos));
+
+        // ACTIONS
         post("/version", (req, res) -> WData.AddAtomVersion(req, sos));
         post("/version/protected/:roleid", (req, res) -> WData.AddProtectedAtomVersion(req, sos));
         post("/version/sign/:roleidSign", (req, res) -> WData.AddSignedAtomVersion(req, sos));
@@ -47,15 +56,12 @@ public class WebApp {
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 
-        get("/webdav", (req, res) -> WWebDAV.Render(sos, fileSystem));
-        get("/nodes", (req, res) -> WNodes.Render(sos));
 
-        get("/contexts", (req, res) -> WContexts.Render(sos));
         post("/contexts", (req, res) -> WContexts.CreateContext(req, res, sos));
         post("/preview", (req, res) -> WContexts.PreviewClassContext(req, res));
         get("/context/:id/contents", (req, res) -> WContexts.GetContents(req, sos));
 
-        get("/usro", (req, res) -> WUsersRoles.Render(sos));
+
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));
         post("/usro/role", (req, res) -> WUsersRoles.CreateRole(req, res, sos));
 
@@ -63,7 +69,6 @@ public class WebApp {
 
         get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.VerifySignature(req, sos));
         get("/verifyIntegrity/:id", (req, res) -> WVerify.VerifyIntegrity(req, sos));
-
     }
 
     private static void registerPostActionRoutes() {

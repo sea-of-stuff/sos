@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.context.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
+import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
@@ -111,7 +112,7 @@ public class ContextLoader {
             // System.out.println(clazzString);
 
             // Print class to file
-            String clazzName = node.get("name").asText();
+            String clazzName = WordUtils.capitalize(node.get("name").asText());
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             if (sourceClazzFile.exists()) sourceClazzFile.delete();
             sourceClazzFile.deleteOnExit();

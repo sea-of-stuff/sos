@@ -25,6 +25,7 @@ public class WContexts {
     public static String Render(SOSLocalNode sos){
         Map<String, Object> model = new HashMap<>();
         model.put("contexts", sos.getCMS().getContexts());
+        model.put("roles", sos.getRMS().getRoles());
 
         return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
     }

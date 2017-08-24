@@ -136,7 +136,7 @@
                                 $version.data
                             #end
                             </div>
-                            <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-primary">More info</button>
+                            <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-success"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                         </div>
 
                     </div>
@@ -224,34 +224,6 @@
     document.querySelector("#actions .cancel").onclick = function() {
         myDropzone.removeAllFiles(true);
     };
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
-<script src="js/sos.js"></script>
-<script type="text/javascript">
-
-    $('button[id^="more"').click(function() {
-        id = $(this).val();
-
-        // UPDATE THE DAG
-        evaluateGraph(id);
-
-        $.get("/manifest/" + id , function(data) {
-            $('#manifest').html(data);
-            hljs.highlightBlock($('#manifest')[0]);
-        })
-
-        $.get("/metadata/" + id , function(data) {
-            $('#metadata').html(data);
-            hljs.highlightBlock($('#metadata')[0]);
-        })
-
-        $.get("/data/" + id , function(data) {
-            $('#data').html(data);
-        })
-
-    });
-
 </script>
 
 </body>

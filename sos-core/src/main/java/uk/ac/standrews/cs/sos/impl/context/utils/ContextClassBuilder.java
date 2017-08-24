@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.IOException;
 
@@ -71,8 +72,7 @@ public class ContextClassBuilder {
 
     public static String ConstructClass(JsonNode node) throws IOException {
 
-        String className = node.get(CONTEXT_JSON_NAME).textValue();
-        className = className.substring(0, 1).toUpperCase() + className.substring(1); // First char of class name MUST be Capitalised
+        String className = WordUtils.capitalize(node.get(CONTEXT_JSON_NAME).textValue());
 
         /////////////////////////
         // Package and Imports //

@@ -42,7 +42,36 @@
 <h2>Data Stored</h2>
 here list of other nodes where this entity is stored
 
-<script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
+<script src="js/sos.js"></script>
+<script type="text/javascript">
+
+
+    function showVersionInfo() {
+        id = $(this).val();
+        console.log(id);
+
+        // UPDATE THE DAG
+        evaluateGraph(id);
+
+        $.get("/manifest/" + id , function(data) {
+            $('#manifest').html(data);
+            hljs.highlightBlock($('#manifest')[0]);
+        })
+
+        $.get("/metadata/" + id , function(data) {
+            $('#metadata').html(data);
+            hljs.highlightBlock($('#metadata')[0]);
+        })
+
+        $.get("/data/" + id , function(data) {
+            $('#data').html(data);
+        })
+
+    };
+
+    $('button[id^="more"').click(showVersionInfo);
+
     $("#verifySignature").click(function() {
 
         var manifestJSON = $("#manifest").text();

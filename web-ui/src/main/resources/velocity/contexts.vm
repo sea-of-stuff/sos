@@ -4,69 +4,78 @@
     <meta charset="utf-8">
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
 </head>
 <body>
-#include("header.html")
+    #include("header.html")
 
 <div class="container-fluid">
 
     <div class="row">
         <div class="col-6">
+            <h1>List of contexts</h1>
+            <ul class="list-group">
+                #foreach($context in $contexts)
+                    <li class="list-group-item">
+                        <pre style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
+                        <button id="viewContext" value="$context.guid().toMultiHash()" type="button" class="btn">View</button>
+                    </li>
+                #end
+            </ul>
+            <br>
+            <h3>Contents for Context <strong class="text-success"><span id="contextid"></span></strong>:</h3>
+            <ul id="contents"></ul>
+
+            <hr>
+
             <h1>Create context</h1>
             <form action="/contexts" method="post">
                 <textarea cols="60" id="contextJSON" name="contextJSON" rows="15"></textarea>
                 <br>
-                <button type="button" class="btn btn-info" id="prettyPrint">Pretty Print</button>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExamples" aria-expanded="false" aria-controls="collapseExamples">Show/Hide Examples</button>
                 <button type="button" class="btn btn-info" id="previewClass">Preview Class</button>
                 <input type="submit" class="btn btn-success" value="Submit">
             </form>
-        </div>
-
-        <div class="col-6">
-            <h1>Preview</h1>
-            <div style="overflow-y:scroll; height:500px;">
-                <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="preview"></code></pre>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-6">
-<strong>Examples</strong>
-<code style=display:block;white-space:pre-wrap>
+            <div class="collapse" id="collapseExamples">
+                <div class="card card-body">
+                    <strong>Examples</strong>
+                    <pre><code class="json">
 {
     "name": "Allv1",
     "predicate": "CommonPredicates.AcceptAll();"
 }
-</code>
-<br>
-<code style=display:block;white-space:pre-wrap>
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
 {
     "name": "Allv2",
     "predicate": "True;"
 }
-</code>
-<br>
-<code style=display:block;white-space:pre-wrap>
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
 {
     "name": "Simone",
     "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
 }
-</code>
-<br>
-<code style=display:block;white-space:pre-wrap>
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
 {
     "name": "Binary",
     "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/octet-stream\"));"
 }
-</code>
-
-<br>
-<code style=display:block;white-space:pre-wrap>
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
 {
     "name": "ImageManifestReplication",
     "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
@@ -74,42 +83,28 @@
         "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
     ]
 }
-</code>
+                    </code></pre>
+                </div>
+            </div>
+            <hr>
+            <h1>Context Java Class Preview</h1>
+            <div style="overflow-y:scroll; height:700px;">
+                <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="preview"></code></pre>
+            </div>
         </div>
 
         <div class="col-6">
-            <h1>List of contexts</h1>
-
-            <ul>
-                #foreach($context in $contexts)
-                    <li>
-                        <pre style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
-                        <button id="context" value="$context.guid().toMultiHash()" type="button" class="btn">View</button>
-                    </li>
-
-                #end
-            </ul>
-
-            <div id="contents"></div>
-
+            #parse("manifestTemplate.vm")
         </div>
     </div>
 
+    <br><br><br>
 </div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.1/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
-
-    $("#prettyPrint").click(function() {
-
-        var ugly = document.getElementById('contextJSON').value;
-        var obj = JSON.parse(ugly);
-        var pretty = JSON.stringify(obj, undefined, 4);
-        document.getElementById('contextJSON').value = pretty;
-    });
 
     $("#previewClass").click(function() {
 
@@ -122,7 +117,6 @@
             url: '/preview',
             data: pretty,
             success: function(data) {
-                console.log(data);
                 $('#preview').html(data);
                 hljs.highlightBlock($('#preview')[0]);
             },
@@ -130,14 +124,26 @@
         });
     });
 
-    $("#context").click(function() {
+    $('button[id^="viewContext"]').click(function() {
 
         var id = $(this).val();
-        console.log(id);
-
         $.get("/context/" + id + "/contents" , function(data) {
-            $('#contents').html(data);
-        })
+
+            $('#contextid').html(id.substring(0, 15));
+
+            list = $('#contents');
+            list.empty();
+            contexts = JSON.parse(data);
+
+            $.each(contexts.contents, function(key, value) {
+                list.append("<li class=\"list-group-item\" id='" + value + "'>" + value +
+                        " <button id=\"more" + value + "\" value=" + value + " type=\"button\" class=\"btn btn-success\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
+                        "</li>" );
+            });
+
+            // Register the buttons with the showVersionInfo function (see manifestTemplate.vm)
+            $('button[id^="more"').click(showVersionInfo);
+        });
     });
 
 </script>
