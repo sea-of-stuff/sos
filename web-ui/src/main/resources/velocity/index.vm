@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <style>
+        .card-columns .card {
+            display: inline-block
+        }
+    </style>
 </head>
 <body>
 #include("header.html")
@@ -132,13 +138,22 @@
 
             <div class="card-columns">
                 #foreach($version in $assets)
+                    #if ($version.contentType == 'AtomP')
+                    <div class="card border-danger">
+                    #else
                     <div class="card border-dark">
+                    #end
+
                         <div class="card-body">
                             <h4 class="card-title">Version: $version.version.toShortString()
                                 <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-outline-dark"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                             </h4>
                             <p class="card-text">
                                 <strong>Invariant</strong> $version.invariant.toShortString()
+                                <br>
+                                <strong>Content:</strong> $version.content.toShortString()
+                                <br>
+                                <strong>Content Type: </strong> $version.contentType
                             </p>
                             <div class="card-text">
                                 #if($version.data)

@@ -222,7 +222,7 @@ public class WData {
             case "text/plain; charset=UTF-8":
             case "text/plain; charset=windows-1252":
                 outputData = "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">";
-                outputData += (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + ".... OTHER DATA FOLLOWING" : data.toString());
+                outputData += (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + " <br><strong>.... OTHER DATA FOLLOWING</strong>" : data.toString());
                 outputData += "</pre>";
                 break;
             case "image/png":

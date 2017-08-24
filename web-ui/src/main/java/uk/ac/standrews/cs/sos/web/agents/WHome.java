@@ -44,6 +44,7 @@ public class WHome {
                 versionModel.put("invariant", version.getInvariantGUID());
                 versionModel.put("version", version.getVersionGUID());
                 versionModel.put("content", version.getContentGUID());
+                versionModel.put("contentType", manifest.getType());
 
             } catch (ManifestNotFoundException | HEADNotFoundException | AtomNotFoundException e) {
                 e.printStackTrace();
