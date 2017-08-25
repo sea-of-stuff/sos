@@ -151,10 +151,7 @@
 
         $.get("/context/search/" + contextNameToSearch , function(data) {
 
-            console.log("Context found: " + data);
-            // Update contexts list
-
-
+            // Hide all
             ul = document.getElementById("allcontexts");
             li = ul.getElementsByTagName("li");
             for (i = 0; i < li.length; i++) {
