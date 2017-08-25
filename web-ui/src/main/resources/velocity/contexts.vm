@@ -27,15 +27,18 @@
             <h1>List of contexts</h1>
             <ul class="list-group">
                 #foreach($context in $contexts)
-                    <li class="list-group-item">
-                        <pre style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
-                        <button id="viewContext" value="$context.guid().toMultiHash()" type="button" class="btn">View</button>
+                    <li class="list-group-item flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                        <pre class="mb-1" style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
+                        <button id="viewContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-success btn-sm">View</button>
+                        <button id="hideContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-warning btn-sm">Hide</button>
+                        </div>
                     </li>
                 #end
             </ul>
             <br>
             <h3>Contents for Context <strong class="text-success"><span id="contextid"></span></strong>:</h3>
-            <ul id="contents"></ul>
+            <ul class="list-group" id="contents"></ul>
 
             <hr>
 
@@ -143,14 +146,25 @@
             contexts = JSON.parse(data);
 
             $.each(contexts.contents, function(key, value) {
-                list.append("<li class=\"list-group-item\" id='" + value + "'>" + value +
-                        " <button id=\"more" + value + "\" value=" + value + " type=\"button\" class=\"btn btn-outline-dark\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
+                list.append("<li class=\"list-group-item flex-column align-items-start\" id='" + key + "'>" +
+                        "<div class=\"d-flex w-100 justify-content-between\">" +
+                        "<h5 class=\"mb-1\">" + key + "</h5>" +
+                        " <button id=\"more" + key + "\" value=" + key + " type=\"button\" class=\"btn btn-outline-dark btn-sm\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
+                        "</div>" +
+                        "<p class=\"mb-1\"><strong>Policy Satisfied</strong> : " + value.policySatisfied + "</p>" +
+                        "<p class=\"mb-1\"><strong>Predicate run </strong> : " + new Date(value.timestamp) + "</p>" +
                         "</li>" );
             });
 
             // Register the buttons with the showVersionInfo function (see manifestTemplate.vm)
             $('button[id^="more"').click(showVersionInfo);
         });
+    });
+
+    $('button[id^="hideContext"]').click(function() {
+
+        list = $('#contents');
+        list.empty();
     });
 
 </script>
@@ -160,9 +174,7 @@
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
 
-
         (function(){
-
             var jsonData = $.ajax({
                 url: "/threads",
                 dataType: "json",
@@ -170,16 +182,7 @@
             }).responseText;
 
             var data = JSON.parse(jsonData);
-
             var dataTable = new google.visualization.DataTable(data);
-
-//            dataTable.addColumn({ type: 'string', id: 'Thread' });
-//            dataTable.addColumn({ type: 'date', id: 'Start' });
-//            dataTable.addColumn({ type: 'date', id: 'End' });
-//            dataTable.addRows([
-//                [ 'Predicate Thread', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
-//                [ 'Policy Thread (1)', new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
-//                [ 'Policy Thread (2)', new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
 
             var container = document.getElementById('timeline');
             var chart = new google.visualization.Timeline(container);
@@ -187,8 +190,6 @@
 
             setTimeout(arguments.callee, 5000);
         })();
-
-
 
     }
 </script>

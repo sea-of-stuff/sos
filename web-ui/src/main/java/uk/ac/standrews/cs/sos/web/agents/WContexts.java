@@ -8,7 +8,6 @@ import spark.Request;
 import spark.Response;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -19,7 +18,6 @@ import uk.ac.standrews.cs.utilities.Pair;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -36,14 +34,18 @@ public class WContexts {
 
     public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException {
         String guidParam = req.params("id");
-        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+        IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
 
         Map<String, Object> model = new HashMap<>();
 
-        model.put("contents", sos.getCMS().getContents(guid).stream()
-                .map(IKey::toMultiHash)
-                .collect(Collectors.toSet()));
+        Map<String, Object> contents = new HashMap<>();
 
+        for(IGUID guid : sos.getCMS().getContents(contextGUID)) {
+
+            contents.put(guid.toMultiHash(), sos.getCMS().getContextContentInfo(contextGUID, guid));
+        }
+
+        model.put("contents", contents);
         return JSONHelper.JsonObjMapper().writeValueAsString(model);
     }
 
@@ -113,7 +115,7 @@ public class WContexts {
         ArrayNode rows = node.putArray("rows");
         addThreadStats(rows, sos.getCMS().getPredicateThreadSessionStatistics(), "Predicate");
         addThreadStats(rows, sos.getCMS().getApplyPolicyThreadSessionStatistics(), "Policy (apply)");
-        addThreadStats(rows, sos.getCMS().getPredicateThreadSessionStatistics(), "Policy (check)");
+        addThreadStats(rows, sos.getCMS().getCheckPolicyThreadSessionStatistics(), "Policy (check)");
 
         return node.toString();
     }

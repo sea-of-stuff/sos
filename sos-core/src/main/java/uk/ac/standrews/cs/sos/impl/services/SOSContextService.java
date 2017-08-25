@@ -212,6 +212,12 @@ public class SOSContextService implements ContextService {
         return checkPolicyThreadSessionStatistics;
     }
 
+    @Override
+    public ContextContent getContextContentInfo(IGUID context, IGUID version) {
+
+        return contextsContents.get(context, version);
+    }
+
     ////////////////////
     // PERIODIC TASKS //
     ////////////////////
@@ -431,7 +437,7 @@ public class SOSContextService implements ContextService {
 
             ContextContent content = new ContextContent();
             content.predicateResult = passed;
-            content.timestamp = System.nanoTime();
+            content.timestamp = System.currentTimeMillis();
 
             // TODO - if there is another entry for this asset, then remove it
 
@@ -508,7 +514,7 @@ public class SOSContextService implements ContextService {
 
         long maxage = context.predicate().maxAge();
         long contentLastRun = content.timestamp;
-        long now = System.nanoTime();
+        long now = System.currentTimeMillis();
 
         return (now - contentLastRun) > maxage;
     }

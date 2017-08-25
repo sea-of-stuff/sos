@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
@@ -94,5 +95,7 @@ public interface ContextService {
     Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics();
     Queue<Pair<Long, Long>> getApplyPolicyThreadSessionStatistics();
     Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics();
+
+    ContextContent getContextContentInfo(IGUID context, IGUID version);
 
 }
