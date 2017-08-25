@@ -75,3 +75,6 @@ t.test(x$Measures, y$Measures)
 model <- lm(formula = Measures ~ ContextName, data = d)
 summary(model)
 anova(model)
+
+# Power test
+# https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html
