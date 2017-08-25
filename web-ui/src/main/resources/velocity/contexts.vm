@@ -94,6 +94,20 @@
     }
 }
                     </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "Protected",
+    "predicate": "CommonPredicates.ContentIsProtected(guid);"
+}
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "NotProtected",
+    "predicate": "CommonPredicates.ContentIsNotProtected(guid);"
+}
+                    </code></pre>
                 </div>
             </div>
             <hr>
@@ -162,6 +176,8 @@
     });
 
     $('button[id^="hideContext"]').click(function() {
+
+        $('#contextid').html("");
 
         list = $('#contents');
         list.empty();

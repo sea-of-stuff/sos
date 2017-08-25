@@ -11,6 +11,9 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.SecureManifest;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.List;
@@ -137,18 +140,39 @@ public class CommonPredicates {
 
     }
 
-    public static boolean CheckDataOnTheFly() {
-
-        // TODO - make some code that checks the data
-        return false;
-    }
-
-    public static boolean SearchText(IGUID atomGUID, String textToSearch) {
+    public static boolean ContentIsProtected(IGUID guid) {
 
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Data data = agent.getData(atomGUID);
+            Manifest manifest = agent.getManifest(guid);
+
+            if (manifest instanceof Version) {
+                Manifest contentManifest = agent.getManifest(((Version) manifest).getContentGUID());
+                boolean a = contentManifest instanceof SecureManifest;
+                return a;
+            }
+
+            return false;
+
+        } catch (ManifestNotFoundException e) {
+
+            return false;
+        }
+
+    }
+
+    public static boolean ContentIsNotProtected(IGUID guid) {
+
+        return !ContentIsProtected(guid);
+    }
+
+    public static boolean SearchText(IGUID guid, String textToSearch) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(guid);
             return data.toString().contains(textToSearch);
 
         } catch (AtomNotFoundException e) {
@@ -157,12 +181,12 @@ public class CommonPredicates {
         }
     }
 
-    public static boolean SearchTextIgnoreCase(IGUID atomGUID, String textToSearch) {
+    public static boolean SearchTextIgnoreCase(IGUID guid, String textToSearch) {
 
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Data data = agent.getData(atomGUID);
+            Data data = agent.getData(guid);
             return data.toString().toLowerCase().contains(textToSearch);
 
         } catch (AtomNotFoundException e) {
@@ -171,12 +195,12 @@ public class CommonPredicates {
         }
     }
 
-    public static int TextOccurrences(IGUID atomGUID, String textToSearch) {
+    public static int TextOccurrences(IGUID guid, String textToSearch) {
 
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Data data = agent.getData(atomGUID);
+            Data data = agent.getData(guid);
             return StringUtils.countMatches(data.toString(), textToSearch);
         } catch (AtomNotFoundException e) {
 
@@ -184,12 +208,12 @@ public class CommonPredicates {
         }
     }
 
-    public static int TextOccurrencesIgnoreCase(IGUID atomGUID, String textToSearch) {
+    public static int TextOccurrencesIgnoreCase(IGUID guid, String textToSearch) {
 
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Data data = agent.getData(atomGUID);
+            Data data = agent.getData(guid);
             return StringUtils.countMatches(data.toString().toLowerCase(), textToSearch);
         } catch (AtomNotFoundException e) {
 
