@@ -13,11 +13,15 @@
     <script>
         hljs.initHighlightingOnLoad();
     </script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
     #include("header.html")
 
 <div class="container-fluid">
+
+    <div id="timeline"></div>
+
     <div class="row">
         <div class="col-6">
             <h1>List of contexts</h1>
@@ -145,6 +149,49 @@
         });
     });
 
+</script>
+
+<script>
+    google.charts.load('current', {packages: ['line']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+
+        (function(){
+
+            var jsonData = $.ajax({
+                url: "/threads",
+                dataType: "json",
+                async: false
+            }).responseText;
+
+            var data = JSON.parse(jsonData);
+            var dataTable = new google.visualization.DataTable(data);
+
+            var container = document.getElementById('timeline');
+            var chart = new google.charts.Line(container);
+
+            var options = {
+                chart: {
+                    title: 'Context Threads Activity'
+                },
+                width: 900,
+                height: 500,
+                vAxis: {
+                    viewWindow: {
+                        max: 2
+                    }
+                }
+            };
+
+            chart.draw(dataTable, google.charts.Line.convertOptions(options));
+
+            setTimeout(arguments.callee, 5000);
+        })();
+
+
+
+    }
 </script>
 </body>
 </html>

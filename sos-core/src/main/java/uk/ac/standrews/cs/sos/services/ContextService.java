@@ -3,8 +3,10 @@ package uk.ac.standrews.cs.sos.services;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -88,5 +90,7 @@ public interface ContextService {
     int runPredicates();
 
     void runPolicies();
+
+    Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics();
 
 }

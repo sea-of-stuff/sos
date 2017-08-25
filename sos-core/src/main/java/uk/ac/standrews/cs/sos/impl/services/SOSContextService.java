@@ -35,12 +35,12 @@ import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +73,7 @@ public class SOSContextService implements ContextService {
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
+    private Queue<Pair<Long, Long>> predicateThreadSessionStatistics;
 
     /**
      * Build a CMS instance.
@@ -104,6 +105,7 @@ public class SOSContextService implements ContextService {
             throw new ServiceException("ContextService - Unable to load contexts correctly");
         }
 
+        predicateThreadSessionStatistics = new LinkedList<>();
         // Run background CRON Jobs if and only if this is set in the node settings file
         if (SOSLocalNode.settings.getServices().getCms().isAutomatic()) {
 
@@ -193,6 +195,10 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    public Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics() {
+        return predicateThreadSessionStatistics;
+    }
+
     ////////////////////
     // PERIODIC TASKS //
     ////////////////////
@@ -211,7 +217,12 @@ public class SOSContextService implements ContextService {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
+
+
+            long start = Instant.now().toEpochMilli();
             runPredicates();
+            long duration = Instant.now().toEpochMilli();
+            predicateThreadSessionStatistics.add(new Pair<>(start, duration));
 
         }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
