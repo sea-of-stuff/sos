@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
@@ -45,12 +44,9 @@ public class SetUpTest extends CommonTest {
             throw new SOSException(e);
         }
 
-        List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes = settings.getBootstrapNodes();
-
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         localSOSNode = builder.settings(settings)
                                 .internalStorage(localStorage)
-                                .bootstrapNodes(bootstrapNodes)
                                 .build();
     }
 

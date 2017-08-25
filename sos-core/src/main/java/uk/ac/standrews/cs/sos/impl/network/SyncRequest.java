@@ -85,6 +85,7 @@ public class SyncRequest extends Request {
     private Response postJSON() throws IOException {
 
         RequestBodyEntity requestWithBody = Unirest.post(url.toString())
+                .header("Content-Type", "application/json")
                 .body(json_body);
 
         return makeRequest(requestWithBody);
@@ -127,7 +128,6 @@ public class SyncRequest extends Request {
 
             return new ResponseImpl(resp);
         } catch (UnirestException e) {
-            e.printStackTrace();
             return new ErrorResponseImpl();
         }
 

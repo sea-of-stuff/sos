@@ -29,6 +29,9 @@
 
 ## With Policy
 
+- domain is LOCAL
+- codomain is LOCAL
+
 ```
 {
 	"name": "Test",
@@ -54,6 +57,8 @@
 
 ## With custom domain
 
+- domain is LOCAL, but explicit
+
 ```
 {
     "name": "All",
@@ -65,16 +70,23 @@
 }
 ```
 
+- domain is SPECIFIED
+
 ```
 {
     "name": "All",
     "predicate": "CommonPredicates.AcceptAll();",
-    "domain": {
+    "policies" : [
+    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+    	],
+    "codomain": {
         "type" : "SPECIFIED",
-        "nodes" : [ "0099af5c875ab6ed01665e6aef853b7ce3b74cff", "0000006e5c875ab6ed01665e6aef853b7ce3b74000"]
+        "nodes" : [ "SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4" ]
     }
 }
 ```
+
+- domain is ANY
 
 ```
 {

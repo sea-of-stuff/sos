@@ -82,7 +82,7 @@ public class WContexts {
 
     }
 
-    public static String Threads(Request req, SOSLocalNode sos) {
+    public static String Threads(SOSLocalNode sos) {
 
         ObjectNode node = JSONHelper.JsonObjMapper().createObjectNode();
 

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -111,7 +110,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         initDB();
         initNDS();
-        loadBootstrapNodes(Builder.bootstrapNodes);
+        loadBootstrapNodes();
         registerNode();
         initServices();
         cacheFlusher();
@@ -186,13 +185,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**
      * Load the bootstrap nodes specified in the configuration file into the local NDS.
      *
-     * @param bootstrapNodes
      * @throws NodeRegistrationException
      */
-    private void loadBootstrapNodes(List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes)
-            throws NodeRegistrationException {
+    private void loadBootstrapNodes() throws NodeRegistrationException {
 
-        for(Node node:bootstrapNodes) {
+        for(Node node:settings.getBootstrapNodes()) {
+            // TODO - contact node and update info
             nodeDiscoveryService.registerNode(node, true);
         }
     }
@@ -272,7 +270,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public static class Builder {
         private static SettingsConfiguration.Settings settings;
         private static LocalStorage localStorage;
-        private static List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes;
 
         public Builder settings(SettingsConfiguration.Settings settings) {
             Builder.settings = settings;
@@ -281,11 +278,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         public Builder internalStorage(LocalStorage localStorage) {
             Builder.localStorage = localStorage;
-            return this;
-        }
-
-        public Builder bootstrapNodes(List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes) {
-            Builder.bootstrapNodes = bootstrapNodes;
             return this;
         }
 

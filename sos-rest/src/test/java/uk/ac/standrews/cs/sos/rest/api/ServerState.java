@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * The following creates a node instance of the SOS.
@@ -52,12 +51,9 @@ public class ServerState {
             throw new SOSException(e);
         }
 
-        List<SettingsConfiguration.Settings.NodeSettings> bootstrapNodes = settings.getBootstrapNodes();
-
         SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
         sos = builder.settings(settings)
                 .internalStorage(localStorage)
-                .bootstrapNodes(bootstrapNodes)
                 .build();
 
     }

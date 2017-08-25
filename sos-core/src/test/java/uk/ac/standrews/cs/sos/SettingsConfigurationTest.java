@@ -118,12 +118,12 @@ public class SettingsConfigurationTest {
     }
 
     @Test
-    public void emptyBoostrapNodes() throws ConfigurationException {
+    public void notEmptyBoostrapNodes() throws ConfigurationException {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
         List<SettingsConfiguration.Settings.NodeSettings> bootstrap = settings.getSettingsObj().getBootstrapNodes();
-        assertTrue(bootstrap.isEmpty());
+        assertFalse(bootstrap.isEmpty());
     }
 
     @Test

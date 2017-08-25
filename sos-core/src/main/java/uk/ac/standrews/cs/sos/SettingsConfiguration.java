@@ -267,12 +267,12 @@ public class SettingsConfiguration {
 
             public static class ServicesSettings {
 
-                private RoleSettings storage;
-                private RoleSettings dds;
-                private RoleSettings nds;
-                private RoleSettings mms;
-                private RoleSettings cms;
-                private RoleSettings rms;
+                private RoleSettings storage = new RoleSettings();
+                private RoleSettings dds = new RoleSettings();
+                private RoleSettings nds = new RoleSettings();
+                private RoleSettings mms = new RoleSettings();
+                private RoleSettings cms = new RoleSettings();
+                private RoleSettings rms = new RoleSettings();
 
                 public RoleSettings getStorage() {
                     return storage;

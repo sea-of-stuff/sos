@@ -71,7 +71,7 @@ public class WebApp {
         get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.VerifySignature(req, sos));
         get("/verifyIntegrity/:id", (req, res) -> WVerify.VerifyIntegrity(req, sos));
 
-        get("/threads", (req, res) -> WContexts.Threads(req, sos));
+        get("/threads", (req, res) -> WContexts.Threads(sos));
     }
 
     private static void registerPostActionRoutes() {

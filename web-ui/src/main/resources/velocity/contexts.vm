@@ -80,11 +80,15 @@
                     <br>
                     <pre><code class="json">
 {
-    "name": "ImageManifestReplication",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));",
+    "name": "All",
+    "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
-        "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
-    ]
+    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+    	],
+    "codomain": {
+        "type" : "SPECIFIED",
+        "nodes" : [ "SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4" ]
+    }
 }
                     </code></pre>
                 </div>

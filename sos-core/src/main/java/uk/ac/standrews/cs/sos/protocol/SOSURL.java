@@ -78,7 +78,7 @@ public class SOSURL {
 
     public static URL NDS_REGISTER_NODE(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "nds/register/";
+                "nds/register";
 
         return makeURL(url);
     }

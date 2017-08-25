@@ -66,6 +66,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
         try {
+            // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, nodeDiscoveryService, dataDiscoveryService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
