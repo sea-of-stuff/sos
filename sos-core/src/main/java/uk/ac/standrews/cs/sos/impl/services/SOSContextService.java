@@ -128,7 +128,7 @@ public class SOSContextService implements ContextService {
                 .stream()
                 .map(c -> {
                     try {
-                        return getContext(c);
+                        return searchContexts(c);
                     } catch (ContextNotFoundException e) {
                         return null;
                     }
@@ -163,15 +163,15 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
+    public Context searchContexts(IGUID contextGUID) throws ContextNotFoundException {
 
         return inMemoryCache.getContext(contextGUID);
     }
 
     @Override
-    public Context getContext(String contextName) throws ContextNotFoundException {
-        // TODO
-        return null;
+    public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
+
+        return inMemoryCache.getContext(contextName);
     }
 
     @Override

@@ -231,8 +231,6 @@ public class SOSAgent implements Agent {
         return metadata;
     }
 
-    // TODO - add secure metadata method
-
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
 

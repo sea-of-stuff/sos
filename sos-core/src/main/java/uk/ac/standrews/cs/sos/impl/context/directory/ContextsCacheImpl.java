@@ -4,6 +4,8 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,6 +32,20 @@ public class ContextsCacheImpl {
 
     public Set<IGUID> getContexts() {
         return contexts.keySet();
+    }
+
+    public Set<Context> getContext(String name) {
+
+        Set<Context> ret = new LinkedHashSet<>();
+        for(Map.Entry<IGUID, Context> e:contexts.entrySet()) {
+
+            if (e.getValue().getName().toLowerCase().contains(name.toLowerCase())) {
+                ret.add(e.getValue());
+            }
+
+        }
+
+        return ret;
     }
 
 }

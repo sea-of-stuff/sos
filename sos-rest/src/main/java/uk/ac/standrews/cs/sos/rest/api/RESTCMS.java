@@ -79,7 +79,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            Context context = contextService.getContext(contextGUID);
+            Context context = contextService.searchContexts(contextGUID);
 
             return HTTPResponses.OK(context.toString());
         } catch (ContextNotFoundException e) {

@@ -55,7 +55,7 @@ public interface ContextService {
      * @return the matching context
      * @throws ContextNotFoundException if no context could be found
      */
-    Context getContext(IGUID contextGUID) throws ContextNotFoundException;
+    Context searchContexts(IGUID contextGUID) throws ContextNotFoundException;
 
     /**
      * Get a context given its name
@@ -63,10 +63,8 @@ public interface ContextService {
      * @param contextName
      * @return
      * @throws ContextNotFoundException
-     *
-     * TODO - assuming the the context name is unique
      */
-    Context getContext(String contextName) throws ContextNotFoundException;
+    Set<Context> searchContexts(String contextName) throws ContextNotFoundException;
 
     /**
      * Get the set for all content belonging to the specified context

@@ -40,6 +40,15 @@ public interface Agent {
      */
     Atom addAtom(AtomBuilder atomBuilder) throws ManifestPersistException, DataStorageException;
 
+    /**
+     * Add a secure atom to the SOS
+     *
+     * @param atomBuilder
+     * @return
+     * @throws ManifestPersistException
+     * @throws ManifestNotMadeException
+     * @throws DataStorageException
+     */
     SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
 
     /**
@@ -56,6 +65,15 @@ public interface Agent {
      */
     Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
 
+    /**
+     * Add a secure compound to the SOS
+     *
+     * @param compoundBuilder
+     * @return
+     * @throws ManifestNotMadeException
+     * @throws ManifestPersistException
+     * @throws RoleNotFoundException
+     */
     SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException;
 
     /**
@@ -82,6 +100,13 @@ public interface Agent {
      */
     Data getAtomContent(Atom atom) throws AtomNotFoundException;
 
+    /**
+     * Get data given the guid of the atom
+     *
+     * @param atomGUID
+     * @return
+     * @throws AtomNotFoundException
+     */
     Data getData(IGUID atomGUID) throws AtomNotFoundException;
 
     /**
@@ -103,6 +128,8 @@ public interface Agent {
      * @throws MetadataException if the metadata could not be generated
      */
     Metadata addMetadata(Data data) throws MetadataException;
+
+    // TODO - add secure metadata method
 
     /**
      * Get the metadata mapped to the specified guid

@@ -9,8 +9,10 @@ import spark.Response;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
@@ -18,6 +20,7 @@ import uk.ac.standrews.cs.utilities.Pair;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -61,6 +64,26 @@ public class WContexts {
         } catch (Exception e) {
 
             response.redirect("/contexts");
+            return "ERROR";
+        }
+
+    }
+
+    public static String SearchContext(Request request, SOSLocalNode sos) {
+
+        String nameToSearch = request.params("name");
+        try {
+
+            ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+            Set<Context> contexts = sos.getCMS().searchContexts(nameToSearch);
+            for(Context context:contexts) {
+                arrayNode.add(context.toString());
+            }
+
+            return arrayNode.toString();
+
+        } catch (ContextNotFoundException e) {
+
             return "ERROR";
         }
 
