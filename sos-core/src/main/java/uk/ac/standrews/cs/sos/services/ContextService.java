@@ -92,5 +92,7 @@ public interface ContextService {
     void runPolicies();
 
     Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics();
+    Queue<Pair<Long, Long>> getApplyPolicyThreadSessionStatistics();
+    Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics();
 
 }

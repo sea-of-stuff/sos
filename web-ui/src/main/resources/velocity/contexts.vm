@@ -152,7 +152,7 @@
 </script>
 
 <script>
-    google.charts.load('current', {packages: ['line']});
+    google.charts.load('current', {'packages':['timeline']});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
 
@@ -166,25 +166,20 @@
             }).responseText;
 
             var data = JSON.parse(jsonData);
+
             var dataTable = new google.visualization.DataTable(data);
 
+//            dataTable.addColumn({ type: 'string', id: 'Thread' });
+//            dataTable.addColumn({ type: 'date', id: 'Start' });
+//            dataTable.addColumn({ type: 'date', id: 'End' });
+//            dataTable.addRows([
+//                [ 'Predicate Thread', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+//                [ 'Policy Thread (1)', new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+//                [ 'Policy Thread (2)', new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+
             var container = document.getElementById('timeline');
-            var chart = new google.charts.Line(container);
-
-            var options = {
-                chart: {
-                    title: 'Context Threads Activity'
-                },
-                width: 900,
-                height: 500,
-                vAxis: {
-                    viewWindow: {
-                        max: 2
-                    }
-                }
-            };
-
-            chart.draw(dataTable, google.charts.Line.convertOptions(options));
+            var chart = new google.visualization.Timeline(container);
+            chart.draw(dataTable);
 
             setTimeout(arguments.callee, 5000);
         })();

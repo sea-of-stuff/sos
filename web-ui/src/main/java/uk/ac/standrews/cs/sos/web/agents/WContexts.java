@@ -17,8 +17,8 @@ import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
@@ -90,113 +90,52 @@ public class WContexts {
         ArrayNode cols = node.putArray("cols");
         cols.add(
                 JSONHelper.JsonObjMapper().createObjectNode()
-                        .put("id", "active")
-                        .put("label", "Active")
+                        .put("id", "Thread")
+                        .put("label", "Thread")
+                        .put("type", "string")
+        );
+
+        cols.add(
+                JSONHelper.JsonObjMapper().createObjectNode()
+                        .put("id", "Start")
+                        .put("label", "Start")
                         .put("type", "date")
         );
 
         cols.add(
                 JSONHelper.JsonObjMapper().createObjectNode()
-                        .put("id", "predicate")
-                        .put("label", "Predicate")
-                        .put("type", "number")
+                        .put("id", "End")
+                        .put("label", "End")
+                        .put("type", "date")
         );
 
         // Rows
         ArrayNode rows = node.putArray("rows");
+        addThreadStats(rows, sos.getCMS().getPredicateThreadSessionStatistics(), "Predicate");
+        addThreadStats(rows, sos.getCMS().getApplyPolicyThreadSessionStatistics(), "Policy (apply)");
+        addThreadStats(rows, sos.getCMS().getPredicateThreadSessionStatistics(), "Policy (check)");
 
-        Iterator<Pair<Long, Long>> threadStats = sos.getCMS().getPredicateThreadSessionStatistics().iterator();
-
-        System.out.println("THREAD STATS: " + sos.getCMS().getPredicateThreadSessionStatistics().size());
-        while(threadStats.hasNext()) {
-            Pair<Long, Long> ts = threadStats.next();
-
-            ObjectNode cells = JSONHelper.JsonObjMapper().createObjectNode();
-            cells.putArray("c")
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "Date(" + ts.X() + ")")
-                    )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "0")
-                    );
-            rows.add(cells);
-
-            cells = JSONHelper.JsonObjMapper().createObjectNode();
-            cells.putArray("c")
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "Date(" + ts.X() + ")")
-                    )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "1")
-                    );
-            rows.add(cells);
-
-            cells = JSONHelper.JsonObjMapper().createObjectNode();
-            cells.putArray("c")
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "Date(" + ts.Y() + ")")
-                    )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "1")
-                    );
-            rows.add(cells);
-
-            cells = JSONHelper.JsonObjMapper().createObjectNode();
-            cells.putArray("c")
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "Date(" + ts.Y() + ")")
-                    )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-                            .put("v", "0")
-                    );
-            rows.add(cells);
-//
-//                    .add(JSONHelper.JsonObjMapper().createObjectNode()
-//                            .put("v", "Date(" + (ts.X() + ts.Y() + 1000000) + ")")
-//                    );
-
-        }
-
-        System.out.println(node.toString());
         return node.toString();
     }
 
-    //            rows.add(
-//                    JSONHelper.JsonObjMapper().createObjectNode()
-//                            .putArray("c")
-//                            .add(JSONHelper.JsonObjMapper().createObjectNode()
-//                                    .put("v", "Predicate")
-//                            )
-//                            .add(JSONHelper.JsonObjMapper().createObjectNode()
-//                                    .put("v", "new Date(" + ts.X() / 1000 + ")")
-//                            )
-//                            .add(JSONHelper.JsonObjMapper().createObjectNode()
-//                                    .put("v", "new Date(" + (ts.X() + ts.Y()) / 1000 + ")")
-//                            )
-//            );
+    private static void addThreadStats(ArrayNode rows, Queue<Pair<Long, Long>> stats, String label) {
 
-    //node.put("" + ts.Y() / 1000, r.getInt("experiments"));
-//        {
-//            "cols": [
-//            {"id":"","label":"Topping","pattern":"","type":"string"},
-//            {"id":"","label":"Slices","pattern":"","type":"number"}
-//      ],
-//            "rows": [
-//            {"c":[{"v":"Mushrooms","f":null},{"v":3,"f":null}]},
-//            {"c":[{"v":"Onions","f":null},{"v":1,"f":null}]},
-//            {"c":[{"v":"Olives","f":null},{"v":1,"f":null}]},
-//            {"c":[{"v":"Zucchini","f":null},{"v":1,"f":null}]},
-//            {"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
-//      ]
-//        }
+        for (Pair<Long, Long> ts : stats) {
+            ObjectNode cells = JSONHelper.JsonObjMapper().createObjectNode();
+            ArrayNode values = cells.putArray("c");
+            values.add(JSONHelper.JsonObjMapper().createObjectNode()
+                    .put("v", label)
+            )
+                    .add(JSONHelper.JsonObjMapper().createObjectNode()
+                            .put("v", "Date(" + ts.X() + ")")
+                    )
+                    .add(JSONHelper.JsonObjMapper().createObjectNode()
+                            .put("v", "Date(" + ts.Y() + ")") // Adding half a second, otherwise data cannot be visualised
+                    );
 
+            rows.add(cells);
 
-//        dataTable.addColumn({ type: 'string', id: 'Thread' });
-//        dataTable.addColumn({ type: 'date', id: 'Start' });
-//        dataTable.addColumn({ type: 'date', id: 'End' });
-//        dataTable.addRows([
-//          [ 'Predicate Thread', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
-//          [ 'Policy Thread (1)',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
-//          [ 'Policy Thread (2)',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+        }
+    }
 
 }

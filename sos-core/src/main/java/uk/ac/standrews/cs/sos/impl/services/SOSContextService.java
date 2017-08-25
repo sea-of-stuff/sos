@@ -39,7 +39,6 @@ import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -74,6 +73,8 @@ public class SOSContextService implements ContextService {
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
     private Queue<Pair<Long, Long>> predicateThreadSessionStatistics;
+    private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
+    private Queue<Pair<Long, Long>> checkPolicyThreadSessionStatistics;
 
     /**
      * Build a CMS instance.
@@ -106,6 +107,8 @@ public class SOSContextService implements ContextService {
         }
 
         predicateThreadSessionStatistics = new LinkedList<>();
+        applyPolicyThreadSessionStatistics = new LinkedList<>();
+        checkPolicyThreadSessionStatistics = new LinkedList<>();
         // Run background CRON Jobs if and only if this is set in the node settings file
         if (SOSLocalNode.settings.getServices().getCms().isAutomatic()) {
 
@@ -199,6 +202,16 @@ public class SOSContextService implements ContextService {
         return predicateThreadSessionStatistics;
     }
 
+    @Override
+    public Queue<Pair<Long, Long>> getApplyPolicyThreadSessionStatistics() {
+        return applyPolicyThreadSessionStatistics;
+    }
+
+    @Override
+    public Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics() {
+        return checkPolicyThreadSessionStatistics;
+    }
+
     ////////////////////
     // PERIODIC TASKS //
     ////////////////////
@@ -219,10 +232,10 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
 
 
-            long start = Instant.now().toEpochMilli();
+            long start = System.currentTimeMillis();
             runPredicates();
-            long duration = Instant.now().toEpochMilli();
-            predicateThreadSessionStatistics.add(new Pair<>(start, duration));
+            long end = System.currentTimeMillis();
+            predicateThreadSessionStatistics.add(new Pair<>(start, end));
 
         }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
@@ -276,7 +289,11 @@ public class SOSContextService implements ContextService {
 
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
+
+            long start = System.currentTimeMillis();
             runPolicies();
+            long end = System.currentTimeMillis();
+            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
 
         }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
@@ -309,7 +326,10 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Check that policies are still valid");
 
+            long start = System.currentTimeMillis();
             checkPolicies();
+            long end = System.currentTimeMillis();
+            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
 
         }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
