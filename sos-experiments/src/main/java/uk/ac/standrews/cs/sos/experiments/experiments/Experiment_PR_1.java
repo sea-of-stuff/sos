@@ -53,7 +53,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     }
 
     public enum CONTEXT_TYPE {
-        ALL, DATA, METADATA, DATA_AND_METADATA
+        ALL, DATA, METADATA, DATA_AND_METADATA, MANIFEST
     }
 
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
@@ -138,6 +138,15 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                     IGUID c_5 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "greater_than_100_kb.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_5 " + c_5.toShortString());
                     break;
+                }
+
+                case MANIFEST: {
+
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "content_protected.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
+                    IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "content_not_protected.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
                 }
             }
 

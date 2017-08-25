@@ -4,8 +4,9 @@ getwd()
 # pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k)
 # pr_1__2017_08_23T11_50_08_412Z.TSV (on text dataset) (40 iterations x configuration type)
 # pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
+# pr_1__2017_08_25T13_39_53_118Z.TSV (text with manifest info)
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_08_23T12_03_11_247Z.TSV", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_08_23T11_50_08_412Z_cleaned.TSV", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
@@ -26,13 +27,16 @@ plotTop <- max(d_processed$mean) + max(d_processed$se) +
   d_processed[d_processed$mean == max(d_processed$mean), 5] * 4
 
 par(ask=F) # Do not ask to print plot on the console
-par(mar=c(12,4,4,2)+3) # Add space to show all labels
+# mar=c(bottom, left, top, right)
+# mgp=c(axis.title.position, axis.label.position, axis.line.position))
+par(mar=c(12,4,4,2)+3, mgp=c(5,1,0)) # Add space to show all labels
 barCenters <- barplot(height = d_processed$mean,
                       names.arg = d_processed$names,
                       beside = true, las =2,
                       ylim = c(0, plotTop),
-                      main = "Predicate performance against different settings",
-                      ylab = "Time (s) per X",
+                      main = "Predicate performance against different settings.",
+                      sub = "This diagram shows the average time to run a predicate of some given type against the entire dataset",
+                      ylab = "Time (s)",
                       border = "black",
                       axes = T)
 
@@ -62,6 +66,12 @@ fit.weibull <- fitdist(x$Measures, "weibull")
 plot(fit.weibull)
 
 # P-test for two sets
-x = subset(d, ContextName=="META")
-y = subset(d, ContextName=="ALL")
+x = subset(d, ContextName=="ALL")
+y = subset(d, ContextName=="META")
 t.test(x$Measures, y$Measures)
+
+# linear model test
+# https://www.r-bloggers.com/one-way-analysis-of-variance-anova/
+model <- lm(formula = Measures ~ ContextName, data = d)
+summary(model)
+anova(model)

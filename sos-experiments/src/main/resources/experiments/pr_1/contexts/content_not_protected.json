@@ -1,0 +1,4 @@
+{
+  "name": "MANIFEST_Protected",
+  "predicate": "CommonPredicates.ContentIsNotProtected(guid);"
+}
