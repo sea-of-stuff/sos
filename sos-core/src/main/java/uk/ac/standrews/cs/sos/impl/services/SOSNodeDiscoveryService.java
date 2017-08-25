@@ -156,17 +156,17 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                 Node node = getNode(nodeRef);
                 switch(type) {
                     case STORAGE:
-                        if (node.isStorage()) filteredNodes.add(nodeRef);
+                        if (node.isStorage()) filteredNodes.add(nodeRef); break;
                     case NDS:
-                        if (node.isNDS()) filteredNodes.add(nodeRef);
+                        if (node.isNDS()) filteredNodes.add(nodeRef); break;
                     case CMS:
-                        if (node.isCMS()) filteredNodes.add(nodeRef);
+                        if (node.isCMS()) filteredNodes.add(nodeRef); break;
                     case DDS:
-                        if (node.isDDS()) filteredNodes.add(nodeRef);
+                        if (node.isDDS()) filteredNodes.add(nodeRef); break;
                     case RMS:
-                        if (node.isRMS()) filteredNodes.add(nodeRef);
+                        if (node.isRMS()) filteredNodes.add(nodeRef); break;
                     case MMS:
-                        if (node.isMMS()) filteredNodes.add(nodeRef);
+                        if (node.isMMS()) filteredNodes.add(nodeRef); break;
                 }
             } catch (NodeNotFoundException e) {
                 SOS_LOG.log(LEVEL.WARN, "Unable to get node with ref: " + nodeRef);
