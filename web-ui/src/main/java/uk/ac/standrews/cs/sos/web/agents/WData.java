@@ -35,6 +35,56 @@ import static uk.ac.standrews.cs.sos.web.WebApp.DATA_LIMIT;
  */
 public class WData {
 
+    public static String AddVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, IOException, ServletException, ManifestNotFoundException {
+
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+        String roleidSign = request.params("roleidsign");
+        String roleid = request.params("roleid");
+        String prev = request.params("prev");
+
+        boolean sign = !roleidSign.equals("0");
+        boolean protect = !roleid.equals("0");
+        boolean update = !prev.equals("0");
+
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setData(new InputStreamData(is));
+
+
+            if (protect) {
+                IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
+                Role roleToProtect = sos.getRMS().getRole(roleGUID);
+                atomBuilder.setRole(roleToProtect);
+            }
+
+            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
+
+            if (sign) {
+                IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
+                Role roleToSign = sos.getRMS().getRole(signerGUID);
+                versionBuilder.setRole(roleToSign);
+            }
+
+            if (update) {
+                IGUID prevGUID = GUIDFactory.recreateGUID(prev);
+                Version version = (Version) sos.getDDS().getManifest(prevGUID);
+
+                Set<IGUID> prevs = new LinkedHashSet<>();
+                prevs.add(prevGUID);
+
+                versionBuilder.setInvariant(version.getInvariantGUID())
+                                .setPrevious(prevs);
+            }
+
+            sos.getAgent().addData(versionBuilder);
+        }
+
+
+        return "";
+    }
+
     public static String GetData(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException {
 
         String guidParam = req.params("id");
@@ -149,109 +199,6 @@ public class WData {
         }
 
         return "N/A";
-    }
-
-    public static String AddAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException {
-
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-        try (InputStream is = request.raw().getPart("file").getInputStream()) {
-            // Use the input stream to create a file
-            AtomBuilder atomBuilder = new AtomBuilder().setData(new InputStreamData(is));
-            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
-
-            sos.getAgent().addData(versionBuilder);
-        }
-
-        return "Atom Added";
-    }
-
-    public static String AddProtectedAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
-
-        IGUID roleid = GUIDFactory.recreateGUID(request.params("roleid"));
-        Role role = sos.getRMS().getRole(roleid);
-
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-        try (InputStream is = request.raw().getPart("file").getInputStream()) {
-            // Use the input stream to create a file
-            AtomBuilder atomBuilder = new AtomBuilder()
-                    .setData(new InputStreamData(is))
-                    .setRole(role);
-
-            VersionBuilder versionBuilder = new VersionBuilder()
-                    .setAtomBuilder(atomBuilder);
-
-            sos.getAgent().addData(versionBuilder);
-        }
-
-        return "Atom Added";
-    }
-
-    public static String AddSignedAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
-
-        IGUID roleidSign = GUIDFactory.recreateGUID(request.params("roleidSign"));
-        Role signer = sos.getRMS().getRole(roleidSign);
-
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-        try (InputStream is = request.raw().getPart("file").getInputStream()) {
-            // Use the input stream to create a file
-            AtomBuilder atomBuilder = new AtomBuilder()
-                    .setData(new InputStreamData(is));
-            VersionBuilder versionBuilder = new VersionBuilder()
-                    .setAtomBuilder(atomBuilder)
-                    .setRole(signer);
-
-            sos.getAgent().addData(versionBuilder);
-        }
-
-        return "Atom Added";
-    }
-
-
-    public static String AddProtectedAndSignedAtomVersion(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
-
-        IGUID roleid = GUIDFactory.recreateGUID(request.params("roleid"));
-        Role role = sos.getRMS().getRole(roleid);
-
-        IGUID roleidSign = GUIDFactory.recreateGUID(request.params("roleidSign"));
-        Role signer = sos.getRMS().getRole(roleidSign);
-
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-        try (InputStream is = request.raw().getPart("file").getInputStream()) {
-            // Use the input stream to create a file
-            AtomBuilder atomBuilder = new AtomBuilder()
-                    .setData(new InputStreamData(is))
-                    .setRole(role);
-
-            VersionBuilder versionBuilder = new VersionBuilder()
-                    .setAtomBuilder(atomBuilder)
-                    .setRole(signer);
-
-            sos.getAgent().addData(versionBuilder);
-        }
-
-        return "Atom Added";
-    }
-
-    public static Object UpdateAtomVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, IOException, ServletException, ManifestNotFoundException {
-
-        IGUID prev = GUIDFactory.recreateGUID(request.params("prev"));
-        Version version = (Version) sos.getDDS().getManifest(prev);
-
-        Set<IGUID> prevs = new LinkedHashSet<>();
-        prevs.add(prev);
-
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-        try (InputStream is = request.raw().getPart("file").getInputStream()) {
-            // Use the input stream to create a file
-            AtomBuilder atomBuilder = new AtomBuilder().setData(new InputStreamData(is));
-            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder)
-                    .setInvariant(version.getInvariantGUID())
-                    .setPrevious(prevs);
-
-            sos.getAgent().addData(versionBuilder);
-        }
-
-        return "Atom Added";
     }
 
     public static String GetData(SOSLocalNode sos, Version version) throws AtomNotFoundException {

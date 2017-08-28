@@ -46,11 +46,8 @@ public class WebApp {
         get("/usro", (req, res) -> WUsersRoles.Render(sos));
 
         // ACTIONS
-        post("/version", (req, res) -> WData.AddAtomVersion(req, sos));
-        post("/version/protected/:roleid", (req, res) -> WData.AddProtectedAtomVersion(req, sos));
-        post("/version/sign/:roleidSign", (req, res) -> WData.AddSignedAtomVersion(req, sos));
-        post("/version/protected/:roleid/sign/:roleidSign", (req, res) -> WData.AddProtectedAndSignedAtomVersion(req, sos));
-        post("/updateVersion/prev/:prev", (req, res) -> WData.UpdateAtomVersion(req, sos));
+        // Use "0" for no param
+        post("/version/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.GetData(req, sos));
         get("/data/:id/download", (req, res) -> WData.GetDataDownload(req, res, sos));

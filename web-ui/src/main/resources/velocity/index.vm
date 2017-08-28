@@ -190,31 +190,24 @@
             signManifest = $("#signManifest").is(":checked");
             updateVersion = $("#updateVersion").is(":checked");
 
-            if (updateVersion) {
+            var roleid = 0;
+            if (protectData) {
+                roleid = $("#roleToProtectData option:selected").val();
+            }
 
-                // Get the manifest visualised on the right pane
+            var roleidSign = 0;
+            if (signManifest) {
+               roleidSign = $("#roleToSignManifest option:selected").val();
+            }
+
+            var prev = 0;
+            if (updateVersion) {
                 var manifestJSON = $("#manifest").text();
                 var obj = JSON.parse(manifestJSON);
-
-                return "/updateVersion/prev/" + obj.GUID;
+                prev = obj.GUID;
             }
 
-            if (protectData && signManifest) {
-                var roleidSign = $( "#roleToSignManifest option:selected" ).val();
-                var roleid = $( "#roleToProtectData option:selected" ).val();
-                return "/version/protected/" + roleid + "/sign/" + roleidSign;
-
-            } else if (protectData) {
-                var roleid = $( "#roleToProtectData option:selected" ).val();
-                return "/version/protected/" + roleid;
-
-            } else if (signManifest) {
-
-                var roleidSign = $( "#roleToSignManifest option:selected" ).val();
-                return "/version/sign/" + roleidSign;
-            } else {
-                return "/version"; // Set the url
-            }
+            return "/version/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev;
         },
         thumbnailWidth: 100,
         thumbnailHeight: 100,
