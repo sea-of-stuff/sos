@@ -43,7 +43,7 @@
                 #foreach($context in $contexts)
                     <li class="list-group-item flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
-                        <pre class="mb-1" style="white-space: pre-wrap; word-wrap: break-word;">$context.toString()</pre>
+                        <pre class="mb-1" style="white-space: pre-wrap; word-wrap: break-word;">$context.getName()</pre>
                         <button id="viewContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-success btn-sm">View</button>
                         <button id="hideContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-warning btn-sm">Hide</button>
                         </div>

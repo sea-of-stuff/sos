@@ -201,7 +201,7 @@ public class ContextLoader {
      * @param className
      * @param jsonNode
      * @param policyActions
-     * @param guid
+     * @param guid of the context
      * @param contextName
      * @param domain
      * @param codomain

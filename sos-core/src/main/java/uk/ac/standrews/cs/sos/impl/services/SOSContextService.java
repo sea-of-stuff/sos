@@ -30,6 +30,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.Pair;
 
@@ -92,7 +93,19 @@ public class SOSContextService implements ContextService {
 
         localContextsDirectory = new LocalContextsDirectory(localStorage, policyActions);
         inMemoryCache = new CacheContextsDirectory();
-        contextsContents = new ContextsContents(); // TODO - load mappings/indices
+
+        try {
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            if (cacheDir.contains(CMS_INDEX_FILE)) {
+                IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+                contextsContents = (ContextsContents) Persistence.Load(contextsContentsFile);
+            } else {
+                contextsContents = new ContextsContents();
+            }
+
+        } catch (DataStorageException | IOException | ClassNotFoundException e) {
+            throw new ServiceException("ContextService - Unable to load CMS Index");
+        }
 
         try {
             for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
@@ -193,9 +206,8 @@ public class SOSContextService implements ContextService {
 
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
-
-            IFile contextsContents = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-            this.contextsContents.persist(contextsContents);
+            IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+            Persistence.Persist(contextsContents, contextsContentsFile);
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
