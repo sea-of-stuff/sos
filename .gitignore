@@ -173,6 +173,9 @@ dump.db
 sos-core/src/test/resources/*.conf
 velocity.log*
 
+# MaxMind GeoIP DB
+*.mmdb
+
 # Experiments
 .key
 experiments/plots
