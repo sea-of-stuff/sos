@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -59,6 +60,8 @@ public abstract class BaseContext implements Context {
      */
     public BaseContext(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
         this.jsonNode = jsonNode;
+        this.jsonNode = ((ObjectNode)jsonNode).put("guid", guid.toMultiHash());
+
         this.policyActions = policyActions;
 
         this.guid = guid;

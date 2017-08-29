@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
@@ -165,7 +166,14 @@ public class SOSContextService implements ContextService {
         NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
         ContextLoader.LoadContext(jsonNode);
-        Context context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
+
+        Context context;
+        if (jsonNode.has("guid")) {
+            IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
+            context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextGUID, contextName, domain, codomain);
+        } else {
+            context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
+        }
 
         return addContext(context);
     }

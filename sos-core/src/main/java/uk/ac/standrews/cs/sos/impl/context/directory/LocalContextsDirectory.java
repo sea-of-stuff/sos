@@ -67,13 +67,13 @@ public class LocalContextsDirectory {
 
             // parse from json
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(new String(data.getState()));
+            IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
             String contextName = WordUtils.capitalize(jsonNode.get(CONTEXT_JSON_NAME).textValue());
             NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
             NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
             ContextLoader.LoadContext(jsonNode);
-            // TODO - have guid as part of the context JSON
-            Context context = ContextLoader.Instance(contextName, jsonNode, policyActions, guid /* THIS IS IMPORTANT, AS WE ALREADY KNOW THE GUID OF THE CONTEXT */, contextName, domain, codomain);
+            Context context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextGUID /* THIS IS IMPORTANT, AS WE ALREADY KNOW THE GUID OF THE CONTEXT */, contextName, domain, codomain);
 
             return context;
 
