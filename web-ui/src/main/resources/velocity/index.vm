@@ -211,7 +211,7 @@
         },
         thumbnailWidth: 100,
         thumbnailHeight: 100,
-        parallelUploads: 5,
+        parallelUploads: 20,
         previewTemplate: previewTemplate,
         autoQueue: false, // Make sure the files aren't queued until manually added
         previewsContainer: "#previews", // Define the container to display the previews
