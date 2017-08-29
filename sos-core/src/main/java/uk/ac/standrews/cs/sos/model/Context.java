@@ -41,6 +41,8 @@ public interface Context {
      */
     String getName();
 
+    String getNotUniqueName();
+
     /**
      * Return the domain of this context
      *

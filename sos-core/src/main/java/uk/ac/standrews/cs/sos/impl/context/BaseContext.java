@@ -75,10 +75,14 @@ public abstract class BaseContext implements Context {
         return guid;
     }
 
-    // FIXME - rename
     @Override
     public String getName() {
         return name + "-" + guid.toMultiHash();
+    }
+
+    @Override
+    public String getNotUniqueName() {
+        return name;
     }
 
     @Override

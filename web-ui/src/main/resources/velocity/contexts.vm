@@ -42,11 +42,22 @@
             <ul class="list-group" id="allcontexts">
                 #foreach($context in $contexts)
                     <li class="list-group-item flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                        <pre class="mb-1" style="white-space: pre-wrap; word-wrap: break-word;">$context.getName()</pre>
-                        <button id="viewContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-success btn-sm">View</button>
-                        <button id="hideContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-warning btn-sm">Hide</button>
-                        <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Run Predicate</button>
+                        <div class="d-flex justify-content-end">
+                            <strong class="mr-auto p-2">$context.getNotUniqueName()</strong>
+                            <div class="p-2 btn-group" role="group">
+                                <button class="btn btn-success btn-sm" id="viewContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye" aria-hidden="true"></i> View</button>
+                                <button class="btn btn-light     btn-sm" id="hideContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye-slash" aria-hidden="true"></i> Hide</button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <i>$context.guid().toMultiHash()</i>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <div class="btn-group" role="group">
+                                <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Predicate</button>
+                                <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Policy</button>
+                                <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Policy (check)</button>
+                            </div>
                         </div>
                     </li>
                 #end
@@ -163,11 +174,12 @@
             contextsFound = JSON.parse(data);
             $.each(contextsFound, function(key, value) {
 
-                filter = value.toUpperCase();
+                context = JSON.parse(value);
+                filter = context.name.toUpperCase();
                 ul = document.getElementById("allcontexts");
                 li = ul.getElementsByTagName("li");
                 for (i = 0; i < li.length; i++) {
-                    a = li[i].getElementsByTagName("pre")[0];
+                    a = li[i].getElementsByTagName("strong")[0];
                     if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         li[i].style.display = "";
                     }
