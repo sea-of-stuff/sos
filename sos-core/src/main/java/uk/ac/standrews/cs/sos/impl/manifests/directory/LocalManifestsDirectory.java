@@ -36,7 +36,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
      *
      * @param localStorage local storage used by this node
      */
-    public LocalManifestsDirectory(LocalStorage localStorage) {
+    public LocalManifestsDirectory(final LocalStorage localStorage) {
         this.localStorage = localStorage;
     }
 

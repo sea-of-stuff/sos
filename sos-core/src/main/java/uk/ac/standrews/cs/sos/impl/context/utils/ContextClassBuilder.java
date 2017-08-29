@@ -2,8 +2,17 @@ package uk.ac.standrews.cs.sos.impl.context.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.text.WordUtils;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * This utility class provides the components needed to construct a properly working Java class for a context.
@@ -27,11 +36,11 @@ public class ContextClassBuilder {
     private static final String VAL = "_VAL_";
     private static final String PRIVATE_STRING_VAR = VAR_NAME + " = \"" + VAL + "\";";
 
-    private static final String CONSTRUCTOR_BODY = "super(policyActions, name, domain, codomain);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
+    private static final String CONSTRUCTOR_BODY = "super(jsonNode, policyActions, name, domain, codomain);";
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
-    private static final String CONSTRUCTOR_BODY_1 = "super(policyActions, guid, name, domain, codomain);";
-    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY_1 + NEW_LINE + "}" + NEW_LINE;
+    private static final String CONSTRUCTOR_BODY_1 = "super(jsonNode, policyActions, guid, name, domain, codomain);";
+    private static final String CONSTRUCTOR_1 = "public " + CLASS_NAME_TAG + " (JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY_1 + NEW_LINE + "}" + NEW_LINE;
 
 
     private static final String POLICIES_TAG = "_POLICIES_";
@@ -89,6 +98,7 @@ public class ContextClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "com.fasterxml.jackson.databind.JsonNode"));
 
         if (node.has(CONTEXT_JSON_DEPENDENCIES)) {
             JsonNode dependencies = node.get(CONTEXT_JSON_DEPENDENCIES);
@@ -138,5 +148,26 @@ public class ContextClassBuilder {
         clazz.append(NEW_LINE);
 
         return clazz.toString();
+    }
+
+    public static NodesCollection makeNodesCollection(JsonNode jsonNode, String tag) throws GUIDGenerationException, NodeNotFoundException, NodesCollectionException {
+        NodesCollection retval;
+        NodesCollection.TYPE type = NodesCollection.TYPE.LOCAL;
+        Set<IGUID> nodes = new LinkedHashSet<>();
+        if (jsonNode.has(tag)) {
+            type = NodesCollection.TYPE.valueOf(jsonNode.get(tag).get("type").asText());
+            JsonNode nodeRefs = jsonNode.get(tag).get("nodes");
+
+            for(JsonNode nodeRef:nodeRefs) {
+                IGUID ref = GUIDFactory.recreateGUID(nodeRef.asText());
+                nodes.add(ref);
+            }
+
+            retval = new NodesCollectionImpl(type, nodes);
+        } else {
+            retval = new NodesCollectionImpl(type);
+        }
+
+        return retval;
     }
 }

@@ -122,7 +122,6 @@ public class ContextLoader {
 
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            // System.out.println("COMPILER: " + compiler);
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
 
@@ -175,6 +174,7 @@ public class ContextLoader {
      * Creates context instance
      *
      * @param className
+     * @param jsonNode
      * @param policyActions
      * @param contextName
      * @param domain
@@ -182,13 +182,13 @@ public class ContextLoader {
      * @return
      * @throws ContextLoaderException
      */
-    public static Context Instance(String className, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
+    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
             ClassLoader classLoader = ClassLoaderForContexts();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
-            Context context = (Context) constructor.newInstance(policyActions, contextName, domain, codomain);
+            Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
+            Context context = (Context) constructor.newInstance(jsonNode, policyActions, contextName, domain, codomain);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);
@@ -199,6 +199,7 @@ public class ContextLoader {
      * Creates context instance
      *
      * @param className
+     * @param jsonNode
      * @param policyActions
      * @param guid
      * @param contextName
@@ -207,13 +208,13 @@ public class ContextLoader {
      * @return
      * @throws ContextLoaderException
      */
-    public static Context Instance(String className, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
+    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
             ClassLoader classLoader = ClassLoaderForContexts();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
-            Context context = (Context) constructor.newInstance(policyActions, guid, contextName, domain, codomain);
+            Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
+            Context context = (Context) constructor.newInstance(jsonNode, policyActions, guid, contextName, domain, codomain);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
             throw new ContextLoaderException("Unable to create instance for class " + className);

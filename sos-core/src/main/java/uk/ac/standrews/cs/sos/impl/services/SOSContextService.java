@@ -4,25 +4,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
-import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
+import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
-import uk.ac.standrews.cs.sos.impl.context.directory.ContextsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
+import uk.ac.standrews.cs.sos.impl.context.directory.LocalContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -39,7 +35,10 @@ import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -64,11 +63,10 @@ public class SOSContextService implements ContextService {
 
     private PolicyActions policyActions;
 
+    private LocalContextsDirectory localContextsDirectory;
     // The inMemoryCache keeps the context objects for this node in memory.
-    private ContextsCacheImpl inMemoryCache;
+    private CacheContextsDirectory inMemoryCache;
     private ContextsContents contextsContents; // TODO - rename to something more meaningful?
-
-    // TODO - store contexts definitions in local storage
 
     // This executor service will be used to schedule any background tasks
     private ScheduledExecutorService service;
@@ -90,19 +88,20 @@ public class SOSContextService implements ContextService {
 
         this.localStorage = localStorage;
         this.dataDiscoveryService = dataDiscoveryService;
+        policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
 
-        inMemoryCache = new ContextsCacheImpl(); // TODO - load existing contexts into memory via reflection
+        localContextsDirectory = new LocalContextsDirectory(localStorage, policyActions);
+        inMemoryCache = new CacheContextsDirectory();
         contextsContents = new ContextsContents(); // TODO - load mappings/indices
 
-        policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage); // TODO - the policy language should be made available to all the context instances
-
-
         try {
-            ContextLoader.LoadMultipleContexts("PATH TO CONTEXTS"); // TODO - path from settings
-            // TODO - make instances for all loaded contexts
-            // TODO - need to save GUIDs back to contexts (this is simply part of the JSON)
+            for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
 
-        } catch (ContextLoaderException e) {
+                Context context = localContextsDirectory.getContext(contextsToLoad);
+                inMemoryCache.addContext(context);
+            }
+
+        } catch (DataStorageException | GUIDGenerationException | ContextNotFoundException e) {
             throw new ServiceException("ContextService - Unable to load contexts correctly");
         }
 
@@ -128,7 +127,7 @@ public class SOSContextService implements ContextService {
                 .stream()
                 .map(c -> {
                     try {
-                        return searchContexts(c);
+                        return getContext(c);
                     } catch (ContextNotFoundException e) {
                         return null;
                     }
@@ -138,7 +137,10 @@ public class SOSContextService implements ContextService {
     @Override
     public IGUID addContext(Context context) throws Exception {
 
-        return inMemoryCache.addContext(context);
+        localContextsDirectory.addContext(context);
+        inMemoryCache.addContext(context);
+
+        return context.guid();
     }
 
     @Override
@@ -150,7 +152,7 @@ public class SOSContextService implements ContextService {
         NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
         ContextLoader.LoadContext(jsonNode);
-        Context context = ContextLoader.Instance(contextName, policyActions, contextName, domain, codomain);
+        Context context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
 
         return addContext(context);
     }
@@ -162,16 +164,22 @@ public class SOSContextService implements ContextService {
         return addContext(node.toString());
     }
 
-    @Override
-    public Context searchContexts(IGUID contextGUID) throws ContextNotFoundException {
+    public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
-        return inMemoryCache.getContext(contextGUID);
+        try {
+            Context context = inMemoryCache.getContext(contextGUID);
+            return context;
+
+        } catch (ContextNotFoundException e) {
+
+            return localContextsDirectory.getContext(contextGUID);
+        }
     }
 
     @Override
     public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
 
-        return inMemoryCache.getContext(contextName);
+        return inMemoryCache.getContexts(contextName);
     }
 
     @Override
@@ -519,24 +527,4 @@ public class SOSContextService implements ContextService {
         return (now - contentLastRun) > maxage;
     }
 
-    private NodesCollection makeNodesCollection(JsonNode jsonNode, String tag) throws GUIDGenerationException, NodeNotFoundException, NodesCollectionException {
-        NodesCollection retval;
-        NodesCollection.TYPE type = NodesCollection.TYPE.LOCAL;
-        Set<IGUID> nodes = new LinkedHashSet<>();
-        if (jsonNode.has(tag)) {
-            type = NodesCollection.TYPE.valueOf(jsonNode.get(tag).get("type").asText());
-            JsonNode nodeRefs = jsonNode.get(tag).get("nodes");
-
-            for(JsonNode nodeRef:nodeRefs) {
-                IGUID ref = GUIDFactory.recreateGUID(nodeRef.asText());
-                nodes.add(ref);
-            }
-
-            retval = new NodesCollectionImpl(type, nodes);
-        } else {
-            retval = new NodesCollectionImpl(type);
-        }
-
-        return retval;
-    }
 }

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.context.*;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -17,8 +18,8 @@ public class BinaryReplicationContext extends BaseContext {
 
     private static final int NUMBER_OF_REPLICAS = 3;
 
-    public BinaryReplicationContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
-        super(policyActions, name, domain, codomain);
+    public BinaryReplicationContext(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        super(jsonNode, policyActions, name, domain, codomain);
     }
 
     @Override

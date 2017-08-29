@@ -55,7 +55,7 @@ public interface ContextService {
      * @return the matching context
      * @throws ContextNotFoundException if no context could be found
      */
-    Context searchContexts(IGUID contextGUID) throws ContextNotFoundException;
+    Context getContext(IGUID contextGUID) throws ContextNotFoundException;
 
     /**
      * Get a context given its name

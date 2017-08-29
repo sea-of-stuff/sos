@@ -14,4 +14,8 @@ public class ContextException extends SOSException {
     public ContextException(Throwable throwable) {
         super(throwable);
     }
+
+    public ContextException(String message) {
+        super(message);
+    }
 }

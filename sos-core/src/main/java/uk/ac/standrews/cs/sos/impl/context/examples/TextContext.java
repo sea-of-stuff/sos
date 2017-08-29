@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.context.*;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -15,8 +16,8 @@ import java.util.Arrays;
  */
 public class TextContext extends BaseContext {
 
-    public TextContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
-        super(policyActions, name, domain, codomain);
+    public TextContext(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        super(jsonNode, policyActions, name, domain, codomain);
     }
 
     @Override

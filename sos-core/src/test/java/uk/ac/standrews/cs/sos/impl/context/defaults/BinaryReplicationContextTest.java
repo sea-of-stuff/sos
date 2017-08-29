@@ -16,7 +16,7 @@ public class BinaryReplicationContextTest {
 
     @Test
     public void basicContextConstructor() throws NodesCollectionException {
-        Context test = new BinaryReplicationContext(null, "test", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context test = new BinaryReplicationContext(null, null,  "test", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(test.predicate());
     }

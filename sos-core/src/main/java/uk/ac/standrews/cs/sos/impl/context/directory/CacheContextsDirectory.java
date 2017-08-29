@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.directory;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
 
 import java.util.HashMap;
@@ -11,12 +12,12 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextsCacheImpl {
+public class CacheContextsDirectory {
 
     // GUID --> Context
     private transient HashMap<IGUID, Context> contexts;
 
-    public ContextsCacheImpl() {
+    public CacheContextsDirectory() {
         contexts = new HashMap<>();
     }
 
@@ -26,15 +27,20 @@ public class ContextsCacheImpl {
         return context.guid();
     }
 
-    public Context getContext(IGUID guid) {
-        return contexts.get(guid);
+    public Context getContext(IGUID guid) throws ContextNotFoundException {
+
+        if (contexts.containsKey(guid)) {
+            return contexts.get(guid);
+        }
+
+        throw new ContextNotFoundException("No context with guid " + guid.toMultiHash() + " found in cache");
     }
 
     public Set<IGUID> getContexts() {
         return contexts.keySet();
     }
 
-    public Set<Context> getContext(String name) {
+    public Set<Context> getContexts(String name) {
 
         Set<Context> ret = new LinkedHashSet<>();
         for(Map.Entry<IGUID, Context> e:contexts.entrySet()) {

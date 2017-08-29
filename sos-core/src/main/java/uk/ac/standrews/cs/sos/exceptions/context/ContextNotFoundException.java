@@ -8,4 +8,8 @@ public class ContextNotFoundException extends ContextException {
     public ContextNotFoundException(Throwable throwable) {
         super(throwable);
     }
+
+    public ContextNotFoundException(String message) {
+        super(message);
+    }
 }

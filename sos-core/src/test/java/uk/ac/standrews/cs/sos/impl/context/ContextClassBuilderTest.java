@@ -37,15 +37,16 @@ public class ContextClassBuilderTest {
                         "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
                         "import java.util.Collections;\n" +
                         "import java.util.Arrays;\n" +
+                        "import com.fasterxml.jackson.databind.JsonNode;\n" +
                         "\n" +
                         "public class Test extends BaseContext {\n" +
                         "\n" +
-                        "public Test (PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
-                        "super(policyActions, name, domain, codomain);\n" +
+                        "public Test (JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
+                        "super(jsonNode, policyActions, name, domain, codomain);\n" +
                         "}\n" +
                         "\n" +
-                        "public Test (PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
-                        "super(policyActions, guid, name, domain, codomain);\n" +
+                        "public Test (JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
+                        "super(jsonNode, policyActions, guid, name, domain, codomain);\n" +
                         "}\n" +
                         "\n" +
                         "@Override\n" +

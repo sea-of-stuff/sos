@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -11,6 +12,8 @@ import uk.ac.standrews.cs.sos.model.SOSPredicate;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class BaseContext implements Context {
+
+    private JsonNode jsonNode;
 
     protected PolicyActions policyActions;
 
@@ -34,25 +37,28 @@ public abstract class BaseContext implements Context {
     /**
      * Use this constructor when creating a new context object and its GUID is unknown yet
      *
+     * @param jsonNode
      * @param policyActions
      * @param name
      * @param domain
      * @param codomain
      */
-    public BaseContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
-        this(policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain);
+    public BaseContext(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        this(jsonNode, policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain);
     }
 
     /**
      * Use this constructor when creating an already existing object with its GUID known already
      *
+     * @param jsonNode
      * @param policyActions
      * @param guid
      * @param name
      * @param domain
      * @param codomain
      */
-    public BaseContext(PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+    public BaseContext(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        this.jsonNode = jsonNode;
         this.policyActions = policyActions;
 
         this.guid = guid;
@@ -66,6 +72,7 @@ public abstract class BaseContext implements Context {
         return guid;
     }
 
+    // FIXME - rename
     @Override
     public String getName() {
         return name + "-" + guid.toMultiHash();
@@ -88,7 +95,7 @@ public abstract class BaseContext implements Context {
 
     @Override
     public String toString() {
-        return "Context GUID: " + guid + ", Name: " + name;
+        return jsonNode.toString();
     }
 
 }

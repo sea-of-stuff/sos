@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
@@ -14,12 +15,12 @@ import java.util.Collections;
  */
 public class ReferenceContext extends BaseContext {
 
-    public ReferenceContext(PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
-        super(policyActions, name, domain, codomain);
+    public ReferenceContext(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {
+        super(jsonNode, policyActions, name, domain, codomain);
     }
 
-    public ReferenceContext(PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
-        super(policyActions, guid, name, domain, codomain);
+    public ReferenceContext(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {
+        super(jsonNode, policyActions, guid, name, domain, codomain);
     }
 
     @Override
