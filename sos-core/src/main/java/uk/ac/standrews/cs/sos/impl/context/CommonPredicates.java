@@ -1,5 +1,10 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -219,6 +224,82 @@ public class CommonPredicates {
 
             return 0;
         }
+    }
+
+    public static boolean JavaFileHasMethod(IGUID guid, String method) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(guid);
+
+            CompilationUnit compilationUnit = JavaParser.parse(data.toString());
+            return InspectJavaFileForMethod(compilationUnit.getChildNodes(), method);
+
+        } catch (AtomNotFoundException e) {
+
+            return false;
+        }
+
+    }
+
+    public static boolean JavaFileHasClass(IGUID guid, String clazz) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try {
+            Data data = agent.getData(guid);
+
+            CompilationUnit compilationUnit = JavaParser.parse(data.toString());
+            return InspectJavaForClass(compilationUnit.getChildNodes(), clazz);
+
+        } catch (AtomNotFoundException e) {
+
+            return false;
+        }
+
+    }
+
+    private static boolean InspectJavaFileForMethod(List<Node> nodes, String methodName) {
+
+        for(Node node:nodes) {
+
+            if (node instanceof MethodDeclaration) {
+                MethodDeclaration methodDeclaration = (MethodDeclaration) node;
+                if (methodDeclaration.getName().asString().equals(methodName)) {
+                    return true;
+                }
+            }
+
+            boolean retval = InspectJavaFileForMethod(node.getChildNodes(), methodName);
+            if (retval) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean InspectJavaForClass(List<Node> nodes, String className) {
+
+        for(Node node:nodes) {
+
+            if (node instanceof ClassOrInterfaceDeclaration) {
+                ClassOrInterfaceDeclaration classOrInterfaceDeclaration = (ClassOrInterfaceDeclaration) node;
+                if (!classOrInterfaceDeclaration.isInterface()) {
+                    if (classOrInterfaceDeclaration.getName().asString().equals(className)) {
+                        return true;
+                    }
+                }
+            }
+
+            boolean retval = InspectJavaForClass(node.getChildNodes(), className);
+            if (retval) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

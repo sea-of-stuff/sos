@@ -95,7 +95,7 @@
                     <br>
                     <pre><code class="json">
 {
-    "name": "Simone",
+    "name": "Jpeg",
     "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"image/jpeg\"));"
 }
                     </code></pre>
@@ -109,7 +109,7 @@
                     <br>
                     <pre><code class="json">
 {
-    "name": "All",
+    "name": "AllWithManifestReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
     	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
@@ -132,6 +132,20 @@
 {
     "name": "NotProtected",
     "predicate": "CommonPredicates.ContentIsNotProtected(guid);"
+}
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "JavaMethod",
+    "predicate": "CommonPredicates.JavaFileHasMethod(guid, \"MetadataPropertyPredicate\");"
+}
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "JavaClazz",
+    "predicate": "CommonPredicates.JavaFileHasClass(guid, \"CommonPredicates\");"
 }
                     </code></pre>
                 </div>
