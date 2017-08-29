@@ -46,6 +46,8 @@ public class CommonPolicies {
 
     /**
      * Replicate data at least n-times
+     *
+     * TODO - have param for canPersist (e.g. replicate only to nodes that can persist data)
      */
     public static class DataReplicationPolicy implements Policy {
 
@@ -82,6 +84,20 @@ public class CommonPolicies {
         }
     }
 
+    // TODO
+    public static class MetadataReplicationPolicy implements Policy {
+
+        @Override
+        public void apply(Manifest manifest) throws PolicyException {
+
+        }
+
+        @Override
+        public boolean satisfied(Manifest manifest) throws PolicyException {
+            return false;
+        }
+    }
+
     /**
      * Delete content (data or manifest) from some nodes
      */
@@ -115,6 +131,48 @@ public class CommonPolicies {
 
             int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
             return numberReplicas == 0;
+        }
+    }
+
+    // TODO
+    public static class GrantAccessPolicy implements Policy {
+
+        @Override
+        public void apply(Manifest manifest) throws PolicyException {
+
+        }
+
+        @Override
+        public boolean satisfied(Manifest manifest) throws PolicyException {
+            return false;
+        }
+    }
+
+    // TODO
+    public static class ReplicateAllVersionsPolicy implements Policy {
+
+        @Override
+        public void apply(Manifest manifest) throws PolicyException {
+
+        }
+
+        @Override
+        public boolean satisfied(Manifest manifest) throws PolicyException {
+            return false;
+        }
+    }
+
+    // TODO
+    public static class NotifyNodePolicy implements Policy {
+
+        @Override
+        public void apply(Manifest manifest) throws PolicyException {
+
+        }
+
+        @Override
+        public boolean satisfied(Manifest manifest) throws PolicyException {
+            return false;
         }
     }
 }
