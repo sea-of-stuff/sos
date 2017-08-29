@@ -46,6 +46,7 @@
                         <pre class="mb-1" style="white-space: pre-wrap; word-wrap: break-word;">$context.getName()</pre>
                         <button id="viewContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-success btn-sm">View</button>
                         <button id="hideContext" value="$context.guid().toMultiHash()" type="button" class="btn btn-warning btn-sm">Hide</button>
+                        <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Run Predicate</button>
                         </div>
                     </li>
                 #end
@@ -241,6 +242,12 @@
         list.empty();
     });
 
+    $('button[id^="runPredicate"]').click(function() {
+
+        var id = $(this).val();
+        $.get("/context/" + id + "/run/predicate");
+    });
+
 </script>
 
 <script>
@@ -262,7 +269,7 @@
             var chart = new google.visualization.Timeline(container);
             chart.draw(dataTable);
 
-            setTimeout(arguments.callee, 5000);
+            setTimeout(arguments.callee, 2000);
         })();
 
     }

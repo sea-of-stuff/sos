@@ -163,4 +163,12 @@ public class WContexts {
         }
     }
 
+    public static String RunPredicate(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException, ContextNotFoundException {
+        String guidParam = req.params("id");
+        IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
+
+        sos.getCMS().runContextPredicateNow(contextGUID);
+        return "";
+    }
+
 }

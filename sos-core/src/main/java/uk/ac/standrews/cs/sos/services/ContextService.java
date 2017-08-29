@@ -82,6 +82,8 @@ public interface ContextService {
      */
     void flush();
 
+    void runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
+
     /**
      * Run the predicates only against all the versions marked as HEADs in the node
      * @return the total number of times that any predicate has been run

@@ -154,6 +154,9 @@ public class SOSContextService implements ContextService {
         localContextsDirectory.addContext(context);
         inMemoryCache.addContext(context);
 
+        // TODO - have this only if set in the configuration of the node
+        runContextPredicateNow(context);
+
         return context.guid();
     }
 
@@ -226,6 +229,13 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    @Override
+    public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
+
+        Context context = getContext(guid);
+        runContextPredicateNow(context);
+    }
+
     public Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics() {
         return predicateThreadSessionStatistics;
     }
@@ -249,6 +259,19 @@ public class SOSContextService implements ContextService {
     ////////////////////
     // PERIODIC TASKS //
     ////////////////////
+
+    private void runContextPredicateNow(Context context) {
+
+        service.schedule(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY predicate for context " + context.getName());
+
+            long start = System.currentTimeMillis();
+            runPredicate(context);
+            long end = System.currentTimeMillis();
+            predicateThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, 0, TimeUnit.MILLISECONDS);
+    }
 
     /**
      * Run PERIODIC predicates.
@@ -279,30 +302,33 @@ public class SOSContextService implements ContextService {
         int counter = 0;
 
         for (Context context : getContexts()) {
-            long start = System.nanoTime();
+            counter += runPredicate(context);
+        }
 
-            int perContextCounter = 0;
-            Set<IGUID> assets = dataDiscoveryService.getAllAssets();
-            for (IGUID assetInvariant : assets) {
+        return counter;
+    }
 
-                try {
-                    IGUID head = dataDiscoveryService.getHead(assetInvariant);
+    private int runPredicate(Context context) {
 
-                    // SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
-                    runPredicate(context, assetInvariant, head);
-                    counter++;
-                    perContextCounter++;
+        int counter = 0;
+        long start = System.nanoTime();
 
-                    SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
-                } catch (HEADNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
-                }
+        Set<IGUID> assets = dataDiscoveryService.getAllAssets();
+        for (IGUID assetInvariant : assets) {
 
+            try {
+                IGUID head = dataDiscoveryService.getHead(assetInvariant);
+                runPredicate(context, assetInvariant, head);
+                counter++;
+                // SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
+            } catch (HEADNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
             }
 
-            long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration);
         }
+
+        long duration = System.nanoTime() - start;
+        InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration);
 
         return counter;
     }
