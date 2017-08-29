@@ -509,7 +509,7 @@ public class SOSContextService implements ContextService {
     private void runPolicies(Context context, IGUID guid) {
 
         try {
-            Policy[] policies = context.policies();
+            Policy[] policies = context.policies(); // TODO - if no policies, then simply set policySatisfied to true
             for (Policy policy:policies) {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);

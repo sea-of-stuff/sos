@@ -1,22 +1,22 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.protocol.tasks.CheckReplica;
 import uk.ac.standrews.cs.sos.protocol.tasks.VerifyData;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -115,10 +115,15 @@ public class PolicyActions {
 
     public int numberOfReplicas(NodesCollection codomain, IGUID guid) {
 
-        CheckReplica checkReplica = new CheckReplica(codomain, guid);
-        TasksQueue.instance().performSyncTask(checkReplica);
+        int counter = 0;
+        for(IGUID nodeRef:codomain.nodesRefs()) {
 
-        return checkReplica.getNumberOfReplicas();
+            if (nodeHasData(nodeRef, guid)) {
+                counter++;
+            }
+        }
+
+        return counter;
     }
 
     public Data getData(NodesCollection codomain, IGUID guid) throws AtomNotFoundException {
@@ -131,31 +136,6 @@ public class PolicyActions {
     public Manifest getManifest(NodesCollection codomain, IGUID guid) throws ManifestNotFoundException {
 
         return dataDiscoveryService.getManifest(codomain, guid);
-    }
-
-    /**
-     * Encrypt the given data using the role
-     *
-     * @param atom
-     * @param role
-     */
-    public SecureAtom protect(Atom atom, Role role) throws ManifestPersistException, StorageException, ManifestNotMadeException {
-
-        return null;
-        //return storage.secureAtom(atom, role);
-    }
-
-    /**
-     * Decrypt the secure manifest using the given role
-     *
-     * The role must have the secret key to decrypt the secure manifest
-     *
-     * @param manifest
-     * @param role
-     */
-    public void unprotect(SecureManifest manifest, Role role) {
-
-        // TODO - replace encrypted data/manifest with the unencrypted one
     }
 
     public Node getNode(IGUID guid) throws NodeNotFoundException {

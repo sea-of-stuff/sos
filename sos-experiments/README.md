@@ -8,13 +8,12 @@ Further info about the experiments is found in the experiments chapter of this w
 
 ### PR_1
 
+Running different types of predicates (data, metadata, none, data and metadata, etc) against some datasets.
 
 
-### DO_2
+### PO_1
 
-### DO_3
 
-### DO_4
 
 ### Scale_1
 
