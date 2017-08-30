@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static uk.ac.standrews.cs.sos.web.WebApp.DATA_LIMIT;
+import static uk.ac.standrews.cs.sos.web.WebApp.LARGE_DATA_LIMIT;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -96,7 +96,7 @@ public class WData {
             Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
             if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-                return GetData(sos, version);
+                return GetData(sos, version, LARGE_DATA_LIMIT);
             }
         }
 
@@ -201,7 +201,7 @@ public class WData {
         return "N/A";
     }
 
-    public static String GetData(SOSLocalNode sos, Version version) throws AtomNotFoundException {
+    public static String GetData(SOSLocalNode sos, Version version, int limit) throws AtomNotFoundException {
 
         Data data = sos.getStorage().getAtomContent(version.getContentGUID());
 
@@ -213,7 +213,7 @@ public class WData {
             }
         } catch (MetadataNotFoundException ignored) { }
 
-        return GetData(type, data);
+        return GetData(type, data, limit);
     }
 
     public static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
@@ -228,10 +228,10 @@ public class WData {
             }
         } catch (MetadataNotFoundException ignored) { }
 
-        return GetData(type, data);
+        return GetData(type, data, LARGE_DATA_LIMIT);
     }
 
-    private static String GetData(String type, Data data) {
+    private static String GetData(String type, Data data, int limit) {
 
         String outputData = "Cannot render this data type";
 
@@ -244,7 +244,7 @@ public class WData {
             case "text/plain; charset=UTF-8":
             case "text/plain; charset=windows-1252":
                 outputData = "<pre style=\"white-space: pre-wrap; word-wrap: break-word;\">";
-                outputData += (data.toString().length() > DATA_LIMIT ? data.toString().substring(0, DATA_LIMIT) + " <br><strong>.... OTHER DATA FOLLOWING</strong>" : data.toString());
+                outputData += (data.toString().length() > limit ? data.toString().substring(0, limit) + " <br><strong>.... OTHER DATA FOLLOWING</strong>" : data.toString());
                 outputData += "</pre>";
                 break;
             case "image/png":

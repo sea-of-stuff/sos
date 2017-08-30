@@ -11,7 +11,8 @@ import static uk.ac.standrews.cs.sos.rest.RESTConfig.sos;
 
 public class WebApp {
 
-    public static final int DATA_LIMIT = 512;
+    public static final int SHORT_DATA_LIMIT = 256;
+    public static final int LARGE_DATA_LIMIT = 1024;
 
     public static void RUN(SOSLocalNode sos, IFileSystem fileSystem, int port) {
 

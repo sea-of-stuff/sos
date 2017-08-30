@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.web.WebApp.SHORT_DATA_LIMIT;
 import static uk.ac.standrews.cs.sos.web.agents.WData.GetData;
 
 /**
@@ -37,7 +38,7 @@ public class WHome {
 
                 Manifest manifest = sos.getDDS().getManifest(version.getContentGUID());
                 if (manifest.getType().equals(ManifestType.ATOM)) {
-                    String outputData = GetData(sos, version);
+                    String outputData = GetData(sos, version, SHORT_DATA_LIMIT);
                     versionModel.put("data", outputData);
                 }
 

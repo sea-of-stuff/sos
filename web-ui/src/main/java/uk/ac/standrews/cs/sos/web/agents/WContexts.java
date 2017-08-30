@@ -36,7 +36,7 @@ public class WContexts {
         return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
     }
 
-    public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException {
+    public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException, ContextNotFoundException {
         String guidParam = req.params("id");
         IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
 
@@ -49,6 +49,10 @@ public class WContexts {
         }
 
         model.put("contents", contents);
+
+        Context context = sos.getCMS().getContext(contextGUID);
+        model.put("context_json", context.toString());
+
         return JSONHelper.JsonObjMapper().writeValueAsString(model);
     }
 

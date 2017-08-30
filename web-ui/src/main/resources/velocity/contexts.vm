@@ -64,6 +64,7 @@
             </ul>
             <br>
             <h3>Contents for Context <strong class="text-success"><span id="contextid"></span></strong>:</h3>
+            <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json" id="context_json"></code></pre>
             <ul class="list-group" id="contents"></ul>
 
             <hr>
@@ -242,9 +243,15 @@
 
             list = $('#contents');
             list.empty();
-            contexts = JSON.parse(data);
+            context = JSON.parse(data);
 
-            $.each(contexts.contents, function(key, value) {
+            var obj = JSON.parse(context.context_json);
+            var pretty = JSON.stringify(obj, undefined, 4);
+
+            $('#context_json').html(pretty);
+            hljs.highlightBlock($('#context_json')[0]);
+
+            $.each(context.contents, function(key, value) {
                 list.append("<li class=\"list-group-item flex-column align-items-start\" id='" + key + "'>" +
                         "<div class=\"d-flex w-100 justify-content-between\">" +
                         "<h5 class=\"mb-1\">" + key + "</h5>" +
@@ -307,7 +314,7 @@
             var chart = new google.visualization.Timeline(container);
             chart.draw(dataTable);
 
-            setTimeout(arguments.callee, 2000);
+            setTimeout(arguments.callee, 1000);
         })();
 
     }
