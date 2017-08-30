@@ -4,6 +4,9 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 
@@ -65,13 +68,15 @@ public class CommonPolicies {
         public void apply(Manifest manifest) throws PolicyException {
 
             try {
-                if (manifest.getType().equals(ManifestType.ATOM)) {
-                    Data data = ((Atom) manifest).getData();
+
+                Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+                if (contentManifest.getType().equals(ManifestType.ATOM)) {
+                    Data data = ((Atom) contentManifest).getData();
 
                     NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
                     policyActions.replicateData(data, nodes, factor);
                 }
-            } catch (IOException e) {
+            } catch (IOException | ManifestNotFoundException e) {
                 throw new PolicyException("Policy was unable to replicate data for manifest with guid " + manifest.guid());
             }
         }
@@ -134,16 +139,37 @@ public class CommonPolicies {
         }
     }
 
-    // TODO
     public static class GrantAccessPolicy implements Policy {
+
+        private PolicyActions policyActions;
+        private IGUID granter;
+        private IGUID grantee;
+
+        public GrantAccessPolicy(PolicyActions policyActions, IGUID granter, IGUID grantee) {
+            this.policyActions = policyActions;
+            this.granter = granter;
+            this.grantee = grantee;
+        }
 
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
+            try {
+                Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+                if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+
+                    policyActions.grantAccess((SecureAtom) contentManifest, granter, grantee);
+                }
+
+            } catch (RoleNotFoundException | ProtectionException | ManifestNotFoundException e) {
+                throw new PolicyException("Policy. Granter " + granter.toMultiHash() + " was unable to grant access to grantee " + grantee.toMultiHash() + " for atom " + manifest.guid());
+            }
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
+
+            // TODO Get secure manifest and check list of roles/keys
             return false;
         }
     }

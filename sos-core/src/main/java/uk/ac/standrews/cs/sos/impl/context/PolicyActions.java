@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -12,10 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.VerifyData;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
@@ -151,6 +149,18 @@ public class PolicyActions {
     public Role getRole(IGUID guid) throws RoleNotFoundException {
 
         return usersRolesService.getRole(guid);
+    }
+
+    public void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
+
+        Role granterRole = usersRolesService.getRole(granter);
+        Role granteeRole = usersRolesService.getRole(grantee);
+        storage.grantAccess(secureAtom, granterRole, granteeRole);
+    }
+
+    public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
+
+        return dataDiscoveryService.getManifest(version.getContentGUID());
     }
 
 
