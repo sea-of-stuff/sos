@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
+ * note: this is created only in deserialization
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @JsonDeserialize(using = MetadataDeserializer.class)
