@@ -1,3 +1,7 @@
+<div class="alert alert-danger" role="alert" id="manifestAlert" style="display: none">
+    Howdy! You need to make sure that a manifest is selected around here!
+</div>
+
 <h1>Version <span class="manifestid text-success"></span></h1>
 <h2>DAG</h2>
 <div class="card">
@@ -126,11 +130,24 @@ here list of other nodes where this entity is stored
 
     };
 
+    function showManifestAlert() {
+        $("#manifestAlert").show();
+        $("#manifestAlert").fadeTo(2000, 500).slideUp(500, function() {
+            $("#manifestAlert").slideUp(500);
+            $("#manifestAlert").hide();
+        });
+    };
+
     $('button[id^="more"').click(showVersionInfo);
 
     $("#verifySignature").click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
         var roleid = $("#roleForSignatureVerification option:selected").val();
 
@@ -142,6 +159,11 @@ here list of other nodes where this entity is stored
     $("#verifyIntegrity").click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
 
         $.get("verifyIntegrity/" + obj.GUID, function (data) {
@@ -152,6 +174,11 @@ here list of other nodes where this entity is stored
     $("#showData").click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
 
         $.get("/data/" + obj.GUID, function (data) {
@@ -162,6 +189,11 @@ here list of other nodes where this entity is stored
     $("#downloadData").click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
 
         window.location="/data/" + obj.GUID + "/download";
@@ -170,6 +202,11 @@ here list of other nodes where this entity is stored
     $("#showProtectedData").click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
         var roleid = $("#roleForProtectedData option:selected").val();
 
@@ -181,16 +218,25 @@ here list of other nodes where this entity is stored
     $("#downloadProtectedData").click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
         var roleid = $("#roleForProtectedData option:selected").val();
 
         window.location="/data/" + obj.GUID + "/role/" + roleid + "/download";
     });
 
-
     $('#grantAccessToData').click(function() {
 
         var manifestJSON = $("#manifest").text();
+        if (!manifestJSON) {
+            showManifestAlert();
+            return;
+        }
+
         var obj = JSON.parse(manifestJSON);
         var granter = $("#granterRole option:selected").val();
         var grantee = $("#granteeRole option:selected").val();
