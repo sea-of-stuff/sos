@@ -55,8 +55,8 @@
                         <div class="d-flex justify-content-start">
                             <div class="btn-group" role="group">
                                 <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Predicate</button>
-                                <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Policy - N/A</button>
-                                <button id="runPredicate" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Policy (check) - N/A</button>
+                                <button id="runPolicies" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Policy</button>
+                                <button id="runCheckPolicies" value="$context.guid().toMultiHash()" type="button" class="btn btn-outline-success btn-sm"><i class="fa fa-play" aria-hidden="true"></i> Policy (check)</button>
                             </div>
                         </div>
                     </li>
@@ -272,6 +272,18 @@
 
         var id = $(this).val();
         $.get("/context/" + id + "/run/predicate");
+    });
+
+    $('button[id^="runPolicies"]').click(function() {
+
+        var id = $(this).val();
+        $.get("/context/" + id + "/run/policies");
+    });
+
+    $('button[id^="runCheckPolicies"]').click(function() {
+
+        var id = $(this).val();
+        $.get("/context/" + id + "/run/checkpolicies");
     });
 
 </script>

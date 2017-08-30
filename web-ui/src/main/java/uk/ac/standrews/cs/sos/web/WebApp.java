@@ -61,6 +61,8 @@ public class WebApp {
         get("/context/:id/contents", (req, res) -> WContexts.GetContents(req, sos));
         get("/context/search/:name", (req, res) -> WContexts.SearchContext(req, sos));
         get("/context/:id/run/predicate", (req, res) -> WContexts.RunPredicate(req, sos));
+        get("/context/:id/run/policies", (req, res) -> WContexts.RunPolicies(req, sos));
+        get("/context/:id/run/checkpolicies", (req, res) -> WContexts.RunCheckPolicies(req, sos));
 
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));
         post("/usro/role", (req, res) -> WUsersRoles.CreateRole(req, res, sos));

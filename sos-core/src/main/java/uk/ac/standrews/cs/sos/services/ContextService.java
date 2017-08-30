@@ -83,6 +83,8 @@ public interface ContextService {
     void flush();
 
     void runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
+    void runContextPolicyNow(IGUID guid) throws ContextNotFoundException;
+    void runContextPolicyCheckNow(IGUID guid) throws ContextNotFoundException;
 
     /**
      * Run the predicates only against all the versions marked as HEADs in the node

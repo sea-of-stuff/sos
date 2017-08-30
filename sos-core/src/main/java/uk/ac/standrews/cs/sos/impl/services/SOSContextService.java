@@ -229,13 +229,6 @@ public class SOSContextService implements ContextService {
         }
     }
 
-    @Override
-    public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
-
-        Context context = getContext(guid);
-        runContextPredicateNow(context);
-    }
-
     public Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics() {
         return predicateThreadSessionStatistics;
     }
@@ -254,6 +247,27 @@ public class SOSContextService implements ContextService {
     public ContextContent getContextContentInfo(IGUID context, IGUID version) {
 
         return contextsContents.get(context, version);
+    }
+
+    @Override
+    public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
+
+        Context context = getContext(guid);
+        runContextPredicateNow(context);
+    }
+
+    @Override
+    public void runContextPolicyNow(IGUID guid) throws ContextNotFoundException {
+
+        Context context = getContext(guid);
+        runContextPoliciesNow(context);
+    }
+
+    @Override
+    public void runContextPolicyCheckNow(IGUID guid) throws ContextNotFoundException {
+
+        Context context = getContext(guid);
+        runContextPoliciesCheckNow(context);
     }
 
     ////////////////////
@@ -333,6 +347,19 @@ public class SOSContextService implements ContextService {
         return counter;
     }
 
+    private void runContextPoliciesNow(Context context) {
+
+        service.schedule(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
+
+            long start = System.currentTimeMillis();
+            runPolicies(context);
+            long end = System.currentTimeMillis();
+            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, 0, TimeUnit.MILLISECONDS);
+    }
+
     /**
      * Run PERIODIC policies.
      *
@@ -362,21 +389,39 @@ public class SOSContextService implements ContextService {
     public void runPolicies() {
 
         for (Context context : getContexts()) {
-            InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
-
-            Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
-            contentsToProcess.forEach((guid, row) -> {
-                if (row.predicateResult && !row.policySatisfied) {
-
-                    SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid.toShortString());
-                    runPolicies(context, guid);
-                    SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid.toShortString());
-                }
-            });
-
-            InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END - for context " + context.getName());
+            runPolicies(context);
         }
 
+    }
+
+    private void runPolicies(Context context) {
+
+        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
+
+        Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+        contentsToProcess.forEach((guid, row) -> {
+            if (row.predicateResult && !row.policySatisfied) {
+
+                SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid.toShortString());
+                runPolicies(context, guid);
+                SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid.toShortString());
+            }
+        });
+
+        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END - for context " + context.getName());
+    }
+
+    private void runContextPoliciesCheckNow(Context context) {
+
+        service.schedule(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
+
+            long start = System.currentTimeMillis();
+            checkPolicies(context);
+            long end = System.currentTimeMillis();
+            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, 0, TimeUnit.MILLISECONDS);
     }
 
     private void checkPoliciesPeriodic() {
@@ -397,20 +442,25 @@ public class SOSContextService implements ContextService {
     public void checkPolicies() {
 
         for (Context context : getContexts()) {
-            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
-
-            Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
-            contentsToProcess.forEach((guid, row) -> {
-                if (row.predicateResult) {
-
-                    SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid.toShortString());
-                    checkPolicies(context, guid);
-                    SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid.toShortString());
-                }
-            });
-
-            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - END - for context " + context.getName());
+            checkPolicies(context);
         }
+    }
+
+    private void checkPolicies(Context context) {
+
+        InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
+
+        Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+        contentsToProcess.forEach((guid, row) -> {
+            if (row.predicateResult) {
+
+                SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid.toShortString());
+                checkPolicies(context, guid);
+                SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid.toShortString());
+            }
+        });
+
+        InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - END - for context " + context.getName());
     }
 
     /**

@@ -171,4 +171,20 @@ public class WContexts {
         return "";
     }
 
+    public static String RunPolicies(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException, ContextNotFoundException {
+        String guidParam = req.params("id");
+        IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
+
+        sos.getCMS().runContextPolicyNow(contextGUID);
+        return "";
+    }
+
+    public static String RunCheckPolicies(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException, ContextNotFoundException {
+        String guidParam = req.params("id");
+        IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
+
+        sos.getCMS().runContextPolicyCheckNow(contextGUID);
+        return "";
+    }
+
 }
