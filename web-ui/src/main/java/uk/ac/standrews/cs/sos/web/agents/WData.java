@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
@@ -101,6 +102,21 @@ public class WData {
         }
 
         return "N/A";
+    }
+
+    public static String GetData(SOSLocalNode sos, Version version, int limit) throws AtomNotFoundException {
+
+        Data data = sos.getStorage().getAtomContent(version.getContentGUID());
+
+        String type = "Raw";
+        try {
+            if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
+                Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                type = metadata.getPropertyAsString("Content-Type");
+            }
+        } catch (MetadataNotFoundException ignored) { }
+
+        return GetData(type, data, limit);
     }
 
     public static String GetDataDownload(Request req, Response response, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException, IOException {
@@ -201,22 +217,43 @@ public class WData {
         return "N/A";
     }
 
-    public static String GetData(SOSLocalNode sos, Version version, int limit) throws AtomNotFoundException {
+    public static String GrantAccess(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException, RoleNotFoundException {
 
-        Data data = sos.getStorage().getAtomContent(version.getContentGUID());
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+        Manifest manifest = sos.getAgent().getManifest(guid);
 
-        String type = "Raw";
+        IGUID roleid = GUIDFactory.recreateGUID(req.params("granter"));
+        Role granter = sos.getRMS().getRole(roleid);
+
+        roleid = GUIDFactory.recreateGUID(req.params("grantee"));
+        Role grantee = sos.getRMS().getRole(roleid);
+
+        SecureAtom secureAtom;
+        Manifest retrieved = manifest;
+        if(manifest.getType().equals(ManifestType.VERSION)) {
+
+            retrieved = sos.getAgent().getManifest(((Version) manifest).getContentGUID());
+        }
+
+        if (retrieved.getType().equals(ManifestType.ATOM_PROTECTED)) {
+            secureAtom = (SecureAtom) retrieved;
+        } else {
+            return "No protected atom";
+        }
+
         try {
-            if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
-                type = metadata.getPropertyAsString("Content-Type");
-            }
-        } catch (MetadataNotFoundException ignored) { }
+            sos.getStorage().grantAccess(secureAtom, granter, grantee);
 
-        return GetData(type, data, limit);
+            return "Access granted";
+
+        } catch (ProtectionException e) {
+            return "Unable to grant access";
+        }
+
     }
 
-    public static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
+    private static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
 
         Data data = sos.getStorage().getSecureAtomContent(atom, role);
 

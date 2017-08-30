@@ -4,11 +4,11 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -55,7 +55,15 @@ public class WHome {
         }
 
         model.put("assets", assets);
-        model.put("roles", sos.getRMS().getRoles());
+
+        Set<Pair<User, Role>> usro = new LinkedHashSet<>();
+        for(Role role:sos.getRMS().getRoles()) {
+            try {
+                User user = sos.getRMS().getUser(role.getUser());
+                usro.add(new Pair<>(user, role));
+            } catch (UserNotFoundException e) { /* do nothing */ }
+        }
+        model.put("usro", usro);
 
         return VelocityUtils.RenderTemplate("velocity/index.vm", model);
     }

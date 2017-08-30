@@ -37,8 +37,8 @@
                 </div>
                 <div class="col-6">
                     <select name="userGUID" id="roleToProtectData" class="custom-select">
-                        #foreach($role in $roles)
-                            <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+                        #foreach($ur in $usro)
+                            <option value=$ur.Y().guid().toMultiHash()>$ur.X().getName() :: $ur.Y().getName() - $ur.Y().guid().toShortString()</option>
                         #end
                     </select>
                 </div>
@@ -55,8 +55,8 @@
                 </div>
                 <div class="col-6">
                     <select name="userGUID" id="roleToSignManifest" class="custom-select">
-                        #foreach($role in $roles)
-                            <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+                        #foreach($ur in $usro)
+                            <option value=$ur.Y().guid().toMultiHash()>$ur.X().getName() :: $ur.Y().getName() - $ur.Y().guid().toShortString()</option>
                         #end
                     </select>
                 </div>

@@ -54,6 +54,8 @@ public class WebApp {
         get("/data/:id/download", (req, res) -> WData.GetDataDownload(req, res, sos));
         get("/data/:id/role/:roleid", (req, res) -> WData.GetProtectedData(req, sos));
         get("/data/:id/role/:roleid/download", (req, res) -> WData.GetProtectedDataDownload(req, res, sos));
+        get("/data/:id/grant/:granter/:grantee", (req, res) -> WData.GrantAccess(req, sos));
+
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 

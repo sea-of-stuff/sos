@@ -1,53 +1,101 @@
 <h1>Version <span class="manifestid text-success"></span></h1>
 <h2>DAG</h2>
-<div id="sos-graph"></div>
+<div class="card">
+    <div class="card-body">
+        <div id="sos-graph"></div>
+    </div>
+</div>
 <br>
+
 <h2>Manifest</h2>
 <div class="row">
-    <div class="col-8">
+    <div class="col-6">
         <button id="verifySignature" type="button" class="btn btn btn-outline-primary">Verify Signature</button>
     </div>
-    <div class="col-4">
+    <div class="col-6">
         <select name="userGUID" id="roleForSignatureVerification" class="custom-select">
-            #foreach($role in $roles)
-                <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+            #foreach($ur in $usro)
+                <option value=$ur.Y().guid().toMultiHash()>$ur.X().getName() :: $ur.Y().getName() - $ur.Y().guid().toShortString()</option>
             #end
         </select>
     </div>
 </div>
 <br>
 <p>Signature verification result: <strong><span id="signatureResult"></span></strong></p>
-<pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
+<div class="card">
+    <div class="card-body">
+        <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="manifest" class="json"></code></pre>
+    </div>
+</div>
 <br>
+
 <h2>Data</h2>
 <div class="row">
     <div class="col-12">
-        <button id="verifyIntegrity" type="button" class="btn btn btn-outline-primary">Verify Integrity</button>
+        <button id="verifyIntegrity" type="button" class="btn btn btn-outline-primary">Verify Data Integrity</button>
+        <span>Data integrity result: <strong><span id="integrityResult"></span></strong></span>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-12">
         <button id="showData" type="button" class="btn btn btn-outline-dark">Show data</button>
         <button id="downloadData" type="button" class="btn btn btn-outline-success">Download data</button>
     </div>
 </div>
 <br>
 <div class="row">
-    <div class="col-8">
+    <div class="col-6">
         <button id="showProtectedData" type="button" class="btn btn btn-outline-dark">Show protected data</button>
         <button id="downloadProtectedData" type="button" class="btn btn btn-outline-success">Download protected data</button>
     </div>
-    <div class="col-4">
+    <div class="col-6">
         <select name="userGUID" id="roleForProtectedData" class="custom-select">
-            #foreach($role in $roles)
-                <option value=$role.guid().toMultiHash()>$role.getName() - $role.guid().toShortString()</option>
+            #foreach($ur in $usro)
+                <option value=$ur.Y().guid().toMultiHash()>$ur.X().getName() :: $ur.Y().getName() - $ur.Y().guid().toShortString()</option>
             #end
         </select>
     </div>
 </div>
 <br>
-<p>Date integrity result: <strong><span id="integrityResult"></span></strong></p>
-<div id="data"></div>
+<h5>Access grant</h5>
+<div class="row">
+    <div class="col-12">
+        <select name="userGUID" id="granterRole" class="custom-select">
+            #foreach($ur in $usro)
+                <option value=$ur.Y().guid().toMultiHash()>$ur.X().getName() :: $ur.Y().getName() - $ur.Y().guid().toShortString()</option>
+            #end
+        </select>
+        <span>grant access to: </span>
+        <select name="userGUID" id="granteeRole" class="custom-select">
+            #foreach($ur in $usro)
+                <option value=$ur.Y().guid().toMultiHash()>$ur.X().getName() :: $ur.Y().getName() - $ur.Y().guid().toShortString()</option>
+            #end
+        </select>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-12">
+        <button id="grantAccessToData" type="button" class="btn btn btn-outline-danger">Grant access to protected data</button>
+        <strong><span id="grantAccessResult"></span></strong>
+    </div>
+</div>
+<br>
+<div class="card">
+    <div class="card-body">
+        <div id="data"></div>
+    </div>
+</div>
 <br>
 <h2>Metadata</h2>
-<pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="metadata" class="json"></code></pre>
+<div class="card">
+    <div class="card-body">
+        <pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="metadata" class="json"></code></pre>
+    </div>
+</div>
 <br>
+
 <h2>Data Stored</h2>
 here list of other nodes where this entity is stored
 
@@ -137,5 +185,18 @@ here list of other nodes where this entity is stored
         var roleid = $("#roleForProtectedData option:selected").val();
 
         window.location="/data/" + obj.GUID + "/role/" + roleid + "/download";
+    });
+
+
+    $('#grantAccessToData').click(function() {
+
+        var manifestJSON = $("#manifest").text();
+        var obj = JSON.parse(manifestJSON);
+        var granter = $("#granterRole option:selected").val();
+        var grantee = $("#granteeRole option:selected").val();
+
+        $.get("/data/" + obj.GUID + "/grant/" + granter + "/" + grantee, function (data) {
+            $('#grantAccessResult').html(data);
+        });
     });
 </script>

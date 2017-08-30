@@ -155,17 +155,21 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException, ManifestPersistException {
+    public SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException {
 
-        String encryptedKey = secureAtom.keysRoles().get(granterRole.guid());
-        SecretKey key = granterRole.decrypt(encryptedKey);
+        try {
+            String encryptedKey = secureAtom.keysRoles().get(granterRole.guid());
+            SecretKey key = granterRole.decrypt(encryptedKey);
 
-        String granteeEncryptedKey = granteeRole.encrypt(key);
+            String granteeEncryptedKey = granteeRole.encrypt(key);
 
-        secureAtom.addKeyRole(granteeRole.guid(), granteeEncryptedKey);
-        dataDiscoveryService.addManifest(secureAtom);
+            secureAtom.addKeyRole(granteeRole.guid(), granteeEncryptedKey);
+            dataDiscoveryService.addManifest(secureAtom);
 
-        return secureAtom;
+            return secureAtom;
+        } catch (Exception e) {
+            throw new ProtectionException(e);
+        }
     }
 
 

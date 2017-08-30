@@ -10,18 +10,18 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -31,7 +31,16 @@ public class WContexts {
     public static String Render(SOSLocalNode sos){
         Map<String, Object> model = new HashMap<>();
         model.put("contexts", sos.getCMS().getContexts());
-        model.put("roles", sos.getRMS().getRoles());
+
+        Set<Pair<User, Role>> usro = new LinkedHashSet<>();
+        for(Role role:sos.getRMS().getRoles()) {
+            try {
+                User user = sos.getRMS().getUser(role.getUser());
+                usro.add(new Pair<>(user, role));
+            } catch (UserNotFoundException e) { /* do nothing */ }
+        }
+        model.put("usro", usro);
+
 
         return VelocityUtils.RenderTemplate("velocity/contexts.vm", model);
     }

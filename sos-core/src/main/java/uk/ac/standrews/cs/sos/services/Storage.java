@@ -51,7 +51,7 @@ public interface Storage {
      */
     SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
 
-    SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException, ManifestPersistException;
+    SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException;
 
     /**
      * Get an atom's data given an AtomManifest.
