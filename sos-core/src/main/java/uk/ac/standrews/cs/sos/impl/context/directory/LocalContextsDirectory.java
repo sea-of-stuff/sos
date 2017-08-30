@@ -66,7 +66,7 @@ public class LocalContextsDirectory {
             Data data = file.getData();
 
             // parse from json
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(new String(data.getState()));
+            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(data.toString());
             IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
             String contextName = WordUtils.capitalize(jsonNode.get(CONTEXT_JSON_NAME).textValue());
             NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
