@@ -16,7 +16,6 @@ import java.util.*;
  */
 public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
 
-    // TODO - think about not doing this type of merging. See SecureAtom merging of keys.
     protected Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 
@@ -26,7 +25,6 @@ public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    // TODO - think about not doing this type of merging. See SecureAtom merging of keys.
     protected Manifest mergeManifests(IGUID guid, SecureAtom first, SecureAtom second) throws ManifestNotMadeException {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 

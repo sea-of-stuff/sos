@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -16,6 +17,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 
 /**
@@ -130,14 +132,19 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             IFile backupFile = backupManifest(existingManifest);
 
             if (!existingManifest.equals(manifest)) {
-                manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
-                // TODO - merge sets of roles/encrypted keys
+
+                if (manifest.getType().equals(ManifestType.ATOM)) {
+                    manifest = mergeManifests(guid, (Atom) existingManifest, (Atom) manifest);
+                } else if (manifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+                    manifest = mergeManifests(guid, (SecureAtom) existingManifest, (SecureAtom) manifest);
+                }
+
                 FileUtils.DeleteFile(manifestFile);
                 saveToFile(manifest);
             }
 
             FileUtils.DeleteFile(backupFile);
-        } catch (ManifestNotFoundException e) {
+        } catch (ManifestNotFoundException | ManifestNotMadeException e) {
             throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toMultiHash() + " and " + manifest.guid().toMultiHash() + "could not be merged", e);
         }
 
