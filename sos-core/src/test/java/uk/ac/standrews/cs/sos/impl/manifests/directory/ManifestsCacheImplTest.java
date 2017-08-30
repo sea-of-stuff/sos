@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
@@ -12,6 +13,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.CommonTest;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -19,27 +21,41 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.utils.ManifestUtils;
 import uk.ac.standrews.cs.sos.utils.Persistence;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ManifestsCacheImplTest extends CommonTest {
+
+    @BeforeMethod
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
+
+        new SOS_LOG(GUIDFactory.generateRandomGUID());
+
+        SOSLocalNode.settings = new SettingsConfiguration.Settings();
+        SOSLocalNode.settings.setGuid(GUIDFactory.generateRandomGUID().toMultiHash());
+        SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
+    }
 
     @Test
     public void basicTest() throws ManifestPersistException, ManifestNotFoundException {
@@ -149,6 +165,26 @@ public class ManifestsCacheImplTest extends CommonTest {
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
         persistedCache.findManifest(guid);
+    }
+
+    @Test
+    public void mergeAtomsTest() throws ManifestPersistException, ManifestNotFoundException {
+        ManifestsCache cache = new ManifestsCacheImpl();
+
+        Manifest manifest = ManifestUtils.createMockAtom();
+        IGUID guid = manifest.guid();
+        cache.addManifest(manifest);
+
+
+        Manifest atomWithOtherLocation = ManifestUtils.createMockAtom(guid);
+        cache.addManifest(atomWithOtherLocation);
+
+        Manifest manifest1 = cache.findManifest(guid);
+        assertNotEquals(manifest, manifest1);
+        assertNotEquals(atomWithOtherLocation, manifest1);
+
+        Set<LocationBundle> bundles = ((Atom) manifest1).getLocations();
+        assertEquals(bundles.size(), 2);
     }
 
     private Manifest getValidManifest() throws GUIDGenerationException, URISyntaxException {

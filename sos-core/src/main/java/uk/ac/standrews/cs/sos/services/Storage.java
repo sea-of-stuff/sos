@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -49,6 +50,8 @@ public interface Storage {
      * @throws DataStorageException
      */
     SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
+
+    SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException, ManifestPersistException;
 
     /**
      * Get an atom's data given an AtomManifest.

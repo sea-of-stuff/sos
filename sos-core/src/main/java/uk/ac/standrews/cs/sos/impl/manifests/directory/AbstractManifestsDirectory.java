@@ -1,23 +1,22 @@
 package uk.ac.standrews.cs.sos.impl.manifests.directory;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.SecureManifest;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
 
+    // TODO - think about not doing this type of merging. See SecureAtom merging of keys.
     protected Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 
@@ -27,12 +26,20 @@ public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    protected HashMap<IGUID, String> mergeSecureManifestsKeys(SecureManifest first, SecureManifest second) {
-        HashMap<IGUID, String> keysRoles = new LinkedHashMap<>();
+    // TODO - think about not doing this type of merging. See SecureAtom merging of keys.
+    protected Manifest mergeManifests(IGUID guid, SecureAtom first, SecureAtom second) throws ManifestNotMadeException {
+        Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 
-        keysRoles.putAll(first.keysRoles());
-        keysRoles.putAll(second.keysRoles());
+        locations.addAll(first.getLocations());
+        locations.addAll(second.getLocations());
 
-        return keysRoles;
+        HashMap<IGUID, String> rolesToKeys = new LinkedHashMap<>(first.keysRoles());
+        for(Map.Entry<IGUID, String> rtk:second.keysRoles().entrySet()) {
+
+            if (!rolesToKeys.containsKey(rtk.getKey())) rolesToKeys.put(rtk.getKey(), rtk.getValue());
+        }
+
+        return ManifestFactory.createSecureAtomManifest(guid, locations, rolesToKeys);
     }
+
 }

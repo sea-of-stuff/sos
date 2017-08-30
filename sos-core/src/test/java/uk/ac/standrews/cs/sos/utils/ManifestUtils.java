@@ -2,12 +2,14 @@ package uk.ac.standrews.cs.sos.utils;
 
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 
+import java.net.MalformedURLException;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
@@ -50,9 +52,33 @@ public class ManifestUtils {
         Manifest manifest = mock(Manifest.class);
         IGUID guid = GUIDFactory.generateRandomGUID();
         when(manifest.guid()).thenReturn(guid);
+        when(manifest.isValid()).thenReturn(true);
+        when(manifest.getType()).thenReturn(ManifestType.ATOM);
+
+        return manifest;
+    }
+
+    public static Manifest createMockAtom() {
+        return createMockAtom(GUIDFactory.generateRandomGUID());
+    }
+
+    public static Manifest createMockAtom(IGUID atomGUID) {
+        Atom manifest = mock(Atom.class);
+        IGUID guid = atomGUID;
         when(manifest.guid()).thenReturn(guid);
         when(manifest.isValid()).thenReturn(true);
         when(manifest.getType()).thenReturn(ManifestType.ATOM);
+
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
+        Location location = null;
+        try {
+            location = new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID());
+            bundles.add(new CacheLocationBundle(location));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        when(manifest.getLocations()).thenReturn(bundles);
 
         return manifest;
     }

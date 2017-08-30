@@ -6,16 +6,11 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -67,6 +62,29 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         IGUID guid = manifest.guid();
         applyLRU(guid);
+
+        if (manifest.getType().equals(ManifestType.ATOM)) {
+
+            // Check if there is already an atom in the cache.
+            try {
+                Atom retrievedManifest = (Atom) findManifest(guid);
+                manifest = mergeManifests(guid, (Atom) manifest, retrievedManifest);
+
+            } catch (ManifestNotFoundException e) {
+                // DO NOTHING
+            }
+        } else if (manifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+
+            // Check if there is already an atom in the cache.
+            try {
+                SecureAtom retrievedManifest = (SecureAtom) findManifest(guid);
+                manifest = mergeManifests(guid, (SecureAtom) manifest, retrievedManifest);
+
+            } catch (ManifestNotFoundException | ManifestNotMadeException e) {
+                // DO NOTHING
+            }
+        }
+
         cache.put(guid, manifest);
     }
 

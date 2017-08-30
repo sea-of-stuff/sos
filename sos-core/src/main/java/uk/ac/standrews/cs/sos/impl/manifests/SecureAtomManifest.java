@@ -45,4 +45,9 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
         this.rolesToKeys = keysRoles;
     }
 
+    @Override
+    public void addKeyRole(IGUID role, String encryptedKey) {
+        this.rolesToKeys.put(role, encryptedKey);
+    }
+
 }

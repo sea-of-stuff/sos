@@ -154,6 +154,21 @@ public class SOSStorage implements Storage {
         return manifest;
     }
 
+    @Override
+    public SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException, ManifestPersistException {
+
+        String encryptedKey = secureAtom.keysRoles().get(granterRole.guid());
+        SecretKey key = granterRole.decrypt(encryptedKey);
+
+        String granteeEncryptedKey = granteeRole.encrypt(key);
+
+        secureAtom.addKeyRole(granteeRole.guid(), granteeEncryptedKey);
+        dataDiscoveryService.addManifest(secureAtom);
+
+        return secureAtom;
+    }
+
+
     /**
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.

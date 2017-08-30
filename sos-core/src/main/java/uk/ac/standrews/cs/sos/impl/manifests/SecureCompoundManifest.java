@@ -92,4 +92,9 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
 
         return encryptedContents;
     }
+
+    @Override
+    public void addKeyRole(IGUID role, String encryptedKey) {
+        this.rolesToKeys.put(role, encryptedKey);
+    }
 }

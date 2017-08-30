@@ -12,4 +12,6 @@ public interface SecureManifest {
     HashMap<IGUID, String> keysRoles();
 
     void setKeysRoles(HashMap<IGUID, String> keysRoles);
+
+    void addKeyRole(IGUID role, String encryptedKey);
 }
