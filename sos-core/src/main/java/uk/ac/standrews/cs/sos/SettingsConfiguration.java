@@ -267,18 +267,18 @@ public class SettingsConfiguration {
 
             public static class ServicesSettings {
 
-                private RoleSettings storage = new RoleSettings();
+                private AdvanceServicesSettings.StorageSettings storage = new AdvanceServicesSettings.StorageSettings();
                 private RoleSettings dds = new RoleSettings();
                 private RoleSettings nds = new RoleSettings();
                 private RoleSettings mms = new RoleSettings();
                 private RoleSettings cms = new RoleSettings();
                 private RoleSettings rms = new RoleSettings();
 
-                public RoleSettings getStorage() {
+                public AdvanceServicesSettings.StorageSettings getStorage() {
                     return storage;
                 }
 
-                public void setStorage(RoleSettings storage) {
+                public void setStorage(AdvanceServicesSettings.StorageSettings storage) {
                     this.storage = storage;
                 }
 
