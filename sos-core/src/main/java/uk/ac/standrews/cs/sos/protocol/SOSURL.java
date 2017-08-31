@@ -20,6 +20,13 @@ public class SOSURL {
     private static final String HTTP_SCHEME = "http://";
     private static final String BASE_PATH = "/sos/";
 
+    public static URL NODE_PING(Node node, String message) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "ping/" + message;
+
+        return makeURL(url);
+    }
+
     public static URL NODE_INFO(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "info";

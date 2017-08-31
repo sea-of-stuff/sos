@@ -6,7 +6,9 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.utilities.Pair;
 
+import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -86,5 +88,8 @@ public interface NodeDiscoveryService {
     Set<Node> getNodes(int limit);
 
     String infoNode(IGUID guid) throws NodeNotFoundException;
+
+    // TODO - have a stats object
+    Queue<Pair<Long, Boolean>> getNodeStats(IGUID guid);
 
 }

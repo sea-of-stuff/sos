@@ -58,8 +58,6 @@ import static uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder.*;
  */
 public class SOSContextService implements ContextService {
 
-    private static final int CMS_SCHEDULER_PS = 4;
-
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
 
@@ -71,6 +69,7 @@ public class SOSContextService implements ContextService {
     private ContextsContents contextsContents; // TODO - rename to something more meaningful?
 
     // This executor service will be used to schedule any background tasks
+    private static final int CMS_SCHEDULER_PS = 4;
     private ScheduledExecutorService service;
     private Queue<Pair<Long, Long>> predicateThreadSessionStatistics;
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;

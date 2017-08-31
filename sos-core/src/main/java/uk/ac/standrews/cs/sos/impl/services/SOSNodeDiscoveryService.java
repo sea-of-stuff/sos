@@ -15,13 +15,16 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.GetNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.InfoNode;
+import uk.ac.standrews.cs.sos.protocol.tasks.PingNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.Pair;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The SOSNDS represents a basic NDS implementation.
@@ -34,8 +37,18 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     public static final int NO_LIMIT = 0;
     private LocalNodesDirectory localNodesDirectory;
 
+    private static final int NDS_SCHEDULER_PS = 1;
+    private ScheduledExecutorService service; // TODO - use only if specified in settings
+    private HashMap<IGUID, Queue<Pair<Long, Boolean>> > nodesStats;
+
     public SOSNodeDiscoveryService(Node localNode, Database database) throws NodesDirectoryException {
         localNodesDirectory = new LocalNodesDirectory(localNode, database);
+
+        nodesStats = new LinkedHashMap<>();
+        if (true) { // TODO settings!
+            service = new ScheduledThreadPoolExecutor(NDS_SCHEDULER_PS);
+            runCheckNodesPeriodic();
+        }
     }
 
     @Override
@@ -198,6 +211,11 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         return infoNode.getInfo();
     }
 
+    @Override
+    public Queue<Pair<Long, Boolean>> getNodeStats(IGUID guid) {
+        return nodesStats.get(guid);
+    }
+
     /**
      * Find a matching node for the given GUID through other known NDS nodes
      */
@@ -213,5 +231,25 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         return retval;
+    }
+
+    private void runCheckNodesPeriodic() {
+
+        // SettingsConfiguration.Settings.ThreadSettings predicateThreadSettings = SOSLocalNode.settings.getServices().getCms().getPredicateThread();
+
+        service.scheduleWithFixedDelay(() -> {
+
+            for(Node node:getNodes()) {
+
+                if (!nodesStats.containsKey(node.getNodeGUID())) {
+                    nodesStats.put(node.getNodeGUID(), new LinkedList<>());
+                }
+
+                PingNode pingNode = new PingNode(node,  UUID.randomUUID().toString());
+                nodesStats.get(node.getNodeGUID()).add(new Pair<>(pingNode.getTimestamp(), pingNode.valid()));
+            }
+
+        }, 10, 10, TimeUnit.SECONDS);
+        // }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 }
