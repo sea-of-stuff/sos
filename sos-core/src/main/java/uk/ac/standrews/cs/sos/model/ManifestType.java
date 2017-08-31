@@ -8,7 +8,7 @@ public enum ManifestType {
     ATOM("Atom"), ATOM_PROTECTED("AtomP"),
     COMPOUND("Compound"), COMPOUND_PROTECTED("CompoundP"),
     VERSION("Version"),
-    METADATA("Metadata");
+    METADATA("Metadata"), METADATA_PROTECTED("MetadataP");
 
     private final String text;
 

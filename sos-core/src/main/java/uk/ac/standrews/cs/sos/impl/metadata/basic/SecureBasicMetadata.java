@@ -1,17 +1,24 @@
 package uk.ac.standrews.cs.sos.impl.metadata.basic;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.json.SecureMetadataDeserializer;
+import uk.ac.standrews.cs.sos.json.SecureMetadataSerializer;
 import uk.ac.standrews.cs.sos.model.SecureMetadata;
 
 import java.util.HashMap;
 
 /**
- * TODO - have a place where to encrypt the contents of the metadata, see SecureCompound
  *
+ * TODO - work in progress
+ * note: we assume that the properties of this metadata are already encrypted
  * note: this is created only in deserialization
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonDeserialize(using = SecureMetadataDeserializer.class)
+@JsonSerialize(using = SecureMetadataSerializer.class)
 public class SecureBasicMetadata extends BasicMetadata implements SecureMetadata {
 
     private HashMap<IGUID, String> rolesToKeys;

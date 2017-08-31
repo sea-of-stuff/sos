@@ -163,7 +163,7 @@
                         #else
                         <div class="card-footer bg-light">
                         #end
-                        $version.contentType</div>
+                        <strong>$version.contentType</strong></div>
                     </div>
                 #end
             </div>
