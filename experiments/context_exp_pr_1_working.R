@@ -1,3 +1,8 @@
+install.packages("PMCMR")
+install.packages("FSA")
+library("PMCMR", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+library("FSA", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
@@ -58,6 +63,7 @@ x <- boxplot(d$User.Measure~d$ContextName, data=d,
              ylab="Time (s)")
 
 
+
 # CHECKING DISTRIBUTION OF DATA
 x = subset(d, ContextName=="META")
 descdist(x$Measures, discrete = FALSE)
@@ -66,6 +72,38 @@ plot(fit.norm)
 fit.weibull <- fitdist(x$Measures, "weibull")
 plot(fit.weibull)
 
+
+# Kruskal-Wallis Test
+# http://www.r-tutor.com/elementary-statistics/non-parametric-methods/kruskal-wallis-test
+d$Kruskal <- as.factor(d$ContextName)
+kruskal.test(d$User.Measure ~ d$Kruskal, data=d)
+# POSTHOC TESTS
+# adjustments to the p-value can be made. See ?p.adjust for allowed methods
+#
+# - Zar (2010) states that the Dunn test is appropriate for groups with unequal numbers of observations.
+# - Zar (2010) suggests that the Nemenyi test is not appropriate for groups with unequal numbers of observations.
+#
+# Zar, J.H. 2010. Biostatistical Analysis, 5th ed.  Pearson Prentice Hall: Upper Saddle River, NJ.
+#
+# DUNN
+# https://www.rdocumentation.org/packages/PMCMR/versions/4.1/topics/posthoc.kruskal.dunn.test
+posthoc.kruskal.dunn.test(d$User.Measure ~ d$Kruskal, data=d)
+#
+# NEMENYI (not suitable for this dataset)
+# https://www.rdocumentation.org/packages/PMCMR/versions/4.1/topics/posthoc.kruskal.nemenyi.test
+posthoc.kruskal.nemenyi.test(d$User.Measure ~ d$Kruskal, data=d)
+# 
+# Resources:
+# https://rcompanion.org/rcompanion/d_06.html
+
+
+# WRONG 
+# Testing pairs of sets using the t-test will lead to the Type1 error. 
+# Instead we need to do:
+# - a non-parametric test if the sets do not have a normal distribution
+# - a posthoc test to check which sets are significantly different with which one
+# 
+# I am keeping the code below just to remember myself that this type of stats is wrong
 # P-test for two sets
 x = subset(d, ContextName=="ALL")
 y = subset(d, ContextName=="META")
