@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.node.NodeStats;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
@@ -19,7 +20,6 @@ import uk.ac.standrews.cs.sos.protocol.tasks.PingNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.Pair;
 
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,7 +39,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
     private static final int NDS_SCHEDULER_PS = 1;
     private ScheduledExecutorService service; // TODO - use only if specified in settings
-    private HashMap<IGUID, Queue<Pair<Long, Boolean>> > nodesStats;
+    private HashMap<IGUID, NodeStats> nodesStats;
 
     public SOSNodeDiscoveryService(Node localNode, Database database) throws NodesDirectoryException {
         localNodesDirectory = new LocalNodesDirectory(localNode, database);
@@ -212,7 +212,11 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
-    public Queue<Pair<Long, Boolean>> getNodeStats(IGUID guid) {
+    public NodeStats getNodeStats(IGUID guid) {
+        if (!nodesStats.containsKey(guid)) {
+            nodesStats.put(guid, new NodeStats(guid));
+        }
+
         return nodesStats.get(guid);
     }
 
@@ -242,11 +246,12 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
             for(Node node:getNodes()) {
 
                 if (!nodesStats.containsKey(node.getNodeGUID())) {
-                    nodesStats.put(node.getNodeGUID(), new LinkedList<>());
+                    nodesStats.put(node.getNodeGUID(), new NodeStats(node.getNodeGUID()));
                 }
 
-                PingNode pingNode = new PingNode(node,  UUID.randomUUID().toString());
-                nodesStats.get(node.getNodeGUID()).add(new Pair<>(pingNode.getTimestamp(), pingNode.valid()));
+                PingNode pingNode = new PingNode(node, UUID.randomUUID().toString());
+                TasksQueue.instance().performSyncTask(pingNode);
+                nodesStats.get(node.getNodeGUID()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
             }
 
         }, 10, 10, TimeUnit.SECONDS);

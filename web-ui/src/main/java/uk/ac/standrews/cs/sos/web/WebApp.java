@@ -79,6 +79,7 @@ public class WebApp {
         get("/verifyIntegrity/:id", (req, res) -> WVerify.VerifyIntegrity(req, sos));
 
         get("node/info/:nodeid", (req, res) -> WNodes.GetInfo(req, sos));
+        get("node/stats/:nodeid", (req, res) -> WNodes.Stats(req, sos));
 
         get("/threads", (req, res) -> WContexts.Threads(sos));
     }

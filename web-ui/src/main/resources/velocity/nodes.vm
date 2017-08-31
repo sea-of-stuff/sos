@@ -10,6 +10,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 #include("header.html")
@@ -25,6 +26,7 @@
         <div class="row">
             <div class="col-6">
                 <button id="pingNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Ping node</button>
+                <button id="statsNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Stats node</button>
                 <br>
                 <pre><code class="json">$node.toString()</code></pre>
             </div>
@@ -32,6 +34,8 @@
                 <strong>Ping result:</strong>
                 <br>
                 <i><span id="pingResult$node.getNodeGUID().toMultiHash()"></span></i>
+                <br>
+                <div id="chart_div$node.getNodeGUID().toMultiHash()"></div>
             </div>
         </div>
         <br>
@@ -57,5 +61,41 @@
         });
     });
 </script>
+
+<script>
+    google.charts.load('current', {packages: ['corechart', 'line']});
+
+    $('button[id^="statsNode"').click(function() {
+        id = $(this).val();
+
+        var jsonData = $.ajax({
+            url: "/node/stats/" + id,
+            dataType: "json",
+            async: false
+        }).responseText;
+
+        var data = JSON.parse(jsonData);
+        var dataTable = new google.visualization.DataTable(data);
+
+        var options = {
+            title: 'Average Availability',
+            hAxis: {
+                title: 'Time'
+            },
+            vAxis: {
+                title: 'Avg Availability',
+                minValue: 0,
+                maxValue: 100
+            },
+            colors: ['#097138'],
+            legend: {position: 'none'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div' + id));
+        chart.draw(dataTable, options);
+    });
+
+</script>
+
 </body>
 </html>

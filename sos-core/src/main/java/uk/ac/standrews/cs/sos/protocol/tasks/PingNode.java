@@ -22,6 +22,7 @@ public class PingNode extends Task {
     private String message;
     private Long timestamp;
     private boolean valid;
+    private Long latency;
 
     public PingNode(Node node, String message) {
         this.node = node;
@@ -40,15 +41,19 @@ public class PingNode extends Task {
             SyncRequest request = new SyncRequest(HTTPMethod.GET, url, ResponseType.TEXT);
             request.setJSONBody(node.toString());
 
-            timestamp = System.currentTimeMillis();
+            long startRequest = System.currentTimeMillis();
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
-                String pong = response.getJSON().toString();
-                valid = pong.equals(message);
+                String pong = response.getStringBody();
+                valid = pong.contains(message);
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+            } else {
+                valid = false;
             }
+            timestamp = System.currentTimeMillis();
+            latency = System.currentTimeMillis() - startRequest;
 
         } catch (SOSURLException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.toString() );
@@ -66,5 +71,9 @@ public class PingNode extends Task {
     @Override
     public String toString() {
         return "InfoNode " + node.getNodeGUID();
+    }
+
+    public Long getLatency() {
+        return latency;
     }
 }
