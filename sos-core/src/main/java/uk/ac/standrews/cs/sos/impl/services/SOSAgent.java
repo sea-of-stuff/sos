@@ -144,7 +144,13 @@ public class SOSAgent implements Agent {
     public Version addCollection(VersionBuilder versionBuilder) {
 
         try {
-            Compound compound = addCompound(versionBuilder.getCompoundBuilder());
+            Compound compound;
+            if(versionBuilder.getCompoundBuilder().getRole() != null) {
+                compound = addSecureCompound(versionBuilder.getCompoundBuilder());
+            } else {
+                compound = addCompound(versionBuilder.getCompoundBuilder());
+            }
+
             versionBuilder.setContent(compound.guid());
 
             return addVersion(versionBuilder);

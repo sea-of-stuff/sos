@@ -71,15 +71,15 @@
 
             <div class="form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="">
-                    <strong>Make Compound - WIP</strong>
+                    <input class="form-check-input" type="checkbox" value="" id="createCompound">
+                    <strong>Make Compound using data to upload and/or selected versions</strong>
                 </label>
             </div>
 
             <!-- The global file processing state -->
             <span class="fileupload-process">
-                <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                <div id="total-progress" class="progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;" data-dz-uploadprogress></div>
                 </div>
             </span>
             <br>
@@ -113,8 +113,8 @@
                     </div>
                     <div>
                         <p class="size" data-dz-size></p>
-                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        <div class="progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="progress-bar progress-bar-striped bg-info" style="width:0%;" data-dz-uploadprogress></div>
                         </div>
                     </div>
                     <div>
@@ -186,6 +186,7 @@
 
     var myDropzone = new Dropzone($('#uploadingZone')[0], { // Make the whole body a dropzone
         url: function() {
+            createCompound = $("#createCompound").is(":checked");
             protectData = $("#protectData").is(":checked");
             signManifest = $("#signManifest").is(":checked");
             updateVersion = $("#updateVersion").is(":checked");
@@ -197,17 +198,27 @@
 
             var roleidSign = 0;
             if (signManifest) {
-               roleidSign = $("#roleToSignManifest option:selected").val();
+                roleidSign = $("#roleToSignManifest option:selected").val();
             }
 
             var prev = 0;
             if (updateVersion) {
                 var manifestJSON = $("#manifest").text();
+                if (!manifestJSON) {
+                    showManifestAlert();
+                    return;
+                }
+
                 var obj = JSON.parse(manifestJSON);
                 prev = obj.GUID;
             }
 
-            return "/version/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev;
+            if (createCompound) {
+                return "/compound/data/protected/" + roleid;
+            } else {
+                return "/version/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev;
+            }
+
         },
         thumbnailWidth: 100,
         thumbnailHeight: 100,
@@ -238,6 +249,45 @@
     // Hide the total progress bar when nothing's uploading anymore
     myDropzone.on("queuecomplete", function(progress) {
         document.querySelector("#total-progress").style.opacity = "0";
+
+        createCompound = $("#createCompound").is(":checked");
+
+        if (createCompound) {
+            // TODO
+            // Make a query to collect all uploaded data under the compound
+            // This will generate a version to a compound, so we need a similar logic to the above for PROTECTION, SIGNATURE and UPDATE
+
+            protectData = $("#protectData").is(":checked");
+            signManifest = $("#signManifest").is(":checked");
+            updateVersion = $("#updateVersion").is(":checked");
+
+            var roleid = 0;
+            if (protectData) {
+                roleid = $("#roleToProtectData option:selected").val();
+            }
+
+            var roleidSign = 0;
+            if (signManifest) {
+                roleidSign = $("#roleToSignManifest option:selected").val();
+            }
+
+            var prev = 0;
+            if (updateVersion) {
+                var manifestJSON = $("#manifest").text();
+                if (!manifestJSON) {
+                    showManifestAlert();
+                    return;
+                }
+
+                var obj = JSON.parse(manifestJSON);
+                prev = obj.GUID;
+            }
+
+            $.post("/version/compound/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev);
+        }
+
+        // refresh page
+        location = location;
     });
 
     // Setup the buttons for all transfers

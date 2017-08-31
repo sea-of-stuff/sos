@@ -13,15 +13,21 @@ import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,7 +42,9 @@ import static uk.ac.standrews.cs.sos.web.WebApp.LARGE_DATA_LIMIT;
  */
 public class WData {
 
-    public static String AddVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, IOException, ServletException, ManifestNotFoundException {
+    private static Set<Content> pendingContents = new LinkedHashSet<>();
+
+    public static String AddDataVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, IOException, ServletException, ManifestNotFoundException {
 
         request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
@@ -53,13 +61,11 @@ public class WData {
             AtomBuilder atomBuilder = new AtomBuilder()
                     .setData(new InputStreamData(is));
 
-
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
                 Role roleToProtect = sos.getRMS().getRole(roleGUID);
                 atomBuilder.setRole(roleToProtect);
             }
-
             VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
 
             if (sign) {
@@ -79,11 +85,83 @@ public class WData {
                                 .setPrevious(prevs);
             }
 
-            sos.getAgent().addData(versionBuilder);
+            Version version = sos.getAgent().addData(versionBuilder);
+            return version.toString();
         }
 
+    }
 
-        return "";
+    public static String AddCompoundVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, ManifestNotFoundException {
+
+        String roleidSign = request.params("roleidsign");
+        String roleid = request.params("roleid");
+        String prev = request.params("prev");
+
+        boolean sign = !roleidSign.equals("0");
+        boolean protect = !roleid.equals("0");
+        boolean update = !prev.equals("0");
+
+        CompoundBuilder compoundBuilder = new CompoundBuilder()
+                .setType(CompoundType.COLLECTION)
+                .setContents(pendingContents); // see pending atoms
+        if (protect) {
+            IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
+            Role roleToProtect = sos.getRMS().getRole(roleGUID);
+            compoundBuilder.setRole(roleToProtect);
+        }
+        VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
+
+        if (sign) {
+            IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
+            Role roleToSign = sos.getRMS().getRole(signerGUID);
+            versionBuilder.setRole(roleToSign);
+        }
+
+        if (update) {
+            IGUID prevGUID = GUIDFactory.recreateGUID(prev);
+            Version version = (Version) sos.getDDS().getManifest(prevGUID);
+
+            Set<IGUID> prevs = new LinkedHashSet<>();
+            prevs.add(prevGUID);
+
+            versionBuilder.setInvariant(version.getInvariantGUID())
+                    .setPrevious(prevs);
+        }
+
+        Version version = sos.getAgent().addCollection(versionBuilder);
+        return version.toString();
+    }
+
+    public static String AddDataForCompound(Request request, SOSLocalNode sos) throws IOException, ServletException, DataStorageException, ManifestPersistException, GUIDGenerationException, RoleNotFoundException, ManifestNotMadeException {
+
+        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+        String roleid = request.params("roleid");
+        boolean protect = !roleid.equals("0");
+
+        String contentName = getFileName(request.raw().getPart("file"));
+        try (InputStream is = request.raw().getPart("file").getInputStream()) {
+            // Use the input stream to create a file
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setData(new InputStreamData(is));
+
+            Atom atom;
+            if (protect) {
+                IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
+                Role roleToProtect = sos.getRMS().getRole(roleGUID);
+                atomBuilder.setRole(roleToProtect);
+
+                atom = sos.getAgent().addSecureAtom(atomBuilder);
+            } else {
+
+                atom = sos.getAgent().addAtom(atomBuilder);
+            }
+
+            pendingContents.add(new ContentImpl(contentName, atom.guid()));
+
+            return atom.toString();
+        }
+
     }
 
     public static String GetData(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException {
@@ -379,4 +457,14 @@ public class WData {
 
     }
 
+    // How to extract the filename from a spark file upload request
+    // https://github.com/tipsy/spark-file-upload/blob/2206f67e220ed61bf7ca6e150b17cc6818fdde7b/src/main/java/UploadExample.java#L48
+    private static String getFileName(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return "UNKNOWN";
+    }
 }

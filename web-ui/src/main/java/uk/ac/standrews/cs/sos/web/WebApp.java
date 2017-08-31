@@ -11,7 +11,7 @@ import static uk.ac.standrews.cs.sos.rest.RESTConfig.sos;
 
 public class WebApp {
 
-    public static final int SHORT_DATA_LIMIT = 256;
+    public static final int SHORT_DATA_LIMIT = 128;
     public static final int LARGE_DATA_LIMIT = 1024;
 
     public static void RUN(SOSLocalNode sos, IFileSystem fileSystem, int port) {
@@ -48,13 +48,17 @@ public class WebApp {
 
         // ACTIONS
         // Use "0" for no param
-        post("/version/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddVersion(req, sos));
+        post("/version/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddDataVersion(req, sos));
+        post("/version/compound/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddCompoundVersion(req, sos));
 
         get("/data/:id", (req, res) -> WData.GetData(req, sos));
         get("/data/:id/download", (req, res) -> WData.GetDataDownload(req, res, sos));
         get("/data/:id/role/:roleid", (req, res) -> WData.GetProtectedData(req, sos));
         get("/data/:id/role/:roleid/download", (req, res) -> WData.GetProtectedDataDownload(req, res, sos));
         get("/data/:id/grant/:granter/:grantee", (req, res) -> WData.GrantAccess(req, sos));
+
+        post("/compound/data/protected/:roleid", (req, res) -> WData.AddDataForCompound(req, sos));
+
 
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
