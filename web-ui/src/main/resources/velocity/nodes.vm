@@ -25,17 +25,18 @@
     #foreach($node in $nodes)
         <div class="row">
             <div class="col-6">
-                <button id="pingNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Ping node</button>
+                <button id="pingNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Node info</button>
                 <button id="statsNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Stats node</button>
                 <br>
                 <pre><code class="json">$node.toString()</code></pre>
             </div>
             <div class="col-6">
-                <strong>Ping result:</strong>
-                <br>
-                <i><span id="pingResult$node.getNodeGUID().toMultiHash()"></span></i>
+                <strong>Stats:</strong>
                 <br>
                 <div id="chart_div$node.getNodeGUID().toMultiHash()"></div>
+                <strong>Node Info:</strong>
+                <br>
+                <i><pre><code id="pingResult$node.getNodeGUID().toMultiHash()" class="json"></code></pre></i>
             </div>
         </div>
         <br>
