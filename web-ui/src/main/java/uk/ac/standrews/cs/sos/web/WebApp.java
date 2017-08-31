@@ -59,7 +59,6 @@ public class WebApp {
 
         post("/compound/data/protected/:roleid", (req, res) -> WData.AddDataForCompound(req, sos));
 
-
         get("/manifest/:id", (req, res) -> WManifest.Render(req, sos));
         get("/metadata/:id", (req, res) -> WMetadata.Render(req, sos));
 
@@ -78,6 +77,8 @@ public class WebApp {
 
         get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.VerifySignature(req, sos));
         get("/verifyIntegrity/:id", (req, res) -> WVerify.VerifyIntegrity(req, sos));
+
+        get("node/info/:nodeid", (req, res) -> WNodes.GetInfo(req, sos));
 
         get("/threads", (req, res) -> WContexts.Threads(sos));
     }

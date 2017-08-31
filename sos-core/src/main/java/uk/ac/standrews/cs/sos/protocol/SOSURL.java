@@ -20,6 +20,13 @@ public class SOSURL {
     private static final String HTTP_SCHEME = "http://";
     private static final String BASE_PATH = "/sos/";
 
+    public static URL NODE_INFO(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "info";
+
+        return makeURL(url);
+    }
+
     public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "dds/manifest/guid/" + guid.toMultiHash();

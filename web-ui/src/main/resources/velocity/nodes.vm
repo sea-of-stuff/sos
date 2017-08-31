@@ -5,26 +5,57 @@
     <title>SOS WEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github-gist.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
 #include("header.html")
 <div class="container-fluid">
 
     <h1>Local Node</h1>
-    <pre style="white-space: pre-wrap; word-wrap: break-word;">$thisNode.toString()</pre>
+    <pre><code class="json">$thisNode.toString()</code></pre>
 
     <hr>
 
     <h2>Known nodes</h2>
     #foreach($node in $nodes)
-        <pre style="white-space: pre-wrap; word-wrap: break-word;">$node.toString()</pre>
+        <div class="row">
+            <div class="col-6">
+                <button id="pingNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Ping node</button>
+                <br>
+                <pre><code class="json">$node.toString()</code></pre>
+            </div>
+            <div class="col-6">
+                <strong>Ping result:</strong>
+                <br>
+                <i><span id="pingResult$node.getNodeGUID().toMultiHash()"></span></i>
+            </div>
+        </div>
         <br>
     #end
 
 </div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.1/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
+<script>
+    $('button[id^="pingNode"').click(function() {
+        id = $(this).val();
+
+        $.get("node/info/" + id, function (data) {
+
+            var obj = JSON.parse(data);
+            var pretty = JSON.stringify(obj, undefined, 4);
+
+            $("#pingResult" + id).html(pretty);
+            hljs.highlightBlock($('#pingResult' + id)[0]);
+        });
+    });
+</script>
 </body>
 </html>

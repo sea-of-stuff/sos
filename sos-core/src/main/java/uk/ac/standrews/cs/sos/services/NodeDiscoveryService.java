@@ -85,4 +85,6 @@ public interface NodeDiscoveryService {
      */
     Set<Node> getNodes(int limit);
 
+    String infoNode(IGUID guid) throws NodeNotFoundException;
+
 }

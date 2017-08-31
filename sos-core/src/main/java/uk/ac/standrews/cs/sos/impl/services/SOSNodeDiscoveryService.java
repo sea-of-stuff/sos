@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.GetNode;
+import uk.ac.standrews.cs.sos.protocol.tasks.InfoNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -25,8 +26,6 @@ import java.util.Set;
 /**
  * The SOSNDS represents a basic NDS implementation.
  * It provides naive methods to register new nodes in the sos and get known nodes.
- *
- * TODO - pass scope as argument to methods
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -187,6 +186,16 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public Set<Node> getNodes(int limit) {
         return localNodesDirectory.getNodes(p -> true, limit);
+    }
+
+    @Override
+    public String infoNode(IGUID guid) throws NodeNotFoundException {
+        Node node = getNode(guid);
+
+        InfoNode infoNode = new InfoNode(node);
+        TasksQueue.instance().performSyncTask(infoNode);
+
+        return infoNode.getInfo();
     }
 
     /**
