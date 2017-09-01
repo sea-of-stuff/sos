@@ -95,6 +95,19 @@ public class PolicyActions {
         return false;
     }
 
+    public int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
+
+        int counter = 0;
+        for(IGUID nodeRef:codomain.nodesRefs()) {
+
+            if (nodeHasManifest(nodeRef, guid)) {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
     public boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
 
         try {
@@ -111,7 +124,7 @@ public class PolicyActions {
 
     }
 
-    public int numberOfReplicas(NodesCollection codomain, IGUID guid) {
+    public int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
         for(IGUID nodeRef:codomain.nodesRefs()) {

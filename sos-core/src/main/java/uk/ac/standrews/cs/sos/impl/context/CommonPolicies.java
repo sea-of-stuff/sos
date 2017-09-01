@@ -42,7 +42,7 @@ public class CommonPolicies {
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
+            int numberReplicas = policyActions.numberOfManifestReplicas(codomain, manifest.guid());
             return numberReplicas >= factor;
         }
     }
@@ -88,7 +88,7 @@ public class CommonPolicies {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
                 if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-                    int numberReplicas = policyActions.numberOfReplicas(codomain, contentManifest.guid());
+                    int numberReplicas = policyActions.numberOfDataReplicas(codomain, contentManifest.guid());
                     return numberReplicas >= factor;
                 }
 
@@ -144,7 +144,7 @@ public class CommonPolicies {
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
+            int numberReplicas = policyActions.numberOfDataReplicas(codomain, manifest.guid());
             return numberReplicas == 0;
         }
     }

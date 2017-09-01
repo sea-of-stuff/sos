@@ -254,6 +254,8 @@ public class SOSStorage implements Storage {
         try {
             Data data = getAtomContent(guid);
 
+            if (data instanceof EmptyData) return new InvalidID();
+
             List<InputStream> streams = Arrays.asList(data.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
             InputStream combinedStream = new SequenceInputStream(Collections.enumeration(streams));
 
