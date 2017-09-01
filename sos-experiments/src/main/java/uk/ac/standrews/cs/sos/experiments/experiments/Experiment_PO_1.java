@@ -39,15 +39,6 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations();
     }
 
-    public static void main(String[] args) throws ExperimentException, ConfigurationException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_1") + "configuration.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        Experiment_PO_1 experiment_pr_1 = new Experiment_PO_1(experimentConfiguration);
-        experiment_pr_1.process();
-    }
-
     private class ExperimentUnit_PO_1 implements ExperimentUnit {
 
         private int id;
@@ -79,6 +70,16 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
             cms.runPolicies();
         }
 
+    }
+
+    // TODO - this experiment will require multiple nodes. It is pointless to have this experiment run locally only.
+    public static void main(String[] args) throws ExperimentException, ConfigurationException {
+
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_1") + "configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        Experiment_PO_1 experiment_pr_1 = new Experiment_PO_1(experimentConfiguration);
+        experiment_pr_1.process();
     }
 
 }

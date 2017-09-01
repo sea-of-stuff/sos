@@ -36,15 +36,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations();
     }
 
-    public static void main(String[] args) throws ExperimentException, ConfigurationException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "do_1") + "configuration.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        Experiment_DO_1 experiment_pr_1 = new Experiment_DO_1(experimentConfiguration);
-        experiment_pr_1.process();
-    }
-
     private class ExperimentUnit_DO_1 implements ExperimentUnit {
 
         ExperimentUnit_DO_1() {
@@ -60,5 +51,16 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         }
 
     }
+
+    // TODO - this experiment requires nodes to exchange info about their contexts. I am not there yet... :(
+    public static void main(String[] args) throws ExperimentException, ConfigurationException {
+
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "do_1") + "configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        Experiment_DO_1 experiment_pr_1 = new Experiment_DO_1(experimentConfiguration);
+        experiment_pr_1.process();
+    }
+
 
 }
