@@ -446,6 +446,9 @@ public class SettingsConfiguration {
 
             public static class DDSSettings extends RoleSettings {
 
+                @JsonView(Views.Public.class)
+                private int maxReplication = 1; // A value of 1 results in no replication, since this dds service itself will count as replication-1
+
                 private String cacheFile;
                 private String indexFile;
 
@@ -465,6 +468,14 @@ public class SettingsConfiguration {
 
                 public void setIndexFile(String indexFile) {
                     this.indexFile = indexFile;
+                }
+
+                public int getMaxReplication() {
+                    return maxReplication;
+                }
+
+                public void setMaxReplication(int maxReplication) {
+                    this.maxReplication = maxReplication;
                 }
             }
 

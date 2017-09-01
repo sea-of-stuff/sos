@@ -235,7 +235,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     private void initServices() throws ServiceException {
 
-        dataDiscoveryService = new SOSDataDiscoveryService(localStorage, nodeDiscoveryService);
+        dataDiscoveryService = new SOSDataDiscoveryService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage); // TODO - will need to pass NDS to discover other roles
 
         storage = new SOSStorage(settings.getServices().getStorage(), getNodeGUID(), localStorage, dataDiscoveryService, usersRolesService, nodeDiscoveryService);

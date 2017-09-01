@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -38,6 +39,8 @@ import static uk.ac.standrews.cs.sos.model.NodesCollection.TYPE.LOCAL;
  */
 public class SOSDataDiscoveryService implements DataDiscoveryService {
 
+    private SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings;
+
     // We have three layers for storing and getting manifests:
     // 1. memory cache
     // 2. local disk
@@ -52,7 +55,11 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     // Maps ManifestGUID --> [ DDS Nodes that might have it ]
     private DDSIndex ddsIndex;
 
-    public SOSDataDiscoveryService(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
+    public SOSDataDiscoveryService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings,
+                                   LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
+
+        this.ddsSettings = ddsSettings;
+
         this.localStorage = localStorage;
 
         loadOrCreateCache();
@@ -80,7 +87,12 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException {
         addManifest(manifest);
 
-        remote.addManifest(manifest, nodes, replication); // TODO will apply in async mode
+        // TODO -
+        int replicationFactor = (replication - 1) <= ddsSettings.getMaxReplication() ? (replication - 1) : ddsSettings.getMaxReplication();
+        if (replicationFactor > 0) {
+            remote.addManifest(manifest, nodes, replication); // TODO will apply in async mode
+        }
+
         // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook at page 92
     }
 

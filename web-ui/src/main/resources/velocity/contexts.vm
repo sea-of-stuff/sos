@@ -108,10 +108,11 @@
                     <br>
                     <pre><code class="json">
 {
-    "name": "AllWithManifestReplication",
+    "name": "AllWithManifestAndDataReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
-    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)",
+            "CommonPolicies.DataReplicationPolicy(policyActions, codomain, 1)"
     	],
     "codomain": {
         "type" : "SPECIFIED",

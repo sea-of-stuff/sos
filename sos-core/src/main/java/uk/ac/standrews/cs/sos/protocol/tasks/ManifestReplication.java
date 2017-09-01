@@ -39,6 +39,7 @@ public class ManifestReplication extends Task {
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
 
+    // TODO - replication by delegation. See DataReplication!
     public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
 
         if (dataDiscoveryService == null || nodeDiscoveryService == null) {

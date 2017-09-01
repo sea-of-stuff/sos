@@ -49,7 +49,6 @@ import java.util.Iterator;
  *
  * When data is replicated successfully to a node
  * - the storage service is informed about the new location for the data
- * - TODO
  *
  *
  * If the data is successfully replicated to a Storage node:

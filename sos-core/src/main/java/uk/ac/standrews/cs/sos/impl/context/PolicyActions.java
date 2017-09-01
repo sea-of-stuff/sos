@@ -56,7 +56,7 @@ public class PolicyActions {
     public void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
         try {
-            dataDiscoveryService.addManifest(manifest, nodes, replicationFactor);
+            dataDiscoveryService.addManifest(manifest, nodes, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }
@@ -75,7 +75,7 @@ public class PolicyActions {
             AtomBuilder atomBuilder = new AtomBuilder()
                     .setData(data)
                     .setReplicationNodes(nodes)
-                    .setReplicationFactor(replicationFactor);
+                    .setReplicationFactor(replicationFactor + 1 /* We increment the replication factory by one, because we want the data to leave this node */);
 
             storage.addAtom(atomBuilder);
 
@@ -136,6 +136,12 @@ public class PolicyActions {
         return dataDiscoveryService.getManifest(codomain, guid);
     }
 
+    // Retrieve the manifest from local node
+    public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
+
+        return dataDiscoveryService.getManifest(version.getContentGUID());
+    }
+
     public Node getNode(IGUID guid) throws NodeNotFoundException {
 
         return nodeDiscoveryService.getNode(guid);
@@ -158,10 +164,7 @@ public class PolicyActions {
         storage.grantAccess(secureAtom, granterRole, granteeRole);
     }
 
-    public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
-        return dataDiscoveryService.getManifest(version.getContentGUID());
-    }
 
 
 }

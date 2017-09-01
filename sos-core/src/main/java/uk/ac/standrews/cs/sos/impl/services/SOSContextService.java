@@ -558,22 +558,27 @@ public class SOSContextService implements ContextService {
     private void runPolicies(Context context, IGUID guid) {
 
         try {
-            Policy[] policies = context.policies(); // TODO - if no policies, then simply set policySatisfied to true
+            ContextContent content = new ContextContent();
+
+            Policy[] policies = context.policies();
+            boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 policy.apply(manifest);
-                boolean policyIsSatisfied = policy.satisfied(manifest);
+
+                ContextContent prev = contextsContents.get(context.guid(), guid);
 
                 // TODO - this is a naive way to update only the policy result
-                ContextContent prev = contextsContents.get(context.guid(), guid);
-                ContextContent content = new ContextContent();
                 content.predicateResult = prev.predicateResult;
                 content.timestamp = prev.timestamp;
-                content.policySatisfied = policyIsSatisfied;
+
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
                 contextsContents.addUpdateMapping(context.guid(), guid, content);
             }
+
+            content.policySatisfied = allPoliciesAreSatisfied;
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
@@ -583,21 +588,25 @@ public class SOSContextService implements ContextService {
     private void checkPolicies(Context context, IGUID guid) {
 
         try {
+            ContextContent content = new ContextContent();
+
             Policy[] policies = context.policies();
+            boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
-                boolean policyIsSatisfied = policy.satisfied(manifest);
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
                 // TODO - this is a naive way to update only the policy result
                 ContextContent prev = contextsContents.get(context.guid(), guid);
-                ContextContent content = new ContextContent();
+
                 content.predicateResult = prev.predicateResult;
                 content.timestamp = prev.timestamp;
-                content.policySatisfied = policyIsSatisfied;
 
                 contextsContents.addUpdateMapping(context.guid(), guid, content);
             }
+
+            content.policySatisfied = allPoliciesAreSatisfied;
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
