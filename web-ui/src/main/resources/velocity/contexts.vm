@@ -251,12 +251,20 @@
             hljs.highlightBlock($('#context_json')[0]);
 
             $.each(context.contents, function(key, value) {
+
+                var policySatisfiedHTML;
+                if (value.policySatisfied) {
+                    policySatisfiedHTML = "<span class=\"text-success\">" + value.policySatisfied + "</span>";
+                } else {
+                    policySatisfiedHTML = "<span class=\"text-danger\">" + value.policySatisfied + "</span>";
+                }
+
                 list.append("<li class=\"list-group-item flex-column align-items-start\" id='" + key + "'>" +
                         "<div class=\"d-flex w-100 justify-content-between\">" +
                         "<h5 class=\"mb-1\">" + key + "</h5>" +
                         " <button id=\"more" + key + "\" value=" + key + " type=\"button\" class=\"btn btn-outline-dark btn-sm\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
                         "</div>" +
-                        "<p class=\"mb-1\"><strong>Policy Satisfied</strong> : " + value.policySatisfied + "</p>" +
+                        "<p class=\"mb-1\"><strong>Policy Satisfied</strong> : " + policySatisfiedHTML + "</p>" +
                         "<p class=\"mb-1\"><strong>Predicate run </strong> : " + new Date(value.timestamp) + "</p>" +
                         "</li>" );
             });
