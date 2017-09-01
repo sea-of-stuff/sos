@@ -29,10 +29,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         // Prepare the experiments to be run
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            for(int j = 0; j < CONTEXT_TYPE.values().length; j++) {
+            for(int j = 0; j < PREDICATE_TYPE.values().length; j++) {
 
-                CONTEXT_TYPE context_type = CONTEXT_TYPE.values()[j];
-                units.add(new ExperimentUnit_PR_1(context_type));
+                PREDICATE_TYPE predicate_type = PREDICATE_TYPE.values()[j];
+                units.add(new ExperimentUnit_PR_1(predicate_type));
             }
         }
         Collections.shuffle(units);
@@ -49,25 +49,25 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     @Override
     public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations() * CONTEXT_TYPE.values().length;
+        return experiment.getSetup().getIterations() * PREDICATE_TYPE.values().length;
     }
 
-    public enum CONTEXT_TYPE {
+    public enum PREDICATE_TYPE {
         ALL, DATA, METADATA, DATA_AND_METADATA, MANIFEST
     }
 
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
 
         private ContextService cms;
-        private CONTEXT_TYPE context_type;
+        private PREDICATE_TYPE predicate_type;
 
-        ExperimentUnit_PR_1(CONTEXT_TYPE context_type) {
-            this.context_type = context_type;
+        ExperimentUnit_PR_1(PREDICATE_TYPE predicate_type) {
+            this.predicate_type = predicate_type;
         }
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with context type " + context_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with predicate type " + predicate_type.name());
 
             try {
                 cms = node.getCMS();
@@ -82,14 +82,14 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with context type " + context_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with predicate type " + predicate_type.name());
 
             counter = cms.runPredicates();
         }
 
         private void addContexts() throws Exception {
 
-            switch(context_type) {
+            switch(predicate_type) {
                 case ALL: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "all.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());

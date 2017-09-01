@@ -27,37 +27,54 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         // Prepare the experiments to be run
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-                units.add(new ExperimentUnit_PO_1(i));
+            for(int j = 0; j < POLICY_TYPE.values().length; j++) {
+
+                POLICY_TYPE predicate_type = POLICY_TYPE.values()[j];
+                units.add(new ExperimentUnit_PO_1(predicate_type));
+            }
         }
+
         Collections.shuffle(units);
 
         experimentUnitIterator = units.iterator();
     }
 
     @Override
-    public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations();
+    public void finish() {
+        super.finish();
+
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PO_1.");
     }
+
+    @Override
+    public int numberOfTotalIterations() {
+        return experiment.getSetup().getIterations() * POLICY_TYPE.values().length;
+    }
+
+    public enum POLICY_TYPE {
+        NONE, DATA, METADATA, MANIFEST, ROLES, NODES
+    }
+
 
     private class ExperimentUnit_PO_1 implements ExperimentUnit {
 
-        private int id;
         private ContextService cms;
+        private POLICY_TYPE policy_type;
 
-        ExperimentUnit_PO_1(int id) {
-            this.id = id;
+        ExperimentUnit_PO_1(POLICY_TYPE policy_type) {
+            this.policy_type = policy_type;
         }
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with id " + id);
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with policy type " + policy_type.name());
 
             try {
                 cms = node.getCMS();
 
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 addFolderContentToNode(node, new File(datasetPath));
-                // TODO - add contexts
+                addContexts();
             } catch (Exception e) {
                 throw new ExperimentException();
             }
@@ -65,9 +82,23 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT Unit " + id);
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT policy type " + policy_type.name());
 
             cms.runPolicies();
+        }
+
+        private void addContexts() throws Exception {
+
+            switch (policy_type) {
+                case NONE:
+                    // no policy in context
+                    break;
+                case DATA:
+                    // policy with data replication?
+                    break;
+                case METADATA:
+                    break;
+            }
         }
 
     }
