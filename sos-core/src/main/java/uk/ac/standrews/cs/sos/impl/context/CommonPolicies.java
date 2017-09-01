@@ -77,15 +77,25 @@ public class CommonPolicies {
                     policyActions.replicateData(data, nodes, factor);
                 }
             } catch (IOException | ManifestNotFoundException e) {
-                throw new PolicyException("Policy was unable to replicate data for manifest with guid " + manifest.guid());
+                throw new PolicyException("Policy was unable to replicate data referenced by manifest with guid " + manifest.guid());
             }
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            int numberReplicas = policyActions.numberOfReplicas(codomain, manifest.guid());
-            return numberReplicas >= factor;
+            try {
+                Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+                if (contentManifest.getType().equals(ManifestType.ATOM)) {
+
+                    int numberReplicas = policyActions.numberOfReplicas(codomain, contentManifest.guid());
+                    return numberReplicas >= factor;
+                }
+
+                return true; // policy is always satisfied if not atom
+            } catch (ManifestNotFoundException e) {
+                throw new PolicyException("Unable to check data replication policy for data referenced by manifest with guid: " + manifest.guid());
+            }
         }
     }
 

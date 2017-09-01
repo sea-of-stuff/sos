@@ -92,6 +92,7 @@ public class RESTStorage {
 
     }
 
+    // TODO - ignore if data is already stored in node?
     /**
      * Add an atom to the SOS node
      *
