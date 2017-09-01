@@ -1,0 +1,7 @@
+{
+  "name": "DataReplication",
+  "predicate": "CommonPredicates.AcceptAll();",
+  "policies" : [
+    "CommonPolicies.DataReplicationPolicy(policyActions, codomain, 1)"
+  ]
+}

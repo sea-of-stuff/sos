@@ -52,7 +52,10 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
     }
 
     public enum POLICY_TYPE {
-        NONE, DATA, METADATA, MANIFEST, ROLES, NODES
+        NONE, DATA_REPLICATION, MANIFEST_REPLICATION, METADATA_REPLICATION, // <-- each of these can have different settings (e.g. based on where node are, their availability, etc)
+        DATA_PROTECTION, MANIFEST_PROTECTION, METADATA_PROTECTION, // <-- protection granting. Data is not protected by the policies
+        NOTIFICATION // Nodes? are notified about the new data in the context
+
     }
 
 
@@ -93,10 +96,10 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
                 case NONE:
                     // no policy in context
                     break;
-                case DATA:
+                case DATA_REPLICATION:
                     // policy with data replication?
                     break;
-                case METADATA:
+                case MANIFEST_REPLICATION:
                     break;
             }
         }
