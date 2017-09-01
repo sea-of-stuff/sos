@@ -3,15 +3,18 @@ install.packages("FSA")
 library("PMCMR", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
 library("FSA", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
 
+install.packages("stargazer")
+library(stargazer)
+
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-# pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k)
+# pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k) NOT VALID, MUST BE RE-RUN
 # pr_1__2017_08_23T11_50_08_412Z.TSV (on text dataset) (40 iterations x configuration type)
-# pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
-# pr_1__2017_08_25T13_39_53_118Z.TSV (text with manifest info)
-# Read the CVS file
 # pr_1__2017_08_23T11_50_08_412Z_cleaned.TSV
+# pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
+
+# Read the CVS file
 d <- read.csv("output/pr_1__2017_08_23T11_50_08_412Z_cleaned.TSV", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
