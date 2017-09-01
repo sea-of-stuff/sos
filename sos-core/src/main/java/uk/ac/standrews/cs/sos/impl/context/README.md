@@ -67,7 +67,7 @@
 
 ## With dependencies
 
-```
+```json
 {
 	"name": "Test",
 	"guid": "6a7d6e5c875ab6ed01665e6aef853b7ce3b74cff"
@@ -81,7 +81,7 @@
 
 - domain is LOCAL, but explicit
 
-```
+```json
 {
     "name": "All",
     "predicate": "CommonPredicates.AcceptAll();",
@@ -94,7 +94,7 @@
 
 - domain is SPECIFIED
 
-```
+```json
 {
     "name": "All",
     "predicate": "CommonPredicates.AcceptAll();",
@@ -110,7 +110,7 @@
 
 - domain is ANY
 
-```
+```json
 {
     "name": "All",
     "predicate": "CommonPredicates.AcceptAll();",

@@ -68,7 +68,7 @@ The services are:
 Each service, except for the agent one, can be exposed to the outside world by running a REST server.
 You should set the service to be exposed in the node configuration:
 
-```
+```json
 "services": {
       "context": {
         "exposed": false
@@ -127,7 +127,7 @@ However, here we are not constrained by the WebDAV protocol, thus we are able to
 
 ### Packaging
 
-```
+```bash
 $ mvn package # or `mvn package -DskipTests` to skip the tests during the packaging process
 $ mv target/app-1.0-SNAPSHOT.jar sos.jar
 $ java -jar sos.jar -c configuration.conf ARGS
@@ -171,7 +171,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
 
 ### Example
 
-```
+```json
 {
   "settings": {
     "guid": "SHA256_16_9999a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00bb",
