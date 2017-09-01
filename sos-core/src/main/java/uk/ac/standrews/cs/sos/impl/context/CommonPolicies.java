@@ -189,7 +189,11 @@ public class CommonPolicies {
     }
 
     // TODO
-    public static class NotifyNodePolicy implements Policy {
+    public static class NotifyNodesPolicy implements Policy {
+
+        public NotifyNodesPolicy(PolicyActions policyActions, NodesCollection codomain) {
+
+        }
 
         @Override
         public void apply(Manifest manifest) throws PolicyException {

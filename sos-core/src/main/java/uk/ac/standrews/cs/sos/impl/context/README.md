@@ -2,6 +2,8 @@
 
 ## Predicate
 
+This is a list of predicates that can be used:
+
 - MetadataPropertyPredicate(IGUID guid, String property, List<String> matchingContentTypes) : boolean
 - ContentTypePredicate(IGUID guid, List<String> matchingContentTypes) : boolean
 - MetadataIntPropertyPredicate(IGUID guid, String property, Integer matchingValue) : boolean
@@ -17,9 +19,20 @@
 - JavaFileHasMethod(IGUID guid, String method) : boolean
 - JavaFileHasClass(IGUID guid, String clazz) : boolean
 
+In addition you can write your own predicates.
+
 
 ## Policies
 
+This is a list of policies that can be used:
+
+- ManifestReplicationPolicy(PolicyActions policyActions, NodesCollection codomain, int factor)
+- DataReplicationPolicy(PolicyActions policyActions, NodesCollection codomain, int factor)
+- MetadataReplicationPolicy(PolicyActions policyActions, NodesCollection codomain, int factor)
+- DeletionPolicy(PolicyActions policyActions, NodesCollection codomain)
+- GrantAccessPolicy(PolicyActions policyActions, IGUID granter, IGUID grantee)
+- ReplicateAllVersionsPolicy(PolicyActions policyActions)
+- NotifyNodesPolicy(PolicyActions policyActions, NodesCollection codomain)
 
 # Examples of Contexts as JSON strings
 
