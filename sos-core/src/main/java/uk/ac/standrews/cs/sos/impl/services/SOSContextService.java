@@ -559,6 +559,11 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextContent content = new ContextContent();
+            ContextContent prev = contextsContents.get(context.guid(), guid);
+
+            // TODO - this is a naive way to update only the policy result
+            content.predicateResult = prev.predicateResult;
+            content.timestamp = prev.timestamp;
 
             Policy[] policies = context.policies();
             boolean allPoliciesAreSatisfied = true;
@@ -566,13 +571,6 @@ public class SOSContextService implements ContextService {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 policy.apply(manifest);
-
-                ContextContent prev = contextsContents.get(context.guid(), guid);
-
-                // TODO - this is a naive way to update only the policy result
-                content.predicateResult = prev.predicateResult;
-                content.timestamp = prev.timestamp;
-
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
                 contextsContents.addUpdateMapping(context.guid(), guid, content);
@@ -589,6 +587,11 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextContent content = new ContextContent();
+            ContextContent prev = contextsContents.get(context.guid(), guid);
+
+            // TODO - this is a naive way to update only the policy result
+            content.predicateResult = prev.predicateResult;
+            content.timestamp = prev.timestamp;
 
             Policy[] policies = context.policies();
             boolean allPoliciesAreSatisfied = true;
@@ -596,12 +599,6 @@ public class SOSContextService implements ContextService {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
-
-                // TODO - this is a naive way to update only the policy result
-                ContextContent prev = contextsContents.get(context.guid(), guid);
-
-                content.predicateResult = prev.predicateResult;
-                content.timestamp = prev.timestamp;
 
                 contextsContents.addUpdateMapping(context.guid(), guid, content);
             }

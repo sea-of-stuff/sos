@@ -70,12 +70,24 @@ public class CommonPolicies {
             try {
 
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
-                if (contentManifest.getType().equals(ManifestType.ATOM)) {
-                    Data data = ((Atom) contentManifest).getData();
 
-                    NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
-                    policyActions.replicateData(data, nodes, factor);
+                switch(contentManifest.getType()) {
+                    case ATOM:
+                        Data data = ((Atom) contentManifest).getData();
+
+                        NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
+                        policyActions.replicateData(data, nodes, factor);
+
+                        break;
+                    case ATOM_PROTECTED:
+
+                        // TODO - use different policy action? not sure.
+                        // The POST sos/storage/stream/protected end-point is to be used when we want to protect the data, not for when the data is already protected
+                        // However, it is also wrong if the storage on the other side stored the data as atom, rather than atomprotected.
+                        // I think it is okay if the manifest has no keys, but that storage should know that it is protected data we are talking about.
+                        break;
                 }
+
             } catch (IOException | ManifestNotFoundException e) {
                 throw new PolicyException("Policy was unable to replicate data referenced by manifest with guid " + manifest.guid());
             }

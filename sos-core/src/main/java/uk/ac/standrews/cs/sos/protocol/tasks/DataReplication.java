@@ -141,12 +141,12 @@ public class DataReplication extends Task {
      * @return true if the data was transferred successfully.
      */
     private boolean transferDataAndUpdateNodeState(InputStream data, Node node, Storage storage) {
-        SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.toString());
+        SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.getNodeGUID().toMultiHash());
 
 
         try {
             Atom atom = transferDataRequest(data, node);
-            SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.toString());
+            SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.getNodeGUID().toMultiHash());
 
             for(LocationBundle locationBundle:atom.getLocations()) {
                 storage.addLocation(atom.guid(), locationBundle);

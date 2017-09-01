@@ -71,6 +71,8 @@ public class PolicyActions {
      */
     public void replicateData(Data data, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
+        System.out.println("replicating data");
+        // FIXME - differentiate between clear data and protected data
         try {
             AtomBuilder atomBuilder = new AtomBuilder()
                     .setData(data)
