@@ -48,7 +48,7 @@ public class FetchMetadata extends Task {
 
         try {
             URL url = SOSURL.MMS_GET_METADATA(node, metadataId);
-            SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {

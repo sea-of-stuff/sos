@@ -32,7 +32,7 @@ public class InfoNode extends Task {
 
         try {
             URL url = SOSURL.NODE_INFO(node);
-            SyncRequest request = new SyncRequest(HTTPMethod.GET, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
             request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 

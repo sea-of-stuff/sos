@@ -87,7 +87,7 @@ public class ManifestReplication extends Task {
 
         try {
             URL url = SOSURL.DDS_POST_MANIFEST(node);
-            SyncRequest request = new SyncRequest(HTTPMethod.POST, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
             request.setJSONBody(manifest.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

@@ -66,7 +66,7 @@ public class MetadataReplication extends Task {
 
         try {
             URL url = SOSURL.MMS_POST_METADATA(node);
-            SyncRequest request = new SyncRequest(HTTPMethod.POST, url);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url);
             request.setJSONBody(metadata.toString());
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

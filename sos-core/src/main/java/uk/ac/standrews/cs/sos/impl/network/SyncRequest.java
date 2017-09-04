@@ -6,21 +6,24 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.BaseRequest;
 import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.RawBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.PublicKey;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SyncRequest extends Request {
-
 
     private ResponseType responseType;
 
@@ -30,6 +33,16 @@ public class SyncRequest extends Request {
 
     public SyncRequest(HTTPMethod method, URL url, ResponseType responseType) {
         super(method, url);
+
+        this.responseType = responseType;
+    }
+
+    public SyncRequest(PublicKey signatureCertificate, HTTPMethod method, URL url) {
+        this(signatureCertificate, method, url, ResponseType.BINARY);
+    }
+
+    public SyncRequest(PublicKey signatureCertificate, HTTPMethod method, URL url, ResponseType responseType) {
+        super(signatureCertificate, method, url);
 
         this.responseType = responseType;
     }
@@ -84,9 +97,14 @@ public class SyncRequest extends Request {
 
     private Response postJSON() throws IOException {
 
-        RequestBodyEntity requestWithBody = Unirest.post(url.toString())
-                .header("Content-Type", "application/json")
-                .body(json_body);
+        HttpRequestWithBody requestWithBody = Unirest.post(url.toString())
+                .header("Content-Type", "application/json");
+
+        if (signatureCertificate != null) {
+                requestWithBody.header("sos-node-challenge", nodeChallenge);
+        }
+
+        requestWithBody.body(json_body);
 
         return makeRequest(requestWithBody);
     }
@@ -126,8 +144,15 @@ public class SyncRequest extends Request {
                     break;
             }
 
+            if (signatureCertificate != null) {
+                String signedChallenge = resp.getHeaders().getFirst("sos-node-challenge");
+                boolean verified = DigitalSignature.verify64(signatureCertificate, nodeChallenge, signedChallenge);
+
+                if (!verified) return new ErrorResponseImpl();
+            }
+
             return new ResponseImpl(resp);
-        } catch (UnirestException e) {
+        } catch (UnirestException | CryptoException e) {
             return new ErrorResponseImpl();
         }
 

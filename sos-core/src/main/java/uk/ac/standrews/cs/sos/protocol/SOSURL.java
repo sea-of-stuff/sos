@@ -126,6 +126,7 @@ public class SOSURL {
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
         // FIXME - use address.toString()
-        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort() + BASE_PATH;
+        return HTTP_SCHEME + address.toString() + BASE_PATH;
+        // return HTTP_SCHEME + address.getHostName() + ":" + address.getPort() + BASE_PATH;
     }
 }

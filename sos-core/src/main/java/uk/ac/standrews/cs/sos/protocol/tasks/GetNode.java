@@ -53,8 +53,7 @@ public class GetNode extends Task {
 
             try {
                 URL url = SOSURL.NDS_GET_NODE(node, nodeId);
-
-                SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
+                SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
                 Response response = RequestsManager.getInstance().playSyncRequest(request);
 
                 foundNode = parseNode(response);

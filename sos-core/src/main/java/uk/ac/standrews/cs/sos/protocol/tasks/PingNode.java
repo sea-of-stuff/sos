@@ -38,7 +38,7 @@ public class PingNode extends Task {
 
         try {
             URL url = SOSURL.NODE_PING(node, message);
-            SyncRequest request = new SyncRequest(HTTPMethod.GET, url, ResponseType.TEXT);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
             request.setJSONBody(node.toString());
 
             long startRequest = System.currentTimeMillis();

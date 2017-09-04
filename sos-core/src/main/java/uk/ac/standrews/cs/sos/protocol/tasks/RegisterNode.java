@@ -32,7 +32,7 @@ public class RegisterNode extends Task {
 
         try {
             URL url = SOSURL.NDS_REGISTER_NODE(ndsNode);
-            SyncRequest request = new SyncRequest(HTTPMethod.POST, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
             request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 

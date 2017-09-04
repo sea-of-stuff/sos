@@ -78,7 +78,7 @@ public class VerifyData extends Task {
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
         URL url = SOSURL.CHALLENGE(node, entity, challenge);
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
+        SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
         try (InputStream inputStream = response.getBody()) {

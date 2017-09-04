@@ -48,7 +48,7 @@ public class FetchData extends Task {
 
         try {
             URL url = SOSURL.STORAGE_GET_DATA(node, entityId);
-            SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {

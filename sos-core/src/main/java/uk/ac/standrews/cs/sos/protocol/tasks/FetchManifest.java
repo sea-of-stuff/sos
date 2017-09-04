@@ -50,7 +50,7 @@ public class FetchManifest extends Task {
 
         try {
             URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
-            SyncRequest request = new SyncRequest(HTTPMethod.GET, url);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
