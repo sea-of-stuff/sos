@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.model;
 import uk.ac.standrews.cs.guid.IGUID;
 
 import java.net.InetSocketAddress;
+import java.security.PublicKey;
 
 /**
  * Node interface
@@ -18,6 +19,13 @@ public interface Node {
      * @return
      */
     IGUID getNodeGUID();
+
+    /**
+     * This is the signature certificate the the node can expose to the rest of the SOS.
+     *
+     * @return
+     */
+    PublicKey getSignatureCertificate();
 
     /**
      * This is the address of the node.

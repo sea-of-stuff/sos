@@ -138,7 +138,7 @@ public class AtomManifestTest extends CommonTest {
         assertTrue(atomManifest.verifyIntegrity());
     }
 
-    @Test (timeOut = 100000)
+    @Test (timeOut = 10000)
     public void testIsVerifiedForLocation() throws Exception {
         Location location = new URILocation(Hashes.TEST_HTTP_BIN_URL);
         LocationBundle bundle = new ExternalLocationBundle(location);

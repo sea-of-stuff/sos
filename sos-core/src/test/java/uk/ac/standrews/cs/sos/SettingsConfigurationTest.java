@@ -38,9 +38,7 @@ public class SettingsConfigurationTest {
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
         IGUID guid = settings.getSettingsObj().getNodeGUID();
-        assertFalse(guid.isInvalid());
-        assertEquals(guid.toString(), "0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4");
-        assertEquals(guid.toMultiHash(), "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4");
+        assertTrue(guid.isInvalid()); // NOTE: The node GUID is not set from the configuration file, but it is generated using the node certificate.
     }
 
     @Test

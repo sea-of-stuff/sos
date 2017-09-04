@@ -8,8 +8,11 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.IOException;
+import java.security.PublicKey;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -23,6 +26,7 @@ public class SOSNodeDeserializer extends JsonDeserializer<SOSNode> {
 
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_NODE_GUID);
+            PublicKey signatureCertificate = DigitalSignature.getCertificate(node.get(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE).asText());
             String hostname = node.get(JSONConstants.KEY_NODE_HOSTNAME).asText();
             int port = node.get(JSONConstants.KEY_NODE_PORT).asInt();
 
@@ -33,9 +37,9 @@ public class SOSNodeDeserializer extends JsonDeserializer<SOSNode> {
             boolean isCMS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_CMS);
             boolean isRMS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_RMS);
 
-            return new SOSNode(guid, hostname, port, false, isStorage, isDDS, isNDS, isMMS, isCMS, isRMS);
+            return new SOSNode(guid, signatureCertificate, hostname, port, false, isStorage, isDDS, isNDS, isMMS, isCMS, isRMS);
 
-        } catch (GUIDGenerationException e) {
+        } catch (GUIDGenerationException | CryptoException e) {
             throw new IOException("Unable to recreate SOSNode");
         }
 

@@ -50,6 +50,7 @@ public class JSONConstants {
 
     // Node
     public static final String KEY_NODE_GUID = "guid";
+    public static final String KEY_NODE_SIGNATURE_CERTIFICATE = "signCert";
     public static final String KEY_NODE_HOSTNAME = "hostname";
     public static final String KEY_NODE_PORT = "port";
     public static final String KEY_NODE_SERVICES = "services";

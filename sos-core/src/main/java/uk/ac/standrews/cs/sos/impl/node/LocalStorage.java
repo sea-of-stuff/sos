@@ -20,7 +20,7 @@ public class LocalStorage {
     private static final String USERS_ROLES_DIRECTORY_NAME = "usro";
     private static final String CONTEXTS_DIRECTORY_NAME = "context";
     private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
-    private static final String JAVA_DIRECTORY_NAME = "java"; // fixme
+    private static final String JAVA_DIRECTORY_NAME = "java";
     private static final String KEYS_DIRECTORY_NAME = "keys"; // fixme
 
     // The actual storage used by this node
@@ -98,6 +98,14 @@ public class LocalStorage {
     public IDirectory getNodeDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(NODE_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
+    }
+
+    public IDirectory getKeysDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(KEYS_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }

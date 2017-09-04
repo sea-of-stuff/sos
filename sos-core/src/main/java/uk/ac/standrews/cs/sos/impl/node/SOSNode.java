@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.security.PublicKey;
 import java.util.Objects;
 
 /**
@@ -28,13 +29,14 @@ import java.util.Objects;
 @JsonDeserialize(using = SOSNodeDeserializer.class)
 public class SOSNode implements Node {
 
-    private IGUID nodeGUID;
+    protected PublicKey signatureCertificate;
+    protected IGUID nodeGUID;
     protected InetSocketAddress hostAddress;
 
     /******************
      * DB fields *
      ******************/
-    private String DB_nodeid;
+    protected String DB_nodeid;
     private String DB_hostname;
     private int DB_port;
     protected boolean DB_is_agent;
@@ -45,13 +47,13 @@ public class SOSNode implements Node {
     protected boolean DB_is_cms;
     protected boolean DB_is_rms;
 
-    // no-args constructor needed for ORMLite
-    protected SOSNode() {}
+    private SOSNode() {}
 
-    public SOSNode(IGUID guid, String hostname, int port,
-                   boolean isAgent, boolean isStorage, boolean isDDS,
-                   boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS) {
+    public SOSNode(IGUID guid, PublicKey signatureCertificate, String hostname, int port,
+                   boolean isAgent, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS) {
+
         this.nodeGUID = guid;
+        this.signatureCertificate = signatureCertificate;
         this.hostAddress = new InetSocketAddress(hostname, port);
 
         this.DB_nodeid = guid.toMultiHash();
@@ -66,16 +68,13 @@ public class SOSNode implements Node {
         this.DB_is_rms = isRMS;
     }
 
-    public SOSNode(SettingsConfiguration.Settings settings) throws NodeException {
+    protected SOSNode(SettingsConfiguration.Settings settings) throws NodeException {
 
         try {
-            this.nodeGUID = settings.getNodeGUID();
-
             InetAddress hostname = InetAddress.getLocalHost();
             int port = settings.getRest().getPort();
             this.hostAddress = new InetSocketAddress(hostname, port);
 
-            this.DB_nodeid = nodeGUID.toMultiHash();
             this.DB_hostname = hostname.getHostAddress();
             this.DB_port = port;
 
@@ -95,9 +94,9 @@ public class SOSNode implements Node {
 
     // Cloning constructor
     public SOSNode(Node node) {
-        this(node.getNodeGUID(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
-                node.isAgent(), node.isStorage(), node.isDDS(),
-                node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
+
+        this(node.getNodeGUID(), node.getSignatureCertificate(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
+                node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
     }
 
     @Override
@@ -112,6 +111,11 @@ public class SOSNode implements Node {
         }
 
         return nodeGUID;
+    }
+
+    @Override
+    public PublicKey getSignatureCertificate() {
+        return signatureCertificate;
     }
 
     @Override

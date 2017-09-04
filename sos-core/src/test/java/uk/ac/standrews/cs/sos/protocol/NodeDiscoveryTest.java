@@ -19,6 +19,8 @@ import uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -153,10 +155,11 @@ public class NodeDiscoveryTest {
     }
 
     @Test
-    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
+    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.getNodeGUID()).thenReturn(nodeFound);
+        when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);
@@ -167,10 +170,11 @@ public class NodeDiscoveryTest {
     }
 
     @Test (expectedExceptions = NodeNotFoundException.class)
-    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException {
+    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
         when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);

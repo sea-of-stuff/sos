@@ -1,9 +1,14 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -17,12 +22,17 @@ import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Paths;
+import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -45,6 +55,10 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSLocalNode extends SOSNode implements LocalNode {
+
+    // The SOSLocalNode will use this private key to digitally sign messages
+    // that the receivers can then verify using the known digital signature certificate (public key) of this node.
+    private PrivateKey signaturePrivateKey;
 
     public static SettingsConfiguration.Settings settings;
 
@@ -70,7 +84,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     // Each node will have its own log and it will be used to log errors as well
     // as useful information about the node itself.
-    private SOS_LOG SOS_LOG = new SOS_LOG(getNodeGUID());
+    private SOS_LOG SOS_LOG;
 
     /**
      * Construct the Node instance for this machine
@@ -82,6 +96,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         SOSLocalNode.settings = Builder.settings;
         localStorage = Builder.localStorage;
+
+        manageSignatureKeys();
+        manageNodeGUID();
+        SOS_LOG = new SOS_LOG(getNodeGUID());
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
         SOS_LOG.log(LEVEL.INFO,
@@ -116,6 +134,60 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         cacheFlusher();
 
         SOS_LOG.log(LEVEL.INFO, "Node started");
+    }
+
+    /**
+     * TODO - move this method down
+     *
+     * Attempt to load the private key and the certificate for the digital signature.
+     * If keys cannot be loaded, then generate them and save to disk
+     *
+     * @throws SignatureException if an error occurred while managing the keys
+     * @throws DataStorageException if the keys could not be accessed and/or stored
+     */
+    private void manageSignatureKeys() throws SignatureException, DataStorageException {
+
+        IDirectory nodeDirectory = localStorage.getNodeDirectory();
+
+        try {
+            IFile publicKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.CERTIFICATE_EXTENSION);
+            if (signatureCertificate == null && publicKeyFile.exists()) {
+                signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toFile().toPath());
+            }
+
+            IFile privateKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.PRIVATE_KEY_EXTENSION);
+            if (signaturePrivateKey == null && privateKeyFile.exists()) {
+                signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toFile().toPath());
+            }
+
+            if (signatureCertificate == null && signaturePrivateKey == null) {
+
+                KeyPair keys = DigitalSignature.generateKeys();
+                signatureCertificate = keys.getPublic();
+                signaturePrivateKey = keys.getPrivate();
+
+                DigitalSignature.persist(keys,
+                            Paths.get(nodeDirectory.getPathname() + "id_rsa"),
+                            Paths.get(nodeDirectory.getPathname() + "id_rsa"));
+            }
+
+        } catch (CryptoException | IOException e) {
+            throw new SignatureException(e);
+        }
+    }
+
+    // TODO - move this method down
+    private void manageNodeGUID() throws SOSException {
+
+        try {
+            this.nodeGUID = GUIDFactory.generateGUID(signatureCertificate.getEncoded());
+            this.DB_nodeid = nodeGUID.toMultiHash();
+
+            settings.setGuid(nodeGUID.toMultiHash());
+        } catch (GUIDGenerationException e) {
+            throw new SOSException("Unable to generate GUID for SOSLocalNode");
+        }
+
     }
 
     public Agent getAgent() {

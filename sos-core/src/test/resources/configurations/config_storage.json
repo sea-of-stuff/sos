@@ -1,6 +1,5 @@
 {
   "settings": {
-    "guid": "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
     "services": {
       "agent": {
         "exposed": true
@@ -91,7 +90,8 @@
     },
     "bootstrapNodes": [
       {
-        "guid" : "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
+        "guid" : "SHA256_16_c1fca01cb22708da8499d38243cec81bb66b76a756449872b04f619463804f6c",
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALRCkJF8VSc6ZWz6A7GrNbbJf8tMzSveFOe5DUCetLfMjQZ+bNx5J6L7TcuaNWz7uPzrE5FzE2oOzG8H8VQk3osCAwEAAQ==",
         "hostname" : "localhost",
         "port" : 8110,
         "services" : {

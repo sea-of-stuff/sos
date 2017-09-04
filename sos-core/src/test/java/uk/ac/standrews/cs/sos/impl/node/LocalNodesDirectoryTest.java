@@ -15,9 +15,12 @@ import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.security.PublicKey;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
@@ -33,6 +36,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
     private LocalNodesDirectory localNodesDirectory;
     private Node testNode;
+    private PublicKey mockSignatureCertificate;
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
@@ -53,6 +57,12 @@ public class LocalNodesDirectoryTest extends CommonTest {
         testNode = mock(SOSLocalNode.class);
         when(testNode.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
         localNodesDirectory = new LocalNodesDirectory(testNode, database);
+
+        try {
+            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
+        } catch (CryptoException e) {
+            throw new Exception();
+        }
     }
 
     @Test
@@ -64,7 +74,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void basicAddGetNodeTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate, "example.com", 8080, true, false, false, false, false, false, false);
 
         localNodesDirectory.addNode(node);
         Node retrievedNode = localNodesDirectory.getNode(guid);
@@ -78,7 +88,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         assertEquals(nodes.size(), 0);
 
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate, "example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
         addNode(true, false, false, false, false, false, false);
@@ -101,7 +111,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void persistTest() throws GUIDGenerationException, NodesDirectoryException {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false);
 
         assertEquals(localNodesDirectory.getNodes(p -> true, NO_LIMIT).size(), 0);
 
@@ -115,7 +125,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesWithLimitTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
         addNode(true, false, false, false, false, false, false);
@@ -133,7 +143,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesWithLimitCapTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
         addNode(true, false, false, false, false, false, false);
@@ -151,7 +161,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesWithLimitInExcessTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
         addNode(true, false, false, false, false, false, false);
@@ -169,7 +179,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void getStorageNodesIgnoreNegativeLimitTest() {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false);
         localNodesDirectory.addNode(node);
 
         addNode(true, false, false, false, false, false, false);
@@ -187,14 +197,14 @@ public class LocalNodesDirectoryTest extends CommonTest {
     @Test
     public void nodeIsUpdatedTest() throws NodesDirectoryException {
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Node node = new SOSNode(guid, "example.com", 8080, true, false, false, false, false, false, false);
+        Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false);
 
         localNodesDirectory.addNode(node);
         Node retrievedNode = localNodesDirectory.getNode(guid);
         assertEquals(retrievedNode, node);
 
         // Now isStorage node too
-        Node updatedNode = new SOSNode(guid, "example.com", 8080, true, true, false, false, false, false, false);
+        Node updatedNode = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, true, false, false, false, false, false);
         localNodesDirectory.addNode(updatedNode);
 
         Node retrievedUpdatedNode = localNodesDirectory.getNode(guid);
@@ -203,7 +213,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     }
 
     private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS) {
-        localNodesDirectory.addNode(new SOSNode(guid, "example.com", 8080,
+        localNodesDirectory.addNode(new SOSNode(guid, mockSignatureCertificate,"example.com", 8080,
                 isClient, isStorage, isDDS,
                 isNDS, isMCS, isCMS, isRMS));
     }

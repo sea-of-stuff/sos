@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.IOException;
 
@@ -16,9 +18,11 @@ public class SOSNodeSerializer extends JsonSerializer<SOSNode> {
     @Override
     public void serialize(SOSNode node, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
 
+        try {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(JSONConstants.KEY_NODE_GUID, node.getNodeGUID().toMultiHash());
+        jsonGenerator.writeStringField(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
         jsonGenerator.writeStringField(JSONConstants.KEY_NODE_HOSTNAME, node.getHostAddress().getHostName());
         jsonGenerator.writeNumberField(JSONConstants.KEY_NODE_PORT, node.getHostAddress().getPort());
 
@@ -33,6 +37,10 @@ public class SOSNodeSerializer extends JsonSerializer<SOSNode> {
         jsonGenerator.writeEndObject();
 
         jsonGenerator.writeEndObject();
+
+        } catch (CryptoException e) {
+            throw new IOException("Unable to Serialise node");
+        }
     }
 
     private void serializeService(JsonGenerator jsonGenerator, String service, boolean isExposed) throws IOException {

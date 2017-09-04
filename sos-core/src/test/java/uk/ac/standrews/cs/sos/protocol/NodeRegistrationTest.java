@@ -6,13 +6,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -21,9 +18,11 @@ import uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
-import java.io.IOException;
+import java.security.PublicKey;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,6 +43,7 @@ public class NodeRegistrationTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10007;
+    private PublicKey mockSignatureCertificate;
 
     private static final String TEST_DATA =
             "{" +
@@ -101,7 +101,7 @@ public class NodeRegistrationTest {
 
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException, IOException, SOSException {
+    public void setUp() throws Exception {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -148,6 +148,12 @@ public class NodeRegistrationTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
+
+        try {
+            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
+        } catch (CryptoException e) {
+            throw new Exception();
+        }
     }
 
     @AfterMethod
@@ -174,7 +180,7 @@ public class NodeRegistrationTest {
     @Test
     public void registerToNDSTest() throws NodeRegistrationException {
 
-        Node nodeMock = new SOSNode(localNodeGUID, "localhost", 8080, true, true, false, false, false, false, false);
+        Node nodeMock = new SOSNode(localNodeGUID, mockSignatureCertificate, "localhost", 8080, true, true, false, false, false, false, false);
         Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
@@ -187,13 +193,13 @@ public class NodeRegistrationTest {
     @Test
     public void registerToNDSFailsTest() throws NodeRegistrationException {
 
-        Node nodeMock = new SOSNode(localNodeGUID, "localhost", 8081, true, true, false, false, false, false, false);
+        Node nodeMock = new SOSNode(localNodeGUID, mockSignatureCertificate, "localhost", 8081, true, true, false, false, false, false, false);
         Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
 
     private Node makeMockNode() {
-        return new SOSNode(GUIDFactory.generateRandomGUID(), "localhost", 8090, true, true, true, true, true, true, true);
+        return new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate, "localhost", 8090, true, true, true, true, true, true, true);
     }
 }

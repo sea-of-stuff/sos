@@ -12,10 +12,13 @@ import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -68,7 +71,9 @@ public class SettingsConfiguration {
     ///////////////////////////////////////
     public static class Settings {
 
-        private String guid; // TODO - have a way to save the guid to the file if it is not provided
+        @JsonIgnore
+        private String guid;
+
         private AdvanceServicesSettings services;
         private DatabaseSettings database;
         private RESTSettings rest;
@@ -81,10 +86,12 @@ public class SettingsConfiguration {
 
         public Settings() {}
 
+        @JsonIgnore
         public String getGuid() {
             return guid;
         }
 
+        @JsonIgnore
         public void setGuid(String guid) {
             this.guid = guid;
         }
@@ -175,6 +182,7 @@ public class SettingsConfiguration {
         public static class NodeSettings implements Node {
 
             private String guid;
+            private String signCert;
             private String hostname;
             private int port;
             private ServicesSettings services;
@@ -191,6 +199,16 @@ public class SettingsConfiguration {
                 }
 
                 return null;
+            }
+
+            @Override
+            public PublicKey getSignatureCertificate() {
+
+                try {
+                    return DigitalSignature.getCertificate(signCert);
+                } catch (CryptoException e) {
+                    return null;
+                }
             }
 
             @JsonIgnore
@@ -264,6 +282,15 @@ public class SettingsConfiguration {
             public void setServices(ServicesSettings services) {
                 this.services = services;
             }
+
+            public String getSignCert() {
+                return signCert;
+            }
+
+            public void setSignCert(String signCert) {
+                this.signCert = signCert;
+            }
+
 
             public static class ServicesSettings {
 

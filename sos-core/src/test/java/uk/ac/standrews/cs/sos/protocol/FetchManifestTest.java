@@ -9,8 +9,6 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -18,9 +16,12 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchManifest;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.PublicKey;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -49,8 +50,10 @@ public class FetchManifestTest {
             "  \"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}";
 
+    private PublicKey mockSignatureCertificate;
+
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
+    public void setUp() throws Exception {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_manifest_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -70,6 +73,12 @@ public class FetchManifestTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
+
+        try {
+            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
+        } catch (CryptoException e) {
+            throw new Exception();
+        }
     }
 
     @AfterMethod
@@ -80,7 +89,7 @@ public class FetchManifestTest {
     @Test
     public void basicManifestFetchTest() throws IOException, GUIDGenerationException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, true, false, false, false, false);
 

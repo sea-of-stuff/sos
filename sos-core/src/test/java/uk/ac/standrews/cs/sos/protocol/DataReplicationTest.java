@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
@@ -27,9 +26,12 @@ import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -64,9 +66,10 @@ public class DataReplicationTest extends SetUpTest {
     private static final String TWIN_NODE_ID = "SHA256_16_bbbba025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
 
     private NodeDiscoveryService mockNodeDiscoveryService;
+    private PublicKey mockSignatureCertificate;
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
+    public void setUp() throws Exception {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -132,6 +135,12 @@ public class DataReplicationTest extends SetUpTest {
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
+
+        try {
+            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
+        } catch (CryptoException e) {
+            throw new Exception();
+        }
     }
 
     @AfterMethod
@@ -148,7 +157,7 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         Data data = new StringData(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
@@ -175,7 +184,7 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         Data data = new StringData(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
@@ -198,12 +207,12 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         Data data = new StringData(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
@@ -233,17 +242,17 @@ public class DataReplicationTest extends SetUpTest {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
         Data data = new StringData(TEST_DATA);
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.getNodeGUID())).thenReturn(node);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
-        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(anotherNode.getNodeGUID())).thenReturn(anotherNode);
@@ -275,13 +284,13 @@ public class DataReplicationTest extends SetUpTest {
 
         Data data = new StringData(TEST_DATA);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
-        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.getNodeGUID())).thenReturn(twinStorageNode);
@@ -312,12 +321,12 @@ public class DataReplicationTest extends SetUpTest {
 
         Data data = new StringData(TEST_DATA);
 
-        Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID),
+        Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.getNodeGUID())).thenReturn(storageNode);
 
-        Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID),
+        Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_TWIN_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.getNodeGUID())).thenReturn(twinStorageNode);

@@ -9,8 +9,6 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -19,10 +17,13 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchData;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.PublicKey;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -39,9 +40,10 @@ public class FetchDataTest {
     private static final int MOCK_SERVER_PORT = 10005;
 
     private static final String TEST_DATA = "test-data";
+    private PublicKey mockSignatureCertificate;
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
+    public void setUp() throws Exception {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_data_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -65,6 +67,12 @@ public class FetchDataTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
+
+        try {
+            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
+        } catch (CryptoException e) {
+            throw new Exception();
+        }
     }
 
     @AfterMethod
@@ -75,7 +83,7 @@ public class FetchDataTest {
     @Test
     public void basicDataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
@@ -94,7 +102,7 @@ public class FetchDataTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
 
@@ -106,7 +114,7 @@ public class FetchDataTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchANullGUIDTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
