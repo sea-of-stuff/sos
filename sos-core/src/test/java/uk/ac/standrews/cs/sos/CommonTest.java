@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos;
 
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -9,7 +10,7 @@ import java.lang.reflect.Method;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class CommonTest {
+public abstract class CommonTest extends PowerMockTestCase {
 
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {

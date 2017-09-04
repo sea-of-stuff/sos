@@ -24,11 +24,13 @@
       <module name="filesystem" target="1.8" />
       <module name="instrument" target="1.8" />
       <module name="rest" target="1.8" />
-      <module name="rest-jetty" target="1.8" />
       <module name="sos" target="1.8" />
       <module name="sos-rest-jetty" target="1.8" />
       <module name="web-archive" target="1.8" />
       <module name="web-ui" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="PREFER_TARGET_JDK_COMPILER" value="false" />
   </component>
 </project>

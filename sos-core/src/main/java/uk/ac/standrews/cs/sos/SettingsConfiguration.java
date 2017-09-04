@@ -478,6 +478,7 @@ public class SettingsConfiguration {
 
                 private String cacheFile;
                 private String indexFile;
+                private boolean ping = true;
 
                 public DDSSettings() {}
 
@@ -503,6 +504,14 @@ public class SettingsConfiguration {
 
                 public void setMaxReplication(int maxReplication) {
                     this.maxReplication = maxReplication;
+                }
+
+                public boolean isPing() {
+                    return ping;
+                }
+
+                public void setPing(boolean ping) {
+                    this.ping = ping;
                 }
             }
 

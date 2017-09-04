@@ -64,7 +64,7 @@ public class TasksQueue {
             SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
 
             task.notify();
-        }, 30, TimeUnit.SECONDS);
+        }, 10, TimeUnit.SECONDS);
 
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
     }

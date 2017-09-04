@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.NodeStats;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.Database;
@@ -239,7 +240,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
     private void runCheckNodesPeriodic() {
 
-        // SettingsConfiguration.Settings.ThreadSettings predicateThreadSettings = SOSLocalNode.settings.getServices().getCms().getPredicateThread();
+        boolean ping = SOSLocalNode.settings.getServices().getDds().isPing();
+        if (!ping) return;
 
         service.scheduleWithFixedDelay(() -> {
 

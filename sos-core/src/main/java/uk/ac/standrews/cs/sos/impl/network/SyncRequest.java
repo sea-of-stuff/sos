@@ -101,12 +101,12 @@ public class SyncRequest extends Request {
                 .header("Content-Type", "application/json");
 
         if (signatureCertificate != null) {
-                requestWithBody.header("sos-node-challenge", nodeChallenge);
+            requestWithBody = requestWithBody.header("sos-node-challenge", nodeChallenge);
         }
 
-        requestWithBody.body(json_body);
+        RequestBodyEntity requestBodyEntity = requestWithBody.body(json_body);
 
-        return makeRequest(requestWithBody);
+        return makeRequest(requestBodyEntity);
     }
 
     private Response postData() throws IOException {
@@ -153,6 +153,10 @@ public class SyncRequest extends Request {
 
             return new ResponseImpl(resp);
         } catch (UnirestException | CryptoException e) {
+            return new ErrorResponseImpl();
+        } catch (Error e) {
+            e.printStackTrace();
+            System.out.println("WWWWWWWWHAAAAAT???");
             return new ErrorResponseImpl();
         }
 

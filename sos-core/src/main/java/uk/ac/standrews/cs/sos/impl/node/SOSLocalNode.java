@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
+import com.mashape.unirest.http.Unirest;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -185,6 +186,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         if (cacheFlusherService != null)
             cacheFlusherService.shutdown();
+
+        try {
+            Unirest.shutdown();
+        } catch (IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to shutdown Unirest");
+        }
 
         SOSAgent.destroy();
     }

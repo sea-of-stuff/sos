@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.protocol;
 
 import org.mockserver.integration.ClientAndServer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -36,6 +38,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -49,6 +52,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@PrepareForTest(DigitalSignature.class)
 public class DataReplicationTest extends SetUpTest {
 
     private ClientAndServer mockServer;
@@ -68,8 +72,13 @@ public class DataReplicationTest extends SetUpTest {
     private NodeDiscoveryService mockNodeDiscoveryService;
     private PublicKey mockSignatureCertificate;
 
+//    @ObjectFactory
+//    public IObjectFactory getObjectFactory() {
+//        return new org.powermock.modules.testng.PowerMockObjectFactory();
+//    }
+
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, CryptoException {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -136,11 +145,9 @@ public class DataReplicationTest extends SetUpTest {
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
 
-        try {
-            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
-        } catch (CryptoException e) {
-            throw new Exception();
-        }
+        mockSignatureCertificate = mock(PublicKey.class);
+        PowerMockito.mockStatic(DigitalSignature.class);
+        PowerMockito.when(DigitalSignature.verify64(any(PublicKey.class), any(String.class), any(String.class))).thenReturn(true);
     }
 
     @AfterMethod
