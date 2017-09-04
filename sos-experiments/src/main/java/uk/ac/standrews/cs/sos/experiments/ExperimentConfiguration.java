@@ -22,7 +22,7 @@ import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONF
  */
 public class ExperimentConfiguration {
 
-    public static final String REPO_DATASETS_PATH = "sos-experiments/src/main/resources/datasets/";
+    public static final String REPO_DATASETS_PATH = "experiments/datasets/";
     public static final String REMOTE_DATASETS_PATH = "experiments/datasets/";
 
     @JsonIgnore
