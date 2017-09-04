@@ -36,7 +36,7 @@ public class RESTMMS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response postMetadata(String json) throws IOException {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /dds/metadata");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/metadata");
 
         Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
 
@@ -56,7 +56,7 @@ public class RESTMMS {
     @Path("/metadata/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getMetadata(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /dds/metadata/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mms/metadata/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -83,7 +83,7 @@ public class RESTMMS {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response processMetadata(final InputStream inputStream) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /process");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/process");
 
         MetadataService MetadataService = RESTConfig.sos.getMMS();
 

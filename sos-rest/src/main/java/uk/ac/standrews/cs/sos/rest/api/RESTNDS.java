@@ -34,7 +34,7 @@ public class RESTNDS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response register(SOSNode node) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /nds/register");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/nds/register");
 
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 
@@ -57,7 +57,7 @@ public class RESTNDS {
     @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -85,7 +85,7 @@ public class RESTNDS {
     @Path("/service/{service}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByService(@PathParam("service") String service) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /nds/service/{service}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/service/{service}");
 
         try {
             NodeType nodeType = NodeType.get(service.toLowerCase());

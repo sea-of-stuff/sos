@@ -33,7 +33,7 @@ public class RESTRMS {
     @Path("/user/{guid}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUser(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /user/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/user/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -62,7 +62,7 @@ public class RESTRMS {
     @Path("/role/{guid}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRole(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /role/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/role/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -91,7 +91,7 @@ public class RESTRMS {
     @Path("/user/{guid}/roles")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUserRoles(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /user/{guid}/roles");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/user/{guid}/roles");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -123,7 +123,7 @@ public class RESTRMS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
     public Response postUser(final User user) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /user");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/usro/user");
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 
@@ -142,7 +142,7 @@ public class RESTRMS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
     public Response postRole(final Role role) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /role");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/usro/role");
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 

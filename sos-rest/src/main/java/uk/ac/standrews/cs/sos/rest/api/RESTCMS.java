@@ -29,7 +29,7 @@ public class RESTCMS {
     @Path("/contexts")
     @Produces({MediaType.TEXT_PLAIN})
     public Response getAllContext() {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /contexts");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/contexts");
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
@@ -47,7 +47,7 @@ public class RESTCMS {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response add(String context) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /cms/context");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/cms/context");
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
@@ -64,7 +64,7 @@ public class RESTCMS {
     @Path("/context/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /context/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/context/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -94,7 +94,7 @@ public class RESTCMS {
     @Path("/context/guid/{guid}/contents")
     @Produces({MediaType.TEXT_PLAIN})
     public Response findContextContents(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /context/guid/{guid}/contents");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/context/guid/{guid}/contents");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");

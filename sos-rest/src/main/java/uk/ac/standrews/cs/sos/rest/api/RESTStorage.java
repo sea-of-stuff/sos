@@ -68,7 +68,7 @@ public class RESTStorage {
     @Path("/data/guid/{guid}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") String guid) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /storage/data/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST("Bad input");
@@ -143,7 +143,7 @@ public class RESTStorage {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/) { // TODO - see add data with metadata method above
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /storage/stream");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
         try {
             AtomBuilder builder = new AtomBuilder()
@@ -187,7 +187,7 @@ public class RESTStorage {
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") final String guid, @PathParam("challenge") final String challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /data/guid/" + guid + "/challenge/" + challenge);
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage//data/guid/" + guid + "/challenge/" + challenge);
 
         IGUID atomGUID;
         try {
