@@ -6,7 +6,9 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 
 /**
  * Singleton class
@@ -30,17 +32,38 @@ public class SOSURLProtocol {
     public void register(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) throws SOSProtocolException {
         SOS_LOG.log(LEVEL.INFO, "Registering the SOS Protocol");
         try {
-            if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
-                urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(localStorage);
+            urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(localStorage);
 
-                URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
-            }
+            forcefullyInstall(urlStreamHandlerFactory);
+//            if(System.getProperty("uk.ac.standrews.cs.sos.streamHandlerFactoryInstalled") == null) {
+//            // if (!SOSURLStreamHandlerFactory.URLStreamHandlerFactoryIsSet) {
+//
+//                URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
+//                System.setProperty("uk.ac.standrews.cs.sos.streamHandlerFactoryInstalled", "true");
+//            }
         } catch (Error e) {
             SOS_LOG.log(LEVEL.WARN, "SOS Protocol registration failed: " + e.getMessage());
             throw new SOSProtocolException(e);
         }
 
         urlStreamHandlerFactory.getSOSURLStreamHandler().setNodeDiscoveryService(nodeDiscoveryService);
+    }
+
+    // Solution suggested here: https://stackoverflow.com/a/30524545/2467938
+    public static void forcefullyInstall(URLStreamHandlerFactory factory) {
+        try {
+            // Try doing it the normal way
+            URL.setURLStreamHandlerFactory(factory);
+        } catch (final Error e) {
+            // Force it via reflection
+            try {
+                final Field factoryField = URL.class.getDeclaredField("factory");
+                factoryField.setAccessible(true);
+                factoryField.set(null, factory);
+            } catch (NoSuchFieldException | IllegalAccessException e1) {
+                throw new Error("Could not access factory field on URL class: {}", e);
+            }
+        }
     }
 
 }

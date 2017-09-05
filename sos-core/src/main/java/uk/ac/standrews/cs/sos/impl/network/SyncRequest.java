@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.BaseRequest;
 import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.RawBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
@@ -91,6 +92,7 @@ public class SyncRequest extends Request {
     protected Response get() throws IOException {
 
         GetRequest req = Unirest.get(url.toString());
+        req = (GetRequest) setChallenge(req);
 
         return makeRequest(req);
     }
@@ -99,10 +101,7 @@ public class SyncRequest extends Request {
 
         HttpRequestWithBody requestWithBody = Unirest.post(url.toString())
                 .header("Content-Type", "application/json");
-
-        if (signatureCertificate != null) {
-            //requestWithBody = requestWithBody.header("sos-node-challenge", nodeChallenge);
-        }
+        requestWithBody = (HttpRequestWithBody) setChallenge(requestWithBody);
 
         RequestBodyEntity requestBodyEntity = requestWithBody.body(json_body);
 
@@ -114,19 +113,23 @@ public class SyncRequest extends Request {
         // FIXME - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
 
-        RawBody requestWithRawBody = Unirest.post(url.toString())
-                .body(bytes);
+        HttpRequestWithBody httpRequestWithBody = Unirest.post(url.toString());
+        httpRequestWithBody = (HttpRequestWithBody) setChallenge(httpRequestWithBody);
+        RawBody requestWithRawBody = httpRequestWithBody.body(bytes);
 
         return makeRequest(requestWithRawBody);
     }
 
     private Response putJSON() throws IOException {
 
-        RequestBodyEntity requestWithBody = Unirest.put(url.toString())
-                .header("accept", "application/json")
-                .body(json_body);
 
-        return makeRequest(requestWithBody);
+        HttpRequestWithBody requestWithBody = Unirest.put(url.toString())
+                .header("accept", "application/json");
+        requestWithBody = (HttpRequestWithBody) setChallenge(requestWithBody);
+
+        RequestBodyEntity requestBodyEntity = requestWithBody.body(json_body);
+
+        return makeRequest(requestBodyEntity);
     }
 
     private Response makeRequest(BaseRequest request) throws IOException {
@@ -145,7 +148,7 @@ public class SyncRequest extends Request {
             }
 
             if (signatureCertificate != null) {
-                String signedChallenge = resp.getHeaders().getFirst("sos-node-challenge");
+                String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
                 boolean verified = DigitalSignature.verify64(signatureCertificate, nodeChallenge, signedChallenge);
 
                 if (!verified) return new ErrorResponseImpl();
@@ -153,13 +156,22 @@ public class SyncRequest extends Request {
 
             return new ResponseImpl(resp);
         } catch (UnirestException | CryptoException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to make HTTP request");
             return new ErrorResponseImpl();
         } catch (Error e) {
             e.printStackTrace();
-            System.out.println("WWWWWWWWHAAAAAT???");
             return new ErrorResponseImpl();
         }
 
+    }
+
+    private HttpRequest setChallenge(HttpRequest httpRequest) {
+
+        if (signatureCertificate != null) {
+            httpRequest = httpRequest.header(SOS_NODE_CHALLENGE_HEADER, nodeChallenge);
+        }
+
+        return httpRequest;
     }
 
 }

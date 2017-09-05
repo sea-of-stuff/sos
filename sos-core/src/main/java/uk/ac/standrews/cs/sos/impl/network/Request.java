@@ -14,6 +14,8 @@ import java.security.SecureRandom;
  */
 public abstract class Request {
 
+    public static final String SOS_NODE_CHALLENGE_HEADER = "sos-node-challenge";
+
     protected HTTPMethod method;
     protected URL url;
     protected String json_body;

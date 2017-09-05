@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.network;
 
-import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -22,12 +21,12 @@ import static org.testng.Assert.assertNotNull;
  */
 public class RequestsWithMockServerTest {
 
-    private ClientAndProxy proxy;
     private ClientAndServer mockServer;
 
     @BeforeMethod
     public void startProxy() {
         mockServer = startClientAndServer(9998);
+        mockServer.dumpToLog();
         mockServer
                 .when(
                         request()

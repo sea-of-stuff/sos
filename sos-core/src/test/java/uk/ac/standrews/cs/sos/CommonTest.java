@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos;
 
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
@@ -10,6 +11,7 @@ import java.lang.reflect.Method;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@PowerMockIgnore({"javax.net.ssl.*", "javax.crypto.*"})
 public abstract class CommonTest extends PowerMockTestCase {
 
     @BeforeMethod

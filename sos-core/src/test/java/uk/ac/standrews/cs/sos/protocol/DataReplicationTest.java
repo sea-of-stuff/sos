@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol;
 
 import org.mockserver.integration.ClientAndServer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -13,8 +10,9 @@ import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
@@ -30,16 +28,13 @@ import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
-import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.PublicKey;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -53,9 +48,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@PowerMockIgnore("javax.net.ssl.*")
-@PrepareForTest(DigitalSignature.class)
-public class DataReplicationTest extends SetUpTest {
+public class DataReplicationTest extends ProtocolTest {
 
     private ClientAndServer mockServer;
     private ClientAndServer mockServerTwin;
@@ -72,15 +65,10 @@ public class DataReplicationTest extends SetUpTest {
     private static final String TWIN_NODE_ID = "SHA256_16_bbbba025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
 
     private NodeDiscoveryService mockNodeDiscoveryService;
-    private PublicKey mockSignatureCertificate;
-
-//    @ObjectFactory
-//    public IObjectFactory getObjectFactory() {
-//        return new org.powermock.modules.testng.PowerMockObjectFactory();
-//    }
 
     @BeforeMethod
-    public void setUp() throws Exception, CryptoException {
+    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException, CryptoException, IOException, SOSException {
+        super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -146,10 +134,6 @@ public class DataReplicationTest extends SetUpTest {
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
 
         mockNodeDiscoveryService = mock(NodeDiscoveryService.class);
-
-        mockSignatureCertificate = mock(PublicKey.class);
-        PowerMockito.mockStatic(DigitalSignature.class);
-        PowerMockito.when(DigitalSignature.verify64(any(PublicKey.class), any(String.class), any(String.class))).thenReturn(true);
     }
 
     @AfterMethod

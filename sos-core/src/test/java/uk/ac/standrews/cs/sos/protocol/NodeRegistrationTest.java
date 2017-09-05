@@ -6,10 +6,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -19,10 +22,9 @@ import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
-import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
-import java.security.PublicKey;
+import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,14 +38,13 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class NodeRegistrationTest {
+public class NodeRegistrationTest extends ProtocolTest {
 
     private SOSNodeDiscoveryService nds;
     private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10007;
-    private PublicKey mockSignatureCertificate;
 
     private static final String TEST_DATA =
             "{" +
@@ -99,9 +100,9 @@ public class NodeRegistrationTest {
                     "    }" +
                     "}";
 
-
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() throws SOSProtocolException, ConfigurationException, IOException, SOSException, CryptoException, GUIDGenerationException {
+        super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -148,12 +149,6 @@ public class NodeRegistrationTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
-
-        try {
-            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
-        } catch (CryptoException e) {
-            throw new Exception();
-        }
     }
 
     @AfterMethod

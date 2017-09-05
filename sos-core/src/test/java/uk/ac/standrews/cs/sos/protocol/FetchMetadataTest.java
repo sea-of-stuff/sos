@@ -8,6 +8,9 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -16,11 +19,9 @@ import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchMetadata;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
-import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.PublicKey;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -32,11 +33,10 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FetchMetadataTest {
+public class FetchMetadataTest extends ProtocolTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10005;
-    private PublicKey mockSignatureCertificate;
 
     private static final String GUID_METADATA = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
     private static final String TEST_METADATA =
@@ -72,7 +72,8 @@ public class FetchMetadataTest {
                     "}";
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException, SOSException, IOException, CryptoException {
+        super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_metadata_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -94,12 +95,6 @@ public class FetchMetadataTest {
                 );
 
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
-
-        try {
-            mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();
-        } catch (CryptoException e) {
-            throw new Exception();
-        }
     }
 
     @AfterMethod
