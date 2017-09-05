@@ -15,7 +15,6 @@ import static uk.ac.standrews.cs.sos.constants.LocationSchemes.SOS_SCHEME;
  */
 public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
-    protected static boolean URLStreamHandlerFactoryIsSet = false;
     private SOSURLStreamHandler sosurlStreamHandler;
 
     /**
@@ -23,7 +22,6 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
      */
     public SOSURLStreamHandlerFactory(LocalStorage localStorage) {
         sosurlStreamHandler = new SOSURLStreamHandler(localStorage);
-        URLStreamHandlerFactoryIsSet = true;
     }
 
     @Override
