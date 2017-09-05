@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.protocol;
 
 import org.mockserver.integration.ClientAndServer;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -52,6 +53,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@PowerMockIgnore("javax.net.ssl.*")
 @PrepareForTest(DigitalSignature.class)
 public class DataReplicationTest extends SetUpTest {
 

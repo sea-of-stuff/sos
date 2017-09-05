@@ -101,7 +101,7 @@ public class SyncRequest extends Request {
                 .header("Content-Type", "application/json");
 
         if (signatureCertificate != null) {
-            requestWithBody = requestWithBody.header("sos-node-challenge", nodeChallenge);
+            //requestWithBody = requestWithBody.header("sos-node-challenge", nodeChallenge);
         }
 
         RequestBodyEntity requestBodyEntity = requestWithBody.body(json_body);
