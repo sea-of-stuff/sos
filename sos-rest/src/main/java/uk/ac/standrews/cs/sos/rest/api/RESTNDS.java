@@ -52,7 +52,6 @@ public class RESTNDS {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
-
     }
 
     @GET

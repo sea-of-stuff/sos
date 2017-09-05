@@ -28,7 +28,7 @@ public class InfoNode extends Task {
 
     @Override
     public void performAction() {
-        SOS_LOG.log(LEVEL.INFO, "Info about node: " + node.toString());
+        SOS_LOG.log(LEVEL.INFO, "Info about node: " + node.getNodeGUID().toMultiHash());
 
         try {
             URL url = SOSURL.NODE_INFO(node);
@@ -43,7 +43,7 @@ public class InfoNode extends Task {
             }
 
         } catch (SOSURLException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.toString() );
+            SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.getNodeGUID().toMultiHash());
         }
     }
 

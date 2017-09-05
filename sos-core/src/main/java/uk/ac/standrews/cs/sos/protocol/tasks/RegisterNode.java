@@ -28,29 +28,29 @@ public class RegisterNode extends Task {
 
     @Override
     public void performAction() {
-        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.toString() + " to NDS: " + ndsNode.toString());
+        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.getNodeGUID().toMultiHash() + " to NDS: " + ndsNode.getNodeGUID().toMultiHash());
 
         try {
             URL url = SOSURL.NDS_REGISTER_NODE(ndsNode);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(ndsNode.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
             request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
-                SOS_LOG.log(LEVEL.INFO, "Node " + node.getNodeGUID() + " was successfully registered to NDS: " + ndsNode.toString());
+                SOS_LOG.log(LEVEL.INFO, "Node " + node.getNodeGUID().toMultiHash() + " was successfully registered to NDS: " + ndsNode.getNodeGUID().toMultiHash());
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Node " + node.getNodeGUID() + " was NOT successfully registered to NDS: " + ndsNode.toString());
+                SOS_LOG.log(LEVEL.WARN, "Node " + node.getNodeGUID().toMultiHash() + " was NOT successfully registered to NDS: " + ndsNode.getNodeGUID().toMultiHash());
             }
 
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
 
         } catch (SOSURLException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to perform node registration to node " + ndsNode.toString() );
+            SOS_LOG.log(LEVEL.ERROR, "Unable to perform node registration to node " + ndsNode.getNodeGUID().toMultiHash() );
         }
     }
 
     @Override
     public String toString() {
-        return "RegisterNode " + ndsNode.getNodeGUID() + " to NDS node " + ndsNode.getNodeGUID();
+        return "RegisterNode " + ndsNode.getNodeGUID().toMultiHash() + " to NDS node " + ndsNode.getNodeGUID().toMultiHash();
     }
 }

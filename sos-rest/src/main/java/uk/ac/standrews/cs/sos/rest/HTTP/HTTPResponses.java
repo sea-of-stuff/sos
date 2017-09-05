@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.rest.HTTP;
 
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import javax.ws.rs.core.MediaType;
@@ -83,6 +85,7 @@ public class HTTPResponses {
         } catch (CryptoException e) { }
 
         if (signedChallenge != null) {
+            SOS_LOG.log(LEVEL.DEBUG, "Signing challenge: " + challenge);
             builder = builder.header(SOS_NODE_CHALLENGE_HEADER, signedChallenge);
         }
 
