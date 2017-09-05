@@ -35,7 +35,7 @@ public abstract class Request {
 
         this.signatureCertificate = signatureCertificate;
         SecureRandom random = new SecureRandom();
-        this.nodeChallenge = new BigInteger(130, random).toString(32);
+        this.nodeChallenge = new BigInteger(1024, random).toString(32);
     }
 
     public Request setJSONBody(String json_body) {
