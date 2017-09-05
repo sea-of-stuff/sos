@@ -30,7 +30,7 @@ public class RESTCMS {
     @GET
     @Path("/contexts")
     @Produces({MediaType.TEXT_PLAIN})
-    public Response getAllContext(@DefaultValue("") @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) { // TODO - not sure if default value is needed
+    public Response getAllContext(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) { // TODO - not sure if default value is needed
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/contexts");
 
         try {
