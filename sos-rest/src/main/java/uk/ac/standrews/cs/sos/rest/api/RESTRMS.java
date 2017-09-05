@@ -22,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -32,28 +34,28 @@ public class RESTRMS {
     @GET
     @Path("/user/{guid}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUser(@PathParam("guid") String guid) {
+    public Response getUser(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/user/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID userGUID;
         try {
             userGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 
         try {
             String user = usro.getUser(userGUID).toString();
-            return HTTPResponses.OK(user);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, user);
 
         } catch (UserNotFoundException e) {
-            return HTTPResponses.NOT_FOUND("Could not find user with guid: " + userGUID.toMultiHash());
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Could not find user with guid: " + userGUID.toMultiHash());
         }
 
     }
@@ -61,28 +63,28 @@ public class RESTRMS {
     @GET
     @Path("/role/{guid}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getRole(@PathParam("guid") String guid) {
+    public Response getRole(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/role/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID userGUID;
         try {
             userGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 
         try {
             String role = usro.getRole(userGUID).toString();
-            return HTTPResponses.OK(role);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, role);
 
         } catch (RoleNotFoundException e) {
-            return HTTPResponses.NOT_FOUND("Could not find role with guid: " + userGUID.toMultiHash());
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Could not find role with guid: " + userGUID.toMultiHash());
         }
 
     }
@@ -90,18 +92,18 @@ public class RESTRMS {
     @GET
     @Path("/user/{guid}/roles")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getUserRoles(@PathParam("guid") String guid) {
+    public Response getUserRoles(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/user/{guid}/roles");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID userGUID;
         try {
             userGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
@@ -110,10 +112,10 @@ public class RESTRMS {
             Set<Role> roles = usro.getRoles(userGUID);
 
             String out = JSONHelper.JsonObjMapper().writeValueAsString(roles);
-            return HTTPResponses.OK(out);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, out);
 
         } catch (RoleNotFoundException | JsonProcessingException e) {
-            return HTTPResponses.NOT_FOUND("Could not find user with guid: " + userGUID.toMultiHash());
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Could not find user with guid: " + userGUID.toMultiHash());
         }
 
     }
@@ -122,18 +124,18 @@ public class RESTRMS {
     @Path("/user")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
-    public Response postUser(final User user) {
+    public Response postUser(final User user, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/usro/user");
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 
         try {
             usro.addUser(user);
-            return HTTPResponses.CREATED("User with GUID " + user.guid().toMultiHash() + " added");
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, "User with GUID " + user.guid().toMultiHash() + " added");
 
         } catch (UserRolePersistException e) {
 
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 
@@ -141,18 +143,18 @@ public class RESTRMS {
     @Path("/role")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
-    public Response postRole(final Role role) {
+    public Response postRole(final Role role, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/usro/role");
 
         UsersRolesService usro = RESTConfig.sos.getRMS();
 
         try {
             usro.addRole(role);
-            return HTTPResponses.CREATED("Role with GUID " + role.guid().toMultiHash() + " added");
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, "Role with GUID " + role.guid().toMultiHash() + " added");
 
         } catch (UserRolePersistException e) {
 
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 

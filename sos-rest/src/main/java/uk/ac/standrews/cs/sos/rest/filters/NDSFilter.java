@@ -21,7 +21,7 @@ public class NDSFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if (!RESTConfig.sos.isNDS()) {
-            Response response = HTTPResponses.BAD_REQUEST("I am not an NDS node");
+            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not an NDS node");
             throw new WebApplicationException(response);
         }
 

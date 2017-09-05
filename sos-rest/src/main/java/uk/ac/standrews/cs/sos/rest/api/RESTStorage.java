@@ -30,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
 
+import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -40,7 +42,7 @@ public class RESTStorage {
     @GET
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStorageInfo() {
+    public Response getStorageInfo(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/info");
 
         try {
@@ -50,11 +52,11 @@ public class RESTStorage {
                     .writerWithView(SettingsConfiguration.Views.Public.class)
                     .writeValueAsString(storageSettings);
 
-            return HTTPResponses.OK(storageInfo);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, storageInfo);
 
         } catch (JsonProcessingException e) {
 
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 
@@ -67,27 +69,27 @@ public class RESTStorage {
     @GET
     @Path("/data/guid/{guid}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    public Response getData(@PathParam("guid") String guid) {
+    public Response getData(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID atomGUID;
         try {
             atomGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         Storage storage = RESTConfig.sos.getStorage();
         try (Data data = storage.getAtomContent(atomGUID)){
 
-            return HTTPResponses.OK(data.getInputStream());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, data.getInputStream());
 
         } catch (Exception e) {
-            return HTTPResponses.NOT_FOUND("Atom not found");
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Atom not found");
         }
 
     }
@@ -103,7 +105,7 @@ public class RESTStorage {
     @Path("/stream")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomStream(final DataPackage dataPackage) {
+    public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
         // TODO - verify that data received matched the guid in the metadata?
@@ -120,7 +122,7 @@ public class RESTStorage {
                 int replicationFactor = dataPackage.getMetadata().getReplicationFactor();
 
                 if (replicationFactor < 1 || replicationFactor > storage.getStorageSettings().getMaxReplication()) {
-                    return HTTPResponses.BAD_REQUEST("The replicas parameter is invalid");
+                    return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "The replicas parameter is invalid");
                 }
 
                 builder = builder.setReplicationNodes(dataPackage.getMetadata().getReplicationNodes().getNodesCollection())
@@ -130,10 +132,10 @@ public class RESTStorage {
 
             Atom atom = storage.addAtom(builder);
 
-            return HTTPResponses.CREATED(atom.toString());
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | NodesCollectionException e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
     }
@@ -142,7 +144,7 @@ public class RESTStorage {
     @Path("/stream/protected")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/) { // TODO - see add data with metadata method above
+    public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) { // TODO - see add data with metadata method above
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
         try {
@@ -153,10 +155,10 @@ public class RESTStorage {
 
             Storage storage = RESTConfig.sos.getStorage();
             SecureAtom atom = storage.addSecureAtom(builder);
-            return HTTPResponses.CREATED(atom.toString());
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
 
@@ -167,7 +169,7 @@ public class RESTStorage {
 
     @GET
     @Path("/replicas/guid/{guid}")
-    public Response getReplicasInfo(@PathParam("guid") final String guid) {
+    public Response getReplicasInfo(@PathParam("guid") final String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
         /*
         {
@@ -179,13 +181,13 @@ public class RESTStorage {
         }
          */
 
-        return HTTPResponses.INTERNAL_SERVER();
+        return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
     }
 
     @GET
     @Path("/data/guid/{guid}/challenge/{challenge: .*}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    public Response getData(@PathParam("guid") final String guid, @PathParam("challenge") final String challenge) {
+    public Response getData(@PathParam("guid") final String guid, @PathParam("challenge") final String challenge, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage//data/guid/" + guid + "/challenge/" + challenge);
 
@@ -193,14 +195,14 @@ public class RESTStorage {
         try {
             atomGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
-        if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST("Challenge is empty");
+        if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
         Storage storage = RESTConfig.sos.getStorage();
         IGUID challengeResult = storage.challenge(atomGUID, challenge);
 
-        return HTTPResponses.OK(challengeResult.toMultiHash());
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }
 }

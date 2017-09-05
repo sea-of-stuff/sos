@@ -22,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -33,7 +35,7 @@ public class RESTNDS {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response register(SOSNode node) {
+    public Response register(SOSNode node, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/nds/register");
 
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
@@ -41,13 +43,13 @@ public class RESTNDS {
         try {
             Node registeredNode = nodeDiscoveryService.registerNode(node, true); // TODO - might change based on local configuration (see settings)
             if (registeredNode != null) {
-                return HTTPResponses.CREATED(registeredNode.toString());
+                return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, registeredNode.toString());
             } else {
-                return HTTPResponses.INTERNAL_SERVER();
+                return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
             }
 
         } catch (NodeRegistrationException e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
 
@@ -56,27 +58,27 @@ public class RESTNDS {
     @GET
     @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response findByGUID(@PathParam("guid") String guid) {
+    public Response findByGUID(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID nodeGUID;
         try {
             nodeGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 
         try {
             Node node = nodeDiscoveryService.getNode(nodeGUID);
-            return HTTPResponses.OK(node.toString());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, node.toString());
         } catch (NodeNotFoundException e) {
-            return HTTPResponses.NOT_FOUND("Node with GUID: " + nodeGUID.toString() + " could not be found");
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Node with GUID: " + nodeGUID.toString() + " could not be found");
         }
 
     }
@@ -84,7 +86,7 @@ public class RESTNDS {
     @GET
     @Path("/service/{service}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response findByService(@PathParam("service") String service) {
+    public Response findByService(@PathParam("service") String service, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/service/{service}");
 
         try {
@@ -94,11 +96,11 @@ public class RESTNDS {
             Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
             String out = JSONHelper.JsonObjMapper().writeValueAsString(nodes);
 
-            return HTTPResponses.OK(out);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, out);
 
         } catch (JsonProcessingException e) {
 
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 

@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -28,7 +30,7 @@ public class RESTCMS {
     @GET
     @Path("/contexts")
     @Produces({MediaType.TEXT_PLAIN})
-    public Response getAllContext() {
+    public Response getAllContext(@DefaultValue("") @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) { // TODO - not sure if default value is needed
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/contexts");
 
         try {
@@ -36,9 +38,9 @@ public class RESTCMS {
             Set<Context> contexts = contextService.getContexts();
             String output = StringUtils.join(contexts, ",\n");
 
-            return HTTPResponses.OK(output);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
         }  catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 
@@ -46,16 +48,16 @@ public class RESTCMS {
     @Path("/context")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response add(String context) {
+    public Response add(String context, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/cms/context");
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
             IGUID guid = contextService.addContext(context);
 
-            return HTTPResponses.OK(guid.toString());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, guid.toString());
         } catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
     }
@@ -63,48 +65,48 @@ public class RESTCMS {
     @GET
     @Path("/context/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response findByGUID(@PathParam("guid") String guid) {
+    public Response findByGUID(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/context/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID contextGUID;
         try {
             contextGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
             Context context = contextService.getContext(contextGUID);
 
-            return HTTPResponses.OK(context.toString());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, context.toString());
         } catch (ContextNotFoundException e) {
 
-            return HTTPResponses.NOT_FOUND("Unable to find context with GUID " + contextGUID.toString());
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toString());
         } catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 
     @GET
     @Path("/context/guid/{guid}/contents")
     @Produces({MediaType.TEXT_PLAIN})
-    public Response findContextContents(@PathParam("guid") String guid) {
+    public Response findContextContents(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/context/guid/{guid}/contents");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID contextGUID;
         try {
             contextGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         try {
@@ -112,9 +114,9 @@ public class RESTCMS {
             Set<IGUID> contents = contextService.getContents(contextGUID);
             String output = StringUtils.join(contents, ",\n");
 
-            return HTTPResponses.OK(output);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
         } catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 }

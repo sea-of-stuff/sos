@@ -24,6 +24,8 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -35,7 +37,7 @@ public class RESTMMS {
     @Path("/metadata")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response postMetadata(String json) throws IOException {
+    public Response postMetadata(String json, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/metadata");
 
         Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
@@ -43,10 +45,10 @@ public class RESTMMS {
         MetadataService metadataService = RESTConfig.sos.getMMS();
         try {
             metadataService.addMetadata(metadata);
-            return HTTPResponses.CREATED(metadata.toString());
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, metadata.toString());
 
         } catch (MetadataPersistException e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
 
@@ -55,26 +57,26 @@ public class RESTMMS {
     @GET
     @Path("/metadata/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response getMetadata(@PathParam("guid") String guid) {
+    public Response getMetadata(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mms/metadata/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID metadataGUID;
         try {
             metadataGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         MetadataService metadataService = RESTConfig.sos.getMMS();
         try {
             Metadata metadata = metadataService.getMetadata(metadataGUID);
-            return HTTPResponses.OK(metadata.toString());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, metadata.toString());
         } catch (MetadataNotFoundException e) {
-            return HTTPResponses.BAD_REQUEST("Invalid Input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Invalid Input");
         }
     }
 
@@ -82,7 +84,7 @@ public class RESTMMS {
     @Path("/process")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response processMetadata(final InputStream inputStream) {
+    public Response processMetadata(final InputStream inputStream, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/process");
 
         MetadataService MetadataService = RESTConfig.sos.getMMS();
@@ -91,9 +93,9 @@ public class RESTMMS {
             Data data = new InputStreamData(inputStream);
             Metadata metadata = MetadataService.processMetadata(data);
 
-            return HTTPResponses.OK(metadata.toString());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, metadata.toString());
         } catch (MetadataException e) {
-            return HTTPResponses.INTERNAL_SERVER();
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
 

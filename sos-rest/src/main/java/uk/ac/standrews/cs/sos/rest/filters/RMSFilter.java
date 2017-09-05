@@ -21,7 +21,7 @@ public class RMSFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if (!RESTConfig.sos.isRMS()) {
-            Response response = HTTPResponses.BAD_REQUEST("I am not an RMS node");
+            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not an RMS node");
             throw new WebApplicationException(response);
         }
 

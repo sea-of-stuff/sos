@@ -21,7 +21,7 @@ public class DDSFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if (!RESTConfig.sos.isDDS()) {
-            Response response = HTTPResponses.BAD_REQUEST("I am not a DDS node");
+            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a DDS node");
             throw new WebApplicationException(response);
         }
 

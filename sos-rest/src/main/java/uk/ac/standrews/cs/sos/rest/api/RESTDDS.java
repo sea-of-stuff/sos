@@ -25,6 +25,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
+import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -36,7 +38,7 @@ public class RESTDDS {
     @Path("/manifest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response postManifest(String json) throws IOException {
+    public Response postManifest(String json, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/dds/manifest");
 
         Manifest manifest;
@@ -45,11 +47,11 @@ public class RESTDDS {
             ManifestType type = ManifestType.get(jsonNode.get(JSONConstants.KEY_TYPE).textValue());
             manifest = getManifest(type, json);
         } catch (IOException e) {
-            return HTTPResponses.BAD_REQUEST("Invalid Input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Invalid Input");
         }
 
         if (manifest == null) {
-            return HTTPResponses.BAD_REQUEST("Invalid Input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Invalid Input");
         }
 
         try {
@@ -57,36 +59,36 @@ public class RESTDDS {
             dataDiscoveryService.addManifest(manifest);
 
         } catch (ManifestPersistException e) {
-            return HTTPResponses.BAD_REQUEST("Invalid Input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Invalid Input");
         }
 
-        return HTTPResponses.CREATED(manifest.toString());
+        return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, manifest.toString());
     }
 
     @GET
     @Path("/manifest/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-    public Response getManifest(@PathParam("guid") String guid) {
+    public Response getManifest(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/manifest/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         IGUID manifestGUID;
         try {
             manifestGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST("Bad input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         try {
             DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
             Manifest manifest = dataDiscoveryService.getManifest(manifestGUID);
-            return HTTPResponses.OK(manifest.toString());
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, manifest.toString());
 
         } catch (ManifestNotFoundException e) {
-            return HTTPResponses.BAD_REQUEST("Invalid Input");
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Invalid Input");
         }
     }
 

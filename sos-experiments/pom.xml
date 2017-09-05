@@ -37,12 +37,26 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
+                <inherited>true</inherited>
                 <configuration>
-                    <descriptors>
-                        <descriptor>src/main/resources/assemblies/jar-with-dependencies.xml</descriptor>
-                    </descriptors>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>sos-app</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>uk.ac.standrews.cs.sos.experiments.ExperimentManager</mainClass>
@@ -51,7 +65,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>create-archive</id>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -59,6 +73,34 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
+
+
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<version>${maven-assembly-plugin.version}</version>-->
+                <!--<configuration>-->
+                    <!--<descriptors>-->
+                        <!--<descriptor>src/main/resources/assemblies/jar-with-dependencies.xml</descriptor>-->
+                    <!--</descriptors>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<mainClass>uk.ac.standrews.cs.sos.experiments.ExperimentManager</mainClass>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>create-archive</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
     </build>
 </project>
