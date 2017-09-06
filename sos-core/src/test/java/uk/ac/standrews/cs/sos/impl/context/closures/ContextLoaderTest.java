@@ -110,9 +110,10 @@ public class ContextLoaderTest extends SetUpTest {
         meta.setGUID(GUIDFactory.generateRandomGUID());
         this.localSOSNode.getMMS().addMetadata(meta);
 
-        Version version = this.localSOSNode.getAgent().addVersion(new VersionBuilder()
-                .setContent(GUIDFactory.generateRandomGUID())
-                .setMetadata(meta));
+        Version version = this.localSOSNode.getAgent()
+                .addVersion(new VersionBuilder()
+                    .setContent(GUIDFactory.generateRandomGUID())
+                    .setMetadata(meta));
 
         boolean retval = pred.test(version.guid());
         assertTrue(retval);

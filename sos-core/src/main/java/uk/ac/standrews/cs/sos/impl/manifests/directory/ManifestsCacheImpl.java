@@ -42,6 +42,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
     private transient HashMap<IGUID, Set<IGUID>> tips;
     private transient HashMap<IGUID, IGUID> heads;
+    private transient HashMap<IGUID, Set<IGUID>> assetsToVersions; // tracks all assetsToVersions for the invariants
 
     public ManifestsCacheImpl() {
         this(MAX_DEFAULT_SIZE);
@@ -55,6 +56,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         tips = new HashMap<>();
         heads = new HashMap<>();
+        assetsToVersions = new HashMap<>();
     }
 
     @Override
@@ -125,6 +127,16 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
+    public Set<IGUID> getVersions(IGUID invariant) {
+
+        if (assetsToVersions.containsKey(invariant)) {
+            return assetsToVersions.get(invariant);
+        } else {
+            return new LinkedHashSet<>();
+        }
+    }
+
+    @Override
     public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
         if (tips.containsKey(invariant)) {
@@ -151,6 +163,12 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         IGUID versionGUID = version.guid();
 
         heads.put(invariantGUID, versionGUID);
+
+        // Update the [invariant --> [version]] map
+        if (!assetsToVersions.containsKey(invariantGUID)) {
+            assetsToVersions.put(invariantGUID, new LinkedHashSet<>());
+        }
+        assetsToVersions.get(invariantGUID).add(versionGUID);
     }
 
     @Override
@@ -258,6 +276,16 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
             out.writeUTF(head.getKey().toMultiHash());
             out.writeUTF(head.getValue().toMultiHash());
         }
+
+        out.writeInt(assetsToVersions.size());
+        for(Map.Entry<IGUID, Set<IGUID>> versions : assetsToVersions.entrySet()) {
+            out.writeUTF(versions.getKey().toMultiHash());
+            out.writeInt(versions.getValue().size()); // Number of versions per invariant
+
+            for(IGUID version:versions.getValue()) {
+                out.writeUTF(version.toMultiHash());
+            }
+        }
     }
 
     // This method defines how the cache is de-serialised
@@ -293,6 +321,19 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
                 IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
                 IGUID version = GUIDFactory.recreateGUID(in.readUTF());
                 heads.put(invariant, version);
+            }
+
+            assetsToVersions = new HashMap<>();
+            int assetsToVersionsSize = in.readInt();
+            for (int i = 0; i < assetsToVersionsSize; i++) {
+                IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
+                assetsToVersions.put(invariant, new LinkedHashSet<>());
+
+                int numberOfVersionsPerInvariant = in.readInt();
+                for (int j = 0; j < numberOfVersionsPerInvariant; j++) {
+                    String version = in.readUTF();
+                    assetsToVersions.get(invariant).add(GUIDFactory.recreateGUID(version));
+                }
             }
 
         } catch (GUIDGenerationException e) {

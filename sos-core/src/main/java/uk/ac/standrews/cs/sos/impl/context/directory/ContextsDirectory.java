@@ -12,8 +12,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * The ContextsContents holds all the information regarding contexts and their contents.
- * The contexts themselves are stored via the DDS.
+ * The ContextsDirectory holds all the information regarding contexts and their contents.
+ * The actual context definitions are stored using the LocalContextsDirectroy and the CacheContextsDirectory
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -53,13 +53,15 @@ public class ContextsDirectory implements Serializable  {
     }
 
     /**
-     * Checks if the version has already been apply for the given context
+     * Checks if the version has already been applied for the given context
      *
-     * @param context
-     * @param version
-     * @return
+     * This method ignores the eviction model. This way, we won't have to re-process the context for old entries as long as these are kept in this directory.
+     *
+     * @param context to check
+     * @param version to check
+     * @return true if the pair context-version has been processed already
      */
-    public boolean hasBeenProcessed(IGUID context, IGUID version) {
+    public boolean contextVersionPairHasBeenProcessed(IGUID context, IGUID version) {
 
         return mappings.containsKey(context) && mappings.get(context).containsKey(version);
     }
@@ -97,6 +99,27 @@ public class ContextsDirectory implements Serializable  {
         }
     }
 
+    /**
+     * Mark the version as evicted.
+     * Evicted versions are not deleted, unless the LOCAL NODE FLUSHER really has to in order to make some space.
+     *
+     * @param context
+     * @param version
+     */
+    public void evict(IGUID context, IGUID version) {
+
+        HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
+        if (contents != null) {
+
+            ContextVersionInfo contextVersionInfo = contents.get(version);
+            if (contextVersionInfo != null) {
+                contextVersionInfo.evicted = true;
+                contents.put(version, contextVersionInfo);
+            }
+
+        }
+    }
+
     ///////////////////
     // Serialization //
     ///////////////////
@@ -115,6 +138,7 @@ public class ContextsDirectory implements Serializable  {
                 out.writeBoolean(content.getValue().predicateResult);
                 out.writeLong(content.getValue().timestamp);
                 out.writeBoolean(content.getValue().policySatisfied);
+                out.writeBoolean(content.getValue().evicted);
             }
         }
     }
@@ -140,11 +164,13 @@ public class ContextsDirectory implements Serializable  {
                     boolean predicateResult = in.readBoolean();
                     long timestamp = in.readLong();
                     boolean policySatisfied = in.readBoolean();
+                    boolean evicted = in.readBoolean();
 
                     ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
                     contextVersionInfo.predicateResult = predicateResult;
                     contextVersionInfo.timestamp = timestamp;
                     contextVersionInfo.policySatisfied = policySatisfied;
+                    contextVersionInfo.evicted = evicted;
 
                     mappings.get(contextGUID).put(contentGUID, contextVersionInfo);
                 }

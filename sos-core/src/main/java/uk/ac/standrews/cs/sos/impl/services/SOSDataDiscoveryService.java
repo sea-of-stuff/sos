@@ -87,7 +87,6 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException {
         addManifest(manifest);
 
-        // TODO -
         int replicationFactor = (replication - 1) <= ddsSettings.getMaxReplication() ? (replication - 1) : ddsSettings.getMaxReplication();
         if (replicationFactor > 0) {
             remote.addManifest(manifest, nodes, replication); // TODO will apply in async mode
@@ -179,6 +178,13 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public void setHead(Version version) {
 
         inMemoryCache.setHead(version);
+    }
+
+    @Override
+    public Set<IGUID> getVersions(IGUID invariant) {
+
+        // TODO - check the local disk too?
+        return inMemoryCache.getVersions(invariant);
     }
 
     @Override

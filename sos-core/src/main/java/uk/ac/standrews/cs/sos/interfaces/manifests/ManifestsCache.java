@@ -17,6 +17,8 @@ public interface ManifestsCache extends ManifestsDirectory {
 
     Set<IGUID> getAllAssets();
 
+    Set<IGUID> getVersions(IGUID invariant);
+
     Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException ;
 
     IGUID getHead(IGUID invariant) throws HEADNotFoundException;

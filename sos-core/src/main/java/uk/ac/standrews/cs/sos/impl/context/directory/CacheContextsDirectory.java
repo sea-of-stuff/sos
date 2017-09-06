@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * in-memory Directory of context definitions (not the contents)
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class CacheContextsDirectory {

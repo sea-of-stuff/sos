@@ -39,11 +39,23 @@ public class LocalContextsDirectory {
     final private LocalStorage localStorage;
     final private PolicyActions policyActions;
 
+    /**
+     *
+     * @param localStorage needed to interact with the node storage
+     * @param policyActions this is needed to instantiate the context correctly when loaded from file
+     */
     public LocalContextsDirectory(final LocalStorage localStorage, final PolicyActions policyActions) {
         this.localStorage = localStorage;
         this.policyActions = policyActions;
     }
 
+    /**
+     * Persist the context to the node storage
+     *
+     * @param context to be added
+     * @return the guid of the context
+     * @throws DataStorageException if the context could not be added
+     */
     public IGUID addContext(Context context) throws DataStorageException {
 
         try {
@@ -58,6 +70,13 @@ public class LocalContextsDirectory {
         }
     }
 
+    /**
+     * Get the context matching the guid from the node storage
+     *
+     * @param guid of the context
+     * @return the instance of the context
+     * @throws ContextNotFoundException if the context could not be found
+     */
     public Context getContext(IGUID guid) throws ContextNotFoundException {
 
         try {
@@ -82,6 +101,13 @@ public class LocalContextsDirectory {
         }
     }
 
+    /**
+     * Get the references to all the contexts stored in the node storage
+     *
+     * @return a set of references
+     * @throws DataStorageException if unable to talk to the node storage
+     * @throws GUIDGenerationException if one or more of the references are in a bad format
+     */
     public Set<IGUID> getContexts() throws DataStorageException, GUIDGenerationException {
 
         Set<IGUID> contexts = new LinkedHashSet<>();

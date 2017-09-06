@@ -116,6 +116,14 @@ public interface DataDiscoveryService {
     void setHead(Version version);
 
     /**
+     * Get all the known version for an invariant.
+     *
+     * @param invariant of the asset
+     * @return set of versions references
+     */
+    Set<IGUID> getVersions(IGUID invariant);
+
+    /**
      * Flushes the in-memory caches and indices into disk
      */
     void shutdown();

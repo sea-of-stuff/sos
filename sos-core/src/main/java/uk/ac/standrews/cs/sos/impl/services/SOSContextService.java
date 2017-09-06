@@ -504,7 +504,7 @@ public class SOSContextService implements ContextService {
     private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
 
         IGUID contextGUID = context.guid();
-        boolean alreadyRun =  contextsDirectory.hasBeenProcessed(contextGUID, versionGUID);
+        boolean alreadyRun =  contextsDirectory.contextVersionPairHasBeenProcessed(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
@@ -519,7 +519,12 @@ public class SOSContextService implements ContextService {
             content.predicateResult = passed;
             content.timestamp = System.currentTimeMillis();
 
-            // TODO - if there is another entry for this asset, then remove it
+            for(IGUID version:dataDiscoveryService.getVersions(assetInvariant)) {
+
+                if (!version.equals(versionGUID)) {
+                    contextsDirectory.evict(contextGUID, version);
+                }
+            }
 
             contextsDirectory.addUpdateMapping(contextGUID, versionGUID, content);
         }
@@ -538,7 +543,7 @@ public class SOSContextService implements ContextService {
             ContextVersionInfo content = new ContextVersionInfo();
             ContextVersionInfo prev =  contextsDirectory.get(context.guid(), guid);
 
-            // TODO - this is a naive way to update only the policy result
+            // NOTE - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
             content.timestamp = prev.timestamp;
 
@@ -566,7 +571,7 @@ public class SOSContextService implements ContextService {
             ContextVersionInfo content = new ContextVersionInfo();
             ContextVersionInfo prev =  contextsDirectory.get(context.guid(), guid);
 
-            // TODO - this is a naive way to update only the policy result
+            // NOTE - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
             content.timestamp = prev.timestamp;
 
