@@ -13,11 +13,11 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.impl.database.NodesDatabaseImpl;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService;
-import uk.ac.standrews.cs.sos.interfaces.node.Database;
+import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
@@ -62,9 +62,9 @@ public class NodeDiscoveryTest {
         // Make sure that the DB path is clean
         HelperTest.DeletePath(settings.getDatabase().getFilename());
 
-        Database database;
+        NodesDatabase nodesDatabase;
         try {
-            database = new DatabaseImpl(settings.getDatabase().getFilename());
+            nodesDatabase = new NodesDatabaseImpl(settings.getDatabase().getFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
@@ -72,7 +72,7 @@ public class NodeDiscoveryTest {
         localNode = mock(SOSLocalNode.class);
         SOSLocalNode.settings = settings;
         when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
-        nds = new SOSNodeDiscoveryService(localNode, database);
+        nds = new SOSNodeDiscoveryService(localNode, nodesDatabase);
 
         // MOCK SERVER SETUP
         nodeFound = GUIDFactory.generateRandomGUID();

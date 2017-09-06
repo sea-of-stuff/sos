@@ -69,7 +69,7 @@ public class SOSContextService implements ContextService {
     private ContextsDirectory contextsDirectory;
 
     // This executor service will be used to schedule any background tasks
-    private static final int CMS_SCHEDULER_PS = 4;
+    private static final int CMS_SCHEDULER_PS = 5;
     private ScheduledExecutorService service;
     private Queue<Pair<Long, Long>> predicateThreadSessionStatistics;
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
@@ -280,7 +280,6 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running predicates - this is a periodic background thread");
 
-
             long start = System.currentTimeMillis();
             runPredicates();
             long end = System.currentTimeMillis();
@@ -313,7 +312,7 @@ public class SOSContextService implements ContextService {
                 runPredicate(context, assetInvariant, head);
                 counter++;
             } catch (HEADNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
+                SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant: " + assetInvariant.toMultiHash());
             }
 
         }
@@ -377,12 +376,11 @@ public class SOSContextService implements ContextService {
 
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
-            if (row.predicateResult && !row.policySatisfied) {
 
-                SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getName() + " and Version " + guid.toShortString());
+            if (row.predicateResult && !row.policySatisfied) {
                 runPolicies(context, guid);
-                SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run policies for context " + context.getName() + " and Version " + guid.toShortString());
             }
+
         });
 
         InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END - for context " + context.getName());

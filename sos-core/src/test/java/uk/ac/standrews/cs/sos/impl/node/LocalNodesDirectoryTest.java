@@ -10,9 +10,8 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
-import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
-import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.interfaces.node.Database;
+import uk.ac.standrews.cs.sos.impl.database.NodesDatabaseImpl;
+import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
@@ -47,16 +46,16 @@ public class LocalNodesDirectoryTest extends CommonTest {
         // Make sure that the DB path is clean
         HelperTest.DeletePath(settings.getDatabase().getFilename());
 
-        Database database;
+        NodesDatabase nodesDatabase;
         try {
-            database = new DatabaseImpl(settings.getDatabase().getFilename());
+            nodesDatabase = new NodesDatabaseImpl(settings.getDatabase().getFilename());
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
 
         testNode = mock(SOSLocalNode.class);
         when(testNode.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
-        localNodesDirectory = new LocalNodesDirectory(testNode, database);
+        localNodesDirectory = new LocalNodesDirectory(testNode, nodesDatabase);
 
         try {
             mockSignatureCertificate = DigitalSignature.generateKeys().getPublic();

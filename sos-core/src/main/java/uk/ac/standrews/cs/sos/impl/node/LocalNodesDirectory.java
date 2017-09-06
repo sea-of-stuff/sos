@@ -1,10 +1,9 @@
-package uk.ac.standrews.cs.sos.impl.node.directory;
+package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
-import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.interfaces.node.Database;
+import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 
 import java.util.*;
@@ -22,13 +21,13 @@ import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LI
 public class LocalNodesDirectory {
 
     private Node localNode;
-    private Database database;
+    private NodesDatabase nodesDatabase;
 
     private Set<Node> knownNodes;
 
-    public LocalNodesDirectory(Node localNode, Database database) throws NodesDirectoryException {
+    public LocalNodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
         this.localNode = localNode;
-        this.database = database;
+        this.nodesDatabase = nodesDatabase;
 
         this.knownNodes = new HashSet<>(); // Order not preserved
         loadNodesFromDB();
@@ -111,7 +110,7 @@ public class LocalNodesDirectory {
     public void persistNodesTable() throws NodesDirectoryException {
         try {
             for (Node knownNode : knownNodes) {
-                database.addNode(knownNode);
+                nodesDatabase.addNode(knownNode);
             }
         } catch (DatabaseConnectionException e) {
             throw new NodesDirectoryException(e);
@@ -125,7 +124,7 @@ public class LocalNodesDirectory {
      */
     private void loadNodesFromDB() throws NodesDirectoryException {
         try {
-            Set<SOSNode> nodes = database.getNodes();
+            Set<SOSNode> nodes = nodesDatabase.getNodes();
             knownNodes.addAll(nodes);
         } catch (DatabaseConnectionException e) {
             throw new NodesDirectoryException(e);

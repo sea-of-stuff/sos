@@ -15,11 +15,11 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.database.NodesDatabaseImpl;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
-import uk.ac.standrews.cs.sos.impl.node.directory.DatabaseImpl;
 import uk.ac.standrews.cs.sos.impl.services.*;
-import uk.ac.standrews.cs.sos.interfaces.node.Database;
+import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.*;
@@ -70,7 +70,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private LocalStorage localStorage;
 
     // This is a generic abstraction to interact with the Database of this node
-    private Database database;
+    private NodesDatabase nodesDatabase;
 
     // This scheduled service spawns a thread to check that the content of this node is within the specified restrictions.
     // If the restrictions are not satisfied, the background thread will remove any REMOVABLE content
@@ -254,7 +254,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             String dbFilename = settings.getDatabase().getFilename();
             File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
 
-            database = new DatabaseImpl(file.getPath());
+            nodesDatabase = new NodesDatabaseImpl(file.getPath());
         } catch (DataStorageException | DatabaseException | IOException e) {
             throw new SOSException(e);
         }
@@ -308,7 +308,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initNDS() throws SOSException {
         try {
             Node localNode = new SOSNode(this);
-            nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, database);
+            nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, nodesDatabase);
             SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);

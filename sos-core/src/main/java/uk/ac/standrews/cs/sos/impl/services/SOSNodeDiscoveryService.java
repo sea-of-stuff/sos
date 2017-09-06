@@ -6,11 +6,11 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.node.LocalNodesDirectory;
 import uk.ac.standrews.cs.sos.impl.node.NodeStats;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.impl.node.directory.LocalNodesDirectory;
-import uk.ac.standrews.cs.sos.interfaces.node.Database;
+import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -42,8 +42,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     private ScheduledExecutorService service; // TODO - use only if specified in settings
     private HashMap<IGUID, NodeStats> nodesStats;
 
-    public SOSNodeDiscoveryService(Node localNode, Database database) throws NodesDirectoryException {
-        localNodesDirectory = new LocalNodesDirectory(localNode, database);
+    public SOSNodeDiscoveryService(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
+        localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
 
         nodesStats = new LinkedHashMap<>();
         if (true) { // TODO settings!
