@@ -12,18 +12,15 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.LocalContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
-import uk.ac.standrews.cs.sos.impl.database.ContextsDatabase;
-import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
-import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -34,10 +31,12 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -55,6 +54,9 @@ import static uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder.*;
  *
  * NOTE - IDEA should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
  *
+ * TODO - the ContextsDatabase is commented out on purpose.
+ * The ContextsDatabase performs about 10x slower than the ContextsDirectory (in-memory)
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSContextService implements ContextService {
@@ -67,8 +69,8 @@ public class SOSContextService implements ContextService {
     private LocalContextsDirectory localContextsDirectory;
     // The inMemoryCache keeps the context objects for this node in memory.
     private CacheContextsDirectory inMemoryCache;
-    // private ContextsDirectory contextsDirectory;
-    private ContextsDatabase contextsDatabase;
+    private ContextsDirectory contextsDirectory;
+    // private ContextsDatabase contextsDatabase;
 
     // This executor service will be used to schedule any background tasks
     private static final int CMS_SCHEDULER_PS = 5;
@@ -96,12 +98,12 @@ public class SOSContextService implements ContextService {
         localContextsDirectory = new LocalContextsDirectory(localStorage, policyActions);
         inMemoryCache = new CacheContextsDirectory();
 
-        try {
-            contextsDatabase = (ContextsDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.CONTEXTS);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
-        // initContextsDirectory();
+//        try {
+//            contextsDatabase = (ContextsDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.CONTEXTS);
+//        } catch (DatabaseException e) {
+//            e.printStackTrace();
+//        }
+        initContextsDirectory();
         loadContexts();
 
         predicateThreadSessionStatistics = new LinkedList<>();
@@ -196,8 +198,8 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<IGUID> getContents(IGUID context) {
 
-        return contextsDatabase.getVersionsThatPassedPredicateTest(context);
-        // return contextsDirectory.getContentsThatPassedPredicateTest(context);
+        // return contextsDatabase.getVersionsThatPassedPredicateTest(context);
+         return contextsDirectory.getContentsThatPassedPredicateTest(context);
     }
 
     @Override
@@ -234,8 +236,8 @@ public class SOSContextService implements ContextService {
     @Override
     public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
 
-        return contextsDatabase.getEntry(context, version);
-        // return contextsDirectory.get(context, version);
+//        return contextsDatabase.getEntry(context, version);
+         return contextsDirectory.get(context, version);
     }
 
     @Override
@@ -385,7 +387,8 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsDatabase.getContentsThatPassedPredicateTestRows(context.guid()); // contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
+        // contextsDatabase.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextVersionInfo> contentsToProcess =  contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
@@ -435,8 +438,8 @@ public class SOSContextService implements ContextService {
     private void checkPolicies(Context context) {
 
         InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
-
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsDatabase.getContentsThatPassedPredicateTestRows(context.guid()); // contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
+//  contextsDatabase.getContentsThatPassedPredicateTestRows(context.guid()); //
+        Map<IGUID, ContextVersionInfo> contentsToProcess =contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
 
@@ -512,8 +515,8 @@ public class SOSContextService implements ContextService {
     private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
 
         IGUID contextGUID = context.guid();
-
-        boolean alreadyRun = contextsDatabase.entryExists(contextGUID, versionGUID); // contextsDirectory.hasBeenProcessed(contextGUID, versionGUID);
+//contextsDatabase.entryExists(contextGUID, versionGUID); //
+        boolean alreadyRun =  contextsDirectory.hasBeenProcessed(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
@@ -531,8 +534,8 @@ public class SOSContextService implements ContextService {
 
             // TODO - if there is another entry for this asset, then remove it
 
-            contextsDatabase.addEntry(contextGUID, versionGUID, content);
-            // contextsDirectory.addUpdateMapping(contextGUID, versionGUID, content);
+//            contextsDatabase.addEntry(contextGUID, versionGUID, content);
+             contextsDirectory.addUpdateMapping(contextGUID, versionGUID, content);
         }
 
     }
@@ -547,7 +550,8 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
-            ContextVersionInfo prev = contextsDatabase.getEntry(context.guid(), guid); // contextsDirectory.get(context.guid(), guid);
+            // contextsDatabase.getEntry(context.guid(), guid); //
+            ContextVersionInfo prev =  contextsDirectory.get(context.guid(), guid);
 
             // TODO - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -561,8 +565,8 @@ public class SOSContextService implements ContextService {
                 policy.apply(manifest);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
-                contextsDatabase.addEntry(context.guid(), guid, content);
-                // contextsDirectory.addUpdateMapping(context.guid(), guid, content);
+//                contextsDatabase.addEntry(context.guid(), guid, content);
+                 contextsDirectory.addUpdateMapping(context.guid(), guid, content);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -576,7 +580,8 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
-            ContextVersionInfo prev = contextsDatabase.getEntry(context.guid(), guid); // contextsDirectory.get(context.guid(), guid);
+            // contextsDatabase.getEntry(context.guid(), guid); //
+            ContextVersionInfo prev =  contextsDirectory.get(context.guid(), guid);
 
             // TODO - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -589,8 +594,8 @@ public class SOSContextService implements ContextService {
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
-                contextsDatabase.addEntry(context.guid(), guid, content);
-                // contextsDirectory.addUpdateMapping(context.guid(), guid, content);
+//                contextsDatabase.addEntry(context.guid(), guid, content);
+                 contextsDirectory.addUpdateMapping(context.guid(), guid, content);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -609,7 +614,8 @@ public class SOSContextService implements ContextService {
      * @return true if the predicate is still valid
      */
     private boolean predicateHasExpired(Context context, IGUID versionGUID) {
-        ContextVersionInfo content = contextsDatabase.getEntry(context.guid(), versionGUID); // contextsDirectory.get(context.guid(), versionGUID);
+        // contextsDatabase.getEntry(context.guid(), versionGUID); //
+        ContextVersionInfo content =  contextsDirectory.get(context.guid(), versionGUID);
 
         long maxage = context.predicate().maxAge();
         long contentLastRun = content.timestamp;
@@ -618,21 +624,21 @@ public class SOSContextService implements ContextService {
         return (now - contentLastRun) > maxage;
     }
 
-//    private void initContextsDirectory() throws ServiceException {
-//
-//        try {
-//            IDirectory cacheDir = localStorage.getNodeDirectory();
-//            if (cacheDir.contains(CMS_INDEX_FILE)) {
-//                IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-//                contextsDirectory = (ContextsDirectory) Persistence.Load(contextsContentsFile);
-//            } else {
-//                contextsDirectory = new ContextsDirectory();
-//            }
-//
-//        } catch (DataStorageException | IOException | ClassNotFoundException e) {
-//            throw new ServiceException("ContextService - Unable to load CMS Index");
-//        }
-//    }
+    private void initContextsDirectory() throws ServiceException {
+
+        try {
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            if (cacheDir.contains(CMS_INDEX_FILE)) {
+                IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+                contextsDirectory = (ContextsDirectory) Persistence.Load(contextsContentsFile);
+            } else {
+                contextsDirectory = new ContextsDirectory();
+            }
+
+        } catch (DataStorageException | IOException | ClassNotFoundException e) {
+            throw new ServiceException("ContextService - Unable to load CMS Index");
+        }
+    }
 
     private void loadContexts() throws ServiceException {
 
