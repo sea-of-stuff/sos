@@ -44,8 +44,9 @@ public class SOSURLProtocol {
             throw new SOSProtocolException(e);
         }
 
-        if (urlStreamHandlerFactory != null)
+        if (urlStreamHandlerFactory != null) {
             urlStreamHandlerFactory.getSOSURLStreamHandler().setNodeDiscoveryService(nodeDiscoveryService);
+        }
     }
 
 }

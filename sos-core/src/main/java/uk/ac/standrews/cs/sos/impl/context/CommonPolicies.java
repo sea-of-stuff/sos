@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
@@ -141,16 +140,7 @@ public class CommonPolicies {
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
-            // TODO - change code so that we get all the nodes (within codomain) where data is
-            // and then we delete data from there
-
-            IGUID fakeNodeGUID = GUIDFactory.generateRandomGUID(); // FIXME - have a sensible Node GUID
-
-            boolean hasData = policyActions.nodeHasData(fakeNodeGUID, manifest.guid());
-
-            if (hasData) {
-                policyActions.deleteData(manifest.guid(), fakeNodeGUID);
-            }
+            policyActions.deleteData(manifest.guid(), codomain);
         }
 
         @Override

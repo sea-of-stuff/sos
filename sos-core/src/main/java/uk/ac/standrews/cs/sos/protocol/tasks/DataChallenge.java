@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VerifyData extends Task {
+public class DataChallenge extends Task {
 
     // How to generate a random alpha-numeric string?
     // http://stackoverflow.com/a/41156/2467938
@@ -47,7 +47,7 @@ public class VerifyData extends Task {
 
     private boolean challengePassed;
 
-    public VerifyData(IGUID entity, Data challengedData, Node challengedNode) throws GUIDGenerationException, IOException {
+    public DataChallenge(IGUID entity, Data challengedData, Node challengedNode) throws GUIDGenerationException, IOException {
         this.entity = entity;
         this.challengedNode = challengedNode;
 

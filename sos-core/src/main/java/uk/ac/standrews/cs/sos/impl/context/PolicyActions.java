@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -11,11 +12,12 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.protocol.tasks.VerifyData;
+import uk.ac.standrews.cs.sos.protocol.tasks.DataChallenge;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
@@ -26,12 +28,16 @@ import java.io.IOException;
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
 /**
- * Utility methods accessible by the policies
+ * Utility methods accessible by the policies.
+ *
+ * The policy actions ARE NOT policies. These are just common methods that policies can make use of.
+ * That means that policies do not have to necessarily use these methods, even though it is suggested to do so.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class PolicyActions {
 
+    // Handles for the node services.
     private NodeDiscoveryService nodeDiscoveryService;
     private DataDiscoveryService dataDiscoveryService;
     private UsersRolesService usersRolesService;
@@ -53,7 +59,15 @@ public class PolicyActions {
         this.storage = storage;
     }
 
-    public void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) throws PolicyException {
+    /**
+     * Replicate a manifest to a collection of nodes while attempting to satisfy the specified replication factor.
+     *
+     * @param manifest to be replicated
+     * @param nodes where to replicate the manifests
+     * @param replicationFactor a value of 1 will replicate the manifest to 1 node
+     * @throws PolicyException if the manifest could not be replicated
+     */
+    void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
         try {
             dataDiscoveryService.addManifest(manifest, nodes, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
@@ -63,15 +77,15 @@ public class PolicyActions {
     }
 
     /**
+     * Replicate data to a collection of nodes while attempting to satisfy the specified replication factor.
      *
-     * @param data
-     * @param nodes
-     * @param replicationFactor a value of 1 will make sure that the data is stored locally. A value of n, will replicate the data to n-1 storage nodes.
-     * @throws PolicyException
+     * @param data to be replicated
+     * @param nodes where to replicate the data
+     * @param replicationFactor a value of 1 will replicate the data to 1 node
+     * @throws PolicyException if the data could not be replicated
      */
-    public void replicateData(Data data, NodesCollection nodes, int replicationFactor) throws PolicyException {
+     void replicateData(Data data, NodesCollection nodes, int replicationFactor) throws PolicyException {
 
-        System.out.println("replicating data");
         // FIXME - differentiate between clear data and protected data
         try {
             AtomBuilder atomBuilder = new AtomBuilder()
@@ -86,18 +100,38 @@ public class PolicyActions {
         }
     }
 
-    public void deleteData(IGUID guid, IGUID node) {
-        // TODO - there is not such method yet as I have not thought of a way of removing data/content/assets yet
+    /**
+     * Delete data from a collection of nodes.
+     *
+     * @param guid of the data to delete
+     * @param codomain where to delete the data
+     */
+    void deleteData(IGUID guid, NodesCollection codomain) {
+        throw new NotImplementedException();
     }
 
-    public boolean nodeHasManifest(IGUID node, IGUID guid) {
+    /**
+     * Check if a node has the manifest with the matching guid
+     *
+     * @param node
+     * @param guid
+     * @return
+     */
+    boolean nodeHasManifest(IGUID node, IGUID guid) {
 
         // TODO - this will make a challenge/check/verify call to the node (see Storage)
 
         return false;
     }
 
-    public int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
+    /**
+     * Check the number of manifest replicas within a codomain
+     *
+     * @param codomain
+     * @param guid
+     * @return
+     */
+    int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
         for(IGUID nodeRef:codomain.nodesRefs()) {
@@ -110,14 +144,23 @@ public class PolicyActions {
         return counter;
     }
 
-    public boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
+    /**
+     * Check if a node has the data with the matching guid
+     *
+     * The node is challenged
+     *
+     * @param nodeGUID of the node
+     * @param guid of the data
+     * @return true if the node has the data
+     */
+    boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
-            VerifyData verifyData = new VerifyData(guid, storage.getAtomContent(guid), nodeToBeChallenged);
+            DataChallenge dataChallenge = new DataChallenge(guid, storage.getAtomContent(guid), nodeToBeChallenged);
 
-            TasksQueue.instance().performSyncTask(verifyData);
-            return verifyData.isChallengePassed();
+            TasksQueue.instance().performSyncTask(dataChallenge);
+            return dataChallenge.isChallengePassed();
 
         } catch (NodeNotFoundException | GUIDGenerationException | AtomNotFoundException | IOException e) {
 
@@ -126,7 +169,14 @@ public class PolicyActions {
 
     }
 
-    public int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
+    /**
+     * Check the number of replicas for the data within a codomain.
+     *
+     * @param codomain
+     * @param guid
+     * @return
+     */
+    int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
         for(IGUID nodeRef:codomain.nodesRefs()) {
@@ -139,40 +189,104 @@ public class PolicyActions {
         return counter;
     }
 
-    public Data getData(NodesCollection codomain, IGUID guid) throws AtomNotFoundException {
+    /**
+     * Get the data of an atom from a codomain.
+     *
+     * @param codomain
+     * @param guid
+     * @return
+     * @throws AtomNotFoundException
+     */
+     Data getData(NodesCollection codomain, IGUID guid) throws AtomNotFoundException {
 
         // Check DDS, Storage restricting the request with the codomain
         // TODO Restrict by codomain
         return storage.getAtomContent(guid);
     }
 
-    public Manifest getManifest(NodesCollection codomain, IGUID guid) throws ManifestNotFoundException {
+    /**
+     * Get the manifest from a codomain
+     *
+     * @param codomain
+     * @param guid
+     * @return
+     * @throws ManifestNotFoundException
+     */
+    Manifest getManifest(NodesCollection codomain, IGUID guid) throws ManifestNotFoundException {
 
         return dataDiscoveryService.getManifest(codomain, guid);
     }
 
+    /**
+     * Get the manifest of a version's content.
+     *
+     * @param version
+     * @return
+     * @throws ManifestNotFoundException
+     */
     // Retrieve the manifest from local node
-    public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
+    Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
         return dataDiscoveryService.getManifest(version.getContentGUID());
     }
 
-    public Node getNode(IGUID guid) throws NodeNotFoundException {
+    /**
+     * Get the node with the specified guid
+     * @param guid
+     * @return
+     * @throws NodeNotFoundException
+     */
+    Node getNode(IGUID guid) throws NodeNotFoundException {
 
         return nodeDiscoveryService.getNode(guid);
     }
 
-    public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
+    /**
+     * Filter the codomain by type
+     *
+     * @param codomain
+     * @param type
+     * @return
+     */
+    NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
         return nodeDiscoveryService.filterNodesCollection(codomain, type, NO_LIMIT);
     }
 
-    public Role getRole(IGUID guid) throws RoleNotFoundException {
+    /**
+     * Get the role with the specified guid
+     *
+     * @param guid
+     * @return
+     * @throws RoleNotFoundException
+     */
+    Role getRole(IGUID guid) throws RoleNotFoundException {
 
         return usersRolesService.getRole(guid);
     }
 
-    public void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
+    /**
+     * Get the user with the specified guid
+     *
+     * @param guid
+     * @return
+     * @throws UserNotFoundException
+     */
+    User getUser(IGUID guid) throws UserNotFoundException {
+
+        return usersRolesService.getUser(guid);
+    }
+
+    /**
+     * Grant access to a secure atom
+     *
+     * @param secureAtom
+     * @param granter
+     * @param grantee
+     * @throws RoleNotFoundException
+     * @throws ProtectionException
+     */
+    void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
 
         Role granterRole = usersRolesService.getRole(granter);
         Role granteeRole = usersRolesService.getRole(grantee);
