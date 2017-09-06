@@ -91,7 +91,7 @@ public interface Storage {
     /**
      * Flush all indexes and caches managed by the storage actor
      */
-    void flush();
+    void shutdown();
 
     SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings getStorageSettings();
 

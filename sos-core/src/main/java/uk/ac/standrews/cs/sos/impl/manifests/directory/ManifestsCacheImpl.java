@@ -106,7 +106,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
     @Override
     public void flush() {
-        // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
+        // NOTE: This method is not implemented, as we use the persist method to actually shutdown the cache
     }
 
     @Override

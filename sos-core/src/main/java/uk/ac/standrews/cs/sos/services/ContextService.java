@@ -80,7 +80,7 @@ public interface ContextService {
     /**
      * Flushes any in-memory information into disk
      */
-    void flush();
+    void shutdown();
 
     void runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
     void runContextPolicyNow(IGUID guid) throws ContextNotFoundException;

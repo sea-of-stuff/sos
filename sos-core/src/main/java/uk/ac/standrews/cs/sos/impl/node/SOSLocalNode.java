@@ -181,10 +181,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        dataDiscoveryService.flush();
-        storage.flush();
-        usersRolesService.flush();
-        contextService.flush();
+        dataDiscoveryService.shutdown();
+        storage.shutdown();
+        usersRolesService.shutdown();
+        contextService.shutdown();
 
         if (cacheFlusherService != null)
             cacheFlusherService.shutdown();

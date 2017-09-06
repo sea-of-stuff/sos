@@ -267,14 +267,14 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public void flush() {
+    public void shutdown() {
 
         try {
             IDirectory cacheDir = storage.getNodeDirectory();
             IFile file = storage.createFile(cacheDir, "locations.index");
             locationIndex.persist(file);
         } catch (IOException | DataStorageException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to flush LocationIndex");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to shutdown LocationIndex");
         }
     }
 

@@ -112,7 +112,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
-    public void flush() {
+    public void shutdown() {
 
     }
 

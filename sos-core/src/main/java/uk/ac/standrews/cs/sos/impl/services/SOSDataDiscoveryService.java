@@ -182,7 +182,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     }
 
     @Override
-    public void flush() {
+    public void shutdown() {
 
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();

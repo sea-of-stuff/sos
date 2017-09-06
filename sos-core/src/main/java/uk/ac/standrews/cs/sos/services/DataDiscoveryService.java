@@ -118,6 +118,6 @@ public interface DataDiscoveryService {
     /**
      * Flushes the in-memory caches and indices into disk
      */
-    void flush();
+    void shutdown();
 
 }

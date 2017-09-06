@@ -106,5 +106,5 @@ public interface UsersRolesService {
      */
     void setActiveUser(User user) throws UserRolePersistException;
 
-    void flush();
+    void shutdown();
 }

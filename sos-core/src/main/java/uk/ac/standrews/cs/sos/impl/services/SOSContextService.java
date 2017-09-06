@@ -170,8 +170,7 @@ public class SOSContextService implements ContextService {
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
-            Context context = inMemoryCache.getContext(contextGUID);
-            return context;
+            return inMemoryCache.getContext(contextGUID);
 
         } catch (ContextNotFoundException e) {
 
@@ -192,7 +191,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public void flush() {
+    public void shutdown() {
 
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
