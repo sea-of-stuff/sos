@@ -488,7 +488,7 @@ public class SettingsConfiguration {
 
                 private String cacheFile;
                 private String indexFile;
-                private boolean ping = true;
+                private boolean ping = false;
 
                 public DDSSettings() {}
 
