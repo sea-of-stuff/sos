@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextsContents implements Serializable  {
+public class ContextsDirectory implements Serializable  {
 
     // Maps the context to the versions belonging to it
     private transient HashMap<IGUID, HashMap<IGUID, ContextContent>> mappings;
     
-    public ContextsContents() {
+    public ContextsDirectory() {
         mappings = new HashMap<>();
     }
 

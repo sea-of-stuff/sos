@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
-import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContents;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.LocalContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -66,7 +66,7 @@ public class SOSContextService implements ContextService {
     private LocalContextsDirectory localContextsDirectory;
     // The inMemoryCache keeps the context objects for this node in memory.
     private CacheContextsDirectory inMemoryCache;
-    private ContextsContents contextsContents; // TODO - rename to something more meaningful?
+    private ContextsDirectory contextsDirectory;
 
     // This executor service will be used to schedule any background tasks
     private static final int CMS_SCHEDULER_PS = 4;
@@ -94,29 +94,8 @@ public class SOSContextService implements ContextService {
         localContextsDirectory = new LocalContextsDirectory(localStorage, policyActions);
         inMemoryCache = new CacheContextsDirectory();
 
-        try {
-            IDirectory cacheDir = localStorage.getNodeDirectory();
-            if (cacheDir.contains(CMS_INDEX_FILE)) {
-                IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-                contextsContents = (ContextsContents) Persistence.Load(contextsContentsFile);
-            } else {
-                contextsContents = new ContextsContents();
-            }
-
-        } catch (DataStorageException | IOException | ClassNotFoundException e) {
-            throw new ServiceException("ContextService - Unable to load CMS Index");
-        }
-
-        try {
-            for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
-
-                Context context = localContextsDirectory.getContext(contextsToLoad);
-                inMemoryCache.addContext(context);
-            }
-
-        } catch (DataStorageException | GUIDGenerationException | ContextNotFoundException e) {
-            throw new ServiceException("ContextService - Unable to load contexts correctly");
-        }
+        initContextsDirectory();
+        loadContexts();
 
         predicateThreadSessionStatistics = new LinkedList<>();
         applyPolicyThreadSessionStatistics = new LinkedList<>();
@@ -208,7 +187,7 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<IGUID> getContents(IGUID context) {
 
-        return contextsContents.getContentsThatPassedPredicateTest(context);
+        return contextsDirectory.getContentsThatPassedPredicateTest(context);
     }
 
     @Override
@@ -217,7 +196,7 @@ public class SOSContextService implements ContextService {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-            Persistence.Persist(contextsContents, contextsContentsFile);
+            Persistence.Persist(contextsDirectory, contextsContentsFile);
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
@@ -245,7 +224,7 @@ public class SOSContextService implements ContextService {
     @Override
     public ContextContent getContextContentInfo(IGUID context, IGUID version) {
 
-        return contextsContents.get(context, version);
+        return contextsDirectory.get(context, version);
     }
 
     @Override
@@ -397,7 +376,7 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextContent> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult && !row.policySatisfied) {
 
@@ -449,7 +428,7 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextContent> contentsToProcess = contextsContents.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextContent> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
 
@@ -526,7 +505,7 @@ public class SOSContextService implements ContextService {
 
         IGUID contextGUID = context.guid();
 
-        boolean alreadyRun = contextsContents.hasBeenProcessed(contextGUID, versionGUID);
+        boolean alreadyRun = contextsDirectory.hasBeenProcessed(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
@@ -544,7 +523,7 @@ public class SOSContextService implements ContextService {
 
             // TODO - if there is another entry for this asset, then remove it
 
-            contextsContents.addUpdateMapping(contextGUID, versionGUID, content);
+            contextsDirectory.addUpdateMapping(contextGUID, versionGUID, content);
         }
 
     }
@@ -559,7 +538,7 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextContent content = new ContextContent();
-            ContextContent prev = contextsContents.get(context.guid(), guid);
+            ContextContent prev = contextsDirectory.get(context.guid(), guid);
 
             // TODO - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -573,7 +552,7 @@ public class SOSContextService implements ContextService {
                 policy.apply(manifest);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
-                contextsContents.addUpdateMapping(context.guid(), guid, content);
+                contextsDirectory.addUpdateMapping(context.guid(), guid, content);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -587,7 +566,7 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextContent content = new ContextContent();
-            ContextContent prev = contextsContents.get(context.guid(), guid);
+            ContextContent prev = contextsDirectory.get(context.guid(), guid);
 
             // TODO - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -600,7 +579,7 @@ public class SOSContextService implements ContextService {
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
 
-                contextsContents.addUpdateMapping(context.guid(), guid, content);
+                contextsDirectory.addUpdateMapping(context.guid(), guid, content);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -619,7 +598,7 @@ public class SOSContextService implements ContextService {
      * @return true if the predicate is still valid
      */
     private boolean predicateHasExpired(Context context, IGUID versionGUID) {
-        ContextContent content = contextsContents.get(context.guid(), versionGUID);
+        ContextContent content = contextsDirectory.get(context.guid(), versionGUID);
 
         long maxage = context.predicate().maxAge();
         long contentLastRun = content.timestamp;
@@ -627,5 +606,36 @@ public class SOSContextService implements ContextService {
 
         return (now - contentLastRun) > maxage;
     }
+
+    private void initContextsDirectory() throws ServiceException {
+
+        try {
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            if (cacheDir.contains(CMS_INDEX_FILE)) {
+                IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
+                contextsDirectory = (ContextsDirectory) Persistence.Load(contextsContentsFile);
+            } else {
+                contextsDirectory = new ContextsDirectory();
+            }
+
+        } catch (DataStorageException | IOException | ClassNotFoundException e) {
+            throw new ServiceException("ContextService - Unable to load CMS Index");
+        }
+    }
+
+    private void loadContexts() throws ServiceException {
+
+        try {
+            for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
+
+                Context context = localContextsDirectory.getContext(contextsToLoad);
+                inMemoryCache.addContext(context);
+            }
+
+        } catch (DataStorageException | GUIDGenerationException | ContextNotFoundException e) {
+            throw new ServiceException("ContextService - Unable to load contexts correctly");
+        }
+    }
+
 
 }

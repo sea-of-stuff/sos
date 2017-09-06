@@ -74,6 +74,8 @@ public class PolicyActions {
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }
+
+        // TODO - shallow vs deep
     }
 
     /**
@@ -120,6 +122,8 @@ public class PolicyActions {
     boolean nodeHasManifest(IGUID node, IGUID guid) {
 
         // TODO - this will make a challenge/check/verify call to the node (see Storage)
+        // TODO - shallow vs deep challenge
+        // a deep challenge will also challenge the content referenced by the manifest
 
         return false;
     }
