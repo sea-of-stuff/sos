@@ -128,7 +128,7 @@
             <version>3.3.3</version>
         </dependency>
         <!-- http://maxmind.github.io/GeoIP2-java/ -->
-        <!-- see code in uk.ac.standrews.cs.sos.impl.context.IPGeoUtils.java_BAK -->
+        <!-- see commented code in uk.ac.standrews.cs.sos.impl.context.IPGeoUtils.java -->
         <!--<dependency>-->
             <!--<groupId>com.maxmind.geoip2</groupId>-->
             <!--<artifactId>geoip2</artifactId>-->

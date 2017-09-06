@@ -87,32 +87,7 @@
       }
     },
     "bootstrapNodes": [
-      {
-        "guid" : "SHA256_16_c1fca01cb22708da8499d38243cec81bb66b76a756449872b04f619463804f6c",
-        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALRCkJF8VSc6ZWz6A7GrNbbJf8tMzSveFOe5DUCetLfMjQZ+bNx5J6L7TcuaNWz7uPzrE5FzE2oOzG8H8VQk3osCAwEAAQ==",
-        "hostname": "cs-wifi-093.cs.st-andrews.ac.uk",
-        "port": 8080,
-        "services": {
-          "storage": {
-            "exposed": true
-          },
-          "dds": {
-            "exposed": true
-          },
-          "nds": {
-            "exposed": true
-          },
-          "mms": {
-            "exposed": true
-          },
-          "rms": {
-            "exposed": true
-          },
-          "cms": {
-            "exposed": true
-          }
-        }
-      }
+      "SHA256_16_c1fca01cb22708da8499d38243cec81bb66b76a756449872b04f619463804f6c"
     ]
   }
 }

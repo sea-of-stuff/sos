@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.PublicKey;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -82,7 +83,7 @@ public class SettingsConfiguration {
         private KeysSettings keys;
         private StoreSettings store;
         private GlobalSettings global;
-        private List<NodeSettings> bootstrapNodes;
+        private List<String> bootstrapNodes;
 
         public Settings() {}
 
@@ -170,14 +171,23 @@ public class SettingsConfiguration {
             this.global = global;
         }
 
-        public List<NodeSettings> getBootstrapNodes() {
+        public List<String> getBootstrapNodes() {
             return bootstrapNodes;
         }
 
-        public void setBootstrapNodes(List<NodeSettings> bootstrapNodes) {
+        public void setBootstrapNodes(List<String> bootstrapNodes) {
             this.bootstrapNodes = bootstrapNodes;
         }
 
+        public List<IGUID> getBootstrapNodesRefs() {
+            return bootstrapNodes.stream().map(n -> {
+                try {
+                    return GUIDFactory.recreateGUID(n);
+                } catch (GUIDGenerationException e) {
+                    return new InvalidID();
+                }
+            }).collect(Collectors.toList());
+        }
 
         public static class NodeSettings implements Node {
 

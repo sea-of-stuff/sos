@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.node;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -21,6 +23,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.Database;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.*;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
@@ -264,9 +267,16 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     private void loadBootstrapNodes() throws NodeRegistrationException {
 
-        for(Node node:settings.getBootstrapNodes()) {
-            // TODO - contact node and update info
-            nodeDiscoveryService.registerNode(node, true);
+        for(IGUID nodeRef:settings.getBootstrapNodesRefs()) {
+            try {
+
+                String nodeInfo = nodeDiscoveryService.infoNode(nodeRef);
+                Node node = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
+                nodeDiscoveryService.registerNode(node, true);
+
+            } catch (NodeNotFoundException | IOException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with GUID:" + nodeRef.toMultiHash());
+            }
         }
     }
 

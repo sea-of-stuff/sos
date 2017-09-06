@@ -64,6 +64,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         Node nodeToRegister = new SOSNode(node);
+        SOS_LOG.log(LEVEL.INFO, "DDS - Registering node with GUID: " + nodeToRegister.getNodeGUID().toMultiHash());
 
         try {
             localNodesDirectory.addNode(nodeToRegister);

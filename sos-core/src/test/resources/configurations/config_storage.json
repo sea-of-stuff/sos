@@ -89,32 +89,7 @@
       }
     },
     "bootstrapNodes": [
-      {
-        "guid" : "SHA256_16_c1fca01cb22708da8499d38243cec81bb66b76a756449872b04f619463804f6c",
-        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALRCkJF8VSc6ZWz6A7GrNbbJf8tMzSveFOe5DUCetLfMjQZ+bNx5J6L7TcuaNWz7uPzrE5FzE2oOzG8H8VQk3osCAwEAAQ==",
-        "hostname" : "localhost",
-        "port" : 8110,
-        "services" : {
-          "storage" : {
-            "exposed": true
-          },
-          "dds" : {
-            "exposed": false
-          },
-          "nds" : {
-            "exposed": false
-          },
-          "mms" : {
-            "exposed": false
-          },
-          "cms" : {
-            "exposed": false
-          },
-          "rms" : {
-            "exposed": false
-          }
-        }
-      }
+      "SHA256_16_c1fca01cb22708da8499d38243cec81bb66b76a756449872b04f619463804f6c"
     ]
   }
 }

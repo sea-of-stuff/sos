@@ -159,7 +159,7 @@ public class SyncRequest extends Request {
             SOS_LOG.log(LEVEL.ERROR, "Unable to make HTTP request");
             return new ErrorResponseImpl();
         } catch (Error e) {
-            e.printStackTrace();
+            SOS_LOG.log(LEVEL.ERROR, "SyncRequest - Serious error: " + e.getMessage());
             return new ErrorResponseImpl();
         }
 
