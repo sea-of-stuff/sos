@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -10,7 +11,8 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
-import uk.ac.standrews.cs.sos.impl.database.NodesDatabaseImpl;
+import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
+import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -48,7 +50,8 @@ public class LocalNodesDirectoryTest extends CommonTest {
 
         NodesDatabase nodesDatabase;
         try {
-            nodesDatabase = new NodesDatabaseImpl(settings.getDatabase().getFilename());
+            DatabaseFactory.initInstance(settings.getDatabase().getFilename());
+            nodesDatabase = (NodesDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.NODES);
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
@@ -62,6 +65,13 @@ public class LocalNodesDirectoryTest extends CommonTest {
         } catch (CryptoException e) {
             throw new Exception();
         }
+    }
+
+    @AfterMethod
+    public void tearDown() throws Exception {
+        super.tearDown();
+
+        DatabaseFactory.kill();
     }
 
     @Test

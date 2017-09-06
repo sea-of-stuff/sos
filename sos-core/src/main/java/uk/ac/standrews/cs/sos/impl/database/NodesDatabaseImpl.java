@@ -24,6 +24,7 @@ import java.util.Set;
  */
 public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase {
 
+    // TODO - rename DB_fields!!
     private final static String SQL_CHECK_NODES_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'nodes\'";
     private final static String SQL_CREATE_NODES_TABLE = "CREATE TABLE `nodes` " +
             "(`DB_nodeid`       VARCHAR , " +
@@ -81,6 +82,7 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
             preparedStatement.setBoolean(11, node.isRMS());
 
             preparedStatement.execute();
+
         } catch (SQLException | CryptoException e) {
             throw new DatabaseConnectionException(e);
         }

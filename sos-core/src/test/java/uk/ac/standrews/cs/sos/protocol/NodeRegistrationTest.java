@@ -13,7 +13,8 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.impl.database.NodesDatabaseImpl;
+import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
+import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -112,7 +113,8 @@ public class NodeRegistrationTest extends ProtocolTest {
 
         NodesDatabase nodesDatabase;
         try {
-            nodesDatabase = new NodesDatabaseImpl(settings.getDatabase().getFilename());
+            DatabaseFactory.initInstance(settings.getDatabase().getFilename());
+            nodesDatabase = (NodesDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.NODES);
         } catch (DatabaseException e) {
             throw new SOSException(e);
         }
@@ -153,6 +155,9 @@ public class NodeRegistrationTest extends ProtocolTest {
 
     @AfterMethod
     public void tearDown() {
+
+        DatabaseFactory.kill();
+
         mockServer.stop();
     }
 

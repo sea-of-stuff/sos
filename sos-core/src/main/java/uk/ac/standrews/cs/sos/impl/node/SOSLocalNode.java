@@ -15,7 +15,8 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.database.NodesDatabaseImpl;
+import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
+import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.services.*;
@@ -189,6 +190,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         if (cacheFlusherService != null)
             cacheFlusherService.shutdown();
 
+        DatabaseFactory.kill();
+
         SOSAgent.destroy();
     }
 
@@ -254,7 +257,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             String dbFilename = settings.getDatabase().getFilename();
             File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
 
-            nodesDatabase = new NodesDatabaseImpl(file.getPath());
+            DatabaseFactory.initInstance(file.getPath());
+            nodesDatabase = (NodesDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.NODES);
         } catch (DataStorageException | DatabaseException | IOException e) {
             throw new SOSException(e);
         }

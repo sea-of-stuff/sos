@@ -12,6 +12,7 @@
         "exposed": false,
         "indexFile": "cms.index",
         "automatic": false,
+        "predicateOnNewContext" : false,
         "predicateThread": {
           "initialDelay": 30,
           "period": 60

@@ -2,20 +2,19 @@ package uk.ac.standrews.cs.sos.impl.database;
 
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
-import uk.ac.standrews.cs.sos.utils.FileUtils;
+import uk.ac.standrews.cs.sos.interfaces.database.Database;
 
 import java.sql.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AbstractDatabase {
+public class AbstractDatabase implements Database {
 
     private String path;
 
     public AbstractDatabase(String path) throws DatabaseException {
         this.path = path;
-        FileUtils.MakePath(path);
     }
 
     /**

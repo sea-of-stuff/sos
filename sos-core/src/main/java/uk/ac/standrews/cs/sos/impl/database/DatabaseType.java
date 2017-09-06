@@ -5,5 +5,5 @@ package uk.ac.standrews.cs.sos.impl.database;
  */
 public enum DatabaseType {
 
-    NODES, TASKS
+    NODES, TASKS, CONTEXTS
 }

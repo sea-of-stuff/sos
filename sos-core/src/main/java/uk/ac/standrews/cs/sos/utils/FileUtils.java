@@ -227,8 +227,9 @@ public class FileUtils {
         if (parent != null)
             parent.mkdirs();
 
-        if (path.endsWith("/"))
+        if (path.endsWith("/")) {
             file.mkdir();
+        }
     }
 
 }
