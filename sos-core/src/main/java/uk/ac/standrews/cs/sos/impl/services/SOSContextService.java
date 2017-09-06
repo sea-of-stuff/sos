@@ -132,8 +132,9 @@ public class SOSContextService implements ContextService {
         localContextsDirectory.addContext(context);
         inMemoryCache.addContext(context);
 
-        // TODO - have this only if set in the configuration of the node
-        runContextPredicateNow(context);
+        if (SOSLocalNode.settings.getServices().getCms().isPredicateOnNewContext()) {
+            runContextPredicateNow(context);
+        }
 
         return context.guid();
     }

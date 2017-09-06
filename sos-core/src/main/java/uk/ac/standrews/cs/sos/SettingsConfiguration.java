@@ -371,6 +371,7 @@ public class SettingsConfiguration {
                 private ThreadSettings checkPoliciesThread;
                 private ThreadSettings getdataThread;
                 private ThreadSettings spawnThread;
+                private boolean predicateOnNewContext = true;
 
                 public CMSSettings() {}
 
@@ -436,6 +437,14 @@ public class SettingsConfiguration {
 
                 public void setLoadedPath(String loadedPath) {
                     this.loadedPath = loadedPath;
+                }
+
+                public boolean isPredicateOnNewContext() {
+                    return predicateOnNewContext;
+                }
+
+                public void setPredicateOnNewContext(boolean predicateOnNewContext) {
+                    this.predicateOnNewContext = predicateOnNewContext;
                 }
             }
 
