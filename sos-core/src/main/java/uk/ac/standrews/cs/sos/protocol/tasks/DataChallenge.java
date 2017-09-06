@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -15,6 +17,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
 import uk.ac.standrews.cs.sos.utils.IO;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.ByteArrayInputStream;
@@ -27,6 +30,8 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static uk.ac.standrews.cs.sos.protocol.json.TaskJSONFields.*;
 
 /**
  * Other node should return hash(data + random string)
@@ -73,6 +78,26 @@ public class DataChallenge extends Task {
         } catch (SOSURLException |IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to verify data with GUID " + entity + " against node " + challengedNode);
         }
+    }
+
+    @Override
+    public String serialize() {
+
+        ObjectNode node = JSONHelper.JsonObjMapper().createObjectNode();
+        node.put(TASK_TYPE, "DataChallenge");
+        node.put(TASK_ENTITY, entity.toMultiHash());
+        // TODO - the challenged data will be retrieved again from the node
+        node.put(TASK_CHALLENGED_NODE, challengedNode.toString());
+
+        return node.toString();
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
+
+        return null;
     }
 
     private boolean challenge(Node node) throws SOSURLException, IOException {

@@ -132,6 +132,16 @@ public class DataReplication extends Task {
 
     }
 
+    @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
     /**
      * Transfer a stream of data to a given node and update this node state
      *

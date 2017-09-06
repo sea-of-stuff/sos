@@ -47,6 +47,16 @@ public class InfoNode extends Task {
         }
     }
 
+    @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
     public String getInfo() {
         return info;
     }

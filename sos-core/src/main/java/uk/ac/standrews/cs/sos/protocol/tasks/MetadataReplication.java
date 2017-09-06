@@ -62,6 +62,16 @@ public class MetadataReplication extends Task {
         }
     }
 
+    @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
     private static boolean TransferMetadataRequest(Metadata metadata, Node node) throws GUIDGenerationException {
 
         try {

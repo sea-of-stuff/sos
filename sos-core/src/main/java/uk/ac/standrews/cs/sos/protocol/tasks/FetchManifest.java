@@ -74,6 +74,16 @@ public class FetchManifest extends Task {
         }
     }
 
+    @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
     public Manifest getManifest() {
         return manifest;
     }

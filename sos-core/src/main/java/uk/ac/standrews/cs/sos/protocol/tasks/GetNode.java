@@ -67,6 +67,16 @@ public class GetNode extends Task {
         }
     }
 
+    @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
     private Node parseNode(Response response) throws IOException {
 
         if (response.getCode() != HTTPStatus.OK) {

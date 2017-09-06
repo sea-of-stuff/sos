@@ -83,6 +83,16 @@ public class ManifestReplication extends Task {
         }
     }
 
+    @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
     private static boolean TransferManifestRequest(Manifest manifest, Node node) {
 
         try {

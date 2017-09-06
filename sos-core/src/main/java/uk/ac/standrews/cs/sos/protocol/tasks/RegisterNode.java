@@ -50,6 +50,16 @@ public class RegisterNode extends Task {
     }
 
     @Override
+    public String serialize() {
+        return null;
+    }
+
+    @Override
+    public Task deserialize(String json) throws IOException {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "RegisterNode " + ndsNode.getNodeGUID().toMultiHash() + " to NDS node " + ndsNode.getNodeGUID().toMultiHash();
     }
