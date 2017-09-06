@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
-import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -53,7 +53,7 @@ public class WContexts {
 
         Map<String, Object> contents = new HashMap<>();
         for(IGUID guid : sos.getCMS().getContents(contextGUID)) {
-            ContextContent info = sos.getCMS().getContextContentInfo(contextGUID, guid);
+            ContextVersionInfo info = sos.getCMS().getContextContentInfo(contextGUID, guid);
             contents.put(guid.toMultiHash(), info);
         }
 

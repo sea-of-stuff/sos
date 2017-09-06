@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context.directory;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextContent {
+public class ContextVersionInfo {
 
     public boolean predicateResult; // The last result of the predicate
     public long timestamp; // Time when the predicate was last apply for this content

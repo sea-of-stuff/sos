@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
-import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.LocalContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
@@ -222,7 +222,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public ContextContent getContextContentInfo(IGUID context, IGUID version) {
+    public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
 
         return contextsDirectory.get(context, version);
     }
@@ -312,7 +312,6 @@ public class SOSContextService implements ContextService {
                 IGUID head = dataDiscoveryService.getHead(assetInvariant);
                 runPredicate(context, assetInvariant, head);
                 counter++;
-                // SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getName() + " and Version-HEAD " + head.toShortString());
             } catch (HEADNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant");
             }
@@ -376,7 +375,7 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextContent> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult && !row.policySatisfied) {
 
@@ -428,7 +427,7 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextContent> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
 
@@ -517,7 +516,7 @@ public class SOSContextService implements ContextService {
             boolean passed = context.predicate().test(versionGUID);
             // SOS_LOG.log(LEVEL.INFO, "Context " + context.getName() + " for version " + versionGUID + " has passed: " + passed);
 
-            ContextContent content = new ContextContent();
+            ContextVersionInfo content = new ContextVersionInfo();
             content.predicateResult = passed;
             content.timestamp = System.currentTimeMillis();
 
@@ -537,8 +536,8 @@ public class SOSContextService implements ContextService {
     private void runPolicies(Context context, IGUID guid) {
 
         try {
-            ContextContent content = new ContextContent();
-            ContextContent prev = contextsDirectory.get(context.guid(), guid);
+            ContextVersionInfo content = new ContextVersionInfo();
+            ContextVersionInfo prev = contextsDirectory.get(context.guid(), guid);
 
             // TODO - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -565,8 +564,8 @@ public class SOSContextService implements ContextService {
     private void checkPolicies(Context context, IGUID guid) {
 
         try {
-            ContextContent content = new ContextContent();
-            ContextContent prev = contextsDirectory.get(context.guid(), guid);
+            ContextVersionInfo content = new ContextVersionInfo();
+            ContextVersionInfo prev = contextsDirectory.get(context.guid(), guid);
 
             // TODO - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -598,7 +597,7 @@ public class SOSContextService implements ContextService {
      * @return true if the predicate is still valid
      */
     private boolean predicateHasExpired(Context context, IGUID versionGUID) {
-        ContextContent content = contextsDirectory.get(context.guid(), versionGUID);
+        ContextVersionInfo content = contextsDirectory.get(context.guid(), versionGUID);
 
         long maxage = context.predicate().maxAge();
         long contentLastRun = content.timestamp;

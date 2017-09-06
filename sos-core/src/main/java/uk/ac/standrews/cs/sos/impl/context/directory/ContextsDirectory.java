@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 public class ContextsDirectory implements Serializable  {
 
     // Maps the context to the versions belonging to it
-    private transient HashMap<IGUID, HashMap<IGUID, ContextContent>> mappings;
+    private transient HashMap<IGUID, HashMap<IGUID, ContextVersionInfo>> mappings;
     
     public ContextsDirectory() {
         mappings = new HashMap<>();
     }
 
-    public void addUpdateMapping(IGUID context, IGUID version, ContextContent content) {
+    public void addUpdateMapping(IGUID context, IGUID version, ContextVersionInfo content) {
 
         if (!mappings.containsKey(context)) {
             mappings.put(context, new HashMap<>());
@@ -42,7 +42,7 @@ public class ContextsDirectory implements Serializable  {
      * @param version
      * @return
      */
-    public ContextContent get(IGUID context, IGUID version) {
+    public ContextVersionInfo get(IGUID context, IGUID version) {
 
         return mappings.get(context).get(version);
     }
@@ -71,7 +71,7 @@ public class ContextsDirectory implements Serializable  {
      * @return
      */
     public Set<IGUID> getContentsThatPassedPredicateTest(IGUID context) {
-        HashMap<IGUID, ContextContent> contents = mappings.get(context);
+        HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptySet();
         } else {
@@ -84,8 +84,8 @@ public class ContextsDirectory implements Serializable  {
         }
     }
 
-    public Map<IGUID, ContextContent> getContentsThatPassedPredicateTestRows(IGUID context) {
-        HashMap<IGUID, ContextContent> contents = mappings.get(context);
+    public Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context) {
+        HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
         if (contents == null) {
             return new HashMap<>();
         } else {
@@ -106,11 +106,11 @@ public class ContextsDirectory implements Serializable  {
         out.defaultWriteObject();
 
         out.writeInt(mappings.size());
-        for(Map.Entry<IGUID, HashMap<IGUID, ContextContent>> mapping:mappings.entrySet()) {
+        for(Map.Entry<IGUID, HashMap<IGUID, ContextVersionInfo>> mapping:mappings.entrySet()) {
             out.writeUTF(mapping.getKey().toMultiHash());
 
             out.writeInt(mapping.getValue().size());
-            for(Map.Entry<IGUID, ContextContent> content:mapping.getValue().entrySet()) {
+            for(Map.Entry<IGUID, ContextVersionInfo> content:mapping.getValue().entrySet()) {
                 out.writeUTF(content.getKey().toMultiHash());
                 out.writeBoolean(content.getValue().predicateResult);
                 out.writeLong(content.getValue().timestamp);
@@ -141,12 +141,12 @@ public class ContextsDirectory implements Serializable  {
                     long timestamp = in.readLong();
                     boolean policySatisfied = in.readBoolean();
 
-                    ContextContent contextContent = new ContextContent();
-                    contextContent.predicateResult = predicateResult;
-                    contextContent.timestamp = timestamp;
-                    contextContent.policySatisfied = policySatisfied;
+                    ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
+                    contextVersionInfo.predicateResult = predicateResult;
+                    contextVersionInfo.timestamp = timestamp;
+                    contextVersionInfo.policySatisfied = policySatisfied;
 
-                    mappings.get(contextGUID).put(contentGUID, contextContent);
+                    mappings.get(contextGUID).put(contentGUID, contextVersionInfo);
                 }
             }
 

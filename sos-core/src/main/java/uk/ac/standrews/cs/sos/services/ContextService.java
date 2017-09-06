@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
-import uk.ac.standrews.cs.sos.impl.context.directory.ContextContent;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
@@ -20,6 +20,11 @@ import java.util.Set;
  */
 public interface ContextService {
 
+    /**
+     * Get all the contexts run by this node
+     *
+     * @return
+     */
     Set<Context> getContexts();
 
     /**
@@ -82,8 +87,28 @@ public interface ContextService {
      */
     void shutdown();
 
+    /**
+     * Forces to run the predicate of the context with the matching GUID
+     *
+     * @param guid
+     * @throws ContextNotFoundException
+     */
     void runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
+
+    /**
+     * Forces to run the policies of the context with the matching GUID
+     *
+     * @param guid
+     * @throws ContextNotFoundException
+     */
     void runContextPolicyNow(IGUID guid) throws ContextNotFoundException;
+
+    /**
+     * Forces to run the check policies of the context with the matching GUID
+     *
+     * @param guid
+     * @throws ContextNotFoundException
+     */
     void runContextPolicyCheckNow(IGUID guid) throws ContextNotFoundException;
 
     /**
@@ -92,12 +117,35 @@ public interface ContextService {
      */
     int runPredicates();
 
+    /**
+     * Run the policies for all contexts
+     */
     void runPolicies();
 
+    /**
+     * Get the statistics for the predicate thread
+     * @return
+     */
     Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics();
+
+    /**
+     * Get the statistics for the policy thread
+     * @return
+     */
     Queue<Pair<Long, Long>> getApplyPolicyThreadSessionStatistics();
+
+    /**
+     * Get the statistics for the check-policy thread
+     * @return
+     */
     Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics();
 
-    ContextContent getContextContentInfo(IGUID context, IGUID version);
+    /**
+     * Get the info about the pair context-version
+     * @param context
+     * @param version
+     * @return
+     */
+    ContextVersionInfo getContextContentInfo(IGUID context, IGUID version);
 
 }
