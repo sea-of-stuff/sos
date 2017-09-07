@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context.directory;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.interfaces.context.ContextsContentsDirectory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,16 +18,17 @@ import java.util.stream.Collectors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextsDirectory implements Serializable  {
+public class ContextsContentsDirectoryInMemory implements Serializable, ContextsContentsDirectory {
 
     // Maps the context to the versions belonging to it
     private transient HashMap<IGUID, HashMap<IGUID, ContextVersionInfo>> mappings;
     
-    public ContextsDirectory() {
+    public ContextsContentsDirectoryInMemory() {
         mappings = new HashMap<>();
     }
 
-    public void addUpdateMapping(IGUID context, IGUID version, ContextVersionInfo content) {
+    @Override
+    public void addEntry(IGUID context, IGUID version, ContextVersionInfo content) {
 
         if (!mappings.containsKey(context)) {
             mappings.put(context, new HashMap<>());
@@ -42,11 +44,13 @@ public class ContextsDirectory implements Serializable  {
      * @param version
      * @return
      */
-    public ContextVersionInfo get(IGUID context, IGUID version) {
+    @Override
+    public ContextVersionInfo getEntry(IGUID context, IGUID version) {
 
         return mappings.get(context).get(version);
     }
 
+    // FIXME
     public void remove(IGUID context, IGUID version) {
 
         mappings.get(context).remove(version);
@@ -61,7 +65,8 @@ public class ContextsDirectory implements Serializable  {
      * @param version to check
      * @return true if the pair context-version has been processed already
      */
-    public boolean contextVersionPairHasBeenProcessed(IGUID context, IGUID version) {
+    @Override
+    public boolean entryExists(IGUID context, IGUID version) {
 
         return mappings.containsKey(context) && mappings.get(context).containsKey(version);
     }
@@ -72,7 +77,8 @@ public class ContextsDirectory implements Serializable  {
      * @param context
      * @return
      */
-    public Set<IGUID> getContentsThatPassedPredicateTest(IGUID context) {
+    @Override
+    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context) {
         HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptySet();
@@ -86,6 +92,7 @@ public class ContextsDirectory implements Serializable  {
         }
     }
 
+    @Override
     public Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context) {
         HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
         if (contents == null) {
@@ -106,6 +113,7 @@ public class ContextsDirectory implements Serializable  {
      * @param context
      * @param version
      */
+    @Override
     public void evict(IGUID context, IGUID version) {
 
         HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);

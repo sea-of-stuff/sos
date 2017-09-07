@@ -14,11 +14,13 @@ public class DatabaseFactory {
 
     private NodesDatabase nodesDatabase;
     private TasksDatabase tasksDatabase;
+    private ContextsContentsDirectoryDatabase contextsContentsDirectoryDatabase;
 
     public DatabaseFactory(String path) throws DatabaseException {
 
         nodesDatabase = new NodesDatabaseImpl(path);
         tasksDatabase = new TasksDatabase(path);
+        contextsContentsDirectoryDatabase = new ContextsContentsDirectoryDatabase(path);
     }
 
     private static DatabaseFactory instance;
@@ -52,6 +54,8 @@ public class DatabaseFactory {
                 return nodesDatabase;
             case TASKS:
                 return tasksDatabase;
+            case CONTEXTS:
+                return contextsContentsDirectoryDatabase;
         }
 
         throw new DatabaseException("Database type is unknown");
