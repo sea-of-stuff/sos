@@ -102,4 +102,7 @@ $("#dag_setHead").click(function() {
     id = $('#dag_selected_node_full').html();
 
     $.post("version/" + id + "/sethead");
+
+    // refresh page
+    location = location;
 });

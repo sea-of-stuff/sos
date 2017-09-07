@@ -198,7 +198,10 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         if (tips.containsKey(invariant) && tips.get(invariant).containsAll(previousVersions)) {
 
             advanceTip(invariant, newVersion);
-            tips.get(invariant).removeAll(previousVersions);
+            tips.get(invariant).removeAll(previousVersions); // Remove the previous tips, which are now replaced by the newVersion
+        } else {
+            // This is the case when we are adding a tip to a new branch.
+            advanceTip(invariant, newVersion);
         }
     }
 
