@@ -93,16 +93,10 @@ $("#dag_reset").click(function() {
 $("#dag_seeAllVersions").click(function() {
     id = $('#manifestid_full').html();
 
-    console.log("versions for " + id);
+    $.get("/graph/asset/" + id, function (data) {
+        buildAndRenderGraph(data);
+    })
 });
-
-
-$("#dag_highlightTips").click(function() {
-    id = $('#manifestid_full').html();
-
-    console.log("tips for " + id);
-});
-
 
 $("#dag_setHead").click(function() {
     id = $('#dag_selected_node_full').html();

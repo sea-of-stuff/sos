@@ -16,7 +16,6 @@
         <div class="btn-group" role="group">
             <button id="dag_show" type="button" class="btn btn btn-outline-dark">Show Manifests/Data/Metadata</button>
             <button id="dag_seeAllVersions" type="button" class="btn btn btn-outline-dark">See all versions</button>
-            <button id="dag_highlightTips" type="button" class="btn btn btn-outline-dark">Highlight TIPS</button>
             <button id="dag_setHead" type="button" class="btn btn btn-outline-dark">Set HEAD</button>
             <button id="dag_explore" type="button" class="btn btn btn-outline-dark">Explore</button>
             <button id="dag_reset" type="button" class="btn btn btn-outline-dark">Reset</button>

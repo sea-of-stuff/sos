@@ -75,6 +75,7 @@ public class WebApp {
         post("/usro/role", (req, res) -> WUsersRoles.CreateRole(req, res, sos));
 
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
+        get("/graph/asset/:versionid", (req, res) -> WGraph.RenderAsset(req, sos));
 
         get("/verifySignature/:id/role/:roleid", (req, res) -> WVerify.VerifySignature(req, sos));
         get("/verifyIntegrity/:id", (req, res) -> WVerify.VerifyIntegrity(req, sos));
