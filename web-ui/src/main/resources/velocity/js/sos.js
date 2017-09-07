@@ -105,7 +105,7 @@ $("#dag_highlightTips").click(function() {
 
 
 $("#dag_setHead").click(function() {
-    id = $('#manifestid_full').html();
+    id = $('#dag_selected_node_full').html();
 
-    console.log("set head for " + id);
+    $.post("version/" + id + "/sethead");
 });

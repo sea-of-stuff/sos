@@ -120,6 +120,7 @@
 
 <h2>Data Stored</h2>
 here list of other nodes where this entity is stored
+<span id="replicasInfo"></span>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
 <script src="js/sos.js"></script>
@@ -148,6 +149,10 @@ here list of other nodes where this entity is stored
         $.get("/data/" + id , function(data) {
             $('#data').html(data);
         })
+
+        $.get("/replicas/info/" + id, function(data) {
+            $('#replicasInfo').html(data);
+        });
 
     };
 

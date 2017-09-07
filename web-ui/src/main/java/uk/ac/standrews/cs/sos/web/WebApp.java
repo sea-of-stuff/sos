@@ -50,6 +50,7 @@ public class WebApp {
         // Use "0" for no param
         post("/version/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddDataVersion(req, sos));
         post("/version/compound/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddCompoundVersion(req, sos));
+        post("/version/:id/sethead", (req, res) -> WData.SetHead(req, sos));
 
         get("/data/:id", (req, res) -> WData.GetData(req, sos));
         get("/data/:id/download", (req, res) -> WData.GetDataDownload(req, res, sos));
@@ -82,6 +83,9 @@ public class WebApp {
         get("node/stats/:nodeid", (req, res) -> WNodes.Stats(req, sos));
 
         get("/threads", (req, res) -> WContexts.Threads(sos));
+
+        // TODO - query to get lists of nodes where content (data, manifest, etc) is replicated
+        // get("/replicas/info/:id", (req, req) -> )
     }
 
     private static void registerPostActionRoutes() {

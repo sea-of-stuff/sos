@@ -331,6 +331,20 @@ public class WData {
 
     }
 
+    public static String SetHead(Request request, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
+
+        String guidParam = request.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+
+        Manifest manifest = sos.getDDS().getManifest(guid);
+        if (manifest.getType().equals(ManifestType.VERSION)) {
+
+            sos.getDDS().setHead((Version) manifest);
+        }
+
+        return "HEAD SET";
+    }
+
     private static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
 
         Data data = sos.getStorage().getSecureAtomContent(atom, role);
