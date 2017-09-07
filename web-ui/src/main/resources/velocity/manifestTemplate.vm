@@ -2,13 +2,15 @@
     Howdy! You need to make sure that a manifest is selected around here!
 </div>
 
-<h1>Version <span class="manifestid text-success"></span></h1>
+<h1>Version <span id="manifestid" class="text-success"></span></h1>
 <h2>DAG</h2>
 <div class="card">
     <div class="card-body">
         <div id="sos-graph"></div>
     </div>
     <div class="card-footer bg-transparent">
+        Selected node: <span id="dag_selected_node" class="text-success"></span>
+        <br>
         <div class="btn-group" role="group">
             <button id="seeAllVersions" type="button" class="btn btn btn-outline-dark">See all versions</button>
             <button id="highlightTips" type="button" class="btn btn btn-outline-dark">Highlight TIPS</button>
@@ -122,7 +124,8 @@ here list of other nodes where this entity is stored
 
     function showVersionInfo() {
         id = $(this).val();
-        $('.manifestid').html(id.substring(0, 15));
+        $('#manifestid').html(id.substring(0, 15));
+        $('#dag_selected_node').html("");
 
         // UPDATE THE DAG
         evaluateGraph(id);

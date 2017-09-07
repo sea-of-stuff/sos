@@ -61,7 +61,7 @@
 
             <div class="pretty success curvy a-tada">
                 <input type="checkbox" id="updateVersion"/>
-                <label><i class="fa fa-check"></i> <strong>Update</strong> the selected version <span class="manifestid text-success"></span> (see right pane)</label>
+                <label><i class="fa fa-check"></i> <strong>Update</strong> the selected version <strong><span class="manifestid text-success"></span></strong> (see right pane)</label>
             </div>
             <br>
             <div class="pretty success curvy a-tada">

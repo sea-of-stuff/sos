@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.Agent;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.Set;
 
@@ -27,8 +28,7 @@ public class WGraph {
         // We assume that the manifest is of type version
         Manifest selectedManifest = sos.getAgent().getManifest(guid);
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode graph = mapper.createObjectNode();
+        ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
 
         ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), selectedManifest);
         ArrayNode edges = ManifestEdgesGraph(selectedManifest);
@@ -196,7 +196,7 @@ public class WGraph {
         objectNode.put("to", toPrefix + to.toMultiHash());
         objectNode.put("label", label);
         objectNode.put("arrows", "to");
-        objectNode.put("physics", "false");
+        // objectNode.put("physics", "false");
 
         return objectNode;
     }
