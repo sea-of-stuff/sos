@@ -127,6 +127,11 @@ here list of other nodes where this entity is stored
 
     function showVersionInfo() {
         id = $(this).val();
+        showVersionInfoById(id);
+    };
+
+    function showVersionInfoById(id) {
+
         $('#manifestid').html(id.substring(0, 15));
         $('#manifestid_full').html(id);
         $('#dag_selected_node').html("");
@@ -152,7 +157,6 @@ here list of other nodes where this entity is stored
         $.get("/replicas/info/" + id, function(data) {
             $('#replicasInfo').html(data);
         });
-
     };
 
     function showManifestAlert() {

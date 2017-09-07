@@ -65,6 +65,11 @@
             </div>
             <br>
             <div class="pretty success curvy a-tada">
+                <input type="checkbox" id="updateAndMergeVersion"/>
+                <label><i class="fa fa-check"></i> <strong>Update and Merge (N/A)</strong> the selected version <strong><span class="manifestid text-success"></span></strong> (see right pane)</label>
+            </div>
+            <br>
+            <div class="pretty success curvy a-tada">
                 <input type="checkbox" id="createCompound"/>
                 <label><i class="fa fa-check"></i> <strong>Make Compound using data to upload and/or selected versions</strong></label>
             </div>

@@ -7,12 +7,14 @@ import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBind
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
+import uk.ac.standrews.cs.utilities.Pair;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -30,6 +32,15 @@ public class WWebDAV {
         } catch (TIPNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();
         }
+
+        Set<Pair<User, Role>> usro = new LinkedHashSet<>();
+        for(Role role:sos.getRMS().getRoles()) {
+            try {
+                User user = sos.getRMS().getUser(role.getUser());
+                usro.add(new Pair<>(user, role));
+            } catch (UserNotFoundException e) { /* do nothing */ }
+        }
+        model.put("usro", usro);
 
         return VelocityUtils.RenderTemplate("velocity/webdav.vm", model);
     }

@@ -57,6 +57,7 @@
                 $('#data').html(data);
             })
 
+            showVersionInfoById(data.selected[0]);
             evaluateGraph(data.selected[0]);
         });
 
