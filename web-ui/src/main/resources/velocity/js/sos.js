@@ -89,3 +89,23 @@ $("#dag_reset").click(function() {
         buildAndRenderGraph(data);
     });
 });
+
+$("#dag_seeAllVersions").click(function() {
+    id = $('#manifestid_full').html();
+
+    console.log("versions for " + id);
+});
+
+
+$("#dag_highlightTips").click(function() {
+    id = $('#manifestid_full').html();
+
+    console.log("tips for " + id);
+});
+
+
+$("#dag_setHead").click(function() {
+    id = $('#manifestid_full').html();
+
+    console.log("set head for " + id);
+});

@@ -7,11 +7,14 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.Agent;
+import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.Set;
@@ -30,7 +33,7 @@ public class WGraph {
 
         ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
 
-        ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), selectedManifest);
+        ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), sos.getDDS(), selectedManifest);
         ArrayNode edges = ManifestEdgesGraph(selectedManifest);
 
         graph.put("nodes", nodes);
@@ -40,14 +43,27 @@ public class WGraph {
     }
 
     // TODO - must refactor
-    private static ArrayNode ManifestNodeGraph(Agent agent, Manifest manifest) throws ManifestNotFoundException {
+    private static ArrayNode ManifestNodeGraph(Agent agent, DataDiscoveryService dataDiscoveryService, Manifest manifest) throws ManifestNotFoundException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
 
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
 
-            ObjectNode node = ManifestNode(version, version.getInvariantGUID().toMultiHash());
+            boolean isHEAD = false;
+            try {
+                IGUID head = dataDiscoveryService.getHead(version.getInvariantGUID());
+                isHEAD = version.guid().equals(head);
+            } catch (HEADNotFoundException ignored) { }
+
+            boolean isTIP = false;
+            try {
+                Set<IGUID> tips = dataDiscoveryService.getTips(version.getInvariantGUID());
+                isTIP = tips.contains(version.guid());
+            } catch (TIPNotFoundException ignored) { }
+
+
+            ObjectNode node = VersionManifestNode(version, version.getInvariantGUID().toMultiHash(), isHEAD, isTIP);
             arrayNode.add(node);
 
             // Content
@@ -161,6 +177,19 @@ public class WGraph {
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toMultiHash());
         objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 15));
+        objectNode.put("group", group);
+        objectNode.put("shape", "box");
+        objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
+
+        return objectNode;
+    }
+
+    private static ObjectNode VersionManifestNode(Version version, String group, boolean isHEAD, boolean isTIP) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", version.guid().toMultiHash());
+        objectNode.put("label", "Type: " + version.getType() + "\nGUID: " + version.guid().toMultiHash().substring(0, 15) + "\nHEAD: " + isHEAD + "\nTIP: " + isTIP);
         objectNode.put("group", group);
         objectNode.put("shape", "box");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
