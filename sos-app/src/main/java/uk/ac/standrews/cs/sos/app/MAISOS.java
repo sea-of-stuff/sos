@@ -59,7 +59,9 @@ public class MAISOS {
 
         if (cli.hasOption(FS_OPT)) {
             IGUID root = getRootGUID(cli);
-            HandleFSApp(executorService, sos, root, configuration.getSettingsObj());
+            HandleWebAppAndWebDAVApp(executorService, sos, root, configuration.getSettingsObj());
+        } else {
+            HandleWebApp(executorService, sos, configuration.getSettingsObj());
         }
 
         HandleExit(executorService);
@@ -142,8 +144,7 @@ public class MAISOS {
         }
     }
 
-    private static void HandleFSApp(ExecutorService executorService, SOSLocalNode sos, IGUID root,
-                                    SettingsConfiguration.Settings settings) throws FileSystemCreationException {
+    private static void HandleWebAppAndWebDAVApp(ExecutorService executorService, SOSLocalNode sos, IGUID root, SettingsConfiguration.Settings settings) throws FileSystemCreationException {
 
         Agent agent = sos.getAgent();
         if (agent == null) {
@@ -163,6 +164,20 @@ public class MAISOS {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        });
+    }
+
+    private static void HandleWebApp(ExecutorService executorService, SOSLocalNode sos, SettingsConfiguration.Settings settings) {
+
+        Agent agent = sos.getAgent();
+        if (agent == null) {
+            return;
+        }
+
+        executorService.submit(() -> {
+
+            SOS_LOG.log(LEVEL.INFO, "Launching the WebApp on port: " + settings.getWebAPP().getPort());
+            WebApp.RUN(sos, null, settings.getWebAPP().getPort());
         });
     }
 

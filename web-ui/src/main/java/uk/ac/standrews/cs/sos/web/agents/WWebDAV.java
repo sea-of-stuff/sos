@@ -21,6 +21,10 @@ import java.util.*;
  */
 public class WWebDAV {
 
+    public static String RenderNoWebDav() {
+        return VelocityUtils.RenderTemplate("velocity/invalid.vm");
+    }
+
     public static String Render(SOSLocalNode sos, IFileSystem fileSystem){
         Map<String, Object> model = new HashMap<>();
 

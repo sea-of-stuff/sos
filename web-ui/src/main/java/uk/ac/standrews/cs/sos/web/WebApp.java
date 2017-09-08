@@ -39,7 +39,12 @@ public class WebApp {
         // PAGES
         get("/", (req, res) -> WHome.Render(sos));
         get("/index", (req, res) -> WHome.Render(sos));
-        get("/webdav", (req, res) -> WWebDAV.Render(sos, fileSystem));
+
+        if (fileSystem != null) {
+            get("/webdav", (req, res) -> WWebDAV.Render(sos, fileSystem));
+        } else {
+            get("/webdav", (req, res) -> WWebDAV.RenderNoWebDav());
+        }
         get("/nodes", (req, res) -> WNodes.Render(sos));
         get("/webarchive", (req, res) -> WWebArchive.Render());
         get("/settings", (req, res) -> WSettings.Render(sos));
