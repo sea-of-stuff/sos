@@ -107,8 +107,6 @@ public class SOSStorage implements Storage {
         dataDiscoveryService.addManifest(manifest);
 
         // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
-        // TODO - in adjusting this we must take into account: atomBuilder.isDelegateReplication()
-        // TODO - this was fixed (not nice) by increasing the replication factory by one in the policy actions
         int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
 
