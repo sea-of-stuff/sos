@@ -72,7 +72,7 @@ public class SettingsConfiguration {
     public static class Settings {
 
         @JsonIgnore
-        private String guid;
+        private String guid; // The local node uses this field to share its GUID across different parts of the node.
 
         private AdvanceServicesSettings services;
         private DatabaseSettings database;
@@ -193,7 +193,9 @@ public class SettingsConfiguration {
                 this.guid = guid;
             }
 
-            public IGUID getNodeRef() {
+            @JsonIgnore
+            @Override
+            public IGUID getNodeGUID() {
                 try {
                     return GUIDFactory.recreateGUID(getGuid());
                 } catch (GUIDGenerationException e) {
@@ -223,16 +225,6 @@ public class SettingsConfiguration {
 
             public void setSignCert(String signCert) {
                 this.signCert = signCert;
-            }
-
-            @JsonIgnore
-            @Override
-            public IGUID getNodeGUID() {
-                try {
-                    return GUIDFactory.recreateGUID(getGuid());
-                } catch (GUIDGenerationException e) {
-                    return new InvalidID();
-                }
             }
 
             @JsonIgnore
