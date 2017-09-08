@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.InputStream;
 
 import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
@@ -108,9 +109,12 @@ public class RESTStorage {
     public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
-        // TODO - verify that data received matched the guid in the metadata?
-
         try {
+            IGUID guidOfReceivedData = GUIDFactory.generateGUID(dataPackage.getDataObj().getInputStream());
+            if (!guidOfReceivedData.equals(dataPackage.getGUIDObj())) {
+                return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Data received does not match the GUID");
+            }
+
             Storage storage = RESTConfig.sos.getStorage();
 
             AtomBuilder builder = new AtomBuilder()
@@ -134,7 +138,7 @@ public class RESTStorage {
 
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
-        } catch (DataStorageException | ManifestPersistException | NodesCollectionException e) {
+        } catch (DataStorageException | ManifestPersistException | NodesCollectionException | GUIDGenerationException | IOException e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 

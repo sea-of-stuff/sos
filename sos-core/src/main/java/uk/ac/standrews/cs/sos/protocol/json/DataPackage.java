@@ -25,6 +25,7 @@ public class DataPackage {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Metadata metadata;
     private String data;
+    private String guid;
 
     public DataPackage() {}
 
@@ -43,28 +44,36 @@ public class DataPackage {
     @JsonIgnore
     public Data getDataObj() {
         return new InputStreamData(IO.Base64StringToInputStream(data));
-        // return new StringData(data);
     }
 
     public void setData(String data) {
         this.data = data;
     }
 
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+
+    @JsonIgnore
+    public IGUID getGUIDObj() {
+
+        try {
+            return GUIDFactory.recreateGUID(getGuid());
+        } catch (GUIDGenerationException e) {
+            return new InvalidID();
+        }
+    }
+
     public static class Metadata {
 
-        private String guid;
         private int replicationFactor;
         private ReplicationNodes replicationNodes;
 
         public Metadata() {}
-
-        public String getGuid() {
-            return guid;
-        }
-
-        public void setGuid(String guid) {
-            this.guid = guid;
-        }
 
         public int getReplicationFactor() {
             return replicationFactor;

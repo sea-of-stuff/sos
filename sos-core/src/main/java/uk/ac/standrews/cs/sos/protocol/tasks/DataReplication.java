@@ -58,6 +58,7 @@ import java.util.Iterator;
  */
 public class DataReplication extends Task {
 
+    private IGUID guid;
     private Data data;
     private NodesCollection nodesCollection;
     private int replicationFactor;
@@ -83,10 +84,8 @@ public class DataReplication extends Task {
      * @param storage
      * @param nodeDiscoveryService
      * @throws SOSProtocolException
-     *
-     * FIXME - should tell the other node that GUID to expect
      */
-    public DataReplication(Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
+    public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
 
         if (storage == null || nodeDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
@@ -95,6 +94,8 @@ public class DataReplication extends Task {
         this.storage = storage;
         this.nodeDiscoveryService = nodeDiscoveryService;
 
+
+        this.guid = guid;
         this.data = data;
         this.nodesCollection = nodesCollection;
         this.replicationFactor = replicationFactor;
@@ -179,6 +180,7 @@ public class DataReplication extends Task {
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
 
             DataPackage dataPackage = new DataPackage();
+            dataPackage.setGuid(guid.toMultiHash());
             dataPackage.setData(IO.InputStreamToBase64String(data));
 
             if (delegateReplication) {
