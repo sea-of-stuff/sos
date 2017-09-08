@@ -69,15 +69,15 @@ public class ManifestReplication extends Task {
                 boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
 
                 if (transferWasSuccessful) {
-                    SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.toString());
+                    SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.getNodeGUID().toMultiHash());
                     dataDiscoveryService.addManifestDDSMapping(manifest.guid(), ref);
                     successfulReplicas++;
                 } else {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.toString());
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.getNodeGUID().toMultiHash());
                 }
 
             } catch (NodeNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to get node with ref: " + ref);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to get node with ref: " + ref.toMultiHash());
             }
 
         }
@@ -107,7 +107,7 @@ public class ManifestReplication extends Task {
 
             return transferWasSuccessful;
         } catch (IOException | SOSURLException e) {
-            SOS_LOG.log(LEVEL.ERROR, "TransferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.toString());
+            SOS_LOG.log(LEVEL.ERROR, "TransferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.getNodeGUID().toMultiHash());
         }
 
         return false;

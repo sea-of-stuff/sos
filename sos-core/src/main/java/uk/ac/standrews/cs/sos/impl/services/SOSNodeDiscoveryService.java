@@ -210,7 +210,26 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         InfoNode infoNode = new InfoNode(node);
         TasksQueue.instance().performSyncTask(infoNode);
 
-        return infoNode.getInfo();
+        String retval = infoNode.getInfo();
+        if (retval == null) {
+            throw new NodeNotFoundException("Unable to find info about node");
+        } else {
+            return retval;
+        }
+    }
+
+    @Override
+    public String infoNode(Node node) throws NodeNotFoundException {
+
+        InfoNode infoNode = new InfoNode(node);
+        TasksQueue.instance().performSyncTask(infoNode);
+
+        String retval = infoNode.getInfo();
+        if (retval == null) {
+            throw new NodeNotFoundException("Unable to find info about node");
+        } else {
+            return retval;
+        }
     }
 
     @Override

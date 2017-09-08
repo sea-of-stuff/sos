@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 
-import java.util.Iterator;
+import java.util.Queue;
 
 /**
  * The Storage roles defines an entry point in the SOS to store data.
@@ -103,9 +103,9 @@ public interface Storage {
      * Find all locations for a given atom
      *
      * @param guid of the atom
-     * @return an iterator of locations
+     * @return locations
      */
-    Iterator<LocationBundle> findLocations(IGUID guid);
+    Queue<LocationBundle> findLocations(IGUID guid);
 
     /**
      * Challenge the storage for the atom matching the given guid.

@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Iterator;
+import java.util.Queue;
 
 /**
  * Maps entities and locations
@@ -17,7 +17,7 @@ public interface LocationsIndex extends Serializable {
 
     void addLocation(IGUID guid, LocationBundle locationBundle);
 
-    Iterator<LocationBundle> findLocations(IGUID guid);
+    Queue<LocationBundle> findLocations(IGUID guid);
 
     void persist(IFile file) throws IOException;
 

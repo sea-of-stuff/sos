@@ -117,9 +117,9 @@
 </div>
 <br>
 
-<h2>Data Stored</h2>
-here list of other nodes where this entity is stored
-##<span id="replicasInfo"></span>
+<h2>Data Stored in the following locations:</h2>
+<pre style="white-space: pre-wrap; word-wrap: break-word;"><code id="locationsInfo" class="json"></code></pre>
+<br>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
 <script src="js/sos.js"></script>
@@ -143,20 +143,21 @@ here list of other nodes where this entity is stored
         $.get("/manifest/" + id , function(data) {
             $('#manifest').html(data);
             hljs.highlightBlock($('#manifest')[0]);
-        })
+        });
 
         $.get("/metadata/" + id , function(data) {
             $('#metadata').html(data);
             hljs.highlightBlock($('#metadata')[0]);
-        })
+        });
 
         $.get("/data/" + id , function(data) {
             $('#data').html(data);
-        })
+        });
 
-//        $.get("/replicas/info/" + id, function(data) {
-//            $('#replicasInfo').html(data);
-//        });
+        $.get("/data/" + id + "/locations", function(data) {
+            $('#locationsInfo').html(data);
+            hljs.highlightBlock($('#locationsInfo')[0]);
+        });
     };
 
     function showManifestAlert() {

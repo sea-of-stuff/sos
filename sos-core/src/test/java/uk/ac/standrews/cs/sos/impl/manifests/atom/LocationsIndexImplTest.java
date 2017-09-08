@@ -40,7 +40,7 @@ public class LocationsIndexImplTest {
 
         locationsIndex.addLocation(guid, locationBundle);
 
-        Iterator<LocationBundle> it = locationsIndex.findLocations(guid);
+        Iterator<LocationBundle> it = locationsIndex.findLocations(guid).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle indexedLocationBundle = it.next();
@@ -53,7 +53,7 @@ public class LocationsIndexImplTest {
 
         IGUID guid = GUIDFactory.generateRandomGUID();
 
-        Iterator<LocationBundle> it = locationsIndex.findLocations(guid);
+        Iterator<LocationBundle> it = locationsIndex.findLocations(guid).iterator();
         assertFalse(it.hasNext());
     }
 
@@ -83,7 +83,7 @@ public class LocationsIndexImplTest {
         LocationsIndex locationsIndexPersisted = (LocationsIndex) Persistence.Load(file);
         assertNotNull(locationsIndexPersisted);
 
-        Iterator<LocationBundle> it = locationsIndexPersisted.findLocations(guid);
+        Iterator<LocationBundle> it = locationsIndexPersisted.findLocations(guid).iterator();
         assertTrue(it.hasNext());
         assertEquals(locationBundle, it.next());
     }
@@ -99,7 +99,7 @@ public class LocationsIndexImplTest {
         locationsIndex.addLocation(guid, locationBundlePersist);
         locationsIndex.addLocation(guid, locationBundle);
 
-        Iterator<LocationBundle> it = locationsIndex.findLocations(guid);
+        Iterator<LocationBundle> it = locationsIndex.findLocations(guid).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle indexedLocationBundle = it.next();

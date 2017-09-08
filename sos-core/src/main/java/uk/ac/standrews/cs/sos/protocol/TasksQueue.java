@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TasksQueue {
 
+    private static final int TIMEOUT_LIMIT_S = 30;
     private ScheduledExecutorService executorService;
 
     private static TasksQueue instance;
@@ -64,7 +65,7 @@ public class TasksQueue {
             SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
 
             task.notify();
-        }, 10, TimeUnit.SECONDS);
+        }, TIMEOUT_LIMIT_S, TimeUnit.SECONDS);
 
         SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
     }

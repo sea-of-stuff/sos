@@ -50,7 +50,7 @@ public class LocationBundle {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof LocationBundle)) return false;
         LocationBundle that = (LocationBundle) o;
         return Objects.equals(type, that.type) &&
                 Objects.equals(location, that.location);

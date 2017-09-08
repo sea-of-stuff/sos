@@ -164,7 +164,7 @@ public class DataReplicationTest extends ProtocolTest {
         DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -191,7 +191,7 @@ public class DataReplicationTest extends ProtocolTest {
         DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
         assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
     }
 
@@ -220,7 +220,7 @@ public class DataReplicationTest extends ProtocolTest {
         DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -261,7 +261,7 @@ public class DataReplicationTest extends ProtocolTest {
         DataReplication replicationTask = new DataReplication(data, nodesCollection, 3, storage, mockNodeDiscoveryService, false); // TODO - test with different replication factor
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -298,7 +298,7 @@ public class DataReplicationTest extends ProtocolTest {
         DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -333,7 +333,7 @@ public class DataReplicationTest extends ProtocolTest {
         DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID);
+        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);

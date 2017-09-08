@@ -120,7 +120,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        List<String> bootstrap = settings.getSettingsObj().getBootstrapNodes();
+        List<SettingsConfiguration.Settings.SimpleNode> bootstrap = settings.getSettingsObj().getBootstrapNodes();
         assertFalse(bootstrap.isEmpty());
     }
 

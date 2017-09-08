@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
@@ -33,7 +34,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
+import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.web.WebApp.LARGE_DATA_LIMIT;
 
@@ -343,6 +346,33 @@ public class WData {
         }
 
         return "HEAD SET";
+    }
+
+
+    // NOTE: Won't work for compounds
+    public static String Locations(Request request, SOSLocalNode sos) {
+
+        try {
+            String guidParam = request.params("id");
+            IGUID guid = GUIDFactory.recreateGUID(guidParam);
+            Manifest manifest = sos.getAgent().getManifest(guid);
+
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+                Version version = (Version) manifest;
+                guid = version.getContentGUID();
+            }
+
+            Queue<LocationBundle> locations = sos.getStorage().findLocations(guid);
+
+            if (locations.size() == 0) return "";
+
+            return locations.stream()
+                    .map(LocationBundle::toString)
+                    .collect(Collectors.joining(" \n\n "));
+
+        } catch (GUIDGenerationException | ManifestNotFoundException e) {
+            return "N/A";
+        }
     }
 
     private static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {

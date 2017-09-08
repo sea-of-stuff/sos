@@ -108,6 +108,7 @@ public class SOSStorage implements Storage {
 
         // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
         // TODO - in adjusting this we must take into account: atomBuilder.isDelegateReplication()
+        // TODO - this was fixed (not nice) by increasing the replication factory by one in the policy actions
         int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
 
@@ -186,10 +187,7 @@ public class SOSStorage implements Storage {
     @Override
     public Data getAtomContent(Atom atom) throws AtomNotFoundException {
 
-        Iterator<LocationBundle> it = findLocations(atom.guid());
-        while(it.hasNext()) {
-            LocationBundle locationBundle = it.next();
-
+        for (LocationBundle locationBundle : findLocations(atom.guid())) {
             Location location = locationBundle.getLocation();
             Data data = LocationUtility.getDataFromLocation(location);
 
@@ -244,7 +242,7 @@ public class SOSStorage implements Storage {
     }
 
     @Override
-    public Iterator<LocationBundle> findLocations(IGUID guid) {
+    public Queue<LocationBundle> findLocations(IGUID guid) {
         return locationIndex.findLocations(guid);
     }
 

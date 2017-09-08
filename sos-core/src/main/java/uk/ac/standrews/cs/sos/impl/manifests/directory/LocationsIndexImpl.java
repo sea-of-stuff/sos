@@ -16,7 +16,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -44,30 +47,13 @@ public class LocationsIndexImpl implements LocationsIndex {
     }
 
     @Override
-    public Iterator<LocationBundle> findLocations(IGUID guid) {
-        return new LocationsIterator(guid);
-    }
+    public Queue<LocationBundle> findLocations(IGUID guid) {
 
-    private class LocationsIterator implements Iterator<LocationBundle> {
-
-        Iterator<LocationBundle> it;
-
-        LocationsIterator(IGUID guid) {
-            if (index.containsKey(guid)) {
-                it = index.get(guid).iterator();
-            } else {
-                it = Collections.emptyIterator();
-            }
+        if (index.containsKey(guid)) {
+            return index.get(guid);
         }
 
-        public boolean hasNext() {
-            return it.hasNext();
-        }
-
-        public LocationBundle next() {
-            return it.next();
-        }
-
+        return new PriorityQueue<>();
     }
 
     /**
@@ -174,9 +160,8 @@ public class LocationsIndexImpl implements LocationsIndex {
             int numberOfLocations = index.get(key).size();
             out.writeInt(numberOfLocations);
 
-            Iterator<LocationBundle> it = findLocations(key);
-            while (it.hasNext()) {
-                out.writeUTF(it.next().toString());
+            for (LocationBundle bundle : findLocations(key)) {
+                out.writeUTF(bundle.toString());
             }
         }
     }

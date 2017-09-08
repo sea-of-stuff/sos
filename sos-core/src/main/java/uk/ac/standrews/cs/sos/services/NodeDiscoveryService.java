@@ -86,7 +86,21 @@ public interface NodeDiscoveryService {
      */
     Set<Node> getNodes(int limit);
 
+    /**
+     *
+     * @param guid of the node
+     * @return the info in JSON format
+     * @throws NodeNotFoundException if the node could not be found
+     */
     String infoNode(IGUID guid) throws NodeNotFoundException;
+
+    /**
+     *
+     * @param node with partial info. This node must have: host address, host port, signature certificate
+     * @return the info in JSON format
+     * @throws NodeNotFoundException if the node could not be found
+     */
+    String infoNode(Node node) throws NodeNotFoundException;
 
     NodeStats getNodeStats(IGUID guid);
 

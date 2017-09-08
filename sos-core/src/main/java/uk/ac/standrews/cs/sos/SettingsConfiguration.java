@@ -10,12 +10,16 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.security.PublicKey;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -78,7 +82,7 @@ public class SettingsConfiguration {
         private KeysSettings keys;
         private StoreSettings store;
         private GlobalSettings global;
-        private List<String> bootstrapNodes;
+        private List<SimpleNode> bootstrapNodes;
 
         public Settings() {}
 
@@ -166,22 +170,130 @@ public class SettingsConfiguration {
             this.global = global;
         }
 
-        public List<String> getBootstrapNodes() {
+        public List<SimpleNode> getBootstrapNodes() {
             return bootstrapNodes;
         }
 
-        public void setBootstrapNodes(List<String> bootstrapNodes) {
+        public void setBootstrapNodes(List<SimpleNode> bootstrapNodes) {
             this.bootstrapNodes = bootstrapNodes;
         }
 
-        public List<IGUID> getBootstrapNodesRefs() {
-            return bootstrapNodes.stream().map(n -> {
+        public static class SimpleNode implements Node {
+
+            private String guid;
+            private String hostname; // or ip
+            private int port;
+            private String signCert;
+
+            public String getGuid() {
+                return guid;
+            }
+
+            public void setGuid(String guid) {
+                this.guid = guid;
+            }
+
+            public IGUID getNodeRef() {
                 try {
-                    return GUIDFactory.recreateGUID(n);
+                    return GUIDFactory.recreateGUID(getGuid());
                 } catch (GUIDGenerationException e) {
                     return new InvalidID();
                 }
-            }).collect(Collectors.toList());
+            }
+
+            public String getHostname() {
+                return hostname;
+            }
+
+            public void setHostname(String hostname) {
+                this.hostname = hostname;
+            }
+
+            public int getPort() {
+                return port;
+            }
+
+            public void setPort(int port) {
+                this.port = port;
+            }
+
+            public String getSignCert() {
+                return signCert;
+            }
+
+            public void setSignCert(String signCert) {
+                this.signCert = signCert;
+            }
+
+            @JsonIgnore
+            @Override
+            public IGUID getNodeGUID() {
+                try {
+                    return GUIDFactory.recreateGUID(getGuid());
+                } catch (GUIDGenerationException e) {
+                    return new InvalidID();
+                }
+            }
+
+            @JsonIgnore
+            public PublicKey getSignatureCertificate() {
+
+                try {
+                    return DigitalSignature.getCertificate(getSignCert());
+                } catch (CryptoException e) {
+                    throw new Error("Settings - certificate for bootstrap node is invalid");
+                }
+            }
+
+            @JsonIgnore
+            @Override
+            public InetSocketAddress getHostAddress() {
+                return new InetSocketAddress(getHostname(), getPort());
+            }
+
+            // IGNORE METHODS BELOW
+
+            @JsonIgnore
+            @Override
+            public boolean isAgent() {
+                return false;
+            }
+
+            @JsonIgnore
+            @Override
+            public boolean isStorage() {
+                return false;
+            }
+
+            @JsonIgnore
+            @Override
+            public boolean isDDS() {
+                return false;
+            }
+
+            @JsonIgnore
+            @Override
+            public boolean isNDS() {
+                return false;
+            }
+
+            @JsonIgnore
+            @Override
+            public boolean isMMS() {
+                return false;
+            }
+
+            @JsonIgnore
+            @Override
+            public boolean isCMS() {
+                return false;
+            }
+
+            @JsonIgnore
+            @Override
+            public boolean isRMS() {
+                return false;
+            }
         }
 
         // Settings relative to each Service

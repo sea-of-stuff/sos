@@ -51,8 +51,6 @@ public class MAISOS {
         SOSLocalNode sos = ServerState.init(configuration.getSettingsObj());
         assert sos != null;
 
-        IGUID root = getRootGUID(cli);
-
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
         if (cli.hasOption(REST_OPT)) {
@@ -60,6 +58,7 @@ public class MAISOS {
         }
 
         if (cli.hasOption(FS_OPT)) {
+            IGUID root = getRootGUID(cli);
             HandleFSApp(executorService, sos, root, configuration.getSettingsObj());
         }
 

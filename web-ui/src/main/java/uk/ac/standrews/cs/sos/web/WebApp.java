@@ -57,6 +57,7 @@ public class WebApp {
         get("/data/:id/role/:roleid", (req, res) -> WData.GetProtectedData(req, sos));
         get("/data/:id/role/:roleid/download", (req, res) -> WData.GetProtectedDataDownload(req, res, sos));
         get("/data/:id/grant/:granter/:grantee", (req, res) -> WData.GrantAccess(req, sos));
+        get("/data/:id/locations", (req, res) -> WData.Locations(req, sos));
 
         post("/compound/data/protected/:roleid", (req, res) -> WData.AddDataForCompound(req, sos));
 
@@ -84,9 +85,6 @@ public class WebApp {
         get("node/stats/:nodeid", (req, res) -> WNodes.Stats(req, sos));
 
         get("/threads", (req, res) -> WContexts.Threads(sos));
-
-        // TODO - query to get lists of nodes where content (data, manifest, etc) is replicated
-        // get("/replicas/info/:id", (req, req) -> )
     }
 
     private static void registerPostActionRoutes() {

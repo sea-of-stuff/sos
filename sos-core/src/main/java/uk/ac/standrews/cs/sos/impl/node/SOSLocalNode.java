@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.node;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -267,19 +266,32 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**
      * Load the bootstrap nodes specified in the configuration file into the local NDS.
      *
-     * @throws NodeRegistrationException
+     * @throws NodeRegistrationException if the node could not be registered
      */
     private void loadBootstrapNodes() throws NodeRegistrationException {
 
-        for(IGUID nodeRef:settings.getBootstrapNodesRefs()) {
+        for(Node node:settings.getBootstrapNodes()) {
+
             try {
+            String nodeInfo = "";
+            try {
+                // Get info by GUID
+                nodeInfo = nodeDiscoveryService.infoNode(node.getNodeGUID());
+            } catch (NodeNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with GUID: " + node.getNodeGUID().toMultiHash());
 
-                String nodeInfo = nodeDiscoveryService.infoNode(nodeRef);
-                Node node = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
-                nodeDiscoveryService.registerNode(node, true);
+                try {
+                    nodeInfo = nodeDiscoveryService.infoNode(node);
+                } catch (NodeNotFoundException e1) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with address: " + node.getHostAddress().toString());
+                }
+            }
 
-            } catch (NodeNotFoundException | IOException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with GUID:" + nodeRef.toMultiHash());
+            Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
+            nodeDiscoveryService.registerNode(retrievedNode, true);
+
+            } catch (IOException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + node.getNodeGUID().toMultiHash() + " and address " + node.getHostAddress().toString());
             }
         }
     }
