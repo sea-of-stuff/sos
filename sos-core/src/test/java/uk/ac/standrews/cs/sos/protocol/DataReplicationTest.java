@@ -162,7 +162,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
@@ -189,7 +189,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
@@ -218,7 +218,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
@@ -259,7 +259,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 3, storage, mockNodeDiscoveryService, false); // TODO - test with different replication factor
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 3, storage, mockNodeDiscoveryService, false); // TODO - test with different replication factor
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
@@ -296,7 +296,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Storage storage = localSOSNode.getStorage();
 
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false); // TODO - rep factor 1
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storage, mockNodeDiscoveryService, false); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
@@ -309,7 +309,7 @@ public class DataReplicationTest extends ProtocolTest {
         assertFalse(it.hasNext());
     }
 
-    @Test // FIXME - this test fails sometimes. Index does nt seem to be update consistently
+    @Test
     public void replicateSameDataTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
 
@@ -331,7 +331,7 @@ public class DataReplicationTest extends ProtocolTest {
         NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
-        DataReplication replicationTask = new DataReplication(data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();

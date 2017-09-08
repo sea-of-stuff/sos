@@ -532,7 +532,7 @@ public class SOSContextService implements ContextService {
     /**
      * Run the policies of a given context for the specified entity
      *
-     * @param context
+     * @param context for which policies have to run
      * @param guid of the entity
      */
     private void runPolicies(Context context, IGUID guid) {
@@ -551,12 +551,11 @@ public class SOSContextService implements ContextService {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 policy.apply(manifest);
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
-
-                contextsContentsDirectory.addEntry(context.guid(), guid, content);
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
+            contextsContentsDirectory.addEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
@@ -579,11 +578,10 @@ public class SOSContextService implements ContextService {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(manifest);;
-
-                contextsContentsDirectory.addEntry(context.guid(), guid, content);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
+            contextsContentsDirectory.addEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
