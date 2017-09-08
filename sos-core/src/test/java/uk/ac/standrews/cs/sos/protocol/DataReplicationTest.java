@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol;
 
+import com.adobe.xmp.impl.Base64;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -84,7 +85,7 @@ public class DataReplicationTest extends ProtocolTest {
                         request()
                                 .withMethod("POST")
                                 .withPath("/sos/storage/stream")
-                                .withBody(BASIC_REQUEST.replace("{DATA}", TEST_DATA))
+                                .withBody(BASIC_REQUEST.replace("{DATA}", Base64.encode(TEST_DATA)))
                 )
                 .respond(
                         response()
@@ -111,7 +112,7 @@ public class DataReplicationTest extends ProtocolTest {
                         request()
                                 .withMethod("POST")
                                 .withPath("/sos/storage/stream")
-                                .withBody(BASIC_REQUEST.replace("{DATA}", TEST_DATA))
+                                .withBody(BASIC_REQUEST.replace("{DATA}", Base64.encode(TEST_DATA)))
                 )
                 .respond(
                         response()
