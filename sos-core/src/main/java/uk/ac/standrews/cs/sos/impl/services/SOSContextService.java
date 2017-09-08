@@ -57,12 +57,14 @@ import static uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder.*;
  */
 public class SOSContextService implements ContextService {
 
+    // NODE SERVICES AND UTILS
     private LocalStorage localStorage;
     private DataDiscoveryService dataDiscoveryService;
 
     private PolicyActions policyActions;
 
-    private LocalContextsDirectory localContextsDirectory;
+    // DATA STRUCTURES
+    private LocalContextsDirectory localContextsDirectory; // TODO - need to be able to track active/inactive contexts
     // The inMemoryCache keeps the context objects for this node in memory.
     private CacheContextsDirectory inMemoryCache;
     private ContextsContentsDirectory contextsContentsDirectory;

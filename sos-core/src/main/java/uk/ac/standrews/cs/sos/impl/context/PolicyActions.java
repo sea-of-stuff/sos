@@ -187,6 +187,8 @@ public class PolicyActions {
 
             if (nodeHasData(nodeRef, guid)) {
                 counter++;
+
+                // TODO - make sure that the storage locationsindex is updated
             }
         }
 

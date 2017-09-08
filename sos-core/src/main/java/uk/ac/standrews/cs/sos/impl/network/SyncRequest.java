@@ -156,7 +156,7 @@ public class SyncRequest extends Request {
 
             return new ResponseImpl(resp);
         } catch (UnirestException | CryptoException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to make HTTP request");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to make HTTP request: " + e.getMessage());
             return new ErrorResponseImpl();
         } catch (Error e) {
             SOS_LOG.log(LEVEL.ERROR, "SyncRequest - Serious error: " + e.getMessage());

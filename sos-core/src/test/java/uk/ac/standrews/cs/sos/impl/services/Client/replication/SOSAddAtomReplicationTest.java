@@ -3,11 +3,19 @@ package uk.ac.standrews.cs.sos.impl.services.Client.replication;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
@@ -17,11 +25,24 @@ import static org.testng.AssertJUnit.assertNotNull;
  */
 public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
+    // FIXME - there is an issue when replicating the data and when fetchign it. need to investigate the protocol tasks for these two actions
     @Test
     public void replicateDataAndFetchItTest() throws Exception {
 
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false, false, false);
+        nds.registerNode(node, true);
+
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
-        AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
+        AtomBuilder builder = new AtomBuilder()
+                .setData(new InputStreamData(stream))
+                .setReplicationFactor(2) // This node and the remote one
+                .setReplicationNodes(nodesCollection);
         Atom manifest = agent.addAtom(builder);
 
         Thread.sleep(1000); // Let replication happen
@@ -35,7 +56,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         // Look at locationIndex in atomStorage
         // Get data from external source (data is never kept in memory, unlike manifests)
-        Data data  = agent.getAtomContent(manifest);
+        Data data = agent.getAtomContent(manifest);
         assertNotNull(data);
 
         String retrievedData = data.toString();
