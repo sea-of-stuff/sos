@@ -9,8 +9,10 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.impl.metadata.AbstractMetadataEngine;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +43,11 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
             return meta;
 
         } catch (IOException | TikaException | SAXException | GUIDGenerationException e) {
-            throw new MetadataException("Unable to generate metadata from given data", e);
+            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - bad error. Metadata could not be generated properly");
+            throw new MetadataException("TikaMetadataEngine - bad error. Metadata could not be generated properly", e);
+        } catch (Error e) {
+            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - very bad error. Metadata could not be generated properly");
+            throw new MetadataException("TikaMetadataEngine - very bad error. Metadata could not be generated properly", e);
         }
 
     }
