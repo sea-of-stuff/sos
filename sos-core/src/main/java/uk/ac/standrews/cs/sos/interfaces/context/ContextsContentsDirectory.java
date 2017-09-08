@@ -19,8 +19,8 @@ public interface ContextsContentsDirectory {
 
     boolean entryExists(IGUID context, IGUID version);
 
-    Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context);
+    Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context, boolean includeEvicted);
 
-    Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context);
+    Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context, boolean includeEvicted);
 
 }

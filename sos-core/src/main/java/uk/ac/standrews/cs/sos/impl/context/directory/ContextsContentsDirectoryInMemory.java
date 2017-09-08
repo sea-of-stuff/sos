@@ -78,14 +78,14 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
      * @return
      */
     @Override
-    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context) {
+    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context, boolean includeEvicted) {
         HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
         if (contents == null) {
             return Collections.emptySet();
         } else {
             return contents.entrySet()
                     .stream()
-                    .filter(p -> p.getValue().predicateResult)
+                    .filter(p -> p.getValue().predicateResult && (includeEvicted || !p.getValue().evicted))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toSet());
 
@@ -93,15 +93,15 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     }
 
     @Override
-    public Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context) {
+    public Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context, boolean includeEvicted) {
         HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
         if (contents == null) {
             return new HashMap<>();
         } else {
             return contents.entrySet()
                     .stream()
-                    .filter(p -> p.getValue().predicateResult)
-                    .collect(Collectors.toMap( x -> x.getKey(), x -> x.getValue()));
+                    .filter(p -> p.getValue().predicateResult && (includeEvicted || !p.getValue().evicted))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         }
     }

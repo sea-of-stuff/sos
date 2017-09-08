@@ -72,12 +72,13 @@ public interface ContextService {
     Set<Context> searchContexts(String contextName) throws ContextNotFoundException;
 
     /**
-     * Get the set for all content belonging to the specified context
+     * Get the set for all content belonging to the specified context.
+     *
+     * This method won't return contents which are evicted.
      *
      * @param context for which we want to find its contents
      * @return the references to the contents of the context
      *
-     * TODO - only the refs of versions that are still tips?
      *
      */
     Set<IGUID> getContents(IGUID context);

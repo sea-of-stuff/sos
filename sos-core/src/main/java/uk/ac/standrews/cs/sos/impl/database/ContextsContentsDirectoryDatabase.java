@@ -35,6 +35,9 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
             "VALUES (?, ?, ?, ?, ?)";
 
     private final static String SQL_GET_ENTRIES = "SELECT version_id, pred_result, timestamp, policy_satisfied " +
+            "FROM contexts";
+
+    private final static String SQL_GET_NOT_EVICTED_ENTRIES = "SELECT version_id, pred_result, timestamp, policy_satisfied " +
             "FROM contexts WHERE evict == 0";
 
     private final static String SQL_GET_ENTRY = "SELECT pred_result, timestamp, policy_satisfied " +
@@ -135,14 +138,14 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
     }
 
     @Override
-    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context) {
+    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context, boolean includeEvicted) {
 
         Set<IGUID> contents = new LinkedHashSet<>();
 
         try (Connection connection = getSQLiteConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ENTRIES)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(includeEvicted ? SQL_GET_ENTRIES : SQL_GET_NOT_EVICTED_ENTRIES)) {
 
-            preparedStatement.setString(1, context.toMultiHash());
+            if (!includeEvicted) preparedStatement.setString(1, context.toMultiHash());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -158,14 +161,14 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
     }
 
     @Override
-    public Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context) {
+    public Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context, boolean includeEvicted) {
 
         HashMap<IGUID, ContextVersionInfo> contents = new LinkedHashMap<>();
 
         try (Connection connection = getSQLiteConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ENTRIES)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(includeEvicted ? SQL_GET_ENTRIES : SQL_GET_NOT_EVICTED_ENTRIES)) {
 
-            preparedStatement.setString(1, context.toMultiHash());
+            if (!includeEvicted) preparedStatement.setString(1, context.toMultiHash());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {

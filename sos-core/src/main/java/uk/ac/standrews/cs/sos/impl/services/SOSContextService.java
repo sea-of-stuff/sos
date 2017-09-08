@@ -188,7 +188,7 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<IGUID> getContents(IGUID context) {
 
-        return contextsContentsDirectory.getVersionsThatPassedPredicateTest(context);
+        return contextsContentsDirectory.getVersionsThatPassedPredicateTest(context, false);
     }
 
     @Override
@@ -375,7 +375,7 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextVersionInfo> contentsToProcess =  contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextVersionInfo> contentsToProcess =  contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
@@ -426,7 +426,7 @@ public class SOSContextService implements ContextService {
 
         InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
 
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid());
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
 
