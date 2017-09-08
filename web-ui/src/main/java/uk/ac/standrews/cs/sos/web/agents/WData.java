@@ -348,7 +348,6 @@ public class WData {
         return "HEAD SET";
     }
 
-
     // NOTE: Won't work for compounds
     public static String Locations(Request request, SOSLocalNode sos) {
 
@@ -364,7 +363,7 @@ public class WData {
 
             Queue<LocationBundle> locations = sos.getStorage().findLocations(guid);
 
-            if (locations.size() == 0) return "";
+            if (locations.size() == 0) return "N/A";
 
             return locations.stream()
                     .map(LocationBundle::toString)

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.utils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -15,12 +16,22 @@ import java.nio.charset.StandardCharsets;
  */
 public class IO {
 
-    public static String InputStreamToString(InputStream string) throws IOException {
-        return IOUtils.toString(string, StandardCharsets.UTF_8);
+    public static String InputStreamToString(InputStream input) throws IOException {
+        return IOUtils.toString(input, StandardCharsets.ISO_8859_1);
     }
 
     public static InputStream StringToInputStream(String input) {
-        return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+        return new ByteArrayInputStream(input.getBytes(StandardCharsets.ISO_8859_1));
+    }
+
+    public static String InputStreamToBase64String(InputStream inputStream) throws IOException {
+
+        return new String(Base64.encodeBase64(IOUtils.toByteArray(inputStream)));
+    }
+
+    public static InputStream Base64StringToInputStream(String input) {
+
+        return new ByteArrayInputStream(Base64.decodeBase64(input));
     }
 
     public static ByteArrayOutputStream InputStreamToByteArrayOutputStream(InputStream input) throws IOException {

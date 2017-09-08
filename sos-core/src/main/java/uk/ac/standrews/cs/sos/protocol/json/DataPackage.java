@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.protocol.json;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -41,7 +42,8 @@ public class DataPackage {
 
     @JsonIgnore
     public Data getDataObj() {
-        return new StringData(data);
+        return new InputStreamData(IO.Base64StringToInputStream(data));
+        // return new StringData(data);
     }
 
     public void setData(String data) {

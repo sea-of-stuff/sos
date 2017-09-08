@@ -83,6 +83,8 @@ public class DataReplication extends Task {
      * @param storage
      * @param nodeDiscoveryService
      * @throws SOSProtocolException
+     *
+     * FIXME - should tell the other node that GUID to expect
      */
     public DataReplication(Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
 
@@ -177,7 +179,7 @@ public class DataReplication extends Task {
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
 
             DataPackage dataPackage = new DataPackage();
-            dataPackage.setData(IO.InputStreamToString(data));
+            dataPackage.setData(IO.InputStreamToBase64String(data));
 
             if (delegateReplication) {
                 DataPackage.Metadata metadata = new DataPackage.Metadata();
