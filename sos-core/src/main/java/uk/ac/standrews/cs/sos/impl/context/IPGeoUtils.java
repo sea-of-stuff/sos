@@ -10,7 +10,7 @@ public class IPGeoUtils {
 //    private  DatabaseReader reader;
 //
 //    public IPGeoUtils() throws IOException {
-//        File database = new File("sos-core/src/main/resources/GeoLite2-City_20170801/GeoLite2-City.mmdb");
+//        File database = new File("third-party/geolite2-city/GeoLite2-City_20170801/GeoLite2-City.mmdb");
 //
 //        // This creates the DatabaseReader object, which should be reused across lookups.
 //        reader = new DatabaseReader.Builder(database).withCache(new CHMCache()).build();
