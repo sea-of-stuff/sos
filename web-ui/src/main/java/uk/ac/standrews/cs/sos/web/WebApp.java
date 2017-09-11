@@ -56,7 +56,7 @@ public class WebApp {
         // Use "0" for no param
         post("/version/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddDataVersion(req, sos));
         post("/version/compound/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddCompoundVersion(req, sos));
-        post("/version/compound/selected/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddCompoundVersion(req, sos)); // FIXME - use proper method
+        post("/version/compound/selected/protected/:roleid/sign/:roleidSign/update/prev/:prev", (req, res) -> WData.AddCompoundVersionFromSelectedVersion(req, sos));
         post("/version/:id/sethead", (req, res) -> WData.SetHead(req, sos));
 
         get("/data/:id", (req, res) -> WData.GetData(req, sos));

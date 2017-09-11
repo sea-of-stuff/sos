@@ -156,7 +156,7 @@
 
                         <div class="card-header">
                             <div class="pretty info curvy">
-                                <input type="checkbox" id="selected$version.version.toMultiHash()" name=$version.version.toMultiHash()/>
+                                <input type="checkbox" id="selected$version.version.toMultiHash()" name=$version.version.toMultiHash() />
                                 <label><i class="fa fa-check"></i> (include in compound)</label>
                             </div>
                         </div>
@@ -365,7 +365,11 @@
             $.ajax({
                 type: "POST",
                 url: "/version/compound/selected/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev,
-                data: JSON.stringify(selected)
+                data: {data: JSON.stringify(selected)}
+            }).done(function() {
+
+                // refresh page
+                location = location;
             });
         }
 

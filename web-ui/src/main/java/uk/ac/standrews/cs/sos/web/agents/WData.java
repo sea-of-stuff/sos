@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.web.agents;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.impl.util.Base64;
 import spark.Request;
@@ -25,6 +26,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -107,6 +109,9 @@ public class WData {
         CompoundBuilder compoundBuilder = new CompoundBuilder()
                 .setType(CompoundType.COLLECTION)
                 .setContents(pendingContents); // see pending atoms
+
+        pendingContents = new LinkedHashSet<>(); // reset
+
         if (protect) {
             IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
             Role roleToProtect = sos.getRMS().getRole(roleGUID);
@@ -133,6 +138,19 @@ public class WData {
 
         Version version = sos.getAgent().addCollection(versionBuilder);
         return version.toString();
+    }
+
+    public static String AddCompoundVersionFromSelectedVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, ManifestNotFoundException, IOException {
+
+        pendingContents = new LinkedHashSet<>();
+
+        String data = request.queryParams("data");
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(data);
+        for(JsonNode child: node) {
+            pendingContents.add(new ContentImpl(child.asText(), GUIDFactory.recreateGUID(child.asText())));
+        }
+
+        return AddCompoundVersion(request, sos);
     }
 
     public static String AddDataForCompound(Request request, SOSLocalNode sos) throws IOException, ServletException, DataStorageException, ManifestPersistException, GUIDGenerationException, RoleNotFoundException, ManifestNotMadeException {
