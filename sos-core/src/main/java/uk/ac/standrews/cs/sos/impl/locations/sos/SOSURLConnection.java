@@ -65,18 +65,22 @@ public class SOSURLConnection extends URLConnection {
             IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial slash
 
             if (isLocalNode(nodeGUID) && dataIsStoredLocally(entityGUID)) {
+
                 inputStream = getDataLocally(entityGUID);
-            } else {
+
+            } else if (!isLocalNode(nodeGUID)) {
+
                 Node nodeToContact = nodeDiscoveryService.getNode(nodeGUID);
 
                 FetchData fetchData = new FetchData(nodeToContact, entityGUID);
                 TasksQueue.instance().performSyncTask(fetchData);
                 inputStream = fetchData.getBody();
+
+            } else {
+                throw new IOException("Unable to get data from the node: " + nodeGUID.toMultiHash());
             }
 
-        } catch (GUIDGenerationException | DataException
-                | BindingAbsentException | DataStorageException
-                | NodeNotFoundException e) {
+        } catch (GUIDGenerationException | DataException | BindingAbsentException | DataStorageException | NodeNotFoundException e) {
             throw new IOException(e);
         }
 

@@ -387,6 +387,7 @@ public class SettingsConfiguration {
             public static class NDSSettings extends RoleSettings {
 
                 private boolean startupRegistration;
+                private boolean bootstrap = true;
 
                 public NDSSettings() {}
 
@@ -396,6 +397,14 @@ public class SettingsConfiguration {
 
                 public void setStartupRegistration(boolean startupRegistration) {
                     this.startupRegistration = startupRegistration;
+                }
+
+                public boolean isBootstrap() {
+                    return bootstrap;
+                }
+
+                public void setBootstrap(boolean bootstrap) {
+                    this.bootstrap = bootstrap;
                 }
             }
 

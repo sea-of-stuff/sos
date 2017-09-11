@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.services.Agent;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
@@ -52,7 +53,7 @@ public class ClientReplicationTest extends SetUpTest {
             "  \"guid\" : \"" + TEST_DATA_HASH + "\"\n" +
             "}";
 
-    private static final String NODE_ID = "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
+    protected static final String NODE_ID = "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
 
     protected NodeDiscoveryService nds;
     protected PublicKey mockSignatureCertificate;
@@ -115,6 +116,7 @@ public class ClientReplicationTest extends SetUpTest {
                                 .withBody(TEST_DATA)
                 );
 
+        SOSURLProtocol.getInstance().register(null, nds); // Local storage is not needed for this set of tests
     }
 
     @AfterMethod

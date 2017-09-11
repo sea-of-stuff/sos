@@ -46,7 +46,9 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         localNodesDirectory = new LocalNodesDirectory(localNode, nodesDatabase);
 
         nodesStats = new LinkedHashMap<>();
-        if (true) { // TODO settings!
+
+        boolean ping = SOSLocalNode.settings.getServices().getDds().isPing();
+        if (ping) { // TODO settings!
             service = new ScheduledThreadPoolExecutor(NDS_SCHEDULER_PS);
             runCheckNodesPeriodic();
         }
@@ -259,9 +261,6 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     private void runCheckNodesPeriodic() {
-
-        boolean ping = SOSLocalNode.settings.getServices().getDds().isPing();
-        if (!ping) return;
 
         service.scheduleWithFixedDelay(() -> {
 

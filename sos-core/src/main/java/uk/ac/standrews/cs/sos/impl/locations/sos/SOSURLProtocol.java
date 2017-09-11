@@ -32,7 +32,9 @@ public class SOSURLProtocol {
         try {
 
             // Solution suggested here: https://stackoverflow.com/a/30524545/2467938
-            if(System.getProperty("uk.ac.standrews.cs.sos.streamHandlerFactoryInstalled") == null) {
+            if (System.getProperty("uk.ac.standrews.cs.sos.streamHandlerFactoryInstalled") == null ||
+                    System.getProperty("uk.ac.standrews.cs.sos.streamHandlerFactoryInstalled").equalsIgnoreCase("false")) {
+
                 urlStreamHandlerFactory = new SOSURLStreamHandlerFactory(localStorage);
 
                 URL.setURLStreamHandlerFactory(urlStreamHandlerFactory);
@@ -45,7 +47,8 @@ public class SOSURLProtocol {
         }
 
         if (urlStreamHandlerFactory != null) {
-            urlStreamHandlerFactory.getSOSURLStreamHandler().setNodeDiscoveryService(nodeDiscoveryService);
+            SOSURLStreamHandler handler = urlStreamHandlerFactory.getSOSURLStreamHandler();
+            handler.setNodeDiscoveryService(nodeDiscoveryService);
         }
     }
 

@@ -165,6 +165,8 @@ public class DataReplication extends Task {
                 storage.addLocation(atom.guid(), locationBundle);
             }
 
+
+
         } catch (SOSProtocolException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());
             return false;

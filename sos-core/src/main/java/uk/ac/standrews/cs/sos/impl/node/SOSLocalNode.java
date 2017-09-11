@@ -270,6 +270,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     private void loadBootstrapNodes() throws NodeRegistrationException {
 
+        if (!settings.getServices().getNds().isBootstrap()) return;
+
         for(Node node:settings.getBootstrapNodes()) {
 
             try {

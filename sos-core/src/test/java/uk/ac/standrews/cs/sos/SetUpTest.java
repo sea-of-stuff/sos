@@ -15,7 +15,9 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
@@ -33,6 +35,19 @@ public class SetUpTest extends CommonTest {
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
+
+
+        // FORCE THE SOS PROTOCOL TO BE DE-REGISTERED. THIS STUFF IS HACKY, BUT THERE IS NOT ANOTHER WAY OF RESETTING THE
+        // URLStreamHandlerFactory
+        try {
+            final Field factoryField = URL.class.getDeclaredField("factory");
+            factoryField.setAccessible(true);
+            factoryField.set(null, null);
+            System.setProperty("uk.ac.standrews.cs.sos.streamHandlerFactoryInstalled", "false");
+        } catch (NoSuchFieldException | IllegalAccessException e1) {
+            throw new Error("Could not access factory field on URL class: {}", e1);
+        }
+
 
         createConfiguration();
 

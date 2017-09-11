@@ -25,11 +25,10 @@ import static org.testng.AssertJUnit.assertNotNull;
  */
 public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
-    // FIXME - there is an issue when replicating the data and when fetchign it. need to investigate the protocol tasks for these two actions
     @Test
     public void replicateDataAndFetchItTest() throws Exception {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         nds.registerNode(node, true);
@@ -68,8 +67,20 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
     @Test
     public void fetchReplicatedDataIgnoreManifestTest() throws Exception {
 
+        Node node = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false, false, false);
+        nds.registerNode(node, true);
+
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.getNodeGUID());
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
-        AtomBuilder builder = new AtomBuilder().setData(new InputStreamData(stream));
+        AtomBuilder builder = new AtomBuilder()
+                .setData(new InputStreamData(stream))
+                .setReplicationFactor(2) // This node and the remote one
+                .setReplicationNodes(nodesCollection);
         Atom manifest = agent.addAtom(builder);
 
         Thread.sleep(1000); // Let replication happen

@@ -122,7 +122,6 @@ public class SyncRequest extends Request {
 
     private Response putJSON() throws IOException {
 
-
         HttpRequestWithBody requestWithBody = Unirest.put(url.toString())
                 .header("accept", "application/json");
         requestWithBody = (HttpRequestWithBody) setChallenge(requestWithBody);
