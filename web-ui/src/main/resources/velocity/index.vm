@@ -29,7 +29,7 @@
         <div class="col-6" id="uploadingZone">
             <div class="row">
                 <div class="col-6">
-                    <div class="pretty success curvy a-tada">
+                    <div class="pretty success curvy">
                         <input type="checkbox" id="protectData"/>
                         <label><i class="fa fa-check"></i> Protect data with the selected Role</label>
                     </div>
@@ -45,7 +45,7 @@
 
             <div class="row">
                 <div class="col-6">
-                    <div class="pretty success curvy a-tada">
+                    <div class="pretty success curvy">
                         <input type="checkbox" id="signManifest"/>
                         <label><i class="fa fa-check"></i> Sign manifests with the selected Role</label>
                     </div>
@@ -59,19 +59,28 @@
                 </div>
             </div>
 
-            <div class="pretty success curvy a-tada">
+            <div class="pretty success curvy">
                 <input type="checkbox" id="updateVersion"/>
                 <label><i class="fa fa-check"></i> <strong>Update</strong> the selected version <strong><span class="manifestid text-success"></span></strong> (see right pane)</label>
             </div>
             <br>
-            <div class="pretty success curvy a-tada">
+            <div class="pretty success curvy">
                 <input type="checkbox" id="updateAndMergeVersion"/>
                 <label><i class="fa fa-check"></i> <strong>Update and Merge (N/A)</strong> the selected version <strong><span class="manifestid text-success"></span></strong> (see right pane)</label>
             </div>
             <br>
-            <div class="pretty success curvy a-tada">
-                <input type="checkbox" id="createCompound"/>
-                <label><i class="fa fa-check"></i> <strong>Make Compound using data to upload and/or selected versions</strong></label>
+            <div class="pretty success curvy">
+                <input type="checkbox" id="partitionedAtom"/>
+                <label><i class="fa fa-check"></i> <strong>Partitioned Atom (5 MB) - WIP</strong></label>
+            </div>
+            <br>
+            <div class="pretty circle success">
+                <input type="radio" name="makecompound" id="createCompoundNew"/>
+                <label><i class="fa fa-check"></i> <strong>Make Compound using data to upload</strong></label>
+            </div>
+            <div class="pretty circle success">
+                <input type="radio" name="makecompound" id="createCompoundSelected"/>
+                <label><i class="fa fa-check"></i> <strong>Make Compound using selected versions</strong></label>
             </div>
 
             <!-- The global file processing state -->
@@ -87,9 +96,9 @@
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     <span>Add files...</span>
                     </span>
-                <button type="submit" class="btn btn-primary start">
+                <button type="submit" class="btn btn-primary start" id="startupload">
                     <i class="fa fa-upload" aria-hidden="true"></i>
-                    <span>Start upload</span>
+                    <span>Start upload / MAKE </span>
                 </button>
                 <button type="reset" class="btn btn-warning cancel">
                     <i class="fa fa-ban" aria-hidden="true"></i>
@@ -145,8 +154,15 @@
                     <div class="card border-danger">
                     #end
 
+                        <div class="card-header">
+                            <div class="pretty info curvy">
+                                <input type="checkbox" id="selected$version.version.toMultiHash()" name=$version.version.toMultiHash()/>
+                                <label><i class="fa fa-check"></i> (include in compound)</label>
+                            </div>
+                        </div>
                         <div class="card-body">
-                            <h4 class="card-title">Version: $version.version.toShortString()
+                            <h4 class="card-title">
+                                Version: $version.version.toShortString()
                                 <button id="more$version.version.toMultiHash()" value=$version.version.toMultiHash() type="button" class="btn btn-outline-dark"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                             </h4>
                             <p class="card-text">
@@ -195,7 +211,8 @@
 
     var myDropzone = new Dropzone($('#uploadingZone')[0], { // Make the whole body a dropzone
         url: function() {
-            createCompound = $("#createCompound").is(":checked");
+            createCompound = $("#createCompoundNew").is(":checked");
+            createCompoundFromVersions = $("#createCompoundSelected").is(":checked");
             protectData = $("#protectData").is(":checked");
             signManifest = $("#signManifest").is(":checked");
             updateVersion = $("#updateVersion").is(":checked");
@@ -224,6 +241,9 @@
 
             if (createCompound) {
                 return "/compound/data/protected/" + roleid;
+            } else if (createCompoundFromVersions) {
+                // DO NOTHING - no need to upload content, as the content is already uploaded
+                return "/";
             } else {
                 return "/version/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev;
             }
@@ -259,12 +279,8 @@
     myDropzone.on("queuecomplete", function(progress) {
         document.querySelector("#total-progress").style.opacity = "0";
 
-        createCompound = $("#createCompound").is(":checked");
-
+        createCompound = $("#createCompoundNew").is(":checked");
         if (createCompound) {
-            // TODO
-            // Make a query to collect all uploaded data under the compound
-            // This will generate a version to a compound, so we need a similar logic to the above for PROTECTION, SIGNATURE and UPDATE
 
             protectData = $("#protectData").is(":checked");
             signManifest = $("#signManifest").is(":checked");
@@ -308,6 +324,53 @@
     document.querySelector("#actions .cancel").onclick = function() {
         myDropzone.removeAllFiles(true);
     };
+
+    $( "#startupload" ).click(function() {
+
+        createCompoundFromVersions = $("#createCompoundSelected").is(":checked");
+        if (createCompoundFromVersions) {
+
+            protectData = $("#protectData").is(":checked");
+            signManifest = $("#signManifest").is(":checked");
+            updateVersion = $("#updateVersion").is(":checked");
+
+            var roleid = 0;
+            if (protectData) {
+                roleid = $("#roleToProtectData option:selected").val();
+            }
+
+            var roleidSign = 0;
+            if (signManifest) {
+                roleidSign = $("#roleToSignManifest option:selected").val();
+            }
+
+            var prev = 0;
+            if (updateVersion) {
+                var manifestJSON = $("#manifest").text();
+                if (!manifestJSON) {
+                    showManifestAlert();
+                    return;
+                }
+
+                var obj = JSON.parse(manifestJSON);
+                prev = obj.GUID;
+            }
+
+            var selected = [];
+            $('input[id^="selected"]:checked').each(function () {
+                console.log($(this).attr('name'));
+                selected.push($(this).attr('name'));
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/version/compound/selected/protected/" + roleid + "/sign/" + roleidSign + "/update/prev/" + prev,
+                data: JSON.stringify(selected)
+            });
+        }
+
+    });
+
 </script>
 
 </body>
