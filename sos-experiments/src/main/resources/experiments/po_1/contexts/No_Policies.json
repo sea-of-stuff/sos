@@ -1,0 +1,5 @@
+{
+  "name": "NoPolicies",
+  "predicate": "CommonPredicates.AcceptAll();",
+  "policies" : []
+}

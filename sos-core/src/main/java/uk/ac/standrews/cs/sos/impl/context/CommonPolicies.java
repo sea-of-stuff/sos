@@ -23,6 +23,17 @@ import java.util.Set;
  */
 public class CommonPolicies {
 
+    public static class DoNothingPolicy implements Policy {
+
+        @Override
+        public void apply(Manifest manifest) throws PolicyException {}
+
+        @Override
+        public boolean satisfied(Manifest manifest) throws PolicyException {
+            return true;
+        }
+    }
+
     /**
      * Replicate manifests at least n-times
      */

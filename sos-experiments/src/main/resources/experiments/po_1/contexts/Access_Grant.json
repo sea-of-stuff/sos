@@ -1,0 +1,7 @@
+{
+  "name": "AccessGrant",
+  "predicate": "CommonPredicates.AcceptAll();",
+  "policies" : [
+    "CommonPolicies.GrantAccessPolicy(policyActions, GRANTER, GRANTEE)"
+  ]
+}

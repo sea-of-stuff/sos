@@ -16,7 +16,7 @@
     "stats": {
       "experiment": true,
       "predicate": false,
-      "policies": false,
+      "policies": true,
       "checkPolicies": false
     }
   }
