@@ -454,15 +454,17 @@ public class SOSContextService implements ContextService {
 
             for (Context context : getContexts()) {
 
+                // TODO - run this only for those contexts/nodes that have been marked (data-periodic) by the spawnContextsPeriodic logic (see comments in there)
                 NodesCollection domain = context.domain();
 
-                // First thing to do is to get the GUIDs for that domain
-                // TODO - Not sure how to deal with this, as the domain might be huge
 
                 // TODO - before downloading data, we should check the following:
+                // Instead of downloading the data straight away, better to get a list of the data first and then request only what we need
+                //
                 // 1. do we have the data already?
                 // 2. does another node have this data and this context? if so, do we have any results from there?
                 // 3. if the answer to all the above if no, then download data from some known location
+
             }
 
 
@@ -479,8 +481,12 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Spawn contexts to other nodes - this is a periodic background thread");
 
-            // Get contexts that have to be spawned
-            // spawn contexts
+            // TODO
+            // 1. Iterate over all known local contexts
+            // 2. filter by contexts that should be run over multiple nodes
+            // 3. make a call to the ContextDefinitionReplication TASK
+            // 4. if the context cannot be spawned (maybe other node does not want us to run the context there! or it is a storage node),
+            // then mark that and use #getDataPeriodic to get data to be processed from that node
 
         }, spawnThreadSettings.getInitialDelay(), spawnThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
