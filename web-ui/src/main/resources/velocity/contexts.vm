@@ -108,11 +108,53 @@
                     <br>
                     <pre><code class="json">
 {
-    "name": "AllWithManifestAndDataReplication",
+    "name": "AllDataReplication",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "policies" : [
+            "CommonPolicies.DataReplicationPolicy(policyActions, codomain, 1)"
+    	],
+    "codomain": {
+        "type" : "SPECIFIED",
+        "nodes" : [ "SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4" ]
+    }
+}
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "AllManifestReplication",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "policies" : [
+    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+    	],
+    "codomain": {
+        "type" : "SPECIFIED",
+        "nodes" : [ "SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4" ]
+    }
+}
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "AllManifestAndDataReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
     	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)",
             "CommonPolicies.DataReplicationPolicy(policyActions, codomain, 1)"
+    	],
+    "codomain": {
+        "type" : "SPECIFIED",
+        "nodes" : [ "SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4" ]
+    }
+}
+                    </code></pre>
+                    <br>
+                    <pre><code class="json">
+{
+    "name": "AllVersionsReplication",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "policies" : [
+            "CommonPolicies.ReplicateAllVersionsPolicy(policyActions, codomain, 1)"
     	],
     "codomain": {
         "type" : "SPECIFIED",
