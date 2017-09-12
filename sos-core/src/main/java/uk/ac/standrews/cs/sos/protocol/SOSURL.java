@@ -83,9 +83,16 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
+    public static URL STORAGE_DATA_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
+
+        return makeURL(url);
+    }
+
+    public static URL DDS_MANIFEST_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "dds/manifest/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
 
         return makeURL(url);
     }

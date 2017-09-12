@@ -92,6 +92,28 @@ public class RESTDDS {
         }
     }
 
+    @GET
+    @Path("/manifest/guid/{guid}/challenge/{challenge: .*}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response getManifest(@PathParam("guid") String guid, @PathParam("challenge") final String challenge, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/manifest/guid/" + guid + "/challenge/" + challenge);
+
+        IGUID manifestGUID;
+        try {
+            manifestGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
+
+        DataDiscoveryService dds = RESTConfig.sos.getDDS();
+        IGUID challengeResult = dds.challenge(manifestGUID, challenge);
+
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
+    }
+
     @POST
     @Path("/compound/data")
     public Response makeCompoundData() {

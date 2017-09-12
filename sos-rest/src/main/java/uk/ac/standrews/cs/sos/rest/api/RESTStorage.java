@@ -193,7 +193,7 @@ public class RESTStorage {
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") final String guid, @PathParam("challenge") final String challenge, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage//data/guid/" + guid + "/challenge/" + challenge);
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/" + guid + "/challenge/" + challenge);
 
         IGUID atomGUID;
         try {

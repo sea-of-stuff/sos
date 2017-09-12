@@ -2,7 +2,11 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
@@ -27,7 +31,13 @@ import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
@@ -108,6 +118,24 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         } catch (NodesCollectionException e) {
             throw new ManifestNotFoundException("Manifest not found");
         }
+    }
+
+    @Override
+    public IGUID challenge(IGUID guid, String challenge) {
+
+        try {
+            Manifest manifest = getManifest(guid);
+
+            List<InputStream> streams = Arrays.asList(manifest.contentToHash(), new ByteArrayInputStream(challenge.getBytes()));
+            InputStream combinedStream = new SequenceInputStream(Collections.enumeration(streams));
+
+            return GUIDFactory.generateGUID(ALGORITHM.SHA256, combinedStream);
+
+        } catch (ManifestNotFoundException | IOException | GUIDGenerationException e) {
+
+            return new InvalidID();
+        }
+
     }
 
     @Override

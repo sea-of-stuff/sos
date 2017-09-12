@@ -20,6 +20,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataChallenge;
+import uk.ac.standrews.cs.sos.protocol.tasks.ManifestChallenge;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
@@ -120,17 +121,30 @@ public class PolicyActions {
     /**
      * Check if a node has the manifest with the matching guid
      *
-     * @param node
+     * TODO - shallow vs deep challenge
+     * a deep challenge will also challenge the content referenced by the manifest
+     *
+     * @param nodeGUID
      * @param guid
      * @return
      */
-    boolean nodeHasManifest(IGUID node, IGUID guid) {
+    boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
 
-        // TODO - this will make a challenge/check/verify call to the node (see Storage)
-        // TODO - shallow vs deep challenge
-        // a deep challenge will also challenge the content referenced by the manifest
+        try {
+            Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
 
-        return false;
+            Manifest manifest = getManifest(guid);
+            ManifestChallenge manifestChallenge = new ManifestChallenge(guid, manifest, nodeToBeChallenged);
+
+            TasksQueue.instance().performSyncTask(manifestChallenge);
+            return manifestChallenge.isChallengePassed();
+
+        } catch (ManifestNotFoundException | NodesCollectionException | NodeNotFoundException |
+                GUIDGenerationException | IOException e) {
+
+            return false;
+        }
+
     }
 
     /**
@@ -147,6 +161,8 @@ public class PolicyActions {
 
             if (nodeHasManifest(nodeRef, guid)) {
                 counter++;
+
+                // TODO - make sure that the DDS is updated with locations
             }
         }
 

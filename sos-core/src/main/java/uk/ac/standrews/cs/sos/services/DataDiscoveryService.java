@@ -50,6 +50,8 @@ public interface DataDiscoveryService {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
+    IGUID challenge(IGUID guid, String challenge);
+
     /**
      * Get the manifest matching the given GUID from the nodes collection
      *
