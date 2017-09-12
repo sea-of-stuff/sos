@@ -3,7 +3,7 @@
     "name": "po_1",
     "description": "The experiment PO 1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc..",
     "setup": {
-      "app": "sos-app/target/sos-with-dependencies.jar",
+      "app": "sos-app/target/sos-app.jar",
       "iterations": 10
     },
     "nodes": [],

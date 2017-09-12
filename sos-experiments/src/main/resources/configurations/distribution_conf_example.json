@@ -5,7 +5,7 @@
 	"experiment": {
 		"name": "Experiment PR 1",
 		"setup": {
-			"app": "sos-app/target/sos-with-dependencies.jar",
+			"app": "sos-app/target/sos-app.jar",
 			"iterations": 10
 		},
 		"nodes": [{
