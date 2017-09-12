@@ -5,11 +5,13 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * This class contains some pre-defined policies.
@@ -26,7 +28,7 @@ public class CommonPolicies {
      */
     public static class ManifestReplicationPolicy implements Policy {
 
-        private PolicyActions policyActions;
+        protected PolicyActions policyActions;
         private NodesCollection codomain;
         private int factor;
 
@@ -176,7 +178,7 @@ public class CommonPolicies {
                 if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
 
                     policyActions.grantAccess((SecureAtom) contentManifest, granter, grantee);
-                }
+                } // TODO - compound_protected
 
             } catch (RoleNotFoundException | ProtectionException | ManifestNotFoundException e) {
                 throw new PolicyException("Policy. Granter " + granter.toMultiHash() +
@@ -194,7 +196,8 @@ public class CommonPolicies {
 
                     SecureAtom secureAtom = (SecureAtom) contentManifest;
                     return secureAtom.keysRoles().containsKey(grantee);
-                }
+                } // TODO - compound_protected
+
             } catch (ManifestNotFoundException e) {
                 throw new PolicyException("Policy. Unable to check if whether the Granter " + granter.toMultiHash() +
                         " was able to grant access to the grantee " + grantee.toMultiHash() +
@@ -205,17 +208,62 @@ public class CommonPolicies {
         }
     }
 
-    // TODO
-    public static class ReplicateAllVersionsPolicy implements Policy {
+    /**
+     * Replicate all version manifests
+     */
+    public static class ReplicateAllVersionsPolicy extends ManifestReplicationPolicy implements Policy {
+
+        public ReplicateAllVersionsPolicy(PolicyActions policyActions, NodesCollection codomain, int factor) {
+            super(policyActions, codomain, factor);
+        }
 
         @Override
         public void apply(Manifest manifest) throws PolicyException {
 
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+
+                Version version = (Version) manifest;
+                IGUID invariant = version.getInvariantGUID();
+
+                Set<IGUID> versions = policyActions.getVersions(invariant);
+                for(IGUID v:versions) {
+
+                    try {
+                        Manifest m = policyActions.getManifest(v);
+                        super.apply(m);
+
+                    } catch (ManifestNotFoundException | NodesCollectionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
-            return false;
+
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+
+                Version version = (Version) manifest;
+                IGUID invariant = version.getInvariantGUID();
+
+                Set<IGUID> versions = policyActions.getVersions(invariant);
+                for(IGUID v:versions) {
+
+                    try {
+                        Manifest m = policyActions.getManifest(v);
+                        if (!super.satisfied(m)) {
+                            return false;
+                        }
+
+                    } catch (ManifestNotFoundException | NodesCollectionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+            return true;
         }
     }
 

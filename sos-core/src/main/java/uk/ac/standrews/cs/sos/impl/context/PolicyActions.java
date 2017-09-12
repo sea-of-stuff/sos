@@ -10,9 +10,11 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
@@ -24,6 +26,7 @@ import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 
 import java.io.IOException;
+import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
@@ -200,12 +203,11 @@ public class PolicyActions {
     /**
      * Get the data of an atom from a codomain.
      *
-     * @param codomain
      * @param guid
      * @return
      * @throws AtomNotFoundException
      */
-     Data getData(NodesCollection codomain, IGUID guid) throws AtomNotFoundException {
+     Data getData(IGUID guid) throws AtomNotFoundException {
 
         // Check DDS, Storage restricting the request with the codomain
         // TODO Restrict by codomain
@@ -213,19 +215,23 @@ public class PolicyActions {
     }
 
     /**
+     * TODO - this is not a policy action. Move it to another class
+     *
      * Get the manifest from a codomain
      *
-     * @param codomain
      * @param guid
      * @return
      * @throws ManifestNotFoundException
      */
-    Manifest getManifest(NodesCollection codomain, IGUID guid) throws ManifestNotFoundException {
+    Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
-        return dataDiscoveryService.getManifest(codomain, guid);
+        NodesCollection domain = new NodesCollectionImpl(NodesCollection.TYPE.LOCAL);
+        return dataDiscoveryService.getManifest(domain, guid);
     }
 
     /**
+     * TODO - this is not a policy action. Move it to another class
+     *
      * Get the manifest of a version's content.
      *
      * @param version
@@ -238,7 +244,15 @@ public class PolicyActions {
         return dataDiscoveryService.getManifest(version.getContentGUID());
     }
 
+    // TODO - this is not a policy action. Move it to another class
+    Set<IGUID> getVersions(IGUID invariant) {
+
+        return dataDiscoveryService.getVersions(invariant);
+    }
+
     /**
+     * TODO - this is not a policy action. Move it to another class
+     *
      * Get the node with the specified guid
      * @param guid
      * @return
@@ -250,6 +264,8 @@ public class PolicyActions {
     }
 
     /**
+     * TODO - this is not a policy action. Move it to another class
+     *
      * Filter the codomain by type
      *
      * @param codomain
@@ -300,8 +316,6 @@ public class PolicyActions {
         Role granteeRole = usersRolesService.getRole(grantee);
         storage.grantAccess(secureAtom, granterRole, granteeRole);
     }
-
-
 
 
 }
