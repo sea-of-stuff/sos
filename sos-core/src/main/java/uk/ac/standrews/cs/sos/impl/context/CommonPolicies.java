@@ -12,6 +12,11 @@ import uk.ac.standrews.cs.sos.model.*;
 import java.io.IOException;
 
 /**
+ * This class contains some pre-defined policies.
+ * Each policy implements the #Policy interface and it has the two methods:
+ * - void apply(Manifest manifest)
+ * - boolean satisfied(Manifest manifest)
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class CommonPolicies {
@@ -174,14 +179,28 @@ public class CommonPolicies {
                 }
 
             } catch (RoleNotFoundException | ProtectionException | ManifestNotFoundException e) {
-                throw new PolicyException("Policy. Granter " + granter.toMultiHash() + " was unable to grant access to grantee " + grantee.toMultiHash() + " for atom " + manifest.guid());
+                throw new PolicyException("Policy. Granter " + granter.toMultiHash() +
+                        " was unable to grant access to grantee " + grantee.toMultiHash() +
+                        " for the content of version " + manifest.guid().toMultiHash());
             }
         }
 
         @Override
         public boolean satisfied(Manifest manifest) throws PolicyException {
 
-            // TODO Get secure manifest and check list of roles/keys
+            try {
+                Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+                if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+
+                    SecureAtom secureAtom = (SecureAtom) contentManifest;
+                    return secureAtom.keysRoles().containsKey(grantee);
+                }
+            } catch (ManifestNotFoundException e) {
+                throw new PolicyException("Policy. Unable to check if whether the Granter " + granter.toMultiHash() +
+                        " was able to grant access to the grantee " + grantee.toMultiHash() +
+                        " for the content of version " + manifest.guid().toMultiHash());
+            }
+
             return false;
         }
     }
