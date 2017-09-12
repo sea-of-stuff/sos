@@ -379,7 +379,7 @@ public class SOSContextService implements ContextService {
 
     private void runPolicies(Context context) {
 
-        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - START - for context " + context.getName());
+        long start = System.nanoTime();
 
         Map<IGUID, ContextVersionInfo> contentsToProcess =  contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
@@ -390,7 +390,8 @@ public class SOSContextService implements ContextService {
 
         });
 
-        InstrumentFactory.instance().measure(StatsTYPE.policies, "runPolicies - END - for context " + context.getName());
+        long duration = System.nanoTime() - start;
+        InstrumentFactory.instance().measure(StatsTYPE.policies, context.getName(), duration);
     }
 
     private void runContextPoliciesCheckNow(Context context) {
@@ -411,7 +412,6 @@ public class SOSContextService implements ContextService {
         SettingsConfiguration.Settings.ThreadSettings checkPoliciesThreadSettings = SOSLocalNode.settings.getServices().getCms().getCheckPoliciesThread();
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.WARN, "N/A yet - Check that policies are still valid");
 
             long start = System.currentTimeMillis();
             checkPolicies();
@@ -430,19 +430,17 @@ public class SOSContextService implements ContextService {
 
     private void checkPolicies(Context context) {
 
-        InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - START - for context " + context.getName());
+        long start = System.nanoTime();
 
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
-
-                SOS_LOG.log(LEVEL.INFO, "Check policies for context " + context.getName() + " and Version " + guid.toShortString());
                 checkPolicies(context, guid);
-                SOS_LOG.log(LEVEL.INFO, "ASYN Call - Finished to run CHECK policies for context " + context.getName() + " and Version " + guid.toShortString());
             }
         });
 
-        InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, "checkPolicies - END - for context " + context.getName());
+        long duration = System.nanoTime() - start;
+        InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, context.getName(), duration);
     }
 
     /**
@@ -508,7 +506,7 @@ public class SOSContextService implements ContextService {
      *  - Update the contextsContents
      *
      * @param context for which to run the predicate
-     * @param assetInvariant
+     * @param assetInvariant of the version
      * @param versionGUID to evaluate
      */
     private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
@@ -612,11 +610,11 @@ public class SOSContextService implements ContextService {
 
         ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
 
-        long maxage = context.predicate().maxAge();
+        long max_age = context.predicate().maxAge();
         long contentLastRun = content.timestamp;
         long now = System.currentTimeMillis();
 
-        return (now - contentLastRun) > maxage;
+        return (now - contentLastRun) > max_age;
     }
 
     private void loadContexts() throws ServiceException {
