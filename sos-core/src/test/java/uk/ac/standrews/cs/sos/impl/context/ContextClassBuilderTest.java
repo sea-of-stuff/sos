@@ -66,10 +66,13 @@ public class ContextClassBuilderTest {
                         "        return \n" +
                         "    }\n" +
                         "}@Override\n" +
-                        "public Policy[] policies() {\n" +
-                        "        return new Policy[]{  };\n" +
-                        "}\n" +
-                        "\n" +
+                        "    public Policy[] policies() {\n" +
+                        "        try {\n" +
+                        "            return new Policy[]{  };\n" +
+                        "        } catch (Exception e) {\n" +
+                        "            return new Policy[]{};\n" +
+                        "        }\n" +
+                        "    }\n" +
                         "}\n";
 
         assertEquals(clazzString, MATCHING_CLAZZ);

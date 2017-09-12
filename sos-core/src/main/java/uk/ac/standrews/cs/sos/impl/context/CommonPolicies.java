@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -179,6 +181,10 @@ public class CommonPolicies {
             this.policyActions = policyActions;
             this.granter = granter;
             this.grantee = grantee;
+        }
+
+        public GrantAccessPolicy(PolicyActions policyActions, String granter, String grantee) throws GUIDGenerationException {
+            this(policyActions, GUIDFactory.recreateGUID(granter), GUIDFactory.recreateGUID(grantee));
         }
 
         @Override

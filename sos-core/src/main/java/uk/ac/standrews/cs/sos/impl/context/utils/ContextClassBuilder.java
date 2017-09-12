@@ -44,12 +44,15 @@ public class ContextClassBuilder {
 
 
     private static final String POLICIES_TAG = "_POLICIES_";
-
     private static final String POLICIES_METHODS =
             "@Override\n" +
-            "public Policy[] policies() {\n" +
-            "        return new Policy[]{ " + POLICIES_TAG + " };" + NEW_LINE +
-            "}" + NEW_LINE;
+            "    public Policy[] policies() {\n" +
+            "        try {\n" +
+            "            return new Policy[]{ " + POLICIES_TAG + " };" + NEW_LINE +
+            "        } catch (Exception e) {\n" +
+            "            return new Policy[]{};\n" +
+            "        }\n" +
+            "    }";
 
     private static final String PREDICATE_TAG = "_PREDICATE_TAG_";
     private static final String PREDICATE_METHOD =
