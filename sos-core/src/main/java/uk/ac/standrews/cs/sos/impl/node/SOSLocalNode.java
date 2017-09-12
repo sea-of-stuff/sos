@@ -39,7 +39,7 @@ import java.security.PrivateKey;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FLUSHER_TIME_UNIT;
+import static uk.ac.standrews.cs.sos.constants.Internals.NODE_MAINTAINER_TIME_UNIT;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -72,9 +72,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     // This is a generic abstraction to interact with the Database of this node
     private NodesDatabase nodesDatabase;
 
+    private NodeMaintainer nodeMaintainer;
     // This scheduled service spawns a thread to check that the content of this node is within the specified restrictions.
     // If the restrictions are not satisfied, the background thread will remove any REMOVABLE content
-    private ScheduledExecutorService cacheFlusherService;
+    private ScheduledExecutorService nodeMaintainerService;
 
     // Services for this node
     private Agent agent;
@@ -134,7 +135,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         loadBootstrapNodes();
         registerNode();
         initServices();
-        cacheFlusher();
+        initNodeMaintainer();
 
         SOS_LOG.log(LEVEL.INFO, "Node started");
     }
@@ -181,16 +182,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     @Override
     public void kill() {
-        dataDiscoveryService.shutdown();
-        storage.shutdown();
-        usersRolesService.shutdown();
-        contextService.shutdown();
 
-        if (cacheFlusherService != null)
-            cacheFlusherService.shutdown();
+        if (nodeMaintainer != null) {
+            nodeMaintainer.flush();
+            nodeMaintainer.shutdown();
+        }
+
+        if (nodeMaintainerService != null) {
+            nodeMaintainerService.shutdown();
+        }
 
         DatabaseFactory.kill();
-
         SOSAgent.destroy();
     }
 
@@ -352,18 +354,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      * Launch a background scheduled process that checks the size of the local cache
      * and cleans it up if needed
      */
-    private void cacheFlusher() {
-        SOS_LOG.log(LEVEL.INFO, "Cache Flusher started");
+    private void initNodeMaintainer() {
 
-        SettingsConfiguration.Settings.GlobalSettings.CacheFlusherSettings cacheFlusherSettings = SOSLocalNode.settings.getGlobal().getCacheFlusher();
+        NodeMaintainer nodeMaintainer = new NodeMaintainer(localStorage, dataDiscoveryService, storage, usersRolesService, contextService);
 
-        if (cacheFlusherSettings.isEnabled()) {
+        SettingsConfiguration.Settings.GlobalSettings.NodeMaintainerSettings nodeMaintainerSettings = SOSLocalNode.settings.getGlobal().getNodeMaintainer();
+        if (nodeMaintainerSettings.isEnabled()) {
+            SOS_LOG.log(LEVEL.INFO, "Node Maintainer is ENABLED");
 
-            SettingsConfiguration.Settings.ThreadSettings threadSettings = cacheFlusherSettings.getThread();
-
-            CacheFlusher cacheFlusher = new CacheFlusher(localStorage);
-            cacheFlusherService = Executors.newScheduledThreadPool(threadSettings.getPs());
-            cacheFlusherService.scheduleAtFixedRate(cacheFlusher, threadSettings.getInitialDelay(), threadSettings.getPeriod(), CACHE_FLUSHER_TIME_UNIT);
+            SettingsConfiguration.Settings.ThreadSettings threadSettings = nodeMaintainerSettings.getThread();
+            nodeMaintainerService = Executors.newScheduledThreadPool(threadSettings.getPs());
+            nodeMaintainerService.scheduleAtFixedRate(nodeMaintainer, threadSettings.getInitialDelay(), threadSettings.getPeriod(), NODE_MAINTAINER_TIME_UNIT);
         }
     }
 

@@ -79,7 +79,7 @@
           "ps": 4
         }
       },
-      "cacheFlusher": {
+      "nodeMaintainer": {
         "enabled" : false,
         "maxSize": 1048576,
         "thread": {

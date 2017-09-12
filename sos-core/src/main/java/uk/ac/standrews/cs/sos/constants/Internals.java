@@ -13,7 +13,7 @@ public class Internals {
     public static final String CMS_INDEX_FILE = "cms.index";
     public static final String USRO_CACHE_FILE = "usro.cache";
 
-    public static final TimeUnit CACHE_FLUSHER_TIME_UNIT = TimeUnit.SECONDS;
+    public static final TimeUnit NODE_MAINTAINER_TIME_UNIT = TimeUnit.SECONDS;
 
     public static final String DEFAULT_USER_NAME = "DEFAULT_USER";
     public static final String DEFAULT_ROLE_NAME = "DEFAULT_ROLE";

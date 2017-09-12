@@ -696,7 +696,7 @@ public class SettingsConfiguration {
 
             private String ssl_trust_store;
             private TasksSettings tasks;
-            private CacheFlusherSettings cacheFlusher;
+            private NodeMaintainerSettings nodeMaintainer;
 
             public GlobalSettings() {}
 
@@ -708,12 +708,12 @@ public class SettingsConfiguration {
                 this.tasks = tasks;
             }
 
-            public CacheFlusherSettings getCacheFlusher() {
-                return cacheFlusher;
+            public NodeMaintainerSettings getNodeMaintainer() {
+                return nodeMaintainer;
             }
 
-            public void setCacheFlusher(CacheFlusherSettings cacheFlusher) {
-                this.cacheFlusher = cacheFlusher;
+            public void setNodeMaintainer(NodeMaintainerSettings nodeMaintainer) {
+                this.nodeMaintainer = nodeMaintainer;
             }
 
             public String getSsl_trust_store() {
@@ -740,12 +740,12 @@ public class SettingsConfiguration {
                 }
             }
 
-            public static class CacheFlusherSettings extends ComponentSettings {
+            public static class NodeMaintainerSettings extends ComponentSettings {
 
                 private long maxSize; // in Bytes
                 private ThreadSettings thread;
 
-                public CacheFlusherSettings() {}
+                public NodeMaintainerSettings() {}
 
                 public ThreadSettings getThread() {
                     return thread;

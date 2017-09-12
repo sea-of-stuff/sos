@@ -86,6 +86,11 @@ public interface ContextService {
     /**
      * Flushes any in-memory information into disk
      */
+    void flush();
+
+    /**
+     * Stops the threads
+     */
     void shutdown();
 
     /**

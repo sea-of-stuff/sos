@@ -50,6 +50,13 @@ public interface DataDiscoveryService {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
 
+    /**
+     * Challenge manifest matching the GUID with the given string challenge
+     *
+     * @param guid of the manifest to be challenged
+     * @param challenge for the manifest
+     * @return GUID of the challenge
+     */
     IGUID challenge(IGUID guid, String challenge);
 
     /**
@@ -128,6 +135,6 @@ public interface DataDiscoveryService {
     /**
      * Flushes the in-memory caches and indices into disk
      */
-    void shutdown();
+    void flush();
 
 }

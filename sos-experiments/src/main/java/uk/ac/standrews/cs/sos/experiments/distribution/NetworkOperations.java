@@ -295,7 +295,7 @@ public class NetworkOperations {
                 }
                 printingIndex++;
 
-                out.write(buf, 0, len); //out.shutdown();
+                out.write(buf, 0, len); //out.flush();
             }
 
             fis.close();

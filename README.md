@@ -249,7 +249,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
           "ps": 4
         }
       },
-      "cacheFlusher": {
+      "nodeMaintainer": {
         "enabled" : false,
         "maxSize": 1048576,
         "thread": {

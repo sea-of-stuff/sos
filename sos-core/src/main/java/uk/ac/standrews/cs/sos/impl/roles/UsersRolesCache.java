@@ -130,8 +130,8 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
     }
 
     @Override
-    public void shutdown() {
-        // NOTE: This method is not implemented, as we use the persist method to actually shutdown the cache
+    public void flush() {
+        // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
     }
 
     public static UsersRolesCache load(IFile file) throws IOException, ClassNotFoundException {

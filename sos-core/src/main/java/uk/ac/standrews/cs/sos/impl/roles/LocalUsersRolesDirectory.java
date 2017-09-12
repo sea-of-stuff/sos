@@ -112,8 +112,8 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
     }
 
     @Override
-    public void shutdown() {
-
+    public void flush() {
+        // DO NOTHING
     }
 
     private void setActive(User user, String filename) {

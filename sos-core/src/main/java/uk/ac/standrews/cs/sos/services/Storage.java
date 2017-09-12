@@ -121,7 +121,7 @@ public interface Storage {
     /**
      * Flush all indexes and caches managed by the storage actor
      */
-    void shutdown();
+    void flush();
 
     /**
      * The settings for the storage service

@@ -194,7 +194,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public void shutdown() {
+    public void flush() {
 
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
@@ -204,6 +204,10 @@ public class SOSContextService implements ContextService {
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
         }
+    }
+
+    @Override
+    public void shutdown() {
 
         if (service != null) {
             service.shutdown();

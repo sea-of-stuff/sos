@@ -140,7 +140,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public void shutdown() {
+    public void flush() {
 
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
