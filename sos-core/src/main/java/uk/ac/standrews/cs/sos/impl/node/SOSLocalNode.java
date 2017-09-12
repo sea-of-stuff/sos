@@ -174,7 +174,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         return usersRolesService;
     }
 
-
+    // THIS METHOD IS GOING TO BE USED BY EXPERIMENTS ONLY.
+    // THIS METHOD CLEANS UP EVERTHING...SO USE IT WITH PRECAUTION
     public void cleanup() throws DataStorageException {
 
         localStorage.destroy();
