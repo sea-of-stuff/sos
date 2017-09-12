@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -52,7 +53,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
     }
 
     public enum POLICY_TYPE {
-        NONE, DATA_REPLICATION, MANIFEST_REPLICATION, METADATA_REPLICATION, // <-- each of these can have different settings (e.g. based on where node are, their availability, etc)
+        NONE, NOTHING,
+        DATA_REPLICATION, MANIFEST_REPLICATION, METADATA_REPLICATION, // <-- each of these can have different settings (e.g. based on where node are, their availability, etc)
         DATA_PROTECTION, MANIFEST_PROTECTION, METADATA_PROTECTION, // <-- protection granting. Data is not protected by the policies
         NOTIFICATION // Nodes? are notified about the new data in the context
 
@@ -95,14 +97,35 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         private void addContexts() throws Exception {
 
             switch (policy_type) {
-                case NONE:
-                    // no policy in context
+                case NONE: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "No_Policies.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
                     break;
-                case DATA_REPLICATION:
-                    // policy with data replication?
+                }
+                case NOTHING: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Do_Nothing_Policy.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
                     break;
-                case MANIFEST_REPLICATION:
+                }
+                case DATA_REPLICATION: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Data_Replication_1.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
                     break;
+                }
+                case MANIFEST_REPLICATION: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Manifest_Replication.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
+                    break;
+                }
+                case DATA_PROTECTION: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
+                    break;
+                }
             }
         }
 

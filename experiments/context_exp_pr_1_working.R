@@ -3,6 +3,8 @@ install.packages("FSA")
 library("PMCMR", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
 library("FSA", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
 
+library("fitdistrplus", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+
 install.packages("stargazer")
 library(stargazer)
 
@@ -15,7 +17,7 @@ getwd()
 # pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_09_06T14_37_25_623Z.TSV", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_09_12T13_41_32_362Z.TSV", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
@@ -70,7 +72,7 @@ x <- boxplot(d$User.Measure~d$ContextName, data=d,
 # CHECKING DISTRIBUTION OF DATA
 x = subset(d, ContextName=="META")
 descdist(x$Measures, discrete = FALSE)
-fit.norm <- fitdist(x$Measures, "norm")
+fit.norm <- fitdist(x$Measures, "beta", start=NULL) # other distributions: norm, etc...
 plot(fit.norm)
 fit.weibull <- fitdist(x$Measures, "weibull")
 plot(fit.weibull)
