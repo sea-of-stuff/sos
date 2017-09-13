@@ -18,26 +18,33 @@ import uk.ac.standrews.cs.sos.services.Agent;
  */
 public class WMetadata {
 
-    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException {
-        String guidParam = req.params("id");
-        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+    public static String Render(Request req, SOSLocalNode sos) {
 
-        Agent agent = sos.getAgent();
+        try {
+            String guidParam = req.params("id");
+            IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
-        Manifest manifest = agent.getManifest(guid);
-        if (manifest.getType() == ManifestType.VERSION) {
+            Agent agent = sos.getAgent();
 
-            Version version = (Version) manifest;
-            IGUID metadataGUID = version.getMetadata();
-            if (metadataGUID == null || metadataGUID.isInvalid()) {
+            Manifest manifest = agent.getManifest(guid);
+            if (manifest.getType() == ManifestType.VERSION) {
+
+                Version version = (Version) manifest;
+                IGUID metadataGUID = version.getMetadata();
+                if (metadataGUID == null || metadataGUID.isInvalid()) {
+                    return "N/A";
+                }
+
+                Metadata metadata = agent.getMetadata(metadataGUID);
+                return metadata.toString();
+            } else {
                 return "N/A";
             }
 
-            Metadata metadata = agent.getMetadata(metadataGUID);
-            return metadata.toString();
-        } else {
-            return "N/A";
+        } catch (GUIDGenerationException e) {
+            return "Metadata GUID is invalid";
+        } catch (MetadataNotFoundException | ManifestNotFoundException e) {
+            return "Unable to find metadata";
         }
-
     }
 }

@@ -42,6 +42,7 @@ import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
 import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
+import static uk.ac.standrews.cs.sos.model.NodesCollection.TYPE.ANY;
 import static uk.ac.standrews.cs.sos.model.NodesCollection.TYPE.LOCAL;
 
 /**
@@ -122,7 +123,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
         try {
-            return getManifest(new NodesCollectionImpl(LOCAL), guid);
+            return getManifest(new NodesCollectionImpl(ANY), guid);
         } catch (NodesCollectionException e) {
             throw new ManifestNotFoundException("Manifest not found");
         }
@@ -154,13 +155,25 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         }
 
         try {
-            Manifest manifest = inMemoryCache.findManifest(guid);
+            Manifest manifest;
+
+            try {
+                manifest = inMemoryCache.findManifest(guid);
+            } catch (ManifestNotFoundException e) {
+                manifest = null;
+            }
+
             if (manifest == null) {
 
-                manifest = local.findManifest(guid);
-                if (manifest != null) {
-                    inMemoryCache.addManifest(manifest);
+                try {
+                    manifest = local.findManifest(guid);
+                    if (manifest != null) {
+                        inMemoryCache.addManifest(manifest);
+                    }
+                } catch (ManifestNotFoundException e) {
+                    manifest = null;
                 }
+
             }
 
             if (manifest == null && !nodes.type().equals(LOCAL)) {

@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class WGraph {
 
-    public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException {
+    public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
@@ -37,7 +37,7 @@ public class WGraph {
         return graph.toString();
     }
 
-    public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException {
+    public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
 
         String guidParam = req.params("versionid");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
@@ -53,7 +53,7 @@ public class WGraph {
         return graph.toString();
     }
 
-    private static void MakeVersionGraph(ObjectNode graph, SOSLocalNode sos, Manifest selectedManifest) throws ManifestNotFoundException {
+    private static void MakeVersionGraph(ObjectNode graph, SOSLocalNode sos, Manifest selectedManifest) {
 
         ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), sos.getDDS(), selectedManifest);
         ArrayNode edges = ManifestEdgesGraph(selectedManifest);
@@ -62,59 +62,72 @@ public class WGraph {
         graph.put("edges", edges);
     }
 
-    private static void MakeAssetGraph(ObjectNode graph, SOSLocalNode sos, IGUID invariant) throws ManifestNotFoundException {
+    private static void MakeAssetGraph(ObjectNode graph, SOSLocalNode sos, IGUID invariant) {
 
-        ArrayNode nodes = AllVersionsNodesGraph(sos.getDDS(), sos.getDDS(), invariant);
-        ArrayNode edges = AllVersionsEdgesGraph(sos.getDDS(), sos.getDDS(), invariant);
+        ArrayNode nodes = AllVersionsNodesGraph(sos.getDDS(), invariant);
+        ArrayNode edges = AllVersionsEdgesGraph(sos.getDDS(), invariant);
 
         graph.put("nodes", nodes);
         graph.put("edges", edges);
     }
 
-    private static ArrayNode AllVersionsNodesGraph(DataDiscoveryService dataDiscoveryService, DataDiscoveryService dds, IGUID invariant) throws ManifestNotFoundException {
+    private static ArrayNode AllVersionsNodesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
         Set<IGUID> versionRefs = dataDiscoveryService.getVersions(invariant);
         for(IGUID versionRef:versionRefs) {
 
-            Version version = (Version) dataDiscoveryService.getManifest(versionRef);
-
-            boolean isHEAD = false;
             try {
-                IGUID head = dataDiscoveryService.getHead(version.getInvariantGUID());
-                isHEAD = version.guid().equals(head);
-            } catch (HEADNotFoundException ignored) { }
+                Version version = (Version) dataDiscoveryService.getManifest(versionRef);
 
-            boolean isTIP = false;
-            try {
-                Set<IGUID> tips = dataDiscoveryService.getTips(version.getInvariantGUID());
-                isTIP = tips.contains(version.guid());
-            } catch (TIPNotFoundException ignored) { }
+                boolean isHEAD = false;
+                try {
+                    IGUID head = dataDiscoveryService.getHead(version.getInvariantGUID());
+                    isHEAD = version.guid().equals(head);
+                } catch (HEADNotFoundException ignored) {
+                }
+
+                boolean isTIP = false;
+                try {
+                    Set<IGUID> tips = dataDiscoveryService.getTips(version.getInvariantGUID());
+                    isTIP = tips.contains(version.guid());
+                } catch (TIPNotFoundException ignored) {
+                }
 
 
-            ObjectNode node = VersionManifestNode(version, version.getInvariantGUID().toMultiHash(), isHEAD, isTIP);
-            arrayNode.add(node);
+                ObjectNode node = VersionManifestNode(version, version.getInvariantGUID().toMultiHash(), isHEAD, isTIP);
+                arrayNode.add(node);
+
+            } catch (ManifestNotFoundException e) {
+
+                ObjectNode unknownNode = UnknownNode(versionRef);
+                arrayNode.add(unknownNode);
+            }
         }
 
         return arrayNode;
     }
 
-    private static ArrayNode AllVersionsEdgesGraph(DataDiscoveryService dataDiscoveryService, DataDiscoveryService dds, IGUID invariant) throws ManifestNotFoundException {
+    private static ArrayNode AllVersionsEdgesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
         Set<IGUID> versionRefs = dataDiscoveryService.getVersions(invariant);
         for(IGUID versionRef:versionRefs) {
 
-            Version version = (Version) dataDiscoveryService.getManifest(versionRef);
+            try {
+                Version version = (Version) dataDiscoveryService.getManifest(versionRef);
 
-            Set<IGUID> prevs = version.getPreviousVersions();
-            if (prevs != null && !prevs.isEmpty()) {
-                for (IGUID prev : prevs) {
-                    ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
-                    arrayNode.add(prevNode);
+                Set<IGUID> prevs = version.getPreviousVersions();
+                if (prevs != null && !prevs.isEmpty()) {
+                    for (IGUID prev : prevs) {
+                        ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
+                        arrayNode.add(prevNode);
+                    }
                 }
+            } catch (ManifestNotFoundException e) {
+                // DO NOTHING
             }
         }
 
@@ -122,7 +135,7 @@ public class WGraph {
     }
 
     // TODO - must refactor
-    private static ArrayNode ManifestNodeGraph(Agent agent, DataDiscoveryService dataDiscoveryService, Manifest manifest) throws ManifestNotFoundException {
+    private static ArrayNode ManifestNodeGraph(Agent agent, DataDiscoveryService dataDiscoveryService, Manifest manifest) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
@@ -146,18 +159,31 @@ public class WGraph {
             arrayNode.add(node);
 
             // Content
-            Manifest contentManifest = agent.getManifest(version.getContentGUID());
-            ObjectNode contentNode = ManifestNode(contentManifest);
-            arrayNode.add(contentNode);
+            try {
+                Manifest contentManifest = agent.getManifest(version.getContentGUID());
+                ObjectNode contentNode = ManifestNode(contentManifest);
+                arrayNode.add(contentNode);
+            } catch (ManifestNotFoundException e) {
+
+                ObjectNode unknownNode = UnknownNode(version.getContentGUID());
+                arrayNode.add(unknownNode);
+            }
 
             // Previous
             Set<IGUID> prevs = version.getPreviousVersions();
 
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
-                    Manifest previousManifest = agent.getManifest(prev);
-                    ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toMultiHash());
-                    arrayNode.add(prevNode);
+
+                    try {
+                        Manifest previousManifest = agent.getManifest(prev);
+                        ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toMultiHash());
+                        arrayNode.add(prevNode);
+                    } catch (ManifestNotFoundException e) {
+
+                        ObjectNode unknownNode = UnknownNode(prev);
+                        arrayNode.add(unknownNode);
+                    }
                 }
             }
 
@@ -180,9 +206,16 @@ public class WGraph {
             Compound compound = (Compound) manifest;
             Set<Content> contents = compound.getContents();
             for(Content content:contents) {
-                Manifest contentManifest = agent.getManifest(content.getGUID());
-                ObjectNode contentNode = ManifestNode(contentManifest);
-                arrayNode.add(contentNode);
+
+                try {
+                    Manifest contentManifest = agent.getManifest(content.getGUID());
+                    ObjectNode contentNode = ManifestNode(contentManifest);
+                    arrayNode.add(contentNode);
+                } catch (ManifestNotFoundException e) {
+
+                    ObjectNode unknownNode = UnknownNode(content.getGUID());
+                    arrayNode.add(unknownNode);
+                }
             }
         } else { // ATOM
             ObjectNode node = ManifestNode(manifest);
@@ -287,9 +320,23 @@ public class WGraph {
         ObjectMapper mapper = JSONHelper.JsonObjMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", "DATA-" + guid.toString());
+        objectNode.put("id", "DATA-" + guid.toMultiHash());
         objectNode.put("label", "Type: DATA\nGUID: " + guid.toMultiHash());
         objectNode.put("shape", "diamond");
+        objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
+
+        return objectNode;
+    }
+
+    private static ObjectNode UnknownNode(IGUID guid) {
+
+        ObjectMapper mapper = JSONHelper.JsonObjMapper();
+
+        ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("id", guid.toMultiHash());
+        objectNode.put("label", "Type: unknown\nGUID: " + guid.toMultiHash());
+        objectNode.put("shape", "box");
+        objectNode.put("color", "#FF0000");
         objectNode.put("font", mapper.createObjectNode().put("face", "monospace").put("align", "left"));
 
         return objectNode;

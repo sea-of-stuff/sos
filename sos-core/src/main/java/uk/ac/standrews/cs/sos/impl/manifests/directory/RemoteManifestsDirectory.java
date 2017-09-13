@@ -22,6 +22,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.REPLICATION_FACTOR_MULTIPLIER;
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
@@ -92,7 +93,16 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             NodesCollection ddsNodesOnly = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, NO_LIMIT);
             ddsGUIDsToCheck = ddsNodesOnly.nodesRefs();
         } else {
+            // Get DDS nodes where we know the entity could be
             ddsGUIDsToCheck = ddsIndex.getDDSRefs(guid);
+        }
+
+        if (ddsGUIDsToCheck == null) {
+
+            // Simply check any node
+            ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream() // FIXME - this call can be improved
+                                    .map(Node::getNodeGUID)
+                                    .collect(Collectors.toSet());
         }
 
         if (ddsGUIDsToCheck == null) {
