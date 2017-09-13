@@ -1,12 +1,14 @@
 package uk.ac.standrews.cs.sos.web.agents;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
 
@@ -48,7 +50,7 @@ public class WHome {
                 versionModel.put("contentType", manifest.getType());
 
             } catch (ManifestNotFoundException | HEADNotFoundException | AtomNotFoundException e) {
-                e.printStackTrace();
+                SOS_LOG.log(LEVEL.ERROR, "WebAPP - unable to process version for HOME PAGE");
             }
 
             assets.add(versionModel);

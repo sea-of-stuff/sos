@@ -90,6 +90,14 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
             Version version = (Version) manifest;
             inMemoryCache.advanceTip(version);
+
+
+            // Make sure that this node has at least one HEAD, otherwise keep the current head.
+            try {
+                getHead(version.getInvariantGUID());
+            } catch (HEADNotFoundException e) {
+                setHead(version);
+            }
         }
     }
 
