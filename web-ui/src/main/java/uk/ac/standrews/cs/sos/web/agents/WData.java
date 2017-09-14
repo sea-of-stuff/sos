@@ -147,7 +147,7 @@ public class WData {
         String data = request.queryParams("data");
         JsonNode node = JSONHelper.JsonObjMapper().readTree(data);
         for(JsonNode child: node) {
-            pendingContents.add(new ContentImpl(child.asText(), GUIDFactory.recreateGUID(child.asText())));
+            pendingContents.add(new ContentImpl(GUIDFactory.recreateGUID(child.asText())));
         }
 
         return AddCompoundVersion(request, sos);

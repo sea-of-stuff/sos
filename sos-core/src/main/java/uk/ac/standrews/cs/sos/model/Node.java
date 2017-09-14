@@ -35,6 +35,9 @@ public interface Node {
      */
     InetSocketAddress getHostAddress();
 
+    // TODO - getIP
+    String getHostname();
+
     /**
      * Returns true if this is a client node
      * @return

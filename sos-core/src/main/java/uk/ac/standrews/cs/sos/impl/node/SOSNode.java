@@ -9,14 +9,13 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.node.NodeException;
 import uk.ac.standrews.cs.sos.json.SOSNodeDeserializer;
 import uk.ac.standrews.cs.sos.json.SOSNodeSerializer;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.utils.IP;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.PublicKey;
@@ -68,34 +67,29 @@ public class SOSNode implements Node {
         this.DB_is_rms = isRMS;
     }
 
-    protected SOSNode(SettingsConfiguration.Settings settings) throws NodeException {
+    protected SOSNode(SettingsConfiguration.Settings settings) {
 
-        try {
-            InetAddress hostname = InetAddress.getLocalHost();
-            int port = settings.getRest().getPort();
-            this.hostAddress = new InetSocketAddress(hostname, port);
+        InetAddress address = IP.findLocalAddress();
+        int port = settings.getRest().getPort();
+        this.hostAddress = new InetSocketAddress(address, port);
 
-            this.DB_hostname = hostname.getHostAddress();
-            this.DB_port = port;
+        this.DB_hostname = address.getHostAddress();
+        this.DB_port = port;
 
-            this.DB_is_agent = true;
-            this.DB_is_storage = settings.getServices().getStorage().isExposed();
-            this.DB_is_dds = settings.getServices().getDds().isExposed();
-            this.DB_is_nds = settings.getServices().getNds().isExposed();
-            this.DB_is_mms = settings.getServices().getMms().isExposed();
-            this.DB_is_cms = settings.getServices().getCms().isExposed();
-            this.DB_is_rms = settings.getServices().getRms().isExposed();
-
-        } catch (IOException e) {
-            throw new NodeException(e);
-        }
+        this.DB_is_agent = true;
+        this.DB_is_storage = settings.getServices().getStorage().isExposed();
+        this.DB_is_dds = settings.getServices().getDds().isExposed();
+        this.DB_is_nds = settings.getServices().getNds().isExposed();
+        this.DB_is_mms = settings.getServices().getMms().isExposed();
+        this.DB_is_cms = settings.getServices().getCms().isExposed();
+        this.DB_is_rms = settings.getServices().getRms().isExposed();
     }
 
 
     // Cloning constructor
     public SOSNode(Node node) {
 
-        this(node.getNodeGUID(), node.getSignatureCertificate(), node.getHostAddress().getHostName(), node.getHostAddress().getPort(),
+        this(node.getNodeGUID(), node.getSignatureCertificate(), node.getHostname(), node.getHostAddress().getPort(),
                 node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
     }
 
@@ -126,6 +120,11 @@ public class SOSNode implements Node {
         }
 
         return hostAddress;
+    }
+
+    @Override
+    public String getHostname() {
+        return DB_hostname;
     }
 
     @Override

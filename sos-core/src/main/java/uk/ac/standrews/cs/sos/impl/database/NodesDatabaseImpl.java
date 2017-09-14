@@ -71,7 +71,7 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
 
             preparedStatement.setString(1, node.getNodeGUID().toMultiHash());
             preparedStatement.setString(2, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
-            preparedStatement.setString(3, node.getHostAddress().getHostName());
+            preparedStatement.setString(3, node.getHostname());
             preparedStatement.setInt(4, node.getHostAddress().getPort());
             preparedStatement.setBoolean(5, node.isAgent());
             preparedStatement.setBoolean(6, node.isStorage());
