@@ -102,9 +102,11 @@ public interface Storage {
     /**
      * Find all locations for a given atom
      *
-     * @param guid of the atom
+     * @param atom
      * @return locations
      */
+    Queue<LocationBundle> findLocations(Atom atom);
+
     Queue<LocationBundle> findLocations(IGUID guid);
 
     /**

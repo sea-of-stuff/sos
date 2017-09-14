@@ -177,7 +177,7 @@ public class SOSStorage implements Storage {
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.
      *
-     * TODO - find other locations
+     * TODO - find other locations from remote nodes?
      *
      * @param atom describing the atom to retrieve.
      * @return data referenced by the atom
@@ -185,7 +185,7 @@ public class SOSStorage implements Storage {
     @Override
     public Data getAtomContent(Atom atom) throws AtomNotFoundException {
 
-        for (LocationBundle locationBundle : findLocations(atom.guid())) {
+        for (LocationBundle locationBundle : findLocations(atom)) {
             Location location = locationBundle.getLocation();
             Data data = LocationUtility.getDataFromLocation(location);
 
@@ -200,7 +200,7 @@ public class SOSStorage implements Storage {
     @Override
     public Data getSecureAtomContent(SecureAtom atom, Role role) throws DataNotFoundException {
 
-        try (Data encryptedData = getAtomContent(atom)){
+        try (Data encryptedData = getAtomContent(atom.guid())){
 
             if (atom.keysRoles().containsKey(role.guid())) {
                 String encryptedKey = atom.keysRoles().get(role.guid());
@@ -240,8 +240,25 @@ public class SOSStorage implements Storage {
     }
 
     @Override
+    public Queue<LocationBundle> findLocations(Atom atom) {
+        Queue<LocationBundle> locationBundles = locationIndex.findLocations(atom.guid());
+        locationBundles.addAll(atom.getLocations());
+
+        return locationBundles;
+    }
+
+    @Override
     public Queue<LocationBundle> findLocations(IGUID guid) {
-        return locationIndex.findLocations(guid);
+
+        Atom atom = null;
+        try {
+            atom = (Atom) dataDiscoveryService.getManifest(guid);
+            return findLocations(atom);
+
+        } catch (ManifestNotFoundException e) {
+
+            return new LinkedList<>();
+        }
     }
 
     @Override
