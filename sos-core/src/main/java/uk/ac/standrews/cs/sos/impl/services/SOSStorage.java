@@ -250,15 +250,15 @@ public class SOSStorage implements Storage {
     @Override
     public Queue<LocationBundle> findLocations(IGUID guid) {
 
-        Atom atom = null;
+        Queue<LocationBundle> locationBundles = locationIndex.findLocations(guid);
+
         try {
-            atom = (Atom) dataDiscoveryService.getManifest(guid);
-            return findLocations(atom);
+            Atom atom = (Atom) dataDiscoveryService.getManifest(guid);
+            locationBundles.addAll(findLocations(atom));
 
-        } catch (ManifestNotFoundException e) {
+        } catch (ManifestNotFoundException ignored) { }
 
-            return new LinkedList<>();
-        }
+        return locationBundles;
     }
 
     @Override

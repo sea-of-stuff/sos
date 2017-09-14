@@ -139,6 +139,6 @@ public class SOSURL {
 
     private static String buildURLBase(Node node) {
         InetSocketAddress address = node.getHostAddress();
-        return HTTP_SCHEME + address.getHostName() + ":" + address.getPort() + BASE_PATH;
+        return HTTP_SCHEME + address.getAddress().getHostAddress() + ":" + address.getPort() + BASE_PATH;
     }
 }

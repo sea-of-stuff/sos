@@ -357,7 +357,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     private void initNodeMaintainer() {
 
-        NodeMaintainer nodeMaintainer = new NodeMaintainer(localStorage, dataDiscoveryService, storage, usersRolesService, contextService);
+        nodeMaintainer = new NodeMaintainer(localStorage, dataDiscoveryService, storage, usersRolesService, contextService);
 
         SettingsConfiguration.Settings.GlobalSettings.NodeMaintainerSettings nodeMaintainerSettings = SOSLocalNode.settings.getGlobal().getNodeMaintainer();
         if (nodeMaintainerSettings.isEnabled()) {
