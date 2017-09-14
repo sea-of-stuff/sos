@@ -32,14 +32,18 @@ public class WGraph {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         // We assume that the manifest is of type version
-        Manifest selectedManifest = sos.getAgent().getManifest(guid);
-        ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
-        MakeVersionGraph(graph, sos, selectedManifest);
+        try {
+            Manifest selectedManifest = sos.getAgent().getManifest(guid);
+            ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
+            MakeVersionGraph(graph, sos, selectedManifest);
 
-        return graph.toString();
+            return graph.toString();
+        } catch (ManifestNotFoundException e) {
+
+            return JSONHelper.JsonObjMapper().createObjectNode().toString();
+        }
     }
 
-    // TODO
     public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
 
         String guidParam = req.params("versionid");
@@ -68,7 +72,7 @@ public class WGraph {
     private static void MakeAssetGraph(ObjectNode graph, SOSLocalNode sos, IGUID invariant, boolean lookForContentEagerly) {
 
         ArrayNode nodes = AllVersionsNodesGraph(sos.getDDS(), invariant, lookForContentEagerly);
-        ArrayNode edges = AllVersionsEdgesGraph(sos.getDDS(), invariant);
+        ArrayNode edges = AllVersionsEdgesGraph(sos.getDDS(), invariant, lookForContentEagerly);
 
         graph.put("nodes", nodes);
         graph.put("edges", edges);
@@ -119,11 +123,18 @@ public class WGraph {
         return arrayNode;
     }
 
-    private static ArrayNode AllVersionsEdgesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant) {
+    private static ArrayNode AllVersionsEdgesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant, boolean lookForContentEagerly) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
-        Set<IGUID> versionRefs = dataDiscoveryService.getVersions(invariant);
+        NodesCollection nodesCollection;
+        try {
+            nodesCollection = lookForContentEagerly ? new NodesCollectionImpl(NodesCollection.TYPE.ANY) : new NodesCollectionImpl(NodesCollection.TYPE.LOCAL);
+        } catch (NodesCollectionException e) {
+            return arrayNode;
+        }
+
+        Set<IGUID> versionRefs = dataDiscoveryService.getVersions(nodesCollection, invariant);
         for(IGUID versionRef:versionRefs) {
 
             try {
@@ -201,11 +212,13 @@ public class WGraph {
             IGUID metaGUID = version.getMetadata();
             if (metaGUID != null && !metaGUID.isInvalid()) {
                 try {
-                    Metadata metadata = agent.getMetadata(metaGUID);
+                    Metadata metadata = agent.getMetadata(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), metaGUID);
                     ObjectNode metadataNode = ManifestNode(metadata);
                     arrayNode.add(metadataNode);
-                } catch (MetadataNotFoundException e) {
-                    System.err.println(e.getMessage());
+                } catch (NodesCollectionException | MetadataNotFoundException e) {
+
+                    ObjectNode unknownNode = UnknownNode(metaGUID);
+                    arrayNode.add(unknownNode);
                 }
             }
 

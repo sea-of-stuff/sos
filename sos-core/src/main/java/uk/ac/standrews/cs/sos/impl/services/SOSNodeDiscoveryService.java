@@ -108,7 +108,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         if (nodeToContact == null) {
             throw new NodeNotFoundException("Unable to find node for GUID: " + guid.toString());
         } else {
-            SOS_LOG.log(LEVEL.INFO, "Node with GUID " + guid + " was found: " + nodeToContact.toString());
+            SOS_LOG.log(LEVEL.INFO, "Node with GUID " + guid + " was found");
         }
 
         return nodeToContact;
@@ -256,6 +256,10 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         if (retval == null) {
             throw new NodeNotFoundException("Unable to find node with GUID " + nodeGUID);
         }
+
+        try {
+            registerNode(retval, true);
+        } catch (NodeRegistrationException ignored) { }
 
         return retval;
     }

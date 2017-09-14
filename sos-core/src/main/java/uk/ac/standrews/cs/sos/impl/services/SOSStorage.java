@@ -19,12 +19,15 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
 import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
+import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
@@ -180,16 +183,50 @@ public class SOSStorage implements Storage {
      * Return an InputStream for the given Atom.
      * The caller should ensure that the stream is closed.
      *
-     * TODO - find other locations from remote nodes?
-     *
      * @param atom describing the atom to retrieve.
      * @return data referenced by the atom
      */
     @Override
     public Data getAtomContent(Atom atom) throws AtomNotFoundException {
 
+        try {
+            return getAtomContent(new NodesCollectionImpl(NodesCollection.TYPE.ANY), atom);
+        } catch (NodesCollectionException e) {
+            throw new AtomNotFoundException();
+        }
+
+    }
+
+    private Data getAtomContent(NodesCollection nodesCollection, Atom atom) throws AtomNotFoundException {
+
+        Set<IGUID> nodeRefs = nodesCollection.nodesRefs();
+
         for (LocationBundle locationBundle : findLocations(atom)) {
             Location location = locationBundle.getLocation();
+
+            if (location instanceof SOSLocation) {
+
+                if (nodesCollection.type() == NodesCollection.TYPE.SPECIFIED) {
+
+                    if (!nodeRefs.contains(((SOSLocation) location).getMachineID())) {
+                        continue;
+                    }
+
+                } else if (nodesCollection.type() == NodesCollection.TYPE.LOCAL) {
+
+                    if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().getNodeGUID())) {
+                        continue;
+                    }
+
+                }
+
+            } else {
+
+                if (nodesCollection.type() == NodesCollection.TYPE.LOCAL || nodesCollection.type() == NodesCollection.TYPE.SPECIFIED) {
+                    continue;
+                }
+            }
+
             Data data = LocationUtility.getDataFromLocation(location);
 
             if (!(data instanceof EmptyData)) {
@@ -229,6 +266,23 @@ public class SOSStorage implements Storage {
             if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
                 Atom atom = (Atom) manifest;
                 return getAtomContent(atom);
+            }
+        } catch (ManifestNotFoundException e) {
+            throw new AtomNotFoundException();
+        }
+
+        return new EmptyData();
+    }
+
+    @Override
+    public Data getAtomContent(NodesCollection nodesCollection, IGUID guid) throws AtomNotFoundException {
+
+        try {
+            Manifest manifest = dataDiscoveryService.getManifest(nodesCollection, guid);
+
+            if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
+                Atom atom = (Atom) manifest;
+                return getAtomContent(nodesCollection, atom);
             }
         } catch (ManifestNotFoundException e) {
             throw new AtomNotFoundException();

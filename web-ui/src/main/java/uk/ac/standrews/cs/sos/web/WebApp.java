@@ -92,6 +92,8 @@ public class WebApp {
         get("node/stats/:nodeid", (req, res) -> WNodes.Stats(req, sos));
 
         get("/threads", (req, res) -> WContexts.Threads(sos));
+
+        post("/find/node", (req, res) -> WNodes.Find(req, sos));
     }
 
     private static void registerPostActionRoutes() {

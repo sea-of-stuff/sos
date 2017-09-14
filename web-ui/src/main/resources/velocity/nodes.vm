@@ -21,6 +21,15 @@
 
     <hr>
 
+    <h2>Find Node</h2>
+    <form action="/find/node" method="post">
+        Node ID<br>
+        <input type="text" name="nodeid" value="">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <hr>
+
     <h2>Known nodes</h2>
     #foreach($node in $nodes)
         <div class="row">

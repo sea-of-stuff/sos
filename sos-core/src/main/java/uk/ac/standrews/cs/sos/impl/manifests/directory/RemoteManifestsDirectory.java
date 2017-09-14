@@ -129,13 +129,14 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant) {
 
 
-        Set<IGUID> ddsGUIDsToCheck = null;
+        Set<IGUID> ddsGUIDsToCheck;
         try {
             ddsGUIDsToCheck = getDDSNodes(nodesCollection, invariant);
         } catch (NodeNotFoundException e) {
             return new LinkedHashSet<>();
         }
 
+        Set<IGUID> versionRefs = new LinkedHashSet<>();
         for(IGUID ddsGUID : ddsGUIDsToCheck) {
 
             try {
@@ -144,7 +145,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
                 FetchVersions fetchVersions = new FetchVersions(node, invariant);
                 TasksQueue.instance().performSyncTask(fetchVersions);
 
-                return fetchVersions.getVersions();
+                versionRefs.addAll(fetchVersions.getVersions());
 
             } catch (NodeNotFoundException | IOException e) {
                 SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch versions for invariant " + invariant.toMultiHash()+ " from Node with GUID " + ddsGUID.toMultiHash());
@@ -152,7 +153,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         }
 
-        return new LinkedHashSet<>();
+        return versionRefs;
     }
 
     @Override
@@ -164,8 +165,12 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         if (nodesCollection.type().equals(NodesCollection.TYPE.SPECIFIED)) {
             NodesCollection ddsNodesOnly = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, NO_LIMIT);
             ddsGUIDsToCheck = ddsNodesOnly.nodesRefs();
-        } else {
+        } else if (nodesCollection.type().equals(NodesCollection.TYPE.ANY)){
             // Get DDS nodes where we know the entity could be
+            ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
+                    .map(Node::getNodeGUID)
+                    .collect(Collectors.toSet());
+        } else {
             ddsGUIDsToCheck = ddsIndex.getDDSRefs(guid);
         }
 

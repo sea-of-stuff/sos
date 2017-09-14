@@ -156,7 +156,6 @@ public class DataReplication extends Task {
     private boolean transferDataAndUpdateNodeState(InputStream data, Node node, Storage storage) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.getNodeGUID().toMultiHash());
 
-
         try {
             Atom atom = transferDataRequest(data, node);
             SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.getNodeGUID().toMultiHash());
@@ -164,8 +163,6 @@ public class DataReplication extends Task {
             for(LocationBundle locationBundle:atom.getLocations()) {
                 storage.addLocation(atom.guid(), locationBundle);
             }
-
-
 
         } catch (SOSProtocolException e) {
             SOS_LOG.log(LEVEL.ERROR, e.getMessage());

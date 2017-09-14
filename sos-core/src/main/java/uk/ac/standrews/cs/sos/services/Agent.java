@@ -139,6 +139,7 @@ public interface Agent {
      * @return SOSMetadata mapped with the guid
      */
     Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+    Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException;
 
     /**
      * Verify the manifest signature against the given role.

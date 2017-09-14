@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 
@@ -88,6 +89,8 @@ public interface Storage {
      * @throws AtomNotFoundException if the atom was not found
      */
     Data getAtomContent(IGUID guid) throws AtomNotFoundException;
+
+    Data getAtomContent(NodesCollection nodesCollection, IGUID guid) throws AtomNotFoundException;
 
     /**
      * Add a new location for the atom matching that guid

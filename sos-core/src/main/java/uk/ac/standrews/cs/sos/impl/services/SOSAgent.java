@@ -248,6 +248,12 @@ public class SOSAgent implements Agent {
         return metadataService.getMetadata(guid);
     }
 
+    @Override
+    public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {
+
+        return metadataService.getMetadata(nodesCollection, guid);
+    }
+
     private void addManifest(Manifest manifest) throws ManifestPersistException {
         dataDiscoveryService.addManifest(manifest);
     }

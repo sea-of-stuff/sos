@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 
 /**
  * Metadata Service
@@ -38,4 +39,5 @@ public interface MetadataService {
      * @throws MetadataNotFoundException
      */
     Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+    Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException;
 }

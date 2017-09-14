@@ -17,8 +17,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
@@ -196,21 +198,28 @@ public class WData {
             Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
             if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-                return GetData(sos, version, LARGE_DATA_LIMIT);
+                return GetData(sos, version, LARGE_DATA_LIMIT, false);
             }
         }
 
         return "N/A";
     }
 
-    public static String GetData(SOSLocalNode sos, Version version, int limit) throws AtomNotFoundException {
+    public static String GetData(SOSLocalNode sos, Version version, int limit, boolean local) throws AtomNotFoundException {
 
-        Data data = sos.getStorage().getAtomContent(version.getContentGUID());
+        NodesCollection nodesCollection;
+        try {
+            nodesCollection = local ? new NodesCollectionImpl(NodesCollection.TYPE.LOCAL) : new NodesCollectionImpl(NodesCollection.TYPE.ANY);
+        } catch (NodesCollectionException e) {
+            return "N/A";
+        }
+
+        Data data = sos.getStorage().getAtomContent(nodesCollection, version.getContentGUID());
 
         String type = "Raw";
         try {
             if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                Metadata metadata = sos.getMMS().getMetadata(nodesCollection, version.getMetadata());
                 type = metadata.getPropertyAsString("Content-Type");
             }
         } catch (MetadataNotFoundException ignored) { }
