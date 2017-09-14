@@ -377,6 +377,9 @@ public class WData {
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
                 guid = version.getContentGUID();
+
+            } else if (manifest.getType().equals(ManifestType.COMPOUND)) {
+                return "N/A";
             }
 
             Queue<LocationBundle> locations = sos.getStorage().findLocations(guid);

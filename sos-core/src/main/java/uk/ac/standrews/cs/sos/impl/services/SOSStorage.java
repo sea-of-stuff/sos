@@ -49,6 +49,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl.comparator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -96,7 +99,7 @@ public class SOSStorage implements Storage {
     @Override
     public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
 
-        Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
+        Set<LocationBundle> bundles = new TreeSet<>(comparator());
 
         IGUID guid = addAtom(atomBuilder, bundles).getGuid();
         if (guid == null || guid.isInvalid()) {
@@ -128,7 +131,7 @@ public class SOSStorage implements Storage {
         if (atomBuilder.getRole() == null)
             throw new DataStorageException();
 
-        Set<LocationBundle> bundles = new TreeSet<>(LocationsIndexImpl.comparator());
+        Set<LocationBundle> bundles = new TreeSet<>(comparator());
 
         // Make sure that a role is being used
         try {
@@ -223,7 +226,7 @@ public class SOSStorage implements Storage {
         try {
             Manifest manifest = dataDiscoveryService.getManifest(guid);
 
-            if (manifest.getType() == ManifestType.ATOM) {
+            if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
                 Atom atom = (Atom) manifest;
                 return getAtomContent(atom);
             }
@@ -241,24 +244,30 @@ public class SOSStorage implements Storage {
 
     @Override
     public Queue<LocationBundle> findLocations(Atom atom) {
-        Queue<LocationBundle> locationBundles = locationIndex.findLocations(atom.guid());
+        Queue<LocationBundle> locationBundles = new PriorityQueue<>(comparator());
+        locationBundles.addAll(locationIndex.findLocations(atom.guid()));
         locationBundles.addAll(atom.getLocations());
 
-        return locationBundles;
+        return locationBundles.stream().distinct().collect(Collectors.toCollection(PriorityQueue::new));
     }
 
     @Override
     public Queue<LocationBundle> findLocations(IGUID guid) {
 
-        Queue<LocationBundle> locationBundles = locationIndex.findLocations(guid);
+        Queue<LocationBundle> locationBundles = new PriorityQueue<>(comparator());
+        locationBundles.addAll(locationIndex.findLocations(guid));
 
         try {
-            Atom atom = (Atom) dataDiscoveryService.getManifest(guid);
-            locationBundles.addAll(findLocations(atom));
+            Manifest manifest = dataDiscoveryService.getManifest(guid);
+            if (manifest.getType().equals(ManifestType.ATOM) || manifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+                Atom atom = (Atom) manifest;
+                Queue<LocationBundle> locs = findLocations(atom);
+                locationBundles.addAll(locs);
+            }
 
         } catch (ManifestNotFoundException ignored) { }
 
-        return locationBundles;
+        return locationBundles.stream().distinct().collect(Collectors.toCollection(PriorityQueue::new));
     }
 
     @Override
