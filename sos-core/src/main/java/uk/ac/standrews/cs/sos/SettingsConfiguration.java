@@ -388,6 +388,7 @@ public class SettingsConfiguration {
 
                 private boolean startupRegistration;
                 private boolean bootstrap = true;
+                private boolean ping = false;
 
                 public NDSSettings() {}
 
@@ -406,6 +407,14 @@ public class SettingsConfiguration {
                 public void setBootstrap(boolean bootstrap) {
                     this.bootstrap = bootstrap;
                 }
+
+                public boolean isPing() {
+                    return ping;
+                }
+
+                public void setPing(boolean ping) {
+                    this.ping = ping;
+                }
             }
 
             public static class MMSSettings extends RoleSettings {
@@ -420,7 +429,6 @@ public class SettingsConfiguration {
 
                 private String cacheFile;
                 private String indexFile;
-                private boolean ping = false;
 
                 public DDSSettings() {}
 
@@ -446,14 +454,6 @@ public class SettingsConfiguration {
 
                 public void setMaxReplication(int maxReplication) {
                     this.maxReplication = maxReplication;
-                }
-
-                public boolean isPing() {
-                    return ping;
-                }
-
-                public void setPing(boolean ping) {
-                    this.ping = ping;
                 }
             }
 
