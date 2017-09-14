@@ -115,6 +115,7 @@ public class ManifestReplicationTest {
         Node node = mock(Node.class);
         when(node.getNodeGUID()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
+        when(node.getHostname()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -174,6 +175,7 @@ public class ManifestReplicationTest {
         Node node = mock(Node.class);
         when(node.getNodeGUID()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
+        when(node.getHostname()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -193,6 +195,7 @@ public class ManifestReplicationTest {
         Node node = mock(Node.class);
         when(node.getNodeGUID()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
+        when(node.getHostname()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();

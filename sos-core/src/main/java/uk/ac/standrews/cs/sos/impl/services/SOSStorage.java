@@ -248,7 +248,13 @@ public class SOSStorage implements Storage {
         locationBundles.addAll(locationIndex.findLocations(atom.guid()));
         locationBundles.addAll(atom.getLocations());
 
-        return locationBundles.stream().distinct().collect(Collectors.toCollection(PriorityQueue::new));
+        Queue<LocationBundle> retval = new PriorityQueue<>(comparator());
+        retval.addAll(
+                locationBundles.stream()
+                        .distinct()
+                        .collect(Collectors.toList())
+        );
+        return retval;
     }
 
     @Override
@@ -267,7 +273,13 @@ public class SOSStorage implements Storage {
 
         } catch (ManifestNotFoundException ignored) { }
 
-        return locationBundles.stream().distinct().collect(Collectors.toCollection(PriorityQueue::new));
+        Queue<LocationBundle> retval = new PriorityQueue<>(comparator());
+        retval.addAll(
+                locationBundles.stream()
+                        .distinct()
+                        .collect(Collectors.toList())
+        );
+        return retval;
     }
 
     @Override
