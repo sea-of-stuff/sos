@@ -209,6 +209,11 @@ public class SOSAgent implements Agent {
     }
 
     @Override
+    public Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ManifestNotFoundException {
+        return dataDiscoveryService.getManifest(nodesCollection, guid);
+    }
+
+    @Override
     public boolean verifyManifestSignature(Role role, Manifest manifest) throws SignatureException {
 
         return manifest.verifySignature(role);

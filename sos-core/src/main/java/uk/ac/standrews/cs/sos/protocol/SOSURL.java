@@ -41,6 +41,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL DDS_GET_VERSIONS(Node node, IGUID invariant) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "dds/versions/invariant/" + invariant.toMultiHash();
+
+        return makeURL(url);
+    }
+
     public static URL MMS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "mms/metadata/guid/" + guid.toMultiHash();

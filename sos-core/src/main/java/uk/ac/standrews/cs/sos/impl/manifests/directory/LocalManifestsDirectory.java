@@ -20,6 +20,9 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
  * IDirectory for the manifests stored locally to this node
  *
@@ -75,6 +78,12 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         }
 
         return getManifestFromGUID(guid);
+    }
+
+    @Override
+    public Set<IGUID> getVersions(IGUID invariant) {
+        // TODO - implement this method
+        return new LinkedHashSet<>();
     }
 
     @Override

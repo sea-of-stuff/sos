@@ -35,10 +35,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
 import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
@@ -178,7 +175,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
             if (manifest == null && !nodes.type().equals(LOCAL)) {
 
-                manifest = remote.findManifest(guid, nodes);
+                manifest = remote.findManifest(nodes, guid);
                 if (manifest != null) {
                     inMemoryCache.addManifest(manifest);
                     local.addManifest(manifest);
@@ -232,8 +229,29 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     @Override
     public Set<IGUID> getVersions(IGUID invariant) {
 
-        // TODO - check the local disk too?
-        return inMemoryCache.getVersions(invariant);
+
+        try {
+            return getVersions(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), invariant);
+        } catch (NodesCollectionException e) {
+            return new LinkedHashSet<>();
+        }
+
+    }
+
+    @Override
+    public Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant) {
+
+        Set<IGUID> versions = new LinkedHashSet<>();
+        versions.addAll(inMemoryCache.getVersions(invariant));
+        versions.addAll(local.getVersions(invariant)); // THIS MIGHT BE SLOW
+
+        if (!nodesCollection.type().equals(NodesCollection.TYPE.LOCAL)) {
+
+            versions.addAll(remote.getVersions(nodesCollection, invariant));
+        }
+
+        return versions;
+
     }
 
     @Override

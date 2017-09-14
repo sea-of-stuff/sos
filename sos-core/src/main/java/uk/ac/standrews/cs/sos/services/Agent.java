@@ -119,6 +119,7 @@ public interface Agent {
      *
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+    Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ManifestNotFoundException;
 
     /**
      * Generate and add metadata for this atom

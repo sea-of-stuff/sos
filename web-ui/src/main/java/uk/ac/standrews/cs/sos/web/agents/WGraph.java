@@ -11,6 +11,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
+import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.Agent;
@@ -37,6 +39,7 @@ public class WGraph {
         return graph.toString();
     }
 
+    // TODO
     public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
 
         String guidParam = req.params("versionid");
@@ -48,7 +51,7 @@ public class WGraph {
 
         Version version = (Version) manifest;
         ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
-        MakeAssetGraph(graph, sos, version.getInvariantGUID());
+        MakeAssetGraph(graph, sos, version.getInvariantGUID(), true);
 
         return graph.toString();
     }
@@ -62,20 +65,27 @@ public class WGraph {
         graph.put("edges", edges);
     }
 
-    private static void MakeAssetGraph(ObjectNode graph, SOSLocalNode sos, IGUID invariant) {
+    private static void MakeAssetGraph(ObjectNode graph, SOSLocalNode sos, IGUID invariant, boolean lookForContentEagerly) {
 
-        ArrayNode nodes = AllVersionsNodesGraph(sos.getDDS(), invariant);
+        ArrayNode nodes = AllVersionsNodesGraph(sos.getDDS(), invariant, lookForContentEagerly);
         ArrayNode edges = AllVersionsEdgesGraph(sos.getDDS(), invariant);
 
         graph.put("nodes", nodes);
         graph.put("edges", edges);
     }
 
-    private static ArrayNode AllVersionsNodesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant) {
+    private static ArrayNode AllVersionsNodesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant, boolean lookForContentEagerly) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
-        Set<IGUID> versionRefs = dataDiscoveryService.getVersions(invariant);
+        NodesCollection nodesCollection;
+        try {
+            nodesCollection = lookForContentEagerly ? new NodesCollectionImpl(NodesCollection.TYPE.ANY) : new NodesCollectionImpl(NodesCollection.TYPE.LOCAL);
+        } catch (NodesCollectionException e) {
+            return arrayNode;
+        }
+
+        Set<IGUID> versionRefs = dataDiscoveryService.getVersions(nodesCollection, invariant);
         for(IGUID versionRef:versionRefs) {
 
             try {
@@ -160,10 +170,10 @@ public class WGraph {
 
             // Content
             try {
-                Manifest contentManifest = agent.getManifest(version.getContentGUID());
+                Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), version.getContentGUID());
                 ObjectNode contentNode = ManifestNode(contentManifest);
                 arrayNode.add(contentNode);
-            } catch (ManifestNotFoundException e) {
+            } catch (NodesCollectionException | ManifestNotFoundException e) {
 
                 ObjectNode unknownNode = UnknownNode(version.getContentGUID());
                 arrayNode.add(unknownNode);
@@ -176,10 +186,10 @@ public class WGraph {
                 for (IGUID prev : prevs) {
 
                     try {
-                        Manifest previousManifest = agent.getManifest(prev);
+                        Manifest previousManifest = agent.getManifest(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), prev);
                         ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toMultiHash());
                         arrayNode.add(prevNode);
-                    } catch (ManifestNotFoundException e) {
+                    } catch (NodesCollectionException | ManifestNotFoundException e) {
 
                         ObjectNode unknownNode = UnknownNode(prev);
                         arrayNode.add(unknownNode);
@@ -208,10 +218,10 @@ public class WGraph {
             for(Content content:contents) {
 
                 try {
-                    Manifest contentManifest = agent.getManifest(content.getGUID());
+                    Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), content.getGUID());
                     ObjectNode contentNode = ManifestNode(contentManifest);
                     arrayNode.add(contentNode);
-                } catch (ManifestNotFoundException e) {
+                } catch (NodesCollectionException | ManifestNotFoundException e) {
 
                     ObjectNode unknownNode = UnknownNode(content.getGUID());
                     arrayNode.add(unknownNode);

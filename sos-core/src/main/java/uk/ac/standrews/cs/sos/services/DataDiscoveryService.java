@@ -131,6 +131,7 @@ public interface DataDiscoveryService {
      * @return set of versions references
      */
     Set<IGUID> getVersions(IGUID invariant);
+    Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
 
     /**
      * Flushes the in-memory caches and indices into disk

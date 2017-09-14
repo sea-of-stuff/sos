@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.rest.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -24,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
 
@@ -122,6 +124,36 @@ public class RESTDDS {
         // then should make a call to /compound/data/finalise (containing json of all components)
         // storage node should have the "freedom" to delete the data until finalise call
         return null;
+    }
+
+    @GET
+    @Path("/versions/invariant/{invariant}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    public Response getVersions(@PathParam("invariant") String invariant, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/versions/invariant/{invariant}");
+
+
+        if (invariant == null || invariant.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        IGUID manifestGUID;
+        try {
+            manifestGUID = GUIDFactory.recreateGUID(invariant);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+
+        DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
+        Set<IGUID> versions = dataDiscoveryService.getVersions(manifestGUID);
+
+        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        for(IGUID version:versions) {
+            arrayNode.add(version.toMultiHash());
+        }
+
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge, arrayNode.toString());
     }
 
     private Manifest getManifest(ManifestType type, String json) throws IOException {
