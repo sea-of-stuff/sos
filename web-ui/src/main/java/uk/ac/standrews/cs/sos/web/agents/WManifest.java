@@ -16,14 +16,20 @@ import java.io.IOException;
  */
 public class WManifest {
 
-    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, IOException {
+    public static String Render(Request req, SOSLocalNode sos) throws GUIDGenerationException, IOException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getAgent().getManifest(guid);
 
-        ObjectMapper mapper = new ObjectMapper();
-        Object json = mapper.readValue(manifest.toString(), Object.class);
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+        try {
+            Manifest manifest = sos.getAgent().getManifest(guid);
+            ObjectMapper mapper = new ObjectMapper();
+            Object json = mapper.readValue(manifest.toString(), Object.class);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+
+        } catch (ManifestNotFoundException e) {
+
+            return "Manifest Not Found";
+        }
     }
 }

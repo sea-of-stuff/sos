@@ -274,7 +274,7 @@ public class WGraph {
             // Metadata
             IGUID metaGUID = version.getMetadata();
             if (metaGUID != null && !metaGUID.isInvalid()) {
-                ObjectNode metadataNode = MakeEdge(version.guid(), metaGUID);
+                ObjectNode metadataNode = MakeEdge(version.guid(), metaGUID, "", "Meta");
                 arrayNode.add(metadataNode);
             }
 

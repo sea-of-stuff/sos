@@ -23,10 +23,12 @@
 
     <h2>Find Node</h2>
     <form action="/find/node" method="post">
-        Node ID<br>
-        <input type="text" name="nodeid" value="">
-        <br>
-        <input type="submit" value="Submit">
+        <div class="form-group">
+            <label for="findNodeGUID">Node GUID</label>
+            <input type="text" class="form-control" id="findNodeGUID" name="nodeid">
+            <small class="form-text text-muted">Click submit to find the node. If found, the node will be added to the known nodes.</small>
+        </div>
+        <button type="submit" class="btn btn-success">Find</button>
     </form>
     <hr>
 

@@ -37,13 +37,13 @@ public class WNodes {
         return sos.getNDS().infoNode(nodeid);
     }
 
-    public static String Find(Request request, SOSLocalNode sos) throws GUIDGenerationException, NodeNotFoundException {
+    public static String Find(Request request, SOSLocalNode sos) throws GUIDGenerationException, NodeNotFoundException, JsonProcessingException {
 
         String q = request.queryParams("nodeid");
         IGUID nodeid = GUIDFactory.recreateGUID(q);
         sos.getNDS().getNode(nodeid); // force the nds to look for the node and register it?
 
-        return VelocityUtils.RenderTemplate("velocity/nodes.vm");
+        return Render(sos);
     }
 
     public static String Stats(Request request, SOSLocalNode sos) throws GUIDGenerationException {
