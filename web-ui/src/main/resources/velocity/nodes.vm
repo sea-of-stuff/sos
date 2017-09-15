@@ -26,7 +26,7 @@
         <div class="form-group">
             <label for="findNodeGUID">Node GUID</label>
             <input type="text" class="form-control" id="findNodeGUID" name="nodeid">
-            <small class="form-text text-muted">Click submit to find the node. If found, the node will be added to the known nodes.</small>
+            <small class="form-text text-muted">Use this form to find a node. If found, the node will be added to the known nodes.</small>
         </div>
         <button type="submit" class="btn btn-success">Find</button>
     </form>

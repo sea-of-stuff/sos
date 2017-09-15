@@ -77,10 +77,15 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
 
             for(Content content:contents) {
 
-                String encryptedLabel = SymmetricEncryption.encrypt(key, content.getLabel());
+                if (content.getLabel() != null) { // labels are optional
+                    String encryptedLabel = SymmetricEncryption.encrypt(key, content.getLabel());
 
-                Content encryptedContent = new ContentImpl(encryptedLabel, content.getGUID());
-                encryptedContents.add(encryptedContent);
+                    Content encryptedContent = new ContentImpl(encryptedLabel, content.getGUID());
+                    encryptedContents.add(encryptedContent);
+                } else {
+
+                    encryptedContents.add(content);
+                }
             }
 
             String encryptedKey = signer.encrypt(key);
