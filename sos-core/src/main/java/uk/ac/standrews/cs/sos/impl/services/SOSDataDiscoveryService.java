@@ -247,7 +247,8 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
         if (!nodesCollection.type().equals(NodesCollection.TYPE.LOCAL)) {
 
-            versions.addAll(remote.getVersions(nodesCollection, invariant));
+            Set<IGUID> remotes = remote.getVersions(nodesCollection, invariant);
+            versions.addAll(remotes);
         }
 
         return versions;

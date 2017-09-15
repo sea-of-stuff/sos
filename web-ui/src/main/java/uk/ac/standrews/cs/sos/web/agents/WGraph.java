@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class WGraph {
 
-    public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
+    public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
@@ -44,20 +44,25 @@ public class WGraph {
         }
     }
 
-    public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
+    public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException {
 
         String guidParam = req.params("versionid");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
-        // We assume that the manifest is of type version
-        Manifest manifest = sos.getAgent().getManifest(guid);
-        if (!manifest.getType().equals(ManifestType.VERSION)) return "Version manifest should be selected";
+        try {
+            // We assume that the manifest is of type version
+            Manifest manifest = sos.getAgent().getManifest(guid);
+            if (!manifest.getType().equals(ManifestType.VERSION)) return "Version manifest should be selected";
 
-        Version version = (Version) manifest;
-        ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
-        MakeAssetGraph(graph, sos, version.getInvariantGUID(), true);
+            Version version = (Version) manifest;
+            ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
+            MakeAssetGraph(graph, sos, version.getInvariantGUID(), true);
 
-        return graph.toString();
+            return graph.toString();
+        } catch (ManifestNotFoundException e) {
+
+            return JSONHelper.JsonObjMapper().createObjectNode().toString();
+        }
     }
 
     private static void MakeVersionGraph(ObjectNode graph, SOSLocalNode sos, Manifest selectedManifest) {

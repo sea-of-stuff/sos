@@ -51,7 +51,7 @@ public class WData {
 
     private static Set<Content> pendingContents = new LinkedHashSet<>();
 
-    public static String AddDataVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, IOException, ServletException, ManifestNotFoundException {
+    public static String AddDataVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, IOException, ServletException {
 
         request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
@@ -94,11 +94,14 @@ public class WData {
 
             Version version = sos.getAgent().addData(versionBuilder);
             return version.toString();
+
+        } catch (ManifestNotFoundException e) {
+            return "Unable to add data version";
         }
 
     }
 
-    public static String AddCompoundVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, ManifestNotFoundException {
+    public static String AddCompoundVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException {
 
         String roleidSign = request.params("roleidsign");
         String roleid = request.params("roleid");
@@ -108,41 +111,46 @@ public class WData {
         boolean protect = !roleid.equals("0");
         boolean update = !prev.equals("0");
 
-        CompoundBuilder compoundBuilder = new CompoundBuilder()
-                .setType(CompoundType.COLLECTION)
-                .setContents(pendingContents); // see pending atoms
+        try {
+            CompoundBuilder compoundBuilder = new CompoundBuilder()
+                    .setType(CompoundType.COLLECTION)
+                    .setContents(pendingContents); // see pending atoms
 
-        pendingContents = new LinkedHashSet<>(); // reset
+            pendingContents = new LinkedHashSet<>(); // reset
 
-        if (protect) {
-            IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
-            Role roleToProtect = sos.getRMS().getRole(roleGUID);
-            compoundBuilder.setRole(roleToProtect);
+            if (protect) {
+                IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
+                Role roleToProtect = sos.getRMS().getRole(roleGUID);
+                compoundBuilder.setRole(roleToProtect);
+            }
+            VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
+
+            if (sign) {
+                IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
+                Role roleToSign = sos.getRMS().getRole(signerGUID);
+                versionBuilder.setRole(roleToSign);
+            }
+
+            if (update) {
+                IGUID prevGUID = GUIDFactory.recreateGUID(prev);
+                Version version = (Version) sos.getDDS().getManifest(prevGUID);
+
+                Set<IGUID> prevs = new LinkedHashSet<>();
+                prevs.add(prevGUID);
+
+                versionBuilder.setInvariant(version.getInvariantGUID())
+                        .setPrevious(prevs);
+            }
+
+            Version version = sos.getAgent().addCollection(versionBuilder);
+            return version.toString();
+
+        } catch (ManifestNotFoundException e) {
+            return "Unable to add compound version";
         }
-        VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
-
-        if (sign) {
-            IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
-            Role roleToSign = sos.getRMS().getRole(signerGUID);
-            versionBuilder.setRole(roleToSign);
-        }
-
-        if (update) {
-            IGUID prevGUID = GUIDFactory.recreateGUID(prev);
-            Version version = (Version) sos.getDDS().getManifest(prevGUID);
-
-            Set<IGUID> prevs = new LinkedHashSet<>();
-            prevs.add(prevGUID);
-
-            versionBuilder.setInvariant(version.getInvariantGUID())
-                    .setPrevious(prevs);
-        }
-
-        Version version = sos.getAgent().addCollection(versionBuilder);
-        return version.toString();
     }
 
-    public static String AddCompoundVersionFromSelectedVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, ManifestNotFoundException, IOException {
+    public static String AddCompoundVersionFromSelectedVersion(Request request, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException, IOException {
 
         pendingContents = new LinkedHashSet<>();
 
@@ -155,7 +163,7 @@ public class WData {
         return AddCompoundVersion(request, sos);
     }
 
-    public static String AddDataForCompound(Request request, SOSLocalNode sos) throws IOException, ServletException, DataStorageException, ManifestPersistException, GUIDGenerationException, RoleNotFoundException, ManifestNotMadeException {
+    public static String AddDataForCompound(Request request, SOSLocalNode sos) throws IOException, ServletException, GUIDGenerationException, RoleNotFoundException {
 
         request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
@@ -183,29 +191,37 @@ public class WData {
             pendingContents.add(new ContentImpl(contentName, atom.guid()));
 
             return atom.toString();
+
+        } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
+            return "Unable to add data for compound";
         }
 
     }
 
-    public static String GetData(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException {
+    public static String GetData(Request req, SOSLocalNode sos) throws GUIDGenerationException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getAgent().getManifest(guid);
 
-        if (manifest.getType().equals(ManifestType.VERSION)) {
-            Version version = (Version) manifest;
-            Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
-            if (contentManifest.getType().equals(ManifestType.ATOM)) {
+        try {
+            Manifest manifest = sos.getAgent().getManifest(guid);
 
-                return GetData(sos, version, LARGE_DATA_LIMIT, false);
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+                Version version = (Version) manifest;
+                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                if (contentManifest.getType().equals(ManifestType.ATOM)) {
+
+                    return GetData(sos, version, LARGE_DATA_LIMIT, false);
+                }
             }
+        } catch (ManifestNotFoundException e) {
+            return "Unable to find manifest/data for GUID: " + guid.toMultiHash();
         }
 
         return "N/A";
     }
 
-    public static String GetData(SOSLocalNode sos, Version version, int limit, boolean local) throws AtomNotFoundException {
+    public static String GetData(SOSLocalNode sos, Version version, int limit, boolean local) {
 
         NodesCollection nodesCollection;
         try {
@@ -214,7 +230,12 @@ public class WData {
             return "N/A";
         }
 
-        Data data = sos.getStorage().getAtomContent(nodesCollection, version.getContentGUID());
+        Data data;
+        try {
+            data = sos.getStorage().getAtomContent(nodesCollection, version.getContentGUID());
+        } catch (AtomNotFoundException e) {
+            return "Unable to get data";
+        }
 
         String type = "Raw";
         try {
@@ -227,152 +248,179 @@ public class WData {
         return GetData(type, data, limit);
     }
 
-    public static String GetDataDownload(Request req, Response response, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException, IOException {
+    public static String GetDataDownload(Request req, Response response, SOSLocalNode sos) throws GUIDGenerationException, IOException {
 
         String guidParam = req.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getAgent().getManifest(guid);
-
-        if (manifest.getType().equals(ManifestType.VERSION)) {
-            Version version = (Version) manifest;
-            Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
-            if (contentManifest.getType().equals(ManifestType.ATOM)) {
-
-                String extension = "";
-                if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                    Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
-                    String contentType = metadata.getPropertyAsString("Content-Type");
-                    response.type(contentType);
-
-                    extension = GetExtension(contentType);
-                }
-
-                response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
-                Data data = sos.getStorage().getAtomContent(version.getContentGUID());
-                try(OutputStream out = response.raw().getOutputStream()) {
-                    IOUtils.copy(data.getInputStream(), out);
-                }
-                return "";
-            }
-        }
-
-        return "N/A";
-    }
-
-    public static String GetProtectedData(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException, RoleNotFoundException {
-
-        String guidParam = req.params("id");
-        IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getAgent().getManifest(guid);
-
-        IGUID roleid = GUIDFactory.recreateGUID(req.params("roleid"));
-        Role role = sos.getRMS().getRole(roleid);
-
-        if (manifest.getType().equals(ManifestType.VERSION)) {
-            Version version = (Version) manifest;
-            Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
-            if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
-
-                try {
-                    return GetProtectedData(sos, version, (SecureAtom) contentManifest, role);
-                } catch (DataNotFoundException e) {
-
-                    return "Unable to get Protected Data";
-                }
-            }
-        }
-
-        return "N/A";
-    }
-
-    public static String GetProtectedDataDownload(Request req, Response response, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException, IOException, RoleNotFoundException {
-
-        String guidParam = req.params("id");
-        IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getAgent().getManifest(guid);
-
-        IGUID roleid = GUIDFactory.recreateGUID(req.params("roleid"));
-        Role role = sos.getRMS().getRole(roleid);
-
-        if (manifest.getType().equals(ManifestType.VERSION)) {
-            Version version = (Version) manifest;
-            Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
-            if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
-
-                String extension = "";
-                if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                    Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
-                    String contentType = metadata.getPropertyAsString("Content-Type");
-                    response.type(contentType);
-
-                    extension = GetExtension(contentType);
-                }
-
-                response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
-                try(OutputStream out = response.raw().getOutputStream()) {
-                    Data data = sos.getStorage().getSecureAtomContent((SecureAtom) contentManifest, role);
-                    IOUtils.copy(data.getInputStream(), out);
-
-
-                } catch (DataNotFoundException e) {
-                    response.status(404);
-                    return "";
-                }
-                return "";
-            }
-        }
-
-        return "N/A";
-    }
-
-    public static String GrantAccess(Request req, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, MetadataNotFoundException, AtomNotFoundException, RoleNotFoundException {
-
-        String guidParam = req.params("id");
-        IGUID guid = GUIDFactory.recreateGUID(guidParam);
-        Manifest manifest = sos.getAgent().getManifest(guid);
-
-        IGUID roleid = GUIDFactory.recreateGUID(req.params("granter"));
-        Role granter = sos.getRMS().getRole(roleid);
-
-        roleid = GUIDFactory.recreateGUID(req.params("grantee"));
-        Role grantee = sos.getRMS().getRole(roleid);
-
-        SecureAtom secureAtom;
-        Manifest retrieved = manifest;
-        if(manifest.getType().equals(ManifestType.VERSION)) {
-
-            retrieved = sos.getAgent().getManifest(((Version) manifest).getContentGUID());
-        }
-
-        if (retrieved.getType().equals(ManifestType.ATOM_PROTECTED)) {
-            secureAtom = (SecureAtom) retrieved;
-        } else {
-            return "No protected atom";
-        }
 
         try {
-            sos.getStorage().grantAccess(secureAtom, granter, grantee);
+            Manifest manifest = sos.getAgent().getManifest(guid);
 
-            return "Access granted";
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+                Version version = (Version) manifest;
+                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-        } catch (ProtectionException e) {
-            return "Unable to grant access";
+                    String extension = "";
+                    if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
+                        Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                        String contentType = metadata.getPropertyAsString("Content-Type");
+                        response.type(contentType);
+
+                        extension = GetExtension(contentType);
+                    }
+
+                    response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
+                    Data data = sos.getStorage().getAtomContent(version.getContentGUID());
+                    try (OutputStream out = response.raw().getOutputStream()) {
+                        IOUtils.copy(data.getInputStream(), out);
+                    }
+                    return "";
+                }
+            }
+
+        } catch (ManifestNotFoundException | MetadataNotFoundException | AtomNotFoundException e) {
+            return "Unable to get data for download";
+        }
+
+        return "N/A";
+    }
+
+    public static String GetProtectedData(Request req, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException {
+
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+
+        try {
+            Manifest manifest = sos.getAgent().getManifest(guid);
+
+            IGUID roleid = GUIDFactory.recreateGUID(req.params("roleid"));
+            Role role = sos.getRMS().getRole(roleid);
+
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+                Version version = (Version) manifest;
+                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+
+                    try {
+                        return GetProtectedData(sos, version, (SecureAtom) contentManifest, role);
+                    } catch (DataNotFoundException e) {
+
+                        return "Unable to get Protected Data";
+                    }
+                }
+            }
+
+        } catch (ManifestNotFoundException | AtomNotFoundException e) {
+            return "Unable to get Protected Data";
+        }
+
+        return "N/A";
+    }
+
+    public static String GetProtectedDataDownload(Request req, Response response, SOSLocalNode sos) throws GUIDGenerationException, IOException, RoleNotFoundException {
+
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+
+        try {
+            Manifest manifest = sos.getAgent().getManifest(guid);
+
+            IGUID roleid = GUIDFactory.recreateGUID(req.params("roleid"));
+            Role role = sos.getRMS().getRole(roleid);
+
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+                Version version = (Version) manifest;
+                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+
+                    String extension = "";
+                    if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
+                        Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                        String contentType = metadata.getPropertyAsString("Content-Type");
+                        response.type(contentType);
+
+                        extension = GetExtension(contentType);
+                    }
+
+                    response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
+                    try (OutputStream out = response.raw().getOutputStream()) {
+                        Data data = sos.getStorage().getSecureAtomContent((SecureAtom) contentManifest, role);
+                        IOUtils.copy(data.getInputStream(), out);
+
+
+                    } catch (DataNotFoundException e) {
+                        response.status(404);
+                        return "";
+                    }
+                    return "";
+                }
+            }
+        } catch (MetadataNotFoundException | ManifestNotFoundException e) {
+            return "Unable to get Protected Data for download";
+        }
+
+        return "N/A";
+    }
+
+    public static String GrantAccess(Request req, SOSLocalNode sos) throws GUIDGenerationException, RoleNotFoundException {
+
+        String guidParam = req.params("id");
+        IGUID guid = GUIDFactory.recreateGUID(guidParam);
+
+        try {
+            Manifest manifest = sos.getAgent().getManifest(guid);
+
+            IGUID roleid = GUIDFactory.recreateGUID(req.params("granter"));
+            Role granter = sos.getRMS().getRole(roleid);
+
+            roleid = GUIDFactory.recreateGUID(req.params("grantee"));
+            Role grantee = sos.getRMS().getRole(roleid);
+
+            SecureAtom secureAtom;
+            Manifest retrieved = manifest;
+            if (manifest.getType().equals(ManifestType.VERSION)) {
+
+                retrieved = sos.getAgent().getManifest(((Version) manifest).getContentGUID());
+            }
+
+            if (retrieved.getType().equals(ManifestType.ATOM_PROTECTED)) {
+                secureAtom = (SecureAtom) retrieved;
+            } else {
+                return "No protected atom";
+            }
+
+            try {
+                sos.getStorage().grantAccess(secureAtom, granter, grantee);
+
+                return "Access granted";
+
+            } catch (ProtectionException e) {
+                return "Unable to grant access";
+            }
+
+        } catch (ManifestNotFoundException e) {
+            return "Manifest not found. Could not grant access";
         }
 
     }
 
-    public static String SetHead(Request request, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException {
+    public static String SetHead(Request request, SOSLocalNode sos) throws GUIDGenerationException {
 
         String guidParam = request.params("id");
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
-        Manifest manifest = sos.getDDS().getManifest(guid);
-        if (manifest.getType().equals(ManifestType.VERSION)) {
+        try {
+            Manifest manifest = sos.getDDS().getManifest(guid);
+            if (manifest.getType().equals(ManifestType.VERSION)) {
 
-            sos.getDDS().setHead((Version) manifest);
+                sos.getDDS().setHead((Version) manifest);
+            }
+
+            return "HEAD SET";
+        } catch (ManifestNotFoundException e) {
+            return "Manifest not found. HEAD NOT SET";
         }
-
-        return "HEAD SET";
     }
 
     // NOTE: Won't work for compounds

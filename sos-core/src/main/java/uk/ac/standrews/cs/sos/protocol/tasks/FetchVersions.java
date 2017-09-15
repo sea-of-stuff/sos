@@ -45,6 +45,7 @@ public class FetchVersions extends Task {
 
         this.node = node;
         this.invariant = invariant;
+        this.versions = new LinkedHashSet<>();
     }
 
     @Override

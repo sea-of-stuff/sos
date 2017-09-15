@@ -105,7 +105,12 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
                 FetchManifest fetchManifest = new FetchManifest(node, guid); // FIXME - use different end-points for context, metadata, etc
                 TasksQueue.instance().performSyncTask(fetchManifest);
 
-                return fetchManifest.getManifest();
+                Manifest manifest = fetchManifest.getManifest();
+                if (manifest == null) {
+                    throw new ManifestNotFoundException("Unable to fetch manifest");
+                }
+
+                return manifest;
 
             } catch (NodeNotFoundException | IOException e) {
                 SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid .toMultiHash()+ " from Node with GUID " + ddsGUID.toMultiHash());

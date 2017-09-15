@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.protocol.tasks;
 
+import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
@@ -39,6 +40,7 @@ public class FetchData extends Task {
 
         this.node = node;
         this.entityId = entityId;
+        this.body = new NullInputStream(0);
     }
 
     @Override

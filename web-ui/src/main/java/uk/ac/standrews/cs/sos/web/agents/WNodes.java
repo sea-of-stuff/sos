@@ -7,10 +7,12 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.NodeStats;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
 
@@ -31,17 +33,25 @@ public class WNodes {
         return VelocityUtils.RenderTemplate("velocity/nodes.vm", model);
     }
 
-    public static String GetInfo(Request request, SOSLocalNode sos) throws GUIDGenerationException, NodeNotFoundException {
+    public static String GetInfo(Request request, SOSLocalNode sos) throws GUIDGenerationException {
 
         IGUID nodeid = GUIDFactory.recreateGUID(request.params("nodeid"));
-        return sos.getNDS().infoNode(nodeid);
+        try {
+            return sos.getNDS().infoNode(nodeid);
+        } catch (NodeNotFoundException e) {
+            return "Info for Node " + nodeid.toMultiHash() + " N/A";
+        }
     }
 
-    public static String Find(Request request, SOSLocalNode sos) throws GUIDGenerationException, NodeNotFoundException, JsonProcessingException {
+    public static String Find(Request request, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException {
 
         String q = request.queryParams("nodeid");
         IGUID nodeid = GUIDFactory.recreateGUID(q);
-        sos.getNDS().getNode(nodeid); // force the nds to look for the node and register it?
+        try {
+            sos.getNDS().getNode(nodeid); // force the nds to look for the node and register it?
+        } catch (NodeNotFoundException e) {
+            SOS_LOG.log(LEVEL.WARN, "WebApp - Unable to find node with GUID: " + nodeid.toMultiHash());
+        }
 
         return Render(sos);
     }
