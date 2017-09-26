@@ -125,6 +125,22 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL RMS_GET_USER(Node node, IGUID user) throws SOSURLException {
+
+        String url = buildURLBase(node) +
+                "usro/user/" + user.toMultiHash();
+
+        return makeURL(url);
+    }
+
+    public static URL RMS_GET_ROLE(Node node, IGUID user) throws SOSURLException {
+
+        String url = buildURLBase(node) +
+                "usro/role/" + user.toMultiHash();
+
+        return makeURL(url);
+    }
+
     private static URL makeURL(String urlString) throws SOSURLException {
 
         URL url;

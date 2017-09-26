@@ -2,19 +2,18 @@ package uk.ac.standrews.cs.sos.protocol.tasks;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.impl.network.HTTPStatus;
 import uk.ac.standrews.cs.sos.impl.network.RequestsManager;
 import uk.ac.standrews.cs.sos.impl.network.SyncRequest;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
-import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.protocol.Task;
-import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.IO;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -24,32 +23,29 @@ import java.net.URL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FetchManifest extends Task {
+public class FetchRole extends Task {
 
     private Node node;
-    private IGUID manifestId;
-    private Manifest manifest;
+    private IGUID roleid;
+    private Role role;
 
-    public FetchManifest(Node node, IGUID manifestId) throws IOException {
-        if (!node.isDDS()) {
-            throw new IOException("Attempting to fetch manifest from non-DDS node");
-        }
+    public FetchRole(Node node, IGUID roleid) throws IOException {
 
-        if (manifestId == null || manifestId.isInvalid()) {
-            throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
+        if (!node.isRMS()) {
+            throw new IOException("Attempting to fetch role from non-RMS node");
         }
 
         this.node = node;
-        this.manifestId = manifestId;
+        this.roleid = roleid;
     }
 
     @Override
     public void performAction() {
 
-        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifestId.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
+        SOS_LOG.log(LEVEL.INFO, "Role with GUID " + roleid.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
 
         try {
-            URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
+            URL url = SOSURL.RMS_GET_ROLE(node, roleid);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
@@ -58,20 +54,22 @@ public class FetchManifest extends Task {
                 try (InputStream inputStream = response.getBody()) {
 
                     String responseBody = IO.InputStreamToString(inputStream);
-                    this.manifest = FileUtils.ManifestFromJson(responseBody);
-                    SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
+                    this.role = JSONHelper.JsonObjMapper().readValue(responseBody, Role.class);
 
-                } catch (ManifestNotFoundException e) {
-                    throw new IOException("Unable to parse manifest with GUID " + manifestId);
+                    SOS_LOG.log(LEVEL.INFO, "Role fetched successfully from node " + node.getNodeGUID());
                 }
 
             } else {
-                SOS_LOG.log(LEVEL.ERROR, "Manifest was not fetched successfully from node " + node.getNodeGUID().toShortString());
+                SOS_LOG.log(LEVEL.ERROR, "Role was not fetched successfully from node " + node.getNodeGUID().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to fetch manifest");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to fetch role");
         }
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     @Override
@@ -82,14 +80,5 @@ public class FetchManifest extends Task {
     @Override
     public Task deserialize(String json) throws IOException {
         return null;
-    }
-
-    public Manifest getManifest() {
-        return manifest;
-    }
-
-    @Override
-    public String toString() {
-        return "FetchManifest for guid " + manifestId + " from node " + node.getNodeGUID();
     }
 }
