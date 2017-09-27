@@ -30,12 +30,12 @@ public interface Predicate {
      * @param other the predicate to AND
      * @return the resulting predicate
      */
-    SOSPredicate and(SOSPredicate other);
+    Predicate and(Predicate other);
 
     /**
      * OR this predicate with another one
      * @param other the predicate to OR
      * @return the resulting predicate
      */
-    SOSPredicate or(SOSPredicate other);
+    Predicate or(Predicate other);
 }

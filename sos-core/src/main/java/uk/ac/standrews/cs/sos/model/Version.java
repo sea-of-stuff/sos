@@ -53,7 +53,9 @@ public interface Version extends Manifest {
     Set<IGUID> getPreviousVersions();
 
     /**
-     * Returns a reference to this asset metadata
+     * Returns a reference to this asset metadata.
+     *
+     * TODO - Set<IGUID>
      *
      * @return GUID of the metadata
      */

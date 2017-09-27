@@ -2,26 +2,22 @@ package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.guid.IGUID;
 
+import java.util.Set;
+
 /**
  * A context in the SOS is defined as a set of information used to characterise a collection of related entities.
  * Entities are assets belonging to the SOS.
  *
- * A context is unique and is defined by a closure, which defines what assets belong to the context or not.
- * Moreover, contexts can be combines under the boolean operators AND and OR
+ * A context is unique and is defined by a predicate, which defines what assets belong to the context or not.
  *
- * TODO - json serialise/deserialiser
+ * Immutable components of the context:
+ * - predicate
+ * - policies
  *
- * Example:
- *
- * {
- *     "Type" : "Context",
- *     "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
- *     "Name" : "Simone's replication context",
- *     "Predicate" : CODE,
- *     "Policies" : [ CODE ], // Will be executed in order
- *     "Sources" : [ Where to get the data from ]
- *     "Where" : [ List of nodes where to spawn and apply this context ]
- * }
+ * Mutable components of the context:
+ * - name
+ * - content
+ * - domain and codomain
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -30,7 +26,7 @@ public interface ContextV {
     /**
      * This is the unique GUID for this context
      *
-     * hash(invariant + previous + content + domain + codomain)
+     * hash(name + invariant + previous + content + domain + codomain)
      *
      * @return GUID of the context
      */
@@ -39,7 +35,7 @@ public interface ContextV {
     /**
      * hash(predicate + policies)
      *
-     * @return
+     * @return invariant of the context
      */
     IGUID invariant();
 
@@ -61,11 +57,18 @@ public interface ContextV {
     /**
      * Return a human-readable name for the context
      *
+     * Should not have special characters, as it will mess things up...
+     *
      * @return name of the context
      */
     String getName();
 
-    String getNotUniqueName();
+    /**
+     * name-GUID
+     *
+     * @return
+     */
+    String getUniqueName();
 
     /**
      * Return the domain of this context
@@ -78,7 +81,7 @@ public interface ContextV {
      * Predicate to apply against data.
      * This will define whether data belongs to this context or not
      *
-     * @return predicate of the context
+     * @return a ref to the predicate of the context
      */
     IGUID predicate();
 
@@ -87,8 +90,8 @@ public interface ContextV {
      *
      * The predicates must be executed in order.
      *
-     * @return an array of policies
+     * @return a set of policy refs
      */
-    IGUID policies();
+    Set<IGUID> policies();
 
 }
