@@ -25,14 +25,38 @@ import uk.ac.standrews.cs.guid.IGUID;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Context {
+public interface ContextV {
 
     /**
      * This is the unique GUID for this context
      *
+     * hash(invariant + previous + content + domain + codomain)
+     *
      * @return GUID of the context
      */
     IGUID guid();
+
+    /**
+     * hash(predicate + policies)
+     *
+     * @return
+     */
+    IGUID invariant();
+
+    /**
+     * GUID of compound to contents
+     *
+     * @return
+     */
+    IGUID content();
+
+    /**
+     * Optional.
+     * Should be GUID of another ContextV
+     *
+     * @return
+     */
+    IGUID previous();
 
     /**
      * Return a human-readable name for the context
@@ -56,7 +80,7 @@ public interface Context {
      *
      * @return predicate of the context
      */
-    SOSPredicate predicate();
+    IGUID predicate();
 
     /**
      * Return the policies of this context
@@ -65,6 +89,6 @@ public interface Context {
      *
      * @return an array of policies
      */
-    Policy[] policies();
+    IGUID policies();
 
 }

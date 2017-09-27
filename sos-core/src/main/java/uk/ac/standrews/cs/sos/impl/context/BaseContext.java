@@ -96,11 +96,6 @@ public abstract class BaseContext implements Context {
     }
 
     @Override
-    public NodesCollection whereToRun() {
-        return null;
-    }
-
-    @Override
     public String toString() {
         return jsonNode.toString();
     }
