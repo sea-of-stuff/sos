@@ -67,14 +67,14 @@ public class PolicyActions {
      * Replicate a manifest to a collection of nodes while attempting to satisfy the specified replication factor.
      *
      * @param manifest to be replicated
-     * @param nodes where to replicate the manifests
+     * @param codomain where to replicate the manifests
      * @param replicationFactor a value of 1 will replicate the manifest to 1 node
      * @throws PolicyException if the manifest could not be replicated
      */
-    void replicateManifest(Manifest manifest, NodesCollection nodes, int replicationFactor) throws PolicyException {
+    void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         try {
-            dataDiscoveryService.addManifest(manifest, nodes, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
+            dataDiscoveryService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }
@@ -88,17 +88,17 @@ public class PolicyActions {
      * Replicate data to a collection of nodes while attempting to satisfy the specified replication factor.
      *
      * @param data to be replicated
-     * @param nodes where to replicate the data
+     * @param codomain where to replicate the data
      * @param replicationFactor a value of 1 will replicate the data to 1 node
      * @throws PolicyException if the data could not be replicated
      */
-     void replicateData(Data data, NodesCollection nodes, int replicationFactor) throws PolicyException {
+    void replicateData(Data data, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         // FIXME - differentiate between clear data and protected data
         try {
             AtomBuilder atomBuilder = new AtomBuilder()
                     .setData(data)
-                    .setReplicationNodes(nodes)
+                    .setReplicationNodes(codomain)
                     .setReplicationFactor(replicationFactor + 1 /* We increment the replication factory by one, because we want the data to leave this node */);
 
             storage.addAtom(atomBuilder);
@@ -108,6 +108,10 @@ public class PolicyActions {
         }
     }
 
+    void updateVersion(IGUID guid, NodesCollection codomain) {
+        // TODO
+    }
+
     /**
      * Delete data from a collection of nodes.
      *
@@ -115,6 +119,8 @@ public class PolicyActions {
      * @param codomain where to delete the data
      */
     void deleteData(IGUID guid, NodesCollection codomain) {
+
+        // This operation is currently not supported by the SOS
         throw new NotImplementedException();
     }
 
@@ -124,11 +130,11 @@ public class PolicyActions {
      * TODO - shallow vs deep challenge
      * a deep challenge will also challenge the content referenced by the manifest
      *
-     * @param nodeGUID
-     * @param guid
-     * @return
+     * @param nodeGUID of the node
+     * @param guid of the manifest
+     * @return true if the node has the manifest
      */
-    boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
+    private boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
@@ -139,8 +145,7 @@ public class PolicyActions {
             TasksQueue.instance().performSyncTask(manifestChallenge);
             return manifestChallenge.isChallengePassed();
 
-        } catch (ManifestNotFoundException | NodesCollectionException | NodeNotFoundException |
-                GUIDGenerationException | IOException e) {
+        } catch (ManifestNotFoundException | NodesCollectionException | NodeNotFoundException | GUIDGenerationException | IOException e) {
 
             return false;
         }
@@ -150,9 +155,9 @@ public class PolicyActions {
     /**
      * Check the number of manifest replicas within a codomain
      *
-     * @param codomain
-     * @param guid
-     * @return
+     * @param codomain nodes to check
+     * @param guid of the manifest
+     * @return number of replicas
      */
     int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
 
@@ -178,7 +183,7 @@ public class PolicyActions {
      * @param guid of the data
      * @return true if the node has the data
      */
-    boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
+    private boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
@@ -197,9 +202,9 @@ public class PolicyActions {
     /**
      * Check the number of replicas for the data within a codomain.
      *
-     * @param codomain
-     * @param guid
-     * @return
+     * @param codomain nodes to check
+     * @param guid of the data
+     * @return number of replicas
      */
     int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
 
@@ -217,13 +222,34 @@ public class PolicyActions {
     }
 
     /**
+     * Grant access to a secure atom
+     *
+     * @param secureAtom atom for which access must be granted
+     * @param granter the role granting the access
+     * @param grantee the role receiving the access
+     * @throws RoleNotFoundException if one of the two roles cannot be found
+     * @throws ProtectionException if the access could not be granted
+     */
+    void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
+
+        Role granterRole = usersRolesService.getRole(granter);
+        Role granteeRole = usersRolesService.getRole(grantee);
+        storage.grantAccess(secureAtom, granterRole, granteeRole);
+    }
+
+    ////////////////////////////////
+    // NOTE - Utility methods that should be moved outside of the policy actions
+    ////////////////////////////////
+
+
+    /**
      * Get the data of an atom from a codomain.
      *
      * @param guid
      * @return
      * @throws AtomNotFoundException
      */
-     Data getData(IGUID guid) throws AtomNotFoundException {
+    Data getData(IGUID guid) throws AtomNotFoundException {
 
         // Check DDS, Storage restricting the request with the codomain
         // TODO Restrict by codomain
@@ -316,22 +342,5 @@ public class PolicyActions {
 
         return usersRolesService.getUser(guid);
     }
-
-    /**
-     * Grant access to a secure atom
-     *
-     * @param secureAtom
-     * @param granter
-     * @param grantee
-     * @throws RoleNotFoundException
-     * @throws ProtectionException
-     */
-    void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
-
-        Role granterRole = usersRolesService.getRole(granter);
-        Role granteeRole = usersRolesService.getRole(grantee);
-        storage.grantAccess(secureAtom, granterRole, granteeRole);
-    }
-
 
 }

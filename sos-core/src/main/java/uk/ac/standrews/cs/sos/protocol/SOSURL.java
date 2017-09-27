@@ -133,10 +133,18 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL RMS_GET_ROLE(Node node, IGUID user) throws SOSURLException {
+    public static URL RMS_GET_ROLE(Node node, IGUID role) throws SOSURLException {
 
         String url = buildURLBase(node) +
-                "usro/role/" + user.toMultiHash();
+                "usro/role/" + role.toMultiHash();
+
+        return makeURL(url);
+    }
+
+    public static URL RMS_GET_ROLES(Node node, IGUID user) throws SOSURLException {
+
+        String url = buildURLBase(node) +
+                "usro/user/" + user.toMultiHash() + "/roles";
 
         return makeURL(url);
     }
