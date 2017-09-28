@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -10,8 +11,13 @@ import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Comparator;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * The BasicManifest defines the base implementation for all other manifests.
@@ -57,6 +63,9 @@ public abstract class BasicManifest implements Manifest {
     @Override
     public abstract boolean verifySignature(Role role) throws SignatureException;
 
+    @Override
+    public abstract InputStream contentToHash() throws IOException;
+
     /**
      * Checks whether this manifest contains valid key-value entries.
      *
@@ -99,6 +108,14 @@ public abstract class BasicManifest implements Manifest {
             return "";
         }
 
+    }
+
+    protected String getCollectionToHashOrSign(Set<IGUID> collection) {
+
+        return collection.stream()
+                .sorted(Comparator.comparing(IGUID::toMultiHash))
+                .map(IKey::toMultiHash)
+                .collect(Collectors.joining("."));
     }
 
 }

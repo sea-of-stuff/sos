@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 @JsonSerialize(using = SOSNodeSerializer.class)
 @JsonDeserialize(using = SOSNodeDeserializer.class)
-public class SOSNode implements Node {
+public class SOSNode implements Node { // TODO - extend BasicManifest
 
     protected PublicKey signatureCertificate;
     protected IGUID nodeGUID;

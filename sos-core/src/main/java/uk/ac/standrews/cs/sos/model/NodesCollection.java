@@ -34,6 +34,8 @@ public interface NodesCollection {
      */
     TYPE type();
 
+    String toUniqueString();
+
     enum TYPE {
         LOCAL, // This local node
         SPECIFIED, // The collection is limited to the specified nodes

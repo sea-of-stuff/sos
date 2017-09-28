@@ -5,6 +5,9 @@ import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.utils.IO;
+
+import java.io.IOException;
 
 /**
  * Abstract class for all manifests that support signatures.
@@ -61,8 +64,12 @@ public abstract class SignedManifest extends BasicManifest {
     @Override
     public boolean verifySignature(Role role) throws SignatureException {
 
-        String manifestToSign = getManifestToSign();
-        return role.verify(manifestToSign, signature);
+        try {
+            String manifestToSign = IO.InputStreamToString(contentToHash());
+            return role.verify(manifestToSign, signature);
+        } catch (IOException e) {
+            throw new SignatureException(e);
+        }
     }
 
     /**
@@ -73,19 +80,17 @@ public abstract class SignedManifest extends BasicManifest {
      */
     protected String makeSignature() throws SignatureException {
 
-        String manifestToSign = getManifestToSign();
-        return generateSignature(manifestToSign);
+        try {
+            String manifestToSign = IO.InputStreamToString(contentToHash());
+            return generateSignature(manifestToSign);
+
+        } catch (IOException e) {
+            throw new SignatureException(e);
+        }
 
     }
 
-    /**
-     * Get the manifest sections to sign
-     *
-     * @return manifest sections to sign as a string
-     */
-    protected abstract String getManifestToSign();
-
-    /**
+     /**
      * Generates the signature for this manifest.
      *
      * @return signature of this manifest.

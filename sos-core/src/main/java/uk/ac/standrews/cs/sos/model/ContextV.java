@@ -77,6 +77,8 @@ public interface ContextV {
      */
     NodesCollection domain();
 
+    NodesCollection codomain();
+
     /**
      * Predicate to apply against data.
      * This will define whether data belongs to this context or not

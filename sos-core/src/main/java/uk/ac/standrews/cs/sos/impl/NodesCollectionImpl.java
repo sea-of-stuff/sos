@@ -1,10 +1,13 @@
 package uk.ac.standrews.cs.sos.impl;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
+import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -37,5 +40,21 @@ public class NodesCollectionImpl implements NodesCollection {
     @Override
     public TYPE type() {
         return type;
+    }
+
+    @Override
+    public String toUniqueString() {
+
+        String retval = type().toString();
+
+        if (nodesRefs != null && !nodesRefs.isEmpty()) {
+
+            retval += "Refs" + nodesRefs.stream()
+                    .sorted(Comparator.comparing(IGUID::toMultiHash))
+                    .map(IKey::toMultiHash)
+                    .collect(Collectors.joining("."));
+        }
+
+        return retval;
     }
 }

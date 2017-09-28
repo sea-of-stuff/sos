@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class CommonPolicies {
 
-    public static class DoNothingPolicy implements Policy {
+    public static class DoNothingPolicy extends BasePolicy {
 
         @Override
         public void apply(Manifest manifest) throws PolicyException {}
@@ -39,7 +39,7 @@ public class CommonPolicies {
     /**
      * Replicate manifests at least n-times
      */
-    public static class ManifestReplicationPolicy implements Policy {
+    public static class ManifestReplicationPolicy extends BasePolicy {
 
         protected PolicyActions policyActions;
         private NodesCollection codomain;
@@ -71,7 +71,7 @@ public class CommonPolicies {
      *
      * TODO - have param for canPersist (e.g. replicate only to nodes that can persist data)
      */
-    public static class DataReplicationPolicy implements Policy {
+    public static class DataReplicationPolicy extends BasePolicy {
 
         private PolicyActions policyActions;
         private NodesCollection codomain;
@@ -131,7 +131,7 @@ public class CommonPolicies {
     }
 
     // TODO
-    public static class MetadataReplicationPolicy implements Policy {
+    public static class MetadataReplicationPolicy extends BasePolicy {
 
         @Override
         public void apply(Manifest manifest) throws PolicyException {
@@ -147,7 +147,7 @@ public class CommonPolicies {
     /**
      * Delete content (data or manifest) from some nodes
      */
-    public static class DeletionPolicy implements Policy {
+    public static class DeletionPolicy extends BasePolicy {
 
         private PolicyActions policyActions;
         private NodesCollection codomain;
@@ -171,7 +171,7 @@ public class CommonPolicies {
         }
     }
 
-    public static class GrantAccessPolicy implements Policy {
+    public static class GrantAccessPolicy extends BasePolicy {
 
         private PolicyActions policyActions;
         private IGUID granter;
@@ -285,7 +285,7 @@ public class CommonPolicies {
     }
 
     // TODO
-    public static class NotifyNodesPolicy implements Policy {
+    public static class NotifyNodesPolicy extends BasePolicy {
 
         public NotifyNodesPolicy(PolicyActions policyActions, NodesCollection codomain) {
 

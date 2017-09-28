@@ -2,10 +2,10 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
@@ -76,9 +76,9 @@ public class VersionManifest extends SignedManifest implements Version {
         this.guid = content;
         this.prevs = prevs;
         this.metadata = metadata;
-        try {
-            this.version = makeVersionGUID();
-        } catch (GUIDGenerationException e) {
+        this.version = makeVersionGUID();
+
+        if (version.isInvalid()) {
             throw new ManifestNotMadeException("Failed to generate version GUID");
         }
 
@@ -195,29 +195,19 @@ public class VersionManifest extends SignedManifest implements Version {
         }
     }
 
-    @Override
-    protected String getManifestToSign() {
-        String toSign = getType() +
-                "C" + getContentGUID().toMultiHash();
-
-        toSign += getPreviousToHashOrSign();
-        toSign += getMetadataToHashOrSign();
-
-        return toSign;
-    }
-
     private IGUID makeInvariant() {
         return GUIDFactory.generateRandomGUID();
     }
 
-    private IGUID makeVersionGUID() throws GUIDGenerationException {
+    private IGUID makeVersionGUID() {
 
         try (InputStream inputStream = contentToHash()) {
 
-            return GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStream);
+            return GUIDFactory.generateGUID(inputStream);
 
-        } catch (IOException e) {
-            throw new GUIDGenerationException();
+        } catch (GUIDGenerationException | IOException e) {
+
+            return new InvalidID();
         }
     }
 
@@ -235,14 +225,6 @@ public class VersionManifest extends SignedManifest implements Version {
             retval = "M" + metadata.toMultiHash();
         }
         return retval;
-    }
-
-    private String getCollectionToHashOrSign(Set<IGUID> collection) {
-        StringBuilder toHash = new StringBuilder();
-        for(IGUID obj:collection) {
-            toHash.append(obj.toMultiHash()).append(".");
-        }
-        return toHash.toString();
     }
 
 }
