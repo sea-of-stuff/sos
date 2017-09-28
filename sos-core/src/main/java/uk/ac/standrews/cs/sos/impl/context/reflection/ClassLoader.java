@@ -111,25 +111,24 @@ public class ClassLoader {
 
         try {
 
-            Manifest manifest;
+            ComputationalUnit computationalUnitManifest;
             ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
             switch (type) {
                 case PREDICATE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Predicate.class);
+                    computationalUnitManifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Predicate.class);
                     break;
                 case POLICY:
-                    manifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Policy.class);
+                    computationalUnitManifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Policy.class);
                     break;
                 default:
                     throw new ClassLoaderException("ClassLoader - Manifest Type is wrong");
             }
 
-            String clazzString = ClassBuilderFactory.getClassBuilder("predicate/FIXME").constructClass(node);
-            // String clazzString = ContextClassBuilder.ConstructClass(node);
-            // System.out.println(clazzString);
+            String clazzString = ClassBuilderFactory.getClassBuilder(type.toString()).constructClass(computationalUnitManifest);
+            // System.out.println(clazzString); // THIS LINE IS HERE FOR DEBUG PURPOSES
 
             // Print class to file
-            String clazzName = WordUtils.capitalize(manifest.guid().toMultiHash());
+            String clazzName = WordUtils.capitalize(computationalUnitManifest.guid().toMultiHash());
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             if (sourceClazzFile.exists()) sourceClazzFile.delete();
             sourceClazzFile.deleteOnExit();

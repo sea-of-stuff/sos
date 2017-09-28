@@ -1,8 +1,7 @@
-package uk.ac.standrews.cs.sos.impl.context;
+package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.impl.context.reflection.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;

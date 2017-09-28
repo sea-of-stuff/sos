@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.model;
 
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 
 /**
@@ -15,9 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Policy extends Manifest {
-
-    IGUID guid();
+public interface Policy extends ComputationalUnit {
 
     /**
      * Run this policy over a manifest

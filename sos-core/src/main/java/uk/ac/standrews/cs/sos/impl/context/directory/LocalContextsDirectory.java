@@ -92,7 +92,7 @@ public class LocalContextsDirectory {
             NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
             ClassLoader.Load(jsonNode);
-            Context context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextGUID /* THIS IS IMPORTANT, AS WE ALREADY KNOW THE GUID OF THE CONTEXT */, contextName, domain, codomain);
+            Context context = ClassLoader.Instance(jsonNode, policyActions, contextGUID /* THIS IS IMPORTANT, AS WE ALREADY KNOW THE GUID OF THE CONTEXT */, contextName, domain, codomain);
 
             return context;
 

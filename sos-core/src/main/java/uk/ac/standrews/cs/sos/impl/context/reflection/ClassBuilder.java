@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.reflection;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import uk.ac.standrews.cs.sos.model.ComputationalUnit;
 
 import java.io.IOException;
 
@@ -9,5 +9,5 @@ import java.io.IOException;
  */
 public interface ClassBuilder {
 
-    String constructClass(JsonNode node) throws IOException;
+    String constructClass(ComputationalUnit computationalUnit) throws IOException;
 }

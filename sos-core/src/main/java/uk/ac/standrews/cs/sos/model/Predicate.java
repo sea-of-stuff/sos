@@ -5,9 +5,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Predicate extends Manifest {
-
-    IGUID guid();
+public interface Predicate extends ComputationalUnit {
 
     /**
      * Get the max age for the validity of this predicate

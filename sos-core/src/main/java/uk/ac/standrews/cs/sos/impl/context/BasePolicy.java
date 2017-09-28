@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.manifests.BasicManifest;
@@ -42,5 +43,15 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
 
     public InputStream contentToHash() throws IOException {
         return IO.StringToInputStream(code);
+    }
+
+    @Override
+    public JsonNode dependencies() {
+        return null;
+    }
+
+    @Override
+    public JsonNode code() {
+        return null;
     }
 }
