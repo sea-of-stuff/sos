@@ -16,6 +16,8 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -37,8 +39,8 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
             TikaMetadata meta = new TikaMetadata(metadata, TikaIgnoreMetadata.IGNORE_METADATA);
             meta.addProperty("Size", Long.toString(data.getSize()));
 
-            long unixTime = System.currentTimeMillis() / 1000L;
-            meta.addProperty("Timestamp", Long.toString(unixTime));
+            ZonedDateTime utc = ZonedDateTime.now(ZoneOffset.UTC);
+            meta.addProperty("Timestamp", utc.toString());
 
             return meta;
 
