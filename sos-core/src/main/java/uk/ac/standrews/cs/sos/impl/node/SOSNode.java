@@ -70,6 +70,8 @@ public class SOSNode implements Node { // TODO - extend BasicManifest
     protected SOSNode(SettingsConfiguration.Settings settings) {
 
         InetAddress address = IP.findLocalAddress();
+        assert(address != null);
+
         int port = settings.getRest().getPort();
         this.hostAddress = new InetSocketAddress(address, port);
 

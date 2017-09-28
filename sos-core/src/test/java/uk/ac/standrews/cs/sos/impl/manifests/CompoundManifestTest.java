@@ -28,7 +28,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"GUID\":\"SHA256_16_751ca025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
+                    "\"GUID\":\"SHA256_16_964dab35b9136a610687d31b56fd346bdda027be0a66e6761e0fd1238262cd9f\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
@@ -40,7 +40,7 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"Type\":\"Compound\"," +
-                    "\"GUID\":\"SHA256_16_6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d\"," +
+                    "\"GUID\":\"SHA256_16_c3dbaa4197ea2aa8012e70fd805d9cc6c450cc78e454b2a6a643f935a3454c76\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
