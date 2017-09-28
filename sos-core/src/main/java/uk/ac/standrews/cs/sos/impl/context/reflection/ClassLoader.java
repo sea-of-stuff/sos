@@ -5,12 +5,12 @@ import com.google.common.io.Files;
 import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -110,12 +110,26 @@ public class ClassLoader {
         }
 
         try {
+
+            Manifest manifest;
+            ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
+            switch (type) {
+                case PREDICATE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Predicate.class);
+                    break;
+                case POLICY:
+                    manifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Policy.class);
+                    break;
+                default:
+                    throw new ClassLoaderException("ClassLoader - Manifest Type is wrong");
+            }
+
             String clazzString = ClassBuilderFactory.getClassBuilder("predicate/FIXME").constructClass(node);
             // String clazzString = ContextClassBuilder.ConstructClass(node);
             // System.out.println(clazzString);
 
             // Print class to file
-            String clazzName = WordUtils.capitalize(node.get("name").asText());
+            String clazzName = WordUtils.capitalize(manifest.guid().toMultiHash());
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             if (sourceClazzFile.exists()) sourceClazzFile.delete();
             sourceClazzFile.deleteOnExit();
@@ -176,7 +190,7 @@ public class ClassLoader {
     /**
      * Creates context instance
      *
-     * @param className
+     * @param className // TODO this is the guid of the context
      * @param jsonNode
      * @param policyActions
      * @param contextName
@@ -201,7 +215,6 @@ public class ClassLoader {
     /**
      * Creates context instance
      *
-     * @param className
      * @param jsonNode
      * @param policyActions
      * @param guid of the context
@@ -211,16 +224,16 @@ public class ClassLoader {
      * @return
      * @throws ClassLoaderException
      */
-    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ClassLoaderException {
+    public static Context Instance(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ClassLoaderException {
 
         try {
             java.lang.ClassLoader classLoader = SOSClassLoader();
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + guid.toMultiHash(), true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(jsonNode, policyActions, guid, contextName, domain, codomain);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ClassLoaderException("Unable to create instance for class " + className);
+            throw new ClassLoaderException("Unable to create instance for class " + guid.toMultiHash());
         }
     }
 

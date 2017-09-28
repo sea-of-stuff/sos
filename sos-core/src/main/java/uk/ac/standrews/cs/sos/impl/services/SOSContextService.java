@@ -155,7 +155,7 @@ public class SOSContextService implements ContextService {
         Context context;
         if (jsonNode.has("guid")) {
             IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
-            context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextGUID, contextName, domain, codomain);
+            context = ClassLoader.Instance(jsonNode, policyActions, contextGUID, contextName, domain, codomain);
         } else {
             context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
         }

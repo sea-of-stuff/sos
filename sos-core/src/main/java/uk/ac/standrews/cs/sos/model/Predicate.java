@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Predicate {
+public interface Predicate extends Manifest {
 
     IGUID guid();
 

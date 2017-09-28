@@ -21,7 +21,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ContextV {
+public interface ContextV extends Manifest {
 
     /**
      * This is the unique GUID for this context

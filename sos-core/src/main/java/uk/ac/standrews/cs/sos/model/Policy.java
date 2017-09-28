@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Policy {
+public interface Policy extends Manifest {
 
     IGUID guid();
 
