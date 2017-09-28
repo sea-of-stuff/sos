@@ -34,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -191,7 +192,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         long modtime = 0;
 
         if (metadata != null && metadata.hasProperty(META_TIMESTAMP)) {
-            modtime = metadata.getPropertyAsLong(META_TIMESTAMP);
+            modtime = ZonedDateTime.parse(metadata.getPropertyAsString(META_TIMESTAMP)).toEpochSecond() * 1000;
         }
 
         return Helper.UnixTimeToFileTime(modtime);
