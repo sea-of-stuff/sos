@@ -12,10 +12,10 @@ import uk.ac.standrews.cs.castore.interfaces.NameObjectBinding;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
+import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
@@ -96,7 +96,7 @@ public class LocalContextsDirectory {
 
             return context;
 
-        } catch (DataStorageException | GUIDGenerationException | NodeNotFoundException | NodesCollectionException | ContextLoaderException | DataException | IOException e) {
+        } catch (DataStorageException | GUIDGenerationException | NodeNotFoundException | NodesCollectionException | ClassLoaderException | DataException | IOException e) {
             throw new ContextNotFoundException(e);
         }
     }

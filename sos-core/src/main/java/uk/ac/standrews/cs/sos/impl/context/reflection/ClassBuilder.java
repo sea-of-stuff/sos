@@ -7,10 +7,7 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class PredicateClassBuilder implements ClassBuilder {
+public interface ClassBuilder {
 
-    @Override
-    public String constructClass(JsonNode node) throws IOException {
-        return null;
-    }
+    String constructClass(JsonNode node) throws IOException;
 }

@@ -5,7 +5,8 @@ import com.google.common.io.Files;
 import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
+import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
+import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
@@ -35,12 +36,12 @@ import java.util.Collections;
 public class ClassLoader {
 
     /**
-     * Load multiple contexts at path
+     * Load multiple classes at path
      *
      * @param path
-     * @throws ContextLoaderException
+     * @throws ClassLoaderException
      */
-    public static void LoadMultipleContexts(String path) throws ContextLoaderException {
+    public static void LoadMultipleClasses(String path) throws ClassLoaderException {
 
         ArrayList<String> notLoaded = new ArrayList<>();
 
@@ -50,8 +51,8 @@ public class ClassLoader {
             if (f.isFile()) {
 
                 try {
-                    LoadContextFromPath(path);
-                } catch (ContextLoaderException e) {
+                    LoadClassFromPath(path);
+                } catch (ClassLoaderException e) {
                     notLoaded.add(f.getName());
                 }
 
@@ -59,18 +60,18 @@ public class ClassLoader {
         }
 
         if (!notLoaded.isEmpty()) {
-            throw new ContextLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
+            throw new ClassLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
         }
 
     }
 
     /**
-     * Load the context at the given path
+     * Load the class at the given path
      *
      * @param path
-     * @throws ContextLoaderException
+     * @throws ClassLoaderException
      */
-    public static void LoadContextFromPath(String path) throws ContextLoaderException {
+    public static void LoadClassFromPath(String path) throws ClassLoaderException {
 
         try {
             File file = new File(path);
@@ -78,28 +79,29 @@ public class ClassLoader {
 
             Load(node);
 
-        } catch (IOException | ContextLoaderException e) {
-            throw new ContextLoaderException(e);
+        } catch (IOException | ClassLoaderException e) {
+            throw new ClassLoaderException(e);
         }
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void Load(String node) throws ContextLoaderException {
+    public static void Load(String node) throws ClassLoaderException {
+
         try {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(node);
             Load(jsonNode);
         } catch (IOException e) {
-            throw new ContextLoaderException(e);
+            throw new ClassLoaderException(e);
         }
     }
 
     /**
-     * Load a context given a context JSON structure
+     * Load a class given a context JSON structure
      *
      * @param node
-     * @throws ContextLoaderException
+     * @throws ClassLoaderException
      */
-    public static void Load(JsonNode node) throws ContextLoaderException {
+    public static void Load(JsonNode node) throws ClassLoaderException {
 
         String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
 
@@ -108,7 +110,8 @@ public class ClassLoader {
         }
 
         try {
-            String clazzString = ContextClassBuilder.ConstructClass(node);
+            String clazzString = ClassBuilderFactory.getClassBuilder("predicate/FIXME").constructClass(node);
+            // String clazzString = ContextClassBuilder.ConstructClass(node);
             // System.out.println(clazzString);
 
             // Print class to file
@@ -147,25 +150,25 @@ public class ClassLoader {
 
             fileManager.close();
 
-        } catch (IOException | ContextLoaderException e) {
-            throw new ContextLoaderException(e);
+        } catch (IOException | ClassLoaderException | ClassBuilderException e) {
+            throw new ClassLoaderException(e);
         }
     }
 
     /**
      * Load context class from path
      * @param className
-     * @throws ContextLoaderException
+     * @throws ClassLoaderException
      */
-    private static void LoadClassName(String className) throws ContextLoaderException {
+    private static void LoadClassName(String className) throws ClassLoaderException {
 
         try {
-            java.lang.ClassLoader cl = ClassLoaderForContexts();
+            java.lang.ClassLoader cl = SOSClassLoader();
             Class<?> cls = cl.loadClass(ContextClassBuilder.PACKAGE + "." + className);
-            SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
+            SOS_LOG.log(LEVEL.INFO, "Loaded class: " + cls.getName());
 
         } catch (ClassNotFoundException e) {
-            throw new ContextLoaderException("Unable to load context for class: " + className);
+            throw new ClassLoaderException("Unable to load class: " + className);
         }
 
     }
@@ -180,18 +183,18 @@ public class ClassLoader {
      * @param domain
      * @param codomain
      * @return
-     * @throws ContextLoaderException
+     * @throws ClassLoaderException
      */
-    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
+    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ClassLoaderException {
 
         try {
-            java.lang.ClassLoader classLoader = ClassLoaderForContexts();
+            java.lang.ClassLoader classLoader = SOSClassLoader();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(jsonNode, policyActions, contextName, domain, codomain);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ContextLoaderException("Unable to create instance for class " + className);
+            throw new ClassLoaderException("Unable to create instance for class " + className);
         }
     }
 
@@ -206,40 +209,40 @@ public class ClassLoader {
      * @param domain
      * @param codomain
      * @return
-     * @throws ContextLoaderException
+     * @throws ClassLoaderException
      */
-    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
+    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ClassLoaderException {
 
         try {
-            java.lang.ClassLoader classLoader = ClassLoaderForContexts();
+            java.lang.ClassLoader classLoader = SOSClassLoader();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(jsonNode, policyActions, guid, contextName, domain, codomain);
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ContextLoaderException("Unable to create instance for class " + className);
+            throw new ClassLoaderException("Unable to create instance for class " + className);
         }
     }
 
 
-    private static java.lang.ClassLoader ClassLoaderForContexts() throws ContextLoaderException {
+    private static java.lang.ClassLoader SOSClassLoader() throws ClassLoaderException {
 
         String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
-        File contextClassDirectory = new File(targetClassPath);
+        File classesDirectory = new File(targetClassPath);
 
-        if (!contextClassDirectory.exists()) {
-            throw new ContextLoaderException("Cannot find path for context classes");
+        if (!classesDirectory.exists()) {
+            throw new ClassLoaderException("Cannot find path for java classes");
         }
 
         try {
-            URL url = contextClassDirectory.toURL();
+            URL url = classesDirectory.toURL();
             URL[] urls = new URL[]{url};
 
             // Create a new class loader with the directory
             java.lang.ClassLoader cl = new URLClassLoader(urls);
             return cl;
         } catch (MalformedURLException e) {
-            throw new ContextLoaderException("Cannot create class loader for contexts");
+            throw new ClassLoaderException("Cannot create class loader");
         }
     }
 }

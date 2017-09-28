@@ -6,11 +6,11 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.context.ContextLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
+import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -46,7 +46,7 @@ public class ClassLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void withGUIDContextConstructorLoader() throws IOException, ContextLoaderException, NodesCollectionException {
+    public void withGUIDContextConstructorLoader() throws IOException, ClassLoaderException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -67,7 +67,7 @@ public class ClassLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void withDomainAndCodomainContextConstructorLoader() throws IOException, ContextLoaderException, NodesCollectionException {
+    public void withDomainAndCodomainContextConstructorLoader() throws IOException, ClassLoaderException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -85,7 +85,7 @@ public class ClassLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicate() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
+    public void contextWithPredicate() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -120,7 +120,7 @@ public class ClassLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicateAndPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
+    public void contextWithPredicateAndPolicy() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
@@ -149,7 +149,7 @@ public class ClassLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void contextWithPredicateAndMultiPolicy() throws IOException, ContextLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
+    public void contextWithPredicateAndMultiPolicy() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
 
         String JSON_CONTEXT =
                 "{\n" +
