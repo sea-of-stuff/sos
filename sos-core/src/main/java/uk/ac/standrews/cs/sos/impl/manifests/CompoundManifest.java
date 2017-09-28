@@ -2,10 +2,7 @@ package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.json.CompoundManifestDeserializer;
@@ -13,7 +10,6 @@ import uk.ac.standrews.cs.sos.json.CompoundManifestSerializer;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.Set;
@@ -74,7 +70,7 @@ public class CompoundManifest extends SignedManifest implements Compound {
 
         this.type = type;
         this.contents = contents;
-        this.guid = makeContentGUID();
+        this.guid = makeGUID();
 
         if (guid.isInvalid()) {
             throw new ManifestNotMadeException("Failed to generate content GUID");
@@ -149,19 +145,6 @@ public class CompoundManifest extends SignedManifest implements Compound {
         } else {
             return signer.sign(toSign);
         }
-    }
-
-    protected IGUID makeContentGUID() {
-
-        try (InputStream inputStream = contentToHash()) {
-
-            return GUIDFactory.generateGUID(inputStream);
-
-        } catch (GUIDGenerationException | IOException e) {
-
-            return new InvalidID();
-        }
-
     }
 
 }

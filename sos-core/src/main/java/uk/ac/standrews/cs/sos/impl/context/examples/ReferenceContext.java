@@ -1,7 +1,8 @@
-package uk.ac.standrews.cs.sos.impl.context;
+package uk.ac.standrews.cs.sos.impl.context.examples;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.context.*;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.SOSPredicate;

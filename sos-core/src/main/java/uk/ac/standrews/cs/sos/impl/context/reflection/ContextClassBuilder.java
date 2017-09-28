@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.context.utils;
+package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.text.WordUtils;
@@ -31,10 +31,6 @@ public class ContextClassBuilder {
     private static final String COMMON_CLASS = "BaseContext";
     private static final String CLASS_SIGNATURE_TEMPLATE = "public class " + CLASS_NAME_TAG + " extends " + COMMON_CLASS + " {" + NEW_LINE;
     private static final String CLASS_CLOSING = "}";
-
-    private static final String VAR_NAME = "_VAR_NAME_";
-    private static final String VAL = "_VAL_";
-    private static final String PRIVATE_STRING_VAR = VAR_NAME + " = \"" + VAL + "\";";
 
     private static final String CONSTRUCTOR_BODY = "super(jsonNode, policyActions, name, domain, codomain);";
     private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  " + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;

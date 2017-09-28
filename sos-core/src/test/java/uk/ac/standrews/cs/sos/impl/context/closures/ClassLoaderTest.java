@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
+import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.*;
@@ -33,7 +33,7 @@ import static org.testng.AssertJUnit.assertTrue;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextLoaderTest extends SetUpTest {
+public class ClassLoaderTest extends SetUpTest {
 
     private PolicyActions policyActions;
 
@@ -56,10 +56,10 @@ public class ContextLoaderTest extends SetUpTest {
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
-        ContextLoader.LoadContext(node);
+        ClassLoader.Load(node);
 
         IGUID guid = GUIDFactory.generateRandomGUID();
-        Context context = ContextLoader.Instance("Test1", node, policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        Context context = ClassLoader.Instance("Test1", node, policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertEquals(context.guid(), guid);
         assertTrue(context.getName().startsWith("Test_context"));
@@ -77,8 +77,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
-        ContextLoader.LoadContext(node);
-        Context context = ContextLoader.Instance("Test2", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        ClassLoader.Load(node);
+        Context context = ClassLoader.Instance("Test2", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
@@ -95,8 +95,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
-        ContextLoader.LoadContext(node);
-        Context context = ContextLoader.Instance("Test3", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        ClassLoader.Load(node);
+        Context context = ClassLoader.Instance("Test3", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
@@ -134,8 +134,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
-        ContextLoader.LoadContext(node);
-        Context context = ContextLoader.Instance("Test4", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        ClassLoader.Load(node);
+        Context context = ClassLoader.Instance("Test4", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));
@@ -165,8 +165,8 @@ public class ContextLoaderTest extends SetUpTest {
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
 
-        ContextLoader.LoadContext(node);
-        Context context = ContextLoader.Instance("Test5", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        ClassLoader.Load(node);
+        Context context = ClassLoader.Instance("Test5", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
         assertNotNull(context.guid());
         assertTrue(context.getName().startsWith("Test_context"));

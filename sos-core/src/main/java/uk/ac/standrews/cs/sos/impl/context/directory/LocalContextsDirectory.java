@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
+import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder.*;
+import static uk.ac.standrews.cs.sos.impl.context.reflection.ContextClassBuilder.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -91,8 +91,8 @@ public class LocalContextsDirectory {
             NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
             NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
-            ContextLoader.LoadContext(jsonNode);
-            Context context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextGUID /* THIS IS IMPORTANT, AS WE ALREADY KNOW THE GUID OF THE CONTEXT */, contextName, domain, codomain);
+            ClassLoader.Load(jsonNode);
+            Context context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextGUID /* THIS IS IMPORTANT, AS WE ALREADY KNOW THE GUID OF THE CONTEXT */, contextName, domain, codomain);
 
             return context;
 

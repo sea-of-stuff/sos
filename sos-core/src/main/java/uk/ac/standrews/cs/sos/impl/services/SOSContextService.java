@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.*;
-import uk.ac.standrews.cs.sos.impl.context.utils.ContextLoader;
+import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
-import static uk.ac.standrews.cs.sos.impl.context.utils.ContextClassBuilder.*;
+import static uk.ac.standrews.cs.sos.impl.context.reflection.ContextClassBuilder.*;
 
 /**
  * The SOSContextService managed the contexts for this node.
@@ -150,14 +150,14 @@ public class SOSContextService implements ContextService {
         NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
         NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
 
-        ContextLoader.LoadContext(jsonNode);
+        ClassLoader.Load(jsonNode);
 
         Context context;
         if (jsonNode.has("guid")) {
             IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
-            context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextGUID, contextName, domain, codomain);
+            context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextGUID, contextName, domain, codomain);
         } else {
-            context = ContextLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
+            context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
         }
 
         return addContext(context);

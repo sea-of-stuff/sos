@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -77,7 +76,7 @@ public class BaseContextV extends SignedManifest implements ContextV {
         this.policyActions = policyActions;
 
         this.invariant = makeInvariantGUID();
-        this.guid = makeContextGUID();
+        this.guid = makeGUID();
         // TODO - throw exceptions if invariant or guid are invalid
 
         this.name = name;
@@ -174,18 +173,6 @@ public class BaseContextV extends SignedManifest implements ContextV {
     @Override
     public String toString() {
         return jsonNode.toString();
-    }
-
-    private IGUID makeContextGUID() {
-
-        try (InputStream inputStream = contentToHash()) {
-
-            return GUIDFactory.generateGUID(inputStream);
-
-        } catch (GUIDGenerationException | IOException e) {
-
-            return new InvalidID();
-        }
     }
 
     private IGUID makeInvariantGUID() {

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.json.VersionManifestDeserializer;
@@ -15,7 +13,6 @@ import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.IO;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -50,6 +47,7 @@ public class VersionManifest extends SignedManifest implements Version {
 
     final private IGUID version;
     final private IGUID invariant;
+    final private IGUID content;
     final private Set<IGUID> prevs;
     final private IGUID metadata;
 
@@ -73,10 +71,11 @@ public class VersionManifest extends SignedManifest implements Version {
             this.invariant = makeInvariant();
         }
 
-        this.guid = content;
+        this.content = content;
         this.prevs = prevs;
         this.metadata = metadata;
-        this.version = makeVersionGUID();
+        this.version = makeGUID(); // guid from manifest content
+        this.guid = version;
 
         if (version.isInvalid()) {
             throw new ManifestNotMadeException("Failed to generate version GUID");
@@ -107,7 +106,8 @@ public class VersionManifest extends SignedManifest implements Version {
 
         this.invariant = invariant;
         this.version = version;
-        this.guid = content;
+        this.guid = version;
+        this.content = content;
         this.prevs = prevs;
         this.metadata = metadata;
         this.signature = signature;
@@ -146,7 +146,7 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     public IGUID getContentGUID() {
-        return guid;
+        return content;
     }
 
     /**
@@ -197,18 +197,6 @@ public class VersionManifest extends SignedManifest implements Version {
 
     private IGUID makeInvariant() {
         return GUIDFactory.generateRandomGUID();
-    }
-
-    private IGUID makeVersionGUID() {
-
-        try (InputStream inputStream = contentToHash()) {
-
-            return GUIDFactory.generateGUID(inputStream);
-
-        } catch (GUIDGenerationException | IOException e) {
-
-            return new InvalidID();
-        }
     }
 
     private String getPreviousToHashOrSign() {

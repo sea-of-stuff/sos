@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.context.utils;
+package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
@@ -32,7 +32,7 @@ import java.util.Collections;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextLoader {
+public class ClassLoader {
 
     /**
      * Load multiple contexts at path
@@ -76,7 +76,7 @@ public class ContextLoader {
             File file = new File(path);
             JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
 
-            LoadContext(node);
+            Load(node);
 
         } catch (IOException | ContextLoaderException e) {
             throw new ContextLoaderException(e);
@@ -84,10 +84,10 @@ public class ContextLoader {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void LoadContext(String node) throws ContextLoaderException {
+    public static void Load(String node) throws ContextLoaderException {
         try {
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(node);
-            LoadContext(jsonNode);
+            Load(jsonNode);
         } catch (IOException e) {
             throw new ContextLoaderException(e);
         }
@@ -99,7 +99,7 @@ public class ContextLoader {
      * @param node
      * @throws ContextLoaderException
      */
-    public static void LoadContext(JsonNode node) throws ContextLoaderException {
+    public static void Load(JsonNode node) throws ContextLoaderException {
 
         String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
 
@@ -136,7 +136,7 @@ public class ContextLoader {
 
             if (task.call()) {
 
-                Load(clazzName);
+                LoadClassName(clazzName);
 
             } else {
 
@@ -157,10 +157,10 @@ public class ContextLoader {
      * @param className
      * @throws ContextLoaderException
      */
-    private static void Load(String className) throws ContextLoaderException {
+    private static void LoadClassName(String className) throws ContextLoaderException {
 
         try {
-            ClassLoader cl = ClassLoaderForContexts();
+            java.lang.ClassLoader cl = ClassLoaderForContexts();
             Class<?> cls = cl.loadClass(ContextClassBuilder.PACKAGE + "." + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded context: " + cls.getName());
 
@@ -185,7 +185,7 @@ public class ContextLoader {
     public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
-            ClassLoader classLoader = ClassLoaderForContexts();
+            java.lang.ClassLoader classLoader = ClassLoaderForContexts();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(jsonNode, policyActions, contextName, domain, codomain);
@@ -211,7 +211,7 @@ public class ContextLoader {
     public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ContextLoaderException {
 
         try {
-            ClassLoader classLoader = ClassLoaderForContexts();
+            java.lang.ClassLoader classLoader = ClassLoaderForContexts();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
             Context context = (Context) constructor.newInstance(jsonNode, policyActions, guid, contextName, domain, codomain);
@@ -222,7 +222,7 @@ public class ContextLoader {
     }
 
 
-    private static ClassLoader ClassLoaderForContexts() throws ContextLoaderException {
+    private static java.lang.ClassLoader ClassLoaderForContexts() throws ContextLoaderException {
 
         String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
         File contextClassDirectory = new File(targetClassPath);
@@ -236,7 +236,7 @@ public class ContextLoader {
             URL[] urls = new URL[]{url};
 
             // Create a new class loader with the directory
-            ClassLoader cl = new URLClassLoader(urls);
+            java.lang.ClassLoader cl = new URLClassLoader(urls);
             return cl;
         } catch (MalformedURLException e) {
             throw new ContextLoaderException("Cannot create class loader for contexts");

@@ -1,8 +1,11 @@
 package uk.ac.standrews.cs.sos.impl.manifests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.IKey;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -116,6 +119,15 @@ public abstract class BasicManifest implements Manifest {
                 .sorted(Comparator.comparing(IGUID::toMultiHash))
                 .map(IKey::toMultiHash)
                 .collect(Collectors.joining("."));
+    }
+
+    protected IGUID makeGUID() {
+
+        try (InputStream content = contentToHash()){
+            return GUIDFactory.generateGUID(content);
+        } catch (GUIDGenerationException | IOException e) {
+            return new InvalidID();
+        }
     }
 
 }

@@ -38,7 +38,7 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
             throw new ManifestNotMadeException("Unable to encrypt contents of Secure Compound Manifest");
         }
 
-        this.guid = makeContentGUID();
+        this.guid = makeGUID();
 
         if (signer != null) {
             try {
