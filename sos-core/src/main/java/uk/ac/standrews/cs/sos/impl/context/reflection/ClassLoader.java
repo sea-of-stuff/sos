@@ -130,7 +130,7 @@ public class ClassLoader {
             // Print class to file
             String clazzName = WordUtils.capitalize(computationalUnitManifest.guid().toMultiHash());
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
-            if (sourceClazzFile.exists()) sourceClazzFile.delete();
+            if (sourceClazzFile.exists()) { sourceClazzFile.delete(); }
             sourceClazzFile.deleteOnExit();
             try (PrintWriter out = new PrintWriter(sourceClazzFile)){
                 out.println(clazzString);
@@ -138,30 +138,31 @@ public class ClassLoader {
 
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
-            fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
 
-            // Compile the file
-            JavaCompiler.CompilationTask task = compiler.getTask(
-                    null,
-                    fileManager,
-                    diagnostics,
-                    null,
-                    null,
-                    fileManager.getJavaFileObjects(sourceClazzFile));
+            try(StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+                fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
 
-            if (task.call()) {
+                // Compile the file
+                JavaCompiler.CompilationTask task = compiler.getTask(
+                        null,
+                        fileManager,
+                        diagnostics,
+                        null,
+                        null,
+                        fileManager.getJavaFileObjects(sourceClazzFile));
 
-                LoadClassName(clazzName);
+                if (task.call()) {
 
-            } else {
+                    LoadClassName(clazzName);
 
-                for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-                    SOS_LOG.log(LEVEL.ERROR, "Error on line " + diagnostic.getLineNumber() + " in " + diagnostic.getSource().toUri());
+                } else {
+
+                    for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+                        SOS_LOG.log(LEVEL.ERROR, "Error on line " + diagnostic.getLineNumber() + " in " + diagnostic.getSource().toUri());
+                    }
                 }
-            }
 
-            fileManager.close();
+            }
 
         } catch (IOException | ClassLoaderException | ClassBuilderException e) {
             throw new ClassLoaderException(e);
@@ -187,6 +188,7 @@ public class ClassLoader {
     }
 
     /**
+     * REMOVEME - not a computational unit
      * Creates context instance
      *
      * @param className // TODO this is the guid of the context
@@ -212,6 +214,7 @@ public class ClassLoader {
     }
 
     /**
+     * REMOVEME - not a computational unit
      * Creates context instance
      *
      * @param jsonNode

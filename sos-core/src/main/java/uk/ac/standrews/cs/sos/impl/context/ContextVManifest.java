@@ -18,9 +18,10 @@ import java.io.InputStream;
 import java.util.Set;
 
 /**
+ * TODO - json parsers
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class BaseContextV extends SignedManifest implements ContextV {
+public class ContextVManifest extends SignedManifest implements ContextV {
 
     private JsonNode jsonNode;
 
@@ -53,7 +54,7 @@ public class BaseContextV extends SignedManifest implements ContextV {
      * @param domain
      * @param codomain
      */
-    public BaseContextV(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
+    public ContextVManifest(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
         this(jsonNode, policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain, signer);
     }
 
@@ -67,7 +68,7 @@ public class BaseContextV extends SignedManifest implements ContextV {
      * @param domain
      * @param codomain
      */
-    public BaseContextV(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
+    public ContextVManifest(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
         super(signer, ManifestType.CONTEXT);
 
         this.jsonNode = jsonNode;

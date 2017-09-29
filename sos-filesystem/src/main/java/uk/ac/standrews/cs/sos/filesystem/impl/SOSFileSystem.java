@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.fs.exceptions.*;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
@@ -153,7 +152,7 @@ public class SOSFileSystem implements IFileSystem {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Move object " + source_name + " TO " + destination_name);
 
         // TODO - delete and create
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -167,7 +166,7 @@ public class SOSFileSystem implements IFileSystem {
             // TODO - get data from sourcename, create new resource at destination_name and put data there
         }
 
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

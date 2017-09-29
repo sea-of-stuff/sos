@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
@@ -75,7 +74,7 @@ public class LocalUsersRolesDirectory implements UsersRolesService {
 
     @Override
     public Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

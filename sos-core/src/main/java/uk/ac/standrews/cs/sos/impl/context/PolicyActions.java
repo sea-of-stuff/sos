@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -121,7 +120,7 @@ public class PolicyActions {
     void deleteData(IGUID guid, NodesCollection codomain) {
 
         // This operation is currently not supported by the SOS
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**

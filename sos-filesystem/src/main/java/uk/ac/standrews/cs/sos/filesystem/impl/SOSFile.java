@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.filesystem.impl;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
@@ -204,7 +203,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      */
     @Override
     public void update(IData data) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**

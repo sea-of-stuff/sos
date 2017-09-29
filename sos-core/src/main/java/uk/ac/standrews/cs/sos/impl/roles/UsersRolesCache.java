@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.roles;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
@@ -87,7 +86,7 @@ public class UsersRolesCache implements UsersRolesService, Serializable {
 
     @Override
     public Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

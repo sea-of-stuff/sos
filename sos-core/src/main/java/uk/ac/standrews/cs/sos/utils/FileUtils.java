@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
+import uk.ac.standrews.cs.sos.impl.context.ContextVManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.*;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -57,6 +58,7 @@ public class FileUtils {
         }
     }
 
+    // TODO - can we have parsers on the interfaces rather than the implementations?
     private static Manifest constructManifestFromJsonFile(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
@@ -79,6 +81,15 @@ public class FileUtils {
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
                     break;
+
+                case CONTEXT:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), ContextVManifest.class);
+                    break;
+                case PREDICATE:
+                case POLICY:
+                    // TODO - need to write proper parsers
+                    throw new UnsupportedOperationException();
+
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
             }
@@ -111,6 +122,15 @@ public class FileUtils {
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, BasicMetadata.class);
                     break;
+
+                case CONTEXT:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, ContextVManifest.class);
+                    break;
+                case PREDICATE:
+                case POLICY:
+                    // TODO - need to write proper parsers
+                    throw new UnsupportedOperationException();
+
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
             }

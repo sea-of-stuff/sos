@@ -7,7 +7,18 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public interface ComputationalUnit extends Manifest {
 
+    /**
+     * The list of dependency for the computational unit to be compiled and run.
+     *
+     * @return
+     */
     JsonNode dependencies();
 
+    /**
+     * The code to compile and run.
+     * This will define the uniqueness of this computational unit.
+     *
+     * @return
+     */
     JsonNode code();
 }
