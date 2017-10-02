@@ -521,18 +521,6 @@ public class SOSContextService implements ContextService {
 
     }
 
-    private Predicate getPredicate(ContextV context) {
-
-        // TODO - retrieve and make instance
-        return null;
-    }
-
-    private Set<Policy> getPolicies(ContextV context) {
-
-        // TODO - retrieve and make instance
-        return null;
-    }
-
     /**
      * Run the policies of a given context for the specified entity
      *
@@ -626,5 +614,24 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    private Predicate getPredicate(ContextV context) {
+
+        // TODO - retrieve and make instance
+        IGUID predicateRef = context.predicate();
+
+        try {
+            return (Predicate) dataDiscoveryService.getManifest(predicateRef);
+
+        } catch (ManifestNotFoundException e) {
+
+            return null;
+        }
+    }
+
+    private Set<Policy> getPolicies(ContextV context) {
+
+        // TODO - retrieve and make instance
+        return null;
+    }
 
 }

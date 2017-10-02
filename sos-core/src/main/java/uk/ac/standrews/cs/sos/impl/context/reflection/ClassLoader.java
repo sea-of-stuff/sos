@@ -187,9 +187,21 @@ public class ClassLoader {
 
     }
 
-    public static Predicate PredicateInstance() {
-        // TODO
-        return null;
+    public static Predicate PredicateInstance(JsonNode node) throws ClassLoaderException {
+
+        String guid = node.get(JSONConstants.KEY_GUID).asText();
+
+        try {
+            java.lang.ClassLoader classLoader = SOSClassLoader();
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + guid, true, classLoader);
+            Constructor<?> constructor = clazz.getConstructor(JsonNode.class);
+            Predicate predicate = (Predicate) constructor.newInstance(null /* TODO - any args */ );
+            return predicate;
+
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
+            throw new ClassLoaderException("Unable to create instance for Predicate class " + guid);
+        }
+
     }
 
     public static Policy PolicyInstance() {
