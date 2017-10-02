@@ -23,13 +23,13 @@ import java.util.Objects;
  */
 public abstract class BasePredicate extends BasicManifest implements Predicate {
 
-    private String code;
+    private String predicate;
     private long maxAge;
 
-    public BasePredicate(String code, long maxAge) {
+    public BasePredicate(String predicate, long maxAge) {
         super(ManifestType.PREDICATE);
 
-        this.code = code;
+        this.predicate = predicate;
         this.maxAge = maxAge;
 
         this.guid = makeGUID();
@@ -75,7 +75,7 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
 
     @Override
     public InputStream contentToHash() throws IOException {
-        return IO.StringToInputStream(code);
+        return IO.StringToInputStream(predicate);
     }
 
 }

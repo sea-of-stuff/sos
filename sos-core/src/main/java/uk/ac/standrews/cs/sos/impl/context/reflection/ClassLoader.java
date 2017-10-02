@@ -175,17 +175,22 @@ public class ClassLoader {
 
     public static Predicate PredicateInstance(JsonNode node) throws ClassLoaderException {
 
-        String guid = node.get(JSONConstants.KEY_GUID).asText();
-
         try {
-            java.lang.ClassLoader classLoader = SOSClassLoader();
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + guid, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(JsonNode.class);
-            Predicate predicate = (Predicate) constructor.newInstance(null /* TODO - any args */ );
-            return predicate;
+            ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
+            ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder(type.toString());
+            String className = classBuilder.className(node);
+            String predicateCode = node.get(JSONConstants.KEY_PREDICATE).asText();
+            long maxage = node.has(JSONConstants.KEY_PREDICATE_MAX_AGE) ? node.get(JSONConstants.KEY_PREDICATE_MAX_AGE).asLong() : 0; // TODO - have this in context
 
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ClassLoaderException("Unable to create instance for Predicate class " + guid);
+            java.lang.ClassLoader classLoader = SOSClassLoader();
+            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
+            Constructor<?> constructor = clazz.getConstructor(String.class, long.class);
+            return (Predicate) constructor.newInstance(predicateCode, maxage);
+
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                ClassBuilderException | IOException e) {
+
+            throw new ClassLoaderException("Unable to create instance for Predicate from jsonnode " + node.toString());
         }
 
     }

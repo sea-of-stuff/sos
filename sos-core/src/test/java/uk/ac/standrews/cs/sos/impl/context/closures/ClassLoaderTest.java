@@ -4,27 +4,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
-import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Predicate;
+import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.assertTrue;
 
 /**
@@ -50,78 +48,36 @@ public class ClassLoaderTest extends SetUpTest {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test1\",\n" +
-                        "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
+                        "\t\"Type\": \"Predicate\",\n" +
+                        "\t\"Predicate\": \"true\",\n" +
+                        "\t\"Dependencies\": []\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-
         ClassLoader.Load(node);
 
-
-
-    }
-
-    // REMOVEME
-    @Test
-    public void withGUIDContextConstructorLoader() throws IOException, ClassLoaderException, NodesCollectionException {
-
-        String JSON_CONTEXT =
-                "{\n" +
-                        "    \"name\": \"Test1\",\n" +
-                        "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
-                        "}";
-
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-
-        ClassLoader.Load(node);
-
-        IGUID guid = GUIDFactory.generateRandomGUID();
-//        Context context = ClassLoader.Instance("Test1", node, policyActions, guid, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-//
-//        assertEquals(context.guid(), guid);
-//        assertTrue(context.getName().startsWith("Test_context"));
-//        assertEquals(context.getName(), "Test_context-" + guid.toMultiHash());
+        Predicate predicate = ClassLoader.PredicateInstance(node);
+        assertNotNull(predicate.guid());
+        assertEquals(predicate.getType(), ManifestType.PREDICATE);
+        assertTrue(predicate.test(GUIDFactory.generateRandomGUID()));
     }
 
     @Test
-    public void withDomainAndCodomainContextConstructorLoader() throws IOException, ClassLoaderException, NodesCollectionException {
+    public void loadNonTrivialPredicate() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
 
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"name\": \"Test2\",\n" +
-                        "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
+                        "\t\"Type\": \"Predicate\",\n" +
+                        "\t\"Predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"))\",\n" +
+                        "\t\"Dependencies\": []\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-
         ClassLoader.Load(node);
-        Context context = ClassLoader.Instance("Test2", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
 
-        assertNotNull(context.guid());
-        assertTrue(context.getName().startsWith("Test_context"));
-    }
-
-    @Test
-    public void contextWithPredicate() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
-
-        String JSON_CONTEXT =
-                "{\n" +
-                        "    \"name\": \"Test3\",\n" +
-                        "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
-                        "}";
-
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-
-        ClassLoader.Load(node);
-        Context context = ClassLoader.Instance("Test3", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-
-        assertNotNull(context.guid());
-        assertTrue(context.getName().startsWith("Test_context"));
-
-        SOSPredicate pred = context.predicate();
-        assertNotNull(pred);
-
+        Predicate predicate = ClassLoader.PredicateInstance(node);
+        assertNotNull(predicate.guid());
+        assertEquals(predicate.getType(), ManifestType.PREDICATE);
 
         BasicMetadata meta = new BasicMetadata();
         meta.addProperty("Content-Type", "image/jpeg");
@@ -130,73 +86,28 @@ public class ClassLoaderTest extends SetUpTest {
 
         Version version = this.localSOSNode.getAgent()
                 .addVersion(new VersionBuilder()
-                    .setContent(GUIDFactory.generateRandomGUID())
-                    .setMetadata(meta));
-
-        boolean retval = pred.test(version.guid());
-        assertTrue(retval);
-    }
-
-    @Test
-    public void contextWithPredicateAndPolicy() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
-
-        String JSON_CONTEXT =
-                "{\n" +
-                        "    \"name\": \"Test4\",\n" +
-                        "    \"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
-                        "  \t\"policies\" : [\n" +
-                        "\t    \"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\"\n" +
-                        "\t  ]\n" +
-                        "}";
+                        .setContent(GUIDFactory.generateRandomGUID())
+                        .setMetadata(meta));
 
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+        assertTrue(predicate.test(version.guid()));
 
-        ClassLoader.Load(node);
-        Context context = ClassLoader.Instance("Test4", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
+        // Predicate.test fails for non jpeg content
+        BasicMetadata metaNonImage = new BasicMetadata();
+        metaNonImage.addProperty("Content-Type", "WHATEVER");
+        metaNonImage.setGUID(GUIDFactory.generateRandomGUID());
+        this.localSOSNode.getMMS().addMetadata(metaNonImage);
 
-        assertNotNull(context.guid());
-        assertTrue(context.getName().startsWith("Test_context"));
-
-        SOSPredicate pred = context.predicate();
-        assertNotNull(pred);
-
-        Policy[] policies = context.policies();
-        assertNotNull(policies);
-        assertEquals(policies.length, 1);
-    }
-
-    @Test
-    public void contextWithPredicateAndMultiPolicy() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, NodesCollectionException {
-
-        String JSON_CONTEXT =
-                "{\n" +
-                        "\t\"name\": \"Test5\",\n" +
-                        "\t\"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
-                        "\t\"policies\": [\n" +
-                        "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\",\n" +
-                        "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\",\n" +
-                        "\t\t\"CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)\"\n" +
-                        "\t]\n" +
-                        "}";
+        Version anotherVersion = this.localSOSNode.getAgent()
+                .addVersion(new VersionBuilder()
+                        .setContent(GUIDFactory.generateRandomGUID())
+                        .setMetadata(metaNonImage));
 
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
-
-        ClassLoader.Load(node);
-        Context context = ClassLoader.Instance("Test5", node, policyActions, "Test_context", new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), new NodesCollectionImpl(NodesCollection.TYPE.LOCAL));
-
-        assertNotNull(context.guid());
-        assertTrue(context.getName().startsWith("Test_context"));
-
-        SOSPredicate pred = context.predicate();
-        assertNotNull(pred);
-
-        Policy[] policies = context.policies();
-        assertNotNull(policies);
-        assertEquals(policies.length, 3);
+        assertFalse(predicate.test(anotherVersion.guid()));
     }
 
 
+    // TODO - load policies
     // TODO - load context from JSON File, load multiple context, etc
 }

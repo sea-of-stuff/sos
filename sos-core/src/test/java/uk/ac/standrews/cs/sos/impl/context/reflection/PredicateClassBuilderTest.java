@@ -16,10 +16,11 @@ public class PredicateClassBuilderTest {
     @Test
     public void basicClassConstruction() throws IOException {
 
-        // TODO - manifest type
         String JSON_CONTEXT =
                 "{\n" +
-                        "    \"predicate\": \"True\"\n" +
+                        "\t\"Type\": \"Predicate\",\n" +
+                        "\t\"Predicate\": \"true\",\n" +
+                        "\t\"Dependencies\": []\n" +
                         "}";
 
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
@@ -27,45 +28,30 @@ public class PredicateClassBuilderTest {
 
         String MATCHING_CLAZZ =
                 "package uk.ac.standrews.cs.sos.impl.context;\n" +
-                        "\n" +
-                        "import uk.ac.standrews.cs.guid.IGUID;\n" +
-                        "import uk.ac.standrews.cs.logger.LEVEL;\n" +
-                        "import uk.ac.standrews.cs.sos.impl.services.SOSAgent;\n" +
-                        "import uk.ac.standrews.cs.sos.model.NodesCollection;\n" +
-                        "import uk.ac.standrews.cs.sos.model.Policy;\n" +
-                        "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
-                        "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
-                        "import java.util.Collections;\n" +
-                        "import java.util.Arrays;\n" +
-                        "import com.fasterxml.jackson.databind.JsonNode;\n" +
-                        "\n" +
-                        "public class Test extends BaseContext {\n" +
-                        "\n" +
-                        "public Test (JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
-                        "super(jsonNode, policyActions, name, domain, codomain);\n" +
-                        "}\n" +
-                        "\n" +
-                        "public Test (JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain) {  \n" +
-                        "super(jsonNode, policyActions, guid, name, domain, codomain);\n" +
-                        "}\n" +
-                        "\n" +
-                        "@Override\n" +
-                        "public SOSPredicate predicate() {\n" +
-                        "\n" +
-                        "    return new P(PREDICATE_ALWAYS_TRUE);\n" +
-                        "}\n" +
-                        "\n" +
-                        "class P extends SOSPredicateImpl {\n" +
-                        "\n" +
-                        "    P(long maxAge) {\n" +
-                        "        super(maxAge);\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    @Override\n" +
-                        "    public boolean test(IGUID guid) {\n" +
-                        "        return \n" +
-                        "    }\n" +
-                        "}\n";
+                "\n" +
+                "import uk.ac.standrews.cs.guid.IGUID;\n" +
+                "import uk.ac.standrews.cs.logger.LEVEL;\n" +
+                "import uk.ac.standrews.cs.sos.impl.services.SOSAgent;\n" +
+                "import uk.ac.standrews.cs.sos.model.NodesCollection;\n" +
+                "import uk.ac.standrews.cs.sos.model.Policy;\n" +
+                "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
+                "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
+                "import java.util.Collections;\n" +
+                "import java.util.Arrays;\n" +
+                "import com.fasterxml.jackson.databind.JsonNode;\n" +
+                "\n" +
+                "public class SHA256_16_3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18 extends BasePredicate {\n" +
+                "\n" +
+                "public SHA256_16_3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18 (String predicate, long maxAge) {  \n" +
+                "super(predicate, maxAge);\n" +
+                "}\n" +
+                "\n" +
+                "@Override\n" +
+                "    public boolean test(IGUID guid) {\n" +
+                "\n" +
+                "        return True;\n" +
+                "    }\n" +
+                "}\n";
 
         assertEquals(clazzString, MATCHING_CLAZZ);
     }

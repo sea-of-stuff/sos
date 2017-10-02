@@ -61,5 +61,10 @@ public class JSONConstants {
     public static final String KEY_NODE_SERVICES_RMS = "rms";
     public static final String KEY_NODE_SERVICES_MMS = "mms";
 
+    // Predicate
+    public static final String KEY_PREDICATE = "Predicate";
+    public static final String KEY_PREDICATE_DEPENDENCIES = "Dependencies";
+    public static final String KEY_PREDICATE_MAX_AGE = "Max-Age"; // TODO - in context
+
     public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 }

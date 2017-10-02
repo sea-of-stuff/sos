@@ -8,6 +8,9 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 
 import java.io.IOException;
 
+import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_PREDICATE;
+import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_PREDICATE_DEPENDENCIES;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -15,7 +18,7 @@ public class PredicateClassBuilder implements ClassBuilder {
 
     private static final String NEW_LINE = "\n";
 
-    static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
+    private static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
     private static final String PACKAGE_DECLARATION = "package " + PACKAGE + ";" + NEW_LINE;
     private static final String IMPORTEE_TAG = "_IMPORTEE_";
     private static final String IMPORT = "import " + IMPORTEE_TAG + ";" + NEW_LINE;
@@ -24,9 +27,8 @@ public class PredicateClassBuilder implements ClassBuilder {
     private static final String CLASS_SIGNATURE_TEMPLATE = "public class " + CLASS_NAME_TAG + " extends " + COMMON_CLASS + " {" + NEW_LINE;
     private static final String CLASS_CLOSING = "}";
 
-
-    private static final String CONSTRUCTOR_BODY = "super(code, maxAge);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String code, long maxAge) {  "
+    private static final String CONSTRUCTOR_BODY = "super(predicate, maxAge);";
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String predicate, long maxAge) {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
     private static final String PREDICATE_TAG = "_PREDICATE_TAG_";
@@ -37,15 +39,12 @@ public class PredicateClassBuilder implements ClassBuilder {
             "        return " + PREDICATE_TAG + ";\n"+
             "    }" + NEW_LINE;
 
-    private static final String CONTEXT_JSON_DEPENDENCIES = "dependencies";
-    private static final String CONTEXT_JSON_PREDICATE = "predicate";
-
     @Override
     public String className(JsonNode jsonNode) throws IOException {
 
         IGUID predicateRef;
         try {
-            predicateRef = GUIDFactory.generateGUID(jsonNode.get(CONTEXT_JSON_PREDICATE).asText());
+            predicateRef = GUIDFactory.generateGUID(jsonNode.get(KEY_PREDICATE).asText());
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to generate predicate ref from json node " + jsonNode.toString());
         }
@@ -75,8 +74,8 @@ public class PredicateClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "com.fasterxml.jackson.databind.JsonNode"));
 
-        if (jsonNode.has(CONTEXT_JSON_DEPENDENCIES)) {
-            JsonNode dependencies = jsonNode.get(CONTEXT_JSON_DEPENDENCIES);
+        if (jsonNode.has(KEY_PREDICATE_DEPENDENCIES)) {
+            JsonNode dependencies = jsonNode.get(KEY_PREDICATE_DEPENDENCIES);
             for (JsonNode dependency : dependencies) {
                 clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
             }
@@ -95,7 +94,7 @@ public class PredicateClassBuilder implements ClassBuilder {
         ///////////////
         // Predicate //
         ///////////////
-        String predicateCode = jsonNode.get(CONTEXT_JSON_PREDICATE).asText();
+        String predicateCode = jsonNode.get(KEY_PREDICATE).asText();
         clazz.append(PREDICATE_METHOD.replace(PREDICATE_TAG, predicateCode));
 
         clazz.append(CLASS_CLOSING);
