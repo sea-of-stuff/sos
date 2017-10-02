@@ -23,10 +23,7 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.context.ContextsContentsDirectory;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.Persistence;
@@ -92,7 +89,7 @@ public class SOSContextService implements ContextService {
         this.dataDiscoveryService = dataDiscoveryService;
         policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
 
-        localContextsDirectory = new LocalContextsDirectory(localStorage, policyActions);
+        localContextsDirectory = new LocalContextsDirectory(dataDiscoveryService, policyActions);
         inMemoryCache = new CacheContextsDirectory();
 
         contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
@@ -116,7 +113,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<Context> getContexts() {
+    public Set<ContextV> getContexts() {
 
         return inMemoryCache.getContexts()
                 .stream()
@@ -130,7 +127,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public IGUID addContext(Context context) throws Exception {
+    public IGUID addContext(ContextV context) throws Exception {
 
         localContextsDirectory.addContext(context);
         inMemoryCache.addContext(context);
@@ -152,7 +149,7 @@ public class SOSContextService implements ContextService {
 
         ClassLoader.Load(jsonNode);
 
-        Context context;
+        ContextV context;
         if (jsonNode.has("guid")) {
             IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
             context = ClassLoader.Instance(jsonNode, policyActions, contextGUID, contextName, domain, codomain);
@@ -170,7 +167,7 @@ public class SOSContextService implements ContextService {
         return addContext(node.toString());
     }
 
-    public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
+    public ContextV getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
             return inMemoryCache.getContext(contextGUID);
@@ -182,7 +179,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
+    public Set<ContextV> searchContexts(String contextName) throws ContextNotFoundException {
 
         return inMemoryCache.getContexts(contextName);
     }
@@ -237,21 +234,21 @@ public class SOSContextService implements ContextService {
     @Override
     public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
 
-        Context context = getContext(guid);
+        ContextV context = getContext(guid);
         runContextPredicateNow(context);
     }
 
     @Override
     public void runContextPolicyNow(IGUID guid) throws ContextNotFoundException {
 
-        Context context = getContext(guid);
+        ContextV context = getContext(guid);
         runContextPoliciesNow(context);
     }
 
     @Override
     public void runContextPolicyCheckNow(IGUID guid) throws ContextNotFoundException {
 
-        Context context = getContext(guid);
+        ContextV context = getContext(guid);
         runContextPoliciesCheckNow(context);
     }
 
@@ -259,7 +256,7 @@ public class SOSContextService implements ContextService {
     // PERIODIC TASKS //
     ////////////////////
 
-    private void runContextPredicateNow(Context context) {
+    private void runContextPredicateNow(ContextV context) {
 
         service.schedule(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY predicate for context " + context.getName());
@@ -299,14 +296,14 @@ public class SOSContextService implements ContextService {
 
         int counter = 0;
 
-        for (Context context : getContexts()) {
+        for (ContextV context : getContexts()) {
             counter += runPredicate(context);
         }
 
         return counter;
     }
 
-    private int runPredicate(Context context) {
+    private int runPredicate(ContextV context) {
 
         int counter = 0;
         long start = System.nanoTime();
@@ -330,7 +327,7 @@ public class SOSContextService implements ContextService {
         return counter;
     }
 
-    private void runContextPoliciesNow(Context context) {
+    private void runContextPoliciesNow(ContextV context) {
 
         service.schedule(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
@@ -371,13 +368,13 @@ public class SOSContextService implements ContextService {
     @Override
     public void runPolicies() {
 
-        for (Context context : getContexts()) {
+        for (ContextV context : getContexts()) {
             runPolicies(context);
         }
 
     }
 
-    private void runPolicies(Context context) {
+    private void runPolicies(ContextV context) {
 
         long start = System.nanoTime();
 
@@ -394,7 +391,7 @@ public class SOSContextService implements ContextService {
         InstrumentFactory.instance().measure(StatsTYPE.policies, context.getName(), duration);
     }
 
-    private void runContextPoliciesCheckNow(Context context) {
+    private void runContextPoliciesCheckNow(ContextV context) {
 
         service.schedule(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
@@ -423,12 +420,12 @@ public class SOSContextService implements ContextService {
 
     public void checkPolicies() {
 
-        for (Context context : getContexts()) {
+        for (ContextV context : getContexts()) {
             checkPolicies(context);
         }
     }
 
-    private void checkPolicies(Context context) {
+    private void checkPolicies(ContextV context) {
 
         long start = System.nanoTime();
 
@@ -454,7 +451,7 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Get data from other nodes - this is a periodic background thread");
 
-            for (Context context : getContexts()) {
+            for (ContextV context : getContexts()) {
 
                 // TODO - run this only for those contexts/nodes that have been marked (data-periodic) by the spawnContextsPeriodic logic (see comments in there)
                 NodesCollection domain = context.domain();
@@ -509,7 +506,7 @@ public class SOSContextService implements ContextService {
      * @param assetInvariant of the version
      * @param versionGUID to evaluate
      */
-    private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
+    private void runPredicate(ContextV context, IGUID assetInvariant, IGUID versionGUID) {
 
         IGUID contextGUID = context.guid();
         boolean alreadyRun =  contextsContentsDirectory.entryExists(contextGUID, versionGUID);
@@ -521,7 +518,8 @@ public class SOSContextService implements ContextService {
 
         if (!alreadyRun || maxAgeExpired) {
 
-            boolean passed = context.predicate().test(versionGUID);
+            Predicate predicate = getPredicate(context);
+            boolean passed = predicate.test(versionGUID);
 
             ContextVersionInfo content = new ContextVersionInfo();
             content.predicateResult = passed;
@@ -539,13 +537,25 @@ public class SOSContextService implements ContextService {
 
     }
 
+    private Predicate getPredicate(ContextV context) {
+
+        // TODO - retrieve and make instance
+        return null;
+    }
+
+    private Set<Policy> getPolicies(ContextV context) {
+
+        // TODO - retrieve and make instance
+        return null;
+    }
+
     /**
      * Run the policies of a given context for the specified entity
      *
      * @param context for which policies have to run
      * @param guid of the entity
      */
-    private void runPolicies(Context context, IGUID guid) {
+    private void runPolicies(ContextV context, IGUID guid) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
@@ -555,7 +565,7 @@ public class SOSContextService implements ContextService {
             content.predicateResult = prev.predicateResult;
             content.timestamp = prev.timestamp;
 
-            Policy[] policies = context.policies();
+            Set<Policy> policies = getPolicies(context);
             boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
@@ -572,7 +582,7 @@ public class SOSContextService implements ContextService {
         }
     }
 
-    private void checkPolicies(Context context, IGUID guid) {
+    private void checkPolicies(ContextV context, IGUID guid) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
@@ -582,7 +592,7 @@ public class SOSContextService implements ContextService {
             content.predicateResult = prev.predicateResult;
             content.timestamp = prev.timestamp;
 
-            Policy[] policies = context.policies();
+            Set<Policy> policies = getPolicies(context);
             boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
@@ -606,11 +616,12 @@ public class SOSContextService implements ContextService {
      * @param versionGUID to evaluate
      * @return true if the predicate is still valid
      */
-    private boolean predicateHasExpired(Context context, IGUID versionGUID) {
+    private boolean predicateHasExpired(ContextV context, IGUID versionGUID) {
 
         ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
 
-        long max_age = context.predicate().maxAge();
+        Predicate predicate = getPredicate(context);
+        long max_age = predicate.maxAge();
         long contentLastRun = content.timestamp;
         long now = System.currentTimeMillis();
 
@@ -622,7 +633,7 @@ public class SOSContextService implements ContextService {
         try {
             for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
 
-                Context context = localContextsDirectory.getContext(contextsToLoad);
+                ContextV context = localContextsDirectory.getContext(contextsToLoad);
                 inMemoryCache.addContext(context);
             }
 

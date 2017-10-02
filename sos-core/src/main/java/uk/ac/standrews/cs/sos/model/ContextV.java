@@ -19,6 +19,8 @@ import java.util.Set;
  * - content
  * - domain and codomain
  *
+ * TODO - rename to Context
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface ContextV extends Manifest {

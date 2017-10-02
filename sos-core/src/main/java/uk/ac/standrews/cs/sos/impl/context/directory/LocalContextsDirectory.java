@@ -19,7 +19,7 @@ import java.util.Set;
 public class LocalContextsDirectory {
 
     final private DataDiscoveryService dataDiscoveryService;
-    final private PolicyActions policyActions;
+    final private PolicyActions policyActions; // TODO - use when creating policy instances
 
     /**
      *

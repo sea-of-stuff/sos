@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.impl.context.directory;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
-import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.ContextV;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -17,19 +17,19 @@ import java.util.Set;
 public class CacheContextsDirectory {
 
     // GUID --> Context
-    private transient HashMap<IGUID, Context> contexts;
+    private transient HashMap<IGUID, ContextV> contexts;
 
     public CacheContextsDirectory() {
         contexts = new HashMap<>();
     }
 
-    public IGUID addContext(Context context) {
+    public IGUID addContext(ContextV context) {
         contexts.put(context.guid(), context);
 
         return context.guid();
     }
 
-    public Context getContext(IGUID guid) throws ContextNotFoundException {
+    public ContextV getContext(IGUID guid) throws ContextNotFoundException {
 
         if (contexts.containsKey(guid)) {
             return contexts.get(guid);
@@ -42,10 +42,10 @@ public class CacheContextsDirectory {
         return contexts.keySet();
     }
 
-    public Set<Context> getContexts(String name) {
+    public Set<ContextV> getContexts(String name) {
 
-        Set<Context> ret = new LinkedHashSet<>();
-        for(Map.Entry<IGUID, Context> e:contexts.entrySet()) {
+        Set<ContextV> ret = new LinkedHashSet<>();
+        for(Map.Entry<IGUID, ContextV> e:contexts.entrySet()) {
 
             if (e.getValue().getName().toLowerCase().contains(name.toLowerCase())) {
                 ret.add(e.getValue());
