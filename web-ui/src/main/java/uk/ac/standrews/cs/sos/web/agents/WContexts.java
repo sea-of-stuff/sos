@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.reflection.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.ContextV;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -59,7 +59,7 @@ public class WContexts {
 
         model.put("contents", contents);
 
-        Context context = sos.getCMS().getContext(contextGUID);
+        ContextV context = sos.getCMS().getContext(contextGUID);
         model.put("context_json", context.toString());
 
         return JSONHelper.JsonObjMapper().writeValueAsString(model);
@@ -88,8 +88,8 @@ public class WContexts {
         try {
 
             ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
-            Set<Context> contexts = sos.getCMS().searchContexts(nameToSearch);
-            for(Context context:contexts) {
+            Set<ContextV> contexts = sos.getCMS().searchContexts(nameToSearch);
+            for(ContextV context:contexts) {
                 arrayNode.add(context.toString());
             }
 

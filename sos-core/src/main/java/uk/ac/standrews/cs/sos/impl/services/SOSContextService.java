@@ -1,10 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
@@ -17,7 +15,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.*;
-import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -42,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
-import static uk.ac.standrews.cs.sos.impl.context.reflection.ContextClassBuilder.*;
 
 /**
  * The SOSContextService managed the contexts for this node.
@@ -98,6 +94,7 @@ public class SOSContextService implements ContextService {
         predicateThreadSessionStatistics = new LinkedList<>();
         applyPolicyThreadSessionStatistics = new LinkedList<>();
         checkPolicyThreadSessionStatistics = new LinkedList<>();
+
         // Run background CRON Jobs if and only if this is set in the node settings file
         if (SOSLocalNode.settings.getServices().getCms().isAutomatic()) {
 
@@ -132,6 +129,7 @@ public class SOSContextService implements ContextService {
         localContextsDirectory.addContext(context);
         inMemoryCache.addContext(context);
 
+        // Trigger context's predicate just after adding the context to the node based on the node settings
         if (SOSLocalNode.settings.getServices().getCms().isPredicateOnNewContext()) {
             runContextPredicateNow(context);
         }
@@ -142,21 +140,7 @@ public class SOSContextService implements ContextService {
     @Override
     public IGUID addContext(String jsonContext) throws Exception {
 
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(jsonContext);
-        String contextName = WordUtils.capitalize(jsonNode.get(CONTEXT_JSON_NAME).textValue());
-        NodesCollection domain = makeNodesCollection(jsonNode, CONTEXT_JSON_DOMAIN);
-        NodesCollection codomain = makeNodesCollection(jsonNode, CONTEXT_JSON_CODOMAIN);
-
-        ClassLoader.Load(jsonNode);
-
-        ContextV context;
-        if (jsonNode.has("guid")) {
-            IGUID contextGUID = GUIDFactory.recreateGUID(jsonNode.get("guid").textValue());
-            context = ClassLoader.Instance(jsonNode, policyActions, contextGUID, contextName, domain, codomain);
-        } else {
-            context = ClassLoader.Instance(contextName, jsonNode, policyActions, contextName, domain, codomain);
-        }
-
+        ContextV context = JSONHelper.JsonObjMapper().readValue(jsonContext, ContextV.class);
         return addContext(context);
     }
 

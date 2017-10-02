@@ -187,6 +187,16 @@ public class ClassLoader {
 
     }
 
+    public static Predicate PredicateInstance() {
+        // TODO
+        return null;
+    }
+
+    public static Policy PolicyInstance() {
+        // TODO
+        return null;
+    }
+
     /**
      * REMOVEME - not a computational unit
      * Creates context instance
