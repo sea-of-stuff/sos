@@ -29,10 +29,7 @@ import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -616,7 +613,6 @@ public class SOSContextService implements ContextService {
 
     private Predicate getPredicate(ContextV context) {
 
-        // TODO - retrieve and make instance
         IGUID predicateRef = context.predicate();
 
         try {
@@ -624,14 +620,30 @@ public class SOSContextService implements ContextService {
 
         } catch (ManifestNotFoundException e) {
 
+            // TODO - throw proper exception
             return null;
         }
     }
 
     private Set<Policy> getPolicies(ContextV context) {
 
-        // TODO - retrieve and make instance
-        return null;
+
+        Set<Policy> retval = new LinkedHashSet<>();
+
+        for(IGUID policyRef:context.policies()) {
+
+            try {
+                Policy policy = (Policy) dataDiscoveryService.getManifest(policyRef);
+                retval.add(policy);
+
+            } catch (ManifestNotFoundException e) {
+                /* TODO - throw proper exception */
+                return null;
+            }
+        }
+
+
+        return retval;
     }
 
 }

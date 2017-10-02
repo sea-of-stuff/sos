@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.context.reflection;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
 import org.apache.commons.lang3.text.WordUtils;
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
@@ -205,7 +204,8 @@ public class ClassLoader {
     }
 
     public static Policy PolicyInstance() {
-        // TODO
+
+        // TODO - create policy instance similarly to the predicate one
         return null;
     }
 
@@ -232,32 +232,6 @@ public class ClassLoader {
             return context;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
             throw new ClassLoaderException("Unable to create instance for class " + className);
-        }
-    }
-
-    /**
-     * REMOVEME - not a computational unit
-     * Creates context instance
-     *
-     * @param jsonNode
-     * @param policyActions
-     * @param guid of the context
-     * @param contextName
-     * @param domain
-     * @param codomain
-     * @return
-     * @throws ClassLoaderException
-     */
-    public static Context Instance(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String contextName, NodesCollection domain, NodesCollection codomain) throws ClassLoaderException {
-
-        try {
-            java.lang.ClassLoader classLoader = SOSClassLoader();
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + guid.toMultiHash(), true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, IGUID.class, String.class, NodesCollection.class, NodesCollection.class);
-            Context context = (Context) constructor.newInstance(jsonNode, policyActions, guid, contextName, domain, codomain);
-            return context;
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ClassLoaderException("Unable to create instance for class " + guid.toMultiHash());
         }
     }
 
