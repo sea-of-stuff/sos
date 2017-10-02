@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
-import org.apache.commons.lang3.text.WordUtils;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
@@ -109,25 +108,13 @@ public class ClassLoader {
         }
 
         try {
-
-            ComputationalUnit computationalUnitManifest;
             ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
-            switch (type) {
-                case PREDICATE:
-                    computationalUnitManifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Predicate.class);
-                    break;
-                case POLICY:
-                    computationalUnitManifest = JSONHelper.JsonObjMapper().readValue(node.toString(), Policy.class);
-                    break;
-                default:
-                    throw new ClassLoaderException("ClassLoader - Manifest Type is wrong");
-            }
-
-            String clazzString = ClassBuilderFactory.getClassBuilder(type.toString()).constructClass(computationalUnitManifest);
+            ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder(type.toString());
+            String clazzString = classBuilder.constructClass(node);
             // System.out.println(clazzString); // THIS LINE IS HERE FOR DEBUG PURPOSES
 
             // Print class to file
-            String clazzName = WordUtils.capitalize(computationalUnitManifest.guid().toMultiHash());
+            String clazzName = classBuilder.className(node);
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             if (sourceClazzFile.exists()) { sourceClazzFile.delete(); }
             sourceClazzFile.deleteOnExit();

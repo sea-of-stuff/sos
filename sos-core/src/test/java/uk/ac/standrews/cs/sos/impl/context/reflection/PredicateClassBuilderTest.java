@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context.reflection;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.model.Predicate;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -16,14 +16,14 @@ public class PredicateClassBuilderTest {
     @Test
     public void basicClassConstruction() throws IOException {
 
+        // TODO - manifest type
         String JSON_CONTEXT =
                 "{\n" +
                         "    \"predicate\": \"True\"\n" +
                         "}";
 
-        Predicate predicate = JSONHelper.JsonObjMapper().readValue(JSON_CONTEXT, Predicate.class);
-
-        String clazzString = new PredicateClassBuilder().constructClass(predicate);
+        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+        String clazzString = new PredicateClassBuilder().constructClass(jsonNode);
 
         String MATCHING_CLAZZ =
                 "package uk.ac.standrews.cs.sos.impl.context;\n" +

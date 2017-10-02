@@ -45,6 +45,23 @@ public class ClassLoaderTest extends SetUpTest {
         policyActions = new PolicyActions(localSOSNode.getNDS(), localSOSNode.getDDS(), localSOSNode.getRMS(), localSOSNode.getStorage());
     }
 
+    @Test
+    public void withGUIDPredicateConstructorLoader() throws IOException, ClassLoaderException {
+
+        String JSON_CONTEXT =
+                "{\n" +
+                        "    \"name\": \"Test1\",\n" +
+                        "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
+                        "}";
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+
+        ClassLoader.Load(node);
+
+
+
+    }
+
     // REMOVEME
     @Test
     public void withGUIDContextConstructorLoader() throws IOException, ClassLoaderException, NodesCollectionException {

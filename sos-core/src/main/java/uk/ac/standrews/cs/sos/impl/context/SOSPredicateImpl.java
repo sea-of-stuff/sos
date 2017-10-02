@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.model.SOSPredicate;
 import java.util.Objects;
 
 /**
+ * REMOVEME
+ *
  * This class acts mainly as a wrapper for the Java Predicate object.
  * The wrapper allows us to cleanly handle the predicate under the test function and to apply it for the and/or operators of the context.
  *

@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.sos.json.PredicateSerializer;
  */
 @JsonSerialize(using = PredicateSerializer.class)
 @JsonDeserialize(using = PredicateDeserializer.class)
-public interface Predicate extends ComputationalUnit {
+public interface Predicate extends Manifest {
 
     /**
      * Get the max age for the validity of this predicate

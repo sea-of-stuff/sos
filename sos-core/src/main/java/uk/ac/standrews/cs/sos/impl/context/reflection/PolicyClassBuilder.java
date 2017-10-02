@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.reflection;
 
-import uk.ac.standrews.cs.sos.model.ComputationalUnit;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
@@ -10,7 +10,12 @@ import java.io.IOException;
 public class PolicyClassBuilder implements ClassBuilder {
 
     @Override
-    public String constructClass(ComputationalUnit computationalUnit) throws IOException {
+    public String className(JsonNode jsonNode) throws IOException {
+        return null;
+    }
+
+    @Override
+    public String constructClass(JsonNode jsonNode) throws IOException {
         return null;
     }
 }

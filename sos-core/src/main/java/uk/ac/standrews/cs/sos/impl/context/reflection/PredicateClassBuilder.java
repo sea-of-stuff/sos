@@ -2,7 +2,9 @@ package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.text.WordUtils;
-import uk.ac.standrews.cs.sos.model.ComputationalUnit;
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 
 import java.io.IOException;
 
@@ -39,9 +41,22 @@ public class PredicateClassBuilder implements ClassBuilder {
     private static final String CONTEXT_JSON_PREDICATE = "predicate";
 
     @Override
-    public String constructClass(ComputationalUnit predicate) throws IOException {
+    public String className(JsonNode jsonNode) throws IOException {
 
-        String className = WordUtils.capitalize(predicate.guid().toMultiHash());
+        IGUID predicateRef;
+        try {
+            predicateRef = GUIDFactory.generateGUID(jsonNode.get(CONTEXT_JSON_PREDICATE).asText());
+        } catch (GUIDGenerationException e) {
+            throw new IOException("Unable to generate predicate ref from json node " + jsonNode.toString());
+        }
+
+        return WordUtils.capitalize(predicateRef.toMultiHash());
+    }
+
+    @Override
+    public String constructClass(JsonNode jsonNode) throws IOException {
+
+        String className = className(jsonNode);
 
         /////////////////////////
         // Package and Imports //
@@ -60,13 +75,12 @@ public class PredicateClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "com.fasterxml.jackson.databind.JsonNode"));
 
-        if (false /* FIXME */ ) {
-            JsonNode dependencies = predicate.dependencies();
+        if (jsonNode.has(CONTEXT_JSON_DEPENDENCIES)) {
+            JsonNode dependencies = jsonNode.get(CONTEXT_JSON_DEPENDENCIES);
             for (JsonNode dependency : dependencies) {
                 clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
             }
         }
-
         clazz.append(NEW_LINE);
 
         //////////////////////////
@@ -81,7 +95,7 @@ public class PredicateClassBuilder implements ClassBuilder {
         ///////////////
         // Predicate //
         ///////////////
-        String predicateCode = predicate.code().has(CONTEXT_JSON_PREDICATE) ? predicate.code().get(CONTEXT_JSON_PREDICATE).asText() : "";
+        String predicateCode = jsonNode.get(CONTEXT_JSON_PREDICATE).asText();
         clazz.append(PREDICATE_METHOD.replace(PREDICATE_TAG, predicateCode));
 
         clazz.append(CLASS_CLOSING);

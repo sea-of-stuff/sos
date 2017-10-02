@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.Predicate;
 import java.io.IOException;
 
 /**
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class PredicateDeserializer extends JsonDeserializer<Predicate> {
