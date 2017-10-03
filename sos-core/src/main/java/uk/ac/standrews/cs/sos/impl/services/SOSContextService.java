@@ -107,7 +107,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<ContextV> getContexts() {
+    public Set<Context> getContexts() {
 
         return inMemoryCache.getContexts()
                 .stream()
@@ -121,7 +121,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public IGUID addContext(ContextV context) throws Exception {
+    public IGUID addContext(Context context) throws Exception {
 
         localContextsDirectory.addContext(context);
         inMemoryCache.addContext(context);
@@ -137,7 +137,7 @@ public class SOSContextService implements ContextService {
     @Override
     public IGUID addContext(String jsonContext) throws Exception {
 
-        ContextV context = JSONHelper.JsonObjMapper().readValue(jsonContext, ContextV.class);
+        Context context = JSONHelper.JsonObjMapper().readValue(jsonContext, Context.class);
         return addContext(context);
     }
 
@@ -148,7 +148,7 @@ public class SOSContextService implements ContextService {
         return addContext(node.toString());
     }
 
-    public ContextV getContext(IGUID contextGUID) throws ContextNotFoundException {
+    public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
             return inMemoryCache.getContext(contextGUID);
@@ -160,7 +160,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<ContextV> searchContexts(String contextName) throws ContextNotFoundException {
+    public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
 
         return inMemoryCache.getContexts(contextName);
     }
@@ -215,21 +215,21 @@ public class SOSContextService implements ContextService {
     @Override
     public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
 
-        ContextV context = getContext(guid);
+        Context context = getContext(guid);
         runContextPredicateNow(context);
     }
 
     @Override
     public void runContextPolicyNow(IGUID guid) throws ContextNotFoundException {
 
-        ContextV context = getContext(guid);
+        Context context = getContext(guid);
         runContextPoliciesNow(context);
     }
 
     @Override
     public void runContextPolicyCheckNow(IGUID guid) throws ContextNotFoundException {
 
-        ContextV context = getContext(guid);
+        Context context = getContext(guid);
         runContextPoliciesCheckNow(context);
     }
 
@@ -237,7 +237,7 @@ public class SOSContextService implements ContextService {
     // PERIODIC TASKS //
     ////////////////////
 
-    private void runContextPredicateNow(ContextV context) {
+    private void runContextPredicateNow(Context context) {
 
         service.schedule(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY predicate for context " + context.getName());
@@ -277,14 +277,14 @@ public class SOSContextService implements ContextService {
 
         int counter = 0;
 
-        for (ContextV context : getContexts()) {
+        for (Context context : getContexts()) {
             counter += runPredicate(context);
         }
 
         return counter;
     }
 
-    private int runPredicate(ContextV context) {
+    private int runPredicate(Context context) {
 
         int counter = 0;
         long start = System.nanoTime();
@@ -308,7 +308,7 @@ public class SOSContextService implements ContextService {
         return counter;
     }
 
-    private void runContextPoliciesNow(ContextV context) {
+    private void runContextPoliciesNow(Context context) {
 
         service.schedule(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
@@ -349,13 +349,13 @@ public class SOSContextService implements ContextService {
     @Override
     public void runPolicies() {
 
-        for (ContextV context : getContexts()) {
+        for (Context context : getContexts()) {
             runPolicies(context);
         }
 
     }
 
-    private void runPolicies(ContextV context) {
+    private void runPolicies(Context context) {
 
         long start = System.nanoTime();
 
@@ -372,7 +372,7 @@ public class SOSContextService implements ContextService {
         InstrumentFactory.instance().measure(StatsTYPE.policies, context.getName(), duration);
     }
 
-    private void runContextPoliciesCheckNow(ContextV context) {
+    private void runContextPoliciesCheckNow(Context context) {
 
         service.schedule(() -> {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
@@ -401,12 +401,12 @@ public class SOSContextService implements ContextService {
 
     public void checkPolicies() {
 
-        for (ContextV context : getContexts()) {
+        for (Context context : getContexts()) {
             checkPolicies(context);
         }
     }
 
-    private void checkPolicies(ContextV context) {
+    private void checkPolicies(Context context) {
 
         long start = System.nanoTime();
 
@@ -432,7 +432,7 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.WARN, "N/A yet - Get data from other nodes - this is a periodic background thread");
 
-            for (ContextV context : getContexts()) {
+            for (Context context : getContexts()) {
 
                 // TODO - run this only for those contexts/nodes that have been marked (data-periodic) by the spawnContextsPeriodic logic (see comments in there)
                 NodesCollection domain = context.domain();
@@ -487,7 +487,7 @@ public class SOSContextService implements ContextService {
      * @param assetInvariant of the version
      * @param versionGUID to evaluate
      */
-    private void runPredicate(ContextV context, IGUID assetInvariant, IGUID versionGUID) {
+    private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
 
         IGUID contextGUID = context.guid();
         boolean alreadyRun =  contextsContentsDirectory.entryExists(contextGUID, versionGUID);
@@ -524,7 +524,7 @@ public class SOSContextService implements ContextService {
      * @param context for which policies have to run
      * @param guid of the entity
      */
-    private void runPolicies(ContextV context, IGUID guid) {
+    private void runPolicies(Context context, IGUID guid) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
@@ -551,7 +551,7 @@ public class SOSContextService implements ContextService {
         }
     }
 
-    private void checkPolicies(ContextV context, IGUID guid) {
+    private void checkPolicies(Context context, IGUID guid) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
@@ -585,7 +585,7 @@ public class SOSContextService implements ContextService {
      * @param versionGUID to evaluate
      * @return true if the predicate is still valid
      */
-    private boolean predicateHasExpired(ContextV context, IGUID versionGUID) {
+    private boolean predicateHasExpired(Context context, IGUID versionGUID) {
 
         ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
 
@@ -602,7 +602,7 @@ public class SOSContextService implements ContextService {
         try {
             for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
 
-                ContextV context = localContextsDirectory.getContext(contextsToLoad);
+                Context context = localContextsDirectory.getContext(contextsToLoad);
                 inMemoryCache.addContext(context);
             }
 
@@ -611,7 +611,7 @@ public class SOSContextService implements ContextService {
         }
     }
 
-    private Predicate getPredicate(ContextV context) {
+    private Predicate getPredicate(Context context) {
 
         IGUID predicateRef = context.predicate();
 
@@ -625,7 +625,7 @@ public class SOSContextService implements ContextService {
         }
     }
 
-    private Set<Policy> getPolicies(ContextV context) {
+    private Set<Policy> getPolicies(Context context) {
 
 
         Set<Policy> retval = new LinkedHashSet<>();

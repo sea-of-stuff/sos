@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.services;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
-import uk.ac.standrews.cs.sos.model.ContextV;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
@@ -25,7 +25,7 @@ public interface ContextService {
      *
      * @return
      */
-    Set<ContextV> getContexts();
+    Set<Context> getContexts();
 
     /**
      * Adds a context to this service.
@@ -34,7 +34,7 @@ public interface ContextService {
      * @param context to be added
      * @throws Exception if the context could not be added
      */
-    IGUID addContext(ContextV context) throws Exception;
+    IGUID addContext(Context context) throws Exception;
 
     /**
      * Add a context to this service given a JSON representation of the context
@@ -60,7 +60,7 @@ public interface ContextService {
      * @return the matching context
      * @throws ContextNotFoundException if no context could be found
      */
-    ContextV getContext(IGUID contextGUID) throws ContextNotFoundException;
+    Context getContext(IGUID contextGUID) throws ContextNotFoundException;
 
     /**
      * Get a context given its name
@@ -69,7 +69,7 @@ public interface ContextService {
      * @return
      * @throws ContextNotFoundException
      */
-    Set<ContextV> searchContexts(String contextName) throws ContextNotFoundException;
+    Set<Context> searchContexts(String contextName) throws ContextNotFoundException;
 
     /**
      * Get the set for all content belonging to the specified context.

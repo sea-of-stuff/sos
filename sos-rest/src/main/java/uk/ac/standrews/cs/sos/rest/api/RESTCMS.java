@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
-import uk.ac.standrews.cs.sos.model.ContextV;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.CMSNode;
@@ -35,7 +35,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            Set<ContextV> contexts = contextService.getContexts();
+            Set<Context> contexts = contextService.getContexts();
             String output = StringUtils.join(contexts, ",\n");
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
@@ -81,7 +81,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            ContextV context = contextService.getContext(contextGUID);
+            Context context = contextService.getContext(contextGUID);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, context.toString());
         } catch (ContextNotFoundException e) {

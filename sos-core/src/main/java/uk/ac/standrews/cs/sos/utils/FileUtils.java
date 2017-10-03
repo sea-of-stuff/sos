@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
-import uk.ac.standrews.cs.sos.impl.context.ContextVManifest;
+import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.impl.manifests.*;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -81,7 +81,7 @@ public class FileUtils {
                     break;
 
                 case CONTEXT:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), ContextVManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), ContextManifest.class);
                     break;
                 case PREDICATE:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Predicate.class);
@@ -125,7 +125,7 @@ public class FileUtils {
                     break;
 
                 case CONTEXT:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, ContextVManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, ContextManifest.class);
                     break;
                 case PREDICATE:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Predicate.class);

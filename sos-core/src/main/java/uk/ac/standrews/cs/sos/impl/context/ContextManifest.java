@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.manifests.SignedManifest;
-import uk.ac.standrews.cs.sos.model.ContextV;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -22,7 +22,7 @@ import java.util.Set;
  * TODO - tests
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextVManifest extends SignedManifest implements ContextV {
+public class ContextManifest extends SignedManifest implements Context {
 
     private JsonNode jsonNode;
 
@@ -55,7 +55,7 @@ public class ContextVManifest extends SignedManifest implements ContextV {
      * @param domain
      * @param codomain
      */
-    public ContextVManifest(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
+    public ContextManifest(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
         this(jsonNode, policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain, signer);
     }
 
@@ -69,7 +69,7 @@ public class ContextVManifest extends SignedManifest implements ContextV {
      * @param domain
      * @param codomain
      */
-    public ContextVManifest(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
+    public ContextManifest(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
         super(signer, ManifestType.CONTEXT);
 
         this.jsonNode = jsonNode;

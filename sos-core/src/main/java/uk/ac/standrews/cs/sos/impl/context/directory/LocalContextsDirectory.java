@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.model.ContextV;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 
 import java.util.LinkedHashSet;
@@ -38,7 +38,7 @@ public class LocalContextsDirectory {
      * @return the guid of the context
      * @throws DataStorageException if the context could not be added
      */
-    public IGUID addContext(ContextV context) throws DataStorageException {
+    public IGUID addContext(Context context) throws DataStorageException {
 
         try {
             dataDiscoveryService.addManifest(context);
@@ -56,10 +56,10 @@ public class LocalContextsDirectory {
      * @return the instance of the context
      * @throws ContextNotFoundException if the context could not be found
      */
-    public ContextV getContext(IGUID guid) throws ContextNotFoundException {
+    public Context getContext(IGUID guid) throws ContextNotFoundException {
 
         try {
-            ContextV context = (ContextV) dataDiscoveryService.getManifest(guid);
+            Context context = (Context) dataDiscoveryService.getManifest(guid);
 
             // TODO - load the predicate and policies lazily
             // ClassLoader.Load(jsonNode);
