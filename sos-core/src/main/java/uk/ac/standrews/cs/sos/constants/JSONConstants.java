@@ -42,7 +42,7 @@ public class JSONConstants {
     public static final String KEY_META_TYPE = "Type";
     public static final String KEY_META_VALUE = "Value";
 
-    // Role/User
+    // User/Role
     public static final String KEY_USER = "User";
     public static final String KEY_NAME = "Name";
     public static final String KEY_SIGNATURE_CERTIFICATE = "Certificate";
@@ -60,14 +60,14 @@ public class JSONConstants {
     public static final String KEY_NODE_SERVICES_NDS = "nds";
     public static final String KEY_NODE_SERVICES_RMS = "rms";
     public static final String KEY_NODE_SERVICES_MMS = "mms";
+    public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 
     // Predicate
     public static final String KEY_PREDICATE = "Predicate";
     public static final String KEY_PREDICATE_DEPENDENCIES = "Dependencies";
-    public static final String KEY_PREDICATE_MAX_AGE = "Max-Age"; // TODO - in context
+    public static final String KEY_PREDICATE_MAX_AGE = "Max-Age"; // TODO - have it in the context
 
     // Policy
-    public static final String KEY_POLICY = "Policy";
     public static final String KEY_POLICY_APPLY = "Apply";
     public static final String KEY_POLICY_SATISFIED = "Satisfied";
     public static final String KEY_POLICY_FIELDS = "Fields";
@@ -75,5 +75,4 @@ public class JSONConstants {
     public static final String KEY_POLICY_FIELD_NAME = "Name";
     public static final String KEY_POLICY_FIELD_VAL = "Value";
 
-    public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 }
