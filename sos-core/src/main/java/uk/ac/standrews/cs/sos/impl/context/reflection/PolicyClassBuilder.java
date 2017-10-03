@@ -17,8 +17,7 @@ public class PolicyClassBuilder implements ClassBuilder {
 
     private static final String NEW_LINE = "\n";
 
-    private static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
-    private static final String PACKAGE_DECLARATION = "package " + PACKAGE + ";" + NEW_LINE;
+    private static final String PACKAGE_DECLARATION = "package " + ClassBuilderFactory.PACKAGE + ";" + NEW_LINE;
     private static final String IMPORTEE_TAG = "_IMPORTEE_";
     private static final String IMPORT = "import " + IMPORTEE_TAG + ";" + NEW_LINE;
     private static final String CLASS_NAME_TAG = "_CLASS_NAME_";
@@ -27,7 +26,7 @@ public class PolicyClassBuilder implements ClassBuilder {
     private static final String CLASS_CLOSING = "}";
 
     private static final String CONSTRUCTOR_BODY = "super(policyManifest);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String policyManifest) {  "
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode policyManifest) {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
 
@@ -99,8 +98,8 @@ public class PolicyClassBuilder implements ClassBuilder {
 
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.io.IOException"));
 
-        if (jsonNode.has(KEY_PREDICATE_DEPENDENCIES)) {
-            JsonNode dependencies = jsonNode.get(KEY_PREDICATE_DEPENDENCIES);
+        if (jsonNode.has(KEY_COMPUTATIONAL_DEPENDENCIES)) {
+            JsonNode dependencies = jsonNode.get(KEY_COMPUTATIONAL_DEPENDENCIES);
             for (JsonNode dependency : dependencies) {
                 clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
             }

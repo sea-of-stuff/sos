@@ -41,7 +41,7 @@ public class PredicateClassBuilderTest {
                 "\n" +
                 "public class SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 extends BasePredicate {\n" +
                 "\n" +
-                "public SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 (String predicateManifest, long maxAge) {  \n" +
+                "public SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 (JsonNode predicateManifest, long maxAge) {  \n" +
                 "super(predicateManifest, maxAge);\n" +
                 "}\n" +
                 "\n" +

@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.manifests.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -23,10 +25,10 @@ import java.util.Objects;
  */
 public abstract class BasePredicate extends BasicManifest implements Predicate {
 
-    private String predicateManifest;
+    private JsonNode predicateManifest;
     private long maxAge;
 
-    public BasePredicate(String predicateManifest, long maxAge) {
+    public BasePredicate(JsonNode predicateManifest, long maxAge) {
         super(ManifestType.PREDICATE);
 
         this.predicateManifest = predicateManifest;
@@ -75,7 +77,17 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
 
     @Override
     public InputStream contentToHash() throws IOException {
-        return IO.StringToInputStream(predicateManifest);
+        return IO.StringToInputStream(predicateManifest.toString());
+    }
+
+    @Override
+    public JsonNode dependencies() {
+        return predicateManifest.get(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
+    }
+
+    @Override
+    public JsonNode predicate() {
+        return predicateManifest.get(JSONConstants.KEY_PREDICATE);
     }
 
 }

@@ -32,7 +32,7 @@ import java.util.Collections;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ClassLoader {
+public class SOSReflection {
 
     /**
      * Load multiple classes at path
@@ -165,7 +165,7 @@ public class ClassLoader {
 
         try {
             java.lang.ClassLoader cl = SOSClassLoader();
-            Class<?> cls = cl.loadClass(ContextClassBuilder.PACKAGE + "." + className);
+            Class<?> cls = cl.loadClass(ClassBuilderFactory.PACKAGE + "." + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded class: " + cls.getName());
 
         } catch (ClassNotFoundException e) {
@@ -182,9 +182,9 @@ public class ClassLoader {
             long maxage = node.has(JSONConstants.KEY_PREDICATE_MAX_AGE) ? node.get(JSONConstants.KEY_PREDICATE_MAX_AGE).asLong() : 0; // TODO - have this in context
 
             java.lang.ClassLoader classLoader = SOSClassLoader();
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(String.class, long.class);
-            return (Predicate) constructor.newInstance(node.toString(), maxage);
+            Class<?> clazz = Class.forName(ClassBuilderFactory.PACKAGE + "." + className, true, classLoader);
+            Constructor<?> constructor = clazz.getConstructor(JsonNode.class, long.class);
+            return (Predicate) constructor.newInstance(node, maxage);
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                 ClassBuilderException | IOException e) {
@@ -201,9 +201,9 @@ public class ClassLoader {
             String className = classBuilder.className(node);
 
             java.lang.ClassLoader classLoader = SOSClassLoader();
-            Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(String.class);
-            return (Policy) constructor.newInstance(node.toString());
+            Class<?> clazz = Class.forName(ClassBuilderFactory.PACKAGE + "." + className, true, classLoader);
+            Constructor<?> constructor = clazz.getConstructor(JsonNode.class);
+            return (Policy) constructor.newInstance(node);
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                 ClassBuilderException | IOException e) {

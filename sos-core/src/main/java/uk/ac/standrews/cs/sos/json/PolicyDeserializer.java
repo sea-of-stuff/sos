@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
-import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
+import uk.ac.standrews.cs.sos.impl.context.reflection.SOSReflection;
 import uk.ac.standrews.cs.sos.model.Policy;
 
 import java.io.IOException;
@@ -20,8 +20,8 @@ public class PolicyDeserializer extends JsonDeserializer<Policy> {
 
         try {
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-            ClassLoader.Load(node);
-            return ClassLoader.PolicyInstance(node);
+            SOSReflection.Load(node);
+            return SOSReflection.PolicyInstance(node);
 
         } catch (ClassLoaderException e) {
             throw new IOException(e);

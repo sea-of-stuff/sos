@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BasePolicy;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -11,7 +12,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
  */
 public class ReferencePolicy extends BasePolicy {
 
-    public ReferencePolicy(String policyManifest) {
+    public ReferencePolicy(JsonNode policyManifest) {
         super(policyManifest);
     }
 

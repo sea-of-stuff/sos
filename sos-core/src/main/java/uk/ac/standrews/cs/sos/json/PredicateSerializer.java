@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Predicate;
 
 import java.io.IOException;
@@ -13,7 +15,13 @@ import java.io.IOException;
 public class PredicateSerializer extends JsonSerializer<Predicate> {
 
     @Override
-    public void serialize(Predicate value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Predicate predicate, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
 
+        jsonGenerator.writeStartObject();
+
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.USER.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_GUID, predicate.guid().toMultiHash());
+
+        jsonGenerator.writeEndObject();
     }
 }

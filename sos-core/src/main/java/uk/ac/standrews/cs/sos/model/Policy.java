@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 
@@ -15,7 +16,7 @@ import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Policy extends Manifest {
+public interface Policy extends ComputationalUnit {
 
     /**
      * Run this policy over a manifest
@@ -39,4 +40,7 @@ public interface Policy extends Manifest {
      */
     boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException;
 
+    JsonNode apply();
+
+    JsonNode satisfied();
 }

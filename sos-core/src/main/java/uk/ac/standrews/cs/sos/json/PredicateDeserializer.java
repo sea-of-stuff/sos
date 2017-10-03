@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
-import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
+import uk.ac.standrews.cs.sos.impl.context.reflection.SOSReflection;
 import uk.ac.standrews.cs.sos.model.Predicate;
 
 import java.io.IOException;
@@ -21,8 +21,8 @@ public class PredicateDeserializer extends JsonDeserializer<Predicate> {
 
         try {
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-            ClassLoader.Load(node);
-            return ClassLoader.PredicateInstance(node);
+            SOSReflection.Load(node);
+            return SOSReflection.PredicateInstance(node);
 
         } catch (ClassLoaderException e) {
             throw new IOException(e);

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context.examples;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.context.BasePredicate;
 import uk.ac.standrews.cs.sos.impl.context.CommonPredicates;
@@ -11,7 +12,7 @@ import java.util.Collections;
  */
 public class ReferencePredicate extends BasePredicate {
 
-    public ReferencePredicate(String code, long maxAge) {
+    public ReferencePredicate(JsonNode code, long maxAge) {
         super(code, maxAge);
     }
 

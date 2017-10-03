@@ -58,19 +58,25 @@ public class PolicyClassBuilderTest {
                         "import com.fasterxml.jackson.databind.JsonNode;\n" +
                         "import java.io.IOException;\n" +
                         "\n" +
-                        "public class SHA256_16_e9326960467fd93dbe3518f2009f4106e30f724f4f515ffc71e038cbe2577791 extends BasePolicy {\n" +
+                        "public class SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d extends BasePolicy {\n" +
                         "\n" +
-                        "public SHA256_16_e9326960467fd93dbe3518f2009f4106e30f724f4f515ffc71e038cbe2577791 (PolicyActions policyActions, String policyManifest) {  \n" +
-                        "super(policyActions, policyManifest);\n" +
+                        "private int factor = 2;\n" +
+                        "\n" +
+                        "public SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d (JsonNode policyManifest) {  \n" +
+                        "super(policyManifest);\n" +
                         "}\n" +
                         "\n" +
-                        "@Override\n" +
-                        "    public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {\n" +
-                        "    true\n" +
-                        "    }@Override\n" +
-                        "    public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {\n" +
-                        "    true\n" +
-                        "    }}\n";
+                        "    @Override\n" +
+                        "    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
+                        "    \n" +
+                        "    }\n" +
+                        "\n" +
+                        "    @Override\n" +
+                        "    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
+                        "    return true;\n" +
+                        "    }\n" +
+                        "\n" +
+                        "}\n";
 
         assertEquals(clazzString, MATCHING_CLAZZ);
     }

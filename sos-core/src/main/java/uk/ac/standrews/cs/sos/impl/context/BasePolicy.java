@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.manifests.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -17,14 +19,15 @@ import java.io.InputStream;
 public abstract class BasePolicy extends BasicManifest implements Policy {
 
     private IGUID guid;
-    private String policyManifest;
+    private JsonNode policyManifest;
 
     // REMOVEME
     protected BasePolicy() {
         super(ManifestType.POLICY);
     }
 
-    protected BasePolicy(String policyManifest) {
+    // TODO - use jsonnode
+    protected BasePolicy(JsonNode policyManifest) {
         super(ManifestType.POLICY);
 
         this.policyManifest = policyManifest;
@@ -36,12 +39,28 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
         return guid;
     }
 
+    @Override
     public boolean verifySignature(Role role) throws SignatureException {
         return false;
     }
 
+    @Override
     public InputStream contentToHash() throws IOException {
-        return IO.StringToInputStream(policyManifest);
+        return IO.StringToInputStream(policyManifest.toString());
     }
 
+    @Override
+    public JsonNode dependencies() {
+        return policyManifest.get(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
+    }
+
+    @Override
+    public JsonNode apply() {
+        return policyManifest.get(JSONConstants.KEY_POLICY_APPLY);
+    }
+
+    @Override
+    public JsonNode satisfied() {
+        return policyManifest.get(JSONConstants.KEY_POLICY_SATISFIED);
+    }
 }

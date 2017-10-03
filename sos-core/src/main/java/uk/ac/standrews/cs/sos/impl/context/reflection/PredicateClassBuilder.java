@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 
 import java.io.IOException;
 
+import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES;
 import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_PREDICATE;
-import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_PREDICATE_DEPENDENCIES;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -18,8 +18,7 @@ public class PredicateClassBuilder implements ClassBuilder {
 
     private static final String NEW_LINE = "\n";
 
-    private static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
-    private static final String PACKAGE_DECLARATION = "package " + PACKAGE + ";" + NEW_LINE;
+    private static final String PACKAGE_DECLARATION = "package " + ClassBuilderFactory.PACKAGE  + ";" + NEW_LINE;
     private static final String IMPORTEE_TAG = "_IMPORTEE_";
     private static final String IMPORT = "import " + IMPORTEE_TAG + ";" + NEW_LINE;
     private static final String CLASS_NAME_TAG = "_CLASS_NAME_";
@@ -28,7 +27,7 @@ public class PredicateClassBuilder implements ClassBuilder {
     private static final String CLASS_CLOSING = "}";
 
     private static final String CONSTRUCTOR_BODY = "super(predicateManifest, maxAge);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String predicateManifest, long maxAge) {  "
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode predicateManifest, long maxAge) {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
     private static final String PREDICATE_TAG = "_PREDICATE_TAG_";
@@ -73,8 +72,8 @@ public class PredicateClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "com.fasterxml.jackson.databind.JsonNode"));
 
-        if (jsonNode.has(KEY_PREDICATE_DEPENDENCIES)) {
-            JsonNode dependencies = jsonNode.get(KEY_PREDICATE_DEPENDENCIES);
+        if (jsonNode.has(KEY_COMPUTATIONAL_DEPENDENCIES)) {
+            JsonNode dependencies = jsonNode.get(KEY_COMPUTATIONAL_DEPENDENCIES);
             for (JsonNode dependency : dependencies) {
                 clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
             }

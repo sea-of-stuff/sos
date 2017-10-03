@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.impl.context.closures;
+package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.BeforeMethod;
@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -33,7 +32,7 @@ import static org.testng.AssertJUnit.assertTrue;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ClassLoaderTest extends SetUpTest {
+public class SOSReflectionTest extends SetUpTest {
 
     private PolicyActions policyActions;
 
@@ -56,9 +55,9 @@ public class ClassLoaderTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
-        ClassLoader.Load(node);
+        SOSReflection.Load(node);
 
-        Predicate predicate = ClassLoader.PredicateInstance(node);
+        Predicate predicate = SOSReflection.PredicateInstance(node);
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
         assertTrue(predicate.test(GUIDFactory.generateRandomGUID()));
@@ -75,9 +74,9 @@ public class ClassLoaderTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
-        ClassLoader.Load(node);
+        SOSReflection.Load(node);
 
-        Predicate predicate = ClassLoader.PredicateInstance(node);
+        Predicate predicate = SOSReflection.PredicateInstance(node);
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
 
@@ -126,12 +125,37 @@ public class ClassLoaderTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
-        ClassLoader.Load(node);
+        SOSReflection.Load(node);
 
-        Policy policy = ClassLoader.PolicyInstance(node);
+        Policy policy = SOSReflection.PolicyInstance(node);
         assertNotNull(policy.guid());
         assertEquals(policy.getType(), ManifestType.POLICY);
         assertTrue(policy.satisfied(null, null, null));
+    }
+
+    @Test
+    public void policyFalseSatisfiedLoader() throws IOException, ClassLoaderException, PolicyException {
+
+        String JSON_POLICY =
+                "{\n" +
+                        "  \"Type\": \"Policy\",\n" +
+                        "  \"Apply\": \"\",\n" +
+                        "  \"Satisfied\": \"return false;\",\n" +
+                        "  \"Dependencies\": [],\n" +
+                        "  \"Fields\": [{\n" +
+                        "    \"Type\": \"int\",\n" +
+                        "    \"Name\": \"factor\",\n" +
+                        "    \"Value\": \"2\"\n" +
+                        "  }]\n" +
+                        "}";
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        SOSReflection.Load(node);
+
+        Policy policy = SOSReflection.PolicyInstance(node);
+        assertNotNull(policy.guid());
+        assertEquals(policy.getType(), ManifestType.POLICY);
+        assertFalse(policy.satisfied(null, null, null));
     }
 
 

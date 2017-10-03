@@ -7,6 +7,8 @@ import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
  */
 public class ClassBuilderFactory {
 
+    static final String PACKAGE = "uk.ac.standrews.cs.sos.impl.context";
+
     public static ClassBuilder getClassBuilder(String builder) throws ClassBuilderException {
 
         switch(builder.toLowerCase()) {

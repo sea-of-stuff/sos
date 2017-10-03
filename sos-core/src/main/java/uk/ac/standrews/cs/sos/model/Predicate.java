@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -11,9 +12,11 @@ import uk.ac.standrews.cs.sos.json.PredicateSerializer;
  */
 @JsonSerialize(using = PredicateSerializer.class)
 @JsonDeserialize(using = PredicateDeserializer.class)
-public interface Predicate extends Manifest {
+public interface Predicate extends ComputationalUnit {
 
     /**
+     * FIXME - have this in the context
+     *
      * Get the max age for the validity of this predicate
      * The max age is compared against the system time, in nano seconds - System.nanoTime();
      *
@@ -42,4 +45,6 @@ public interface Predicate extends Manifest {
      * @return the resulting predicate
      */
     Predicate or(Predicate other);
+
+    JsonNode predicate();
 }
