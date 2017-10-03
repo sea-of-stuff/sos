@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
-import uk.ac.standrews.cs.sos.impl.context.reflection.ContextClassBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -107,7 +106,7 @@ public class WContexts {
         try {
             String contextJSON = request.body();
             JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(contextJSON);
-            String clazz = ContextClassBuilder.ConstructClass(jsonNode);
+            String clazz = "N/A - have to use predicate and policy class builders"; // ContextClassBuilder.ConstructClass(jsonNode);
 
             response.status(200);
             return clazz;
