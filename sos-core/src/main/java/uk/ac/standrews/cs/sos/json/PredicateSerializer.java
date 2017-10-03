@@ -22,6 +22,13 @@ public class PredicateSerializer extends JsonSerializer<Predicate> {
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.USER.toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, predicate.guid().toMultiHash());
 
+        jsonGenerator.writeFieldName(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
+        jsonGenerator.writeStartArray();
+        jsonGenerator.writeTree(predicate.dependencies());
+        jsonGenerator.writeEndArray();
+
+        jsonGenerator.writeStringField(JSONConstants.KEY_PREDICATE, predicate.predicate().toString());
+
         jsonGenerator.writeEndObject();
     }
 }

@@ -20,10 +20,7 @@ import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.model.*;
 
 import java.io.IOException;
 
@@ -58,6 +55,7 @@ public class FileUtils {
         }
     }
 
+    // TODO - user/role/node
     // TODO - can we have parsers on the interfaces rather than the implementations?
     private static Manifest constructManifestFromJsonFile(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
@@ -86,9 +84,11 @@ public class FileUtils {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), ContextVManifest.class);
                     break;
                 case PREDICATE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Predicate.class);
+                    break;
                 case POLICY:
-                    // TODO - need to write proper parsers
-                    throw new UnsupportedOperationException();
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Policy.class);
+                    break;
 
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
@@ -100,6 +100,7 @@ public class FileUtils {
         return manifest;
     }
 
+    // TODO - user/role/node
     private static Manifest constructManifestFromJson(ManifestType type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
@@ -127,9 +128,11 @@ public class FileUtils {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, ContextVManifest.class);
                     break;
                 case PREDICATE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Predicate.class);
+                    break;
                 case POLICY:
-                    // TODO - need to write proper parsers
-                    throw new UnsupportedOperationException();
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Policy.class);
+                    break;
 
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
