@@ -8,7 +8,9 @@ import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Policy;
+import uk.ac.standrews.cs.sos.model.Predicate;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -176,16 +178,14 @@ public class ClassLoader {
     public static Predicate PredicateInstance(JsonNode node) throws ClassLoaderException {
 
         try {
-            ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
-            ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder(type.toString());
+            ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder("PREDICATE");
             String className = classBuilder.className(node);
-            String predicateCode = node.get(JSONConstants.KEY_PREDICATE).asText();
             long maxage = node.has(JSONConstants.KEY_PREDICATE_MAX_AGE) ? node.get(JSONConstants.KEY_PREDICATE_MAX_AGE).asLong() : 0; // TODO - have this in context
 
             java.lang.ClassLoader classLoader = SOSClassLoader();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
             Constructor<?> constructor = clazz.getConstructor(String.class, long.class);
-            return (Predicate) constructor.newInstance(predicateCode, maxage);
+            return (Predicate) constructor.newInstance(node.toString(), maxage);
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                 ClassBuilderException | IOException e) {
@@ -195,38 +195,23 @@ public class ClassLoader {
 
     }
 
-    public static Policy PolicyInstance() {
-
-        // TODO - create policy instance similarly to the predicate one
-        return null;
-    }
-
-    /**
-     * REMOVEME - not a computational unit
-     * Creates context instance
-     *
-     * @param className // TODO this is the guid of the context
-     * @param jsonNode
-     * @param policyActions
-     * @param contextName
-     * @param domain
-     * @param codomain
-     * @return
-     * @throws ClassLoaderException
-     */
-    public static Context Instance(String className, JsonNode jsonNode, PolicyActions policyActions, String contextName, NodesCollection domain, NodesCollection codomain) throws ClassLoaderException {
+    public static Policy PolicyInstance(JsonNode node, PolicyActions policyActions) throws ClassLoaderException {
 
         try {
+            ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder("POLICY");
+            String className = classBuilder.className(node);
+
             java.lang.ClassLoader classLoader = SOSClassLoader();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(JsonNode.class, PolicyActions.class, String.class, NodesCollection.class, NodesCollection.class);
-            Context context = (Context) constructor.newInstance(jsonNode, policyActions, contextName, domain, codomain);
-            return context;
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ClassLoaderException("Unable to create instance for class " + className);
+            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class);
+            return (Policy) constructor.newInstance(policyActions, node.toString());
+
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                ClassBuilderException | IOException e) {
+
+            throw new ClassLoaderException("Unable to create instance for Predicate from jsonnode " + node.toString());
         }
     }
-
 
     private static java.lang.ClassLoader SOSClassLoader() throws ClassLoaderException {
 

@@ -14,22 +14,22 @@ import java.util.Objects;
 
 /**
  * This class acts mainly as a wrapper for the Java Predicate object.
- * The wrapper allows us to cleanly handle the predicate under the test function and to apply it for the and/or operators of the context.
+ * The wrapper allows us to cleanly handle the predicateManifest under the test function and to apply it for the and/or operators of the context.
  *
  * TODO - and/or operations are not fully implemented yet
- * TODO - how is the predicate converted to a first class entity?
+ * TODO - how is the predicateManifest converted to a first class entity?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class BasePredicate extends BasicManifest implements Predicate {
 
-    private String predicate;
+    private String predicateManifest;
     private long maxAge;
 
-    public BasePredicate(String predicate, long maxAge) {
+    public BasePredicate(String predicateManifest, long maxAge) {
         super(ManifestType.PREDICATE);
 
-        this.predicate = predicate;
+        this.predicateManifest = predicateManifest;
         this.maxAge = maxAge;
 
         this.guid = makeGUID();
@@ -51,7 +51,7 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
 
         long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
 
-        return null; // new SOSPredicateImpl(predicate.and(other.predicate()), newMaxAge);
+        return null; // new SOSPredicateImpl(predicateManifest.and(other.predicateManifest()), newMaxAge);
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
 
         long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
 
-        return null; // new SOSPredicateImpl(predicate.or(other.predicate()), newMaxAge);
+        return null; // new SOSPredicateImpl(predicateManifest.or(other.predicateManifest()), newMaxAge);
     }
 
     @Override
@@ -75,7 +75,7 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
 
     @Override
     public InputStream contentToHash() throws IOException {
-        return IO.StringToInputStream(predicate);
+        return IO.StringToInputStream(predicateManifest);
     }
 
 }

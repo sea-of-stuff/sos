@@ -22,7 +22,8 @@ public class PolicyDeserializer extends JsonDeserializer<Policy> {
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
             ClassLoader.Load(node);
 
-            return ClassLoader.PolicyInstance();
+            // FIXME
+            return ClassLoader.PolicyInstance(node, null);
 
         } catch (ClassLoaderException e) {
             throw new IOException(e);

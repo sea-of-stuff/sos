@@ -41,7 +41,7 @@ public class TextContext extends BaseContext {
     @Override
     public Policy[] policies() {
         return new Policy[]{
-                new CommonPolicies.DeletionPolicy(policyActions, codomain)
+                new CommonPolicies.DeletionPolicy(policyActions)
         };
     }
 

@@ -16,10 +16,12 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
+ * TODO - update all the class in here to reflect the new model
+ *
  * This class contains some pre-defined policies.
  * Each policy implements the #Policy interface and it has the two methods:
- * - void apply(Manifest manifest)
- * - boolean satisfied(Manifest manifest)
+ * - void apply(NodesCollection codomain, Manifest manifest)
+ * - boolean satisfied(NodesCollection codomain, Manifest manifest)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -28,10 +30,10 @@ public class CommonPolicies {
     public static class DoNothingPolicy extends BasePolicy {
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {}
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {}
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
             return true;
         }
     }
@@ -42,24 +44,21 @@ public class CommonPolicies {
     public static class ManifestReplicationPolicy extends BasePolicy {
 
         protected PolicyActions policyActions;
-        private NodesCollection codomain;
-        private int factor;
+        public int factor = 1;
 
-        public ManifestReplicationPolicy(PolicyActions policyActions, NodesCollection codomain, int factor) {
+        public ManifestReplicationPolicy(PolicyActions policyActions) {
             this.policyActions = policyActions;
-            this.codomain = codomain;
-            this.factor = factor;
         }
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
             policyActions.replicateManifest(manifest, nodes, factor);
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             int numberReplicas = policyActions.numberOfManifestReplicas(codomain, manifest.guid());
             return numberReplicas >= factor;
@@ -74,17 +73,15 @@ public class CommonPolicies {
     public static class DataReplicationPolicy extends BasePolicy {
 
         private PolicyActions policyActions;
-        private NodesCollection codomain;
         private int factor;
 
-        public DataReplicationPolicy(PolicyActions policyActions, NodesCollection codomain, int factor) {
+        public DataReplicationPolicy(PolicyActions policyActions, int factor) {
             this.policyActions = policyActions;
-            this.codomain = codomain;
             this.factor = factor;
         }
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             try {
 
@@ -113,7 +110,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             try {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
@@ -134,12 +131,12 @@ public class CommonPolicies {
     public static class MetadataReplicationPolicy extends BasePolicy {
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
             return false;
         }
     }
@@ -150,21 +147,19 @@ public class CommonPolicies {
     public static class DeletionPolicy extends BasePolicy {
 
         private PolicyActions policyActions;
-        private NodesCollection codomain;
 
-        public DeletionPolicy(PolicyActions policyActions, NodesCollection codomain) {
+        public DeletionPolicy(PolicyActions policyActions) {
             this.policyActions = policyActions;
-            this.codomain = codomain;
         }
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             policyActions.deleteData(manifest.guid(), codomain);
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             int numberReplicas = policyActions.numberOfDataReplicas(codomain, manifest.guid());
             return numberReplicas == 0;
@@ -188,7 +183,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             try {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
@@ -205,7 +200,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             try {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
@@ -230,12 +225,12 @@ public class CommonPolicies {
      */
     public static class ReplicateAllVersionsPolicy extends ManifestReplicationPolicy implements Policy {
 
-        public ReplicateAllVersionsPolicy(PolicyActions policyActions, NodesCollection codomain, int factor) {
-            super(policyActions, codomain, factor);
+        public ReplicateAllVersionsPolicy(PolicyActions policyActions) {
+            super(policyActions);
         }
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
@@ -247,7 +242,7 @@ public class CommonPolicies {
 
                     try {
                         Manifest m = policyActions.getManifest(v);
-                        super.apply(m);
+                        super.apply(codomain, m);
 
                     } catch (ManifestNotFoundException | NodesCollectionException e) {
                         e.printStackTrace();
@@ -257,7 +252,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
@@ -269,7 +264,7 @@ public class CommonPolicies {
 
                     try {
                         Manifest m = policyActions.getManifest(v);
-                        if (!super.satisfied(m)) {
+                        if (!super.satisfied(codomain, m)) {
                             return false;
                         }
 
@@ -292,12 +287,12 @@ public class CommonPolicies {
         }
 
         @Override
-        public void apply(Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
 
         }
 
         @Override
-        public boolean satisfied(Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
             return false;
         }
     }

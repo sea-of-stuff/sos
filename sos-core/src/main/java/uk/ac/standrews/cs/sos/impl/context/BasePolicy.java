@@ -16,19 +16,21 @@ import java.io.InputStream;
  */
 public abstract class BasePolicy extends BasicManifest implements Policy {
 
+    protected PolicyActions policyActions;
     private IGUID guid;
-    private String code;
+    private String policyManifest;
 
+    // REMOVEME
     protected BasePolicy() {
         super(ManifestType.POLICY);
-
-        this.guid = makeGUID();
     }
 
-    protected BasePolicy(String code) {
-        this();
+    protected BasePolicy(PolicyActions policyActions, String policyManifest) {
+        super(ManifestType.POLICY);
 
-        this.code = code;
+        this.policyManifest = policyManifest;
+        this.policyActions = policyActions;
+        this.guid = makeGUID();
     }
 
     @Override
@@ -41,7 +43,7 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
     }
 
     public InputStream contentToHash() throws IOException {
-        return IO.StringToInputStream(code);
+        return IO.StringToInputStream(policyManifest);
     }
 
 }

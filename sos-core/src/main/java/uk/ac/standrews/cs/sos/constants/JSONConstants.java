@@ -66,5 +66,14 @@ public class JSONConstants {
     public static final String KEY_PREDICATE_DEPENDENCIES = "Dependencies";
     public static final String KEY_PREDICATE_MAX_AGE = "Max-Age"; // TODO - in context
 
+    // Policy
+    public static final String KEY_POLICY = "Policy";
+    public static final String KEY_POLICY_APPLY = "Apply";
+    public static final String KEY_POLICY_SATISFIED = "Satisfied";
+    public static final String KEY_POLICY_FIELDS = "Fields";
+    public static final String KEY_POLICY_FIELD_TYPE = "Type";
+    public static final String KEY_POLICY_FIELD_NAME = "Name";
+    public static final String KEY_POLICY_FIELD_VAL = "Value";
+
     public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 }

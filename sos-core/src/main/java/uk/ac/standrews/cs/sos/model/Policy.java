@@ -19,19 +19,21 @@ public interface Policy extends Manifest {
     /**
      * Run this policy over a manifest
      *
+     * @param codomain over which to apply the policy
      * @param manifest over which this policy runs
      * @throws PolicyException if an error occurred while applying the policy
-     * @see #satisfied(Manifest) for info about the success of the policy
+     * @see #satisfied(NodesCollection, Manifest) for info about the success of the policy
      */
-    void apply(Manifest manifest) throws PolicyException;
+    void apply(NodesCollection codomain, Manifest manifest) throws PolicyException;
 
     /**
      * Check that the policy is satisfied
      *
+     * @param codomain over which the policy must be satisfied
      * @param manifest over which this policy will satisfied its agreement
      * @return true if the policy is satisfied
      * @throws PolicyException if an error occurred while checking that the policy is satisfied
      */
-    boolean satisfied(Manifest manifest) throws PolicyException;
+    boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException;
 
 }

@@ -16,14 +16,14 @@ public class PredicateClassBuilderTest {
     @Test
     public void basicClassConstruction() throws IOException {
 
-        String JSON_CONTEXT =
+        String JSON_PREDICATE =
                 "{\n" +
                         "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"true\",\n" +
+                        "\t\"Predicate\": \"true;\",\n" +
                         "\t\"Dependencies\": []\n" +
                         "}";
 
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
         String clazzString = new PredicateClassBuilder().constructClass(jsonNode);
 
         String MATCHING_CLAZZ =
@@ -34,22 +34,21 @@ public class PredicateClassBuilderTest {
                 "import uk.ac.standrews.cs.sos.impl.services.SOSAgent;\n" +
                 "import uk.ac.standrews.cs.sos.model.NodesCollection;\n" +
                 "import uk.ac.standrews.cs.sos.model.Policy;\n" +
-                "import uk.ac.standrews.cs.sos.model.SOSPredicate;\n" +
                 "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
                 "import java.util.Collections;\n" +
                 "import java.util.Arrays;\n" +
                 "import com.fasterxml.jackson.databind.JsonNode;\n" +
                 "\n" +
-                "public class SHA256_16_3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18 extends BasePredicate {\n" +
+                "public class SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 extends BasePredicate {\n" +
                 "\n" +
-                "public SHA256_16_3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18 (String predicate, long maxAge) {  \n" +
-                "super(predicate, maxAge);\n" +
+                "public SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 (String predicateManifest, long maxAge) {  \n" +
+                "super(predicateManifest, maxAge);\n" +
                 "}\n" +
                 "\n" +
-                "@Override\n" +
+                "    @Override\n" +
                 "    public boolean test(IGUID guid) {\n" +
                 "\n" +
-                "        return True;\n" +
+                "        return true;\n" +
                 "    }\n" +
                 "}\n";
 

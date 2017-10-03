@@ -27,16 +27,16 @@ public class PredicateClassBuilder implements ClassBuilder {
     private static final String CLASS_SIGNATURE_TEMPLATE = "public class " + CLASS_NAME_TAG + " extends " + COMMON_CLASS + " {" + NEW_LINE;
     private static final String CLASS_CLOSING = "}";
 
-    private static final String CONSTRUCTOR_BODY = "super(predicate, maxAge);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String predicate, long maxAge) {  "
+    private static final String CONSTRUCTOR_BODY = "super(predicateManifest, maxAge);";
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String predicateManifest, long maxAge) {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
     private static final String PREDICATE_TAG = "_PREDICATE_TAG_";
     private static final String PREDICATE_METHOD =
-            "@Override\n"+
+            "    @Override\n"+
             "    public boolean test(IGUID guid) {\n"+
             "\n"+
-            "        return " + PREDICATE_TAG + ";\n"+
+            "        return " + PREDICATE_TAG + "\n"+
             "    }" + NEW_LINE;
 
     @Override
@@ -44,7 +44,7 @@ public class PredicateClassBuilder implements ClassBuilder {
 
         IGUID predicateRef;
         try {
-            predicateRef = GUIDFactory.generateGUID(jsonNode.get(KEY_PREDICATE).asText());
+            predicateRef = GUIDFactory.generateGUID(jsonNode.toString());
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to generate predicate ref from json node " + jsonNode.toString());
         }
@@ -68,7 +68,6 @@ public class PredicateClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.services.SOSAgent"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.NodesCollection"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.Policy"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.SOSPredicate"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
