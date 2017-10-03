@@ -30,10 +30,10 @@ public class CommonPolicies {
     public static class DoNothingPolicy extends BasePolicy {
 
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {}
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {}
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
             return true;
         }
     }
@@ -43,22 +43,17 @@ public class CommonPolicies {
      */
     public static class ManifestReplicationPolicy extends BasePolicy {
 
-        protected PolicyActions policyActions;
         public int factor = 1;
 
-        public ManifestReplicationPolicy(PolicyActions policyActions) {
-            this.policyActions = policyActions;
-        }
-
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
             policyActions.replicateManifest(manifest, nodes, factor);
         }
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             int numberReplicas = policyActions.numberOfManifestReplicas(codomain, manifest.guid());
             return numberReplicas >= factor;
@@ -72,16 +67,10 @@ public class CommonPolicies {
      */
     public static class DataReplicationPolicy extends BasePolicy {
 
-        private PolicyActions policyActions;
-        private int factor;
-
-        public DataReplicationPolicy(PolicyActions policyActions, int factor) {
-            this.policyActions = policyActions;
-            this.factor = factor;
-        }
+        private int factor = 1;
 
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             try {
 
@@ -110,7 +99,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             try {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
@@ -131,12 +120,12 @@ public class CommonPolicies {
     public static class MetadataReplicationPolicy extends BasePolicy {
 
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
         }
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
             return false;
         }
     }
@@ -146,20 +135,14 @@ public class CommonPolicies {
      */
     public static class DeletionPolicy extends BasePolicy {
 
-        private PolicyActions policyActions;
-
-        public DeletionPolicy(PolicyActions policyActions) {
-            this.policyActions = policyActions;
-        }
-
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             policyActions.deleteData(manifest.guid(), codomain);
         }
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             int numberReplicas = policyActions.numberOfDataReplicas(codomain, manifest.guid());
             return numberReplicas == 0;
@@ -168,22 +151,20 @@ public class CommonPolicies {
 
     public static class GrantAccessPolicy extends BasePolicy {
 
-        private PolicyActions policyActions;
         private IGUID granter;
         private IGUID grantee;
 
-        public GrantAccessPolicy(PolicyActions policyActions, IGUID granter, IGUID grantee) {
-            this.policyActions = policyActions;
+        public GrantAccessPolicy(IGUID granter, IGUID grantee) {
             this.granter = granter;
             this.grantee = grantee;
         }
 
-        public GrantAccessPolicy(PolicyActions policyActions, String granter, String grantee) throws GUIDGenerationException {
-            this(policyActions, GUIDFactory.recreateGUID(granter), GUIDFactory.recreateGUID(grantee));
+        public GrantAccessPolicy(String granter, String grantee) throws GUIDGenerationException {
+            this(GUIDFactory.recreateGUID(granter), GUIDFactory.recreateGUID(grantee));
         }
 
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             try {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
@@ -200,7 +181,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             try {
                 Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
@@ -225,12 +206,8 @@ public class CommonPolicies {
      */
     public static class ReplicateAllVersionsPolicy extends ManifestReplicationPolicy implements Policy {
 
-        public ReplicateAllVersionsPolicy(PolicyActions policyActions) {
-            super(policyActions);
-        }
-
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
@@ -242,7 +219,7 @@ public class CommonPolicies {
 
                     try {
                         Manifest m = policyActions.getManifest(v);
-                        super.apply(codomain, m);
+                        super.apply(codomain, policyActions, m);
 
                     } catch (ManifestNotFoundException | NodesCollectionException e) {
                         e.printStackTrace();
@@ -252,7 +229,7 @@ public class CommonPolicies {
         }
 
         @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
@@ -264,7 +241,7 @@ public class CommonPolicies {
 
                     try {
                         Manifest m = policyActions.getManifest(v);
-                        if (!super.satisfied(codomain, m)) {
+                        if (!super.satisfied(codomain, policyActions, m)) {
                             return false;
                         }
 
@@ -282,17 +259,13 @@ public class CommonPolicies {
     // TODO
     public static class NotifyNodesPolicy extends BasePolicy {
 
-        public NotifyNodesPolicy(PolicyActions policyActions, NodesCollection codomain) {
+        @Override
+        public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
         }
 
         @Override
-        public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
-
-        }
-
-        @Override
-        public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+        public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
             return false;
         }
     }

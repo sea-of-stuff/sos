@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
-import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Policy;
@@ -195,7 +194,7 @@ public class ClassLoader {
 
     }
 
-    public static Policy PolicyInstance(JsonNode node, PolicyActions policyActions) throws ClassLoaderException {
+    public static Policy PolicyInstance(JsonNode node) throws ClassLoaderException {
 
         try {
             ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder("POLICY");
@@ -203,13 +202,13 @@ public class ClassLoader {
 
             java.lang.ClassLoader classLoader = SOSClassLoader();
             Class<?> clazz = Class.forName(ContextClassBuilder.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(PolicyActions.class, String.class);
-            return (Policy) constructor.newInstance(policyActions, node.toString());
+            Constructor<?> constructor = clazz.getConstructor(String.class);
+            return (Policy) constructor.newInstance(node.toString());
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                 ClassBuilderException | IOException e) {
 
-            throw new ClassLoaderException("Unable to create instance for Predicate from jsonnode " + node.toString());
+            throw new ClassLoaderException("Unable to create instance for Policy from jsonnode " + node.toString());
         }
     }
 

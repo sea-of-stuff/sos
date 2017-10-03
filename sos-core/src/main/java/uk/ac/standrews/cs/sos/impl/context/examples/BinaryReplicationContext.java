@@ -43,7 +43,7 @@ public class BinaryReplicationContext extends BaseContext {
     @Override
     public Policy[] policies() {
 
-        CommonPolicies.ManifestReplicationPolicy manifestRepl = new CommonPolicies.ManifestReplicationPolicy(policyActions);
+        CommonPolicies.ManifestReplicationPolicy manifestRepl = new CommonPolicies.ManifestReplicationPolicy();
         manifestRepl.factor = NUMBER_OF_REPLICAS;
 
         return new Policy[]{ manifestRepl };

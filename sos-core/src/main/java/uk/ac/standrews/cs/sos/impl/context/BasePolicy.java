@@ -16,7 +16,6 @@ import java.io.InputStream;
  */
 public abstract class BasePolicy extends BasicManifest implements Policy {
 
-    protected PolicyActions policyActions;
     private IGUID guid;
     private String policyManifest;
 
@@ -25,11 +24,10 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
         super(ManifestType.POLICY);
     }
 
-    protected BasePolicy(PolicyActions policyActions, String policyManifest) {
+    protected BasePolicy(String policyManifest) {
         super(ManifestType.POLICY);
 
         this.policyManifest = policyManifest;
-        this.policyActions = policyActions;
         this.guid = makeGUID();
     }
 

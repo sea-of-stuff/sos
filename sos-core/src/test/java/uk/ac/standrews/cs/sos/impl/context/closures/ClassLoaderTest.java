@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.sos.impl.context.reflection.ClassLoader;
 import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.Predicate;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -44,16 +46,16 @@ public class ClassLoaderTest extends SetUpTest {
     }
 
     @Test
-    public void withGUIDPredicateConstructorLoader() throws IOException, ClassLoaderException {
+    public void predicateConstructorLoader() throws IOException, ClassLoaderException {
 
-        String JSON_CONTEXT =
+        String JSON_PREDICATE =
                 "{\n" +
                         "\t\"Type\": \"Predicate\",\n" +
                         "\t\"Predicate\": \"true\",\n" +
                         "\t\"Dependencies\": []\n" +
                         "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
         ClassLoader.Load(node);
 
         Predicate predicate = ClassLoader.PredicateInstance(node);
@@ -65,14 +67,14 @@ public class ClassLoaderTest extends SetUpTest {
     @Test
     public void loadNonTrivialPredicate() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException {
 
-        String JSON_CONTEXT =
+        String JSON_PREDICATE =
                 "{\n" +
                         "\t\"Type\": \"Predicate\",\n" +
                         "\t\"Predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"))\",\n" +
                         "\t\"Dependencies\": []\n" +
                         "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_CONTEXT);
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
         ClassLoader.Load(node);
 
         Predicate predicate = ClassLoader.PredicateInstance(node);
@@ -105,6 +107,31 @@ public class ClassLoaderTest extends SetUpTest {
 
 
         assertFalse(predicate.test(anotherVersion.guid()));
+    }
+
+    @Test
+    public void policyConstructorLoader() throws IOException, ClassLoaderException, PolicyException {
+
+        String JSON_POLICY =
+                "{\n" +
+                        "  \"Type\": \"Policy\",\n" +
+                        "  \"Apply\": \"\",\n" +
+                        "  \"Satisfied\": \"return true;\",\n" +
+                        "  \"Dependencies\": [],\n" +
+                        "  \"Fields\": [{\n" +
+                        "    \"Type\": \"int\",\n" +
+                        "    \"Name\": \"factor\",\n" +
+                        "    \"Value\": \"2\"\n" +
+                        "  }]\n" +
+                        "}";
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        ClassLoader.Load(node);
+
+        Policy policy = ClassLoader.PolicyInstance(node);
+        assertNotNull(policy.guid());
+        assertEquals(policy.getType(), ManifestType.POLICY);
+        assertTrue(policy.satisfied(null, null, null));
     }
 
 

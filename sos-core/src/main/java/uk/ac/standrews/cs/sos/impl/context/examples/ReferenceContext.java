@@ -46,7 +46,7 @@ public class ReferenceContext extends BaseContext {
     @Override
     public Policy[] policies() {
         try {
-            return new Policy[]{ new CommonPolicies.ManifestReplicationPolicy(policyActions) };
+            return new Policy[]{ new CommonPolicies.ManifestReplicationPolicy() };
         } catch (Exception e) {
             return new Policy[]{};
         }

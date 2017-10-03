@@ -26,8 +26,8 @@ public class PolicyClassBuilder implements ClassBuilder {
     private static final String CLASS_SIGNATURE_TEMPLATE = "public class " + CLASS_NAME_TAG + " extends " + COMMON_CLASS + " {" + NEW_LINE;
     private static final String CLASS_CLOSING = "}";
 
-    private static final String CONSTRUCTOR_BODY = "super(policyActions, policyManifest);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (PolicyActions policyActions, String policyManifest) {  "
+    private static final String CONSTRUCTOR_BODY = "super(policyManifest);";
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (String policyManifest) {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
 
@@ -37,14 +37,14 @@ public class PolicyClassBuilder implements ClassBuilder {
     private static final String APPLY_TAG = " _APPLY_TAG_";
     private static final String APPLY_METHOD =
             "    @Override\n" +
-                    "    public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {\n" +
+                    "    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
                     "    " + APPLY_TAG + "\n" +
                     "    }\n";
 
     private static final String SATISFIED_TAG = "_SATISFIED_";
     private static final String SATISFIED_METHOD =
             "    @Override\n" +
-                    "    public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {\n" +
+                    "    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
                     "    " + SATISFIED_TAG + "\n" +
                     "    }\n";
 

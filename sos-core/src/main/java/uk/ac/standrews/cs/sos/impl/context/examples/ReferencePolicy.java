@@ -11,18 +11,17 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
  */
 public class ReferencePolicy extends BasePolicy {
 
-    public ReferencePolicy(PolicyActions policyActions, String policyManifest) {
-        super(policyActions, policyManifest);
+    public ReferencePolicy(String policyManifest) {
+        super(policyManifest);
+    }
+
+    @Override
+    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
     }
 
     @Override
-    public void apply(NodesCollection codomain, Manifest manifest) throws PolicyException {
-
-    }
-
-    @Override
-    public boolean satisfied(NodesCollection codomain, Manifest manifest) throws PolicyException {
+    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
         return false;
     }
 }

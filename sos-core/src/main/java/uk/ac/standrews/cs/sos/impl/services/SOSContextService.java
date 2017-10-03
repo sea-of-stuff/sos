@@ -539,8 +539,8 @@ public class SOSContextService implements ContextService {
             for (Policy policy:policies) {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
-                policy.apply(context.codomain(), manifest);
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), manifest);
+                policy.apply(context.codomain(), policyActions, manifest);
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), policyActions, manifest);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -566,7 +566,7 @@ public class SOSContextService implements ContextService {
             for (Policy policy:policies) {
 
                 Manifest manifest = dataDiscoveryService.getManifest(guid);
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), manifest);;
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), policyActions, manifest);;
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
