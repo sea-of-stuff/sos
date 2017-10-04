@@ -15,6 +15,8 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.*;
+import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePolicy;
+import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePredicate;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -120,6 +122,8 @@ public class SOSContextService implements ContextService {
                 }).collect(Collectors.toSet());
     }
 
+
+    // TODO - where is the add predicate and policy?
     @Override
     public IGUID addContext(Context context) throws Exception {
 
@@ -620,13 +624,12 @@ public class SOSContextService implements ContextService {
 
         } catch (ManifestNotFoundException e) {
 
-            // TODO - throw proper exception
-            return null;
+            JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
+            return new ReferencePredicate(emptyJsonNode, 0);
         }
     }
 
     private Set<Policy> getPolicies(Context context) {
-
 
         Set<Policy> retval = new LinkedHashSet<>();
 
@@ -637,8 +640,13 @@ public class SOSContextService implements ContextService {
                 retval.add(policy);
 
             } catch (ManifestNotFoundException e) {
-                /* TODO - throw proper exception */
-                return null;
+
+                retval.clear();
+
+                JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
+                Policy referencePolicy = new ReferencePolicy(emptyJsonNode);
+                retval.add(referencePolicy);
+                break;
             }
         }
 
