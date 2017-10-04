@@ -50,7 +50,7 @@ public class SOSReflectionTest extends SetUpTest {
         String JSON_PREDICATE =
                 "{\n" +
                         "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"true\",\n" +
+                        "\t\"Predicate\": \"true;\",\n" +
                         "\t\"Dependencies\": []\n" +
                         "}";
 
@@ -69,7 +69,7 @@ public class SOSReflectionTest extends SetUpTest {
         String JSON_PREDICATE =
                 "{\n" +
                         "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"))\",\n" +
+                        "\t\"Predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
                         "\t\"Dependencies\": []\n" +
                         "}";
 

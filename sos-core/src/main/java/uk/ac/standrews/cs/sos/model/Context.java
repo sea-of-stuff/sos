@@ -42,7 +42,7 @@ public interface Context extends Manifest {
     /**
      * GUID of compound to contents
      *
-     * @return
+     * @return the reference to the content of this context's version
      */
     IGUID content();
 
@@ -50,7 +50,7 @@ public interface Context extends Manifest {
      * Optional.
      * Should be GUID of another ContextV
      *
-     * @return
+     * @return the reference to the previous context
      */
     IGUID previous();
 
@@ -66,17 +66,22 @@ public interface Context extends Manifest {
     /**
      * name-GUID
      *
-     * @return
+     * @return the unique name
      */
     String getUniqueName();
 
     /**
-     * Return the domain of this context
+     * The domain of this context
      *
      * @return domain of the context
      */
     NodesCollection domain();
 
+    /**
+     * The codomain of this context
+     *
+     * @return the codomain
+     */
     NodesCollection codomain();
 
     /**

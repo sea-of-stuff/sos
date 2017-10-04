@@ -1,4 +1,5 @@
 /**
+ * First class entities of the SOS Model.
  * The classes in the model package define the entire SOS Model.
  *
  * The implementation of the model is to be found outside of this package.
@@ -20,13 +21,16 @@
  *
  * - Contexts
  *  - Context
- *  - SOSPredicate
+ *  - Predicate
  *  - Policy
  *
  *
  * - USRO
  *  - User
  *  - Role
+ *
+ * - Node
+ *
  *
  * The NodesCollection defines different collections of SOS nodes
  *
