@@ -437,7 +437,7 @@ public class SOSContextService implements ContextService {
         }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
-    public void checkPolicies() {
+    private void checkPolicies() {
 
         for (Context context : getContexts()) {
             checkPolicies(context);

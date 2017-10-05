@@ -20,10 +20,10 @@ public class PredicateDeserializerTest extends SetUpTest {
     public void deserializeSimplePredicate() throws IOException {
 
         String predicateJSON = "{\n" +
-                "  \"Type\" : \"Predicate\",\n" +
+                "  \"type\" : \"Predicate\",\n" +
                 "  \"GUID\" : \"SHA256_16_054ae7aafe6d9e1fedab97f9952f7da4698604eabe3426397b8742362bd7f464\",\n" +
-                "  \"Dependencies\" : [ \"java.util.Set\", \"java.util.Iterator\" ],\n" +
-                "  \"Predicate\" : \"true;\"\n" +
+                "  \"dependencies\" : [ \"java.util.Set\", \"java.util.Iterator\" ],\n" +
+                "  \"predicate\" : \"true;\"\n" +
                 "}";
 
         Predicate predicate = JSONHelper.JsonObjMapper().readValue(predicateJSON, Predicate.class);

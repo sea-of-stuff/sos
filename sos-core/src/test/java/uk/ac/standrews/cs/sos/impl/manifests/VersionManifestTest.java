@@ -27,14 +27,14 @@ import static org.testng.Assert.assertEquals;
 public class VersionManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_BASIC_VERSION =
-            "{\"Type\":\"Version\"," +
+            "{\"type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_VERSION =
-            "{\"Type\":\"Version\"," +
+            "{\"type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
@@ -42,7 +42,7 @@ public class VersionManifestTest extends CommonTest {
                     "}}";
 
     private static final String EXPECTED_JSON_PREVIOUS_VERSION =
-            "{\"Type\":\"Version\"," +
+            "{\"type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
@@ -51,7 +51,7 @@ public class VersionManifestTest extends CommonTest {
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION =
-            "{\"Type\":\"Version\"," +
+            "{\"type\":\"Version\"," +
                     "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +

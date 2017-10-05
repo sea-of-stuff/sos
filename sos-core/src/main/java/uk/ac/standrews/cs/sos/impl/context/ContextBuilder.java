@@ -12,11 +12,18 @@ public class ContextBuilder {
 
     private JsonNode fatContextDefinition;
 
+    // TODO - have thing context definition too!
+
     public ContextBuilder(JsonNode fatContextDefinition) {
         this.fatContextDefinition = fatContextDefinition;
     }
 
     public JsonNode context(IGUID predicate, Set<IGUID> policies) {
+        // TODO - add refs to context definition
+        JsonNode context = fatContextDefinition.get("context");
+
+        // this.jsonNode = ((ObjectNode)jsonNode).put("guid", guid.toMultiHash()); // how is the guid known already? guid is not random anymore
+
         return fatContextDefinition.get("context");
     }
 

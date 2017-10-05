@@ -19,17 +19,17 @@ public class PredicateSerializerTest {
 
         String JSON_PREDICATE =
                 "{\n" +
-                        "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"true;\",\n" +
-                        "\t\"Dependencies\": [ \"EXAMPLE\", \"HELLO\" ]\n" +
+                        "\t\"type\": \"Predicate\",\n" +
+                        "\t\"predicate\": \"true;\",\n" +
+                        "\t\"dependencies\": [ \"EXAMPLE\", \"HELLO\" ]\n" +
                         "}";
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
 
         String expected = "{\n" +
-                "  \"Type\" : \"Predicate\",\n" +
-                "  \"GUID\" : \"SHA256_16_054ae7aafe6d9e1fedab97f9952f7da4698604eabe3426397b8742362bd7f464\",\n" +
-                "  \"Dependencies\" : [ \"EXAMPLE\", \"HELLO\" ],\n" +
-                "  \"Predicate\" : \"true;\"\n" +
+                "  \"type\" : \"Predicate\",\n" +
+                "  \"GUID\" : \"SHA256_16_90cf94ec60bab7127adf5c9646ae9e23fe32276f66f2393d7c6f21744713e369\",\n" +
+                "  \"dependencies\" : [ \"EXAMPLE\", \"HELLO\" ],\n" +
+                "  \"predicate\" : \"true;\"\n" +
                 "}";
 
         ReferencePredicate referencePredicate = new ReferencePredicate(jsonNode, 1);

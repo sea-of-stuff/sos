@@ -91,7 +91,7 @@ public class ClientReplicationTest extends SetUpTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "    {\n" +
-                                                "        \"Type\" : \"Atom\",\n" +
+                                                "        \"type\" : \"Atom\",\n" +
                                                 "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +

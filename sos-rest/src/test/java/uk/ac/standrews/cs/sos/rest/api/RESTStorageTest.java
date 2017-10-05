@@ -23,7 +23,7 @@ public class RESTStorageTest extends CommonRESTTest {
 
     private final static String TEST_NODE_INFO =
             "{\n" +
-                    "  \"Type\": \"Atom\",\n" +
+                    "  \"type\": \"Atom\",\n" +
                     "  \"GUID\": \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +
@@ -35,7 +35,7 @@ public class RESTStorageTest extends CommonRESTTest {
 
     private final static String TEST_EMPTY_ATOM_MANIFEST =
             "{\n" +
-                    "  \"Type\": \"Atom\",\n" +
+                    "  \"type\": \"Atom\",\n" +
                     "  \"GUID\": \"SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n" +
                     "  \"Locations\": [\n" +
                     "    {\n" +

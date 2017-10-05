@@ -42,7 +42,7 @@ public class FetchManifestTest extends ProtocolTest {
     private static final String GUID_VERSION = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
     private static final String TEST_VERSION_MANIFEST = "" +
             "{" +
-            "  \"Type\":\"Version\"," +
+            "  \"type\":\"Version\"," +
             "  \"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "  \"GUID\":\""+ GUID_VERSION+"\"," +
             "  \"Signature\":\"AAAB\"," +

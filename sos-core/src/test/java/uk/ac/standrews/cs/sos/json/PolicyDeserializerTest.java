@@ -21,15 +21,15 @@ public class PolicyDeserializerTest extends SetUpTest {
     public void deserializeSimplePolicy() throws IOException, PolicyException {
 
         String policyJSON = "{\n" +
-                "  \"Type\" : \"Policy\",\n" +
+                "  \"type\" : \"Policy\",\n" +
                 "  \"GUID\" : \"SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d\",\n" +
-                "  \"Dependencies\" : [ ],\n" +
-                "  \"Apply\" : \"\",\n" +
-                "  \"Satisfied\" : \"return true;\",\n" +
-                "  \"Fields\" : [ {\n" +
-                "    \"Type\" : \"int\",\n" +
-                "    \"Name\" : \"factor\",\n" +
-                "    \"Value\" : \"2\"\n" +
+                "  \"dependencies\" : [ ],\n" +
+                "  \"apply\" : \"\",\n" +
+                "  \"satisfied\" : \"return true;\",\n" +
+                "  \"fields\" : [ {\n" +
+                "    \"type\" : \"int\",\n" +
+                "    \"name\" : \"factor\",\n" +
+                "    \"value\" : \"2\"\n" +
                 "  } ]\n" +
                 "}";
 
@@ -44,9 +44,9 @@ public class PolicyDeserializerTest extends SetUpTest {
         Iterator<JsonNode> fields_n = policy.fields().iterator();
         assertTrue(fields_n.hasNext());
         JsonNode field = fields_n.next();
-        assertEquals(field.get("Type").asText(), "int");
-        assertEquals(field.get("Name").asText(), "factor");
-        assertEquals(field.get("Value").asText(), "2");
+        assertEquals(field.get("type").asText(), "int");
+        assertEquals(field.get("name").asText(), "factor");
+        assertEquals(field.get("value").asText(), "2");
 
         assertEquals(policy.apply().asText(), "");
         assertEquals(policy.satisfied().asText(), "return true;");

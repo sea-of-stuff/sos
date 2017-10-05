@@ -1,6 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.json.NodesCollectionDeserializer;
+import uk.ac.standrews.cs.sos.json.NodesCollectionSerializer;
 
 import java.util.Set;
 
@@ -15,6 +19,8 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = NodesCollectionSerializer.class)
+@JsonDeserialize(using = NodesCollectionDeserializer.class)
 public interface NodesCollection {
 
     /**

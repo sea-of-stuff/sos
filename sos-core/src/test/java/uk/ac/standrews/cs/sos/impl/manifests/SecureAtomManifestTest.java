@@ -104,7 +104,7 @@ public class SecureAtomManifestTest extends CommonTest {
 
         String testSecureAtomJson = "" +
                 "{\n" +
-                "  \"Type\" : \"AtomP\",\n" +
+                "  \"type\" : \"AtomP\",\n" +
                 "  \"GUID\" : \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                 "  \"Locations\" : [ {\n" +
                 "    \"type\" : \"external\",\n" +

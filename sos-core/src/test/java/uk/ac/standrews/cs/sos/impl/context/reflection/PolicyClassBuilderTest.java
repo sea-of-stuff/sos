@@ -18,14 +18,14 @@ public class PolicyClassBuilderTest {
 
         String JSON_POLICY =
                 "{\n" +
-                        "  \"Type\": \"Policy\",\n" +
-                        "  \"Apply\": \"\",\n" +
-                        "  \"Satisfied\": \"return true;\",\n" +
-                        "  \"Dependencies\": [],\n" +
-                        "  \"Fields\": [{\n" +
-                        "    \"Type\": \"int\",\n" +
-                        "    \"Name\": \"factor\",\n" +
-                        "    \"Value\": \"2\"\n" +
+                        "  \"type\": \"Policy\",\n" +
+                        "  \"apply\": \"\",\n" +
+                        "  \"satisfied\": \"return true;\",\n" +
+                        "  \"dependencies\": [],\n" +
+                        "  \"fields\": [{\n" +
+                        "    \"type\": \"int\",\n" +
+                        "    \"name\": \"factor\",\n" +
+                        "    \"value\": \"2\"\n" +
                         "  }]\n" +
                         "}";
 
@@ -58,11 +58,11 @@ public class PolicyClassBuilderTest {
                         "import com.fasterxml.jackson.databind.JsonNode;\n" +
                         "import java.io.IOException;\n" +
                         "\n" +
-                        "public class SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d extends BasePolicy {\n" +
+                        "public class SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb extends BasePolicy {\n" +
                         "\n" +
                         "private int factor = 2;\n" +
                         "\n" +
-                        "public SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d (JsonNode policyManifest) {  \n" +
+                        "public SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb (JsonNode policyManifest) {  \n" +
                         "super(policyManifest);\n" +
                         "}\n" +
                         "\n" +

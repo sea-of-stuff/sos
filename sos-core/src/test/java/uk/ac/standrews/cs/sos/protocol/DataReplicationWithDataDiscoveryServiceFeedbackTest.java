@@ -80,7 +80,7 @@
 //                                        "{\n" +
 //                                        "    \"" + SOSConstants.MANIFEST + "\" : \n" +
 //                                        "    {\n" +
-//                                        "        \"Type\" : \"Atom\",\n" +
+//                                        "        \"type\" : \"Atom\",\n" +
 //                                        "        \"GUID\" : \"" + testGUID + "\",\n" +
 //                                        "        \"Locations\" : \n" +
 //                                        "        [\n" +

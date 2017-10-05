@@ -1,6 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.json.ContextDeserializer;
+import uk.ac.standrews.cs.sos.json.ContextSerializer;
 
 import java.util.Set;
 
@@ -21,6 +25,8 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = ContextSerializer.class)
+@JsonDeserialize(using = ContextDeserializer.class)
 public interface Context extends Manifest {
 
     /**

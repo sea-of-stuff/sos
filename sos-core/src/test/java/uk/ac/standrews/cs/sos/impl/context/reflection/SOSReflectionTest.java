@@ -49,9 +49,9 @@ public class SOSReflectionTest extends SetUpTest {
 
         String JSON_PREDICATE =
                 "{\n" +
-                        "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"true;\",\n" +
-                        "\t\"Dependencies\": []\n" +
+                        "\t\"type\": \"Predicate\",\n" +
+                        "\t\"predicate\": \"true;\",\n" +
+                        "\t\"dependencies\": []\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
@@ -68,9 +68,9 @@ public class SOSReflectionTest extends SetUpTest {
 
         String JSON_PREDICATE =
                 "{\n" +
-                        "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
-                        "\t\"Dependencies\": []\n" +
+                        "\t\"type\": \"Predicate\",\n" +
+                        "\t\"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
+                        "\t\"dependencies\": []\n" +
                         "}";
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
@@ -113,14 +113,14 @@ public class SOSReflectionTest extends SetUpTest {
 
         String JSON_POLICY =
                 "{\n" +
-                        "  \"Type\": \"Policy\",\n" +
-                        "  \"Apply\": \"\",\n" +
-                        "  \"Satisfied\": \"return true;\",\n" +
-                        "  \"Dependencies\": [],\n" +
-                        "  \"Fields\": [{\n" +
-                        "    \"Type\": \"int\",\n" +
-                        "    \"Name\": \"factor\",\n" +
-                        "    \"Value\": \"2\"\n" +
+                        "  \"type\": \"Policy\",\n" +
+                        "  \"apply\": \"\",\n" +
+                        "  \"satisfied\": \"return true;\",\n" +
+                        "  \"dependencies\": [],\n" +
+                        "  \"fields\": [{\n" +
+                        "    \"type\": \"int\",\n" +
+                        "    \"name\": \"factor\",\n" +
+                        "    \"value\": \"2\"\n" +
                         "  }]\n" +
                         "}";
 
@@ -138,14 +138,14 @@ public class SOSReflectionTest extends SetUpTest {
 
         String JSON_POLICY =
                 "{\n" +
-                        "  \"Type\": \"Policy\",\n" +
-                        "  \"Apply\": \"\",\n" +
-                        "  \"Satisfied\": \"return false;\",\n" +
-                        "  \"Dependencies\": [],\n" +
-                        "  \"Fields\": [{\n" +
-                        "    \"Type\": \"int\",\n" +
-                        "    \"Name\": \"factor\",\n" +
-                        "    \"Value\": \"2\"\n" +
+                        "  \"type\": \"Policy\",\n" +
+                        "  \"apply\": \"\",\n" +
+                        "  \"satisfied\": \"return false;\",\n" +
+                        "  \"dependencies\": [],\n" +
+                        "  \"fields\": [{\n" +
+                        "    \"type\": \"int\",\n" +
+                        "    \"name\": \"factor\",\n" +
+                        "    \"value\": \"2\"\n" +
                         "  }]\n" +
                         "}";
 

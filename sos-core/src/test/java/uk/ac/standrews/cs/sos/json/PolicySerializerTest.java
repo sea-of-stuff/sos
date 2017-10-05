@@ -19,28 +19,28 @@ public class PolicySerializerTest {
 
         String JSON_POLICY =
             "{\n" +
-            "  \"Type\": \"Policy\",\n" +
-                    "  \"Apply\": \"\",\n" +
-                    "  \"Satisfied\": \"return true;\",\n" +
-                    "  \"Dependencies\": [],\n" +
-                    "  \"Fields\": [{\n" +
-                    "    \"Type\": \"int\",\n" +
-                    "    \"Name\": \"factor\",\n" +
-                    "    \"Value\": \"2\"\n" +
+            "  \"type\": \"Policy\",\n" +
+                    "  \"apply\": \"\",\n" +
+                    "  \"satisfied\": \"return true;\",\n" +
+                    "  \"dependencies\": [],\n" +
+                    "  \"fields\": [{\n" +
+                    "    \"type\": \"int\",\n" +
+                    "    \"name\": \"factor\",\n" +
+                    "    \"value\": \"2\"\n" +
                     "  }]\n" +
                     "}";
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
 
         String expected = "{\n" +
-                "  \"Type\" : \"Policy\",\n" +
-                "  \"GUID\" : \"SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d\",\n" +
-                "  \"Dependencies\" : [ ],\n" +
-                "  \"Apply\" : \"\",\n" +
-                "  \"Satisfied\" : \"return true;\",\n" +
-                "  \"Fields\" : [ {\n" +
-                "    \"Type\" : \"int\",\n" +
-                "    \"Name\" : \"factor\",\n" +
-                "    \"Value\" : \"2\"\n" +
+                "  \"type\" : \"Policy\",\n" +
+                "  \"GUID\" : \"SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb\",\n" +
+                "  \"dependencies\" : [ ],\n" +
+                "  \"apply\" : \"\",\n" +
+                "  \"satisfied\" : \"return true;\",\n" +
+                "  \"fields\" : [ {\n" +
+                "    \"type\" : \"int\",\n" +
+                "    \"name\" : \"factor\",\n" +
+                "    \"value\" : \"2\"\n" +
                 "  } ]\n" +
                 "}";
 

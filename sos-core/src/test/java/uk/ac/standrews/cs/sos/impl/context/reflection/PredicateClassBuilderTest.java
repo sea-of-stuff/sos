@@ -18,9 +18,9 @@ public class PredicateClassBuilderTest {
 
         String JSON_PREDICATE =
                 "{\n" +
-                        "\t\"Type\": \"Predicate\",\n" +
-                        "\t\"Predicate\": \"true;\",\n" +
-                        "\t\"Dependencies\": []\n" +
+                        "\t\"type\": \"Predicate\",\n" +
+                        "\t\"predicate\": \"true;\",\n" +
+                        "\t\"dependencies\": []\n" +
                         "}";
 
         JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
@@ -39,9 +39,9 @@ public class PredicateClassBuilderTest {
                 "import java.util.Arrays;\n" +
                 "import com.fasterxml.jackson.databind.JsonNode;\n" +
                 "\n" +
-                "public class SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 extends BasePredicate {\n" +
+                "public class SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e extends BasePredicate {\n" +
                 "\n" +
-                "public SHA256_16_3d3ee2b48a92d053a1089cbc837b9415dac064ba897d8699a14148778510ebc4 (JsonNode predicateManifest, long maxAge) {  \n" +
+                "public SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e (JsonNode predicateManifest, long maxAge) {  \n" +
                 "super(predicateManifest, maxAge);\n" +
                 "}\n" +
                 "\n" +

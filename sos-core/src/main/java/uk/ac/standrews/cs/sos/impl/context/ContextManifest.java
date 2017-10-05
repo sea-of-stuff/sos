@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -18,15 +16,10 @@ import java.io.InputStream;
 import java.util.Set;
 
 /**
- * TODO - json parsers
  * TODO - tests
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextManifest extends SignedManifest implements Context {
-
-    private JsonNode jsonNode;
-
-    protected PolicyActions policyActions;
 
     protected String name;
     protected IGUID guid;
@@ -36,6 +29,7 @@ public class ContextManifest extends SignedManifest implements Context {
     protected Set<IGUID> policies;
     protected NodesCollection domain;
     protected NodesCollection codomain;
+    protected IGUID content = new InvalidID();
 
     /**
      * The predicate is computed once and its result is true forever.
@@ -47,35 +41,14 @@ public class ContextManifest extends SignedManifest implements Context {
     protected static final long PREDICATE_ALWAYS_TO_COMPUTE = 0;
 
     /**
-     * Use this constructor when creating a new context object and its GUID is unknown yet
-     *
-     * @param jsonNode
-     * @param policyActions
-     * @param name
-     * @param domain
-     * @param codomain
-     */
-    public ContextManifest(JsonNode jsonNode, PolicyActions policyActions, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
-        this(jsonNode, policyActions, GUIDFactory.generateRandomGUID(), name, domain, codomain, signer);
-    }
-
-    /**
      * Use this constructor when creating an already existing object with its GUID known already
      *
-     * @param jsonNode
-     * @param policyActions
-     * @param guid
      * @param name
      * @param domain
      * @param codomain
      */
-    public ContextManifest(JsonNode jsonNode, PolicyActions policyActions, IGUID guid, String name, NodesCollection domain, NodesCollection codomain, Role signer) {
+    public ContextManifest(String name, NodesCollection domain, NodesCollection codomain, IGUID predicate, Set<IGUID> policies, Role signer) {
         super(signer, ManifestType.CONTEXT);
-
-        this.jsonNode = jsonNode;
-        this.jsonNode = ((ObjectNode)jsonNode).put("guid", guid.toMultiHash()); // how is the guid known already? guid is not random anymore
-
-        this.policyActions = policyActions;
 
         this.invariant = makeInvariantGUID();
         this.guid = makeGUID();
@@ -84,7 +57,14 @@ public class ContextManifest extends SignedManifest implements Context {
         this.name = name;
         this.domain = domain;
         this.codomain = codomain;
+        this.predicate = predicate;
+        this.policies = policies;
+
+        this.previous = new InvalidID();
     }
+
+    // TODO - constructor with content
+    // TODO - constructor with invariant and previous
 
     @Override
     public IGUID guid() {
@@ -100,9 +80,8 @@ public class ContextManifest extends SignedManifest implements Context {
     @Override
     public IGUID content() {
 
-        // TODO - generate this guid earlier
         // GUID to compound of contents
-        return new InvalidID();
+        return content;
     }
 
     @Override
@@ -169,12 +148,6 @@ public class ContextManifest extends SignedManifest implements Context {
         } else {
             return signer.sign(toSign);
         }
-    }
-
-    // TODO - json representation should be generated using json serialiser
-    @Override
-    public String toString() {
-        return jsonNode.toString();
     }
 
     private IGUID makeInvariantGUID() {

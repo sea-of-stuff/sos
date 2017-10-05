@@ -96,7 +96,7 @@ public class DataReplicationTest extends ProtocolTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "    {\n" +
-                                                "        \"Type\" : \"Atom\",\n" +
+                                                "        \"type\" : \"Atom\",\n" +
                                                 "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +
@@ -123,7 +123,7 @@ public class DataReplicationTest extends ProtocolTest {
                                 .withStatusCode(201)
                                 .withBody(
                                         "    {\n" +
-                                                "        \"Type\" : \"Atom\",\n" +
+                                                "        \"type\" : \"Atom\",\n" +
                                                 "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
                                                 "        \"Locations\" : \n" +
                                                 "        [\n" +

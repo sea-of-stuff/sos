@@ -66,11 +66,60 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
     private void addContexts() throws Exception {
 
-        node.getCMS().addContext("" +
+        /*
+
+{
+	"context": {
+		"name": "All",
+		"domain": {
+			"type": "LOCAL",
+			"nodes": []
+		},
+		"codomain": {
+			"type": "SPECIFIED",
+			"nodes": ["SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4"]
+		}
+	},
+	"predicate": {
+		"Type": "Predicate",
+		"Predicate": "true;",
+		"Dependencies": []
+	},
+	"policies": [{
+		"Type": "Policy",
+		"Apply": "",
+		"Satisfied": "return true;",
+		"Dependencies": []
+	}]
+}
+
+         */
+        node.getCMS().addContext(
                 "{\n" +
-                "    \"name\": \"All\",\n" +
-                "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
-                "}");
+                        "  \"context\": {\n" +
+                        "    \"name\": \"All\",\n" +
+                        "    \"domain\": {\n" +
+                        "      \"type\": \"LOCAL\",\n" +
+                        "      \"nodes\": []\n" +
+                        "    },\n" +
+                        "    \"codomain\": {\n" +
+                        "      \"type\": \"SPECIFIED\",\n" +
+                        "      \"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
+                        "    }\n" +
+                        "  },\n" +
+                        "  \"predicate\": {\n" +
+                        "    \"type\": \"Predicate\",\n" +
+                        "    \"Predicate\": \"true;\",\n" +
+                        "    \"Dependencies\": []\n" +
+                        "  },\n" +
+                        "  \"policies\": [{\n" +
+                        "    \"type\": \"Policy\",\n" +
+                        "    \"Apply\": \"\",\n" +
+                        "    \"Satisfied\": \"return true;\",\n" +
+                        "    \"Dependencies\": []\n" +
+                        "  }]\n" +
+                        "}"
+        );
     }
 
     private class ExperimentUnit_Scale_1 implements ExperimentUnit {

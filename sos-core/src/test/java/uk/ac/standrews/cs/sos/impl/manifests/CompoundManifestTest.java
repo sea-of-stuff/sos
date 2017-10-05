@@ -27,7 +27,7 @@ import static org.testng.Assert.*;
 public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
-            "{\"Type\":\"Compound\"," +
+            "{\"type\":\"Compound\"," +
                     "\"GUID\":\"SHA256_16_964dab35b9136a610687d31b56fd346bdda027be0a66e6761e0fd1238262cd9f\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
@@ -39,7 +39,7 @@ public class CompoundManifestTest extends CommonTest {
                             "}]}";
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
-            "{\"Type\":\"Compound\"," +
+            "{\"type\":\"Compound\"," +
                     "\"GUID\":\"SHA256_16_c3dbaa4197ea2aa8012e70fd805d9cc6c450cc78e454b2a6a643f935a3454c76\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +

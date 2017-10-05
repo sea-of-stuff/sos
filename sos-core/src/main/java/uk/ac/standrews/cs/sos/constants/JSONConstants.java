@@ -11,7 +11,7 @@ public class JSONConstants {
     private JSONConstants() {}
 
     // Manifest keys
-    public static final String KEY_TYPE = "Type";
+    public static final String KEY_TYPE = "type";
     public static final String KEY_GUID = "GUID";
     public static final String KEY_SIGNER = "Signer";
     public static final String KEY_SIGNATURE = "Signature";
@@ -62,19 +62,30 @@ public class JSONConstants {
     public static final String KEY_NODE_SERVICES_MMS = "mms";
     public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 
+    // Context
+    public static final String KEY_CONTEXT_NAME = "name";
+    public static final String KEY_CONTEXT_INVARIANT = "invariant";
+    public static final String KEY_CONTEXT_PREVIOUS = "previous";
+    public static final String KEY_CONTEXT_CONTENT = "content";
+    public static final String KEY_CONTEXT_DOMAIN = "domain";
+    public static final String KEY_CONTEXT_CODOMAIN = "codomain";
+    public static final String KEY_CONTEXT_PREDICATE = "predicate";
+    public static final String KEY_CONTEXT_POLICIES = "policies";
+
+
     // Computational units
-    public static final String KEY_COMPUTATIONAL_DEPENDENCIES = "Dependencies";
+    public static final String KEY_COMPUTATIONAL_DEPENDENCIES = "dependencies";
 
     // Predicate
-    public static final String KEY_PREDICATE = "Predicate";
-    public static final String KEY_PREDICATE_MAX_AGE = "Max-Age"; // TODO - have it in the context
+    public static final String KEY_PREDICATE = "predicate";
+    public static final String KEY_PREDICATE_MAX_AGE = "max-Age"; // TODO - have it in the context
 
     // Policy
-    public static final String KEY_POLICY_APPLY = "Apply";
-    public static final String KEY_POLICY_SATISFIED = "Satisfied";
-    public static final String KEY_POLICY_FIELDS = "Fields";
-    public static final String KEY_POLICY_FIELD_TYPE = "Type";
-    public static final String KEY_POLICY_FIELD_NAME = "Name";
-    public static final String KEY_POLICY_FIELD_VAL = "Value";
+    public static final String KEY_POLICY_APPLY = "apply";
+    public static final String KEY_POLICY_SATISFIED = "satisfied";
+    public static final String KEY_POLICY_FIELDS = "fields";
+    public static final String KEY_POLICY_FIELD_TYPE = "type";
+    public static final String KEY_POLICY_FIELD_NAME = "name";
+    public static final String KEY_POLICY_FIELD_VAL = "value";
 
 }
