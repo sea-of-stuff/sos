@@ -89,7 +89,7 @@ public class WGraph {
 
         NodesCollection nodesCollection;
         try {
-            nodesCollection = lookForContentEagerly ? new NodesCollectionImpl(NodesCollection.TYPE.ANY) : new NodesCollectionImpl(NodesCollection.TYPE.LOCAL);
+            nodesCollection = lookForContentEagerly ? new NodesCollectionImpl(NodesCollectionType.ANY) : new NodesCollectionImpl(NodesCollectionType.LOCAL);
         } catch (NodesCollectionException e) {
             return arrayNode;
         }
@@ -134,7 +134,7 @@ public class WGraph {
 
         NodesCollection nodesCollection;
         try {
-            nodesCollection = lookForContentEagerly ? new NodesCollectionImpl(NodesCollection.TYPE.ANY) : new NodesCollectionImpl(NodesCollection.TYPE.LOCAL);
+            nodesCollection = lookForContentEagerly ? new NodesCollectionImpl(NodesCollectionType.ANY) : new NodesCollectionImpl(NodesCollectionType.LOCAL);
         } catch (NodesCollectionException e) {
             return arrayNode;
         }
@@ -186,7 +186,7 @@ public class WGraph {
 
             // Content
             try {
-                Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), version.getContentGUID());
+                Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), version.getContentGUID());
                 ObjectNode contentNode = ManifestNode(contentManifest);
                 arrayNode.add(contentNode);
             } catch (NodesCollectionException | ManifestNotFoundException e) {
@@ -202,7 +202,7 @@ public class WGraph {
                 for (IGUID prev : prevs) {
 
                     try {
-                        Manifest previousManifest = agent.getManifest(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), prev);
+                        Manifest previousManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), prev);
                         ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toMultiHash());
                         arrayNode.add(prevNode);
                     } catch (NodesCollectionException | ManifestNotFoundException e) {
@@ -217,7 +217,7 @@ public class WGraph {
             IGUID metaGUID = version.getMetadata();
             if (metaGUID != null && !metaGUID.isInvalid()) {
                 try {
-                    Metadata metadata = agent.getMetadata(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), metaGUID);
+                    Metadata metadata = agent.getMetadata(new NodesCollectionImpl(NodesCollectionType.LOCAL), metaGUID);
                     ObjectNode metadataNode = ManifestNode(metadata);
                     arrayNode.add(metadataNode);
                 } catch (NodesCollectionException | MetadataNotFoundException e) {
@@ -236,7 +236,7 @@ public class WGraph {
             for(Content content:contents) {
 
                 try {
-                    Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), content.getGUID());
+                    Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), content.getGUID());
                     ObjectNode contentNode = ManifestNode(contentManifest);
                     arrayNode.add(contentNode);
                 } catch (NodesCollectionException | ManifestNotFoundException e) {

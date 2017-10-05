@@ -10,6 +10,8 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -29,7 +31,8 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
         try {
             String name = node.get(JSONConstants.KEY_CONTEXT_NAME).asText();
 
-            // TODO - deserialize DOMAIN/CODOMAIN
+            NodesCollection domain = getNodesCollection(node, JSONConstants.KEY_CONTEXT_DOMAIN);
+            NodesCollection codomain = getNodesCollection(node, JSONConstants.KEY_CONTEXT_CODOMAIN);
 
             IGUID predicate = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_PREDICATE).asText());
 
@@ -41,13 +44,16 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
                 policies.add(policy);
             }
 
-
-            Context context = new ContextManifest(name, null, null, predicate, policies, null);
-            return context;
+            return new ContextManifest(name, domain, codomain, predicate, policies, null);
 
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to generate GUIDs for context");
         }
 
+    }
+
+    private NodesCollection getNodesCollection(JsonNode node, String field) {
+        JsonNode nodesCollection_n = node.get(field);
+        return JSONHelper.JsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
     }
 }

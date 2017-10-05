@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.GetNode;
 import uk.ac.standrews.cs.sos.protocol.tasks.InfoNode;
@@ -138,7 +139,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public Set<Node> getNodes(NodesCollection nodesCollection, int limit) {
 
-        if (nodesCollection.type().equals(NodesCollection.TYPE.ANY))
+        if (nodesCollection.type().equals(NodesCollectionType.ANY))
             return getNodes(limit);
 
         Set<Node> retval = new LinkedHashSet<>();
@@ -160,7 +161,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit) {
 
-        if (nodesCollection.type().equals(NodesCollection.TYPE.ANY) && limit == NO_LIMIT) return nodesCollection;
+        if (nodesCollection.type().equals(NodesCollectionType.ANY) && limit == NO_LIMIT) return nodesCollection;
 
 
         Set<IGUID> filteredNodes = new LinkedHashSet<>();
@@ -192,7 +193,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                 break;
         }
 
-        return new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, filteredNodes);
+        return new NodesCollectionImpl(NodesCollectionType.SPECIFIED, filteredNodes);
     }
 
     @Override

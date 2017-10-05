@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.protocol.tasks.FetchVersions;
@@ -56,7 +57,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
         try {
-            NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollection.TYPE.ANY), NodeType.DDS, 1);
+            NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), NodeType.DDS, 1);
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, dataDiscoveryService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException | NodesCollectionException e) {
@@ -81,7 +82,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
         try {
-            return findManifest(new NodesCollectionImpl(NodesCollection.TYPE.ANY), guid);
+            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), guid);
         } catch (NodesCollectionException e) {
             return null;
         }
@@ -125,7 +126,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public Set<IGUID> getVersions(IGUID invariant) {
 
         try {
-            return getVersions(new NodesCollectionImpl(NodesCollection.TYPE.ANY), invariant);
+            return getVersions(new NodesCollectionImpl(NodesCollectionType.ANY), invariant);
         } catch (NodesCollectionException e) {
             return new LinkedHashSet<>();
         }
@@ -167,10 +168,10 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     private Set<IGUID> getDDSNodes(NodesCollection nodesCollection, IGUID guid) throws NodeNotFoundException {
 
         Set<IGUID> ddsGUIDsToCheck;
-        if (nodesCollection.type().equals(NodesCollection.TYPE.SPECIFIED)) {
+        if (nodesCollection.type().equals(NodesCollectionType.SPECIFIED)) {
             NodesCollection ddsNodesOnly = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, NO_LIMIT);
             ddsGUIDsToCheck = ddsNodesOnly.nodesRefs();
-        } else if (nodesCollection.type().equals(NodesCollection.TYPE.ANY)){
+        } else if (nodesCollection.type().equals(NodesCollectionType.ANY)){
             // Get DDS nodes where we know the entity could be
             ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
                     .map(Node::getNodeGUID)

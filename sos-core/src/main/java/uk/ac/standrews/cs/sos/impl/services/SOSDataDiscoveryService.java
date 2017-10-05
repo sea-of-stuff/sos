@@ -22,10 +22,7 @@ import uk.ac.standrews.cs.sos.impl.manifests.directory.ManifestsCacheImpl;
 import uk.ac.standrews.cs.sos.impl.manifests.directory.RemoteManifestsDirectory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
@@ -39,8 +36,8 @@ import java.util.*;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
 import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
-import static uk.ac.standrews.cs.sos.model.NodesCollection.TYPE.ANY;
-import static uk.ac.standrews.cs.sos.model.NodesCollection.TYPE.LOCAL;
+import static uk.ac.standrews.cs.sos.model.NodesCollectionType.ANY;
+import static uk.ac.standrews.cs.sos.model.NodesCollectionType.LOCAL;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -231,7 +228,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
 
         try {
-            return getVersions(new NodesCollectionImpl(NodesCollection.TYPE.LOCAL), invariant);
+            return getVersions(new NodesCollectionImpl(NodesCollectionType.LOCAL), invariant);
         } catch (NodesCollectionException e) {
             return new LinkedHashSet<>();
         }
@@ -245,7 +242,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
         versions.addAll(inMemoryCache.getVersions(invariant));
         versions.addAll(local.getVersions(invariant)); // THIS MIGHT BE SLOW
 
-        if (!nodesCollection.type().equals(NodesCollection.TYPE.LOCAL)) {
+        if (!nodesCollection.type().equals(NodesCollectionType.LOCAL)) {
 
             Set<IGUID> remotes = remote.getVersions(nodesCollection, invariant);
             versions.addAll(remotes);

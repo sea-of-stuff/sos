@@ -225,7 +225,7 @@ public class WData {
 
         NodesCollection nodesCollection;
         try {
-            nodesCollection = local ? new NodesCollectionImpl(NodesCollection.TYPE.LOCAL) : new NodesCollectionImpl(NodesCollection.TYPE.ANY);
+            nodesCollection = local ? new NodesCollectionImpl(NodesCollectionType.LOCAL) : new NodesCollectionImpl(NodesCollectionType.ANY);
         } catch (NodesCollectionException e) {
             return "N/A";
         }

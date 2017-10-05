@@ -190,7 +190,7 @@ public class SOSStorage implements Storage {
     public Data getAtomContent(Atom atom) throws AtomNotFoundException {
 
         try {
-            return getAtomContent(new NodesCollectionImpl(NodesCollection.TYPE.ANY), atom);
+            return getAtomContent(new NodesCollectionImpl(NodesCollectionType.ANY), atom);
         } catch (NodesCollectionException e) {
             throw new AtomNotFoundException();
         }
@@ -206,13 +206,13 @@ public class SOSStorage implements Storage {
 
             if (location instanceof SOSLocation) {
 
-                if (nodesCollection.type() == NodesCollection.TYPE.SPECIFIED) {
+                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
 
                     if (!nodeRefs.contains(((SOSLocation) location).getMachineID())) {
                         continue;
                     }
 
-                } else if (nodesCollection.type() == NodesCollection.TYPE.LOCAL) {
+                } else if (nodesCollection.type() == NodesCollectionType.LOCAL) {
 
                     if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().getNodeGUID())) {
                         continue;
@@ -222,7 +222,7 @@ public class SOSStorage implements Storage {
 
             } else {
 
-                if (nodesCollection.type() == NodesCollection.TYPE.LOCAL || nodesCollection.type() == NodesCollection.TYPE.SPECIFIED) {
+                if (nodesCollection.type() == NodesCollectionType.LOCAL || nodesCollection.type() == NodesCollectionType.SPECIFIED) {
                     continue;
                 }
             }

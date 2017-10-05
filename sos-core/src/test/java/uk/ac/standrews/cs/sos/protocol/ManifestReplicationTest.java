@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -120,7 +121,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
@@ -149,7 +150,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
@@ -180,7 +181,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, null, null);
     }
@@ -200,7 +201,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);

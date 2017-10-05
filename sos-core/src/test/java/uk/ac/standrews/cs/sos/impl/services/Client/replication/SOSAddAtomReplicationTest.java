@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.InputStream;
@@ -35,7 +36,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(node.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
         AtomBuilder builder = new AtomBuilder()
@@ -74,7 +75,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(node.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
         AtomBuilder builder = new AtomBuilder()

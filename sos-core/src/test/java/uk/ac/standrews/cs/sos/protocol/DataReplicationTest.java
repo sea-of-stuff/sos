@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
@@ -161,7 +162,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(node.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
@@ -188,7 +189,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(node.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
@@ -217,7 +218,7 @@ public class DataReplicationTest extends ProtocolTest {
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(node.getNodeGUID());
         nodes.add(storageNode.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
@@ -258,7 +259,7 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(node.getNodeGUID());
         nodes.add(storageNode.getNodeGUID());
         nodes.add(anotherNode.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
@@ -294,7 +295,7 @@ public class DataReplicationTest extends ProtocolTest {
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(storageNode.getNodeGUID());
         nodes.add(twinStorageNode.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 
@@ -329,7 +330,7 @@ public class DataReplicationTest extends ProtocolTest {
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(storageNode.getNodeGUID());
         nodes.add(twinStorageNode.getNodeGUID());
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollection.TYPE.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
 
         Storage storage = localSOSNode.getStorage();
 

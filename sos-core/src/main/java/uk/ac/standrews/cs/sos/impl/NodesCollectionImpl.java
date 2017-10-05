@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -14,17 +15,17 @@ import java.util.stream.Collectors;
  */
 public class NodesCollectionImpl implements NodesCollection {
 
-    private TYPE type;
+    private NodesCollectionType type;
     private Set<IGUID> nodesRefs;
 
-    public NodesCollectionImpl(TYPE type) throws NodesCollectionException {
+    public NodesCollectionImpl(NodesCollectionType type) throws NodesCollectionException {
 
-        if (type.equals(TYPE.SPECIFIED)) throw new NodesCollectionException("Cannot use this constructor for Nodes Collection of type SPECIFIED");
+        if (type.equals(NodesCollectionType.SPECIFIED)) throw new NodesCollectionException("Cannot use this constructor for Nodes Collection of type SPECIFIED");
 
         this.type = type;
     }
 
-    public NodesCollectionImpl(TYPE type, Set<IGUID> nodesRefs) {
+    public NodesCollectionImpl(NodesCollectionType type, Set<IGUID> nodesRefs) {
 
         // TODO - this must be used for type specified only
 
@@ -38,7 +39,7 @@ public class NodesCollectionImpl implements NodesCollection {
     }
 
     @Override
-    public TYPE type() {
+    public NodesCollectionType type() {
         return type;
     }
 

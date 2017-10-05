@@ -266,7 +266,7 @@ public class PolicyActions {
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
-        NodesCollection domain = new NodesCollectionImpl(NodesCollection.TYPE.LOCAL);
+        NodesCollection domain = new NodesCollectionImpl(NodesCollectionType.LOCAL);
         return dataDiscoveryService.getManifest(domain, guid);
     }
 

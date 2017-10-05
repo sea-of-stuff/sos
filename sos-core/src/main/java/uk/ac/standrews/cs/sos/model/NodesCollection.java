@@ -38,14 +38,8 @@ public interface NodesCollection {
      *
      * @return the type of this nodes collection
      */
-    TYPE type();
+    NodesCollectionType type();
 
     String toUniqueString();
-
-    enum TYPE {
-        LOCAL, // This local node
-        SPECIFIED, // The collection is limited to the specified nodes
-        ANY // The collection is unlimited
-    }
 
 }

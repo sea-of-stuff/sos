@@ -62,6 +62,10 @@ public class JSONConstants {
     public static final String KEY_NODE_SERVICES_MMS = "mms";
     public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 
+    // NodesCollection
+    public static final String KEY_NODES_COLLECTION_TYPE = "type";
+    public static final String KEY_NODES_COLLECTION_REFS = "nodes";
+
     // Context
     public static final String KEY_CONTEXT_NAME = "name";
     public static final String KEY_CONTEXT_INVARIANT = "invariant";
@@ -71,7 +75,6 @@ public class JSONConstants {
     public static final String KEY_CONTEXT_CODOMAIN = "codomain";
     public static final String KEY_CONTEXT_PREDICATE = "predicate";
     public static final String KEY_CONTEXT_POLICIES = "policies";
-
 
     // Computational units
     public static final String KEY_COMPUTATIONAL_DEPENDENCIES = "dependencies";

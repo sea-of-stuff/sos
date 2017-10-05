@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.util.Arrays;
@@ -93,16 +94,16 @@ public class DataPackage {
 
         public static class ReplicationNodes {
 
-            private NodesCollection.TYPE type;
+            private NodesCollectionType type;
             private String[] refs;
 
             public ReplicationNodes() {}
 
-            public NodesCollection.TYPE getType() {
+            public NodesCollectionType getType() {
                 return type;
             }
 
-            public void setType(NodesCollection.TYPE type) {
+            public void setType(NodesCollectionType type) {
                 this.type = type;
             }
 
@@ -116,7 +117,7 @@ public class DataPackage {
 
             public NodesCollection getNodesCollection() throws NodesCollectionException {
 
-                if (type.equals(NodesCollection.TYPE.ANY)) {
+                if (type.equals(NodesCollectionType.ANY)) {
 
                     return new NodesCollectionImpl(type);
                 } else {

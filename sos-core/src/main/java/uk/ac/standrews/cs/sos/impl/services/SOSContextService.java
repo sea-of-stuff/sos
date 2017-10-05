@@ -149,14 +149,14 @@ public class SOSContextService implements ContextService {
         }
 
         JsonNode context_n = contextBuilder.context(predicate, policies);
-        Context context = JSONHelper.JsonObjMapper().readValue(context_n.toString(), Context.class);
+        Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
 
         return context.guid();
     }
 
     private IGUID addPredicate(JsonNode jsonNode) throws IOException, ManifestPersistException {
 
-        Predicate predicate = JSONHelper.JsonObjMapper().readValue(jsonNode.toString(), Predicate.class);
+        Predicate predicate = JSONHelper.JsonObjMapper().convertValue(jsonNode, Predicate.class);
         dataDiscoveryService.addManifest(predicate);
 
         return predicate.guid();
@@ -164,7 +164,7 @@ public class SOSContextService implements ContextService {
 
     private IGUID addPolicy(JsonNode jsonNode) throws IOException, ManifestPersistException {
 
-        Policy policy = JSONHelper.JsonObjMapper().readValue(jsonNode.toString(), Policy.class);
+        Policy policy = JSONHelper.JsonObjMapper().convertValue(jsonNode, Policy.class);
         dataDiscoveryService.addManifest(policy);
 
         return policy.guid();
