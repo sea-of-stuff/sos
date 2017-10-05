@@ -25,10 +25,12 @@ public class NodesCollectionSerializer extends JsonSerializer<NodesCollection> {
 
         jsonGenerator.writeFieldName(KEY_NODES_COLLECTION_REFS);
         jsonGenerator.writeStartArray();
-        for(IGUID guid:nodesCollection.nodesRefs()) {
-            jsonGenerator.writeString(guid.toMultiHash());
+        if (nodesCollection.nodesRefs() != null) {
+            for (IGUID guid : nodesCollection.nodesRefs()) {
+                jsonGenerator.writeString(guid.toMultiHash());
+            }
         }
-        jsonGenerator.writeEndObject();
+        jsonGenerator.writeEndArray();
 
         jsonGenerator.writeEndObject();
     }

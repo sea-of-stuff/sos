@@ -44,7 +44,9 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
                 policies.add(policy);
             }
 
-            return new ContextManifest(name, domain, codomain, predicate, policies, null);
+            IGUID content = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_CONTENT).asText());
+
+            return new ContextManifest(name, domain, codomain, predicate, policies, null, content);
 
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to generate GUIDs for context");

@@ -24,6 +24,8 @@ public class ContextBuilder {
 
         // this.jsonNode = ((ObjectNode)jsonNode).put("guid", guid.toMultiHash()); // how is the guid known already? guid is not random anymore
 
+        // TODO - reference to empty compound
+
         return fatContextDefinition.get("context");
     }
 

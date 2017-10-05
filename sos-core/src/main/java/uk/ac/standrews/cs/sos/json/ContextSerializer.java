@@ -24,7 +24,7 @@ public class ContextSerializer extends JsonSerializer<Context> {
 
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_NAME, context.getName());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_INVARIANT, context.invariant().toMultiHash());
-        jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_CONTENT, context.invariant().toMultiHash());
+        jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_CONTENT, context.content().toMultiHash());
 
         if (!context.previous().isInvalid()) {
             jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREVIOUS, context.previous().toMultiHash());
@@ -40,7 +40,7 @@ public class ContextSerializer extends JsonSerializer<Context> {
         for(IGUID policy:context.policies()) {
             jsonGenerator.writeString(policy.toMultiHash());
         }
-        jsonGenerator.writeEndObject();
+        jsonGenerator.writeEndArray();
 
         jsonGenerator.writeEndObject();
     }

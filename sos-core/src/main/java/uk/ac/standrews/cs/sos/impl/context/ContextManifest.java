@@ -29,7 +29,7 @@ public class ContextManifest extends SignedManifest implements Context {
     protected Set<IGUID> policies;
     protected NodesCollection domain;
     protected NodesCollection codomain;
-    protected IGUID content = new InvalidID();
+    protected IGUID content;
 
     /**
      * The predicate is computed once and its result is true forever.
@@ -47,20 +47,23 @@ public class ContextManifest extends SignedManifest implements Context {
      * @param domain
      * @param codomain
      */
-    public ContextManifest(String name, NodesCollection domain, NodesCollection codomain, IGUID predicate, Set<IGUID> policies, Role signer) {
+    public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
+                           IGUID predicate, Set<IGUID> policies, Role signer,
+                           IGUID content) {
         super(signer, ManifestType.CONTEXT);
-
-        this.invariant = makeInvariantGUID();
-        this.guid = makeGUID();
-        // TODO - throw exceptions if invariant or guid are invalid
 
         this.name = name;
         this.domain = domain;
         this.codomain = codomain;
         this.predicate = predicate;
         this.policies = policies;
+        this.content = content;
 
         this.previous = new InvalidID();
+
+        this.invariant = makeInvariantGUID();
+        this.guid = makeGUID();
+        // TODO - throw exceptions if invariant or guid are invalid
     }
 
     // TODO - constructor with content
