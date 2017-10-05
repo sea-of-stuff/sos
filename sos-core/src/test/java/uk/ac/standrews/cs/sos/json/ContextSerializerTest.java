@@ -29,7 +29,7 @@ public class ContextSerializerTest {
                 "  \"GUID\": \"SHA256_16_5bc364fd780d83a6167296fcd2e316c68414eeb421cebafdddc86cd4a7bb612b\",\n" +
                 "  \"name\": \"TEST\",\n" +
                 "  \"invariant\": \"SHA256_16_00d2a6d2528938d72e339af3bad3cff89780f4576ae461ad20c463acd9c1d21a\",\n" +
-                "  \"content\": \"SHA256_16_e85f9770df500fb74794d429dd8d32238340c845fdac48bb17fb6a87bde86547\",\n" + // FIXME
+                "  \"content\": \"SHA256_16_e85f9770df500fb74794d429dd8d32238340c845fdac48bb17fb6a87bde86547\",\n" +
                 "  \"domain\": {\n" +
                 "    \"type\": \"LOCAL\",\n" +
                 "    \"nodes\": []\n" +

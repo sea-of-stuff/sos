@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.constants;
 /**
  * This class contains some useful uk.ac.standrews.cs.sos.constants for constructing manifests.
  *
+ * TODO - use all lowercase for keys
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class JSONConstants {
@@ -37,10 +39,10 @@ public class JSONConstants {
     public static final String BUNDLE_LOCATION = "location";
 
     // Metadata
-    public static final String KEY_META_PROPERTIES = "Properties";
-    public static final String KEY_META_KEY = "Key";
-    public static final String KEY_META_TYPE = "Type";
-    public static final String KEY_META_VALUE = "Value";
+    public static final String KEY_META_PROPERTIES = "properties";
+    public static final String KEY_META_KEY = "key";
+    public static final String KEY_META_TYPE = "type";
+    public static final String KEY_META_VALUE = "value";
 
     // User/Role
     public static final String KEY_USER = "User";

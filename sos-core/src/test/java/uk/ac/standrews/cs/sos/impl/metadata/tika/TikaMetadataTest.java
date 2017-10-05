@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -26,8 +27,8 @@ public class TikaMetadataTest {
         TikaMetadata output = test.processData(data);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(output.toString());
-        assertTrue(node.has("GUID"));
-        assertTrue(node.has("Properties"));
-        assertEquals(node.get("Properties").size(), 5);
+        assertTrue(node.has(JSONConstants.KEY_GUID));
+        assertTrue(node.has(JSONConstants.KEY_META_PROPERTIES));
+        assertEquals(node.get(JSONConstants.KEY_META_PROPERTIES).size(), 5);
     }
 }

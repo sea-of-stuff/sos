@@ -20,31 +20,31 @@ public class BasicMetadataTest {
         String testMetadata =
                 "{\n" +
                         "    \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
-                        "    \"Properties\": [\n" +
+                        "    \"properties\": [\n" +
                         "        {\n" +
-                        "            \"Key\": \"X-Parsed-By\",\n" +
+                        "            \"key\": \"X-Parsed-By\",\n" +
                         "            \"type\": \"String\",\n" +
-                        "            \"Value\": \"org.apache.tika.parser.DefaultParser\"\n" +
+                        "            \"value\": \"org.apache.tika.parser.DefaultParser\"\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"Key\": \"Content-Encoding\",\n" +
+                        "            \"key\": \"Content-Encoding\",\n" +
                         "            \"type\": \"String\",\n" +
-                        "            \"Value\": \"null\"\n" +
+                        "            \"value\": \"null\"\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"Key\": \"Size\",\n" +
+                        "            \"key\": \"Size\",\n" +
                         "            \"type\": \"Long\",\n" +
-                        "            \"Value\": 26\n" +
+                        "            \"value\": 26\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"Key\": \"Timestamp\",\n" +
+                        "            \"key\": \"Timestamp\",\n" +
                         "            \"type\": \"int\",\n" +
-                        "            \"Value\": 1484736105\n" +
+                        "            \"value\": 1484736105\n" +
                         "        },\n" +
                         "        {\n" +
-                        "            \"Key\": \"Content-Type\",\n" +
+                        "            \"key\": \"Content-Type\",\n" +
                         "            \"type\": \"String\",\n" +
-                        "            \"Value\": \"text/plain; charset=ISO-8859-1\"\n" +
+                        "            \"value\": \"text/plain; charset=ISO-8859-1\"\n" +
                         "        }\n" +
                         "    ]\n" +
                         "}";
