@@ -1,12 +1,16 @@
 package uk.ac.standrews.cs.sos.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Queue;
 import java.util.Set;
 
@@ -35,6 +39,17 @@ public interface ContextService {
      * @throws Exception if the context could not be added
      */
     IGUID addContext(Context context) throws Exception;
+
+    /**
+     * Add a context to this service.
+     *
+     * @param contextBuilder
+     * @return
+     * @throws GUIDGenerationException
+     * @throws IOException
+     * @throws ManifestPersistException
+     */
+    IGUID addContext(ContextBuilder contextBuilder) throws GUIDGenerationException, IOException, ManifestPersistException;
 
     /**
      * Add a context to this service given a JSON representation of the context

@@ -12,7 +12,9 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.*;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePolicy;
@@ -122,13 +124,10 @@ public class SOSContextService implements ContextService {
                 }).collect(Collectors.toSet());
     }
 
-
-    // TODO - where is the add predicate and policy?
     @Override
     public IGUID addContext(Context context) throws Exception {
 
-        localContextsDirectory.addContext(context);
-        inMemoryCache.addContext(context);
+        dataDiscoveryService.addManifest(context);
 
         // Trigger context's predicate just after adding the context to the node based on the node settings
         if (SOSLocalNode.settings.getServices().getCms().isPredicateOnNewContext()) {
@@ -139,17 +138,52 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
+    public IGUID addContext(ContextBuilder contextBuilder) throws GUIDGenerationException, IOException, ManifestPersistException {
+
+        IGUID predicate = addPredicate(contextBuilder.predicate());
+        Set<IGUID> policies = new LinkedHashSet<>();
+        JsonNode policies_n = contextBuilder.policies();
+        for(JsonNode policy_n:policies_n) {
+            IGUID policy = addPolicy(policy_n);
+            policies.add(policy);
+        }
+
+        JsonNode context_n = contextBuilder.context(predicate, policies);
+        Context context = JSONHelper.JsonObjMapper().readValue(context_n.toString(), Context.class);
+
+        return context.guid();
+    }
+
+    private IGUID addPredicate(JsonNode jsonNode) throws IOException, ManifestPersistException {
+
+        Predicate predicate = JSONHelper.JsonObjMapper().readValue(jsonNode.toString(), Predicate.class);
+        dataDiscoveryService.addManifest(predicate);
+
+        return predicate.guid();
+    }
+
+    private IGUID addPolicy(JsonNode jsonNode) throws IOException, ManifestPersistException {
+
+        Policy policy = JSONHelper.JsonObjMapper().readValue(jsonNode.toString(), Policy.class);
+        dataDiscoveryService.addManifest(policy);
+
+        return policy.guid();
+    }
+
+    @Override
     public IGUID addContext(String jsonContext) throws Exception {
 
-        Context context = JSONHelper.JsonObjMapper().readValue(jsonContext, Context.class);
-        return addContext(context);
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(jsonContext);
+        ContextBuilder contextBuilder = new ContextBuilder(node);
+        return addContext(contextBuilder);
     }
 
     @Override
     public IGUID addContext(File file) throws Exception {
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
-        return addContext(node.toString());
+        ContextBuilder contextBuilder = new ContextBuilder(node);
+        return addContext(contextBuilder);
     }
 
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
