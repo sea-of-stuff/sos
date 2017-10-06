@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.impl.context.ContextManifest.PREDICATE_ALWAYS_TO_COMPUTE;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -34,7 +36,7 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
             NodesCollection codomain = getNodesCollection(node, JSONConstants.KEY_CONTEXT_CODOMAIN);
 
             IGUID predicate = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_PREDICATE).asText());
-            long maxage = node.has(JSONConstants.KEY_CONTEXT_MAX_AGE) ? node.get(JSONConstants.KEY_CONTEXT_MAX_AGE).asLong() : 0;
+            long maxage = node.has(JSONConstants.KEY_CONTEXT_MAX_AGE) ? node.get(JSONConstants.KEY_CONTEXT_MAX_AGE).asLong() : PREDICATE_ALWAYS_TO_COMPUTE;
 
             Set<IGUID> policies = new LinkedHashSet<>();
             JsonNode policies_n = node.get(JSONConstants.KEY_CONTEXT_POLICIES);

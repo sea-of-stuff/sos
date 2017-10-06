@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.util.Set;
 
 /**
- * TODO - tests
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextManifest extends SignedManifest implements Context {
@@ -26,21 +25,16 @@ public class ContextManifest extends SignedManifest implements Context {
     protected IGUID invariant;
     protected IGUID previous;
     protected IGUID predicate;
-    private long maxAge = 0; // TODO - set from constructor
+    private long maxAge;
     protected Set<IGUID> policies;
     protected NodesCollection domain;
     protected NodesCollection codomain;
     protected IGUID content;
 
-    // TODO - have max-age here, not in the predicate
-    /**
-     * The predicate is computed once and its result is true forever.
-     */
-    protected static final long PREDICATE_ALWAYS_TRUE = Long.MAX_VALUE;
     /**
      * The predicate is true only at the time when it is computed.
      */
-    protected static final long PREDICATE_ALWAYS_TO_COMPUTE = 0;
+    public static final long PREDICATE_ALWAYS_TO_COMPUTE = 0;
 
     /**
      * Use this constructor when creating an already existing object with its GUID known already
