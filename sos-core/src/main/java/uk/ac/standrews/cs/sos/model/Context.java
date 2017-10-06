@@ -99,6 +99,15 @@ public interface Context extends Manifest {
     IGUID predicate();
 
     /**
+     *
+     * Get the max age for the validity for the predicate of this context.
+     * The max age is compared against the system time, in nano seconds - System.nanoTime();
+     *
+     * @return the max age
+     */
+    long maxAge();
+
+    /**
      * Return the policies of this context
      *
      * The predicates must be executed in order.

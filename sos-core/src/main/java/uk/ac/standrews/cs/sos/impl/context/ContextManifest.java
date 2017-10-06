@@ -26,6 +26,7 @@ public class ContextManifest extends SignedManifest implements Context {
     protected IGUID invariant;
     protected IGUID previous;
     protected IGUID predicate;
+    private long maxAge = 0; // TODO - set from constructor
     protected Set<IGUID> policies;
     protected NodesCollection domain;
     protected NodesCollection codomain;
@@ -49,7 +50,7 @@ public class ContextManifest extends SignedManifest implements Context {
      * @param codomain
      */
     public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
-                           IGUID predicate, Set<IGUID> policies, Role signer,
+                           IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
                            IGUID content) {
         super(signer, ManifestType.CONTEXT);
 
@@ -57,6 +58,7 @@ public class ContextManifest extends SignedManifest implements Context {
         this.domain = domain;
         this.codomain = codomain;
         this.predicate = predicate;
+        this.maxAge = maxAge;
         this.policies = policies;
         this.content = content;
 
@@ -68,7 +70,7 @@ public class ContextManifest extends SignedManifest implements Context {
     }
 
     public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
-                           IGUID predicate, Set<IGUID> policies, Role signer,
+                           IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
                            IGUID content, IGUID invariant, IGUID previous) {
         super(signer, ManifestType.CONTEXT);
 
@@ -76,6 +78,7 @@ public class ContextManifest extends SignedManifest implements Context {
         this.domain = domain;
         this.codomain = codomain;
         this.predicate = predicate;
+        this.maxAge = maxAge;
         this.policies = policies;
         this.content = content;
 
@@ -153,6 +156,11 @@ public class ContextManifest extends SignedManifest implements Context {
     @Override
     public IGUID predicate() {
         return predicate;
+    }
+
+    @Override
+    public long maxAge() {
+        return maxAge;
     }
 
     @Override

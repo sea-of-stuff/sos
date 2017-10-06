@@ -15,16 +15,6 @@ import uk.ac.standrews.cs.sos.impl.json.PredicateSerializer;
 public interface Predicate extends ComputationalUnit {
 
     /**
-     * FIXME - have this in the context
-     *
-     * Get the max age for the validity of this predicate
-     * The max age is compared against the system time, in nano seconds - System.nanoTime();
-     *
-     * @return the max age
-     */
-    long maxAge();
-
-    /**
      * Test the entity matching this GUID with the predicate
      *
      * @param guid of the entity to test

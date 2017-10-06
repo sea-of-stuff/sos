@@ -179,12 +179,11 @@ public class SOSReflection {
         try {
             ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder("PREDICATE");
             String className = classBuilder.className(node);
-            long maxage = node.has(JSONConstants.KEY_PREDICATE_MAX_AGE) ? node.get(JSONConstants.KEY_PREDICATE_MAX_AGE).asLong() : 0; // TODO - have this in context
 
             java.lang.ClassLoader classLoader = SOSClassLoader();
             Class<?> clazz = Class.forName(ClassBuilderFactory.PACKAGE + "." + className, true, classLoader);
-            Constructor<?> constructor = clazz.getConstructor(JsonNode.class, long.class);
-            return (Predicate) constructor.newInstance(node, maxage);
+            Constructor<?> constructor = clazz.getConstructor(JsonNode.class);
+            return (Predicate) constructor.newInstance(node);
 
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                 ClassBuilderException | IOException e) {

@@ -76,6 +76,7 @@ public class JSONConstants {
     public static final String KEY_CONTEXT_DOMAIN = "domain";
     public static final String KEY_CONTEXT_CODOMAIN = "codomain";
     public static final String KEY_CONTEXT_PREDICATE = "predicate";
+    public static final String KEY_CONTEXT_MAX_AGE = "max_age";
     public static final String KEY_CONTEXT_POLICIES = "policies";
 
     // Computational units
@@ -83,7 +84,6 @@ public class JSONConstants {
 
     // Predicate
     public static final String KEY_PREDICATE = "predicate";
-    public static final String KEY_PREDICATE_MAX_AGE = "max-Age"; // TODO - have it in the context
 
     // Policy
     public static final String KEY_POLICY_APPLY = "apply";

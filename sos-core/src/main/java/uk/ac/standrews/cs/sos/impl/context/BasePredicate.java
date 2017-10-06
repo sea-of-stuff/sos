@@ -19,27 +19,19 @@ import java.util.Objects;
  * The wrapper allows us to cleanly handle the predicateManifest under the test function and to apply it for the and/or operators of the context.
  *
  * TODO - and/or operations are not fully implemented yet
- * TODO - how is the predicateManifest converted to a first class entity?
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class BasePredicate extends BasicManifest implements Predicate {
 
     private JsonNode predicateManifest;
-    private long maxAge;
 
-    public BasePredicate(JsonNode predicateManifest, long maxAge) {
+    public BasePredicate(JsonNode predicateManifest) {
         super(ManifestType.PREDICATE);
 
         this.predicateManifest = predicateManifest;
-        this.maxAge = maxAge;
 
         this.guid = makeGUID();
-    }
-
-    @Override
-    public long maxAge() {
-        return maxAge;
     }
 
     @Override
@@ -51,16 +43,12 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
     public Predicate and(Predicate other) {
         Objects.requireNonNull(other);
 
-        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
-
         return null; // new SOSPredicateImpl(predicateManifest.and(other.predicateManifest()), newMaxAge);
     }
 
     @Override
     public Predicate or(Predicate other) {
         Objects.requireNonNull(other);
-
-        long newMaxAge = maxAge < other.maxAge() ? maxAge : other.maxAge();
 
         return null; // new SOSPredicateImpl(predicateManifest.or(other.predicateManifest()), newMaxAge);
     }

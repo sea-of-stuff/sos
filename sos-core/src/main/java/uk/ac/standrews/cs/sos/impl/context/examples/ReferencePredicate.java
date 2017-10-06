@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.sos.impl.context.BasePredicate;
  */
 public class ReferencePredicate extends BasePredicate {
 
-    public ReferencePredicate(JsonNode code, long maxAge) {
-        super(code, maxAge);
+    public ReferencePredicate(JsonNode code) {
+        super(code);
     }
 
     @Override

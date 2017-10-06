@@ -341,6 +341,8 @@ public class SOSContextService implements ContextService {
 
         }
 
+        // TODO - generate new version of context, which links to previous
+
         long duration = System.nanoTime() - start;
         InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration);
 
@@ -528,6 +530,8 @@ public class SOSContextService implements ContextService {
      */
     private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
 
+        // TODO - max age from context
+
         IGUID contextGUID = context.guid();
         boolean alreadyRun =  contextsContentsDirectory.entryExists(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
@@ -628,8 +632,7 @@ public class SOSContextService implements ContextService {
 
         ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
 
-        Predicate predicate = getPredicate(context);
-        long max_age = predicate.maxAge();
+        long max_age = context.maxAge();
         long contentLastRun = content.timestamp;
         long now = System.currentTimeMillis();
 
@@ -651,7 +654,7 @@ public class SOSContextService implements ContextService {
         } catch (ManifestNotFoundException e) {
 
             JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
-            return new ReferencePredicate(emptyJsonNode, 0);
+            return new ReferencePredicate(emptyJsonNode);
         }
     }
 

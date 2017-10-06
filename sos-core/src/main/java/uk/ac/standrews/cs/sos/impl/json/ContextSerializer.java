@@ -34,6 +34,7 @@ public class ContextSerializer extends JsonSerializer<Context> {
         jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_CODOMAIN, context.codomain());
 
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREDICATE, context.predicate().toMultiHash());
+        jsonGenerator.writeNumberField(JSONConstants.KEY_CONTEXT_MAX_AGE, context.maxAge());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_CONTEXT_POLICIES);
         jsonGenerator.writeStartArray();

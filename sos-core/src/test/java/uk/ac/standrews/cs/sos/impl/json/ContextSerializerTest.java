@@ -39,6 +39,7 @@ public class ContextSerializerTest {
                 "    \"nodes\": [\"SHA256_16_29497892317a98d1299808516f7456fae992b88b2e50682ce31ff25c76f02caa\", \"SHA256_16_d3720e9346c08abaf7017b57cab422fc6ae7055886162bb92ca4a6cbb386c0d1\"]\n" +
                 "  },\n" +
                 "  \"predicate\": \"SHA256_16_57daa6858e8bdcc0e2e1ab93a1a782f2cd566186aff620fe0e7d1a545d681cab\",\n" +
+                "  \"max_age\": 1,\n" +
                 "  \"policies\": [\"SHA256_16_d9e4b085724893ff91d4666cd0fc63dbf98fd38b1e05952dc7b836ece28d2a84\", \"SHA256_16_acad290a502ea13384879c68d9cc481604190c46a31508ccf8bb93a4a74ee8e2\"]\n" +
                 "}";
 
@@ -57,7 +58,7 @@ public class ContextSerializerTest {
 
         IGUID content = GUIDFactory.recreateGUID("SHA256_16_e85f9770df500fb74794d429dd8d32238340c845fdac48bb17fb6a87bde86547");
 
-        Context basicContext = new ContextManifest("TEST", domain, codomain, predicate, policies, null, content);
+        Context basicContext = new ContextManifest("TEST", domain, codomain, predicate, 1, policies, null, content);
 
         JSONAssert.assertEquals(expectedContextJSON, basicContext.toString(), false);
     }

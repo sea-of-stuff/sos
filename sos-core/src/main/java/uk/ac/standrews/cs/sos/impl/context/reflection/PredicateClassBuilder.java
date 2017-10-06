@@ -26,8 +26,8 @@ public class PredicateClassBuilder implements ClassBuilder {
     private static final String CLASS_SIGNATURE_TEMPLATE = "public class " + CLASS_NAME_TAG + " extends " + COMMON_CLASS + " {" + NEW_LINE;
     private static final String CLASS_CLOSING = "}";
 
-    private static final String CONSTRUCTOR_BODY = "super(predicateManifest, maxAge);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode predicateManifest, long maxAge) {  "
+    private static final String CONSTRUCTOR_BODY = "super(predicateManifest);";
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode predicateManifest) {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
     private static final String PREDICATE_TAG = "_PREDICATE_TAG_";

@@ -34,6 +34,7 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
             NodesCollection codomain = getNodesCollection(node, JSONConstants.KEY_CONTEXT_CODOMAIN);
 
             IGUID predicate = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_PREDICATE).asText());
+            long maxage = node.has(JSONConstants.KEY_CONTEXT_MAX_AGE) ? node.get(JSONConstants.KEY_CONTEXT_MAX_AGE).asLong() : 0;
 
             Set<IGUID> policies = new LinkedHashSet<>();
             JsonNode policies_n = node.get(JSONConstants.KEY_CONTEXT_POLICIES);
@@ -50,10 +51,10 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
                 IGUID invariant = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_INVARIANT).asText());
                 IGUID previous = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_PREVIOUS).asText());
 
-                return new ContextManifest(name, domain, codomain, predicate, policies, null, content, invariant, previous);
+                return new ContextManifest(name, domain, codomain, predicate, maxage, policies, null, content, invariant, previous);
             } else {
 
-                return new ContextManifest(name, domain, codomain, predicate, policies, null, content);
+                return new ContextManifest(name, domain, codomain, predicate, maxage, policies, null, content);
             }
 
         } catch (GUIDGenerationException e) {

@@ -32,7 +32,7 @@ public class PredicateSerializerTest {
                 "  \"predicate\" : \"true;\"\n" +
                 "}";
 
-        ReferencePredicate referencePredicate = new ReferencePredicate(jsonNode, 1);
+        ReferencePredicate referencePredicate = new ReferencePredicate(jsonNode);
         assertEquals(referencePredicate.toString(), expected);
     }
 }
