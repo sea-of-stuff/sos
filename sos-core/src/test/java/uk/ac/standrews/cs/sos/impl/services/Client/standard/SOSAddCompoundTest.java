@@ -7,9 +7,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.ContentImpl;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 
 import java.io.IOException;

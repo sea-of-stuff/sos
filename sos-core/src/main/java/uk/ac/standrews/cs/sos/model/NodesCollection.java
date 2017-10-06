@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.json.NodesCollectionDeserializer;
-import uk.ac.standrews.cs.sos.json.NodesCollectionSerializer;
+import uk.ac.standrews.cs.sos.impl.json.NodesCollectionDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.NodesCollectionSerializer;
 
 import java.util.Set;
 

@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.data;
 
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

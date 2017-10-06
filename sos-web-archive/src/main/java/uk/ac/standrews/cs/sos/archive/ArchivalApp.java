@@ -8,9 +8,9 @@ import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.impl.locations.URILocation;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Version;
 

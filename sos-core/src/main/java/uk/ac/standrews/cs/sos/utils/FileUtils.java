@@ -15,11 +15,11 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.*;
+import uk.ac.standrews.cs.sos.impl.datamodel.*;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
-import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
+import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
+import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
 import uk.ac.standrews.cs.sos.model.*;
 
 import java.io.IOException;

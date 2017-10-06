@@ -16,7 +16,10 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.impl.context.directory.*;
+import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFactory;
+import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePolicy;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePredicate;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -57,11 +60,11 @@ public class SOSContextService implements ContextService {
 
     private PolicyActions policyActions;
 
+    // REMOVEME some of these data structures
     // DATA STRUCTURES
-    private LocalContextsDirectory localContextsDirectory; // TODO - need to be able to track active/inactive contexts
     // The inMemoryCache keeps the context objects for this node in memory.
     private CacheContextsDirectory inMemoryCache;
-    private ContextsContentsDirectory contextsContentsDirectory;
+    private ContextsContentsDirectory contextsContentsDirectory; // Needed only partially!
 
     // This executor service will be used to schedule any background tasks
     private static final int CMS_SCHEDULER_PS = 5;
@@ -86,7 +89,6 @@ public class SOSContextService implements ContextService {
         this.dataDiscoveryService = dataDiscoveryService;
         policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
 
-        localContextsDirectory = new LocalContextsDirectory(dataDiscoveryService, policyActions);
         inMemoryCache = new CacheContextsDirectory();
 
         contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
@@ -113,6 +115,7 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<Context> getContexts() {
 
+        // TODO - should do this using the data discovery service
         return inMemoryCache.getContexts()
                 .stream()
                 .map(c -> {
@@ -189,11 +192,9 @@ public class SOSContextService implements ContextService {
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
-            return inMemoryCache.getContext(contextGUID);
-
-        } catch (ContextNotFoundException e) {
-
-            return localContextsDirectory.getContext(contextGUID);
+            return (Context) dataDiscoveryService.getManifest(contextGUID);
+        } catch (ManifestNotFoundException e) {
+            throw new ContextNotFoundException(e);
         }
     }
 
@@ -637,16 +638,7 @@ public class SOSContextService implements ContextService {
 
     private void loadContexts() throws ServiceException {
 
-        try {
-            for (IGUID contextsToLoad : localContextsDirectory.getContexts()) {
-
-                Context context = localContextsDirectory.getContext(contextsToLoad);
-                inMemoryCache.addContext(context);
-            }
-
-        } catch (DataStorageException | GUIDGenerationException | ContextNotFoundException e) {
-            throw new ServiceException("ContextService - Unable to load contexts correctly");
-        }
+        // TODO - load predicates/policies for contexts
     }
 
     private Predicate getPredicate(Context context) {

@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.StringData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.CompoundBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Metadata;

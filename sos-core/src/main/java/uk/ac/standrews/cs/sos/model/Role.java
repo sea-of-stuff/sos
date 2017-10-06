@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
-import uk.ac.standrews.cs.sos.json.RoleDeserializer;
-import uk.ac.standrews.cs.sos.json.RoleSerializer;
+import uk.ac.standrews.cs.sos.impl.json.RoleDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.RoleSerializer;
 
 import javax.crypto.SecretKey;
 import java.security.PublicKey;

@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.impl.manifests.SignedManifest;
+import uk.ac.standrews.cs.sos.impl.manifest.SignedManifest;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -31,6 +31,7 @@ public class ContextManifest extends SignedManifest implements Context {
     protected NodesCollection codomain;
     protected IGUID content;
 
+    // TODO - have max-age here, not in the predicate
     /**
      * The predicate is computed once and its result is true forever.
      */
@@ -66,8 +67,29 @@ public class ContextManifest extends SignedManifest implements Context {
         // TODO - throw exceptions if invariant or guid are invalid
     }
 
-    // TODO - constructor with content
-    // TODO - constructor with invariant and previous
+    public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
+                           IGUID predicate, Set<IGUID> policies, Role signer,
+                           IGUID content, IGUID invariant, IGUID previous) {
+        super(signer, ManifestType.CONTEXT);
+
+        this.name = name;
+        this.domain = domain;
+        this.codomain = codomain;
+        this.predicate = predicate;
+        this.policies = policies;
+        this.content = content;
+
+        this.previous = previous;
+
+        this.invariant = makeInvariantGUID();
+        this.guid = makeGUID();
+
+        if (!this.invariant.equals(invariant)) {
+            // TODO - throw exception
+        }
+        // TODO - throw exceptions if invariant or guid are invalid
+    }
+
 
     @Override
     public IGUID guid() {

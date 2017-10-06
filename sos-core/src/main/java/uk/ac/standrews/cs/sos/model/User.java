@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.json.UserDeserializer;
-import uk.ac.standrews.cs.sos.json.UserSerializer;
+import uk.ac.standrews.cs.sos.impl.json.UserDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.UserSerializer;
 
 import java.security.PublicKey;
 

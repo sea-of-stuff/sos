@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.sos.utils;
 
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.CacheLocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
+import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Role;

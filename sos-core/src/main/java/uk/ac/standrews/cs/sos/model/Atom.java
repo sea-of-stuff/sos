@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 
 import java.io.IOException;
 import java.util.Set;

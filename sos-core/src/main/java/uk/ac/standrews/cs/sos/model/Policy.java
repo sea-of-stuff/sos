@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.json.PolicyDeserializer;
-import uk.ac.standrews.cs.sos.json.PolicySerializer;
+import uk.ac.standrews.cs.sos.impl.json.PolicyDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.PolicySerializer;
 
 /**
  * A policy is a task apply on the content of a given context.

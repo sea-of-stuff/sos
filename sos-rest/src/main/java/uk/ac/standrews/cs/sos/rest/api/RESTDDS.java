@@ -9,9 +9,9 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.CompoundManifest;
-import uk.ac.standrews.cs.sos.impl.manifests.VersionManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Set;
 
-import static uk.ac.standrews.cs.sos.impl.network.Request.SOS_NODE_CHALLENGE_HEADER;
+import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

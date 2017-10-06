@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import uk.ac.standrews.cs.sos.json.LocationDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.LocationDeserializer;
 
 import java.io.IOException;
 import java.io.InputStream;

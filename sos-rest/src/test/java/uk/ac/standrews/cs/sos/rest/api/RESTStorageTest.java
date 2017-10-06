@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.impl.manifests.AtomManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 

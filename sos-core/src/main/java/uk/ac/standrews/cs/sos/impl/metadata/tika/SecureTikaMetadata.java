@@ -2,8 +2,8 @@ package uk.ac.standrews.cs.sos.impl.metadata.tika;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.impl.json.SecureMetadataSerializer;
 import uk.ac.standrews.cs.sos.impl.metadata.AbstractMetadata;
-import uk.ac.standrews.cs.sos.json.SecureMetadataSerializer;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
 import java.util.Arrays;

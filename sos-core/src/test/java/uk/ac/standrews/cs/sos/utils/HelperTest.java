@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.castore.implementations.filesystem.FileBasedFile;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
-import uk.ac.standrews.cs.sos.impl.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Location;
 

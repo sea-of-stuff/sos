@@ -12,7 +12,7 @@ public class ContextBuilder {
 
     private JsonNode fatContextDefinition;
 
-    // TODO - have thing context definition too!
+    // TODO - have thin context definition too!
 
     public ContextBuilder(JsonNode fatContextDefinition) {
         this.fatContextDefinition = fatContextDefinition;

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.json.PredicateDeserializer;
-import uk.ac.standrews.cs.sos.json.PredicateSerializer;
+import uk.ac.standrews.cs.sos.impl.json.PredicateDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.PredicateSerializer;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

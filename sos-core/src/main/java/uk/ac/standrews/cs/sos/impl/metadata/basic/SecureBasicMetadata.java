@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.impl.metadata.basic;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.json.SecureMetadataDeserializer;
-import uk.ac.standrews.cs.sos.json.SecureMetadataSerializer;
+import uk.ac.standrews.cs.sos.impl.json.SecureMetadataDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.SecureMetadataSerializer;
 import uk.ac.standrews.cs.sos.model.SecureMetadata;
 
 import java.util.HashMap;

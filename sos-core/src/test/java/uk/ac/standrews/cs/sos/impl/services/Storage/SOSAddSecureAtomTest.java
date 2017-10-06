@@ -2,9 +2,9 @@ package uk.ac.standrews.cs.sos.impl.services.Storage;
 
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.impl.roles.RoleImpl;
-import uk.ac.standrews.cs.sos.impl.roles.UserImpl;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
+import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 

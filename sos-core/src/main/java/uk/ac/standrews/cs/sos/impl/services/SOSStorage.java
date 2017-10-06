@@ -23,22 +23,22 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.impl.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
-import uk.ac.standrews.cs.sos.impl.locations.LocationUtility;
-import uk.ac.standrews.cs.sos.impl.locations.SOSLocation;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.BundleTypes;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.ExternalLocationBundle;
-import uk.ac.standrews.cs.sos.impl.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.manifests.ManifestFactory;
-import uk.ac.standrews.cs.sos.impl.manifests.builders.AtomBuilder;
-import uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.LocationUtility;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.ExternalLocationBundle;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
@@ -54,7 +54,7 @@ import java.io.SequenceInputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static uk.ac.standrews.cs.sos.impl.manifests.directory.LocationsIndexImpl.comparator;
+import static uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl.comparator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

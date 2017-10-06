@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
-import uk.ac.standrews.cs.sos.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.Task;
 
 import java.sql.Connection;
 import java.sql.SQLException;
