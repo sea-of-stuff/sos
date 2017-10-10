@@ -1,16 +1,15 @@
 package uk.ac.standrews.cs.sos.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Queue;
 import java.util.Set;
 
@@ -36,38 +35,43 @@ public interface ContextService {
      * The context is automatically set as active
      *
      * @param context to be added
-     * @throws Exception if the context could not be added
+     * @throws ContextException if the context could not be added
      */
-    IGUID addContext(Context context) throws Exception;
+    IGUID addContext(Context context) throws ContextException;
 
     /**
      * Add a context to this service.
      *
      * @param contextBuilder
      * @return
-     * @throws GUIDGenerationException
-     * @throws IOException
-     * @throws ManifestPersistException
+     * @throws ContextException
      */
-    IGUID addContext(ContextBuilder contextBuilder) throws GUIDGenerationException, IOException, ManifestPersistException;
+    IGUID addContext(ContextBuilder contextBuilder) throws ContextException;
 
     /**
      * Add a context to this service given a JSON representation of the context
      *
      * @param jsonContext
      * @return
-     * @throws Exception
+     * @throws ContextException
      */
-    IGUID addContext(String jsonContext) throws Exception;
+    IGUID addContext(String jsonContext) throws ContextException;
 
     /**
      * Add a context from a file
      *
      * @param file
      * @return
-     * @throws Exception
+     * @throws ContextException
      */
-    IGUID addContext(File file) throws Exception;
+    IGUID addContext(File file) throws ContextException;
+
+    /**
+     *
+     * @param contextBuilder should be of type TEMP (see constructors)
+     * @throws ContextException if the context could not be updated
+     */
+    void updateContext(ContextBuilder contextBuilder) throws ContextException;
 
     /**
      * Get the context given its guid
@@ -76,6 +80,15 @@ public interface ContextService {
      * @throws ContextNotFoundException if no context could be found
      */
     Context getContext(IGUID contextGUID) throws ContextNotFoundException;
+
+    /**
+     * Get the latest context version given the context invariant.
+     * We have only TIPS for context versions. We do not have HEADS, as we do not have branching.
+     *
+     * @param invariant of the context versions
+     * @return current TIP for the context identified by the invariant
+     */
+    Context getContextTIP(IGUID invariant) throws TIPNotFoundException, ContextNotFoundException;
 
     /**
      * Get a context given its name
@@ -136,7 +149,7 @@ public interface ContextService {
      * Run the predicates only against all the versions marked as HEADs in the node
      * @return the total number of times that any predicate has been run
      */
-    int runPredicates();
+    int runPredicates() throws ContextException;
 
     /**
      * Run the policies for all contexts

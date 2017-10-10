@@ -183,6 +183,19 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
     }
 
+    @Override
+    public void advanceTip(Context context) {
+
+        IGUID previous = context.previous();
+        if (previous == null || previous.isInvalid()) {
+            advanceTip(context.invariant(), context.guid());
+        } else {
+            Set<IGUID> previousVersions = new LinkedHashSet<>();
+            previousVersions.add(previous);
+            advanceTip(context.invariant(), previousVersions, context.guid());
+        }
+    }
+
     private void advanceTip(IGUID invariant, IGUID version) {
 
         if (!tips.containsKey(invariant)) {

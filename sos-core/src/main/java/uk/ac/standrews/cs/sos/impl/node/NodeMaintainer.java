@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.services.ContextService;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -19,18 +19,18 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 public class NodeMaintainer implements Runnable {
 
     private LocalStorage localStorage;
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
     private Storage storage;
     private UsersRolesService usersRolesService;
     private ContextService contextService;
 
     private long maxSize;
 
-    NodeMaintainer(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, Storage storage,
+    NodeMaintainer(LocalStorage localStorage, ManifestsDataService manifestsDataService, Storage storage,
                    UsersRolesService usersRolesService, ContextService contextService) {
 
         this.localStorage = localStorage;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
         this.storage = storage;
         this.usersRolesService = usersRolesService;
         this.contextService = contextService;
@@ -54,7 +54,7 @@ public class NodeMaintainer implements Runnable {
 
     public void flush() {
 
-        dataDiscoveryService.flush();
+        manifestsDataService.flush();
         storage.flush();
         usersRolesService.flush();
         contextService.flush();

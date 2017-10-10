@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.network.*;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -37,17 +37,17 @@ public class ManifestReplication extends Task {
     private NodesCollection nodesCollection;
     private int replicationFactor;
     private NodeDiscoveryService nodeDiscoveryService;
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
 
     // TODO - replication by delegation. See DataReplication!
-    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) throws SOSProtocolException {
+    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) throws SOSProtocolException {
 
-        if (dataDiscoveryService == null || nodeDiscoveryService == null) {
+        if (manifestsDataService == null || nodeDiscoveryService == null) {
             throw new SOSProtocolException("DDS and/or NDS are null. Manifest replication process is aborted.");
         }
 
         this.nodeDiscoveryService = nodeDiscoveryService;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
 
         this.manifest = manifest;
         this.nodesCollection = nodesCollection;
@@ -70,7 +70,7 @@ public class ManifestReplication extends Task {
 
                 if (transferWasSuccessful) {
                     SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.getNodeGUID().toMultiHash());
-                    dataDiscoveryService.addManifestDDSMapping(manifest.guid(), ref);
+                    manifestsDataService.addManifestDDSMapping(manifest.guid(), ref);
                     successfulReplicas++;
                 } else {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.getNodeGUID().toMultiHash());

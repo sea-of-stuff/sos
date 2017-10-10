@@ -22,7 +22,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataDiscoveryServiceIndexTest {
+public class ManifestsDataServiceIndexTest {
 
     @Test
     public void basicTest() {

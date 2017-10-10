@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -126,15 +126,15 @@ public class ManifestReplicationTest {
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
 
-        DataDiscoveryService dataDiscoveryServiceMock = mock(DataDiscoveryService.class);
+        ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, dataDiscoveryServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
 
-        verify(dataDiscoveryServiceMock, times(1)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(manifestsDataServiceMock, times(1)).addManifestDDSMapping(anyObject(), anyObject());
     }
 
     @Test
@@ -155,15 +155,15 @@ public class ManifestReplicationTest {
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
 
-        DataDiscoveryService dataDiscoveryServiceMock = mock(DataDiscoveryService.class);
+        ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, dataDiscoveryServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
         verify(node, times(0)).getHostAddress();
 
-        verify(dataDiscoveryServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(manifestsDataServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -206,14 +206,14 @@ public class ManifestReplicationTest {
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
 
-        DataDiscoveryService dataDiscoveryServiceMock = mock(DataDiscoveryService.class);
+        ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, dataDiscoveryServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
 
-        verify(dataDiscoveryServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(manifestsDataServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
     }
 }

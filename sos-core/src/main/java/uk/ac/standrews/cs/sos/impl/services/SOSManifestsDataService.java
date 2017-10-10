@@ -23,7 +23,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -42,7 +42,7 @@ import static uk.ac.standrews.cs.sos.model.NodesCollectionType.LOCAL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSDataDiscoveryService implements DataDiscoveryService {
+public class SOSManifestsDataService implements ManifestsDataService {
 
     private SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings;
 
@@ -60,8 +60,7 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
     // Maps ManifestGUID --> [ DDS Nodes that might have it ]
     private DDSIndex ddsIndex;
 
-    public SOSDataDiscoveryService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings,
-                                   LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
+    public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
 
         this.ddsSettings = ddsSettings;
 
@@ -81,19 +80,28 @@ public class SOSDataDiscoveryService implements DataDiscoveryService {
 
         // Add/Update TIP
         ManifestType manifestType = manifest.getType();
-        if (manifestType.equals(ManifestType.VERSION)) {
+        switch(manifestType) {
 
-            Version version = (Version) manifest;
-            inMemoryCache.advanceTip(version);
+            case VERSION:
+            {
+                Version version = (Version) manifest;
+                inMemoryCache.advanceTip(version);
 
-
-            // Make sure that this node has at least one HEAD, otherwise keep the current head.
-            try {
-                getHead(version.getInvariantGUID());
-            } catch (HEADNotFoundException e) {
-                setHead(version);
+                // Make sure that this node has at least one HEAD, otherwise keep the current head.
+                try {
+                    getHead(version.getInvariantGUID());
+                } catch (HEADNotFoundException e) {
+                    setHead(version);
+                }
+                break;
+            }
+            case CONTEXT:
+            {
+                Context context = (Context) manifest;
+                inMemoryCache.advanceTip(context);
             }
         }
+
     }
 
     @Override

@@ -10,7 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.MetadataService;
 
 /**
@@ -18,12 +18,12 @@ import uk.ac.standrews.cs.sos.services.MetadataService;
  */
 public class SOSMetadataService implements MetadataService {
 
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
     private MetadataEngine engine;
 
-    public SOSMetadataService(MetadataEngine metadataEngine, DataDiscoveryService dataDiscoveryService) {
+    public SOSMetadataService(MetadataEngine metadataEngine, ManifestsDataService manifestsDataService) {
         this.engine = metadataEngine;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SOSMetadataService implements MetadataService {
     @Override
     public void addMetadata(Metadata metadata) throws MetadataPersistException {
         try {
-            dataDiscoveryService.addManifest(metadata);
+            manifestsDataService.addManifest(metadata);
         } catch (ManifestPersistException e) {
             throw new MetadataPersistException(e);
         }
@@ -44,7 +44,7 @@ public class SOSMetadataService implements MetadataService {
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
         try {
-            return (Metadata) dataDiscoveryService.getManifest(guid);
+            return (Metadata) manifestsDataService.getManifest(guid);
         } catch (ManifestNotFoundException e) {
             throw new MetadataNotFoundException("Unable to find metadata");
         }
@@ -53,7 +53,7 @@ public class SOSMetadataService implements MetadataService {
     @Override
     public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {
         try {
-            return (Metadata) dataDiscoveryService.getManifest(nodesCollection, guid);
+            return (Metadata) manifestsDataService.getManifest(nodesCollection, guid);
         } catch (ManifestNotFoundException e) {
             throw new MetadataNotFoundException("Unable to find metadata");
         }

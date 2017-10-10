@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.util.Set;
@@ -24,4 +25,6 @@ public interface ManifestsCache extends ManifestsDirectory {
     void setHead(Version version);
 
     void advanceTip(Version version);
+
+    void advanceTip(Context context);
 }

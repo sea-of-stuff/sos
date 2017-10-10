@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface DataDiscoveryService {
+public interface ManifestsDataService {
 
     /**
      * Add a manifest to the local sea of stuff.

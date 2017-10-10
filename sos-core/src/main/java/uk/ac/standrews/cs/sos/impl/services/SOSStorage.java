@@ -39,7 +39,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
@@ -63,7 +63,7 @@ public class SOSStorage implements Storage {
 
     private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
 
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
     private UsersRolesService usersRolesService;
     private NodeDiscoveryService nodeDiscoveryService;
 
@@ -72,12 +72,12 @@ public class SOSStorage implements Storage {
     private LocationsIndex locationIndex;
 
     public SOSStorage(SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings, IGUID localNodeGUID, LocalStorage storage,
-                      DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
+                      ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
 
         this.storageSettings = storageSettings;
 
         this.storage = storage;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
         this.usersRolesService = usersRolesService;
         this.nodeDiscoveryService = nodeDiscoveryService;
 
@@ -110,7 +110,7 @@ public class SOSStorage implements Storage {
         }
 
         Atom manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        dataDiscoveryService.addManifest(manifest);
+        manifestsDataService.addManifest(manifest);
 
         // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
         int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
@@ -155,7 +155,7 @@ public class SOSStorage implements Storage {
         rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
 
         SecureAtom manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
-        dataDiscoveryService.addManifest(manifest);
+        manifestsDataService.addManifest(manifest);
 
         return manifest;
     }
@@ -170,7 +170,7 @@ public class SOSStorage implements Storage {
             String granteeEncryptedKey = granteeRole.encrypt(key);
 
             secureAtom.addKeyRole(granteeRole.guid(), granteeEncryptedKey);
-            dataDiscoveryService.addManifest(secureAtom);
+            manifestsDataService.addManifest(secureAtom);
 
             return secureAtom;
         } catch (Exception e) {
@@ -261,7 +261,7 @@ public class SOSStorage implements Storage {
     public Data getAtomContent(IGUID guid) throws AtomNotFoundException {
 
         try {
-            Manifest manifest = dataDiscoveryService.getManifest(guid);
+            Manifest manifest = manifestsDataService.getManifest(guid);
 
             if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
                 Atom atom = (Atom) manifest;
@@ -278,7 +278,7 @@ public class SOSStorage implements Storage {
     public Data getAtomContent(NodesCollection nodesCollection, IGUID guid) throws AtomNotFoundException {
 
         try {
-            Manifest manifest = dataDiscoveryService.getManifest(nodesCollection, guid);
+            Manifest manifest = manifestsDataService.getManifest(nodesCollection, guid);
 
             if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
                 Atom atom = (Atom) manifest;
@@ -318,7 +318,7 @@ public class SOSStorage implements Storage {
         locationBundles.addAll(locationIndex.findLocations(guid));
 
         try {
-            Manifest manifest = dataDiscoveryService.getManifest(guid);
+            Manifest manifest = manifestsDataService.getManifest(guid);
             if (manifest.getType().equals(ManifestType.ATOM) || manifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
                 Atom atom = (Atom) manifest;
                 Queue<LocationBundle> locs = findLocations(atom);

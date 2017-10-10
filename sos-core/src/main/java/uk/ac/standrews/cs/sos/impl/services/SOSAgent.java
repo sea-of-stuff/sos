@@ -27,22 +27,22 @@ import java.util.Set;
 public class SOSAgent implements Agent {
 
     private Storage storage;
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
     private MetadataService metadataService;
     private UsersRolesService usersRolesService;
 
-    private SOSAgent(Storage storage, DataDiscoveryService dataDiscoveryService, MetadataService metadataService, UsersRolesService usersRolesService) {
+    private SOSAgent(Storage storage, ManifestsDataService manifestsDataService, MetadataService metadataService, UsersRolesService usersRolesService) {
 
         this.storage = storage;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
         this.metadataService = metadataService;
         this.usersRolesService = usersRolesService;
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, DataDiscoveryService dataDiscoveryService, MetadataService metadataService, UsersRolesService usersRolesService) {
+    public static SOSAgent instance(Storage storage, ManifestsDataService manifestsDataService, MetadataService metadataService, UsersRolesService usersRolesService) {
         if (instance == null) {
-            instance = new SOSAgent(storage, dataDiscoveryService, metadataService, usersRolesService);
+            instance = new SOSAgent(storage, manifestsDataService, metadataService, usersRolesService);
         }
 
         return instance;
@@ -111,7 +111,7 @@ public class SOSAgent implements Agent {
 
         // NOTE:
         // Make the added manifest the HEAD by default
-        dataDiscoveryService.setHead(manifest);
+        manifestsDataService.setHead(manifest);
 
         return manifest;
     }
@@ -175,10 +175,10 @@ public class SOSAgent implements Agent {
         try {
             IGUID atomGUID = guid;
 
-            Manifest manifest = dataDiscoveryService.getManifest(guid);
+            Manifest manifest = manifestsDataService.getManifest(guid);
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 atomGUID = ((Version) manifest).getContentGUID();
-                if (!dataDiscoveryService.getManifest(atomGUID).getType().equals(ManifestType.ATOM)) {
+                if (!manifestsDataService.getManifest(atomGUID).getType().equals(ManifestType.ATOM)) {
                     throw new AtomNotFoundException();
                 }
             }
@@ -205,12 +205,12 @@ public class SOSAgent implements Agent {
 
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        return dataDiscoveryService.getManifest(guid);
+        return manifestsDataService.getManifest(guid);
     }
 
     @Override
     public Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ManifestNotFoundException {
-        return dataDiscoveryService.getManifest(nodesCollection, guid);
+        return manifestsDataService.getManifest(nodesCollection, guid);
     }
 
     @Override
@@ -255,7 +255,7 @@ public class SOSAgent implements Agent {
     }
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {
-        dataDiscoveryService.addManifest(manifest);
+        manifestsDataService.addManifest(manifest);
     }
 
 }

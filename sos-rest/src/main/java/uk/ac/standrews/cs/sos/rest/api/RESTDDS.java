@@ -17,7 +17,7 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.DDSNode;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -57,8 +57,8 @@ public class RESTDDS {
         }
 
         try {
-            DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
-            dataDiscoveryService.addManifest(manifest);
+            ManifestsDataService manifestsDataService = RESTConfig.sos.getDDS();
+            manifestsDataService.addManifest(manifest);
 
         } catch (ManifestPersistException e) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Invalid Input");
@@ -85,8 +85,8 @@ public class RESTDDS {
         }
 
         try {
-            DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
-            Manifest manifest = dataDiscoveryService.getManifest(manifestGUID);
+            ManifestsDataService manifestsDataService = RESTConfig.sos.getDDS();
+            Manifest manifest = manifestsDataService.getManifest(manifestGUID);
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, manifest.toString());
 
         } catch (ManifestNotFoundException e) {
@@ -110,7 +110,7 @@ public class RESTDDS {
 
         if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
-        DataDiscoveryService dds = RESTConfig.sos.getDDS();
+        ManifestsDataService dds = RESTConfig.sos.getDDS();
         IGUID challengeResult = dds.challenge(manifestGUID, challenge);
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
@@ -145,8 +145,8 @@ public class RESTDDS {
         }
 
 
-        DataDiscoveryService dataDiscoveryService = RESTConfig.sos.getDDS();
-        Set<IGUID> versions = dataDiscoveryService.getVersions(manifestGUID);
+        ManifestsDataService manifestsDataService = RESTConfig.sos.getDDS();
+        Set<IGUID> versions = manifestsDataService.getVersions(manifestGUID);
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
         for(IGUID version:versions) {

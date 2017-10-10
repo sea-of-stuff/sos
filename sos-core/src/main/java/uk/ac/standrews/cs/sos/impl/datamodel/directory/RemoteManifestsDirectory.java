@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -39,12 +39,12 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
     private DDSIndex ddsIndex;
     private NodeDiscoveryService nodeDiscoveryService;
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
 
-    public RemoteManifestsDirectory(DDSIndex ddsIndex, NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService) {
+    public RemoteManifestsDirectory(DDSIndex ddsIndex, NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) {
         this.ddsIndex = ddsIndex;
         this.nodeDiscoveryService = nodeDiscoveryService;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
     }
 
     /**
@@ -58,7 +58,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         try {
             NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), NodeType.DDS, 1);
-            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, dataDiscoveryService);
+            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException | NodesCollectionException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
@@ -71,7 +71,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
         try {
             // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
-            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, nodeDiscoveryService, dataDiscoveryService);
+            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");

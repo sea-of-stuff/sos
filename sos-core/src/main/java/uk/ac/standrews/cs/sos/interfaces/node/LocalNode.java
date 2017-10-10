@@ -27,7 +27,7 @@ public interface LocalNode extends Node {
      *
      * @return
      */
-    DataDiscoveryService getDDS();
+    ManifestsDataService getDDS();
 
     /**
      * Node discovery service for this node

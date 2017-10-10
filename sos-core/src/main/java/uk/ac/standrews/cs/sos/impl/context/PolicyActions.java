@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataChallenge;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestChallenge;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.Storage;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
@@ -42,7 +42,7 @@ public class PolicyActions {
 
     // Handles for the node services.
     private NodeDiscoveryService nodeDiscoveryService;
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
     private UsersRolesService usersRolesService;
     private Storage storage;
 
@@ -50,14 +50,14 @@ public class PolicyActions {
      * Create a policy language utility object using the specified SOS services
      *
      * @param nodeDiscoveryService
-     * @param dataDiscoveryService
+     * @param manifestsDataService
      * @param usersRolesService
      * @param storage
      */
-    public PolicyActions(NodeDiscoveryService nodeDiscoveryService, DataDiscoveryService dataDiscoveryService, UsersRolesService usersRolesService, Storage storage) {
+    public PolicyActions(NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, Storage storage) {
 
         this.nodeDiscoveryService = nodeDiscoveryService;
-        this.dataDiscoveryService = dataDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
         this.usersRolesService = usersRolesService;
         this.storage = storage;
     }
@@ -73,7 +73,7 @@ public class PolicyActions {
     void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         try {
-            dataDiscoveryService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
+            manifestsDataService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }
@@ -267,7 +267,7 @@ public class PolicyActions {
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
         NodesCollection domain = new NodesCollectionImpl(NodesCollectionType.LOCAL);
-        return dataDiscoveryService.getManifest(domain, guid);
+        return manifestsDataService.getManifest(domain, guid);
     }
 
     /**
@@ -282,13 +282,13 @@ public class PolicyActions {
     // Retrieve the manifest from local node
     Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
-        return dataDiscoveryService.getManifest(version.getContentGUID());
+        return manifestsDataService.getManifest(version.getContentGUID());
     }
 
     // TODO - this is not a policy action. Move it to another class
     Set<IGUID> getVersions(IGUID invariant) {
 
-        return dataDiscoveryService.getVersions(invariant);
+        return manifestsDataService.getVersions(invariant);
     }
 
     /**

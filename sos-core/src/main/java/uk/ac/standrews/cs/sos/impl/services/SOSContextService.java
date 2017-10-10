@@ -4,15 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
@@ -22,6 +20,8 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFa
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePolicy;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePredicate;
+import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
+import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -56,7 +56,7 @@ public class SOSContextService implements ContextService {
 
     // NODE SERVICES AND UTILS
     private LocalStorage localStorage;
-    private DataDiscoveryService dataDiscoveryService;
+    private ManifestsDataService manifestsDataService;
 
     private PolicyActions policyActions;
 
@@ -78,16 +78,16 @@ public class SOSContextService implements ContextService {
      * The DDS is passed as parameter and it is needed to access the manifests to be processed.
      *
      * @param localStorage used to persist the internal data structures
-     * @param dataDiscoveryService used to discover the data to process and act upon it
+     * @param manifestsDataService used to discover the data to process and act upon it
      * @param nodeDiscoveryService used to operate on the SOS and its nodes
      * @param usersRolesService uses to perform USER/ROLE operations in the SOS
      * @param storage used to access the SOS storage
      */
-    public SOSContextService(LocalStorage localStorage, DataDiscoveryService dataDiscoveryService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) throws ServiceException {
+    public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) throws ServiceException {
 
         this.localStorage = localStorage;
-        this.dataDiscoveryService = dataDiscoveryService;
-        policyActions = new PolicyActions(nodeDiscoveryService, dataDiscoveryService, usersRolesService, storage);
+        this.manifestsDataService = manifestsDataService;
+        policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storage);
 
         inMemoryCache = new CacheContextsDirectory();
 
@@ -115,7 +115,9 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<Context> getContexts() {
 
+        // FIXME - should get the TIPS!!
         // TODO - should do this using the data discovery service
+
         return inMemoryCache.getContexts()
                 .stream()
                 .map(c -> {
@@ -128,39 +130,50 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public IGUID addContext(Context context) throws Exception {
+    public IGUID addContext(Context context) throws ContextException {
 
-        dataDiscoveryService.addManifest(context);
+        try {
+            manifestsDataService.addManifest(context);
 
-        // Trigger context's predicate just after adding the context to the node based on the node settings
-        if (SOSLocalNode.settings.getServices().getCms().isPredicateOnNewContext()) {
-            runContextPredicateNow(context);
+            // Trigger context's predicate just after adding the context to the node based on the node settings
+            if (SOSLocalNode.settings.getServices().getCms().isPredicateOnNewContext()) {
+                runContextPredicateNow(context);
+            }
+
+            return context.guid();
+
+        } catch (ManifestPersistException e) {
+            throw new ContextException("Unable to add context to SOS node");
         }
-
-        return context.guid();
     }
 
     @Override
-    public IGUID addContext(ContextBuilder contextBuilder) throws GUIDGenerationException, IOException, ManifestPersistException {
+    public IGUID addContext(ContextBuilder contextBuilder) throws ContextException {
 
-        IGUID predicate = addPredicate(contextBuilder.predicate());
-        Set<IGUID> policies = new LinkedHashSet<>();
-        JsonNode policies_n = contextBuilder.policies();
-        for(JsonNode policy_n:policies_n) {
-            IGUID policy = addPolicy(policy_n);
-            policies.add(policy);
+        try {
+            IGUID predicate = addPredicate(contextBuilder.predicate());
+            Set<IGUID> policies = new LinkedHashSet<>();
+            JsonNode policies_n = contextBuilder.policies();
+            for (JsonNode policy_n : policies_n) {
+                IGUID policy = addPolicy(policy_n);
+                policies.add(policy);
+            }
+
+            JsonNode context_n = contextBuilder.context(predicate, policies);
+            Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
+
+            addContext(context);
+            return context.guid();
+
+        } catch (ManifestPersistException | IOException e) {
+            throw new ContextException("Unable to add context to SOS node");
         }
-
-        JsonNode context_n = contextBuilder.context(predicate, policies);
-        Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
-
-        return context.guid();
     }
 
     private IGUID addPredicate(JsonNode jsonNode) throws IOException, ManifestPersistException {
 
         Predicate predicate = JSONHelper.JsonObjMapper().convertValue(jsonNode, Predicate.class);
-        dataDiscoveryService.addManifest(predicate);
+        manifestsDataService.addManifest(predicate);
 
         return predicate.guid();
     }
@@ -168,34 +181,81 @@ public class SOSContextService implements ContextService {
     private IGUID addPolicy(JsonNode jsonNode) throws IOException, ManifestPersistException {
 
         Policy policy = JSONHelper.JsonObjMapper().convertValue(jsonNode, Policy.class);
-        dataDiscoveryService.addManifest(policy);
+        manifestsDataService.addManifest(policy);
 
         return policy.guid();
     }
 
     @Override
-    public IGUID addContext(String jsonContext) throws Exception {
+    public IGUID addContext(String jsonContext) throws ContextException {
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(jsonContext);
-        ContextBuilder contextBuilder = new ContextBuilder(node);
-        return addContext(contextBuilder);
+        try {
+            JsonNode node = JSONHelper.JsonObjMapper().readTree(jsonContext);
+            ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
+            return addContext(contextBuilder);
+
+        } catch (IOException e) {
+            throw new ContextException("Unable to add context to SOS from json string");
+        }
     }
 
     @Override
-    public IGUID addContext(File file) throws Exception {
+    public IGUID addContext(File file) throws ContextException {
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
-        ContextBuilder contextBuilder = new ContextBuilder(node);
-        return addContext(contextBuilder);
+        try {
+            JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
+            ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
+            return addContext(contextBuilder);
+
+        } catch (IOException e) {
+            throw new ContextException("Unable to add context to SOS from file");
+        }
+    }
+
+    @Override
+    public void updateContext(ContextBuilder contextBuilder) throws ContextException {
+
+        if (contextBuilder.getContextBuilderType() == ContextBuilder.ContextBuilderType.TEMP) {
+
+            try {
+                Context previous = getContext(contextBuilder.getPrevious());
+                Compound contents = contextBuilder.getContents();
+
+                if (!previous.content().equals(contents.guid()) ||
+                    !previous.domain().equals(contextBuilder.getDomain()) ||
+                    !previous.codomain().equals(contextBuilder.getCodomain()) ||
+                    previous.maxAge() != contextBuilder.getMaxage()) {
+
+                    manifestsDataService.addManifest(contents);
+                }
+
+            } catch (ManifestPersistException e) {
+                throw new ContextException(e);
+            }
+        }
+
     }
 
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
-            return (Context) dataDiscoveryService.getManifest(contextGUID);
+            return (Context) manifestsDataService.getManifest(contextGUID);
         } catch (ManifestNotFoundException e) {
             throw new ContextNotFoundException(e);
         }
+    }
+
+    @Override
+    public Context getContextTIP(IGUID invariant) throws TIPNotFoundException, ContextNotFoundException {
+
+        // Should have only one tip per time
+        Iterator<IGUID> tips = manifestsDataService.getTips(invariant).iterator();
+        if (tips.hasNext()) {
+            IGUID tip = tips.next();
+            return getContext(tip);
+        }
+
+        throw new TIPNotFoundException();
     }
 
     @Override
@@ -282,7 +342,13 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY predicate for context " + context.getName());
 
             long start = System.currentTimeMillis();
-            runPredicate(context);
+
+            try {
+                runPredicate(context);
+            } catch (ContextException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
+            }
+
             long end = System.currentTimeMillis();
             predicateThreadSessionStatistics.add(new Pair<>(start, end));
 
@@ -317,23 +383,42 @@ public class SOSContextService implements ContextService {
         int counter = 0;
 
         for (Context context : getContexts()) {
-            counter += runPredicate(context);
+            try {
+                counter += runPredicate(context);
+            } catch (ContextException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
+            }
         }
 
         return counter;
     }
 
-    private int runPredicate(Context context) {
+    private int runPredicate(Context context) throws ContextException {
 
         int counter = 0;
         long start = System.nanoTime();
 
-        Set<IGUID> assets = dataDiscoveryService.getAllAssets();
+
+        Set<Content> currentContents;
+        try {
+            Compound compound = (Compound) manifestsDataService.getManifest(context.content());
+            currentContents = compound.getContents();
+        } catch (ManifestNotFoundException e) {
+            throw new ContextException("Unable to get the context's current contents");
+        }
+
+        Set<Content> contents = new LinkedHashSet<>();
+        Set<IGUID> assets = manifestsDataService.getAllAssets();
         for (IGUID assetInvariant : assets) {
 
             try {
-                IGUID head = dataDiscoveryService.getHead(assetInvariant);
-                runPredicate(context, assetInvariant, head);
+                IGUID head = manifestsDataService.getHead(assetInvariant);
+                boolean predicateResult = runPredicate(context, currentContents, assetInvariant, head);
+                if (predicateResult) {
+                    Content content = new ContentImpl(head);
+                    contents.add(content);
+                }
+
                 counter++;
             } catch (HEADNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant: " + assetInvariant.toMultiHash());
@@ -341,7 +426,15 @@ public class SOSContextService implements ContextService {
 
         }
 
-        // TODO - generate new version of context, which links to previous
+        try {
+            Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
+            ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
+            updateContext(contextBuilder);
+
+        } catch (ManifestNotMadeException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to update context version properly");
+            throw new ContextException("Unable to update context version properly");
+        }
 
         long duration = System.nanoTime() - start;
         InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration);
@@ -485,9 +578,7 @@ public class SOSContextService implements ContextService {
                 // 1. do we have the data already?
                 // 2. does another node have this data and this context? if so, do we have any results from there?
                 // 3. if the answer to all the above if no, then download data from some known location
-
             }
-
 
         }, getDataPeriodicThreadSettings.getInitialDelay(), getDataPeriodicThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
@@ -528,28 +619,31 @@ public class SOSContextService implements ContextService {
      * @param assetInvariant of the version
      * @param versionGUID to evaluate
      */
-    private void runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
+    private boolean runPredicate(Context context, Set<Content> currentContents, IGUID assetInvariant, IGUID versionGUID) {
 
-        // TODO - max age from context
+        boolean predicateResult = false;
 
         IGUID contextGUID = context.guid();
-        boolean alreadyRun =  contextsContentsDirectory.entryExists(contextGUID, versionGUID);
+        // The `contextsContentsDirectory` data structure is needed to run this process faster and avoid unnecessary re-runs
+        // In fact, this data structure keeps track of entries that have negative results too
+        boolean alreadyRun = contextsContentsDirectory.entryExists(contextGUID, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
+            predicateResult = currentContents.stream().anyMatch(c -> c.getGUID().equals(versionGUID));
             maxAgeExpired = predicateHasExpired(context, versionGUID);
         }
 
         if (!alreadyRun || maxAgeExpired) {
 
             Predicate predicate = getPredicate(context);
-            boolean passed = predicate.test(versionGUID);
+            predicateResult = predicate.test(versionGUID);
 
             ContextVersionInfo content = new ContextVersionInfo();
-            content.predicateResult = passed;
+            content.predicateResult = predicateResult;
             content.timestamp = System.currentTimeMillis();
 
-            for(IGUID version:dataDiscoveryService.getVersions(assetInvariant)) {
+            for(IGUID version: manifestsDataService.getVersions(assetInvariant)) {
 
                 if (!version.equals(versionGUID)) {
                     contextsContentsDirectory.evict(contextGUID, version);
@@ -559,6 +653,7 @@ public class SOSContextService implements ContextService {
             contextsContentsDirectory.addEntry(contextGUID, versionGUID, content);
         }
 
+        return predicateResult;
     }
 
     /**
@@ -581,7 +676,7 @@ public class SOSContextService implements ContextService {
             boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
-                Manifest manifest = dataDiscoveryService.getManifest(guid);
+                Manifest manifest = manifestsDataService.getManifest(guid);
                 policy.apply(context.codomain(), policyActions, manifest);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), policyActions, manifest);
             }
@@ -608,7 +703,7 @@ public class SOSContextService implements ContextService {
             boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
-                Manifest manifest = dataDiscoveryService.getManifest(guid);
+                Manifest manifest = manifestsDataService.getManifest(guid);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), policyActions, manifest);;
             }
 
@@ -649,7 +744,7 @@ public class SOSContextService implements ContextService {
         IGUID predicateRef = context.predicate();
 
         try {
-            return (Predicate) dataDiscoveryService.getManifest(predicateRef);
+            return (Predicate) manifestsDataService.getManifest(predicateRef);
 
         } catch (ManifestNotFoundException e) {
 
@@ -665,7 +760,7 @@ public class SOSContextService implements ContextService {
         for(IGUID policyRef:context.policies()) {
 
             try {
-                Policy policy = (Policy) dataDiscoveryService.getManifest(policyRef);
+                Policy policy = (Policy) manifestsDataService.getManifest(policyRef);
                 retval.add(policy);
 
             } catch (ManifestNotFoundException e) {

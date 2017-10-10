@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.Agent;
-import uk.ac.standrews.cs.sos.services.DataDiscoveryService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.Set;
@@ -83,7 +83,7 @@ public class WGraph {
         graph.put("edges", edges);
     }
 
-    private static ArrayNode AllVersionsNodesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant, boolean lookForContentEagerly) {
+    private static ArrayNode AllVersionsNodesGraph(ManifestsDataService manifestsDataService, IGUID invariant, boolean lookForContentEagerly) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
@@ -94,22 +94,22 @@ public class WGraph {
             return arrayNode;
         }
 
-        Set<IGUID> versionRefs = dataDiscoveryService.getVersions(nodesCollection, invariant);
+        Set<IGUID> versionRefs = manifestsDataService.getVersions(nodesCollection, invariant);
         for(IGUID versionRef:versionRefs) {
 
             try {
-                Version version = (Version) dataDiscoveryService.getManifest(versionRef);
+                Version version = (Version) manifestsDataService.getManifest(versionRef);
 
                 boolean isHEAD = false;
                 try {
-                    IGUID head = dataDiscoveryService.getHead(version.getInvariantGUID());
+                    IGUID head = manifestsDataService.getHead(version.getInvariantGUID());
                     isHEAD = version.guid().equals(head);
                 } catch (HEADNotFoundException ignored) {
                 }
 
                 boolean isTIP = false;
                 try {
-                    Set<IGUID> tips = dataDiscoveryService.getTips(version.getInvariantGUID());
+                    Set<IGUID> tips = manifestsDataService.getTips(version.getInvariantGUID());
                     isTIP = tips.contains(version.guid());
                 } catch (TIPNotFoundException ignored) {
                 }
@@ -128,7 +128,7 @@ public class WGraph {
         return arrayNode;
     }
 
-    private static ArrayNode AllVersionsEdgesGraph(DataDiscoveryService dataDiscoveryService, IGUID invariant, boolean lookForContentEagerly) {
+    private static ArrayNode AllVersionsEdgesGraph(ManifestsDataService manifestsDataService, IGUID invariant, boolean lookForContentEagerly) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
@@ -139,11 +139,11 @@ public class WGraph {
             return arrayNode;
         }
 
-        Set<IGUID> versionRefs = dataDiscoveryService.getVersions(nodesCollection, invariant);
+        Set<IGUID> versionRefs = manifestsDataService.getVersions(nodesCollection, invariant);
         for(IGUID versionRef:versionRefs) {
 
             try {
-                Version version = (Version) dataDiscoveryService.getManifest(versionRef);
+                Version version = (Version) manifestsDataService.getManifest(versionRef);
 
                 Set<IGUID> prevs = version.getPreviousVersions();
                 if (prevs != null && !prevs.isEmpty()) {
@@ -161,7 +161,7 @@ public class WGraph {
     }
 
     // TODO - must refactor
-    private static ArrayNode ManifestNodeGraph(Agent agent, DataDiscoveryService dataDiscoveryService, Manifest manifest) {
+    private static ArrayNode ManifestNodeGraph(Agent agent, ManifestsDataService manifestsDataService, Manifest manifest) {
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
 
@@ -170,13 +170,13 @@ public class WGraph {
 
             boolean isHEAD = false;
             try {
-                IGUID head = dataDiscoveryService.getHead(version.getInvariantGUID());
+                IGUID head = manifestsDataService.getHead(version.getInvariantGUID());
                 isHEAD = version.guid().equals(head);
             } catch (HEADNotFoundException ignored) { }
 
             boolean isTIP = false;
             try {
-                Set<IGUID> tips = dataDiscoveryService.getTips(version.getInvariantGUID());
+                Set<IGUID> tips = manifestsDataService.getTips(version.getInvariantGUID());
                 isTIP = tips.contains(version.guid());
             } catch (TIPNotFoundException ignored) { }
 
