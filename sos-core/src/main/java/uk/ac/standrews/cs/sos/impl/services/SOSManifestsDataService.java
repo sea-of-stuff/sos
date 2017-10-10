@@ -261,6 +261,34 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
+    public Set<IGUID> getManifests(ManifestType type) {
+        // TODO - similar to get all, but filtered
+        return null;
+    }
+
+    @Override
+    public Set<IGUID> getTips(ManifestType type) {
+
+        if (type != ManifestType.VERSION || type != ManifestType.CONTEXT) {
+            return new LinkedHashSet<>();
+        }
+
+        // TODO
+        return null;
+    }
+
+    @Override
+    public Set<IGUID> getHeads(ManifestType type) {
+
+        if (type != ManifestType.VERSION) {
+            return new LinkedHashSet<>();
+        }
+
+        // TODO
+        return null;
+    }
+
+    @Override
     public void flush() {
 
         try {

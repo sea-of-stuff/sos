@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Version;
 
@@ -131,7 +132,21 @@ public interface ManifestsDataService {
      * @return set of versions references
      */
     Set<IGUID> getVersions(IGUID invariant);
+
+    /**
+     * Get all versions for the given invariant from the specified node collection
+     *
+     * @param nodesCollection
+     * @param invariant
+     * @return
+     */
     Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
+
+    // METHODS TO GET COLLECTIONS OF MANIFESTS
+
+    Set<IGUID> getManifests(ManifestType type);
+    Set<IGUID> getTips(ManifestType type);
+    Set<IGUID> getHeads(ManifestType type);
 
     /**
      * Flushes the in-memory caches and indices into disk

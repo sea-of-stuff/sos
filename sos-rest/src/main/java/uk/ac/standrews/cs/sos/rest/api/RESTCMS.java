@@ -81,6 +81,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
+            // FIXME - get tip
             Context context = contextService.getContext(contextGUID);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, context.toString());

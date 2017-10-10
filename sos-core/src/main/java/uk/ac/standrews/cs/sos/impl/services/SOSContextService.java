@@ -40,7 +40,6 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
@@ -115,18 +114,20 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<Context> getContexts() {
 
-        // FIXME - should get the TIPS!!
-        // TODO - should do this using the data discovery service
+        Set<Context> contexts = new LinkedHashSet<>();
 
-        return inMemoryCache.getContexts()
-                .stream()
-                .map(c -> {
-                    try {
-                        return getContext(c);
-                    } catch (ContextNotFoundException e) {
-                        return null;
-                    }
-                }).collect(Collectors.toSet());
+        Set<IGUID> contextRefs = manifestsDataService.getTips(ManifestType.CONTEXT);
+        for(IGUID contextRef:contextRefs) {
+            try {
+                Context context = getContext(contextRef);
+                contexts.add(context);
+            } catch (ContextNotFoundException e) {
+                SOS_LOG.log(LEVEL.WARN, "Unable to get context tip with ref: " + contextRef.toMultiHash());
+                /* SKIP */
+            }
+        }
+
+        return contexts;
     }
 
     @Override
