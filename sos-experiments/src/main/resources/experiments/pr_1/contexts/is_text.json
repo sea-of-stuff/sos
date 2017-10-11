@@ -1,4 +1,20 @@
 {
-  "name": "META_IS_TEXT",
-  "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain\", \"text/plain; charset=ISO-8859-1\", \"text/plain; charset=UTF-8\"));"
+  "context": {
+    "name": "META_IS_TEXT",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain\", \"text/plain; charset=ISO-8859-1\", \"text/plain; charset=UTF-8\"));",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": []
 }

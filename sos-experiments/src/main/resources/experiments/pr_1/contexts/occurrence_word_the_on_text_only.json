@@ -1,4 +1,20 @@
 {
-  "name": "METAandDATA_Occurrence_word_the_text_only",
-  "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"the\");"
+  "context": {
+    "name": "METAandDATA_Occurrence_word_the_text_only",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"the\");",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": []
 }

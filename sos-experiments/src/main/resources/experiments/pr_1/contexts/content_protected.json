@@ -1,4 +1,20 @@
 {
-  "name": "MANIFEST_Protected",
-  "predicate": "CommonPredicates.ContentIsProtected(guid);"
+  "context": {
+    "name": "MANIFEST_Protected",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.ContentIsProtected(guid);",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": []
 }
