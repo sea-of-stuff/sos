@@ -54,6 +54,7 @@ import java.io.SequenceInputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.LOCATIONS_INDEX_FILE;
 import static uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl.comparator;
 
 /**
@@ -84,7 +85,7 @@ public class SOSStorage implements Storage {
         // Load/Create the locations Index impl
         try {
             IDirectory cacheDir = storage.getNodeDirectory();
-            IFile file = storage.createFile(cacheDir, "locations.index");
+            IFile file = storage.createFile(cacheDir, LOCATIONS_INDEX_FILE);
             if (file.exists()) {
                 locationIndex = (LocationsIndex) Persistence.Load(file);
             }
@@ -359,7 +360,7 @@ public class SOSStorage implements Storage {
 
         try {
             IDirectory cacheDir = storage.getNodeDirectory();
-            IFile file = storage.createFile(cacheDir, "locations.index");
+            IFile file = storage.createFile(cacheDir, LOCATIONS_INDEX_FILE);
             locationIndex.persist(file);
         } catch (IOException | DataStorageException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to flush LocationIndex");

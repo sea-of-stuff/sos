@@ -34,6 +34,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.LOCATIONS_INDEX_FILE;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -85,7 +86,7 @@ public class LocationsIndexImplTest {
         locationsIndex.addLocation(guid, locationBundle);
 
         IDirectory cachesDir = localStorage.getNodeDirectory();
-        IFile file = localStorage.createFile(cachesDir, "locations.index");
+        IFile file = localStorage.createFile(cachesDir, LOCATIONS_INDEX_FILE);
         locationsIndex.persist(file);
 
 

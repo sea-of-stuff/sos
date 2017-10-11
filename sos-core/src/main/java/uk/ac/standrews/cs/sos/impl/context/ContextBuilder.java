@@ -38,6 +38,8 @@ public class ContextBuilder {
     // FAT && THIN
     private JsonNode contextDefinitions;
 
+    private CompoundManifest compoundManifest;
+
     // TEMP
     private IGUID previous;
     private Compound contents;
@@ -78,7 +80,8 @@ public class ContextBuilder {
         IGUID content;
         try {
             // Reference to empty compound
-            content = new CompoundManifest(CompoundType.COLLECTION, new LinkedHashSet<>(), null).guid();
+            compoundManifest = new CompoundManifest(CompoundType.COLLECTION, new LinkedHashSet<>(), null);
+            content = compoundManifest.guid();
         } catch (ManifestNotMadeException e) {
             content = new InvalidID();
         }
@@ -104,6 +107,10 @@ public class ContextBuilder {
         }
 
         throw new ContextBuilderException();
+    }
+
+    public CompoundManifest getCompoundManifest() {
+        return compoundManifest;
     }
 
     public IGUID predicateRef() throws ContextBuilderException {

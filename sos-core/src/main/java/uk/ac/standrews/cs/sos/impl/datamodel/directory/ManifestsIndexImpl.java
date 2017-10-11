@@ -45,11 +45,15 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
     @Override
     public Set<IGUID> getInvariants(ManifestType type) {
 
-        if (type != ManifestType.CONTEXT || type != ManifestType.VERSION) {
+        if (type != ManifestType.CONTEXT && type != ManifestType.VERSION) {
             return new LinkedHashSet<>();
         }
 
-        return typeToInvariant.get(type);
+        if (typeToInvariant.containsKey(type)) {
+            return typeToInvariant.get(type);
+        } else {
+            return new LinkedHashSet<>();
+        }
     }
 
     @Override

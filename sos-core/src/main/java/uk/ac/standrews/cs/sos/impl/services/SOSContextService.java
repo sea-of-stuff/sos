@@ -133,7 +133,10 @@ public class SOSContextService implements ContextService {
             }
         }
 
-        return contexts;
+        // Shuffling contexts to avoid executing them always in the same order
+        List<Context> temp = new ArrayList<>(contexts);
+        Collections.shuffle(temp);
+        return new LinkedHashSet<>(temp);
     }
 
     @Override
@@ -169,6 +172,7 @@ public class SOSContextService implements ContextService {
             JsonNode context_n = contextBuilder.context(predicate, policies);
             Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
 
+            manifestsDataService.addManifest(contextBuilder.getCompoundManifest());
             addContext(context);
             return context.guid();
 

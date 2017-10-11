@@ -70,7 +70,6 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
     private void addContexts() throws Exception {
 
         /*
-
 {
 	"context": {
 		"name": "All",
@@ -88,6 +87,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 		"Predicate": "true;",
 		"Dependencies": []
 	},
+	"max_age": 0,
 	"policies": [{
 		"Type": "Policy",
 		"Apply": "",
@@ -95,34 +95,35 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 		"Dependencies": []
 	}]
 }
-
          */
-        node.getCMS().addContext(
-                "{\n" +
-                        "  \"context\": {\n" +
-                        "    \"name\": \"All\",\n" +
-                        "    \"domain\": {\n" +
-                        "      \"type\": \"LOCAL\",\n" +
-                        "      \"nodes\": []\n" +
-                        "    },\n" +
-                        "    \"codomain\": {\n" +
-                        "      \"type\": \"SPECIFIED\",\n" +
-                        "      \"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
-                        "    }\n" +
-                        "  },\n" +
-                        "  \"predicate\": {\n" +
-                        "    \"type\": \"Predicate\",\n" +
-                        "    \"Predicate\": \"true;\",\n" +
-                        "    \"Dependencies\": []\n" +
-                        "  },\n" +
-                        "  \"policies\": [{\n" +
-                        "    \"type\": \"Policy\",\n" +
-                        "    \"Apply\": \"\",\n" +
-                        "    \"Satisfied\": \"return true;\",\n" +
-                        "    \"Dependencies\": []\n" +
-                        "  }]\n" +
-                        "}"
-        );
+        String FATContext = "{\n" +
+                "\t\"context\": {\n" +
+                "\t\t\"name\": \"All\",\n" +
+                "\t\t\"domain\": {\n" +
+                "\t\t\t\"type\": \"LOCAL\",\n" +
+                "\t\t\t\"nodes\": []\n" +
+                "\t\t},\n" +
+                "\t\t\"codomain\": {\n" +
+                "\t\t\t\"type\": \"SPECIFIED\",\n" +
+                "\t\t\t\"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
+                "\t\t}\n" +
+                "\t},\n" +
+                "\t\"predicate\": {\n" +
+                "\t\t\"Type\": \"Predicate\",\n" +
+                "\t\t\"Predicate\": \"true;\",\n" +
+                "\t\t\"Dependencies\": []\n" +
+                "\t},\n" +
+                "\t\"max_age\": 0,\n" +
+                "\t\"policies\": [{\n" +
+                "\t\t\"Type\": \"Policy\",\n" +
+                "\t\t\"Apply\": \"\",\n" +
+                "\t\t\"Satisfied\": \"return true;\",\n" +
+                "\t\t\"Dependencies\": []\n" +
+                "\t}]\n" +
+                "}";
+
+        System.out.println(FATContext);
+        node.getCMS().addContext(FATContext);
     }
 
     private class ExperimentUnit_Scale_1 implements ExperimentUnit {
