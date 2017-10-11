@@ -30,22 +30,22 @@ public class WHome {
 
         Set<Map<String, Object> > assets = new LinkedHashSet<>();
 
-        Set<IGUID> assetInvariants = sos.getDDS().getAllAssets();
-        for(IGUID guid : assetInvariants) {
+        Set<IGUID> assetInvariants = sos.getDDS().getInvariants(ManifestType.VERSION);
+        for(IGUID invariant : assetInvariants) {
 
             Map<String, Object> versionModel = new HashMap<>();
             try {
-                Version version = (Version) sos.getDDS().getManifest(sos.getDDS().getHead(guid));
+                Version version = (Version) sos.getDDS().getManifest(sos.getDDS().getHead(invariant));
 
-                Manifest manifest = sos.getDDS().getManifest(version.getContentGUID());
+                Manifest manifest = sos.getDDS().getManifest(version.content());
                 if (manifest.getType().equals(ManifestType.ATOM)) {
                     String outputData = GetData(sos, version, SHORT_DATA_LIMIT, true);
                     versionModel.put("data", outputData);
                 }
 
-                versionModel.put("invariant", version.getInvariantGUID());
-                versionModel.put("version", version.getVersionGUID());
-                versionModel.put("content", version.getContentGUID());
+                versionModel.put("invariant", version.invariant());
+                versionModel.put("version", version.version());
+                versionModel.put("content", version.content());
                 versionModel.put("contentType", manifest.getType());
 
             } catch (ManifestNotFoundException | HEADNotFoundException e) {

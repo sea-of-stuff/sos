@@ -43,7 +43,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
         assertEquals(retrievedManifest.getType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -76,16 +76,16 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         assertEquals(manifest.getType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
         assertEquals(retrievedManifest.getType(), ManifestType.VERSION);
 
-        IGUID retrievedInvariant = ((VersionManifest) retrievedManifest).getInvariantGUID();
+        IGUID retrievedInvariant = ((VersionManifest) retrievedManifest).invariant();
         assertEquals(invariant, retrievedInvariant);
 
         IGUID retrievedMetadata = ((VersionManifest) retrievedManifest).getMetadata();
         assertEquals(retrievedMetadata, metaMock.guid());
 
-        Set<IGUID> retrievedPrevs = ((VersionManifest) retrievedManifest).getPreviousVersions();
+        Set<IGUID> retrievedPrevs = ((VersionManifest) retrievedManifest).previous();
         assertTrue(retrievedPrevs.containsAll(prevs));
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -108,7 +108,7 @@ public class SOSAddVersionTest extends AgentTest {
 
         VersionBuilder builder = new VersionBuilder(compound.guid());
         Version manifest = agent.addVersion(builder);
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
 
         assertFalse(agent.verifyManifestSignature(localSOSNode.getRMS().activeRole(), retrievedManifest));
     }
@@ -123,7 +123,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
         assertEquals(retrievedManifest.getType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -143,7 +143,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
         assertEquals(retrievedManifest.getType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -162,7 +162,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
         assertEquals(retrievedManifest.getType(), ManifestType.VERSION);
 
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
@@ -181,7 +181,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Assert.assertEquals(manifest.getType(), ManifestType.VERSION);
 
-        Manifest retrievedManifest = agent.getManifest(manifest.getVersionGUID());
+        Manifest retrievedManifest = agent.getManifest(manifest.version());
         assertEquals(retrievedManifest.getType(), ManifestType.VERSION);
 
         Version retrievedVersion = (Version) retrievedManifest;

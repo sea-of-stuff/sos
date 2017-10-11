@@ -66,10 +66,10 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
                 version = sos.addVersion(builder);
 
                 if (assetIsWebDAVRoot(version)) {
-                    SOSFileSystemFactory.WriteCurrentVersion(version.getInvariantGUID(), version.getVersionGUID());
+                    SOSFileSystemFactory.WriteCurrentVersion(version.invariant(), version.version());
                 }
 
-                guid = version.getVersionGUID();
+                guid = version.version();
             } else {
                 SOS_LOG.log(LEVEL.WARN, "Version has exactly the same data. Metadata, however, might have changed.");
             }
@@ -79,18 +79,18 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
     }
 
     private boolean assetIsWebDAVRoot(Version version) {
-        File file = new File(SOSFileSystemFactory.WEBDAV_CURRENT_PATH + version.getInvariantGUID());
+        File file = new File(SOSFileSystemFactory.WEBDAV_CURRENT_PATH + version.invariant());
         return file.exists();
     }
 
     @Override
     public Set<IGUID> getPrevious() {
-        return version.getPreviousVersions();
+        return version.previous();
     }
 
     @Override
     public IGUID getInvariant() {
-        return version.getInvariantGUID();
+        return version.invariant();
     }
 
     @Override
@@ -113,7 +113,7 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
 
     protected boolean previousAssetDiffers(IGUID contentGUID) {
         if (previous != null) {
-            IGUID previousContentGUID = previous.getVersion().getContentGUID();
+            IGUID previousContentGUID = previous.getVersion().content();
             return !previousContentGUID.equals(contentGUID);
         }
 
@@ -130,15 +130,15 @@ class SOSFileSystemObject extends FileSystemObject implements IVersionableObject
         VersionBuilder builder = new VersionBuilder(contentGUID);
 
         if (version != null) {
-            builder.setInvariant(version.getInvariantGUID());
+            builder.setInvariant(version.invariant());
         }
 
         Set<IGUID> prevs = new LinkedHashSet<>();
         if (previous != null) {
-            IGUID versionGUID = previous.getVersion().getVersionGUID();
+            IGUID versionGUID = previous.getVersion().version();
             prevs.add(versionGUID);
-        } else if (version != null && version.getPreviousVersions() != null) {
-            prevs.addAll(version.getPreviousVersions());
+        } else if (version != null && version.previous() != null) {
+            prevs.addAll(version.previous());
         }
 
         if (prevs.size() > 0) {

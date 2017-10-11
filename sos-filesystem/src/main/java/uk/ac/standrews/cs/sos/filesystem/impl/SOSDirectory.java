@@ -77,7 +77,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         this.guid = version.guid();
 
         try {
-            compound = (Compound) sos.getManifest(version.getContentGUID());
+            compound = (Compound) sos.getManifest(version.content());
             contents = compound.getContents();
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
@@ -113,7 +113,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             if (previousVersionDiffers) {
 
                 Set<IGUID> previousVersion = new LinkedHashSet<>();
-                previousVersion.add(previous.getVersion().getVersionGUID());
+                previousVersion.add(previous.getVersion().version());
                 VersionBuilder versionBuilder = new VersionBuilder(compound.guid())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
@@ -158,7 +158,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             if (previousVersionDiffers) {
 
                 Set<IGUID> previousVersion = new LinkedHashSet<>();
-                previousVersion.add(previous.getVersion().getVersionGUID());
+                previousVersion.add(previous.getVersion().version());
                 VersionBuilder versionBuilder = new VersionBuilder(compound.guid())
                         .setInvariant(previous.getInvariant())
                         .setPrevious(previousVersion);
@@ -252,7 +252,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     private SOSFileSystemObject getObject(Version version) {
 
         try {
-            IGUID contentGUID = version.getContentGUID();
+            IGUID contentGUID = version.content();
             Manifest manifest = sos.getManifest(contentGUID);
             if (manifest instanceof Atom) {
                 return new SOSFile(sos, version);

@@ -282,7 +282,7 @@ public class PolicyActions {
     // Retrieve the manifest from local node
     Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
-        return manifestsDataService.getManifest(version.getContentGUID());
+        return manifestsDataService.getManifest(version.content());
     }
 
     // TODO - this is not a policy action. Move it to another class

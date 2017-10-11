@@ -15,13 +15,11 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.impl.datamodel.directory.DDSIndex;
-import uk.ac.standrews.cs.sos.impl.datamodel.directory.LocalManifestsDirectory;
-import uk.ac.standrews.cs.sos.impl.datamodel.directory.ManifestsCacheImpl;
-import uk.ac.standrews.cs.sos.impl.datamodel.directory.RemoteManifestsDirectory;
+import uk.ac.standrews.cs.sos.impl.datamodel.directory.*;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
+import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsIndex;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -34,8 +32,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.*;
 
-import static uk.ac.standrews.cs.sos.constants.Internals.CACHE_FILE;
-import static uk.ac.standrews.cs.sos.constants.Internals.DDS_INDEX_FILE;
+import static uk.ac.standrews.cs.sos.constants.Internals.*;
 import static uk.ac.standrews.cs.sos.model.NodesCollectionType.ANY;
 import static uk.ac.standrews.cs.sos.model.NodesCollectionType.LOCAL;
 
@@ -53,6 +50,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     private ManifestsCache inMemoryCache;
     private LocalManifestsDirectory local;
     private RemoteManifestsDirectory remote;
+    private ManifestsIndex index;
 
     // Uses to store/get manifests into the local disk
     private LocalStorage localStorage;
@@ -68,6 +66,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         loadOrCreateCache();
         loadOrCreateDDSIndex();
+        loadOrCreateIndex();
 
         local = new LocalManifestsDirectory(localStorage);
         remote = new RemoteManifestsDirectory(ddsIndex, nodeDiscoveryService, this);
@@ -85,11 +84,11 @@ public class SOSManifestsDataService implements ManifestsDataService {
             case VERSION:
             {
                 Version version = (Version) manifest;
-                inMemoryCache.advanceTip(version);
+                index.advanceTip(version);
 
                 // Make sure that this node has at least one HEAD, otherwise keep the current head.
                 try {
-                    getHead(version.getInvariantGUID());
+                    getHead(version.invariant());
                 } catch (HEADNotFoundException e) {
                     setHead(version);
                 }
@@ -98,7 +97,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             case CONTEXT:
             {
                 Context context = (Context) manifest;
-                inMemoryCache.advanceTip(context);
+                index.advanceTip(context);
             }
         }
 
@@ -199,36 +198,27 @@ public class SOSManifestsDataService implements ManifestsDataService {
         throw new ManifestNotFoundException("Manifest not found");
     }
 
-    @Override
-    public Set<IGUID> getAllAssets() {
+    public Set<IGUID> getInvariants(ManifestType manifestType) {
 
-        // NOTE - returning only the ones from the inMemoryCache for the moment
-        return inMemoryCache.getAllAssets();
-    }
-
-    @Override
-    public Set<IGUID> getAllAssets(NodesCollection nodesCollection) {
-
-        // TODO - this requires some HTTP request to other nodes
-        return null;
+        return index.getInvariants(manifestType);
     }
 
     @Override
     public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
-        return inMemoryCache.getTips(invariant);
+        return index.getTips(invariant);
     }
 
     @Override
     public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
 
-        return inMemoryCache.getHead(invariant);
+        return index.getHead(invariant);
     }
 
     @Override
     public void setHead(Version version) {
 
-        inMemoryCache.setHead(version);
+        index.setHead(version);
     }
 
     @Override
@@ -247,8 +237,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     public Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant) {
 
         Set<IGUID> versions = new LinkedHashSet<>();
-        versions.addAll(inMemoryCache.getVersions(invariant));
-        versions.addAll(local.getVersions(invariant)); // THIS MIGHT BE SLOW
+        versions.addAll(index.getVersions(invariant));
 
         if (!nodesCollection.type().equals(NodesCollectionType.LOCAL)) {
 
@@ -262,30 +251,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
     @Override
     public Set<IGUID> getManifests(ManifestType type) {
-        // TODO - similar to get all, but filtered
-        return null;
-    }
 
-    @Override
-    public Set<IGUID> getTips(ManifestType type) {
-
-        if (type != ManifestType.VERSION || type != ManifestType.CONTEXT) {
-            return new LinkedHashSet<>();
-        }
-
-        // TODO
-        return null;
-    }
-
-    @Override
-    public Set<IGUID> getHeads(ManifestType type) {
-
-        if (type != ManifestType.VERSION) {
-            return new LinkedHashSet<>();
-        }
-
-        // TODO
-        return null;
+        return local.getManifests(type);
     }
 
     @Override
@@ -334,6 +301,22 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         if (ddsIndex == null) {
             ddsIndex = new DDSIndex();
+        }
+    }
+
+    private void loadOrCreateIndex() {
+        try {
+            IDirectory cacheDir = localStorage.getNodeDirectory();
+            IFile file = localStorage.createFile(cacheDir, INDEX_FILE);
+            if (file.exists()) {
+                index = (ManifestsIndex) Persistence.Load(file);
+            }
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS inMemoryCache");
+        }
+
+        if (index == null) {
+            index = new ManifestsIndexImpl();
         }
     }
 

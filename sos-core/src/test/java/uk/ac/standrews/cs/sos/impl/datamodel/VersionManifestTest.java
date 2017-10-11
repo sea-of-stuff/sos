@@ -161,9 +161,9 @@ public class VersionManifestTest extends CommonTest {
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 
-        assertEquals(versionManifest.getContentGUID(), guid);
-        assertEquals(versionManifest.getInvariantGUID(), invariantGUID);
+        assertEquals(versionManifest.content(), guid);
+        assertEquals(versionManifest.invariant(), invariantGUID);
         assertEquals(versionManifest.getMetadata(), metadataGUID);
-        assertEquals(versionManifest.getPreviousVersions(), previous);
+        assertEquals(versionManifest.previous(), previous);
     }
 }

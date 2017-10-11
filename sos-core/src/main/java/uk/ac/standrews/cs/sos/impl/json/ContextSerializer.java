@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.Context;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -26,8 +27,10 @@ public class ContextSerializer extends JsonSerializer<Context> {
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_INVARIANT, context.invariant().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_CONTENT, context.content().toMultiHash());
 
-        if (!context.previous().isInvalid()) {
-            jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREVIOUS, context.previous().toMultiHash());
+        Set<IGUID> prev = context.previous();
+        if (prev != null && !prev.isEmpty()) {
+            IGUID previous = prev.iterator().next();
+            jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREVIOUS, previous.toMultiHash());
         }
 
         jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_DOMAIN, context.domain());

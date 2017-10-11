@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -9,6 +11,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +87,11 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         public void run() {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with predicate type " + predicate_type.name());
 
-            counter = cms.runPredicates();
+            try {
+                counter = cms.runPredicates();
+            } catch (ContextException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Experiment PR_1 - Unable to run predicates properly for predicate type " + predicate_type.name());
+            }
         }
 
         private void addContexts() throws Exception {

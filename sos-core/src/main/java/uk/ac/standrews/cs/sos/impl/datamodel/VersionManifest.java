@@ -120,7 +120,7 @@ public class VersionManifest extends SignedManifest implements Version {
      * @return version GUID of this asset manifest.
      */
     @Override
-    public IGUID getVersionGUID() {
+    public IGUID version() {
         return version;
     }
 
@@ -130,7 +130,7 @@ public class VersionManifest extends SignedManifest implements Version {
      * @return the GUID of this asset
      */
     @Override
-    public IGUID getInvariantGUID() {
+    public IGUID invariant() {
         return invariant;
     }
 
@@ -141,12 +141,12 @@ public class VersionManifest extends SignedManifest implements Version {
      *         Null if the asset does not have a previous version.
      */
     @Override
-    public Set<IGUID> getPreviousVersions() {
+    public Set<IGUID> previous() {
         return prevs;
     }
 
     @Override
-    public IGUID getContentGUID() {
+    public IGUID content() {
         return content;
     }
 
@@ -170,15 +170,15 @@ public class VersionManifest extends SignedManifest implements Version {
 
     @Override
     public IGUID guid() {
-        return getVersionGUID();
+        return version();
     }
 
     @Override
     public InputStream contentToHash() {
 
         String toHash = getType() +
-                "I" + getInvariantGUID().toMultiHash() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
-                "C" + getContentGUID().toMultiHash();
+                "I" + invariant().toMultiHash() + // <-- this will stop a user from forking an asset. It means that they cannot generate the same version guid under a different asset.
+                "C" + content().toMultiHash();
 
         toHash += getPreviousToHashOrSign();
         toHash += getMetadataToHashOrSign();

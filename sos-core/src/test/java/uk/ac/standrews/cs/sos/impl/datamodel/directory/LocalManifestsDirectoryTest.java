@@ -135,13 +135,13 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         IGUID contentGUID = GUIDFactory.generateRandomGUID();
         Version versionManifest = ManifestUtils.createDummyVersion(contentGUID);
 
-        IGUID guid = versionManifest.getVersionGUID();
+        IGUID guid = versionManifest.version();
         try {
             manifestsDirectory.addManifest(versionManifest);
             Version manifest = (Version) manifestsDirectory.findManifest(guid);
 
             assertEquals(manifest.getType(), ManifestType.VERSION);
-            assertEquals(manifest.getContentGUID(), contentGUID);
+            assertEquals(manifest.content(), contentGUID);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException | ManifestNotFoundException e) {
             throw new Exception(e);

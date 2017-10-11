@@ -70,10 +70,10 @@ public class SOSFileSystemTest {
         when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());
         when(mockRootFolder.guid()).thenReturn(rootGUID);
 
-        when(mockRootVersion.getInvariantGUID()).thenReturn(guid);
-        when(mockRootVersion.getVersionGUID()).thenReturn(versionGUID);
-        when(mockRootVersion.getContentGUID()).thenReturn(contentsGUID);
-        when(mockRootVersion.getPreviousVersions()).thenReturn(Collections.emptySet());
+        when(mockRootVersion.invariant()).thenReturn(guid);
+        when(mockRootVersion.version()).thenReturn(versionGUID);
+        when(mockRootVersion.content()).thenReturn(contentsGUID);
+        when(mockRootVersion.previous()).thenReturn(Collections.emptySet());
 
         SOSFileSystemFactory.WriteCurrentVersion(guid, versionGUID);
 

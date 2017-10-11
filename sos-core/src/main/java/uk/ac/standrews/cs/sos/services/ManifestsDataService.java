@@ -81,22 +81,11 @@ public interface ManifestsDataService {
     void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
 
     /**
-     * Get all known assets to this DDS node.
-     * The assets are returned as a set of invariant GUIDs.
+     * Get all the invariants known by this node which match the manifest type
      *
-     * @return list of DDS versions's invariants
+     * @return list of invariants as set of GUIDs
      */
-    Set<IGUID> getAllAssets();
-
-    /**
-     * Returns all the invariant references for the assets at the nodes within the nodes collection.
-     *
-     * TODO - this method has not been implemented yet
-     *
-     * @param nodesCollection
-     * @return
-     */
-    Set<IGUID> getAllAssets(NodesCollection nodesCollection);
+    Set<IGUID> getInvariants(ManifestType manifestType);
 
     /**
      * Get all the tips for the given invariant.
@@ -142,11 +131,7 @@ public interface ManifestsDataService {
      */
     Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
 
-    // METHODS TO GET COLLECTIONS OF MANIFESTS
-
     Set<IGUID> getManifests(ManifestType type);
-    Set<IGUID> getTips(ManifestType type);
-    Set<IGUID> getHeads(ManifestType type);
 
     /**
      * Flushes the in-memory caches and indices into disk

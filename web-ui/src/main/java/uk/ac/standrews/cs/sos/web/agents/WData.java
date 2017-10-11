@@ -88,7 +88,7 @@ public class WData {
                 Set<IGUID> prevs = new LinkedHashSet<>();
                 prevs.add(prevGUID);
 
-                versionBuilder.setInvariant(version.getInvariantGUID())
+                versionBuilder.setInvariant(version.invariant())
                                 .setPrevious(prevs);
             }
 
@@ -138,7 +138,7 @@ public class WData {
                 Set<IGUID> prevs = new LinkedHashSet<>();
                 prevs.add(prevGUID);
 
-                versionBuilder.setInvariant(version.getInvariantGUID())
+                versionBuilder.setInvariant(version.invariant())
                         .setPrevious(prevs);
             }
 
@@ -208,7 +208,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                Manifest contentManifest = sos.getDDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
                     return GetData(sos, version, LARGE_DATA_LIMIT, false);
@@ -232,7 +232,7 @@ public class WData {
 
         Data data;
         try {
-            data = sos.getStorage().getAtomContent(nodesCollection, version.getContentGUID());
+            data = sos.getStorage().getAtomContent(nodesCollection, version.content());
         } catch (AtomNotFoundException e) {
             return "Unable to get data";
         }
@@ -258,7 +258,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                Manifest contentManifest = sos.getDDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
                     String extension = "";
@@ -271,7 +271,7 @@ public class WData {
                     }
 
                     response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
-                    Data data = sos.getStorage().getAtomContent(version.getContentGUID());
+                    Data data = sos.getStorage().getAtomContent(version.content());
                     try (OutputStream out = response.raw().getOutputStream()) {
                         IOUtils.copy(data.getInputStream(), out);
                     }
@@ -299,7 +299,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                Manifest contentManifest = sos.getDDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
 
                     try {
@@ -331,7 +331,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.getContentGUID());
+                Manifest contentManifest = sos.getDDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
 
                     String extension = "";
@@ -381,7 +381,7 @@ public class WData {
             Manifest retrieved = manifest;
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
-                retrieved = sos.getAgent().getManifest(((Version) manifest).getContentGUID());
+                retrieved = sos.getAgent().getManifest(((Version) manifest).content());
             }
 
             if (retrieved.getType().equals(ManifestType.ATOM_PROTECTED)) {
@@ -433,7 +433,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                guid = version.getContentGUID();
+                guid = version.content();
 
             } else if (manifest.getType().equals(ManifestType.COMPOUND)) {
                 return "N/A";

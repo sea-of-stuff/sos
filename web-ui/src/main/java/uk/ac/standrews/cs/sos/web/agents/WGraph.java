@@ -56,7 +56,7 @@ public class WGraph {
 
             Version version = (Version) manifest;
             ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
-            MakeAssetGraph(graph, sos, version.getInvariantGUID(), true);
+            MakeAssetGraph(graph, sos, version.invariant(), true);
 
             return graph.toString();
         } catch (ManifestNotFoundException e) {
@@ -102,20 +102,20 @@ public class WGraph {
 
                 boolean isHEAD = false;
                 try {
-                    IGUID head = manifestsDataService.getHead(version.getInvariantGUID());
+                    IGUID head = manifestsDataService.getHead(version.invariant());
                     isHEAD = version.guid().equals(head);
                 } catch (HEADNotFoundException ignored) {
                 }
 
                 boolean isTIP = false;
                 try {
-                    Set<IGUID> tips = manifestsDataService.getTips(version.getInvariantGUID());
+                    Set<IGUID> tips = manifestsDataService.getTips(version.invariant());
                     isTIP = tips.contains(version.guid());
                 } catch (TIPNotFoundException ignored) {
                 }
 
 
-                ObjectNode node = VersionManifestNode(version, version.getInvariantGUID().toMultiHash(), isHEAD, isTIP);
+                ObjectNode node = VersionManifestNode(version, version.invariant().toMultiHash(), isHEAD, isTIP);
                 arrayNode.add(node);
 
             } catch (ManifestNotFoundException e) {
@@ -145,7 +145,7 @@ public class WGraph {
             try {
                 Version version = (Version) manifestsDataService.getManifest(versionRef);
 
-                Set<IGUID> prevs = version.getPreviousVersions();
+                Set<IGUID> prevs = version.previous();
                 if (prevs != null && !prevs.isEmpty()) {
                     for (IGUID prev : prevs) {
                         ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
@@ -170,40 +170,40 @@ public class WGraph {
 
             boolean isHEAD = false;
             try {
-                IGUID head = manifestsDataService.getHead(version.getInvariantGUID());
+                IGUID head = manifestsDataService.getHead(version.invariant());
                 isHEAD = version.guid().equals(head);
             } catch (HEADNotFoundException ignored) { }
 
             boolean isTIP = false;
             try {
-                Set<IGUID> tips = manifestsDataService.getTips(version.getInvariantGUID());
+                Set<IGUID> tips = manifestsDataService.getTips(version.invariant());
                 isTIP = tips.contains(version.guid());
             } catch (TIPNotFoundException ignored) { }
 
 
-            ObjectNode node = VersionManifestNode(version, version.getInvariantGUID().toMultiHash(), isHEAD, isTIP);
+            ObjectNode node = VersionManifestNode(version, version.invariant().toMultiHash(), isHEAD, isTIP);
             arrayNode.add(node);
 
             // Content
             try {
-                Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), version.getContentGUID());
+                Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), version.content());
                 ObjectNode contentNode = ManifestNode(contentManifest);
                 arrayNode.add(contentNode);
             } catch (NodesCollectionException | ManifestNotFoundException e) {
 
-                ObjectNode unknownNode = UnknownNode(version.getContentGUID());
+                ObjectNode unknownNode = UnknownNode(version.content());
                 arrayNode.add(unknownNode);
             }
 
             // Previous
-            Set<IGUID> prevs = version.getPreviousVersions();
+            Set<IGUID> prevs = version.previous();
 
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
 
                     try {
                         Manifest previousManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), prev);
-                        ObjectNode prevNode = ManifestNode(previousManifest, version.getInvariantGUID().toMultiHash());
+                        ObjectNode prevNode = ManifestNode(previousManifest, version.invariant().toMultiHash());
                         arrayNode.add(prevNode);
                     } catch (NodesCollectionException | ManifestNotFoundException e) {
 
@@ -264,11 +264,11 @@ public class WGraph {
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
 
-            ObjectNode objectNode = MakeEdge(version.guid(), version.getContentGUID());
+            ObjectNode objectNode = MakeEdge(version.guid(), version.content());
             arrayNode.add(objectNode);
 
             // Previous
-            Set<IGUID> prevs = version.getPreviousVersions();
+            Set<IGUID> prevs = version.previous();
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
                     ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");

@@ -73,9 +73,9 @@ public class SOSFileSystemFactoryTest {
         when(mockAgent.addVersion(any())).thenReturn(mockRootVersion);
 
         when(mockRootFolder.getContents()).thenReturn(Collections.emptySet());
-        when(mockRootVersion.getInvariantGUID()).thenReturn(guid);
-        when(mockRootVersion.getVersionGUID()).thenReturn(versionGUID);
-        when(mockRootVersion.getContentGUID()).thenReturn(contentsGUID);
+        when(mockRootVersion.invariant()).thenReturn(guid);
+        when(mockRootVersion.version()).thenReturn(versionGUID);
+        when(mockRootVersion.content()).thenReturn(contentsGUID);
 
         when(mockAgent.getManifest(contentsGUID)).thenReturn(mockRootFolder);
         when(mockAgent.getManifest(versionGUID)).thenReturn(mockRootVersion);

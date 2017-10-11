@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.InputStream;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -111,8 +112,8 @@ public class ContextManifest extends SignedManifest implements Context {
 
         String contentToHash = getType() + getName() + "I" + invariant().toMultiHash();
 
-        if (previous() != null) {
-            contentToHash += "P" + previous().toMultiHash();
+        if (previous != null) {
+            contentToHash += "P" + previous.toMultiHash();
         }
 
         contentToHash += "C" + content().toMultiHash();
@@ -123,8 +124,10 @@ public class ContextManifest extends SignedManifest implements Context {
     }
 
     @Override
-    public IGUID previous() {
-        return previous;
+    public Set<IGUID> previous() {
+        Set<IGUID> prev = new LinkedHashSet<>();
+        prev.add(previous);
+        return prev;
     }
 
     @Override

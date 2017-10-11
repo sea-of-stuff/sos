@@ -87,7 +87,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
                 boolean previousVersionDiffers = previousAssetDiffers(atom.guid());
                 if (previousVersionDiffers) {
                     Set<IGUID> previousVersion = new LinkedHashSet<>();
-                    previousVersion.add(previous.getVersion().getVersionGUID());
+                    previousVersion.add(previous.getVersion().version());
 
                     versionBuilder.setInvariant(previous.getInvariant())
                             .setPrevious(previousVersion);
@@ -131,7 +131,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.isCompoundData = false;
         this.version = version;
 
-        IGUID contentGUID = version.getContentGUID();
+        IGUID contentGUID = version.content();
         try {
             this.atom = (Atom) sos.getManifest(contentGUID);
         } catch (ManifestNotFoundException e) {

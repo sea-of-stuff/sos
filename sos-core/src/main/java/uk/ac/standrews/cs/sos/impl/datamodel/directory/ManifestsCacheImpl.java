@@ -6,7 +6,9 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
@@ -20,8 +22,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
@@ -39,10 +39,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     private transient HashMap<IGUID, Manifest> cache;
     private transient ConcurrentLinkedQueue<IGUID> lru;
 
-    private transient HashMap<IGUID, Set<IGUID>> tips;
-    private transient HashMap<IGUID, IGUID> heads;
-    private transient HashMap<IGUID, Set<IGUID>> assetsToVersions; // tracks all assetsToVersions for the invariants
-
     public ManifestsCacheImpl() {
         this(MAX_DEFAULT_SIZE);
     }
@@ -52,10 +48,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         cache = new HashMap<>();
         lru = new ConcurrentLinkedQueue<>();
-
-        tips = new HashMap<>();
-        heads = new HashMap<>();
-        assetsToVersions = new HashMap<>();
     }
 
     @Override
@@ -120,101 +112,9 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         return cache.values()
                 .stream()
                 .filter(m -> m.getType() == ManifestType.VERSION)
-                .map(m -> ((Version) m).getInvariantGUID())
+                .map(m -> ((Version) m).invariant())
                 .distinct()
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<IGUID> getVersions(IGUID invariant) {
-
-        if (assetsToVersions.containsKey(invariant)) {
-            return assetsToVersions.get(invariant);
-        } else {
-            return new LinkedHashSet<>();
-        }
-    }
-
-    @Override
-    public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
-
-        if (tips.containsKey(invariant)) {
-            return tips.get(invariant);
-        }
-
-        throw new TIPNotFoundException();
-    }
-
-    @Override
-    public IGUID getHead(IGUID invariant) throws HEADNotFoundException {
-
-        if (heads.containsKey(invariant)) {
-            return heads.get(invariant);
-        }
-
-        throw new HEADNotFoundException();
-    }
-
-    @Override
-    public void setHead(Version version) {
-
-        IGUID invariantGUID = version.getInvariantGUID();
-        IGUID versionGUID = version.guid();
-
-        heads.put(invariantGUID, versionGUID);
-
-        // Update the [invariant --> [version]] map
-        if (!assetsToVersions.containsKey(invariantGUID)) {
-            assetsToVersions.put(invariantGUID, new LinkedHashSet<>());
-        }
-        assetsToVersions.get(invariantGUID).add(versionGUID);
-    }
-
-    @Override
-    public void advanceTip(Version version) {
-
-        Set<IGUID> previousVersions = version.getPreviousVersions();
-
-        if (previousVersions == null || previousVersions.isEmpty()) {
-            advanceTip(version.getInvariantGUID(), version.guid());
-        } else {
-            advanceTip(version.getInvariantGUID(), version.getPreviousVersions(), version.guid());
-        }
-
-    }
-
-    @Override
-    public void advanceTip(Context context) {
-
-        IGUID previous = context.previous();
-        if (previous == null || previous.isInvalid()) {
-            advanceTip(context.invariant(), context.guid());
-        } else {
-            Set<IGUID> previousVersions = new LinkedHashSet<>();
-            previousVersions.add(previous);
-            advanceTip(context.invariant(), previousVersions, context.guid());
-        }
-    }
-
-    private void advanceTip(IGUID invariant, IGUID version) {
-
-        if (!tips.containsKey(invariant)) {
-            tips.put(invariant, new LinkedHashSet<>());
-        }
-
-        tips.get(invariant).add(version);
-    }
-
-    private void advanceTip(IGUID invariant, Set<IGUID> previousVersions, IGUID newVersion) {
-
-        if (tips.containsKey(invariant) && tips.get(invariant).containsAll(previousVersions)) {
-
-            advanceTip(invariant, newVersion);
-            tips.get(invariant).removeAll(previousVersions); // Remove the previous tips, which are now replaced by the newVersion
-        } else {
-            // This is the case when we are adding a tip to a new branch.
-            advanceTip(invariant, newVersion);
-        }
     }
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
@@ -275,32 +175,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         for (IGUID guid : lru) {
             out.writeUTF(guid.toMultiHash());
         }
-
-        out.writeInt(tips.size());
-        for(Map.Entry<IGUID, Set<IGUID>> tip : tips.entrySet()) {
-            out.writeUTF(tip.getKey().toMultiHash());
-            out.writeInt(tip.getValue().size());
-
-            for(IGUID t:tip.getValue()) {
-                out.writeUTF(t.toMultiHash());
-            }
-        }
-
-        out.writeInt(heads.size());
-        for(Map.Entry<IGUID, IGUID> head : heads.entrySet()) {
-            out.writeUTF(head.getKey().toMultiHash());
-            out.writeUTF(head.getValue().toMultiHash());
-        }
-
-        out.writeInt(assetsToVersions.size());
-        for(Map.Entry<IGUID, Set<IGUID>> versions : assetsToVersions.entrySet()) {
-            out.writeUTF(versions.getKey().toMultiHash());
-            out.writeInt(versions.getValue().size()); // Number of versions per invariant
-
-            for(IGUID version:versions.getValue()) {
-                out.writeUTF(version.toMultiHash());
-            }
-        }
     }
 
     // This method defines how the cache is de-serialised
@@ -316,40 +190,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
             }
 
             cache = new HashMap<>();
-
-            tips = new HashMap<>();
-            int tipsSize = in.readInt();
-            for (int i = 0; i < tipsSize; i++) {
-                IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
-                tips.put(invariant, new LinkedHashSet<>());
-
-                int numberOfTipsPerInvariant = in.readInt();
-                for (int j = 0; j < numberOfTipsPerInvariant; j++) {
-                    String version = in.readUTF();
-                    tips.get(invariant).add(GUIDFactory.recreateGUID(version));
-                }
-            }
-
-            heads = new HashMap<>();
-            int headsSize = in.readInt();
-            for(int i = 0; i < headsSize; i++) {
-                IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
-                IGUID version = GUIDFactory.recreateGUID(in.readUTF());
-                heads.put(invariant, version);
-            }
-
-            assetsToVersions = new HashMap<>();
-            int assetsToVersionsSize = in.readInt();
-            for (int i = 0; i < assetsToVersionsSize; i++) {
-                IGUID invariant = GUIDFactory.recreateGUID(in.readUTF());
-                assetsToVersions.put(invariant, new LinkedHashSet<>());
-
-                int numberOfVersionsPerInvariant = in.readInt();
-                for (int j = 0; j < numberOfVersionsPerInvariant; j++) {
-                    String version = in.readUTF();
-                    assetsToVersions.get(invariant).add(GUIDFactory.recreateGUID(version));
-                }
-            }
 
         } catch (GUIDGenerationException e) {
             SOS_LOG.log(LEVEL.WARN, "Manifest cache loading - unable to recreated some of the GUIDs");

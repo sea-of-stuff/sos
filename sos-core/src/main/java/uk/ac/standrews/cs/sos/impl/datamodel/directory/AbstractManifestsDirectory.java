@@ -14,9 +14,9 @@ import java.util.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
+abstract class AbstractManifestsDirectory implements ManifestsDirectory {
 
-    protected Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
+    Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 
         locations.addAll(first.getLocations());
@@ -25,7 +25,7 @@ public abstract class AbstractManifestsDirectory implements ManifestsDirectory {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    protected Manifest mergeManifests(IGUID guid, SecureAtom first, SecureAtom second) throws ManifestNotMadeException {
+    Manifest mergeManifests(IGUID guid, SecureAtom first, SecureAtom second) throws ManifestNotMadeException {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 
         locations.addAll(first.getLocations());

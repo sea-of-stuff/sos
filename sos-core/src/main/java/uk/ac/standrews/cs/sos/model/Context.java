@@ -23,11 +23,14 @@ import java.util.Set;
  * - content
  * - domain and codomain
  *
+ * NOTE 1: must have only one version
+ * NOTE 2: invariant = hash(predicate + policies)
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @JsonSerialize(using = ContextSerializer.class)
 @JsonDeserialize(using = ContextDeserializer.class)
-public interface Context extends Manifest {
+public interface Context extends Versionable {
 
     /**
      * This is the unique GUID for this context
@@ -39,26 +42,11 @@ public interface Context extends Manifest {
     IGUID guid();
 
     /**
-     * hash(predicate + policies)
-     *
-     * @return invariant of the context
-     */
-    IGUID invariant();
-
-    /**
      * GUID of compound to contents
      *
      * @return the reference to the content of this context's version
      */
     IGUID content();
-
-    /**
-     * Optional.
-     * Should be GUID of another ContextV
-     *
-     * @return the reference to the previous context
-     */
-    IGUID previous();
 
     /**
      * Return a human-readable name for the context

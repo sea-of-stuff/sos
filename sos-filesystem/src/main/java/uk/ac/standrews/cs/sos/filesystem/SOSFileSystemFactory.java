@@ -84,7 +84,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             VersionBuilder builder = new VersionBuilder(compoundGUID).setInvariant(rootGUID);
 
             Version retval = sos.addVersion(builder);
-            IGUID versionGUID = retval.getVersionGUID();
+            IGUID versionGUID = retval.version();
 
             WriteCurrentVersion(rootGUID, versionGUID);
 

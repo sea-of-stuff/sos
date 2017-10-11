@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -81,13 +80,11 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     }
 
     @Override
-    public Set<IGUID> getVersions(IGUID invariant) {
-        // TODO - implement this method
-        return new LinkedHashSet<>();
-    }
-
-    @Override
     public void flush() {}
+
+    public Set<IGUID> getManifests(ManifestType type) {
+        return null;
+    }
 
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
         IFile manifestFile = getManifestFile(guid);

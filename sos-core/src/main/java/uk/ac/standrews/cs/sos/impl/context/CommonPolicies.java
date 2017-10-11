@@ -212,7 +212,7 @@ public class CommonPolicies {
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
                 Version version = (Version) manifest;
-                IGUID invariant = version.getInvariantGUID();
+                IGUID invariant = version.invariant();
 
                 Set<IGUID> versions = policyActions.getVersions(invariant);
                 for(IGUID v:versions) {
@@ -234,7 +234,7 @@ public class CommonPolicies {
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
                 Version version = (Version) manifest;
-                IGUID invariant = version.getInvariantGUID();
+                IGUID invariant = version.invariant();
 
                 Set<IGUID> versions = policyActions.getVersions(invariant);
                 for(IGUID v:versions) {

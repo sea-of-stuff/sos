@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -13,6 +15,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -139,10 +142,14 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         }
 
         @Override
-        public void run() throws ExperimentException {
+        public void run() {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT");
 
-            counter = cms.runPredicates();
+            try {
+                counter = cms.runPredicates();
+            } catch (ContextException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Experiment Scale_1 - Unable to run predicates properly");
+            }
         }
     }
 

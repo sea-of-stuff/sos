@@ -38,7 +38,7 @@ public class SOSFileSystem implements IFileSystem {
 
     public SOSFileSystem(Agent sos, Version rootVersion) throws FileSystemCreationException {
         this.sos = sos;
-        this.invariant = rootVersion.getInvariantGUID();
+        this.invariant = rootVersion.invariant();
 
         try {
             SOSDirectory root = new SOSDirectory(sos, rootVersion);
@@ -178,7 +178,7 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public IGUID getRootId() {
         Version version = SOSFileSystemFactory.getRoot(sos, invariant);
-        return version.getVersionGUID();
+        return version.version();
     }
 
     @Override

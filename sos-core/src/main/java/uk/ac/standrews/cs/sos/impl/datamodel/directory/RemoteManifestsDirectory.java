@@ -122,7 +122,6 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");
     }
 
-    @Override
     public Set<IGUID> getVersions(IGUID invariant) {
 
         try {

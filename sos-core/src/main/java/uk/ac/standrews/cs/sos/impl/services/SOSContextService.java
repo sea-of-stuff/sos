@@ -116,13 +116,19 @@ public class SOSContextService implements ContextService {
 
         Set<Context> contexts = new LinkedHashSet<>();
 
-        Set<IGUID> contextRefs = manifestsDataService.getTips(ManifestType.CONTEXT);
-        for(IGUID contextRef:contextRefs) {
+        Set<IGUID> contextInvariants = manifestsDataService.getInvariants(ManifestType.CONTEXT);
+        for(IGUID contextInvariant:contextInvariants) {
             try {
-                Context context = getContext(contextRef);
-                contexts.add(context);
-            } catch (ContextNotFoundException e) {
-                SOS_LOG.log(LEVEL.WARN, "Unable to get context tip with ref: " + contextRef.toMultiHash());
+                Iterator<IGUID> tips = manifestsDataService.getTips(contextInvariant).iterator();
+                if (tips.hasNext()) {
+
+                    IGUID contextTip = tips.next();
+                    Context context = getContext(contextTip);
+                    contexts.add(context);
+                }
+
+            } catch (TIPNotFoundException | ContextNotFoundException e) {
+                SOS_LOG.log(LEVEL.WARN, "Unable to get context tip from invariant ref: " + contextInvariant.toMultiHash());
                 /* SKIP */
             }
         }
@@ -409,8 +415,8 @@ public class SOSContextService implements ContextService {
         }
 
         Set<Content> contents = new LinkedHashSet<>();
-        Set<IGUID> assets = manifestsDataService.getAllAssets();
-        for (IGUID assetInvariant : assets) {
+        Set<IGUID> assetInvariants = manifestsDataService.getInvariants(ManifestType.VERSION);
+        for (IGUID assetInvariant:assetInvariants) {
 
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
