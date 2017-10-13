@@ -21,8 +21,6 @@ import java.security.PublicKey;
  *      "Signature": "MQ17983827se=" // Generated using User's keys
  * }
  *
- * TODO: consider sharing algorithm info about encryption, signatures, etc
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @JsonSerialize(using = RoleSerializer.class)

@@ -24,7 +24,6 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
         super(ManifestType.POLICY);
     }
 
-    // TODO - use jsonnode
     protected BasePolicy(JsonNode policyManifest) {
         super(ManifestType.POLICY);
 

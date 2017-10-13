@@ -110,7 +110,7 @@ public class SyncRequest extends Request {
 
     private Response postData() throws IOException {
 
-        // FIXME - this will most likely fail for large data
+        // NOTE - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
 
         HttpRequestWithBody httpRequestWithBody = Unirest.post(url.toString());
