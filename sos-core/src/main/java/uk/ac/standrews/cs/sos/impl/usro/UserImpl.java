@@ -54,7 +54,11 @@ public class UserImpl extends BasicManifest implements User {
     }
 
     public UserImpl(IGUID guid, String name, PublicKey signatureCertificate) throws SignatureException {
-        super(ManifestType.USER);
+        this(ManifestType.USER, guid, name, signatureCertificate);
+    }
+
+    UserImpl(ManifestType manifestType, IGUID guid, String name, PublicKey signatureCertificate) throws SignatureException {
+        super(manifestType);
 
         this.guid = guid;
         this.name = name;

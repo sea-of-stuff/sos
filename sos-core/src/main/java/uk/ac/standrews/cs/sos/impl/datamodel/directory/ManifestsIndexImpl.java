@@ -207,8 +207,8 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
 
                 int numberOfTipsPerInvariant = in.readInt();
                 for (int j = 0; j < numberOfTipsPerInvariant; j++) {
-                    String version = in.readUTF();
-                    tips.get(invariant).add(GUIDFactory.recreateGUID(version));
+                    IGUID version = GUIDFactory.recreateGUID(in.readUTF());
+                    tips.get(invariant).add(version);
                 }
             }
 

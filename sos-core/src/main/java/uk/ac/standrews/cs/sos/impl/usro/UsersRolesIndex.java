@@ -1,7 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.usro;
 
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -14,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.utils.FileUtils.RoleFromString;
@@ -99,6 +102,14 @@ public class UsersRolesIndex implements Serializable {
             out.writeBoolean(false);
         }
 
+        out.writeInt(usersToRoles.size());
+        for(Map.Entry<IGUID, Set<IGUID>> u2r:usersToRoles.entrySet()) {
+            out.writeUTF(u2r.getKey().toMultiHash());
+            out.writeInt(u2r.getValue().size());
+            for(IGUID role:u2r.getValue()) {
+                out.writeUTF(role.toMultiHash());
+            }
+        }
     }
 
     // This method defines how the cache is de-serialised
@@ -110,13 +121,19 @@ public class UsersRolesIndex implements Serializable {
             if (in.readBoolean()) activeRole = RoleFromString(in.readUTF());
 
             usersToRoles = new HashMap<>();
-            int noRoles = in.readInt();
-            for(int i = 0; i < noRoles; i++) {
-                Role role = RoleFromString(in.readUTF());
-                addRole(role);
+            int numberOfUsers = in.readInt();
+            for(int i = 0; i < numberOfUsers; i++) {
+                IGUID userGUID = GUIDFactory.recreateGUID(in.readUTF());
+                usersToRoles.put(userGUID, new LinkedHashSet<>());
+
+                int numberOfRoles = in.readInt();
+                for(int j = 0; j < numberOfRoles; j++) {
+                    IGUID roleGUID = GUIDFactory.recreateGUID(in.readUTF());
+                    usersToRoles.get(userGUID).add(roleGUID);
+                }
             }
 
-        } catch (UserNotFoundException | RoleNotFoundException e) {
+        } catch (GUIDGenerationException | UserNotFoundException | RoleNotFoundException e) {
             throw new IOException(e);
         }
 

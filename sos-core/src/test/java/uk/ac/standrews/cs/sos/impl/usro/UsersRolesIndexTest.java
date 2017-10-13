@@ -80,7 +80,6 @@ public class UsersRolesIndexTest extends SetUpTest {
         assertEquals(loadedCache.activeRole().toString(), role.toString());
     }
 
-
     @Test
     public void saveLoadRolesTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, ProtectionException, RoleNotFoundException {
 
