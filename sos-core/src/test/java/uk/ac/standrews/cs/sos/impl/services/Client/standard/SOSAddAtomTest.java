@@ -73,7 +73,6 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Manifest retrievedManifest = agent.getManifest(manifest.guid());
-        assertFalse(retrievedManifest.verifySignature(null));
         assertTrue(retrievedManifest.verifyIntegrity());
     }
 

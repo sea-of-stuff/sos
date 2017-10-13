@@ -1,10 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.metadata.basic;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.impl.json.MetadataDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.impl.metadata.AbstractMetadata;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
@@ -16,8 +12,6 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonDeserialize(using = MetadataDeserializer.class)
-@JsonSerialize(using = MetadataSerializer.class)
 public class BasicMetadata extends AbstractMetadata implements Metadata {
 
     private HashMap<String, Object> metadata;

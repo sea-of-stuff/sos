@@ -1,13 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.datamodel;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.json.CompoundManifestDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.CompoundManifestSerializer;
-import uk.ac.standrews.cs.sos.impl.manifest.SignedManifest;
+import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 
@@ -44,9 +40,7 @@ import java.util.stream.Collectors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = CompoundManifestSerializer.class)
-@JsonDeserialize(using = CompoundManifestDeserializer.class)
-public class CompoundManifest extends SignedManifest implements Compound {
+public class CompoundManifest extends AbstractSignedManifest implements Compound {
 
     protected Set<Content> contents;
     protected CompoundType type;

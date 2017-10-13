@@ -1,6 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.json.VersionManifestDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.VersionManifestSerializer;
 
 /**
  * A Version Manifest represents a particular snapshot for some given data.
@@ -18,7 +22,9 @@ import uk.ac.standrews.cs.guid.IGUID;
  * }
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Version extends Versionable {
+@JsonSerialize(using = VersionManifestSerializer.class)
+@JsonDeserialize(using = VersionManifestDeserializer.class)
+public interface Version extends Versionable, SignedManifest {
 
     /**
      * This is the unique ID of this version.

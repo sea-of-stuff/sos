@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,15 +20,6 @@ import java.io.InputStream;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface Manifest {
-
-    /**
-     * Verify this manifest's GUID against its content.
-     *
-     * @param role used to sign this manifest
-     * @return true if the GUID of the manifest matches the content.
-     * @throws SignatureException signature of the manifest could not be verified
-     */
-    boolean verifySignature(Role role) throws SignatureException;
 
     /**
      * Verifies that the GUID of this manifest matches its contents

@@ -1,12 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.datamodel;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.impl.json.SecureAtomManifestDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.SecureAtomManifestSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 
@@ -16,8 +12,6 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = SecureAtomManifestSerializer.class)
-@JsonDeserialize(using = SecureAtomManifestDeserializer.class)
 public class SecureAtomManifest extends AtomManifest implements SecureAtom {
 
     private HashMap<IGUID, String> rolesToKeys;

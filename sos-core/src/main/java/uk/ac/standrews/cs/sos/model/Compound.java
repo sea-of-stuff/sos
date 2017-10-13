@@ -1,5 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.sos.impl.json.CompoundManifestDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.CompoundManifestSerializer;
+
 import java.util.Set;
 
 /**
@@ -27,7 +32,9 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Compound extends Manifest {
+@JsonSerialize(using = CompoundManifestSerializer.class)
+@JsonDeserialize(using = CompoundManifestDeserializer.class)
+public interface Compound extends SignedManifest {
 
     /**
      * Get the contents of this compound.

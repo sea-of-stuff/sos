@@ -135,7 +135,6 @@ public class AtomManifestTest extends CommonTest {
         bundles.add(bundle);
         Atom atomManifest = ManifestFactory.createAtomManifest(GUIDFactory.recreateGUID(Hashes.TEST_HTTP_BIN_HASH), bundles);
 
-        assertFalse(atomManifest.verifySignature(null));
         assertTrue(atomManifest.verifyIntegrity());
     }
 
@@ -160,7 +159,6 @@ public class AtomManifestTest extends CommonTest {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         Atom atomManifest = ManifestFactory.createAtomManifest(null, bundles);
 
-        assertFalse(atomManifest.verifySignature(null));
         assertTrue(atomManifest.verifyIntegrity());
     }
 }

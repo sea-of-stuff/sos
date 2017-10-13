@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
+import uk.ac.standrews.cs.sos.model.Metadata;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -16,10 +17,10 @@ import java.util.Iterator;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class MetadataDeserializer extends JsonDeserializer<BasicMetadata> {
+public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
     @Override
-    public BasicMetadata deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public Metadata deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

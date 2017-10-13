@@ -23,9 +23,9 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
-import uk.ac.standrews.cs.sos.impl.manifest.SignedManifest;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
@@ -107,7 +107,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
             Manifest manifest = manifestsDirectory.findManifest(guid);
 
             assertEquals(manifest.getType(), ManifestType.COMPOUND);
-            assertFalse(((SignedManifest) manifest).getSignature().isEmpty());
+            assertFalse(((AbstractSignedManifest) manifest).getSignature().isEmpty());
             assertEquals(manifest.guid(), guid);
             assertEquals(manifest.isValid(), true);
         } catch (ManifestPersistException | ManifestNotFoundException e) {

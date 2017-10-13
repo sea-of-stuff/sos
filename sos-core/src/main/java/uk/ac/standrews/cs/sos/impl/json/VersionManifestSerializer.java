@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Version;
 
 import java.io.IOException;
 import java.util.Set;
@@ -14,10 +14,10 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
+public class VersionManifestSerializer extends JsonSerializer<Version> {
 
     @Override
-    public void serialize(VersionManifest versionManifest, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Version versionManifest, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
 
@@ -47,7 +47,7 @@ public class VersionManifestSerializer extends JsonSerializer<VersionManifest> {
         jsonGenerator.writeEndObject();
     }
 
-    private void serializePrevious(VersionManifest versionManifest, JsonGenerator jsonGenerator) throws IOException {
+    private void serializePrevious(Version versionManifest, JsonGenerator jsonGenerator) throws IOException {
         Set<IGUID> previous = versionManifest.previous();
         for(IGUID prev:previous) {
             jsonGenerator.writeString(prev.toMultiHash());

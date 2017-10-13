@@ -3,11 +3,9 @@ package uk.ac.standrews.cs.sos.impl.context;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Predicate;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.IOException;
@@ -51,11 +49,6 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
         Objects.requireNonNull(other);
 
         return null; // new SOSPredicateImpl(predicateManifest.or(other.predicateManifest()), newMaxAge);
-    }
-
-    @Override
-    public boolean verifySignature(Role role) throws SignatureException {
-        return false;
     }
 
     @Override

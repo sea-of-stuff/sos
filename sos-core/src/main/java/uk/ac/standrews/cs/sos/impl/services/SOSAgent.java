@@ -216,7 +216,11 @@ public class SOSAgent implements Agent {
     @Override
     public boolean verifyManifestSignature(Role role, Manifest manifest) throws SignatureException {
 
-        return manifest.verifySignature(role);
+        if (manifest instanceof SignedManifest) {
+            return ((SignedManifest) manifest).verifySignature(role);
+        }
+
+        return false;
     }
 
     @Override

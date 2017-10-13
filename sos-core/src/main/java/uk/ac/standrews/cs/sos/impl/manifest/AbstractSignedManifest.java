@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.SignedManifest;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.IOException;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class SignedManifest extends BasicManifest {
+public abstract class AbstractSignedManifest extends BasicManifest implements SignedManifest {
 
     protected final Role signer;
     protected String signature;
@@ -25,7 +26,7 @@ public abstract class SignedManifest extends BasicManifest {
      * @param signer for this manifest
      * @param manifestType the type of manifest
      */
-    protected SignedManifest(Role signer, ManifestType manifestType) {
+    protected AbstractSignedManifest(Role signer, ManifestType manifestType) {
         super(manifestType);
 
         this.signer = signer;

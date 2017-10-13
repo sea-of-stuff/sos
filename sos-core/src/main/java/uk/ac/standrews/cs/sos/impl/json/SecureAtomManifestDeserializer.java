@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -22,10 +23,10 @@ import static uk.ac.standrews.cs.sos.impl.json.CommonJson.getRolesToKeys;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SecureAtomManifestDeserializer extends JsonDeserializer<SecureAtomManifest> {
+public class SecureAtomManifestDeserializer extends JsonDeserializer<SecureAtom> {
 
     @Override
-    public SecureAtomManifest deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+    public SecureAtom deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

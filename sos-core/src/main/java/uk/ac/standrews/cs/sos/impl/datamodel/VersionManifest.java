@@ -1,14 +1,10 @@
 package uk.ac.standrews.cs.sos.impl.datamodel;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.json.VersionManifestDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.VersionManifestSerializer;
-import uk.ac.standrews.cs.sos.impl.manifest.SignedManifest;
+import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.Version;
@@ -42,9 +38,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = VersionManifestSerializer.class)
-@JsonDeserialize(using = VersionManifestDeserializer.class)
-public class VersionManifest extends SignedManifest implements Version {
+public class VersionManifest extends AbstractSignedManifest implements Version {
 
     final private IGUID version;
     final private IGUID invariant;

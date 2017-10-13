@@ -6,10 +6,8 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -111,11 +109,6 @@ public abstract class AbstractMetadata implements Metadata {
     @Override
     public ManifestType getType() {
         return ManifestType.METADATA;
-    }
-
-    @Override
-    public boolean verifySignature(Role role) throws SignatureException {
-        return false;
     }
 
     @Override

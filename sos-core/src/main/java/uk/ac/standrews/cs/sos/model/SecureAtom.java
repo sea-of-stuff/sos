@@ -1,5 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.sos.impl.json.SecureAtomManifestDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.SecureAtomManifestSerializer;
+
 /**
  * This is the interface for the Atom manifest.
  * An atom is the basic building block for the SOS and it is used to abstract data over locations.
@@ -19,4 +24,6 @@ package uk.ac.standrews.cs.sos.model;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = SecureAtomManifestSerializer.class)
+@JsonDeserialize(using = SecureAtomManifestDeserializer.class)
 public interface SecureAtom extends Atom, SecureManifest {}

@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -18,10 +19,10 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifestDeserializer extends JsonDeserializer<AtomManifest> {
+public class AtomManifestDeserializer extends JsonDeserializer<Atom> {
 
     @Override
-    public AtomManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public Atom deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

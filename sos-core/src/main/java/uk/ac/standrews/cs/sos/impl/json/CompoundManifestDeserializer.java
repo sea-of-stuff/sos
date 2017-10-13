@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
+import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -22,10 +23,10 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class CompoundManifestDeserializer extends JsonDeserializer<CompoundManifest> {
+public class CompoundManifestDeserializer extends JsonDeserializer<Compound> {
 
     @Override
-    public CompoundManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public Compound deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

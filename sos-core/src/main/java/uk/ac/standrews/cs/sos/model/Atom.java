@@ -1,7 +1,11 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.json.AtomManifestDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.AtomManifestSerializer;
 
 import java.io.IOException;
 import java.util.Set;
@@ -25,6 +29,8 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = AtomManifestSerializer.class)
+@JsonDeserialize(using = AtomManifestDeserializer.class)
 public interface Atom extends Manifest {
 
     /**

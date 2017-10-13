@@ -1,13 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.datamodel;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.json.SecureCompoundManifestDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.SecureCompoundManifestSerializer;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
@@ -21,8 +17,6 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = SecureCompoundManifestSerializer.class)
-@JsonDeserialize(using = SecureCompoundManifestDeserializer.class)
 public class SecureCompoundManifest extends CompoundManifest implements SecureCompound {
 
     private HashMap<IGUID, String> rolesToKeys;

@@ -14,9 +14,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.UnknownManifestTypeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
-import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
-import uk.ac.standrews.cs.sos.impl.datamodel.*;
-import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
@@ -55,33 +52,31 @@ public class FileUtils {
         }
     }
 
-    // TODO - user/role/node
-    // TODO - can we have parsers on the interfaces rather than the implementations?
     private static Manifest constructManifestFromJsonFile(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
             switch (type) {
                 case ATOM:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), AtomManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Atom.class);
                     break;
                 case ATOM_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureAtomManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureAtom.class);
                     break;
                 case COMPOUND:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), CompoundManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Compound.class);
                     break;
                 case COMPOUND_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureCompoundManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureCompound.class);
                     break;
                 case VERSION:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), VersionManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Version.class);
                     break;
                 case METADATA:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), BasicMetadata.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Metadata.class);
                     break;
 
                 case CONTEXT:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), ContextManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Context.class);
                     break;
                 case PREDICATE:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Predicate.class);
@@ -89,6 +84,10 @@ public class FileUtils {
                 case POLICY:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Policy.class);
                     break;
+
+                case USER: case ROLE: case NODE: case METADATA_PROTECTED:
+                    throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
+
 
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
@@ -100,32 +99,31 @@ public class FileUtils {
         return manifest;
     }
 
-    // TODO - user/role/node
     private static Manifest constructManifestFromJson(ManifestType type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
         Manifest manifest;
         try {
             switch (type) {
                 case ATOM:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, AtomManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Atom.class);
                     break;
                 case ATOM_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureAtomManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureAtom.class);
                     break;
                 case COMPOUND:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, CompoundManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Compound.class);
                     break;
                 case COMPOUND_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureCompoundManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureCompound.class);
                     break;
                 case VERSION:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, VersionManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Version.class);
                     break;
                 case METADATA:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, BasicMetadata.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Metadata.class);
                     break;
 
                 case CONTEXT:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, ContextManifest.class);
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Context.class);
                     break;
                 case PREDICATE:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Predicate.class);
@@ -133,6 +131,9 @@ public class FileUtils {
                 case POLICY:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Policy.class);
                     break;
+
+                case USER: case ROLE: case NODE: case METADATA_PROTECTED:
+                    throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
 
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");

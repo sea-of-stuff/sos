@@ -30,7 +30,7 @@ import java.util.Set;
  */
 @JsonSerialize(using = ContextSerializer.class)
 @JsonDeserialize(using = ContextDeserializer.class)
-public interface Context extends Versionable {
+public interface Context extends Versionable, SignedManifest {
 
     /**
      * This is the unique GUID for this context

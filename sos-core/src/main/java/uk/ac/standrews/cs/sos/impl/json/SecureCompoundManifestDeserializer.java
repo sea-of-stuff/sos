@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.SecureCompoundManifest;
 import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
+import uk.ac.standrews.cs.sos.model.SecureCompound;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -25,10 +26,10 @@ import static uk.ac.standrews.cs.sos.impl.json.CommonJson.getRolesToKeys;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SecureCompoundManifestDeserializer extends JsonDeserializer<SecureCompoundManifest> {
+public class SecureCompoundManifestDeserializer extends JsonDeserializer<SecureCompound> {
 
     @Override
-    public SecureCompoundManifest deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+    public SecureCompound deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 

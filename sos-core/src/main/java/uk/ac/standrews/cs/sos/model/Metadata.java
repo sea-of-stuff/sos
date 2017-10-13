@@ -1,5 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.sos.impl.json.MetadataDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
+
 /**
  *
  * Example:
@@ -35,6 +40,8 @@ package uk.ac.standrews.cs.sos.model;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonDeserialize(using = MetadataDeserializer.class)
+@JsonSerialize(using = MetadataSerializer.class)
 public interface Metadata extends Manifest {
 
     Object getProperty(String propertyName);

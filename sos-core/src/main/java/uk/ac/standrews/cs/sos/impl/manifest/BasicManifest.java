@@ -7,10 +7,8 @@ import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -56,15 +54,6 @@ public abstract class BasicManifest implements Manifest {
     public ManifestType getType() {
         return this.manifestType;
     }
-
-    /**
-     * Verifies this manifest's GUID against its content.
-     *
-     * @return true if the GUID of the manifest matches the content.
-     * @throws SignatureException
-     */
-    @Override
-    public abstract boolean verifySignature(Role role) throws SignatureException;
 
     @Override
     public abstract InputStream contentToHash() throws IOException;

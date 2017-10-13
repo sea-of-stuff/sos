@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
+import uk.ac.standrews.cs.sos.model.Version;
 
 import java.io.IOException;
 import java.util.Set;
@@ -16,10 +17,10 @@ import java.util.Set;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class VersionManifestDeserializer extends JsonDeserializer<VersionManifest> {
+public class VersionManifestDeserializer extends JsonDeserializer<Version> {
 
     @Override
-    public VersionManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public Version deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
