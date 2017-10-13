@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
+import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
@@ -40,6 +41,7 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
@@ -224,12 +226,11 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public void updateContext(ContextBuilder contextBuilder) throws ContextException {
+    public void updateContext(Context previous, ContextBuilder contextBuilder) throws ContextException {
 
         if (contextBuilder.getContextBuilderType() == ContextBuilder.ContextBuilderType.TEMP) {
 
             try {
-                Context previous = getContext(contextBuilder.getPrevious());
                 Compound contents = contextBuilder.getContents();
 
                 if (!previous.content().equals(contents.guid()) ||
@@ -238,6 +239,10 @@ public class SOSContextService implements ContextService {
                     previous.maxAge() != contextBuilder.getMaxage()) {
 
                     manifestsDataService.addManifest(contents);
+
+                    Context context = new ContextManifest(previous.getName(), contextBuilder.getDomain(), contextBuilder.getCodomain(),
+                            previous.predicate(), previous.maxAge(), previous.policies(), null, contents.guid(), previous.invariant(), previous.guid());
+                    manifestsDataService.addManifest(context);
                 }
 
             } catch (ManifestPersistException e) {
@@ -276,9 +281,20 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<IGUID> getContents(IGUID context) {
+    public Set<IGUID> getContents(IGUID contextGUID) {
 
-        return contextsContentsDirectory.getVersionsThatPassedPredicateTest(context, false);
+        try {
+            Context context = getContext(contextGUID);
+
+            Compound compound = (Compound) manifestsDataService.getManifest(context.content());
+            return compound.getContents().stream()
+                    .map(Content::getGUID)
+                    .collect(Collectors.toSet());
+
+        } catch (ContextNotFoundException | ManifestNotFoundException e) {
+
+            return new LinkedHashSet<>();
+        }
     }
 
     @Override
@@ -319,6 +335,7 @@ public class SOSContextService implements ContextService {
     @Override
     public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
 
+        // TODO - use compound!!
         return contextsContentsDirectory.getEntry(context, version);
     }
 
@@ -440,7 +457,7 @@ public class SOSContextService implements ContextService {
         try {
             Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
             ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
-            updateContext(contextBuilder);
+            updateContext(context, contextBuilder);
 
         } catch (ManifestNotMadeException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to update context version properly");

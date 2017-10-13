@@ -47,7 +47,12 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     @Override
     public ContextVersionInfo getEntry(IGUID context, IGUID version) {
 
-        return mappings.get(context).get(version);
+        if (mappings.containsKey(context)) {
+            return mappings.get(context).get(version);
+        } else {
+            // Dummy entry
+            return new ContextVersionInfo();
+        }
     }
 
     // FIXME

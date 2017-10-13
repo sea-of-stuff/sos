@@ -10,12 +10,14 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
@@ -45,23 +47,30 @@ public class WContexts {
     }
 
     public static String GetContents(Request req, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException, ContextNotFoundException {
-        String guidParam = req.params("id");
-        IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
 
-        Map<String, Object> model = new HashMap<>();
+        try {
+            ContextService contextService = sos.getCMS();
 
-        Map<String, Object> contents = new HashMap<>();
-        for(IGUID guid : sos.getCMS().getContents(contextGUID)) {
-            ContextVersionInfo info = sos.getCMS().getContextContentInfo(contextGUID, guid);
-            contents.put(guid.toMultiHash(), info);
+            String guidParam = req.params("id");
+            IGUID contextGUID = GUIDFactory.recreateGUID(guidParam);
+            Context context = contextService.getContext(contextGUID);
+            Context tipContext = contextService.getContextTIP(context.invariant());
+            Map<String, Object> model = new HashMap<>();
+
+            Map<String, Object> contents = new HashMap<>();
+            for (IGUID guid : contextService.getContents(tipContext.guid())) {
+                ContextVersionInfo info = contextService.getContextContentInfo(contextGUID, guid);
+                contents.put(guid.toMultiHash(), info);
+            }
+
+            model.put("contents", contents);
+            model.put("context_json", tipContext.toString());
+
+            return JSONHelper.JsonObjMapper().writeValueAsString(model);
+
+        } catch (TIPNotFoundException e) {
+            return "Unable to find context tip";
         }
-
-        model.put("contents", contents);
-
-        Context context = sos.getCMS().getContext(contextGUID);
-        model.put("context_json", context.toString());
-
-        return JSONHelper.JsonObjMapper().writeValueAsString(model);
     }
 
     public static String CreateContext(Request request, Response response, SOSLocalNode sos) {

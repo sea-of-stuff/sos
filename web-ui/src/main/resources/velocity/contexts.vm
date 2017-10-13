@@ -41,7 +41,7 @@
                 #foreach($context in $contexts)
                     <li class="list-group-item flex-column align-items-start">
                         <div class="d-flex justify-content-end">
-                            <strong class="mr-auto p-2">$context.getNotUniqueName()</strong>
+                            <strong class="mr-auto p-2">$context.getName()</strong>
                             <div class="p-2 btn-group" role="group">
                                 <button class="btn btn-success btn-sm" id="viewContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye" aria-hidden="true"></i> View</button>
                                 <button class="btn btn-light     btn-sm" id="hideContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye-slash" aria-hidden="true"></i> Hide</button>

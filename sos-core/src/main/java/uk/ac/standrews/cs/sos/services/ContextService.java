@@ -68,10 +68,11 @@ public interface ContextService {
 
     /**
      *
+     * @param prev
      * @param contextBuilder should be of type TEMP (see constructors)
      * @throws ContextException if the context could not be updated
      */
-    void updateContext(ContextBuilder contextBuilder) throws ContextException;
+    void updateContext(Context prev, ContextBuilder contextBuilder) throws ContextException;
 
     /**
      * Get the context given its guid
