@@ -269,13 +269,13 @@ public class SOSManifestsDataService implements ManifestsDataService {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
-            IFile cacheFile = localStorage.createFile(cacheDir, CACHE_FILE);
+            IFile cacheFile = localStorage.createFile(cacheDir, MANIFESTS_CACHE_FILE);
             Persistence.Persist(inMemoryCache, cacheFile);
 
             IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             Persistence.Persist(ddsIndex, ddsIndexFile);
 
-            IFile indexFile = localStorage.createFile(cacheDir, INDEX_FILE);
+            IFile indexFile = localStorage.createFile(cacheDir, MANIFESTS_INDEX_FILE);
             Persistence.Persist(index, indexFile);
 
         } catch (DataStorageException | IOException e) {
@@ -286,7 +286,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     private void loadOrCreateCache() {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
-            IFile file = localStorage.createFile(cacheDir, CACHE_FILE);
+            IFile file = localStorage.createFile(cacheDir, MANIFESTS_CACHE_FILE);
             if (file.exists()) {
                 inMemoryCache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
             }
@@ -318,7 +318,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     private void loadOrCreateIndex() {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
-            IFile file = localStorage.createFile(cacheDir, INDEX_FILE);
+            IFile file = localStorage.createFile(cacheDir, MANIFESTS_INDEX_FILE);
             if (file.exists()) {
                 index = (ManifestsIndex) Persistence.Load(file);
             }

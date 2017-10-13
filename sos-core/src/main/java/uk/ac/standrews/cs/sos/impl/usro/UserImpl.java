@@ -1,11 +1,14 @@
 package uk.ac.standrews.cs.sos.impl.usro;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.commons.io.input.NullInputStream;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -13,6 +16,8 @@ import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -21,7 +26,7 @@ import java.security.PublicKey;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class UserImpl implements User {
+public class UserImpl extends BasicManifest implements User {
 
     private IGUID guid;
     private String name;
@@ -35,6 +40,12 @@ public class UserImpl implements User {
     }
 
     UserImpl(IGUID guid, String name) throws SignatureException {
+        this(ManifestType.USER, guid, name);
+    }
+
+    UserImpl(ManifestType manifestType, IGUID guid, String name) throws SignatureException {
+        super(manifestType);
+
         this.guid = guid;
         this.name = name;
         this.keysFolder = SOSLocalNode.settings.getKeys().getLocation();
@@ -43,12 +54,18 @@ public class UserImpl implements User {
     }
 
     public UserImpl(IGUID guid, String name, PublicKey signatureCertificate) throws SignatureException {
+        super(ManifestType.USER);
+
         this.guid = guid;
         this.name = name;
         this.keysFolder = SOSLocalNode.settings.getKeys().getLocation();
         this.signatureCertificate = signatureCertificate;
 
         manageSignatureKeys(true);
+    }
+
+    public InputStream contentToHash() throws IOException {
+        return new NullInputStream(0);
     }
 
     @Override

@@ -342,7 +342,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initServices() throws ServiceException {
 
         manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
-        usersRolesService = new SOSUsersRolesService(localStorage); // TODO - will need to pass NDS to discover other roles
+        usersRolesService = new SOSUsersRolesService(localStorage, manifestsDataService); // TODO - will need to pass NDS to discover other roles
 
         storage = new SOSStorage(settings.getServices().getStorage(), getNodeGUID(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), manifestsDataService);

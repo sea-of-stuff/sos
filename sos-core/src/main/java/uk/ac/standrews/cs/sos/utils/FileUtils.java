@@ -85,7 +85,14 @@ public class FileUtils {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Policy.class);
                     break;
 
-                case USER: case ROLE: case NODE: case METADATA_PROTECTED:
+                case USER:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), User.class);
+                    break;
+                    case ROLE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Role.class);
+                    break;
+
+                case NODE: case METADATA_PROTECTED:
                     throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
 
 
@@ -132,7 +139,14 @@ public class FileUtils {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Policy.class);
                     break;
 
-                case USER: case ROLE: case NODE: case METADATA_PROTECTED:
+                case USER:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, User.class);
+                    break;
+                case ROLE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Role.class);
+                    break;
+
+                case NODE: case METADATA_PROTECTED:
                     throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
 
                 default:

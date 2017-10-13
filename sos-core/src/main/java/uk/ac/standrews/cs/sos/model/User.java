@@ -17,7 +17,7 @@ import java.security.PublicKey;
  */
 @JsonSerialize(using = UserSerializer.class)
 @JsonDeserialize(using = UserDeserializer.class)
-public interface User { // TODO - extends Manifest
+public interface User extends Manifest {
 
     /**
      * Unique GUID for the user

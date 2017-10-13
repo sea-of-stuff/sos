@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.utilities.crypto.AsymmetricEncryption;
@@ -37,7 +38,7 @@ public class RoleImpl extends UserImpl implements Role {
      * @throws ProtectionException if the protection keys could not be generated
      */
     public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
-        super(GUIDFactory.generateRandomGUID(), name);
+        super(ManifestType.ROLE, GUIDFactory.generateRandomGUID(), name);
         this.userGUID = user.guid();
 
         manageProtectionKey(false);

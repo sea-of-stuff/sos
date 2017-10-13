@@ -12,4 +12,8 @@ public class UserRolePersistException extends Exception {
     public UserRolePersistException(String message) {
         super(message);
     }
+
+    public UserRolePersistException(Throwable throwable) {
+        super(throwable);
+    }
 }
