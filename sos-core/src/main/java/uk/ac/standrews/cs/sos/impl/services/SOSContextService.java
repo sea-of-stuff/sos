@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
@@ -22,6 +23,7 @@ import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePolicy;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePredicate;
 import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -271,11 +273,18 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
 
-        // FIXME - have method in manifestsDataService such as
-        // manifestsDataService.find([field, value])
-        // Example of params:
-        // [field=type, value=Context ; field=name, value=contextName]
-        return new LinkedHashSet<>();
+        List<ManifestParam> params = new LinkedList<>();
+        params.add(new ManifestParam(JSONConstants.KEY_CONTEXT_NAME, contextName));
+
+        Set<IGUID> contextsFound = manifestsDataService.searchVersionableManifests(ManifestType.CONTEXT, params);
+
+        Set<Context> retval = new LinkedHashSet<>();
+        for(IGUID contextRef:contextsFound) {
+            Context context = getContext(contextRef);
+            retval.add(context);
+        }
+
+        return retval;
     }
 
     @Override

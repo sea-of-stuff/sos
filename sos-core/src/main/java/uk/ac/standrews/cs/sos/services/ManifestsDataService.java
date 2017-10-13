@@ -5,11 +5,13 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Version;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -132,6 +134,8 @@ public interface ManifestsDataService {
     Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
 
     Set<IGUID> getManifests(ManifestType type);
+
+    Set<IGUID> searchVersionableManifests(ManifestType type, List<ManifestParam> params);
 
     /**
      * Flushes the in-memory caches and indices into disk

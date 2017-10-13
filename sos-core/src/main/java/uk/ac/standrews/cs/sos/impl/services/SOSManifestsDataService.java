@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.datamodel.directory.*;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
@@ -253,6 +254,13 @@ public class SOSManifestsDataService implements ManifestsDataService {
     public Set<IGUID> getManifests(ManifestType type) {
 
         return local.getManifests(type);
+    }
+
+    @Override
+    public Set<IGUID> searchVersionableManifests(ManifestType type, List<ManifestParam> params) {
+
+        Set<IGUID> input = index.getInvariants(type);
+        return local.getManifests(input, params);
     }
 
     @Override

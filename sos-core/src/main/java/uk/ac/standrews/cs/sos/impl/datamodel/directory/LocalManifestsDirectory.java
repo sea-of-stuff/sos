@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
@@ -8,18 +9,25 @@ import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -83,7 +91,43 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     public void flush() {}
 
     public Set<IGUID> getManifests(ManifestType type) {
+        // TODO
         return null;
+    }
+
+    public Set<IGUID> getManifests(Set<IGUID> input, List<ManifestParam> params) {
+
+        Set<IGUID> matchedManifestRefs = new LinkedHashSet<>();
+
+        for(IGUID manifestRef:input) {
+
+            try {
+                String manifest = getManifestFromGUID(manifestRef).toString();
+                JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(manifest);
+
+                // Search
+                int matches = 0;
+                for(ManifestParam param:params) {
+
+                    if (jsonNode.has(param.getType())) {
+
+                        JsonNode field = jsonNode.get(param.getType());
+                        if (field.asText().equals(param.getValue())) {
+                            matches++;
+                        }
+                    }
+                }
+
+                if (matches == params.size()) {
+                    matchedManifestRefs.add(manifestRef);
+                }
+
+            } catch (ManifestNotFoundException | IOException e) {
+                SOS_LOG.log(LEVEL.WARN, "Unable to check manifest with GUID " + manifestRef.toMultiHash());
+            }
+        }
+
+        return matchedManifestRefs;
     }
 
     private Manifest getManifestFromGUID(IGUID guid) throws ManifestNotFoundException {
