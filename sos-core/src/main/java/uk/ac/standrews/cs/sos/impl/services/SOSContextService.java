@@ -703,7 +703,7 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
-            ContextVersionInfo prev =  contextsContentsDirectory.getEntry(context.guid(), guid);
+            ContextVersionInfo prev = contextsContentsDirectory.getEntry(context.guid(), guid);
 
             // NOTE - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;

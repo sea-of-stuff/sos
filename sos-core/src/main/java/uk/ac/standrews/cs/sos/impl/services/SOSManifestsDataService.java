@@ -275,6 +275,9 @@ public class SOSManifestsDataService implements ManifestsDataService {
             IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             Persistence.Persist(ddsIndex, ddsIndexFile);
 
+            IFile indexFile = localStorage.createFile(cacheDir, INDEX_FILE);
+            Persistence.Persist(index, indexFile);
+
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the DDS inMemoryCache and/or index");
         }
