@@ -47,7 +47,7 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     @Override
     public ContextVersionInfo getEntry(IGUID context, IGUID version) {
 
-        if (mappings.containsKey(context)) {
+        if (entryExists(context, version)) {
             return mappings.get(context).get(version);
         } else {
             // Dummy entry
@@ -55,10 +55,11 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
         }
     }
 
-    // FIXME
     public void remove(IGUID context, IGUID version) {
 
-        mappings.get(context).remove(version);
+        if (entryExists(context, version)) {
+            mappings.get(context).remove(version);
+        }
     }
 
     /**
