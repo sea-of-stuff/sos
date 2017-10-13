@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ *
  * The ContextsDirectory holds all the information regarding contexts and their contents.
  * The actual context definitions are stored using the LocalContextsDirectroy and the CacheContextsDirectory
  *
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class ContextsContentsDirectoryInMemory implements Serializable, ContextsContentsDirectory {
 
     // Maps the context to the versions belonging to it
+    // [ context -> [version, ContextVersionInfo] ]
     private transient HashMap<IGUID, HashMap<IGUID, ContextVersionInfo>> mappings;
     
     public ContextsContentsDirectoryInMemory() {
@@ -50,7 +52,6 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
         if (entryExists(context, version)) {
             return mappings.get(context).get(version);
         } else {
-            // Dummy entry
             return new ContextVersionInfo();
         }
     }

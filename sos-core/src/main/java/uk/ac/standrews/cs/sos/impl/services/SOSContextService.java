@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
-import uk.ac.standrews.cs.sos.impl.context.directory.CacheContextsDirectory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFactory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
@@ -61,11 +60,8 @@ public class SOSContextService implements ContextService {
 
     private PolicyActions policyActions;
 
-    // REMOVEME some of these data structures
     // DATA STRUCTURES
-    // The inMemoryCache keeps the context objects for this node in memory.
-    private CacheContextsDirectory inMemoryCache;
-    private ContextsContentsDirectory contextsContentsDirectory; // Needed only partially!
+    private ContextsContentsDirectory contextsContentsDirectory;
 
     // This executor service will be used to schedule any background tasks
     private static final int CMS_SCHEDULER_PS = 5;
@@ -89,8 +85,6 @@ public class SOSContextService implements ContextService {
         this.localStorage = localStorage;
         this.manifestsDataService = manifestsDataService;
         policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storage);
-
-        inMemoryCache = new CacheContextsDirectory();
 
         contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
         loadContexts();
@@ -277,7 +271,11 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
 
-        return inMemoryCache.getContexts(contextName);
+        // FIXME - have method in manifestsDataService such as
+        // manifestsDataService.find([field, value])
+        // Example of params:
+        // [field=type, value=Context ; field=name, value=contextName]
+        return new LinkedHashSet<>();
     }
 
     @Override
@@ -319,23 +317,25 @@ public class SOSContextService implements ContextService {
     }
 
     public Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics() {
+
         return predicateThreadSessionStatistics;
     }
 
     @Override
     public Queue<Pair<Long, Long>> getApplyPolicyThreadSessionStatistics() {
+
         return applyPolicyThreadSessionStatistics;
     }
 
     @Override
     public Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics() {
+
         return checkPolicyThreadSessionStatistics;
     }
 
     @Override
     public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
 
-        // TODO - use compound!!
         return contextsContentsDirectory.getEntry(context, version);
     }
 
