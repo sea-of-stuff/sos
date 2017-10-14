@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -121,7 +120,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
@@ -150,7 +149,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);
@@ -181,7 +180,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
         ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, null, null);
     }
@@ -201,7 +200,7 @@ public class ManifestReplicationTest {
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
-        NodesCollection nodesCollection = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, nodes);
+        NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
         NodeDiscoveryService nodeDiscoveryServiceMock = mock(NodeDiscoveryService.class);
         when(nodeDiscoveryServiceMock.getNode(nodeGUID)).thenReturn(node);

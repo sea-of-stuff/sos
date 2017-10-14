@@ -130,7 +130,7 @@ public class DataPackage {
                         }
                     }).collect(Collectors.toSet());
 
-                    return new NodesCollectionImpl(type, nodeRefs);
+                    return new NodesCollectionImpl(nodeRefs);
                 }
             }
         }

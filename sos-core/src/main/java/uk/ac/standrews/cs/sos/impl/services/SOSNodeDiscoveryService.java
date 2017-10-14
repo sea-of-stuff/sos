@@ -189,7 +189,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                 break;
         }
 
-        return new NodesCollectionImpl(NodesCollectionType.SPECIFIED, filteredNodes);
+        return new NodesCollectionImpl(filteredNodes);
     }
 
     @Override

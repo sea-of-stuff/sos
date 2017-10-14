@@ -40,7 +40,7 @@ public class NodesCollectionDeserializer extends JsonDeserializer<NodesCollectio
             if (type != NodesCollectionType.SPECIFIED) {
                 return new NodesCollectionImpl(type);
             } else {
-                return new NodesCollectionImpl(type, nodes);
+                return new NodesCollectionImpl(nodes);
             }
 
         } catch (GUIDGenerationException | NodesCollectionException e) {

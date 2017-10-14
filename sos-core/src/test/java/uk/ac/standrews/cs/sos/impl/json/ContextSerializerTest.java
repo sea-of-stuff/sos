@@ -48,7 +48,7 @@ public class ContextSerializerTest {
         Set<IGUID> codomainRefs = new LinkedHashSet<>();
         codomainRefs.add(GUIDFactory.recreateGUID("SHA256_16_29497892317a98d1299808516f7456fae992b88b2e50682ce31ff25c76f02caa"));
         codomainRefs.add(GUIDFactory.recreateGUID("SHA256_16_d3720e9346c08abaf7017b57cab422fc6ae7055886162bb92ca4a6cbb386c0d1"));
-        NodesCollection codomain = new NodesCollectionImpl(NodesCollectionType.SPECIFIED, codomainRefs);
+        NodesCollection codomain = new NodesCollectionImpl(codomainRefs);
 
         IGUID predicate = GUIDFactory.recreateGUID("SHA256_16_57daa6858e8bdcc0e2e1ab93a1a782f2cd566186aff620fe0e7d1a545d681cab");
 
