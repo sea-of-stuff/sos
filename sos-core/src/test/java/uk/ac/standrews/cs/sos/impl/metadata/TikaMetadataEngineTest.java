@@ -65,41 +65,4 @@ public class TikaMetadataEngineTest extends CommonTest {
 
     }
 
-    // TODO - download data first
-    @Test (enabled = false)
-    public void parseLocalImageTest() throws MetadataException, URISyntaxException, IOException {
-
-        TikaMetadataEngine test = new TikaMetadataEngine();
-
-        Location location = new URILocation("file:///Users/sic2/Downloads/isamuni-logo3.png");
-        Data data = new InputStreamData(location.getSource());
-        TikaMetadata output = test.processData(data);
-
-        String[] props = output.getAllPropertyNames();
-        for(String prop:props) {
-            System.out.println(prop);
-            System.out.println(">> " + output.getProperty(prop));
-        }
-
-    }
-
-    // TODO - download data first
-    @Test (enabled = false)
-    public void parseLocalImagenoextTest() throws MetadataException, URISyntaxException, IOException {
-
-        TikaMetadataEngine test = new TikaMetadataEngine();
-
-        Location location = new URILocation("file:///Users/sic2/sos/data/90e64f5c9baff995b4f7a8eaee3d1dd68c6538fe");
-        Data data = new InputStreamData(location.getSource());
-        TikaMetadata output = test.processData(data);
-
-        String[] props = output.getAllPropertyNames();
-        for(String prop:props) {
-            System.out.println(prop);
-            System.out.println(">> " + output.getProperty(prop));
-        }
-
-    }
-
-
 }
