@@ -57,7 +57,6 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         DATA_REPLICATION, MANIFEST_REPLICATION, METADATA_REPLICATION, // <-- each of these can have different settings (e.g. based on where node are, their availability, etc)
         DATA_PROTECTION, MANIFEST_PROTECTION, METADATA_PROTECTION, // <-- protection granting. Data is not protected by the policies
         NOTIFICATION // Nodes? are notified about the new data in the context
-
     }
 
 
@@ -137,8 +136,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PO_1 experiment_pr_1 = new Experiment_PO_1(experimentConfiguration);
-        experiment_pr_1.process();
+        Experiment_PO_1 experiment_po_1 = new Experiment_PO_1(experimentConfiguration);
+        experiment_po_1.process();
     }
 
 }

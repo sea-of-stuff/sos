@@ -42,8 +42,8 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             units.add(new Experiment_Scale_1.ExperimentUnit_Scale_1());
         }
-        Collections.shuffle(units);
 
+        Collections.shuffle(units);
         experimentUnitIterator = units.iterator();
     }
 
@@ -70,33 +70,6 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
     private void addContexts() throws Exception {
 
-        /*
-{
-	"context": {
-		"name": "All",
-		"domain": {
-			"type": "LOCAL",
-			"nodes": []
-		},
-		"codomain": {
-			"type": "SPECIFIED",
-			"nodes": ["SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4"]
-		}
-	},
-	"predicate": {
-		"Type": "Predicate",
-		"Predicate": "true;",
-		"Dependencies": []
-	},
-	"max_age": 0,
-	"policies": [{
-		"Type": "Policy",
-		"Apply": "",
-		"Satisfied": "return true;",
-		"Dependencies": []
-	}]
-}
-         */
         String FATContext = "{\n" +
                 "\t\"context\": {\n" +
                 "\t\t\"name\": \"All\",\n" +
