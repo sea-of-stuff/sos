@@ -5,7 +5,7 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 
@@ -27,7 +27,7 @@ public class WManifest {
             Object json = mapper.readValue(manifest.toString(), Object.class);
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
 
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
 
             return "Manifest Not Found";
         }

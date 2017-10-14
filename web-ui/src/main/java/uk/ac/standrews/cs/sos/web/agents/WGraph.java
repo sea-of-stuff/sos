@@ -7,10 +7,10 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -38,7 +38,7 @@ public class WGraph {
             MakeVersionGraph(graph, sos, selectedManifest);
 
             return graph.toString();
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
 
             return JSONHelper.JsonObjMapper().createObjectNode().toString();
         }
@@ -59,7 +59,7 @@ public class WGraph {
             MakeAssetGraph(graph, sos, version.invariant(), true);
 
             return graph.toString();
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
 
             return JSONHelper.JsonObjMapper().createObjectNode().toString();
         }
@@ -189,7 +189,7 @@ public class WGraph {
                 Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), version.content());
                 ObjectNode contentNode = ManifestNode(contentManifest);
                 arrayNode.add(contentNode);
-            } catch (NodesCollectionException | ManifestNotFoundException e) {
+            } catch (NodesCollectionException | ServiceException e) {
 
                 ObjectNode unknownNode = UnknownNode(version.content());
                 arrayNode.add(unknownNode);
@@ -205,7 +205,7 @@ public class WGraph {
                         Manifest previousManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), prev);
                         ObjectNode prevNode = ManifestNode(previousManifest, version.invariant().toMultiHash());
                         arrayNode.add(prevNode);
-                    } catch (NodesCollectionException | ManifestNotFoundException e) {
+                    } catch (NodesCollectionException | ServiceException e) {
 
                         ObjectNode unknownNode = UnknownNode(prev);
                         arrayNode.add(unknownNode);
@@ -220,7 +220,7 @@ public class WGraph {
                     Metadata metadata = agent.getMetadata(new NodesCollectionImpl(NodesCollectionType.LOCAL), metaGUID);
                     ObjectNode metadataNode = ManifestNode(metadata);
                     arrayNode.add(metadataNode);
-                } catch (NodesCollectionException | MetadataNotFoundException e) {
+                } catch (NodesCollectionException | ServiceException e) {
 
                     ObjectNode unknownNode = UnknownNode(metaGUID);
                     arrayNode.add(unknownNode);
@@ -239,7 +239,7 @@ public class WGraph {
                     Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), content.getGUID());
                     ObjectNode contentNode = ManifestNode(contentManifest);
                     arrayNode.add(contentNode);
-                } catch (NodesCollectionException | ManifestNotFoundException e) {
+                } catch (NodesCollectionException | ServiceException e) {
 
                     ObjectNode unknownNode = UnknownNode(content.getGUID());
                     arrayNode.add(unknownNode);

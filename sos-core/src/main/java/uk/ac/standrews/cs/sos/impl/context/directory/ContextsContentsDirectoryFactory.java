@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.impl.context.directory;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
@@ -20,7 +20,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  */
 public class ContextsContentsDirectoryFactory {
 
-    public ContextsContentsDirectory makeContextsContentsDirectory(ContextsContentsDirectoryType type, LocalStorage localStorage) throws ServiceException {
+    public ContextsContentsDirectory makeContextsContentsDirectory(ContextsContentsDirectoryType type, LocalStorage localStorage) throws ContextException {
 
         switch(type) {
             case IN_MEMORY:
@@ -29,14 +29,14 @@ public class ContextsContentsDirectoryFactory {
                 try {
                     return (ContextsContentsDirectory) DatabaseFactory.instance().getDatabase(DatabaseType.CONTEXTS);
                 } catch (DatabaseException e) {
-                    throw new ServiceException("Unable to make ContextsContentsDirectoryDatabase");
+                    throw new ContextException("Unable to make ContextsContentsDirectoryDatabase");
                 }
         }
 
-        throw new ServiceException("Unable to make a ContextsContentsDirectory");
+        throw new ContextException("Unable to make a ContextsContentsDirectory");
     }
 
-    private ContextsContentsDirectory makeContextsContentsDirectoryInMemory(LocalStorage localStorage) throws ServiceException {
+    private ContextsContentsDirectory makeContextsContentsDirectoryInMemory(LocalStorage localStorage) throws ContextException {
 
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
@@ -50,7 +50,7 @@ public class ContextsContentsDirectoryFactory {
             }
 
         } catch (DataStorageException | IOException | ClassNotFoundException e) {
-            throw new ServiceException("ContextService - Unable to load CMS Index");
+            throw new ContextException("ContextService - Unable to load CMS Index");
         }
     }
 }

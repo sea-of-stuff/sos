@@ -11,9 +11,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -138,7 +136,7 @@ public class CommonPredicates {
             IGUID signerFound = GUIDFactory.recreateGUID((String) agent.getMetaProperty(guid, "signer")); // FIXME - use appropriate method from Metadata obj
             return signerFound.equals(signer);
 
-        } catch (ManifestNotFoundException | MetadataNotFoundException | GUIDGenerationException e) {
+        } catch (ServiceException | GUIDGenerationException e) {
 
             return false;
         }
@@ -160,7 +158,7 @@ public class CommonPredicates {
 
             return false;
 
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
 
             return false;
         }
@@ -180,7 +178,7 @@ public class CommonPredicates {
             Data data = agent.getData(guid);
             return data.toString().contains(textToSearch);
 
-        } catch (AtomNotFoundException e) {
+        } catch (ServiceException e) {
 
             return false;
         }
@@ -194,7 +192,7 @@ public class CommonPredicates {
             Data data = agent.getData(guid);
             return data.toString().toLowerCase().contains(textToSearch);
 
-        } catch (AtomNotFoundException e) {
+        } catch (ServiceException e) {
 
             return false;
         }
@@ -207,7 +205,7 @@ public class CommonPredicates {
         try {
             Data data = agent.getData(guid);
             return StringUtils.countMatches(data.toString(), textToSearch);
-        } catch (AtomNotFoundException e) {
+        } catch (ServiceException e) {
 
             return 0;
         }
@@ -220,7 +218,7 @@ public class CommonPredicates {
         try {
             Data data = agent.getData(guid);
             return StringUtils.countMatches(data.toString().toLowerCase(), textToSearch);
-        } catch (AtomNotFoundException e) {
+        } catch (ServiceException e) {
 
             return 0;
         }
@@ -236,7 +234,7 @@ public class CommonPredicates {
             CompilationUnit compilationUnit = JavaParser.parse(data.toString());
             return InspectJavaFileForMethod(compilationUnit.getChildNodes(), method);
 
-        } catch (AtomNotFoundException e) {
+        } catch (ServiceException e) {
 
             return false;
         }
@@ -253,7 +251,7 @@ public class CommonPredicates {
             CompilationUnit compilationUnit = JavaParser.parse(data.toString());
             return InspectJavaForClass(compilationUnit.getChildNodes(), clazz);
 
-        } catch (AtomNotFoundException e) {
+        } catch (ServiceException e) {
 
             return false;
         }

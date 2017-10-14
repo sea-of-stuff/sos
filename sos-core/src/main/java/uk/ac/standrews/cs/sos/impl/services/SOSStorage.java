@@ -90,7 +90,7 @@ public class SOSStorage implements Storage {
                 locationIndex = (LocationsIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            throw new ServiceException("STORAGE - Unable to create the LocationIndex");
+            throw new ServiceException(ServiceException.SERVICE.STORAGE, "Unable to create the LocationIndex");
         }
 
         if (locationIndex == null) {

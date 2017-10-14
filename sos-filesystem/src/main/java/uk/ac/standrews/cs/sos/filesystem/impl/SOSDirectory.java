@@ -11,10 +11,8 @@ import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemException;
 import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
@@ -46,22 +44,28 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
      * @param sos reference to the SOS
      * @param name of the directory
      * @param parent of the directory
-     * @throws GUIDGenerationException
+     * @throws SOSFileSystemException
      */
-    public SOSDirectory(Agent sos, String name, SOSDirectory parent) throws GUIDGenerationException {
+    public SOSDirectory(Agent sos, String name, SOSDirectory parent) throws SOSFileSystemException {
         super(sos);
-        this.name = name;
-        this.parent = parent;
-        contents = new HashSet<>();
 
-        CompoundBuilder compoundBuilder = new CompoundBuilder()
-                .setType(CompoundType.COLLECTION)
-                .setContents(contents);
+        try {
+            this.name = name;
+            this.parent = parent;
+            contents = new HashSet<>();
+
+            CompoundBuilder compoundBuilder = new CompoundBuilder()
+                    .setType(CompoundType.COLLECTION)
+                    .setContents(contents);
 
 
-        // FIXME - previous, and metadata
-        VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
-        sos.addCollection(versionBuilder);
+            // FIXME - previous, and metadata
+            VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
+            sos.addCollection(versionBuilder);
+
+        } catch (ServiceException e) {
+            throw new SOSFileSystemException();
+        }
     }
 
     /**
@@ -79,7 +83,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         try {
             compound = (Compound) sos.getManifest(version.content());
             contents = compound.getContents();
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
 
@@ -126,7 +130,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.previous = previous.getPreviousObject();
             }
 
-        } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
 
@@ -171,7 +175,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.previous = previous.getPreviousObject();
             }
 
-        } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
 
@@ -242,7 +246,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 SOS_LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type. " +
                         "GUID: " + guid + " Type: " + manifest.getType());
             }
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
 
@@ -260,7 +264,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             } else if (manifest instanceof  Compound) {
                 return getCompoundObject(version, (Compound) manifest);
             }
-        } catch (GUIDGenerationException | ManifestNotFoundException e) {
+        } catch (GUIDGenerationException | ServiceException e) {
             e.printStackTrace();
         }
 

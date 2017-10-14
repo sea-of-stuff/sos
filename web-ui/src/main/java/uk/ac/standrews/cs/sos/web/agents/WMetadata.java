@@ -4,8 +4,7 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -43,7 +42,7 @@ public class WMetadata {
 
         } catch (GUIDGenerationException e) {
             return "Metadata GUID is invalid";
-        } catch (MetadataNotFoundException | ManifestNotFoundException e) {
+        } catch (ServiceException e) {
             return "Unable to find metadata";
         }
     }

@@ -4,9 +4,7 @@ import spark.Request;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestVerificationException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -18,7 +16,7 @@ import uk.ac.standrews.cs.sos.services.Agent;
  */
 public class WVerify {
 
-    public static String VerifySignature(Request request, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, RoleNotFoundException {
+    public static String VerifySignature(Request request, SOSLocalNode sos) throws GUIDGenerationException, ServiceException, RoleNotFoundException {
 
         Agent agent = sos.getAgent();
 
@@ -34,12 +32,12 @@ public class WVerify {
             } else {
                 return "NOT VERIFIED";
             }
-        } catch (SignatureException e) {
+        } catch (ServiceException e) {
             return "Signature Exception";
         }
     }
 
-    public static String VerifyIntegrity(Request request, SOSLocalNode sos) throws GUIDGenerationException, ManifestNotFoundException, RoleNotFoundException {
+    public static String VerifyIntegrity(Request request, SOSLocalNode sos) throws GUIDGenerationException, ServiceException, RoleNotFoundException {
 
         Agent agent = sos.getAgent();
 
@@ -52,7 +50,7 @@ public class WVerify {
             } else {
                 return "NOT VERIFIED";
             }
-        } catch (ManifestVerificationException e) {
+        } catch (ServiceException e) {
             return "ManifestVerificationException";
         }
     }

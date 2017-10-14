@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemException;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.services.Agent;
@@ -57,7 +57,8 @@ public class SOSFileSystem implements IFileSystem {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
 
         // TODO - satisfied if file exists already. it is often the case with the DS store files at start?
-        long size = data.getSize();
+        try {
+            long size = data.getSize();
 
 //        if (data.getSize() != 0) {
             SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, null);
@@ -72,24 +73,31 @@ public class SOSFileSystem implements IFileSystem {
 //            return file;
 //        }
 
+        } catch (SOSFileSystemException e) {
+            throw new PersistenceException("SOSFS Exception");
+        }
     }
 
     @Override
     public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
         SOS_LOG.log(LEVEL.INFO, "WEBDAV - Update file " + name);
 
-        long size = data.getSize();
+        try {
 
-        boolean compoundFile = pendingFiles.containsKey(parent.getGUID() + "/" + name);
-        if (compoundFile) {
-            SOSFile file = pendingFiles.get(parent.getGUID() + "/" + name);
-            file.append(data);
-        } else {
-            SOSFile previous = (SOSFile) parent.get(name);
-            SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, previous);
-            file.persist();
+            boolean compoundFile = pendingFiles.containsKey(parent.getGUID() + "/" + name);
+            if (compoundFile) {
+                SOSFile file = pendingFiles.get(parent.getGUID() + "/" + name);
+                file.append(data);
+            } else {
+                SOSFile previous = (SOSFile) parent.get(name);
+                SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, previous);
+                file.persist();
 
-            updateParent((SOSDirectory) parent, name, file);
+                updateParent((SOSDirectory) parent, name, file);
+            }
+
+        } catch (SOSFileSystemException e) {
+            throw new PersistenceException("SOSFS Exception");
         }
     }
 
@@ -122,7 +130,7 @@ public class SOSFileSystem implements IFileSystem {
             updateParent((SOSDirectory) parent, name, directory);
 
             return directory;
-        } catch (GUIDGenerationException e) {
+        } catch (SOSFileSystemException e) {
             throw new PersistenceException("Unable to create SOS Directory correctly");
         }
     }

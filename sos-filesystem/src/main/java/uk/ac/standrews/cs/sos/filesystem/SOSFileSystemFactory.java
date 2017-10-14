@@ -7,10 +7,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.filesystem.impl.SOSFileSystem;
 import uk.ac.standrews.cs.sos.filesystem.utils.AssetObject;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
@@ -89,7 +86,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             WriteCurrentVersion(rootGUID, versionGUID);
 
             return retval;
-        } catch (ManifestNotMadeException | ManifestPersistException | FileNotFoundException | RoleNotFoundException e) {
+        } catch (ServiceException | FileNotFoundException e) {
             throw new FileSystemCreationException("WEBDAV - Unable to create Root Asset");
         }
 
@@ -105,12 +102,12 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
             retval = (Version) sos.getManifest(assetObject.getVersion());
 
-        } catch (GUIDGenerationException | IOException | ManifestNotFoundException e) { /* Ignore */ }
+        } catch (GUIDGenerationException | IOException | ServiceException e) { /* Ignore */ }
 
         return retval;
     }
 
-    private Compound createRootCompound(Agent sos) throws ManifestPersistException, ManifestNotMadeException, RoleNotFoundException {
+    private Compound createRootCompound(Agent sos) throws ServiceException {
 
         CompoundBuilder compoundBuilder = new CompoundBuilder()
                 .setType(CompoundType.COLLECTION)

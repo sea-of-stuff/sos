@@ -2,8 +2,12 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.*;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -57,120 +61,131 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException {
-
-        return storage.addAtom(atomBuilder);
-    }
-
-    @Override
-    public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
-
-        return storage.addSecureAtom(atomBuilder);
-    }
-
-    @Override
-    public Compound addCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
-
-        CompoundType type = compoundBuilder.getType();
-        Set<Content> contents = compoundBuilder.getContents();
-
-        Role role = usersRolesService.getRole(compoundBuilder);
-
-        Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
-        addManifest(compound);
-
-        return compound;
-    }
-
-    @Override
-    public SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
-
-        CompoundType type = compoundBuilder.getType();
-        Set<Content> contents = compoundBuilder.getContents();
-
-        Role role = usersRolesService.getRole(compoundBuilder);
-
-        SecureCompound compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
-        addManifest(compound);
-
-        return compound;
-    }
-
-    @Override
-    public Version addVersion(VersionBuilder versionBuilder) throws ManifestNotMadeException, ManifestPersistException, RoleNotFoundException {
-
-        IGUID content = versionBuilder.getContent();
-        IGUID invariant = versionBuilder.getInvariant();
-        Set<IGUID> prevs = versionBuilder.getPreviousCollection();
-        IGUID metadata = versionBuilder.getMetadataCollection();
-
-        Role role = usersRolesService.getRole(versionBuilder);
-
-        Version manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
-        addManifest(manifest);
-
-        // NOTE:
-        // Make the added manifest the HEAD by default
-        manifestsDataService.setHead(manifest);
-
-        return manifest;
-    }
-
-    @Override
-    public Version addData(VersionBuilder versionBuilder) {
+    public Atom addAtom(AtomBuilder atomBuilder) throws ServiceException {
 
         try {
-            Metadata metadata = addMetadata(versionBuilder.getAtomBuilder().getData());
-
-            Atom atom;
-            if(versionBuilder.getAtomBuilder().getRole() != null) {
-                atom = addSecureAtom(versionBuilder.getAtomBuilder());
-            } else {
-                atom = addAtom(versionBuilder.getAtomBuilder());
-            }
-
-            versionBuilder.setContent(atom.guid());
-            versionBuilder.setMetadata(metadata);
-
-            return addVersion(versionBuilder);
-        } catch (MetadataException | DataStorageException | ManifestPersistException | ManifestNotMadeException | RoleNotFoundException e) {
-            e.printStackTrace();
+            return storage.addAtom(atomBuilder);
+        } catch (DataStorageException | ManifestPersistException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
-
-        return null;
     }
 
     @Override
-    public Version addCollection(VersionBuilder versionBuilder) {
+    public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ServiceException {
 
         try {
-            Compound compound;
-            if(versionBuilder.getCompoundBuilder().getRole() != null) {
-                compound = addSecureCompound(versionBuilder.getCompoundBuilder());
-            } else {
-                compound = addCompound(versionBuilder.getCompoundBuilder());
-            }
+            return storage.addSecureAtom(atomBuilder);
+        } catch (ManifestPersistException | ManifestNotMadeException | DataStorageException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
 
-            versionBuilder.setContent(compound.guid());
+    @Override
+    public Compound addCompound(CompoundBuilder compoundBuilder) throws ServiceException {
 
-            return addVersion(versionBuilder);
-        } catch (ManifestNotMadeException | ManifestPersistException | RoleNotFoundException e) {
-            e.printStackTrace();
-            // TODO - throw proper exception
+        try {
+            CompoundType type = compoundBuilder.getType();
+            Set<Content> contents = compoundBuilder.getContents();
+
+            Role role = usersRolesService.getRole(compoundBuilder);
+
+            Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
+            addManifest(compound);
+
+            return compound;
+        } catch (RoleNotFoundException | ManifestPersistException | ManifestNotMadeException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ServiceException {
+
+        try {
+            CompoundType type = compoundBuilder.getType();
+            Set<Content> contents = compoundBuilder.getContents();
+
+            Role role = usersRolesService.getRole(compoundBuilder);
+
+            SecureCompound compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
+            addManifest(compound);
+
+            return compound;
+        } catch (RoleNotFoundException | ManifestPersistException | ManifestNotMadeException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public Version addVersion(VersionBuilder versionBuilder) throws ServiceException {
+
+        try {
+            IGUID content = versionBuilder.getContent();
+            IGUID invariant = versionBuilder.getInvariant();
+            Set<IGUID> prevs = versionBuilder.getPreviousCollection();
+            IGUID metadata = versionBuilder.getMetadataCollection();
+
+            Role role = usersRolesService.getRole(versionBuilder);
+
+            Version manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
+            addManifest(manifest);
+
+            // NOTE:
+            // Make the added manifest the HEAD by default
+            manifestsDataService.setHead(manifest);
+
+            return manifest;
+        } catch (RoleNotFoundException | ManifestPersistException | ManifestNotMadeException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public Version addData(VersionBuilder versionBuilder) throws ServiceException {
+
+        Metadata metadata = addMetadata(versionBuilder.getAtomBuilder().getData());
+
+        Atom atom;
+        if(versionBuilder.getAtomBuilder().getRole() != null) {
+            atom = addSecureAtom(versionBuilder.getAtomBuilder());
+        } else {
+            atom = addAtom(versionBuilder.getAtomBuilder());
         }
 
-        return null;
+        versionBuilder.setContent(atom.guid());
+        versionBuilder.setMetadata(metadata);
+
+        return addVersion(versionBuilder);
     }
 
     @Override
-    public Data getData(Version version) throws AtomNotFoundException {
+    public Version addCollection(VersionBuilder versionBuilder) throws ServiceException {
 
-        IGUID content = version.content();
-        return storage.getAtomContent(content);
+        Compound compound;
+        if(versionBuilder.getCompoundBuilder().getRole() != null) {
+            compound = addSecureCompound(versionBuilder.getCompoundBuilder());
+        } else {
+            compound = addCompound(versionBuilder.getCompoundBuilder());
+        }
+
+        versionBuilder.setContent(compound.guid());
+
+        return addVersion(versionBuilder);
     }
 
     @Override
-    public Data getData(IGUID guid) throws AtomNotFoundException {
+    public Data getData(Version version) throws ServiceException {
+
+        try {
+            IGUID content = version.content();
+            return storage.getAtomContent(content);
+        } catch (AtomNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public Data getData(IGUID guid) throws ServiceException {
 
         try {
             IGUID atomGUID = guid;
@@ -179,14 +194,14 @@ public class SOSAgent implements Agent {
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 atomGUID = ((Version) manifest).content();
                 if (!manifestsDataService.getManifest(atomGUID).getType().equals(ManifestType.ATOM)) {
-                    throw new AtomNotFoundException();
+                    throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to find atom data");
                 }
             }
 
             return storage.getAtomContent(atomGUID);
 
-        } catch (ManifestNotFoundException e) {
-            throw new AtomNotFoundException();
+        } catch (AtomNotFoundException | ManifestNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to find manifest for data", e);
         }
 
     }
@@ -199,38 +214,57 @@ public class SOSAgent implements Agent {
      * @return Input Stream of the data for the given atom
      */
     @Override
-    public Data getAtomContent(Atom atom) throws AtomNotFoundException {
-        return storage.getAtomContent(atom);
-    }
+    public Data getAtomContent(Atom atom) throws ServiceException {
 
-    @Override
-    public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
-        return manifestsDataService.getManifest(guid);
-    }
-
-    @Override
-    public Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ManifestNotFoundException {
-        return manifestsDataService.getManifest(nodesCollection, guid);
-    }
-
-    @Override
-    public boolean verifyManifestSignature(Role role, Manifest manifest) throws SignatureException {
-
-        if (manifest instanceof SignedManifest) {
-            return ((SignedManifest) manifest).verifySignature(role);
+        try {
+            return storage.getAtomContent(atom);
+        } catch (AtomNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
-
-        return false;
     }
 
     @Override
-    public boolean verifyManifestIntegrity(Manifest manifest) throws ManifestVerificationException {
+    public Manifest getManifest(IGUID guid) throws ServiceException {
+        try {
+            return manifestsDataService.getManifest(guid);
+        } catch (ManifestNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ServiceException {
+        try {
+            return manifestsDataService.getManifest(nodesCollection, guid);
+        } catch (ManifestNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public boolean verifyManifestSignature(Role role, Manifest manifest) throws ServiceException {
+
+        try {
+            if (manifest instanceof SignedManifest) {
+                return ((SignedManifest) manifest).verifySignature(role);
+            } else {
+                return false;
+            }
+
+        } catch (SignatureException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    @Override
+    public boolean verifyManifestIntegrity(Manifest manifest) throws ServiceException {
 
         return manifest.verifyIntegrity();
     }
 
     @Override
-    public Object getMetaProperty(IGUID guid, String property) throws ManifestNotFoundException, MetadataNotFoundException {
+    public Object getMetaProperty(IGUID guid, String property) throws ServiceException {
+
         Version version = (Version) getManifest(guid);
 
         Metadata metadata = getMetadata(version.getMetadata());
@@ -238,24 +272,36 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Metadata addMetadata(Data data) throws MetadataException {
+    public Metadata addMetadata(Data data) throws ServiceException {
 
-        Metadata metadata = metadataService.processMetadata(data);
-        metadataService.addMetadata(metadata);
+        try {
+            Metadata metadata = metadataService.processMetadata(data);
+            metadataService.addMetadata(metadata);
 
-        return metadata;
+            return metadata;
+        } catch (MetadataException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
     }
 
     @Override
-    public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
+    public Metadata getMetadata(IGUID guid) throws ServiceException {
 
-        return metadataService.getMetadata(guid);
+        try {
+            return metadataService.getMetadata(guid);
+        } catch (MetadataNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
     }
 
     @Override
-    public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {
+    public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws ServiceException {
 
-        return metadataService.getMetadata(nodesCollection, guid);
+        try {
+            return metadataService.getMetadata(nodesCollection, guid);
+        } catch (MetadataNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
     }
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {

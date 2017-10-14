@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -47,7 +48,7 @@ public class SOSFileSystemFactoryTest {
     }
 
     @Test
-    public void makeFileSystemTest() throws FileSystemCreationException, TIPNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException, RoleNotFoundException {
+    public void makeFileSystemTest() throws FileSystemCreationException, TIPNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException, RoleNotFoundException, ServiceException {
         IGUID invariant = GUIDFactory.generateRandomGUID();
         IGUID versionGUID = GUIDFactory.generateRandomGUID();
 
@@ -62,7 +63,7 @@ public class SOSFileSystemFactoryTest {
         assertEquals(versionGUID, fileSystem.getRootId());
     }
 
-    private Agent mockAgent(IGUID guid, IGUID versionGUID) throws ManifestPersistException, ManifestNotMadeException, ManifestNotFoundException, TIPNotFoundException, RoleNotFoundException {
+    private Agent mockAgent(IGUID guid, IGUID versionGUID) throws ManifestPersistException, ManifestNotMadeException, ManifestNotFoundException, TIPNotFoundException, RoleNotFoundException, ServiceException {
         Agent mockAgent = mock(Agent.class);
         Compound mockRootFolder = mock(Compound.class);
         Version mockRootVersion = mock(Version.class);

@@ -57,7 +57,7 @@ public class SOSUsersRolesService implements UsersRolesService {
             manageDefaultRole();
 
         } catch (SignatureException | UserNotFoundException | ProtectionException | UserRolePersistException e) {
-            throw new ServiceException("USRO - Unable to manage default user/role correctly");
+            throw new ServiceException(ServiceException.SERVICE.USRO, "Unable to manage default user/role correctly");
         }
     }
 

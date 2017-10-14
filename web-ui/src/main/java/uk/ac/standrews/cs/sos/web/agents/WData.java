@@ -11,14 +11,12 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
@@ -95,7 +93,7 @@ public class WData {
             Version version = sos.getAgent().addData(versionBuilder);
             return version.toString();
 
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException e) {
             return "Unable to add data version";
         }
 
@@ -145,7 +143,7 @@ public class WData {
             Version version = sos.getAgent().addCollection(versionBuilder);
             return version.toString();
 
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException e) {
             return "Unable to add compound version";
         }
     }
@@ -192,7 +190,7 @@ public class WData {
 
             return atom.toString();
 
-        } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
+        } catch (ServiceException e) {
             return "Unable to add data for compound";
         }
 
@@ -214,7 +212,7 @@ public class WData {
                     return GetData(sos, version, LARGE_DATA_LIMIT, false);
                 }
             }
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException e) {
             return "Unable to find manifest/data for GUID: " + guid.toMultiHash();
         }
 
@@ -279,7 +277,7 @@ public class WData {
                 }
             }
 
-        } catch (ManifestNotFoundException | MetadataNotFoundException | AtomNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException | MetadataNotFoundException | AtomNotFoundException e) {
             return "Unable to get data for download";
         }
 
@@ -311,7 +309,7 @@ public class WData {
                 }
             }
 
-        } catch (ManifestNotFoundException | AtomNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException | AtomNotFoundException e) {
             return "Unable to get Protected Data";
         }
 
@@ -356,7 +354,7 @@ public class WData {
                     return "";
                 }
             }
-        } catch (MetadataNotFoundException | ManifestNotFoundException e) {
+        } catch (ServiceException | MetadataNotFoundException | ManifestNotFoundException e) {
             return "Unable to get Protected Data for download";
         }
 
@@ -399,7 +397,7 @@ public class WData {
                 return "Unable to grant access";
             }
 
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
             return "Manifest not found. Could not grant access";
         }
 
@@ -447,7 +445,7 @@ public class WData {
                     .map(LocationBundle::toString)
                     .collect(Collectors.joining(" \n\n "));
 
-        } catch (GUIDGenerationException | ManifestNotFoundException e) {
+        } catch (GUIDGenerationException | ServiceException e) {
             return "N/A";
         }
     }

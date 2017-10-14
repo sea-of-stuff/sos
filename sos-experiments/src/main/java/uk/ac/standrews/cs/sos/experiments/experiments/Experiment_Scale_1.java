@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
@@ -58,7 +59,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations();
     }
 
-    private void addContentToNode() throws URISyntaxException {
+    private void addContentToNode() throws URISyntaxException, ServiceException {
 
         // Add a bunch of data, versions, and so on here
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation("https://www.takemefishing.org/tmf/assets/images/fish/american-shad-464x170.png"));

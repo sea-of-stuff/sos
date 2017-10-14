@@ -4,10 +4,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
@@ -48,13 +47,13 @@ public class ArchivalApp {
         while(!endPoints.isEmpty()) {
             try {
                 crawl(sos, endPoints);
-            } catch (IOException | ManifestPersistException | URISyntaxException | StorageException | CrawlerException e) {
+            } catch (IOException | ServiceException | URISyntaxException | CrawlerException e) {
                 continue;
             }
         }
     }
 
-    private static void crawl(SOSLocalNode sos, Queue<String> endPoints) throws IOException, ManifestPersistException, StorageException, URISyntaxException, CrawlerException {
+    private static void crawl(SOSLocalNode sos, Queue<String> endPoints) throws IOException, URISyntaxException, CrawlerException, ServiceException {
 
         String uriToCrawl = endPoints.poll();
         System.err.println("Crawling " + uriToCrawl);
@@ -95,7 +94,7 @@ public class ArchivalApp {
         }
     }
 
-    private static void addData(SOSLocalNode sos, String uri) throws URISyntaxException, ManifestPersistException, StorageException {
+    private static void addData(SOSLocalNode sos, String uri) throws URISyntaxException, ServiceException {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(uri));
         VersionBuilder versionBuilder = new VersionBuilder()
                 .setAtomBuilder(atomBuilder);

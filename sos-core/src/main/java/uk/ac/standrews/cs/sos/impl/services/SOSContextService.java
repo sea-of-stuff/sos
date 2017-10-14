@@ -84,28 +84,34 @@ public class SOSContextService implements ContextService {
      */
     public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) throws ServiceException {
 
-        this.localStorage = localStorage;
-        this.manifestsDataService = manifestsDataService;
-        policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storage);
+        try {
 
-        contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
-        loadContexts();
+            this.localStorage = localStorage;
+            this.manifestsDataService = manifestsDataService;
+            policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storage);
 
-        predicateThreadSessionStatistics = new LinkedList<>();
-        applyPolicyThreadSessionStatistics = new LinkedList<>();
-        checkPolicyThreadSessionStatistics = new LinkedList<>();
+            contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
+            loadContexts();
 
-        // Run background CRON Jobs if and only if this is set in the node settings file
-        if (SOSLocalNode.settings.getServices().getCms().isAutomatic()) {
+            predicateThreadSessionStatistics = new LinkedList<>();
+            applyPolicyThreadSessionStatistics = new LinkedList<>();
+            checkPolicyThreadSessionStatistics = new LinkedList<>();
 
-            service = new ScheduledThreadPoolExecutor(CMS_SCHEDULER_PS);
-            runPredicatesPeriodic();
-            runPoliciesPeriodic();
-            checkPoliciesPeriodic();
-            getDataPeriodic();
-            spawnContextsPeriodic();
-        } else {
-            service = new ScheduledThreadPoolExecutor(1); // ThreadPool for triggered requests only
+            // Run background CRON Jobs if and only if this is set in the node settings file
+            if (SOSLocalNode.settings.getServices().getCms().isAutomatic()) {
+
+                service = new ScheduledThreadPoolExecutor(CMS_SCHEDULER_PS);
+                runPredicatesPeriodic();
+                runPoliciesPeriodic();
+                checkPoliciesPeriodic();
+                getDataPeriodic();
+                spawnContextsPeriodic();
+            } else {
+                service = new ScheduledThreadPoolExecutor(1); // ThreadPool for triggered requests only
+            }
+
+        } catch (ContextException e) {
+            throw new ServiceException(ServiceException.SERVICE.CONTEXT, e);
         }
     }
 

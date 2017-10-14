@@ -10,11 +10,8 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemException;
 import uk.ac.standrews.cs.sos.filesystem.utils.FileSystemConstants;
 import uk.ac.standrews.cs.sos.filesystem.utils.Helper;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
@@ -63,7 +60,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      * @param previous
      * @throws PersistenceException
      */
-    public SOSFile(Agent sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
+    public SOSFile(Agent sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException, SOSFileSystemException {
         super(sos, data);
 
         this.parent = parent;
@@ -104,8 +101,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         } catch (IOException e) {
             throw new PersistenceException("SOS atom could not be created");
-        } catch (MetadataException | ManifestPersistException | DataStorageException e) {
-            e.printStackTrace();
+        } catch (ServiceException e) {
+            throw new SOSFileSystemException();
         }
 
     }
@@ -134,7 +131,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         IGUID contentGUID = version.content();
         try {
             this.atom = (Atom) sos.getManifest(contentGUID);
-        } catch (ManifestNotFoundException e) {
+        } catch (ServiceException e) {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get atom content for GUID " + contentGUID);
         }
 
@@ -142,7 +139,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         if (meta != null && !meta.isInvalid()) {
             try {
                 this.metadata = sos.getMetadata(meta);
-            } catch (MetadataNotFoundException e) {
+            } catch (ServiceException e) {
                 SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get metadata for GUID " + meta);
             }
         }
@@ -222,7 +219,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             Content content = new ContentImpl(atom.guid());
             atoms.add(content);
 
-        } catch (ManifestPersistException | IOException | DataStorageException e) {
+        } catch (ServiceException | IOException e) {
             e.printStackTrace();
         }
     }

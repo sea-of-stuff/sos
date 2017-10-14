@@ -5,7 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.SetUpTest;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.services.Agent;
 
@@ -33,12 +33,12 @@ public class AgentTest extends SetUpTest {
         super.tearDown();
     }
 
-    @Test(expectedExceptions = ManifestNotFoundException.class)
+    @Test(expectedExceptions = ServiceException.class)
     public void testFailGetManifest() throws Exception {
         agent.getManifest(GUIDFactory.generateRandomGUID());
     }
 
-    @Test (expectedExceptions = ManifestNotFoundException.class)
+    @Test (expectedExceptions = ServiceException.class)
     public void testFailGetManifestNull() throws Exception {
         agent.getManifest(null);
     }

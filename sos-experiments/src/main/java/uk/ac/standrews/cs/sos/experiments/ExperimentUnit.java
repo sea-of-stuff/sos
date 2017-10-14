@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments;
 
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
@@ -63,7 +64,7 @@ public interface ExperimentUnit {
 
                     Version version = node.getAgent().addData(versionBuilder);
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
-                } catch (URISyntaxException e) {
+                } catch (URISyntaxException  | ServiceException e) {
                     e.printStackTrace();
                 }
 
