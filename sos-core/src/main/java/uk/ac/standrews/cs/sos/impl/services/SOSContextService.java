@@ -56,7 +56,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
  */
 public class SOSContextService implements ContextService {
 
-    // NODE SERVICES AND UTILS
+    // Resources and services
     private LocalStorage localStorage;
     private ManifestsDataService manifestsDataService;
 
@@ -85,7 +85,6 @@ public class SOSContextService implements ContextService {
     public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, StorageService storageService) throws ServiceException {
 
         try {
-
             this.localStorage = localStorage;
             this.manifestsDataService = manifestsDataService;
             policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);

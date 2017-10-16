@@ -70,7 +70,7 @@ public class PolicyActions {
      * @param replicationFactor a value of 1 will replicate the manifest to 1 node
      * @throws PolicyException if the manifest could not be replicated
      */
-    void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
+    public void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         try {
             manifestsDataService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
@@ -91,7 +91,7 @@ public class PolicyActions {
      * @param replicationFactor a value of 1 will replicate the data to 1 node
      * @throws PolicyException if the data could not be replicated
      */
-    void replicateData(Data data, NodesCollection codomain, int replicationFactor) throws PolicyException {
+    public void replicateData(Data data, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         // FIXME - differentiate between clear data and protected data
         try {
@@ -107,7 +107,7 @@ public class PolicyActions {
         }
     }
 
-    void updateVersion(IGUID guid, NodesCollection codomain) {
+    public void updateVersion(IGUID guid, NodesCollection codomain) {
         // TODO
     }
 
@@ -117,7 +117,7 @@ public class PolicyActions {
      * @param guid of the data to delete
      * @param codomain where to delete the data
      */
-    void deleteData(IGUID guid, NodesCollection codomain) {
+    public void deleteData(IGUID guid, NodesCollection codomain) {
 
         // This operation is currently not supported by the SOS
         throw new UnsupportedOperationException();
@@ -133,7 +133,7 @@ public class PolicyActions {
      * @param guid of the manifest
      * @return true if the node has the manifest
      */
-    private boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
+    public  boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
@@ -158,7 +158,7 @@ public class PolicyActions {
      * @param guid of the manifest
      * @return number of replicas
      */
-    int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
+    public int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
         for(IGUID nodeRef:codomain.nodesRefs()) {
@@ -182,7 +182,7 @@ public class PolicyActions {
      * @param guid of the data
      * @return true if the node has the data
      */
-    private boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
+    public  boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
@@ -205,7 +205,7 @@ public class PolicyActions {
      * @param guid of the data
      * @return number of replicas
      */
-    int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
+    public int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
         for(IGUID nodeRef:codomain.nodesRefs()) {
@@ -229,7 +229,7 @@ public class PolicyActions {
      * @throws RoleNotFoundException if one of the two roles cannot be found
      * @throws ProtectionException if the access could not be granted
      */
-    void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
+    public void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
 
         Role granterRole = usersRolesService.getRole(granter);
         Role granteeRole = usersRolesService.getRole(grantee);
@@ -248,7 +248,7 @@ public class PolicyActions {
      * @return
      * @throws AtomNotFoundException
      */
-    Data getData(IGUID guid) throws AtomNotFoundException {
+    public Data getData(IGUID guid) throws AtomNotFoundException {
 
         // Check DDS, Storage restricting the request with the codomain
         // TODO Restrict by codomain
@@ -264,7 +264,7 @@ public class PolicyActions {
      * @return
      * @throws ManifestNotFoundException
      */
-    Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
+    public Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
         NodesCollection domain = new NodesCollectionImpl(NodesCollectionType.LOCAL);
         return manifestsDataService.getManifest(domain, guid);
@@ -280,13 +280,13 @@ public class PolicyActions {
      * @throws ManifestNotFoundException
      */
     // Retrieve the manifest from local node
-    Manifest getContentManifest(Version version) throws ManifestNotFoundException {
+    public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
         return manifestsDataService.getManifest(version.content());
     }
 
     // TODO - this is not a policy action. Move it to another class
-    Set<IGUID> getVersions(IGUID invariant) {
+    public Set<IGUID> getVersions(IGUID invariant) {
 
         return manifestsDataService.getVersions(invariant);
     }
@@ -299,7 +299,7 @@ public class PolicyActions {
      * @return
      * @throws NodeNotFoundException
      */
-    Node getNode(IGUID guid) throws NodeNotFoundException {
+    public Node getNode(IGUID guid) throws NodeNotFoundException {
 
         return nodeDiscoveryService.getNode(guid);
     }
@@ -313,7 +313,7 @@ public class PolicyActions {
      * @param type
      * @return
      */
-    NodesCollection getNodes(NodesCollection codomain, NodeType type) {
+    public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
         return nodeDiscoveryService.filterNodesCollection(codomain, type, NO_LIMIT);
     }
@@ -325,7 +325,7 @@ public class PolicyActions {
      * @return
      * @throws RoleNotFoundException
      */
-    Role getRole(IGUID guid) throws RoleNotFoundException {
+    public Role getRole(IGUID guid) throws RoleNotFoundException {
 
         return usersRolesService.getRole(guid);
     }
@@ -337,7 +337,7 @@ public class PolicyActions {
      * @return
      * @throws UserNotFoundException
      */
-    User getUser(IGUID guid) throws UserNotFoundException {
+    public User getUser(IGUID guid) throws UserNotFoundException {
 
         return usersRolesService.getUser(guid);
     }
