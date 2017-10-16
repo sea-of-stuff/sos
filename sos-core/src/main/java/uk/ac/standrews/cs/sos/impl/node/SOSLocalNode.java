@@ -79,7 +79,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     // Services for this node
     private Agent agent;
-    private Storage storage;
+    private StorageService storageService;
     private ManifestsDataService manifestsDataService;
     private NodeDiscoveryService nodeDiscoveryService;
     private MetadataService metadataService;
@@ -145,8 +145,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public Storage getStorage() {
-        return storage;
+    public StorageService getStorageService() {
+        return storageService;
     }
 
     @Override
@@ -344,11 +344,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage, manifestsDataService); // TODO - will need to pass NDS to discover other roles
 
-        storage = new SOSStorage(settings.getServices().getStorage(), getNodeGUID(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
+        storageService = new SOSStorageService(settings.getServices().getStorage(), getNodeGUID(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), manifestsDataService);
-        contextService = new SOSContextService(localStorage, manifestsDataService, nodeDiscoveryService, usersRolesService, storage);
+        contextService = new SOSContextService(localStorage, manifestsDataService, nodeDiscoveryService, usersRolesService, storageService);
 
-        agent = SOSAgent.instance(storage, manifestsDataService, metadataService, usersRolesService);
+        agent = SOSAgent.instance(storageService, manifestsDataService, metadataService, usersRolesService);
     }
 
     /**
@@ -357,7 +357,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      */
     private void initNodeMaintainer() {
 
-        nodeMaintainer = new NodeMaintainer(localStorage, manifestsDataService, storage, usersRolesService, contextService);
+        nodeMaintainer = new NodeMaintainer(localStorage, manifestsDataService, storageService, usersRolesService, contextService);
 
         SettingsConfiguration.Settings.GlobalSettings.NodeMaintainerSettings nodeMaintainerSettings = SOSLocalNode.settings.getGlobal().getNodeMaintainer();
         if (nodeMaintainerSettings.isEnabled()) {

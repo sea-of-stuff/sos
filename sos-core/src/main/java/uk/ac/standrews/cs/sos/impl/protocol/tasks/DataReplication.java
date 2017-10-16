@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -64,7 +64,7 @@ public class DataReplication extends Task {
     private int replicationFactor;
     private boolean delegateReplication;
 
-    private Storage storage;
+    private StorageService storageService;
     private NodeDiscoveryService nodeDiscoveryService;
 
     /**
@@ -81,17 +81,17 @@ public class DataReplication extends Task {
      * @param data
      * @param nodesCollection
      * @param replicationFactor
-     * @param storage
+     * @param storageService
      * @param nodeDiscoveryService
      * @throws SOSProtocolException
      */
-    public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor, Storage storage, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
+    public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor, StorageService storageService, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
 
-        if (storage == null || nodeDiscoveryService == null) {
+        if (storageService == null || nodeDiscoveryService == null) {
             throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
         }
 
-        this.storage = storage;
+        this.storageService = storageService;
         this.nodeDiscoveryService = nodeDiscoveryService;
 
 
@@ -117,7 +117,7 @@ public class DataReplication extends Task {
                     Node node = nodeDiscoveryService.getNode(ref);
                     if (!node.isStorage()) continue;
 
-                    boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storage);
+                    boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storageService);
 
                     if (transferWasSuccessful) {
                         successfulReplicas++;
@@ -150,10 +150,10 @@ public class DataReplication extends Task {
      *
      * @param data
      * @param node
-     * @param storage
+     * @param storageService
      * @return true if the data was transferred successfully.
      */
-    private boolean transferDataAndUpdateNodeState(InputStream data, Node node, Storage storage) {
+    private boolean transferDataAndUpdateNodeState(InputStream data, Node node, StorageService storageService) {
         SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.getNodeGUID().toMultiHash());
 
         try {
@@ -161,7 +161,7 @@ public class DataReplication extends Task {
             SOS_LOG.log(LEVEL.INFO, "Successful data replication to node " + node.getNodeGUID().toMultiHash());
 
             for(LocationBundle locationBundle:atom.getLocations()) {
-                storage.addLocation(atom.guid(), locationBundle);
+                storageService.addLocation(atom.guid(), locationBundle);
             }
 
         } catch (SOSProtocolException e) {

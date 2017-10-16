@@ -20,7 +20,7 @@ public interface LocalNode extends Node {
      *
      * @return
      */
-    Storage getStorage();
+    StorageService getStorageService();
 
     /**
      * Data discovery service for this node

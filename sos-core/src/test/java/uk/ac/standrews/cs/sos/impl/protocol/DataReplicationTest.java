@@ -26,7 +26,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
@@ -163,14 +163,14 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(node.getNodeGUID());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        Storage storage = localSOSNode.getStorage();
+        StorageService storageService = localSOSNode.getStorageService();
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
+        Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -190,14 +190,14 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(node.getNodeGUID());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        Storage storage = localSOSNode.getStorage();
+        StorageService storageService = localSOSNode.getStorageService();
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
+        Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
         assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
     }
 
@@ -219,14 +219,14 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(storageNode.getNodeGUID());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        Storage storage = localSOSNode.getStorage();
+        StorageService storageService = localSOSNode.getStorageService();
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
+        Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -260,14 +260,14 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(anotherNode.getNodeGUID());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        Storage storage = localSOSNode.getStorage();
+        StorageService storageService = localSOSNode.getStorageService();
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 3, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 3, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
+        Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -296,14 +296,14 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(twinStorageNode.getNodeGUID());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        Storage storage = localSOSNode.getStorage();
+        StorageService storageService = localSOSNode.getStorageService();
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storage, mockNodeDiscoveryService, false); // TODO - rep factor 1
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService, mockNodeDiscoveryService, false); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
+        Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
 
         LocationBundle locationBundle = it.next();
@@ -331,14 +331,14 @@ public class DataReplicationTest extends ProtocolTest {
         nodes.add(twinStorageNode.getNodeGUID());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        Storage storage = localSOSNode.getStorage();
+        StorageService storageService = localSOSNode.getStorageService();
 
         IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storage, mockNodeDiscoveryService, false);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        Iterator<LocationBundle> it = storage.findLocations(testGUID).iterator();
+        Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
         assertTrue(it.hasNext());
         LocationBundle locationBundle = it.next();
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);

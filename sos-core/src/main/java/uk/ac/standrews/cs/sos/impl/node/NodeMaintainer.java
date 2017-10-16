@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -20,18 +20,18 @@ public class NodeMaintainer implements Runnable {
 
     private LocalStorage localStorage;
     private ManifestsDataService manifestsDataService;
-    private Storage storage;
+    private StorageService storageService;
     private UsersRolesService usersRolesService;
     private ContextService contextService;
 
     private long maxSize;
 
-    NodeMaintainer(LocalStorage localStorage, ManifestsDataService manifestsDataService, Storage storage,
+    NodeMaintainer(LocalStorage localStorage, ManifestsDataService manifestsDataService, StorageService storageService,
                    UsersRolesService usersRolesService, ContextService contextService) {
 
         this.localStorage = localStorage;
         this.manifestsDataService = manifestsDataService;
-        this.storage = storage;
+        this.storageService = storageService;
         this.usersRolesService = usersRolesService;
         this.contextService = contextService;
 
@@ -55,7 +55,7 @@ public class NodeMaintainer implements Runnable {
     public void flush() {
 
         manifestsDataService.flush();
-        storage.flush();
+        storageService.flush();
         usersRolesService.flush();
         contextService.flush();
     }

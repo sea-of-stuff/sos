@@ -19,7 +19,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class RESTStorageTest extends CommonRESTTest {
+public class RESTStorageServiceTest extends CommonRESTTest {
 
     private final static String TEST_NODE_INFO =
             "{\n" +

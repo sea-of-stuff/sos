@@ -30,23 +30,23 @@ import java.util.Set;
  */
 public class SOSAgent implements Agent {
 
-    private Storage storage;
+    private StorageService storageService;
     private ManifestsDataService manifestsDataService;
     private MetadataService metadataService;
     private UsersRolesService usersRolesService;
 
-    private SOSAgent(Storage storage, ManifestsDataService manifestsDataService, MetadataService metadataService, UsersRolesService usersRolesService) {
+    private SOSAgent(StorageService storageService, ManifestsDataService manifestsDataService, MetadataService metadataService, UsersRolesService usersRolesService) {
 
-        this.storage = storage;
+        this.storageService = storageService;
         this.manifestsDataService = manifestsDataService;
         this.metadataService = metadataService;
         this.usersRolesService = usersRolesService;
     }
 
     private static SOSAgent instance;
-    public static SOSAgent instance(Storage storage, ManifestsDataService manifestsDataService, MetadataService metadataService, UsersRolesService usersRolesService) {
+    public static SOSAgent instance(StorageService storageService, ManifestsDataService manifestsDataService, MetadataService metadataService, UsersRolesService usersRolesService) {
         if (instance == null) {
-            instance = new SOSAgent(storage, manifestsDataService, metadataService, usersRolesService);
+            instance = new SOSAgent(storageService, manifestsDataService, metadataService, usersRolesService);
         }
 
         return instance;
@@ -64,7 +64,7 @@ public class SOSAgent implements Agent {
     public Atom addAtom(AtomBuilder atomBuilder) throws ServiceException {
 
         try {
-            return storage.addAtom(atomBuilder);
+            return storageService.addAtom(atomBuilder);
         } catch (DataStorageException | ManifestPersistException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
@@ -74,7 +74,7 @@ public class SOSAgent implements Agent {
     public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ServiceException {
 
         try {
-            return storage.addSecureAtom(atomBuilder);
+            return storageService.addSecureAtom(atomBuilder);
         } catch (ManifestPersistException | ManifestNotMadeException | DataStorageException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
@@ -178,7 +178,7 @@ public class SOSAgent implements Agent {
 
         try {
             IGUID content = version.content();
-            return storage.getAtomContent(content);
+            return storageService.getAtomContent(content);
         } catch (AtomNotFoundException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
@@ -198,7 +198,7 @@ public class SOSAgent implements Agent {
                 }
             }
 
-            return storage.getAtomContent(atomGUID);
+            return storageService.getAtomContent(atomGUID);
 
         } catch (AtomNotFoundException | ManifestNotFoundException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to find manifest for data", e);
@@ -217,7 +217,7 @@ public class SOSAgent implements Agent {
     public Data getAtomContent(Atom atom) throws ServiceException {
 
         try {
-            return storage.getAtomContent(atom);
+            return storageService.getAtomContent(atom);
         } catch (AtomNotFoundException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }

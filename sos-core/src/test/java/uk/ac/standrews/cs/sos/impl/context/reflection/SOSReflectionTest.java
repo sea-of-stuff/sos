@@ -42,7 +42,7 @@ public class SOSReflectionTest extends SetUpTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        policyActions = new PolicyActions(localSOSNode.getNDS(), localSOSNode.getDDS(), localSOSNode.getRMS(), localSOSNode.getStorage());
+        policyActions = new PolicyActions(localSOSNode.getNDS(), localSOSNode.getDDS(), localSOSNode.getRMS(), localSOSNode.getStorageService());
     }
 
     @Test

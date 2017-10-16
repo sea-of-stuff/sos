@@ -24,7 +24,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalStorageTest extends CommonTest {
+public class LocalStorageServiceTest extends CommonTest {
 
     protected LocalStorage localStorage;
 

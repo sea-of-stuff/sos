@@ -230,7 +230,7 @@ public class WData {
 
         Data data;
         try {
-            data = sos.getStorage().getAtomContent(nodesCollection, version.content());
+            data = sos.getStorageService().getAtomContent(nodesCollection, version.content());
         } catch (AtomNotFoundException e) {
             return "Unable to get data";
         }
@@ -269,7 +269,7 @@ public class WData {
                     }
 
                     response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
-                    Data data = sos.getStorage().getAtomContent(version.content());
+                    Data data = sos.getStorageService().getAtomContent(version.content());
                     try (OutputStream out = response.raw().getOutputStream()) {
                         IOUtils.copy(data.getInputStream(), out);
                     }
@@ -343,7 +343,7 @@ public class WData {
 
                     response.header("Content-Disposition", "attachment; filename=\"Version-" + version.guid().toMultiHash() + extension + "\"");
                     try (OutputStream out = response.raw().getOutputStream()) {
-                        Data data = sos.getStorage().getSecureAtomContent((SecureAtom) contentManifest, role);
+                        Data data = sos.getStorageService().getSecureAtomContent((SecureAtom) contentManifest, role);
                         IOUtils.copy(data.getInputStream(), out);
 
 
@@ -389,7 +389,7 @@ public class WData {
             }
 
             try {
-                sos.getStorage().grantAccess(secureAtom, granter, grantee);
+                sos.getStorageService().grantAccess(secureAtom, granter, grantee);
 
                 return "Access granted";
 
@@ -437,7 +437,7 @@ public class WData {
                 return "N/A";
             }
 
-            Queue<LocationBundle> locations = sos.getStorage().findLocations(guid);
+            Queue<LocationBundle> locations = sos.getStorageService().findLocations(guid);
 
             if (locations.size() == 0) return "N/A";
 
@@ -452,7 +452,7 @@ public class WData {
 
     private static String GetProtectedData(SOSLocalNode sos, Version version, SecureAtom atom, Role role) throws AtomNotFoundException, DataNotFoundException, ManifestNotFoundException {
 
-        Data data = sos.getStorage().getSecureAtomContent(atom, role);
+        Data data = sos.getStorageService().getSecureAtomContent(atom, role);
 
         String type = "Raw";
         try {

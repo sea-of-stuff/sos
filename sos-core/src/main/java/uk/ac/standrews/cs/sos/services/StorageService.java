@@ -26,7 +26,7 @@ import java.util.Queue;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Storage {
+public interface StorageService {
 
     /**
      * Adds data to the Sea of Stuff as an atom.

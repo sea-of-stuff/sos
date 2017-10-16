@@ -23,7 +23,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddAtomTest extends StorageTest {
+public class SOSAddAtomTest extends StorageServiceTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {
@@ -32,10 +32,10 @@ public class SOSAddAtomTest extends StorageTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setBundleType(BundleTypes.PERSISTENT);
-        Atom manifest = storage.addAtom(builder);
+        Atom manifest = storageService.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
-        try (Data data = storage.getAtomContent(manifest)) {
+        try (Data data = storageService.getAtomContent(manifest)) {
             assertTrue(IOUtils.contentEquals(location.getSource(), data.getInputStream()));
         }
     }
@@ -47,7 +47,7 @@ public class SOSAddAtomTest extends StorageTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setBundleType(BundleTypes.PERSISTENT);
-        Atom manifest = storage.addAtom(builder);
+        Atom manifest = storageService.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -69,7 +69,7 @@ public class SOSAddAtomTest extends StorageTest {
         AtomBuilder builder = new AtomBuilder()
                 .setData(new InputStreamData(stream))
                 .setBundleType(BundleTypes.PERSISTENT);
-        Atom manifest = storage.addAtom(builder);
+        Atom manifest = storageService.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());
@@ -87,7 +87,7 @@ public class SOSAddAtomTest extends StorageTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setBundleType(BundleTypes.PERSISTENT);
-        Atom manifest = storage.addAtom(builder);
+        Atom manifest = storageService.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
         Set<LocationBundle> retrievedLocations = (manifest.getLocations());

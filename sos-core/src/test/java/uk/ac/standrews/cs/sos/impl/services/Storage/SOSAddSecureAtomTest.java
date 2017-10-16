@@ -13,7 +13,7 @@ import static org.testng.AssertJUnit.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddSecureAtomTest extends StorageTest {
+public class SOSAddSecureAtomTest extends StorageServiceTest {
 
     @Test
     public void basicAddSecureAtomTest() throws Exception {
@@ -25,13 +25,13 @@ public class SOSAddSecureAtomTest extends StorageTest {
 
         AtomBuilder clearDataBuilder = new AtomBuilder()
                 .setLocation(location);
-        Atom atomManifest = storage.addAtom(clearDataBuilder);
+        Atom atomManifest = storageService.addAtom(clearDataBuilder);
         assertNotNull(atomManifest.getData());
 
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setRole(role);
-        SecureAtom secureAtomManifest = storage.addSecureAtom(builder);
+        SecureAtom secureAtomManifest = storageService.addSecureAtom(builder);
 
         assertNotNull(secureAtomManifest.getData());
         assertFalse(IOUtils.contentEquals(secureAtomManifest.getData().getInputStream(), location.getSource()));
@@ -51,7 +51,7 @@ public class SOSAddSecureAtomTest extends StorageTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setRole(role);
-        SecureAtom secureAtomManifest = storage.addSecureAtom(builder);
+        SecureAtom secureAtomManifest = storageService.addSecureAtom(builder);
 
         // TODO - storage.getData(role)
     }

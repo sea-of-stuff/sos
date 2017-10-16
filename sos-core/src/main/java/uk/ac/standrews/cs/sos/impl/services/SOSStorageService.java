@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.EmptyData;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.ALGORITHM;
@@ -41,7 +40,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -60,7 +59,7 @@ import static uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSStorage implements Storage {
+public class SOSStorageService implements StorageService {
 
     private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
 
@@ -72,8 +71,8 @@ public class SOSStorage implements Storage {
     private AtomStorage atomStorage;
     private LocationsIndex locationIndex;
 
-    public SOSStorage(SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings, IGUID localNodeGUID, LocalStorage storage,
-                      ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
+    public SOSStorageService(SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings, IGUID localNodeGUID, LocalStorage storage,
+                             ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
 
         this.storageSettings = storageSettings;
 
@@ -82,20 +81,7 @@ public class SOSStorage implements Storage {
         this.usersRolesService = usersRolesService;
         this.nodeDiscoveryService = nodeDiscoveryService;
 
-        // Load/Create the locations Index impl
-        try {
-            IDirectory cacheDir = storage.getNodeDirectory();
-            IFile file = storage.createFile(cacheDir, LOCATIONS_INDEX_FILE);
-            if (file.exists()) {
-                locationIndex = (LocationsIndex) Persistence.Load(file);
-            }
-        } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            throw new ServiceException(ServiceException.SERVICE.STORAGE, "Unable to create the LocationIndex");
-        }
-
-        if (locationIndex == null) {
-            locationIndex = new LocationsIndexImpl();
-        }
+        loadOrCreateLocationIndex();
 
         atomStorage = new AtomStorage(localNodeGUID, storage);
     }
@@ -196,46 +182,6 @@ public class SOSStorage implements Storage {
             throw new AtomNotFoundException();
         }
 
-    }
-
-    private Data getAtomContent(NodesCollection nodesCollection, Atom atom) throws AtomNotFoundException {
-
-        Set<IGUID> nodeRefs = nodesCollection.nodesRefs();
-
-        for (LocationBundle locationBundle : findLocations(atom)) {
-            Location location = locationBundle.getLocation();
-
-            if (location instanceof SOSLocation) {
-
-                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
-
-                    if (!nodeRefs.contains(((SOSLocation) location).getMachineID())) {
-                        continue;
-                    }
-
-                } else if (nodesCollection.type() == NodesCollectionType.LOCAL) {
-
-                    if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().getNodeGUID())) {
-                        continue;
-                    }
-
-                }
-
-            } else {
-
-                if (nodesCollection.type() == NodesCollectionType.LOCAL || nodesCollection.type() == NodesCollectionType.SPECIFIED) {
-                    continue;
-                }
-            }
-
-            Data data = LocationUtility.getDataFromLocation(location);
-
-            if (!(data instanceof EmptyData)) {
-                return data;
-            }
-        }
-
-        throw new AtomNotFoundException();
     }
 
     @Override
@@ -372,13 +318,54 @@ public class SOSStorage implements Storage {
         return storageSettings;
     }
 
+    private Data getAtomContent(NodesCollection nodesCollection, Atom atom) throws AtomNotFoundException {
+
+        Set<IGUID> nodeRefs = nodesCollection.nodesRefs();
+
+        for (LocationBundle locationBundle : findLocations(atom)) {
+            Location location = locationBundle.getLocation();
+
+            if (location instanceof SOSLocation) {
+
+                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
+
+                    if (!nodeRefs.contains(((SOSLocation) location).getMachineID())) {
+                        continue;
+                    }
+
+                } else if (nodesCollection.type() == NodesCollectionType.LOCAL) {
+
+                    if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().getNodeGUID())) {
+                        continue;
+                    }
+
+                }
+
+            } else {
+
+                if (nodesCollection.type() == NodesCollectionType.LOCAL || nodesCollection.type() == NodesCollectionType.SPECIFIED) {
+                    continue;
+                }
+            }
+
+            Data data = LocationUtility.getDataFromLocation(location);
+
+            if (!(data instanceof EmptyData)) {
+                return data;
+            }
+        }
+
+        throw new AtomNotFoundException();
+    }
+
+
     /**
      * Adds the data part of the atom to the SOS
      *
      * @param atomBuilder
      * @param bundles
      * @return
-     * @throws StorageException
+     * @throws DataStorageException
      */
     private StoredAtomInfo addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles) throws DataStorageException {
 
@@ -389,13 +376,11 @@ public class SOSStorage implements Storage {
             retval = atomStorage.cache(atomBuilder);
         }
 
-        // FIXME DITTO AS COMMENT BELOW
         if (atomBuilder.isLocation()) {
             Location location = atomBuilder.getLocation();
             bundles.add(new ExternalLocationBundle(location));
         }
 
-        // TODO - do this outside of this method
         if (bundles != null) {
             bundles.add(retval.getLocationBundle());
             addLocation(retval.getGuid(), retval.getLocationBundle());
@@ -404,4 +389,21 @@ public class SOSStorage implements Storage {
         return retval;
     }
 
+    private void loadOrCreateLocationIndex() throws ServiceException {
+
+        // Load/Create the locations Index impl
+        try {
+            IDirectory cacheDir = storage.getNodeDirectory();
+            IFile file = storage.createFile(cacheDir, LOCATIONS_INDEX_FILE);
+            if (file.exists()) {
+                locationIndex = (LocationsIndex) Persistence.Load(file);
+            }
+        } catch (DataStorageException | ClassNotFoundException | IOException e) {
+            throw new ServiceException(ServiceException.SERVICE.STORAGE, "Unable to create the LocationIndex");
+        }
+
+        if (locationIndex == null) {
+            locationIndex = new LocationsIndexImpl();
+        }
+    }
 }

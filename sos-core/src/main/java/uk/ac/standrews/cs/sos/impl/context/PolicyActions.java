@@ -22,7 +22,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class PolicyActions {
     private NodeDiscoveryService nodeDiscoveryService;
     private ManifestsDataService manifestsDataService;
     private UsersRolesService usersRolesService;
-    private Storage storage;
+    private StorageService storageService;
 
     /**
      * Create a policy language utility object using the specified SOS services
@@ -52,14 +52,14 @@ public class PolicyActions {
      * @param nodeDiscoveryService
      * @param manifestsDataService
      * @param usersRolesService
-     * @param storage
+     * @param storageService
      */
-    public PolicyActions(NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, Storage storage) {
+    public PolicyActions(NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, StorageService storageService) {
 
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.manifestsDataService = manifestsDataService;
         this.usersRolesService = usersRolesService;
-        this.storage = storage;
+        this.storageService = storageService;
     }
 
     /**
@@ -100,7 +100,7 @@ public class PolicyActions {
                     .setReplicationNodes(codomain)
                     .setReplicationFactor(replicationFactor + 1 /* We increment the replication factory by one, because we want the data to leave this node */);
 
-            storage.addAtom(atomBuilder);
+            storageService.addAtom(atomBuilder);
 
         } catch (DataStorageException | ManifestPersistException e) {
             throw new PolicyException("Unable to replicate data");
@@ -186,7 +186,7 @@ public class PolicyActions {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
-            DataChallenge dataChallenge = new DataChallenge(guid, storage.getAtomContent(guid), nodeToBeChallenged);
+            DataChallenge dataChallenge = new DataChallenge(guid, storageService.getAtomContent(guid), nodeToBeChallenged);
 
             TasksQueue.instance().performSyncTask(dataChallenge);
             return dataChallenge.isChallengePassed();
@@ -233,7 +233,7 @@ public class PolicyActions {
 
         Role granterRole = usersRolesService.getRole(granter);
         Role granteeRole = usersRolesService.getRole(grantee);
-        storage.grantAccess(secureAtom, granterRole, granteeRole);
+        storageService.grantAccess(secureAtom, granterRole, granteeRole);
     }
 
     ////////////////////////////////
@@ -252,7 +252,7 @@ public class PolicyActions {
 
         // Check DDS, Storage restricting the request with the codomain
         // TODO Restrict by codomain
-        return storage.getAtomContent(guid);
+        return storageService.getAtomContent(guid);
     }
 
     /**

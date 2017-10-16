@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.StorageNode;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -84,8 +84,8 @@ public class RESTStorage {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
-        Storage storage = RESTConfig.sos.getStorage();
-        try (Data data = storage.getAtomContent(atomGUID)){
+        StorageService storageService = RESTConfig.sos.getStorageService();
+        try (Data data = storageService.getAtomContent(atomGUID)){
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, data.getInputStream());
 
@@ -115,7 +115,7 @@ public class RESTStorage {
                 return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Data received does not match the GUID");
             }
 
-            Storage storage = RESTConfig.sos.getStorage();
+            StorageService storageService = RESTConfig.sos.getStorageService();
 
             AtomBuilder builder = new AtomBuilder()
                     .setData(dataPackage.getDataObj())
@@ -125,7 +125,7 @@ public class RESTStorage {
 
                 int replicationFactor = dataPackage.getMetadata().getReplicationFactor();
 
-                if (replicationFactor < 1 || replicationFactor > storage.getStorageSettings().getMaxReplication()) {
+                if (replicationFactor < 1 || replicationFactor > storageService.getStorageSettings().getMaxReplication()) {
                     return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "The replicas parameter is invalid");
                 }
 
@@ -134,7 +134,7 @@ public class RESTStorage {
                         .setDelegateReplication(true); // This will be ignored anyway if replicas == 1
             }
 
-            Atom atom = storage.addAtom(builder);
+            Atom atom = storageService.addAtom(builder);
 
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
@@ -157,8 +157,8 @@ public class RESTStorage {
                     .setBundleType(BundleTypes.PERSISTENT)
                     .setRole(null); // FIXME
 
-            Storage storage = RESTConfig.sos.getStorage();
-            SecureAtom atom = storage.addSecureAtom(builder);
+            StorageService storageService = RESTConfig.sos.getStorageService();
+            SecureAtom atom = storageService.addSecureAtom(builder);
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
@@ -204,8 +204,8 @@ public class RESTStorage {
 
         if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
-        Storage storage = RESTConfig.sos.getStorage();
-        IGUID challengeResult = storage.challenge(atomGUID, challenge);
+        StorageService storageService = RESTConfig.sos.getStorageService();
+        IGUID challengeResult = storageService.challenge(atomGUID, challenge);
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }

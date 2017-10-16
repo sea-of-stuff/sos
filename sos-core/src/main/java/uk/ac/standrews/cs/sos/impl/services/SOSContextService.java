@@ -80,15 +80,15 @@ public class SOSContextService implements ContextService {
      * @param manifestsDataService used to discover the data to process and act upon it
      * @param nodeDiscoveryService used to operate on the SOS and its nodes
      * @param usersRolesService uses to perform USER/ROLE operations in the SOS
-     * @param storage used to access the SOS storage
+     * @param storageService used to access the SOS storage
      */
-    public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, Storage storage) throws ServiceException {
+    public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, StorageService storageService) throws ServiceException {
 
         try {
 
             this.localStorage = localStorage;
             this.manifestsDataService = manifestsDataService;
-            policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storage);
+            policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);
 
             contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
             loadContexts();

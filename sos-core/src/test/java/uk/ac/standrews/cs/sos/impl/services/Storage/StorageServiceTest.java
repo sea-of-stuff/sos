@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.services.Storage;
+import uk.ac.standrews.cs.sos.services.StorageService;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,16 +15,16 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class StorageTest extends SetUpTest {
+public class StorageServiceTest extends SetUpTest {
 
-    protected Storage storage;
+    protected StorageService storageService;
 
     @Override
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        storage = localSOSNode.getStorage();
+        storageService = localSOSNode.getStorageService();
     }
 
     @Override
