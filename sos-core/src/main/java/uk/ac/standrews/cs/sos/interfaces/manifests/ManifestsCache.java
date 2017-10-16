@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 
 import uk.ac.standrews.cs.guid.IGUID;
 
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -11,6 +10,4 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public interface ManifestsCache extends ManifestsDirectory {
 
     ConcurrentLinkedQueue<IGUID> getLRU();
-
-    Set<IGUID> getAllAssets();
 }

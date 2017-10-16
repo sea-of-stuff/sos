@@ -49,11 +49,27 @@ public interface ManifestsIndex {
     IGUID getHead(IGUID invariant) throws HEADNotFoundException;
 
 
+    /**
+     * Set this version to be the head
+     *
+     * @param versionable
+     */
     void setHead(Versionable versionable);
 
+    /**
+     * Advance the tip for this version
+     *
+     * @param versionable
+     */
     void advanceTip(Versionable versionable);
 
+    /**
+     * Persist index to disk
+     */
     void flush();
 
+    /**
+     * Rebuild index from disk
+     */
     void rebuild();
 }

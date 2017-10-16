@@ -66,6 +66,14 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
     }
 
+    /**
+     * Async operation
+     *
+     * @param manifest
+     * @param nodesCollection
+     * @param replicationFactor
+     * @throws ManifestPersistException
+     */
     public void addManifest(Manifest manifest, NodesCollection nodesCollection, int replicationFactor) throws ManifestPersistException {
 
         NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
@@ -91,7 +99,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
     public Manifest findManifest(NodesCollection nodesCollection, IGUID guid) throws ManifestNotFoundException {
 
-        Set<IGUID> ddsGUIDsToCheck = null;
+        Set<IGUID> ddsGUIDsToCheck;
         try {
             ddsGUIDsToCheck = getDDSNodes(nodesCollection, guid);
         } catch (NodeNotFoundException e) {
@@ -182,7 +190,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         if (ddsGUIDsToCheck == null) {
 
             // Simply check any node
-            ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream() // FIXME - this call can be improved
+            ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
                     .map(Node::getNodeGUID)
                     .collect(Collectors.toSet());
         }

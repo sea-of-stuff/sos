@@ -27,10 +27,13 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
 
     // [type --> invariant]
     private transient HashMap<ManifestType, Set<IGUID>> typeToInvariant;
+
     // [invariant --> [versionable]]
     private transient HashMap<IGUID, Set<IGUID>> assetsToVersions;
+
     // [invariant --> [versionable/tip]]
     private transient HashMap<IGUID, Set<IGUID>> tips;
+
     // [invariant --> versionable/head]
     private transient HashMap<IGUID, IGUID> heads;
 

@@ -51,6 +51,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
     private ManifestsCache inMemoryCache;
     private LocalManifestsDirectory local;
     private RemoteManifestsDirectory remote;
+
+    // Store info about manifests, tips, invariants, etc
     private ManifestsIndex index;
 
     // Uses to store/get manifests into the local disk
@@ -110,7 +112,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         int replicationFactor = (replication - 1) <= ddsSettings.getMaxReplication() ? (replication - 1) : ddsSettings.getMaxReplication();
         if (replicationFactor > 0) {
-            remote.addManifest(manifest, nodes, replication); // TODO will apply in async mode
+            remote.addManifest(manifest, nodes, replication); // This is an async operation
         }
 
         // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook at page 92

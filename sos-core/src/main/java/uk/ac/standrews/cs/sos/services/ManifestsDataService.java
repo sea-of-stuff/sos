@@ -133,8 +133,21 @@ public interface ManifestsDataService {
      */
     Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
 
+    /**
+     * Get manifests of given type
+     *
+     * @param type
+     * @return
+     */
     Set<IGUID> getManifests(ManifestType type);
 
+    /**
+     * Search manifests of given type for the given params
+     *
+     * @param type
+     * @param params
+     * @return
+     */
     Set<IGUID> searchVersionableManifests(ManifestType type, List<ManifestParam> params);
 
     /**

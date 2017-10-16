@@ -36,7 +36,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     private LocalNodesDirectory localNodesDirectory;
 
     private static final int NDS_SCHEDULER_PS = 1;
-    private ScheduledExecutorService service; // TODO - use only if specified in settings
+    private ScheduledExecutorService service;
     private HashMap<IGUID, NodeStats> nodesStats;
 
     public SOSNodeDiscoveryService(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
@@ -45,7 +45,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         nodesStats = new LinkedHashMap<>();
 
         boolean ping = SOSLocalNode.settings.getServices().getNds().isPing();
-        if (ping) { // TODO settings!
+        if (ping) {
             service = new ScheduledThreadPoolExecutor(NDS_SCHEDULER_PS);
             runCheckNodesPeriodic();
         }

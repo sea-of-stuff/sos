@@ -34,6 +34,7 @@ public class SOSMetadataService implements MetadataService {
 
     @Override
     public void addMetadata(Metadata metadata) throws MetadataPersistException {
+
         try {
             manifestsDataService.addManifest(metadata);
         } catch (ManifestPersistException e) {
@@ -43,6 +44,7 @@ public class SOSMetadataService implements MetadataService {
 
     @Override
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
+
         try {
             return (Metadata) manifestsDataService.getManifest(guid);
         } catch (ManifestNotFoundException e) {
@@ -52,6 +54,7 @@ public class SOSMetadataService implements MetadataService {
 
     @Override
     public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {
+
         try {
             return (Metadata) manifestsDataService.getManifest(nodesCollection, guid);
         } catch (ManifestNotFoundException e) {
