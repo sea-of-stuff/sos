@@ -122,6 +122,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
                     break;
                 }
+
                 case DATA_AND_METADATA: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_the_on_text_only.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
@@ -155,6 +156,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "content_not_protected.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
                 }
+
             }
 
         }

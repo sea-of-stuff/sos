@@ -70,7 +70,7 @@ public class DataChallenge extends Task {
         try {
             challengePassed = challenge(challengedNode);
 
-            // TODO - update data structures in this node?
+            // TODO - data structures of local node should be updated
             if (challengePassed) {
                 SOS_LOG.log(LEVEL.INFO, "Data with GUID " + entity + " was verified against node " + challengedNode);
             } else {

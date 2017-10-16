@@ -122,7 +122,7 @@ public class DataPackage {
                     return new NodesCollectionImpl(type);
                 } else {
 
-                    Set<IGUID> nodeRefs = Arrays.asList(refs).stream().map(r -> {
+                    Set<IGUID> nodeRefs = Arrays.stream(refs).map(r -> {
                         try {
                             return GUIDFactory.recreateGUID(r);
                         } catch (GUIDGenerationException e) {

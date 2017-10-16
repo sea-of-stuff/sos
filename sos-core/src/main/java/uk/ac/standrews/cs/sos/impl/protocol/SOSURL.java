@@ -83,13 +83,6 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL STORAGE_POST_REPLICATE_DATA(Node node, int replicas) throws SOSURLException {
-        String url = buildURLBase(node) +
-                "storage/stream/replicas/" + replicas;
-
-        return makeURL(url);
-    }
-
     public static URL STORAGE_DATA_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
