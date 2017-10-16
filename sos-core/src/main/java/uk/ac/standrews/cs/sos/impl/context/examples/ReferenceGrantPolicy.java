@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 public class ReferenceGrantPolicy extends BasePolicy {
 
     private IGUID granter = GUIDFactory.generateRandomGUID();
-    private IGUID grantee = GUIDFactory.generateRandomGUID();;
+    private IGUID grantee = GUIDFactory.generateRandomGUID();
 
     public ReferenceGrantPolicy(JsonNode policyManifest) {
         super(policyManifest);

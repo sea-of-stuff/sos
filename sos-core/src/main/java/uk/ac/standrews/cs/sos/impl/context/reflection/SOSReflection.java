@@ -189,6 +189,9 @@ public class SOSReflection {
                 ClassBuilderException | IOException e) {
 
             throw new ClassLoaderException("Unable to create instance for Predicate from jsonnode " + node.toString());
+        } catch (Exception e) {
+
+            throw new ClassLoaderException("General exception while creating predicate instance. jsonnode: " + node.toString());
         }
 
     }
@@ -208,7 +211,11 @@ public class SOSReflection {
                 ClassBuilderException | IOException e) {
 
             throw new ClassLoaderException("Unable to create instance for Policy from jsonnode " + node.toString());
+        } catch (Exception e) {
+
+            throw new ClassLoaderException("General exception while creating policy instance. jsonnode: " + node.toString());
         }
+
     }
 
     private static java.lang.ClassLoader SOSClassLoader() throws ClassLoaderException {

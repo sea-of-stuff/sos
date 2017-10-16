@@ -11,6 +11,7 @@
       "cms": {
         "exposed": false,
         "automatic": false,
+        "predicateOnNewContext" : false,
         "predicateThread": {
           "initialDelay": 30,
           "period": 60

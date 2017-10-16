@@ -107,6 +107,13 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
                     break;
                 }
+                case DATA_PROTECTION: {
+                    // TODO - need to create roles for granter and grantee - create by name???
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+
+                    break;
+                }
                 default:
                     // SKIP
                     break;
@@ -123,12 +130,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 //
 //                    break;
 //                }
-//                case DATA_PROTECTION: {
-//                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
-//                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
-//
-//                    break;
-//                }
+
             }
         }
 

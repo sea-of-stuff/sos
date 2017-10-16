@@ -26,7 +26,7 @@ public class PolicyClassBuilder implements ClassBuilder {
     private static final String CLASS_CLOSING = "}";
 
     private static final String CONSTRUCTOR_BODY = "super(policyManifest);";
-    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode policyManifest) {  "
+    private static final String CONSTRUCTOR = "public " + CLASS_NAME_TAG + " (JsonNode policyManifest) throws Exception {  "
             + NEW_LINE + CONSTRUCTOR_BODY + NEW_LINE + "}" + NEW_LINE;
 
 

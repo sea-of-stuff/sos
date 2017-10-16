@@ -1,7 +1,39 @@
 {
-  "name": "AccessGrant",
-  "predicate": "CommonPredicates.AcceptAll();",
-  "policies" : [
-    "CommonPolicies.GrantAccessPolicy(policyActions, GRANTER, GRANTEE)"
+  "context": {
+    "name": "AccessGrant",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccessToAtom(codomain, policyActions, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkAtomManifestIsProtected(codomain, policyActions, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_ce0f6c28b5869ff166714da5fe08554c70c731a335ff9702e38b00f81ad348c6\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_0cf8e1ca88d8e9aab905cb6d7cda790730df333b478f485eb510ee28db311411\")"
+        }
+      ]
+    }
   ]
 }

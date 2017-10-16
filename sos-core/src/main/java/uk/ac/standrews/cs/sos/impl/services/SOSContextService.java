@@ -227,7 +227,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public void updateContext(Context previous, ContextBuilder contextBuilder) throws ContextException {
+    public IGUID updateContext(Context previous, ContextBuilder contextBuilder) throws ContextException {
 
         if (contextBuilder.getContextBuilderType() == ContextBuilder.ContextBuilderType.TEMP) {
 
@@ -244,6 +244,8 @@ public class SOSContextService implements ContextService {
                     Context context = new ContextManifest(previous.getName(), contextBuilder.getDomain(), contextBuilder.getCodomain(),
                             previous.predicate(), previous.maxAge(), previous.policies(), null, contents.guid(), previous.invariant(), previous.guid());
                     manifestsDataService.addManifest(context);
+
+                    return context.guid();
                 }
 
             } catch (ManifestPersistException e) {
@@ -251,6 +253,7 @@ public class SOSContextService implements ContextService {
             }
         }
 
+        return previous.guid();
     }
 
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
@@ -440,7 +443,6 @@ public class SOSContextService implements ContextService {
         int counter = 0;
         long start = System.nanoTime();
 
-
         Set<Content> currentContents;
         try {
             Compound compound = (Compound) manifestsDataService.getManifest(context.content());
@@ -450,6 +452,7 @@ public class SOSContextService implements ContextService {
         }
 
         Set<Content> contents = new LinkedHashSet<>();
+        Set<Pair<IGUID, ContextVersionInfo>> cacheResults = new LinkedHashSet<>();
         Set<IGUID> assetInvariants = manifestsDataService.getInvariants(ManifestType.VERSION);
         for (IGUID assetInvariant:assetInvariants) {
 
@@ -461,6 +464,11 @@ public class SOSContextService implements ContextService {
                     contents.add(content);
                 }
 
+                ContextVersionInfo content = new ContextVersionInfo();
+                content.predicateResult = predicateResult;
+                content.timestamp = System.currentTimeMillis();
+                cacheResults.add(new Pair<>(head, content));
+
                 counter++;
             } catch (HEADNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant: " + assetInvariant.toMultiHash());
@@ -471,7 +479,11 @@ public class SOSContextService implements ContextService {
         try {
             Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
             ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
-            updateContext(context, contextBuilder);
+            IGUID newContextRef = updateContext(context, contextBuilder);
+
+            for(Pair<IGUID, ContextVersionInfo> info:cacheResults) {
+                contextsContentsDirectory.addEntry(newContextRef, info.X(), info.Y());
+            }
 
         } catch (ManifestNotMadeException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to update context version properly");
@@ -535,7 +547,7 @@ public class SOSContextService implements ContextService {
 
         long start = System.nanoTime();
 
-        Map<IGUID, ContextVersionInfo> contentsToProcess =  contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
@@ -681,18 +693,18 @@ public class SOSContextService implements ContextService {
             Predicate predicate = getPredicate(context);
             predicateResult = predicate.test(versionGUID);
 
-            ContextVersionInfo content = new ContextVersionInfo();
-            content.predicateResult = predicateResult;
-            content.timestamp = System.currentTimeMillis();
+//            ContextVersionInfo content = new ContextVersionInfo();
+//            content.predicateResult = predicateResult;
+//            content.timestamp = System.currentTimeMillis();
 
-            for(IGUID version: manifestsDataService.getVersions(assetInvariant)) {
-
-                if (!version.equals(versionGUID)) {
-                    contextsContentsDirectory.evict(contextGUID, version);
-                }
-            }
-
-            contextsContentsDirectory.addEntry(contextGUID, versionGUID, content);
+            // NOTE - evicting previous results for this version. This will free a lot of space.
+            // Will ignore for the moment being
+//            for(IGUID version:manifestsDataService.getVersions(assetInvariant)) {
+//
+//                if (!version.equals(versionGUID)) {
+//                    contextsContentsDirectory.evict(contextGUID, version); // FIXME
+//                }
+//            }
         }
 
         return predicateResult;
@@ -724,6 +736,7 @@ public class SOSContextService implements ContextService {
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
+            // TODO - Rather: update entry (even if this method does the same)
             contextsContentsDirectory.addEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
@@ -750,6 +763,7 @@ public class SOSContextService implements ContextService {
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
+            // TODO - Rather: update entry (even if this method does the same)
             contextsContentsDirectory.addEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
