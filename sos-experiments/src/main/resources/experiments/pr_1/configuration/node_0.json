@@ -10,7 +10,6 @@
       },
       "cms": {
         "exposed": false,
-        "indexFile": "cms.index",
         "automatic": false,
         "predicateOnNewContext" : false,
         "predicateThread": {
@@ -35,13 +34,10 @@
         }
       },
       "dds": {
-        "exposed": false,
-        "cacheFile": "manifests.cache",
-        "indexFile": "dds.index"
+        "exposed": false
       },
       "rms": {
-        "exposed": true,
-        "cacheFile": "usro.cache"
+        "exposed": true
       },
       "nds": {
         "exposed": false,

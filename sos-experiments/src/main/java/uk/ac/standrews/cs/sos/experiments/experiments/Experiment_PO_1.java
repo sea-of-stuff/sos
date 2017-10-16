@@ -107,24 +107,28 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
                     break;
                 }
-                case DATA_REPLICATION: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Data_Replication_1.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
-
+                default:
+                    // SKIP
                     break;
-                }
-                case MANIFEST_REPLICATION: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Manifest_Replication.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
 
-                    break;
-                }
-                case DATA_PROTECTION: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
-
-                    break;
-                }
+//                case DATA_REPLICATION: {
+//                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Data_Replication_1.json"));
+//                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+//
+//                    break;
+//                }
+//                case MANIFEST_REPLICATION: {
+//                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Manifest_Replication.json"));
+//                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+//
+//                    break;
+//                }
+//                case DATA_PROTECTION: {
+//                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
+//                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+//
+//                    break;
+//                }
             }
         }
 

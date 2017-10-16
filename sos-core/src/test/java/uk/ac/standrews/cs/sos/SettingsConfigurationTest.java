@@ -132,7 +132,6 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration.Settings.AdvanceServicesSettings.CMSSettings cmsSettings = settings.getSettingsObj().getServices().getCms();
         assertFalse(cmsSettings.isExposed());
-        assertEquals(cmsSettings.getIndexFile(), "cms.index");
         assertTrue(cmsSettings.isAutomatic());
 
         testThreadSettings(cmsSettings.getPredicateThread(), 30, 60);
@@ -149,8 +148,6 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings = settings.getSettingsObj().getServices().getDds();
         assertFalse(ddsSettings.isExposed());
-        assertEquals(ddsSettings.getCacheFile(), "manifests.cache");
-        assertEquals(ddsSettings.getIndexFile(), "dds.index");
     }
 
     @Test
@@ -160,7 +157,6 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration.Settings.AdvanceServicesSettings.RMSSettings rmsSettings = settings.getSettingsObj().getServices().getRms();
         assertTrue(rmsSettings.isExposed());
-        assertEquals(rmsSettings.getCacheFile(), "usro.cache");
     }
 
     @Test

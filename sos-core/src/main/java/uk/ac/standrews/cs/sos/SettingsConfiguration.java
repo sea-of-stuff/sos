@@ -427,26 +427,7 @@ public class SettingsConfiguration {
                 @JsonView(Views.Public.class)
                 private int maxReplication = 1; // A value of 1 results in no replication, since this dds service itself will count as replication-1
 
-                private String cacheFile;
-                private String indexFile;
-
                 public DDSSettings() {}
-
-                public String getCacheFile() {
-                    return cacheFile;
-                }
-
-                public void setCacheFile(String cacheFile) {
-                    this.cacheFile = cacheFile;
-                }
-
-                public String getIndexFile() {
-                    return indexFile;
-                }
-
-                public void setIndexFile(String indexFile) {
-                    this.indexFile = indexFile;
-                }
 
                 public int getMaxReplication() {
                     return maxReplication;
@@ -459,22 +440,11 @@ public class SettingsConfiguration {
 
             public static class RMSSettings extends RoleSettings {
 
-                private String cacheFile;
-
                 public RMSSettings() {}
-
-                public String getCacheFile() {
-                    return cacheFile;
-                }
-
-                public void setCacheFile(String cacheFile) {
-                    this.cacheFile = cacheFile;
-                }
             }
 
             public static class CMSSettings extends RoleSettings {
 
-                private String indexFile;
                 private String loadedPath = "~/sos/java/contexts/"; // This is the default path
 
                 // If true, the CMS will run background processes to classify content and maintain the contexts
@@ -487,14 +457,6 @@ public class SettingsConfiguration {
                 private boolean predicateOnNewContext = true;
 
                 public CMSSettings() {}
-
-                public String getIndexFile() {
-                    return indexFile;
-                }
-
-                public void setIndexFile(String indexFile) {
-                    this.indexFile = indexFile;
-                }
 
                 public boolean isAutomatic() {
                     return automatic;

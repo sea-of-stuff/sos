@@ -6,7 +6,6 @@
             },
             "cms": {
                 "exposed": false,
-                "indexFile": "cms.index",
                 "loadedPath": "sos-core/src/test/resources/contexts/",
                 "automatic": false,
                 "predicateThread": {
@@ -32,13 +31,10 @@
                 }
             },
             "dds": {
-                "exposed": false,
-                "cacheFile": "manifests.cache",
-                "indexFile": "dds.index"
+                "exposed": false
             },
             "rms": {
-                "exposed": false,
-                "cacheFile": "usro.cache"
+                "exposed": false
             },
             "nds": {
                 "exposed": false,
