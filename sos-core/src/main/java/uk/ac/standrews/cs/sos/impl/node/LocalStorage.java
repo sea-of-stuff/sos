@@ -17,7 +17,6 @@ public class LocalStorage {
 
     private static final String DATA_DIRECTORY_NAME = "data";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
-    private static final String USERS_ROLES_DIRECTORY_NAME = "usro";
     private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
     private static final String JAVA_DIRECTORY_NAME = "java";
     private static final String KEYS_DIRECTORY_NAME = "keys";
@@ -58,19 +57,6 @@ public class LocalStorage {
     public IDirectory getManifestsDirectory() throws DataStorageException {
         try {
             return storage.createDirectory(MANIFESTS_DIRECTORY_NAME);
-        } catch (StorageException e) {
-            throw new DataStorageException(e);
-        }
-    }
-
-    /**
-     * Return the directory used to store users and roles
-     * @return directory
-     * @throws DataStorageException
-     */
-    public IDirectory getUsersRolesDirectory() throws DataStorageException {
-        try {
-            return storage.createDirectory(USERS_ROLES_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
@@ -139,7 +125,6 @@ public class LocalStorage {
         try {
             remove(DATA_DIRECTORY_NAME);
             remove(MANIFESTS_DIRECTORY_NAME);
-            remove(USERS_ROLES_DIRECTORY_NAME);
             remove(NODE_DIRECTORY_NAME);
             remove(JAVA_DIRECTORY_NAME);
             remove(KEYS_DIRECTORY_NAME);
@@ -158,7 +143,6 @@ public class LocalStorage {
         try {
             storage.createDirectory(DATA_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
-            storage.createDirectory(USERS_ROLES_DIRECTORY_NAME).persist();
             storage.createDirectory(NODE_DIRECTORY_NAME).persist();
             storage.createDirectory(JAVA_DIRECTORY_NAME).persist();
             storage.createDirectory(KEYS_DIRECTORY_NAME).persist();
