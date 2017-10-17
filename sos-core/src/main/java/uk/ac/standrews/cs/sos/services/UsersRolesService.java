@@ -17,8 +17,18 @@ import java.util.Set;
  */
 public interface UsersRolesService {
 
+    /**
+     * Get the users stored at this node
+     *
+     * @return set of users
+     */
     Set<User> getUsers();
 
+    /**
+     * Get the roles stored at this node
+     *
+     * @return set of roles
+     */
     Set<Role> getRoles();
 
     /**
@@ -59,9 +69,9 @@ public interface UsersRolesService {
      * Get the role as specified in the ManifestBuilder.
      * If no role is specified, then return the current active role.
      *
-     * @param manifestBuilder
-     * @return
-     * @throws RoleNotFoundException
+     * @param manifestBuilder in which there is info to get the role
+     * @return the role associated with the manifest builder
+     * @throws RoleNotFoundException if no role was found
      */
     Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException;
 
@@ -106,5 +116,8 @@ public interface UsersRolesService {
      */
     void setActiveUser(User user) throws UserRolePersistException;
 
+    /**
+     * Flushes any in-memory data structures to disk
+     */
     void flush();
 }
