@@ -1,7 +1,11 @@
 package uk.ac.standrews.cs.sos.experiments;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.io.FileUtils;
+import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
@@ -9,7 +13,11 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
+import uk.ac.standrews.cs.sos.model.ManifestType;
+import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +83,53 @@ public interface ExperimentUnit {
         long start = System.nanoTime();
         Files.walkFileTree(folder.toPath(), fv);
         System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+    }
+
+    default void addFolderUSROToNode(SOSLocalNode node, File folder) {
+
+        File keysToBeAdded = new File(folder, "keys");
+        File keysFolder = new File(SOSLocalNode.settings.getKeys().getLocation());
+
+        try {
+            File[] keys = keysToBeAdded.listFiles();
+            assert keys != null;
+            for (File srcFile: keys) {
+                if (srcFile.isFile()) {
+                    FileUtils.copyFileToDirectory(srcFile, keysFolder);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File[] listOfFiles = folder.listFiles();
+        assert listOfFiles != null;
+        for (File file : listOfFiles) {
+
+            if (file.isFile() && file.getName().endsWith(".json")) {
+
+                try {
+                    JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(file);
+                    ManifestType type = ManifestType.get(jsonNode.get(JSONConstants.KEY_TYPE).textValue());
+                    switch(type) {
+
+                        case ROLE:
+                            Role role = JSONHelper.JsonObjMapper().readValue(file, Role.class);
+                            node.getRMS().addRole(role);
+                            break;
+                        case USER:
+                            User user = JSONHelper.JsonObjMapper().readValue(file, User.class);
+                            node.getRMS().addUser(user);
+                            break;
+                    }
+
+
+                } catch (IOException | UserRolePersistException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 }

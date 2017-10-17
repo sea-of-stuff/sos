@@ -16,6 +16,7 @@ import java.util.List;
 
 import static uk.ac.standrews.cs.sos.experiments.KeyGenerator.pass;
 import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONFIGURATION_FOLDER;
+import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.USRO_FOLDER;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -273,6 +274,10 @@ public class ExperimentConfiguration {
 
             public void setDataset(String dataset) {
                 this.dataset = dataset;
+            }
+
+            public String getUsro(String experimentName) {
+                return USRO_FOLDER.replace("{experiment}", experimentName);
             }
 
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)

@@ -78,6 +78,9 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with policy type " + policy_type.name());
 
             try {
+                String usroPath = experiment.getExperimentNode().getUsro(experiment.getName());
+                addFolderUSROToNode(node, new File(usroPath));
+
                 cms = node.getCMS();
 
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
