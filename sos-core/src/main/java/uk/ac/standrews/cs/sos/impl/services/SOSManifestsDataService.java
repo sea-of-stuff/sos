@@ -95,14 +95,18 @@ public class SOSManifestsDataService implements ManifestsDataService {
                 } catch (HEADNotFoundException e) {
                     setHead(version);
                 }
-                break;
             }
+            break;
+
             case CONTEXT:
             {
                 Context context = (Context) manifest;
                 index.advanceTip(context);
             }
+            break;
         }
+
+        index.track(manifest);
 
     }
 
@@ -201,11 +205,6 @@ public class SOSManifestsDataService implements ManifestsDataService {
         throw new ManifestNotFoundException("Manifest not found");
     }
 
-    public Set<IGUID> getInvariants(ManifestType manifestType) {
-
-        return index.getInvariants(manifestType);
-    }
-
     @Override
     public Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException {
 
@@ -255,13 +254,13 @@ public class SOSManifestsDataService implements ManifestsDataService {
     @Override
     public Set<IGUID> getManifests(ManifestType type) {
 
-        return local.getManifests(type);
+        return index.getManifests(type);
     }
 
     @Override
     public Set<IGUID> searchVersionableManifests(ManifestType type, List<ManifestParam> params) {
 
-        Set<IGUID> input = index.getInvariants(type);
+        Set<IGUID> input = index.getManifests(type);
         return local.getManifests(input, params);
     }
 

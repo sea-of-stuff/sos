@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public interface ContextsContentsDirectory {
 
-    void addEntry(IGUID context, IGUID version, ContextVersionInfo contextVersionInfo);
+    void addOrUpdateEntry(IGUID context, IGUID version, ContextVersionInfo contextVersionInfo);
 
     void evict(IGUID context, IGUID version);
 

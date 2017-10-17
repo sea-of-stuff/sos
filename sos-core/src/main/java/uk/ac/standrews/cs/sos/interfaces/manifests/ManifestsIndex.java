@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.interfaces.manifests;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Versionable;
 
@@ -14,13 +15,17 @@ import java.util.Set;
 public interface ManifestsIndex {
 
     /**
-     * Returns all invariants for the type specified
-     * The manifest must be Versionable
+     *
+     * @param manifest
+     */
+    void track(Manifest manifest);
+
+    /**
      *
      * @param type
      * @return
      */
-    Set<IGUID> getInvariants(ManifestType type);
+    Set<IGUID> getManifests(ManifestType type);
 
     /**
      * References to Versionable manifests (i.e. Version, Context)

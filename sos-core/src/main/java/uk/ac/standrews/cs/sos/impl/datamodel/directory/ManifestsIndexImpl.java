@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsIndex;
+import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Versionable;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -25,8 +26,10 @@ import java.util.Set;
  */
 public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
 
-    // [type --> invariant]
-    private transient HashMap<ManifestType, Set<IGUID>> typeToInvariant;
+    // [type --> guid/invariant]
+    // invariant for versionable manifests
+    // guid for all others
+    private transient HashMap<ManifestType, Set<IGUID>> typeToManifest;
 
     // [invariant --> [versionable]]
     private transient HashMap<IGUID, Set<IGUID>> assetsToVersions;
@@ -42,18 +45,31 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
         tips = new HashMap<>();
         heads = new HashMap<>();
         assetsToVersions = new HashMap<>();
-        typeToInvariant = new HashMap<>();
+        typeToManifest = new HashMap<>();
     }
 
     @Override
-    public Set<IGUID> getInvariants(ManifestType type) {
+    public void track(Manifest manifest) {
 
-        if (type != ManifestType.CONTEXT && type != ManifestType.VERSION) {
-            return new LinkedHashSet<>();
+        if (!typeToManifest.containsKey(manifest.getType())) {
+            typeToManifest.put(manifest.getType(), new LinkedHashSet<>());
         }
 
-        if (typeToInvariant.containsKey(type)) {
-            return typeToInvariant.get(type);
+        if (manifest instanceof Versionable) {
+            Versionable versionable = (Versionable) manifest;
+            typeToManifest.get(versionable.getType()).add(versionable.invariant());
+        } else {
+            typeToManifest.get(manifest.getType()).add(manifest.guid());
+        }
+
+
+    }
+
+    @Override
+    public Set<IGUID> getManifests(ManifestType type) {
+
+        if (typeToManifest.containsKey(type)) {
+            return typeToManifest.get(type);
         } else {
             return new LinkedHashSet<>();
         }
@@ -115,11 +131,6 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
             advanceTip(versionable.invariant(), versionable.previous(), versionable.guid());
         }
 
-        // Add the invariant of this version to the index
-        if (!typeToInvariant.containsKey(versionable.getType())) {
-            typeToInvariant.put(versionable.getType(), new LinkedHashSet<>());
-        }
-        typeToInvariant.get(versionable.getType()).add(versionable.invariant());
     }
 
     @Override
@@ -186,8 +197,8 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
             }
         }
 
-        out.writeInt(typeToInvariant.size());
-        for(Map.Entry<ManifestType, Set<IGUID>> ti : typeToInvariant.entrySet()) {
+        out.writeInt(typeToManifest.size());
+        for(Map.Entry<ManifestType, Set<IGUID>> ti : typeToManifest.entrySet()) {
             out.writeUTF(ti.getKey().toString());
             out.writeInt(ti.getValue().size());
 
@@ -236,16 +247,16 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
                 }
             }
 
-            typeToInvariant = new HashMap<>();
+            typeToManifest = new HashMap<>();
             int typeToInvariantSize = in.readInt();
             for(int i = 0; i < typeToInvariantSize; i++) {
                 ManifestType manifestType = ManifestType.get(in.readUTF());
-                typeToInvariant.put(manifestType, new LinkedHashSet<>());
+                typeToManifest.put(manifestType, new LinkedHashSet<>());
 
                 int numberOfInvariants = in.readInt();
                 for(int j = 0; j < numberOfInvariants; j++) {
                     String invariant = in.readUTF();
-                    typeToInvariant.get(manifestType).add(GUIDFactory.recreateGUID(invariant));
+                    typeToManifest.get(manifestType).add(GUIDFactory.recreateGUID(invariant));
                 }
             }
 

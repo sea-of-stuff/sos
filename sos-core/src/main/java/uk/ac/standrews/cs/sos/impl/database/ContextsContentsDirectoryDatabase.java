@@ -61,7 +61,7 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
     }
 
     @Override
-    public void addEntry(IGUID context, IGUID version, ContextVersionInfo contextVersionInfo) {
+    public void addOrUpdateEntry(IGUID context, IGUID version, ContextVersionInfo contextVersionInfo) {
 
         try (Connection connection = getSQLiteConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_ENTRY)) {

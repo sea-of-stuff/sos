@@ -90,11 +90,6 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     @Override
     public void flush() {}
 
-    public Set<IGUID> getManifests(ManifestType type) {
-        // TODO
-        return null;
-    }
-
     public Set<IGUID> getManifests(Set<IGUID> input, List<ManifestParam> params) {
 
         Set<IGUID> matchedManifestRefs = new LinkedHashSet<>();

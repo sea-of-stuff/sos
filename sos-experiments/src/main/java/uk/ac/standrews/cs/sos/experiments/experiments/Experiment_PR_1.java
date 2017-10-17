@@ -99,62 +99,62 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             switch(predicate_type) {
                 case ALL: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "all.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context all " + c_1.toShortString());
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "reject_all.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context reject_all " + c_2.toShortString());
 
                     break;
                 }
 
                 case DATA: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "search_word_the.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context search_word_the " + c_1.toShortString());
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_the.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context occurrence_word_the " + c_2.toShortString());
 
                     IGUID c_3 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_alice.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_3 " + c_3.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context occurrence_word_alice " + c_3.toShortString());
 
                     IGUID c_4 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "search_sentence_online_marketing.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_4 " + c_4.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context search_sentence_online_marketing " + c_4.toShortString());
 
                     break;
                 }
 
                 case DATA_AND_METADATA: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "occurrence_word_the_on_text_only.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context occurrence_word_the_on_text_only " + c_1.toShortString());
 
                     break;
                 }
 
                 case METADATA: {
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_img.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context is_img " + c_1.toShortString());
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_mp3.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context is_mp3 " + c_2.toShortString());
 
                     IGUID c_3 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_text.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_3 " + c_3.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context is_text " + c_3.toShortString());
 
                     IGUID c_4 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "is_pdf.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_4 " + c_4.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context is_pdf " + c_4.toShortString());
 
                     IGUID c_5 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "greater_than_100_kb.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_5 " + c_5.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context greater_than_100_kb " + c_5.toShortString());
                     break;
                 }
 
                 case MANIFEST: {
 
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "content_protected.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context content_protected " + c_1.toShortString());
 
                     IGUID c_2 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "content_not_protected.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_2 " + c_2.toShortString());
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context content_not_protected " + c_2.toShortString());
                 }
 
             }

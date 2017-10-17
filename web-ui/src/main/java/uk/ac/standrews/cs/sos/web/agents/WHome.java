@@ -30,7 +30,7 @@ public class WHome {
 
         Set<Map<String, Object> > assets = new LinkedHashSet<>();
 
-        Set<IGUID> assetInvariants = sos.getDDS().getInvariants(ManifestType.VERSION);
+        Set<IGUID> assetInvariants = sos.getDDS().getManifests(ManifestType.VERSION);
         for(IGUID invariant : assetInvariants) {
 
             Map<String, Object> versionModel = new HashMap<>();

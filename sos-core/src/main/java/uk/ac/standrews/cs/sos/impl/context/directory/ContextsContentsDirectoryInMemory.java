@@ -30,7 +30,7 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     }
 
     @Override
-    public void addEntry(IGUID context, IGUID version, ContextVersionInfo content) {
+    public void addOrUpdateEntry(IGUID context, IGUID version, ContextVersionInfo content) {
 
         if (!mappings.containsKey(context)) {
             mappings.put(context, new HashMap<>());

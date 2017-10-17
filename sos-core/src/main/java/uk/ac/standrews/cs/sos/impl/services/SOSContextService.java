@@ -90,7 +90,6 @@ public class SOSContextService implements ContextService {
             policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);
 
             contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
-            loadContexts();
 
             predicateThreadSessionStatistics = new LinkedList<>();
             applyPolicyThreadSessionStatistics = new LinkedList<>();
@@ -119,7 +118,7 @@ public class SOSContextService implements ContextService {
 
         Set<Context> contexts = new LinkedHashSet<>();
 
-        Set<IGUID> contextInvariants = manifestsDataService.getInvariants(ManifestType.CONTEXT);
+        Set<IGUID> contextInvariants = manifestsDataService.getManifests(ManifestType.CONTEXT);
         for(IGUID contextInvariant:contextInvariants) {
             try {
                 Iterator<IGUID> tips = manifestsDataService.getTips(contextInvariant).iterator();
@@ -453,7 +452,7 @@ public class SOSContextService implements ContextService {
 
         Set<Content> contents = new LinkedHashSet<>();
         Set<Pair<IGUID, ContextVersionInfo>> cacheResults = new LinkedHashSet<>();
-        Set<IGUID> assetInvariants = manifestsDataService.getInvariants(ManifestType.VERSION);
+        Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
         for (IGUID assetInvariant:assetInvariants) {
 
             try {
@@ -482,7 +481,7 @@ public class SOSContextService implements ContextService {
             IGUID newContextRef = updateContext(context, contextBuilder);
 
             for(Pair<IGUID, ContextVersionInfo> info:cacheResults) {
-                contextsContentsDirectory.addEntry(newContextRef, info.X(), info.Y());
+                contextsContentsDirectory.addOrUpdateEntry(newContextRef, info.X(), info.Y());
             }
 
         } catch (ManifestNotMadeException e) {
@@ -693,6 +692,7 @@ public class SOSContextService implements ContextService {
             Predicate predicate = getPredicate(context);
             predicateResult = predicate.test(versionGUID);
 
+            // FIXME - adapt eviction model to new model
 //            ContextVersionInfo content = new ContextVersionInfo();
 //            content.predicateResult = predicateResult;
 //            content.timestamp = System.currentTimeMillis();
@@ -702,7 +702,7 @@ public class SOSContextService implements ContextService {
 //            for(IGUID version:manifestsDataService.getVersions(assetInvariant)) {
 //
 //                if (!version.equals(versionGUID)) {
-//                    contextsContentsDirectory.evict(contextGUID, version); // FIXME
+//                    contextsContentsDirectory.evict(contextGUID, version);
 //                }
 //            }
         }
@@ -736,8 +736,7 @@ public class SOSContextService implements ContextService {
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
-            // TODO - Rather: update entry (even if this method does the same)
-            contextsContentsDirectory.addEntry(context.guid(), guid, content);
+            contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
@@ -763,8 +762,7 @@ public class SOSContextService implements ContextService {
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
-            // TODO - Rather: update entry (even if this method does the same)
-            contextsContentsDirectory.addEntry(context.guid(), guid, content);
+            contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
@@ -788,11 +786,6 @@ public class SOSContextService implements ContextService {
         long now = System.currentTimeMillis();
 
         return (now - contentLastRun) > max_age;
-    }
-
-    private void loadContexts() throws ServiceException {
-
-        // TODO - load predicates/policies for contexts
     }
 
     private Predicate getPredicate(Context context) {

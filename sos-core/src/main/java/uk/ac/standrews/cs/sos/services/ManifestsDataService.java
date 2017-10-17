@@ -83,13 +83,6 @@ public interface ManifestsDataService {
     void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
 
     /**
-     * Get all the invariants known by this node which match the manifest type
-     *
-     * @return list of invariants as set of GUIDs
-     */
-    Set<IGUID> getInvariants(ManifestType manifestType);
-
-    /**
      * Get all the tips for the given invariant.
      * The tips are the leaves in the DAG of the asset.
      *
