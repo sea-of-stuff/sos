@@ -19,19 +19,23 @@ import java.util.Iterator;
  */
 public abstract class BaseExperiment implements Experiment {
 
+    // Resource locations and output paths
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
-    public static final String OUTPUT_FOLDER = "experiments/output/";
     public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
     public static final String USRO_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/usro/";
+    public static final String OUTPUT_FOLDER = "experiments/output/";
 
+    // Experiment timing
     private long start;
+    private long end;
 
+    // Node and experiment objects
     protected SOSLocalNode node;
     protected ExperimentConfiguration.Experiment experiment;
 
+    // Experiment units
     protected Iterator<ExperimentUnit> experimentUnitIterator;
     protected ExperimentUnit currentExperimentUnit;
-
     private int iteration;
 
     public BaseExperiment(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
@@ -88,7 +92,7 @@ public abstract class BaseExperiment implements Experiment {
 
     @Override
     public void finish() {
-        long end = System.nanoTime();
+        end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("Experiment iteration {" + iteration + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
 

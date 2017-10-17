@@ -181,6 +181,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         for(IGUID nodeRef : nodesRefs) {
 
             // COMPARE node's type with type passed in this method
+            // and
             // add node to filteredNodes
             try {
                 Node node = getNode(nodeRef);
