@@ -85,6 +85,12 @@ public interface ExperimentUnit {
         System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
 
+    /**
+     * Add the users/roles for this experiment to the node
+     *
+     * @param node
+     * @param folder
+     */
     default void addFolderUSROToNode(SOSLocalNode node, File folder) {
 
         File keysToBeAdded = new File(folder, "keys");

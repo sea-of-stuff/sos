@@ -6,12 +6,8 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
-import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
@@ -114,10 +110,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
                     break;
                 }
                 case DATA_PROTECTION: {
-                    // TODO - need to create roles for granter and grantee - create by name???
-                    User user = new UserImpl("Hello");
-                    Role role = new RoleImpl(user, "test");
-
+                    // Roles loaded from experiment resources
                     IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Access_Grant " + c_1.toShortString());
 
