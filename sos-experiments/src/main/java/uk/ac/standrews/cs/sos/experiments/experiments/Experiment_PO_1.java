@@ -116,22 +116,18 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
                     break;
                 }
-                default:
-                    // SKIP
-                    break;
+                case DATA_REPLICATION: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Data_Replication_1.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Data_Replication_1 " + c_1.toShortString());
 
-//                case DATA_REPLICATION: {
-//                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Data_Replication_1.json"));
-//                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
-//
-//                    break;
-//                }
-//                case MANIFEST_REPLICATION: {
-//                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Manifest_Replication.json"));
-//                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context c_1 " + c_1.toShortString());
-//
-//                    break;
-//                }
+                    break;
+                }
+                case MANIFEST_REPLICATION: {
+                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Manifest_Replication_1.json"));
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Manifest_Replication_1 " + c_1.toShortString());
+
+                    break;
+                }
 
             }
         }

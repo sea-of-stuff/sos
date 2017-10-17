@@ -1,7 +1,34 @@
 {
-  "name": "ManifestReplication_1",
-  "predicate": "CommonPredicates.AcceptAll();",
-  "policies" : [
-    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+  "context": {
+    "name": "ManifestReplication",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateManifest(codomain, policyActions, manifest, factor);",
+      "satisfied" : "return CommonPolicies.manifestIsReplicated(codomain, policyActions, manifest, factor);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor",
+          "value" : "1"
+        }
+      ]
+    }
   ]
 }
