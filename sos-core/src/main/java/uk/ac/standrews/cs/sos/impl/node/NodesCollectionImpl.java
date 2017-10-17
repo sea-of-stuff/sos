@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,13 @@ public class NodesCollectionImpl implements NodesCollection {
         if (type.equals(NodesCollectionType.SPECIFIED)) throw new NodesCollectionException("Cannot use this constructor for Nodes Collection of type SPECIFIED");
 
         this.type = type;
+    }
+
+    public NodesCollectionImpl(IGUID local) {
+
+        this.type = NodesCollectionType.LOCAL;
+        this.nodesRefs = new LinkedHashSet<>();
+        this.nodesRefs.add(local);
     }
 
     public NodesCollectionImpl(Set<IGUID> nodesRefs) {

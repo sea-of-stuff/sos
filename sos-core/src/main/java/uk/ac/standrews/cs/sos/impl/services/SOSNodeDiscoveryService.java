@@ -135,8 +135,15 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public Set<Node> getNodes(NodesCollection nodesCollection, int limit) {
 
-        if (nodesCollection.type().equals(NodesCollectionType.ANY))
+        if (nodesCollection.type() == NodesCollectionType.ANY) {
             return getNodes(limit);
+        }
+
+        if (nodesCollection.type() == NodesCollectionType.LOCAL) {
+            Set<Node> retval = new LinkedHashSet<>();
+            retval.add(localNodesDirectory.getLocalNode());
+            return retval;
+        }
 
         Set<Node> retval = new LinkedHashSet<>();
         for(IGUID guid : nodesCollection.nodesRefs()) {
@@ -157,11 +164,21 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit) {
 
-        if (nodesCollection.type().equals(NodesCollectionType.ANY) && limit == NO_LIMIT) return nodesCollection;
+        if (nodesCollection.type() == NodesCollectionType.ANY && limit == NO_LIMIT) {
+            return nodesCollection;
+        }
 
+        if (nodesCollection.type() == NodesCollectionType.LOCAL) {
+            return new NodesCollectionImpl(localNodesDirectory.getLocalNode().getNodeGUID());
+        }
+
+        Set<IGUID> nodesRefs = nodesCollection.nodesRefs();
+        if (nodesRefs == null || nodesRefs.isEmpty()) {
+            return new NodesCollectionImpl(new LinkedHashSet<>());
+        }
 
         Set<IGUID> filteredNodes = new LinkedHashSet<>();
-        for(IGUID nodeRef : nodesCollection.nodesRefs()) {
+        for(IGUID nodeRef : nodesRefs) {
 
             // COMPARE node's type with type passed in this method
             // add node to filteredNodes

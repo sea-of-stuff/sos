@@ -161,6 +161,12 @@ public class PolicyActions {
     public int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
+
+        Set<IGUID> nodesRefs = codomain.nodesRefs();
+        if (nodesRefs == null || nodesRefs.isEmpty()) {
+            return 0;
+        }
+
         for(IGUID nodeRef:codomain.nodesRefs()) {
 
             if (nodeHasManifest(nodeRef, guid)) {
@@ -208,7 +214,13 @@ public class PolicyActions {
     public int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
 
         int counter = 0;
-        for(IGUID nodeRef:codomain.nodesRefs()) {
+
+        Set<IGUID> nodesRefs = codomain.nodesRefs();
+        if (nodesRefs == null || nodesRefs.isEmpty()) {
+            return 0;
+        }
+
+        for(IGUID nodeRef:nodesRefs) {
 
             if (nodeHasData(nodeRef, guid)) {
                 counter++;
