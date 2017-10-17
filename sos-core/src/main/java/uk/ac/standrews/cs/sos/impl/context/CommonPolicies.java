@@ -23,18 +23,22 @@ import java.util.Set;
  */
 public class CommonPolicies {
 
+    @SuppressWarnings("WeakerAccess")
     public static void apply_DoNothing() { }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean satisfied_DoNothing() {
         return false;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void replicateManifest(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
 
         NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
         policyActions.replicateManifest(manifest, nodes, factor);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean manifestIsReplicated(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
 
         int numberReplicas = policyActions.numberOfManifestReplicas(codomain, manifest.guid());
@@ -42,6 +46,7 @@ public class CommonPolicies {
     }
 
     // TODO - have param for canPersist (e.g. replicate only to nodes that can persist data)
+    @SuppressWarnings("WeakerAccess")
     public static void replicateData(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
 
         try {
@@ -70,6 +75,7 @@ public class CommonPolicies {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean dataIsReplicated(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
 
         try {
@@ -86,18 +92,20 @@ public class CommonPolicies {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void deleteData(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
         policyActions.deleteData(manifest.guid(), codomain);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean isDataDeleted(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
         int numberReplicas = policyActions.numberOfDataReplicas(codomain, manifest.guid());
         return numberReplicas == 0;
     }
 
-
+    @SuppressWarnings("WeakerAccess")
     public static void grantAccessToAtom(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
 
         try {
@@ -114,6 +122,7 @@ public class CommonPolicies {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean checkAtomManifestIsProtected(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
 
         try {
@@ -133,6 +142,7 @@ public class CommonPolicies {
         return false;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static void replicateAllVersions(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
 
         if (manifest.getType().equals(ManifestType.VERSION)) {
@@ -154,6 +164,7 @@ public class CommonPolicies {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static boolean allVersionAreReplicated(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
 
         if (manifest.getType().equals(ManifestType.VERSION)) {
@@ -175,7 +186,6 @@ public class CommonPolicies {
                 }
             }
         }
-
 
         return true;
     }
