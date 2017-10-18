@@ -62,7 +62,7 @@ public class PolicyClassBuilderTest {
                         "\n" +
                         "private int factor = 2;\n" +
                         "\n" +
-                        "public SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb (JsonNode policyManifest) {  \n" +
+                        "public SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb (JsonNode policyManifest) throws Exception {  \n" +
                         "super(policyManifest);\n" +
                         "}\n" +
                         "\n" +

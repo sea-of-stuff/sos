@@ -41,7 +41,7 @@ public class PredicateClassBuilderTest {
                 "\n" +
                 "public class SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e extends BasePredicate {\n" +
                 "\n" +
-                "public SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e (JsonNode predicateManifest) {  \n" +
+                "public SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e (JsonNode predicateManifest) throws Exception {  \n" +
                 "super(predicateManifest);\n" +
                 "}\n" +
                 "\n" +

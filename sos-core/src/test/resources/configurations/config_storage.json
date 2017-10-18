@@ -10,7 +10,7 @@
         "maxReplication": 1
       },
       "cms": {
-        "exposed": false
+        "exposed": false,
         "automatic": false,
         "predicateThread": {
           "initialDelay": 30,

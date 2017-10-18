@@ -8,7 +8,7 @@
         "exposed": true
       },
       "cms": {
-        "exposed": false
+        "exposed": false,
         "automatic": true,
         "predicateThread": {
           "initialDelay": 30,
