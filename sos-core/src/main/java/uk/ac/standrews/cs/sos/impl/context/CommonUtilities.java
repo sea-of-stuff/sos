@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
@@ -14,6 +15,9 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.CacheLocationBundle;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataChallenge;
@@ -24,8 +28,10 @@ import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.services.UsersRolesService;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
@@ -166,7 +172,8 @@ public class CommonUtilities {
             if (nodeHasManifest(nodeRef, guid)) {
                 counter++;
 
-                // TODO - make sure that the DDS is updated with locations
+                // Make sure that the manifestDataService has record of this information
+                manifestsDataService.addManifestDDSMapping(guid, nodeRef);
             }
         }
 
@@ -219,7 +226,14 @@ public class CommonUtilities {
             if (nodeHasData(nodeRef, guid)) {
                 counter++;
 
-                // TODO - make sure that the storage locationsindex is updated
+                // Make sure that the storage service is aware of this new location
+                try {
+                    LocationBundle locationBundle = new CacheLocationBundle(new SOSLocation(nodeRef, guid));
+                    storageService.addLocation(guid, locationBundle);
+                } catch (MalformedURLException e) {
+                    SOS_LOG.log(LEVEL.WARN, "Unable to add the mapping data-location " +
+                            guid.toShortString() + " -- " + nodeRef.toShortString() + " to the storage service");
+                }
             }
         }
 
