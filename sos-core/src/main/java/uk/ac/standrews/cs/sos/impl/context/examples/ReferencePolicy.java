@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context.examples;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BasePolicy;
-import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
+import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
@@ -17,11 +17,11 @@ public class ReferencePolicy extends BasePolicy {
     }
 
     @Override
-    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
+    public void apply(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
     }
 
     @Override
-    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
+    public boolean satisfied(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
         return false;
     }
 }

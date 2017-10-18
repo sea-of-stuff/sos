@@ -121,7 +121,7 @@
     "name": "AllDataReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
-            "CommonPolicies.DataReplicationPolicy(policyActions, codomain, 1)"
+            "CommonPolicies.DataReplicationPolicy(commonUtilities, codomain, 1)"
     	],
     "codomain": {
         "type" : "SPECIFIED",
@@ -135,7 +135,7 @@
     "name": "AllManifestReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
-    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)"
+    	    "CommonPolicies.ManifestReplicationPolicy(commonUtilities, codomain, 1)"
     	],
     "codomain": {
         "type" : "SPECIFIED",
@@ -149,8 +149,8 @@
     "name": "AllManifestAndDataReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
-    	    "CommonPolicies.ManifestReplicationPolicy(policyActions, codomain, 1)",
-            "CommonPolicies.DataReplicationPolicy(policyActions, codomain, 1)"
+    	    "CommonPolicies.ManifestReplicationPolicy(commonUtilities, codomain, 1)",
+            "CommonPolicies.DataReplicationPolicy(commonUtilities, codomain, 1)"
     	],
     "codomain": {
         "type" : "SPECIFIED",
@@ -164,7 +164,7 @@
     "name": "AllVersionsReplication",
     "predicate": "CommonPredicates.AcceptAll();",
     "policies" : [
-            "CommonPolicies.ReplicateAllVersionsPolicy(policyActions, codomain, 1)"
+            "CommonPolicies.ReplicateAllVersionsPolicy(commonUtilities, codomain, 1)"
     	],
     "codomain": {
         "type" : "SPECIFIED",

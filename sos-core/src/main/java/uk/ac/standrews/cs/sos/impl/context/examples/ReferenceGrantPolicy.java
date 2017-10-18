@@ -6,7 +6,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.impl.context.BasePolicy;
 import uk.ac.standrews.cs.sos.impl.context.CommonPolicies;
-import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
+import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
@@ -23,14 +23,14 @@ public class ReferenceGrantPolicy extends BasePolicy {
     }
 
     @Override
-    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
+    public void apply(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
 
-        CommonPolicies.grantAccess(codomain, policyActions, manifest, granter, grantee);
+        CommonPolicies.grantAccess(codomain, commonUtilities, manifest, granter, grantee);
     }
 
     @Override
-    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
+    public boolean satisfied(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
 
-        return CommonPolicies.checkManifestIsProtected(codomain, policyActions, manifest, granter, grantee);
+        return CommonPolicies.checkManifestIsProtected(codomain, commonUtilities, manifest, granter, grantee);
     }
 }

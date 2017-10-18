@@ -32,33 +32,33 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void replicateManifest(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
+    public static void replicateManifest(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
-        NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
-        policyActions.replicateManifest(manifest, nodes, factor);
+        NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
+        commonUtilities.replicateManifest(manifest, nodes, factor);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean manifestIsReplicated(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
+    public static boolean manifestIsReplicated(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
-        int numberReplicas = policyActions.numberOfManifestReplicas(codomain, manifest.guid());
+        int numberReplicas = commonUtilities.numberOfManifestReplicas(codomain, manifest.guid());
         return numberReplicas >= factor;
     }
 
     // TODO - have param for canPersist (e.g. replicate only to nodes that can persist data)
     @SuppressWarnings("WeakerAccess")
-    public static void replicateData(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
+    public static void replicateData(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
         try {
 
-            Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+            Manifest contentManifest = commonUtilities.getContentManifest((Version) manifest);
 
             switch(contentManifest.getType()) {
                 case ATOM:
                     Data data = ((Atom) contentManifest).getData();
 
-                    NodesCollection nodes = policyActions.getNodes(codomain, NodeType.DDS);
-                    policyActions.replicateData(data, nodes, factor);
+                    NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
+                    commonUtilities.replicateData(data, nodes, factor);
 
                     break;
                 case ATOM_PROTECTED:
@@ -76,13 +76,13 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean dataIsReplicated(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
+    public static boolean dataIsReplicated(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
         try {
-            Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+            Manifest contentManifest = commonUtilities.getContentManifest((Version) manifest);
             if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-                int numberReplicas = policyActions.numberOfDataReplicas(codomain, contentManifest.guid());
+                int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, contentManifest.guid());
                 return numberReplicas >= factor;
             }
 
@@ -93,27 +93,27 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void deleteData(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
+    public static void deleteData(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
 
-        policyActions.deleteData(manifest.guid(), codomain);
+        commonUtilities.deleteData(manifest.guid(), codomain);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean isDataDeleted(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
+    public static boolean isDataDeleted(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
 
-        int numberReplicas = policyActions.numberOfDataReplicas(codomain, manifest.guid());
+        int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, manifest.guid());
         return numberReplicas == 0;
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void grantAccess(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
+    public static void grantAccess(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
 
         try {
-            Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+            Manifest contentManifest = commonUtilities.getContentManifest((Version) manifest);
             if (contentManifest.getType() == ManifestType.ATOM_PROTECTED ||
                     contentManifest.getType() == ManifestType.COMPOUND_PROTECTED) {
 
-                policyActions.grantAccess((SecureManifest) contentManifest, granter, grantee);
+                commonUtilities.grantAccess((SecureManifest) contentManifest, granter, grantee);
             }
 
         } catch (RoleNotFoundException | ProtectionException | ManifestNotFoundException e) {
@@ -124,10 +124,10 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean checkManifestIsProtected(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
+    public static boolean checkManifestIsProtected(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
 
         try {
-            Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
+            Manifest contentManifest = commonUtilities.getContentManifest((Version) manifest);
             if (contentManifest.getType() == ManifestType.ATOM_PROTECTED ||
                     contentManifest.getType() == ManifestType.COMPOUND_PROTECTED) {
 
@@ -145,19 +145,19 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void replicateAllVersions(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
+    public static void replicateAllVersions(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
         if (manifest.getType().equals(ManifestType.VERSION)) {
 
             Version version = (Version) manifest;
             IGUID invariant = version.invariant();
 
-            Set<IGUID> versions = policyActions.getVersions(invariant);
+            Set<IGUID> versions = commonUtilities.getVersions(invariant);
             for(IGUID v:versions) {
 
                 try {
-                    Manifest m = policyActions.getManifest(v);
-                    replicateManifest(codomain, policyActions, m, factor);
+                    Manifest m = commonUtilities.getManifest(v);
+                    replicateManifest(codomain, commonUtilities, m, factor);
 
                 } catch (ManifestNotFoundException | NodesCollectionException e) {
                     e.printStackTrace();
@@ -167,19 +167,19 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean allVersionAreReplicated(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, int factor) throws PolicyException {
+    public static boolean allVersionAreReplicated(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
         if (manifest.getType().equals(ManifestType.VERSION)) {
 
             Version version = (Version) manifest;
             IGUID invariant = version.invariant();
 
-            Set<IGUID> versions = policyActions.getVersions(invariant);
+            Set<IGUID> versions = commonUtilities.getVersions(invariant);
             for(IGUID v:versions) {
 
                 try {
-                    Manifest m = policyActions.getManifest(v);
-                    if (!manifestIsReplicated(codomain, policyActions, m, factor)) {
+                    Manifest m = commonUtilities.getManifest(v);
+                    if (!manifestIsReplicated(codomain, commonUtilities, m, factor)) {
                         return false;
                     }
 

@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
+import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.ManifestType;
@@ -35,14 +35,14 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SOSReflectionTest extends SetUpTest {
 
-    private PolicyActions policyActions;
+    private CommonUtilities commonUtilities;
 
     @Override
     @BeforeMethod
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        policyActions = new PolicyActions(localSOSNode.getNDS(), localSOSNode.getDDS(), localSOSNode.getRMS(), localSOSNode.getStorageService());
+        commonUtilities = new CommonUtilities(localSOSNode.getNDS(), localSOSNode.getDDS(), localSOSNode.getRMS(), localSOSNode.getStorageService());
     }
 
     @Test

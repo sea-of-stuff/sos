@@ -31,14 +31,11 @@ import java.util.Set;
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
 /**
- * Utility methods accessible by the policies.
- *
- * The policy actions ARE NOT policies. These are just common methods that policies can make use of.
- * That means that policies do not have to necessarily use these methods, even though it is suggested to do so.
+ * Utility methods to operate with the SOS.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class PolicyActions {
+public class CommonUtilities {
 
     // Handles for the node services.
     private NodeDiscoveryService nodeDiscoveryService;
@@ -54,7 +51,7 @@ public class PolicyActions {
      * @param usersRolesService
      * @param storageService
      */
-    public PolicyActions(NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, StorageService storageService) {
+    public CommonUtilities(NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, StorageService storageService) {
 
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.manifestsDataService = manifestsDataService;

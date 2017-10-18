@@ -13,9 +13,9 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.*;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
-import uk.ac.standrews.cs.sos.impl.context.PolicyActions;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFactory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
@@ -60,7 +60,7 @@ public class SOSContextService implements ContextService {
     private LocalStorage localStorage;
     private ManifestsDataService manifestsDataService;
 
-    private PolicyActions policyActions;
+    private CommonUtilities commonUtilities;
 
     // DATA STRUCTURES
     private ContextsContentsDirectory contextsContentsDirectory;
@@ -87,7 +87,7 @@ public class SOSContextService implements ContextService {
         try {
             this.localStorage = localStorage;
             this.manifestsDataService = manifestsDataService;
-            policyActions = new PolicyActions(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);
+            commonUtilities = new CommonUtilities(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);
 
             contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
 
@@ -731,8 +731,8 @@ public class SOSContextService implements ContextService {
             for (Policy policy:policies) {
 
                 Manifest manifest = manifestsDataService.getManifest(guid);
-                policy.apply(context.codomain(), policyActions, manifest);
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), policyActions, manifest);
+                policy.apply(context.codomain(), commonUtilities, manifest);
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -758,7 +758,7 @@ public class SOSContextService implements ContextService {
             for (Policy policy:policies) {
 
                 Manifest manifest = manifestsDataService.getManifest(guid);
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), policyActions, manifest);;
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);;
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
