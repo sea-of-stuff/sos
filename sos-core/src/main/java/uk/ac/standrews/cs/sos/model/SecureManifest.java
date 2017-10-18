@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface SecureManifest {
+public interface SecureManifest extends Manifest {
 
     HashMap<IGUID, String> keysRoles();
 

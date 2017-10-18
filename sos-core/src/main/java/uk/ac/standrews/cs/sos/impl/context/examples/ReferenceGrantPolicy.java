@@ -25,12 +25,12 @@ public class ReferenceGrantPolicy extends BasePolicy {
     @Override
     public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
-        CommonPolicies.grantAccessToAtom(codomain, policyActions, manifest, granter, grantee);
+        CommonPolicies.grantAccess(codomain, policyActions, manifest, granter, grantee);
     }
 
     @Override
     public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {
 
-        return CommonPolicies.checkAtomManifestIsProtected(codomain, policyActions, manifest, granter, grantee);
+        return CommonPolicies.checkManifestIsProtected(codomain, policyActions, manifest, granter, grantee);
     }
 }

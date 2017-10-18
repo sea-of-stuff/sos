@@ -19,8 +19,8 @@
   "policies": [
     {
       "type" : "Policy",
-      "apply" : "CommonPolicies.grantAccessToAtom(codomain, policyActions, manifest, granter, grantee);",
-      "satisfied" : "return CommonPolicies.checkAtomManifestIsProtected(codomain, policyActions, manifest, granter, grantee);",
+      "apply" : "CommonPolicies.grantAccess(codomain, policyActions, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, policyActions, manifest, granter, grantee);",
       "dependencies" : [],
       "fields" : [
         {

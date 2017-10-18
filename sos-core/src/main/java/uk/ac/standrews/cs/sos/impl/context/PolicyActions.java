@@ -235,17 +235,17 @@ public class PolicyActions {
     /**
      * Grant access to a secure atom
      *
-     * @param secureAtom atom for which access must be granted
+     * @param secureManifest for which access must be granted
      * @param granter the role granting the access
      * @param grantee the role receiving the access
      * @throws RoleNotFoundException if one of the two roles cannot be found
      * @throws ProtectionException if the access could not be granted
      */
-    public void grantAccess(SecureAtom secureAtom, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
+    public void grantAccess(SecureManifest secureManifest, IGUID granter, IGUID grantee) throws RoleNotFoundException, ProtectionException {
 
         Role granterRole = usersRolesService.getRole(granter);
         Role granteeRole = usersRolesService.getRole(grantee);
-        storageService.grantAccess(secureAtom, granterRole, granteeRole);
+        storageService.grantAccess(secureManifest, granterRole, granteeRole);
     }
 
     ////////////////////////////////

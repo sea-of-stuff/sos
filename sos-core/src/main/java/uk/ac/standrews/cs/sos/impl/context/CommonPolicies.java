@@ -106,14 +106,15 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void grantAccessToAtom(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
+    public static void grantAccess(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
 
         try {
             Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
-            if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+            if (contentManifest.getType() == ManifestType.ATOM_PROTECTED ||
+                    contentManifest.getType() == ManifestType.COMPOUND_PROTECTED) {
 
-                policyActions.grantAccess((SecureAtom) contentManifest, granter, grantee);
-            } // TODO - compound_protected
+                policyActions.grantAccess((SecureManifest) contentManifest, granter, grantee);
+            }
 
         } catch (RoleNotFoundException | ProtectionException | ManifestNotFoundException e) {
             throw new PolicyException("Policy. Granter " + granter.toMultiHash() +
@@ -123,15 +124,16 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean checkAtomManifestIsProtected(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
+    public static boolean checkManifestIsProtected(NodesCollection codomain, PolicyActions policyActions, Manifest manifest, IGUID granter, IGUID grantee) throws PolicyException {
 
         try {
             Manifest contentManifest = policyActions.getContentManifest((Version) manifest);
-            if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
+            if (contentManifest.getType() == ManifestType.ATOM_PROTECTED ||
+                    contentManifest.getType() == ManifestType.COMPOUND_PROTECTED) {
 
-                SecureAtom secureAtom = (SecureAtom) contentManifest;
-                return secureAtom.keysRoles().containsKey(grantee);
-            } // TODO - compound_protected
+                SecureManifest secureManifest = (SecureManifest) contentManifest;
+                return secureManifest.keysRoles().containsKey(grantee);
+            }
 
         } catch (ManifestNotFoundException e) {
             throw new PolicyException("Policy. Unable to check if whether the Granter " + granter.toMultiHash() +

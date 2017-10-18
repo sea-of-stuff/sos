@@ -11,10 +11,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.model.SecureAtom;
+import uk.ac.standrews.cs.sos.model.*;
 
 import java.util.Queue;
 
@@ -53,15 +50,15 @@ public interface StorageService {
     SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
 
     /**
-     * Let granterRole grant access to granteeRole to the secure atom
+     * Let granterRole grant access to granteeRole to the secure entity
      *
-     * @param secureAtom in question
+     * @param secureManifest in question
      * @param granterRole the role granting access
      * @param granteeRole the role receiving access
-     * @return the new update secure atom manifest
+     * @return the new update secure manifest
      * @throws ProtectionException if access could not be granted
      */
-    SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException;
+    SecureManifest grantAccess(SecureManifest secureManifest, Role granterRole, Role granteeRole) throws ProtectionException;
 
     /**
      * Get an atom's data given an AtomManifest.

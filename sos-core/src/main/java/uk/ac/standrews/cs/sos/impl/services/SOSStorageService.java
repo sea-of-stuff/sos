@@ -148,18 +148,18 @@ public class SOSStorageService implements StorageService {
     }
 
     @Override
-    public SecureAtom grantAccess(SecureAtom secureAtom, Role granterRole, Role granteeRole) throws ProtectionException {
+    public SecureManifest grantAccess(SecureManifest secureManifest, Role granterRole, Role granteeRole) throws ProtectionException {
 
         try {
-            String encryptedKey = secureAtom.keysRoles().get(granterRole.guid());
+            String encryptedKey = secureManifest.keysRoles().get(granterRole.guid());
             SecretKey key = granterRole.decrypt(encryptedKey);
 
             String granteeEncryptedKey = granteeRole.encrypt(key);
 
-            secureAtom.addKeyRole(granteeRole.guid(), granteeEncryptedKey);
-            manifestsDataService.addManifest(secureAtom);
+            secureManifest.addKeyRole(granteeRole.guid(), granteeEncryptedKey);
+            manifestsDataService.addManifest(secureManifest);
 
-            return secureAtom;
+            return secureManifest;
         } catch (Exception e) {
             throw new ProtectionException(e);
         }
