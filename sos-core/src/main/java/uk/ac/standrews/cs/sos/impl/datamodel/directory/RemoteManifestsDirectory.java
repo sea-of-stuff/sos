@@ -111,7 +111,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             try {
                 Node node = nodeDiscoveryService.getNode(ddsGUID);
 
-                FetchManifest fetchManifest = new FetchManifest(node, guid); // FIXME - use different end-points for context, metadata, etc
+                FetchManifest fetchManifest = new FetchManifest(node, guid);
                 TasksQueue.instance().performSyncTask(fetchManifest);
 
                 Manifest manifest = fetchManifest.getManifest();

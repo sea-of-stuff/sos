@@ -256,22 +256,17 @@ public class CommonUtilities {
         storageService.grantAccess(secureManifest, granterRole, granteeRole);
     }
 
-    ////////////////////////////////
-    // NOTE - Utility methods that should be moved outside of the policy actions
-    ////////////////////////////////
-
-
     /**
      * Get the data of an atom from a codomain.
      *
-     * @param guid
-     * @return
-     * @throws AtomNotFoundException
+     * @param guid of the data
+     * @return the data
+     * @throws AtomNotFoundException if the data was not found
      */
     public Data getData(IGUID guid) throws AtomNotFoundException {
 
         // Check DDS, Storage restricting the request with the codomain
-        // TODO Restrict by codomain
+        // TODO Restrict by codomain?
         return storageService.getAtomContent(guid);
     }
 

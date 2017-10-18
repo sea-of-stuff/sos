@@ -47,7 +47,7 @@ public class FetchRoles extends Task {
         SOS_LOG.log(LEVEL.INFO, "Roles for user with GUID " + userid.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
 
         try {
-            URL url = SOSURL.RMS_GET_ROLES(node, userid);
+            URL url = SOSURL.USRO_GET_ROLES(node, userid);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 

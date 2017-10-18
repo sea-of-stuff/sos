@@ -230,9 +230,7 @@ public class SOSAddAtomTest extends AgentTest {
 
         System.out.println("Strings left  " + testStrings.size());
 
-        Runnable runnable = () -> {
-            addAtom(testStrings);
-        };
+        Runnable runnable = () -> addAtom(testStrings);
 
         ExecutorService executor = Executors.newCachedThreadPool();
 

@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.network.*;
@@ -66,7 +67,7 @@ public class ManifestReplication extends Task {
                 Node node = nodeDiscoveryService.getNode(ref);
                 if (!node.isDDS()) continue;
 
-                boolean transferWasSuccessful = TransferManifestRequest(manifest, node);
+                boolean transferWasSuccessful = transferManifestRequest(manifest, node);
 
                 if (transferWasSuccessful) {
                     SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.getNodeGUID().toMultiHash());
@@ -93,10 +94,15 @@ public class ManifestReplication extends Task {
         return null;
     }
 
-    private static boolean TransferManifestRequest(Manifest manifest, Node node) {
+    @Override
+    public String toString() {
+        return "ManifestReplication for manifest " + manifest.guid();
+    }
+
+    private boolean transferManifestRequest(Manifest manifest, Node node) {
 
         try {
-            URL url = SOSURL.DDS_POST_MANIFEST(node);
+            URL url = getManifestURL(node, manifest.getType());
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
             request.setJSONBody(manifest.toString());
 
@@ -107,15 +113,37 @@ public class ManifestReplication extends Task {
 
             return transferWasSuccessful;
         } catch (IOException | SOSURLException e) {
-            SOS_LOG.log(LEVEL.ERROR, "TransferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.getNodeGUID().toMultiHash());
+            SOS_LOG.log(LEVEL.ERROR, "transferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.getNodeGUID().toMultiHash());
         }
 
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "ManifestReplication for manifest " + manifest.guid();
-    }
+    private URL getManifestURL(Node node, ManifestType type) throws SOSURLException {
 
+        if (node.isDDS()) {
+            return SOSURL.DDS_POST_MANIFEST(node);
+
+        } else if (node.isRMS()) {
+
+            if (type == ManifestType.ROLE) {
+                return SOSURL.USRO_POST_ROLE_MANIFEST(node);
+            } else if (type == ManifestType.USER) {
+                return SOSURL.USRO_POST_USER_MANIFEST(node);
+            }
+
+        } else if (node.isCMS()) {
+
+            // one for context, predicate, policy
+
+            return SOSURL.CMS_POST_MANIFEST(node);
+
+        } else if (node.isMMS()) {
+            return SOSURL.MMS_POST_MANIFEST(node);
+
+        }
+
+        throw new SOSURLException("Unable to return manifest URL for node " + node.toString());
+
+    }
 }

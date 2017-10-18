@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchMetadata;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
@@ -42,6 +42,7 @@ public class FetchMetadataTest extends ProtocolTest {
     private static final String TEST_METADATA =
             "{\n" +
                     "    \"GUID\": \"SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
+                    "    \"type\":\"Metadata\"," +
                     "    \"properties\": [\n" +
                     "        {\n" +
                     "            \"key\": \"X-Parsed-By\",\n" +
@@ -86,7 +87,7 @@ public class FetchMetadataTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/sos/mms/metadata/guid/" + testGUID.toMultiHash())
+                                .withPath("/sos/mms/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()
@@ -107,14 +108,14 @@ public class FetchMetadataTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, true, false, false);
+                false, false, false, true, true, false, false);
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_METADATA);
 
-        FetchMetadata fetchMetadata = new FetchMetadata(node, testGUID);
+        FetchManifest fetchMetadata = new FetchManifest(node, testGUID);
         TasksQueue.instance().performSyncTask(fetchMetadata);
 
-        Metadata metadata = fetchMetadata.getMetadata();
+        Metadata metadata = (Metadata) fetchMetadata.getManifest();
         assertNotNull(metadata);
         assertEquals(metadata.guid(), testGUID);
     }

@@ -19,8 +19,8 @@
   "policies": [
     {
       "type" : "Policy",
-      "apply" : "CommonPolicies.replicateManifest(codomain, policyActions, manifest, factor);",
-      "satisfied" : "return CommonPolicies.manifestIsReplicated(codomain, policyActions, manifest, factor);",
+      "apply" : "CommonPolicies.replicateManifest(codomain, utilities, manifest, factor);",
+      "satisfied" : "return CommonPolicies.manifestIsReplicated(codomain, utilities, manifest, factor);",
       "dependencies" : [],
       "fields" : [
         {

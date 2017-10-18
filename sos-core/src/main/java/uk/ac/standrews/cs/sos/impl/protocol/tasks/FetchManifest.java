@@ -31,9 +31,6 @@ public class FetchManifest extends Task {
     private Manifest manifest;
 
     public FetchManifest(Node node, IGUID manifestId) throws IOException {
-        if (!node.isDDS()) {
-            throw new IOException("Attempting to fetch manifest from non-DDS node");
-        }
 
         if (manifestId == null || manifestId.isInvalid()) {
             throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
@@ -49,7 +46,7 @@ public class FetchManifest extends Task {
         SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifestId.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
 
         try {
-            URL url = SOSURL.DDS_GET_MANIFEST(node, manifestId);
+            URL url = getManifestURL(node, manifestId);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
@@ -91,5 +88,25 @@ public class FetchManifest extends Task {
     @Override
     public String toString() {
         return "FetchManifest for guid " + manifestId + " from node " + node.getNodeGUID();
+    }
+
+    private URL getManifestURL(Node node, IGUID manifestId) throws SOSURLException {
+
+        if (node.isDDS()) {
+            return SOSURL.DDS_GET_MANIFEST(node, manifestId);
+
+        } else if (node.isRMS()) {
+            return SOSURL.USRO_GET_MANIFEST(node, manifestId);
+
+        } else if (node.isCMS()) {
+            return SOSURL.CMS_GET_MANIFEST(node, manifestId);
+
+        } else if (node.isMMS()) {
+            return SOSURL.MMS_GET_MANIFEST(node, manifestId);
+
+        }
+
+        throw new SOSURLException("Unable to return manifest URL for node " + node.toString());
+
     }
 }

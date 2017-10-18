@@ -152,8 +152,7 @@ public class CommonPredicates {
 
             if (manifest instanceof Version) {
                 Manifest contentManifest = agent.getManifest(((Version) manifest).content());
-                boolean a = contentManifest instanceof SecureManifest;
-                return a;
+                return contentManifest instanceof SecureManifest;
             }
 
             return false;

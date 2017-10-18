@@ -5,9 +5,11 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
@@ -32,10 +34,10 @@ import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 public class RESTRMS {
 
     @GET
-    @Path("/user/{guid}")
+    @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUser(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/user/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
@@ -48,45 +50,18 @@ public class RESTRMS {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
-        UsersRolesService usro = RESTConfig.sos.getRMS();
-
         try {
-            String user = usro.getUser(userGUID).toString();
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge, user);
+            Manifest manifest = RESTConfig.sos.getDDS().getManifest(userGUID);
 
-        } catch (UserNotFoundException e) {
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Could not find user with guid: " + userGUID.toMultiHash());
-        }
+            if (manifest.getType() == ManifestType.USER ||
+                    manifest.getType() == ManifestType.ROLE) {
 
-    }
+                return HTTPResponses.OK(RESTConfig.sos, node_challenge, manifest.toString());
+            }
 
-    @GET
-    @Path("/role/{guid}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getRole(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/usro/role/{guid}");
+        } catch (ManifestNotFoundException ignored) { }
 
-        if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        IGUID userGUID;
-        try {
-            userGUID = GUIDFactory.recreateGUID(guid);
-        } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        UsersRolesService usro = RESTConfig.sos.getRMS();
-
-        try {
-            String role = usro.getRole(userGUID).toString();
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge, role);
-
-        } catch (RoleNotFoundException e) {
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Could not find role with guid: " + userGUID.toMultiHash());
-        }
-
+        return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Could not find user with guid: " + userGUID.toMultiHash());
     }
 
     @GET

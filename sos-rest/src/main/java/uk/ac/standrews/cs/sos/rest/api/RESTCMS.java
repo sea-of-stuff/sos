@@ -53,7 +53,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            IGUID guid = contextService.addContext(context); // TODO - not necessarily in a FAT json format
+            IGUID guid = contextService.addContext(context); // FIXME - this must be in fat format
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, guid.toString());
         } catch (Exception e) {
@@ -63,10 +63,10 @@ public class RESTCMS {
     }
 
     @GET
-    @Path("/context/guid/{guid}")
+    @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/context/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
@@ -81,7 +81,6 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            // FIXME - get tip
             Context context = contextService.getContext(contextGUID);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, context.toString());

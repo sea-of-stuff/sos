@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The DDSIndex maps the GUID for a manifest to a set of DDS GUIDs that may have it
@@ -45,7 +42,12 @@ public class DDSIndex implements Serializable {
     }
 
     public Set<IGUID> getDDSRefs(IGUID manifestGUID) {
-        return index.get(manifestGUID);
+
+        if (index.containsKey(manifestGUID)) {
+            return index.get(manifestGUID);
+        } else {
+            return new LinkedHashSet<>();
+        }
     }
 
     // This method defines how the cache is serialised
@@ -83,7 +85,7 @@ public class DDSIndex implements Serializable {
                     addEntry(key, value);
                 }
             } catch (GUIDGenerationException e) {
-                e.printStackTrace(); // TODO - exception
+                throw new IOException();
             }
         }
     }

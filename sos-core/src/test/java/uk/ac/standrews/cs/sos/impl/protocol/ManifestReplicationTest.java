@@ -130,7 +130,6 @@ public class ManifestReplicationTest {
         ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
 
         verify(manifestsDataServiceMock, times(1)).addManifestDDSMapping(anyObject(), anyObject());
@@ -159,7 +158,6 @@ public class ManifestReplicationTest {
         ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        verify(node, times(1)).isDDS();
         verify(node, times(0)).getHostAddress();
 
         verify(manifestsDataServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
@@ -210,7 +208,6 @@ public class ManifestReplicationTest {
         ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        verify(node, times(1)).isDDS();
         verify(node, times(1)).getHostAddress();
 
         verify(manifestsDataServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());

@@ -39,7 +39,7 @@ public class TasksQueue {
         return instance;
     }
 
-    public void performSyncTask(Task task) {
+    public void performSyncTask(final Task task) {
 
         try {
             synchronized (task) {

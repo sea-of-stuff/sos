@@ -19,8 +19,8 @@
   "policies": [
     {
       "type" : "Policy",
-      "apply" : "CommonPolicies.grantAccess(codomain, policyActions, manifest, granter, grantee);",
-      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, policyActions, manifest, granter, grantee);",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
       "dependencies" : [],
       "fields" : [
         {

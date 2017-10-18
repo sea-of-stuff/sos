@@ -205,8 +205,7 @@ public class DataReplication extends Task {
 
                 if (response.getCode() == HTTPStatus.CREATED) {
 
-                    Atom atom = JSONHelper.JsonObjMapper().readValue(body, AtomManifest.class);
-                    return atom;
+                    return JSONHelper.JsonObjMapper().readValue(body, AtomManifest.class);
 
                 } else {
                     throw new SOSProtocolException("Unable to transfer DATA");

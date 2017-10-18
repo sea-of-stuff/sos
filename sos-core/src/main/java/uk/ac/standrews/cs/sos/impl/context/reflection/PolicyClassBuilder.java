@@ -36,14 +36,14 @@ public class PolicyClassBuilder implements ClassBuilder {
     private static final String APPLY_TAG = " _APPLY_TAG_";
     private static final String APPLY_METHOD =
             "    @Override\n" +
-                    "    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
+                    "    public void apply(NodesCollection codomain, CommonUtilities utilities, Manifest manifest) throws PolicyException {\n" +
                     "    " + APPLY_TAG + "\n" +
                     "    }\n";
 
     private static final String SATISFIED_TAG = "_SATISFIED_";
     private static final String SATISFIED_METHOD =
             "    @Override\n" +
-                    "    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
+                    "    public boolean satisfied(NodesCollection codomain, CommonUtilities utilities, Manifest manifest) throws PolicyException {\n" +
                     "    " + SATISFIED_TAG + "\n" +
                     "    }\n";
 
@@ -76,7 +76,7 @@ public class PolicyClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.utils.SOS_LOG"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.services.SOSAgent"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.context.BasePolicy"));
-        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.context.PolicyActions"));
+        clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.impl.context.CommonUtilities"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.interfaces.node.NodeType"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "uk.ac.standrews.cs.sos.model.*"));
 

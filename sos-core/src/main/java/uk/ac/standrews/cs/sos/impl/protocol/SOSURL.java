@@ -36,7 +36,28 @@ public class SOSURL {
 
     public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/manifest/guid/" + guid.toMultiHash();
+                "dds/guid/" + guid.toMultiHash();
+
+        return makeURL(url);
+    }
+
+    public static URL MMS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "mms/guid/" + guid.toMultiHash();
+
+        return makeURL(url);
+    }
+
+    public static URL USRO_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "usro/guid/" + guid.toMultiHash();
+
+        return makeURL(url);
+    }
+
+    public static URL CMS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "cms/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
@@ -48,13 +69,6 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL MMS_GET_METADATA(Node node, IGUID guid) throws SOSURLException {
-        String url = buildURLBase(node) +
-                "mms/metadata/guid/" + guid.toMultiHash();
-
-        return makeURL(url);
-    }
-
     public static URL DDS_POST_MANIFEST(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "dds/manifest";
@@ -62,7 +76,28 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL MMS_POST_METADATA(Node node) throws SOSURLException {
+    public static URL USRO_POST_USER_MANIFEST(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "usro/user";
+
+        return makeURL(url);
+    }
+
+    public static URL USRO_POST_ROLE_MANIFEST(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "usro/role";
+
+        return makeURL(url);
+    }
+
+    public static URL CMS_POST_MANIFEST(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "cms/context";
+
+        return makeURL(url);
+    }
+
+    public static URL MMS_POST_MANIFEST(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "mms/metadata";
 
@@ -97,6 +132,7 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    // REMOVEME - need to have node as manifest
     public static URL NDS_REGISTER_NODE(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "nds/register";
@@ -104,6 +140,7 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    // REMOVEME - need to have node as manifest
     public static URL NDS_GET_NODE(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "nds/guid/" + guid.toMultiHash();
@@ -118,23 +155,7 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL RMS_GET_USER(Node node, IGUID user) throws SOSURLException {
-
-        String url = buildURLBase(node) +
-                "usro/user/" + user.toMultiHash();
-
-        return makeURL(url);
-    }
-
-    public static URL RMS_GET_ROLE(Node node, IGUID role) throws SOSURLException {
-
-        String url = buildURLBase(node) +
-                "usro/role/" + role.toMultiHash();
-
-        return makeURL(url);
-    }
-
-    public static URL RMS_GET_ROLES(Node node, IGUID user) throws SOSURLException {
+    public static URL USRO_GET_ROLES(Node node, IGUID user) throws SOSURLException {
 
         String url = buildURLBase(node) +
                 "usro/user/" + user.toMultiHash() + "/roles";

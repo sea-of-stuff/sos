@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.metadata.basic;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class BasicMetadataTest {
         String testMetadata =
                 "{\n" +
                         "    \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
+                        "    \"type\":\"Metadata\"," +
                         "    \"properties\": [\n" +
                         "        {\n" +
                         "            \"key\": \"X-Parsed-By\",\n" +
@@ -50,7 +52,7 @@ public class BasicMetadataTest {
                         "}";
 
 
-        BasicMetadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, BasicMetadata.class);
+        Metadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, Metadata.class);
 
         assertEquals(metadata.getProperty("X-Parsed-By"), "org.apache.tika.parser.DefaultParser");
         assertEquals(metadata.getProperty("Size"), 26L);

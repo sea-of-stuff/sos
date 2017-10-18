@@ -41,7 +41,7 @@ public class PolicyClassBuilderTest {
                         "import uk.ac.standrews.cs.sos.utils.SOS_LOG;\n" +
                         "import uk.ac.standrews.cs.sos.impl.services.SOSAgent;\n" +
                         "import uk.ac.standrews.cs.sos.impl.context.BasePolicy;\n" +
-                        "import uk.ac.standrews.cs.sos.impl.context.PolicyActions;\n" +
+                        "import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;\n" +
                         "import uk.ac.standrews.cs.sos.interfaces.node.NodeType;\n" +
                         "import uk.ac.standrews.cs.sos.model.*;\n" +
                         "import uk.ac.standrews.cs.castore.data.Data;\n" +
@@ -67,12 +67,12 @@ public class PolicyClassBuilderTest {
                         "}\n" +
                         "\n" +
                         "    @Override\n" +
-                        "    public void apply(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
+                        "    public void apply(NodesCollection codomain, CommonUtilities utilities, Manifest manifest) throws PolicyException {\n" +
                         "    \n" +
                         "    }\n" +
                         "\n" +
                         "    @Override\n" +
-                        "    public boolean satisfied(NodesCollection codomain, PolicyActions policyActions, Manifest manifest) throws PolicyException {\n" +
+                        "    public boolean satisfied(NodesCollection codomain, CommonUtilities utilities, Manifest manifest) throws PolicyException {\n" +
                         "    return true;\n" +
                         "    }\n" +
                         "\n" +

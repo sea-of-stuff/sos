@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
-import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
@@ -40,7 +39,7 @@ public class RESTMMS {
     public Response postMetadata(String json, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/metadata");
 
-        Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, BasicMetadata.class);
+        Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, Metadata.class);
 
         MetadataService metadataService = RESTConfig.sos.getMMS();
         try {
@@ -55,10 +54,10 @@ public class RESTMMS {
     }
 
     @GET
-    @Path("/metadata/guid/{guid}")
+    @Path("/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getMetadata(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mms/metadata/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mms/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");

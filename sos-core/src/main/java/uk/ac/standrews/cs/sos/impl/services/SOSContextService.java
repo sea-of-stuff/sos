@@ -457,7 +457,7 @@ public class SOSContextService implements ContextService {
 
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
-                boolean predicateResult = runPredicate(context, currentContents, assetInvariant, head);
+                boolean predicateResult = runPredicate(context, currentContents, head);
                 if (predicateResult) {
                     Content content = new ContentImpl(head);
                     contents.add(content);
@@ -669,10 +669,9 @@ public class SOSContextService implements ContextService {
      *  - Update the contextsContents
      *
      * @param context for which to run the predicate
-     * @param assetInvariant of the version
      * @param versionGUID to evaluate
      */
-    private boolean runPredicate(Context context, Set<Content> currentContents, IGUID assetInvariant, IGUID versionGUID) {
+    private boolean runPredicate(Context context, Set<Content> currentContents, IGUID versionGUID) {
 
         boolean predicateResult = false;
 

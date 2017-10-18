@@ -87,12 +87,12 @@ public abstract class AbstractMetadata implements Metadata {
 
     @Override
     public String metadata() {
-        String retval = "";
+        StringBuilder retval = new StringBuilder();
         for(String meta: getAllFilteredPropertyNames()) {
-            retval += meta + "::" + getProperty(meta);
+            retval.append(meta).append("::").append(getProperty(meta));
         }
 
-        return retval;
+        return retval.toString();
     }
 
     @Override

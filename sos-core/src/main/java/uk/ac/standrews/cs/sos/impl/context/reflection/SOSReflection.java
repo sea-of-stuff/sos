@@ -232,8 +232,7 @@ public class SOSReflection {
             URL[] urls = new URL[]{url};
 
             // Create a new class loader with the directory
-            java.lang.ClassLoader cl = new URLClassLoader(urls);
-            return cl;
+            return new URLClassLoader(urls);
         } catch (MalformedURLException e) {
             throw new ClassLoaderException("Cannot create class loader");
         }

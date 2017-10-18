@@ -338,6 +338,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     /**
      * Initialise all the services for this node
+     *
+     * The services use the localStorage to persist their indices/caches to disk
      */
     private void initServices() throws ServiceException {
 

@@ -44,7 +44,7 @@ public class ManifestsDataServiceIndexTest {
 
         DDSIndex index = new DDSIndex();
         Set<IGUID> nodesGUIDs = index.getDDSRefs(manifestGUID);
-        assertNull(nodesGUIDs);
+        assertEquals(nodesGUIDs.size(), 0);
     }
 
     @Test
@@ -114,6 +114,6 @@ public class ManifestsDataServiceIndexTest {
         DDSIndex persistedIndex = (DDSIndex) Persistence.Load(file);
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
-        assertNull(nodesGUIDs);
+        assertEquals(nodesGUIDs.size(), 0);
     }
 }
