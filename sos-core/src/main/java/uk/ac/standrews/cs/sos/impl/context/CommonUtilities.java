@@ -62,6 +62,8 @@ public class CommonUtilities {
     /**
      * Replicate a manifest to a collection of nodes while attempting to satisfy the specified replication factor.
      *
+     * TODO - shallow vs deep
+     *
      * @param manifest to be replicated
      * @param codomain where to replicate the manifests
      * @param replicationFactor a value of 1 will replicate the manifest to 1 node
@@ -74,8 +76,6 @@ public class CommonUtilities {
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }
-
-        // TODO - shallow vs deep
     }
 
     /**
@@ -104,10 +104,6 @@ public class CommonUtilities {
         }
     }
 
-    public void updateVersion(IGUID guid, NodesCollection codomain) {
-        // TODO
-    }
-
     /**
      * Delete data from a collection of nodes.
      *
@@ -124,6 +120,7 @@ public class CommonUtilities {
      * Check if a node has the manifest with the matching guid
      *
      * TODO - shallow vs deep challenge
+     *
      * a deep challenge will also challenge the content referenced by the manifest
      *
      * @param nodeGUID of the node
@@ -265,8 +262,6 @@ public class CommonUtilities {
     }
 
     /**
-     * TODO - this is not a policy action. Move it to another class
-     *
      * Get the manifest from a codomain
      *
      * @param guid
@@ -280,13 +275,11 @@ public class CommonUtilities {
     }
 
     /**
-     * TODO - this is not a policy action. Move it to another class
-     *
      * Get the manifest of a version's content.
      *
      * @param version
-     * @return
-     * @throws ManifestNotFoundException
+     * @return the manifest of the version's content
+     * @throws ManifestNotFoundException if the manifest was not found
      */
     // Retrieve the manifest from local node
     public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
@@ -294,19 +287,22 @@ public class CommonUtilities {
         return manifestsDataService.getManifest(version.content());
     }
 
-    // TODO - this is not a policy action. Move it to another class
+    /**
+     * Get all known versions from the invariant of the asset
+     *
+     * @param invariant of the asset
+     * @return set of refs to versions of an asset
+     */
     public Set<IGUID> getVersions(IGUID invariant) {
 
         return manifestsDataService.getVersions(invariant);
     }
 
     /**
-     * TODO - this is not a policy action. Move it to another class
-     *
      * Get the node with the specified guid
-     * @param guid
-     * @return
-     * @throws NodeNotFoundException
+     * @param guid of the node
+     * @return the node
+     * @throws NodeNotFoundException if the node was not found
      */
     public Node getNode(IGUID guid) throws NodeNotFoundException {
 
@@ -314,13 +310,11 @@ public class CommonUtilities {
     }
 
     /**
-     * TODO - this is not a policy action. Move it to another class
-     *
      * Filter the codomain by type
      *
      * @param codomain
      * @param type
-     * @return
+     * @return a collection of nodes within the specified codomain and type
      */
     public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
 
