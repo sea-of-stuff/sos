@@ -18,6 +18,13 @@ import java.util.Set;
 public interface NodeDiscoveryService {
 
     /**
+     * The manifestsDataService should be set to allow the NodeDiscoveryService to handle nodes as first class entities
+     *
+     * @param manifestsDataService for this node
+     */
+    void setMDS(ManifestsDataService manifestsDataService);
+
+    /**
      * Get a node object for the local node
      *
      * @return this node

@@ -51,7 +51,6 @@ public class JSONConstants {
     public static final String KEY_PUBLIC_KEY = "PublicKey";
 
     // Node
-    public static final String KEY_NODE_GUID = "guid";
     public static final String KEY_NODE_SIGNATURE_CERTIFICATE = "signCert";
     public static final String KEY_NODE_HOSTNAME = "hostname";
     public static final String KEY_NODE_PORT = "port";

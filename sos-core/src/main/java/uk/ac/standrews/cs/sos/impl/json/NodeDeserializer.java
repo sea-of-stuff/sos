@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
+import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
@@ -17,7 +18,7 @@ import java.security.PublicKey;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSNodeDeserializer extends JsonDeserializer<SOSNode> {
+public class NodeDeserializer extends JsonDeserializer<Node> {
 
     @Override
     public SOSNode deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
@@ -25,7 +26,8 @@ public class SOSNodeDeserializer extends JsonDeserializer<SOSNode> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         try {
-            IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_NODE_GUID);
+            IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
+
             PublicKey signatureCertificate = DigitalSignature.getCertificate(node.get(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE).asText());
             String hostname = node.get(JSONConstants.KEY_NODE_HOSTNAME).asText();
             int port = node.get(JSONConstants.KEY_NODE_PORT).asInt();
@@ -46,6 +48,10 @@ public class SOSNodeDeserializer extends JsonDeserializer<SOSNode> {
     }
 
     private boolean isServiceExposed(JsonNode node, String service) {
+
+        if (!node.has(JSONConstants.KEY_NODE_SERVICES)) return false;
+
+        if (!node.get(JSONConstants.KEY_NODE_SERVICES).has(service)) return false;
 
         return node.get(JSONConstants.KEY_NODE_SERVICES).get(service).get(JSONConstants.KEY_NODE_SERVICE_IS_EXPOSED).asBoolean();
     }

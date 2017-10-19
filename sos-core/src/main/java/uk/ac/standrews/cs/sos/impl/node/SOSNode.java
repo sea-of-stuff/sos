@@ -1,22 +1,14 @@
 package uk.ac.standrews.cs.sos.impl.node;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
-import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.impl.json.SOSNodeDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.SOSNodeSerializer;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.IP;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,8 +21,6 @@ import java.util.Objects;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonSerialize(using = SOSNodeSerializer.class)
-@JsonDeserialize(using = SOSNodeDeserializer.class)
 public class SOSNode extends BasicManifest implements Node { // TODO - implements Manifest
 
     protected PublicKey signatureCertificate;
@@ -173,18 +163,6 @@ public class SOSNode extends BasicManifest implements Node { // TODO - implement
     public InputStream contentToHash() throws IOException {
 
         return new ByteArrayInputStream(signatureCertificate.getEncoded());
-    }
-
-    @Override
-    public String toString() {
-        try {
-            return JSONHelper.JsonObjMapper().writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for node" + this.guid().toShortString());
-            return "";
-        }
-
     }
 
     @Override

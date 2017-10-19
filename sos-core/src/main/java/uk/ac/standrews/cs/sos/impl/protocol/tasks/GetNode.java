@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
@@ -87,7 +86,7 @@ public class GetNode extends Task {
         try (InputStream inputStream = response.getBody()){
 
             String body = IO.InputStreamToString(inputStream);
-            return JSONHelper.JsonObjMapper().readValue(body, SOSNode.class);
+            return JSONHelper.JsonObjMapper().readValue(body, Node.class);
 
         } catch (IOException e) {
             throw new IOException(e);

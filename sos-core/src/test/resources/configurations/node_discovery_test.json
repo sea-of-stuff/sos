@@ -8,6 +8,10 @@
     "database": {
       "filename": "dump.db"
     },
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
+    },
     "global": {
       "ssl_trust_store": "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts",
       "tasks": {

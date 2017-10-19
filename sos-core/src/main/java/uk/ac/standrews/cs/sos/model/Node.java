@@ -1,6 +1,10 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.json.NodeDeserializer;
+import uk.ac.standrews.cs.sos.impl.json.NodeSerializer;
 
 import java.net.InetSocketAddress;
 import java.security.PublicKey;
@@ -10,6 +14,8 @@ import java.security.PublicKey;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+@JsonSerialize(using = NodeSerializer.class)
+@JsonDeserialize(using = NodeDeserializer.class)
 public interface Node extends Manifest {
 
     /**

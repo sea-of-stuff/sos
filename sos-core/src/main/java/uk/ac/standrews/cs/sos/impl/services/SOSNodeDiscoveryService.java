@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
@@ -16,6 +17,7 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -28,9 +30,14 @@ import java.util.concurrent.TimeUnit;
  * The SOSNDS represents a basic NDS implementation.
  * It provides naive methods to register new nodes in the sos and get known nodes.
  *
+ * The NDS uses a combination of the ManifestsDataService and its own DB to manage nodes as first class entities, while
+ * providing advanced nodes management via the DB.
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSNodeDiscoveryService implements NodeDiscoveryService {
+
+    private ManifestsDataService manifestsDataService;
 
     public static final int NO_LIMIT = 0;
     private LocalNodesDirectory localNodesDirectory;
@@ -52,6 +59,11 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
+    public void setMDS(ManifestsDataService manifestsDataService) {
+        this.manifestsDataService = manifestsDataService;
+    }
+
+    @Override
     public Node getThisNode() {
         return localNodesDirectory.getLocalNode();
     }
@@ -66,9 +78,11 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         SOS_LOG.log(LEVEL.INFO, "DDS - Registering node with GUID: " + nodeToRegister.guid().toMultiHash());
 
         try {
+            manifestsDataService.addManifest(node);
+
             localNodesDirectory.addNode(nodeToRegister);
             localNodesDirectory.persistNodesTable();
-        } catch (NodesDirectoryException e) {
+        } catch (ManifestPersistException | NodesDirectoryException e) {
             throw new NodeRegistrationException("Unable to register node", e);
         }
 
@@ -86,6 +100,9 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
     @Override
     public Node getNode(IGUID guid) throws NodeNotFoundException {
+
+        // manifestsDataService.getManifest(guid);
+
 
         if (guid == null || guid.isInvalid()) {
             throw new NodeNotFoundException("Cannot find node for invalid GUID");
@@ -259,6 +276,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     /**
+     * TODO - use getManifest task via MDS
+     *
      * Find a matching node for the given GUID through other known NDS nodes
      */
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {

@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
@@ -132,7 +133,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         "Starting up Node with GUID: " + this.guid().toMultiHash() + "\n");
 
         initDB();
-        initNDS();
+        initBasicServices();
         loadBootstrapNodes();
         registerNode();
         initServices();
@@ -328,10 +329,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      *
      * @throws SOSException
      */
-    private void initNDS() throws SOSException {
+    private void initBasicServices() throws SOSException {
+
+        // Here we build a circular dependency between the NDS and the MDS, but it is necessary to handle nodes as first class entities
         try {
             Node localNode = new SOSNode(this);
             nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, nodesDatabase);
+            manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
+            nodeDiscoveryService.setMDS(manifestsDataService);
+
             SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
         } catch (SOSProtocolException e) {
             throw new SOSException(e);
@@ -339,18 +345,20 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     /**
-     * Initialise all the services for this node
+     * Initialise all the remaining services for this node
      *
      * The services use the localStorage to persist their indices/caches to disk
+     * The manifestsDataService allow entities to be handles as first class entities in the SOS and in a consistent manner
      */
     private void initServices() throws ServiceException {
 
-        manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage, manifestsDataService);
 
         storageService = new SOSStorageService(settings.getServices().getStorage(), guid(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), manifestsDataService);
-        contextService = new SOSContextService(localStorage, manifestsDataService, nodeDiscoveryService, usersRolesService, storageService);
+
+        CommonUtilities commonUtilities = new CommonUtilities(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);
+        contextService = new SOSContextService(localStorage, manifestsDataService, commonUtilities);
 
         agent = SOSAgent.instance(storageService, manifestsDataService, metadataService, usersRolesService);
     }

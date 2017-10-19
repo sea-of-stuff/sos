@@ -30,7 +30,8 @@ import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.context.ContextsContentsDirectory;
 import uk.ac.standrews.cs.sos.model.*;
-import uk.ac.standrews.cs.sos.services.*;
+import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -78,16 +79,14 @@ public class SOSContextService implements ContextService {
      *
      * @param localStorage used to persist the internal data structures
      * @param manifestsDataService used to discover the data to process and act upon it
-     * @param nodeDiscoveryService used to operate on the SOS and its nodes
-     * @param usersRolesService uses to perform USER/ROLE operations in the SOS
-     * @param storageService used to access the SOS storage
+     * @param commonUtilities used to facilitate operations for the contexts
      */
-    public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService, UsersRolesService usersRolesService, StorageService storageService) throws ServiceException {
+    public SOSContextService(LocalStorage localStorage, ManifestsDataService manifestsDataService, CommonUtilities commonUtilities) throws ServiceException {
 
         try {
             this.localStorage = localStorage;
             this.manifestsDataService = manifestsDataService;
-            commonUtilities = new CommonUtilities(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);
+            this.commonUtilities = commonUtilities;
 
             contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
 

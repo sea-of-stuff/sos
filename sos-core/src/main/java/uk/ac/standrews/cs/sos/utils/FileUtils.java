@@ -92,7 +92,11 @@ public class FileUtils {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Role.class);
                     break;
 
-                case NODE: case METADATA_PROTECTED:
+                case NODE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Node.class);
+                    break;
+
+                case METADATA_PROTECTED:
                     throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
 
 
@@ -146,7 +150,11 @@ public class FileUtils {
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Role.class);
                     break;
 
-                case NODE: case METADATA_PROTECTED:
+                case NODE:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Node.class);
+                    break;
+
+                case METADATA_PROTECTED:
                     throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
 
                 default:

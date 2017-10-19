@@ -84,7 +84,7 @@
     },
     "bootstrapNodes": [
       {
-        "guid" : "SHA256_16_8722c9cc747d9ebd99540921ecf29d14d84352f667c1eed9803510faa951f716",
+        "GUID" : "SHA256_16_8722c9cc747d9ebd99540921ecf29d14d84352f667c1eed9803510faa951f716",
         "hostname" : "cs-wifi-093.cs.st-andrews.ac.uk",
         "port" : 8080,
         "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMBmrnmk1ohWWN5ZBKh7I5VcR9KKgzWhoG9290zaXKBEYRODrWn0tYYz8g8rqXtiRVzfvZQZ7WkFIt4NwXYl1i0CAwEAAQ=="

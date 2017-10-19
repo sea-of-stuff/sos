@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
@@ -113,6 +114,8 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
+        when(node.getType()).thenReturn(ManifestType.NODE);
+        when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostname()).thenReturn("localhost");
@@ -143,6 +146,8 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
+        when(node.getType()).thenReturn(ManifestType.NODE);
+        when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(false);
 
@@ -171,6 +176,7 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
+        when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostname()).thenReturn("localhost");
@@ -191,6 +197,8 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
+        when(node.getType()).thenReturn(ManifestType.NODE);
+        when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostname()).thenReturn("localhost");

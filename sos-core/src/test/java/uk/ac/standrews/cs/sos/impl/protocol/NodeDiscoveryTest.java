@@ -4,6 +4,10 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -13,13 +17,18 @@ import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.services.SOSManifestsDataService;
 import uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
@@ -71,10 +80,21 @@ public class NodeDiscoveryTest {
             throw new SOSException(e);
         }
 
+        LocalStorage localStorage;
+        try {
+            CastoreBuilder castoreBuilder = settings.getStore().getCastoreBuilder();
+            IStorage stor = CastoreFactory.createStorage(castoreBuilder);
+            localStorage = new LocalStorage(stor);
+        } catch (StorageException | DataStorageException e) {
+            throw new SOSException(e);
+        }
+
         localNode = mock(SOSLocalNode.class);
         SOSLocalNode.settings = settings;
         when(localNode.guid()).thenReturn(localNodeGUID);
         nds = new SOSNodeDiscoveryService(localNode, nodesDatabase);
+        ManifestsDataService manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nds);
+        nds.setMDS(manifestsDataService);
 
         // MOCK SERVER SETUP
         nodeFound = GUIDFactory.generateRandomGUID();
@@ -162,6 +182,8 @@ public class NodeDiscoveryTest {
     public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
+        when(ndsMock.getType()).thenReturn(ManifestType.NODE);
+        when(ndsMock.isValid()).thenReturn(true);
         when(ndsMock.guid()).thenReturn(nodeFound);
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
@@ -178,6 +200,8 @@ public class NodeDiscoveryTest {
     public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
+        when(ndsMock.getType()).thenReturn(ManifestType.NODE);
+        when(ndsMock.isValid()).thenReturn(true);
         when(ndsMock.guid()).thenReturn(GUIDFactory.generateRandomGUID());
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
