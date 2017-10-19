@@ -36,18 +36,18 @@
     #foreach($node in $nodes)
         <div class="row">
             <div class="col-6">
-                <button id="pingNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Node info</button>
-                <button id="statsNode$node.getNodeGUID().toMultiHash()" value=$node.getNodeGUID().toMultiHash() type="button" class="btn btn btn-outline-info">Stats node</button>
+                <button id="pingNode$node.guid().toMultiHash()" value=$node.guid().toMultiHash() type="button" class="btn btn btn-outline-info">Node info</button>
+                <button id="statsNode$node.guid().toMultiHash()" value=$node.guid().toMultiHash() type="button" class="btn btn btn-outline-info">Stats node</button>
                 <br>
                 <pre><code class="json">$node.toString()</code></pre>
             </div>
             <div class="col-6">
                 <strong>Stats:</strong>
                 <br>
-                <div id="chart_div$node.getNodeGUID().toMultiHash()"></div>
+                <div id="chart_div$node.guid().toMultiHash()"></div>
                 <strong>Node Info:</strong>
                 <br>
-                <i><pre><code id="pingResult$node.getNodeGUID().toMultiHash()" class="json"></code></pre></i>
+                <i><pre><code id="pingResult$node.guid().toMultiHash()" class="json"></code></pre></i>
             </div>
         </div>
         <br>

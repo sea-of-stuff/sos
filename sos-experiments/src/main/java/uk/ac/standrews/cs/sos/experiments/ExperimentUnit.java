@@ -51,8 +51,8 @@ public interface ExperimentUnit {
     /**
      * Add the data inside the folder to the local node
      *
-     * @param node
-     * @param folder
+     * @param node where to add the content
+     * @param folder where the content for the experiment is
      * @throws URISyntaxException
      * @throws MetadataException
      * @throws IOException
@@ -84,6 +84,8 @@ public interface ExperimentUnit {
         Files.walkFileTree(folder.toPath(), fv);
         System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
+
+    // TODO - add content as protected
 
     /**
      * Add the users/roles for this experiment to the node

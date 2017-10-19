@@ -181,7 +181,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         } else if (nodesCollection.type().equals(NodesCollectionType.ANY)){
             // Get DDS nodes where we know the entity could be
             ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
-                    .map(Node::getNodeGUID)
+                    .map(Node::guid)
                     .collect(Collectors.toSet());
         } else {
             ddsGUIDsToCheck = ddsIndex.getDDSRefs(guid);
@@ -191,7 +191,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
             // Simply check any node
             ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
-                    .map(Node::getNodeGUID)
+                    .map(Node::guid)
                     .collect(Collectors.toSet());
         }
 

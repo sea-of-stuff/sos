@@ -43,7 +43,7 @@ public class FetchManifest extends Task {
     @Override
     public void performAction() {
 
-        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifestId.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
+        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifestId.toMultiHash() + " will be fetched from node " + node.guid().toShortString());
 
         try {
             URL url = getManifestURL(node, manifestId);
@@ -56,14 +56,14 @@ public class FetchManifest extends Task {
 
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.manifest = FileUtils.ManifestFromJson(responseBody);
-                    SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
+                    SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.guid());
 
                 } catch (ManifestNotFoundException e) {
                     throw new IOException("Unable to parse manifest with GUID " + manifestId);
                 }
 
             } else {
-                SOS_LOG.log(LEVEL.ERROR, "Manifest was not fetched successfully from node " + node.getNodeGUID().toShortString());
+                SOS_LOG.log(LEVEL.ERROR, "Manifest was not fetched successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
@@ -87,7 +87,7 @@ public class FetchManifest extends Task {
 
     @Override
     public String toString() {
-        return "FetchManifest for guid " + manifestId + " from node " + node.getNodeGUID();
+        return "FetchManifest for guid " + manifestId + " from node " + node.guid();
     }
 
     private URL getManifestURL(Node node, IGUID manifestId) throws SOSURLException {

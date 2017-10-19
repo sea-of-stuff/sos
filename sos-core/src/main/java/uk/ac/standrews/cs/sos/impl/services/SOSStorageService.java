@@ -335,7 +335,7 @@ public class SOSStorageService implements StorageService {
 
                 } else if (nodesCollection.type() == NodesCollectionType.LOCAL) {
 
-                    if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().getNodeGUID())) {
+                    if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().guid())) {
                         continue;
                     }
 

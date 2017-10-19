@@ -63,7 +63,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         Node nodeToRegister = new SOSNode(node);
-        SOS_LOG.log(LEVEL.INFO, "DDS - Registering node with GUID: " + nodeToRegister.getNodeGUID().toMultiHash());
+        SOS_LOG.log(LEVEL.INFO, "DDS - Registering node with GUID: " + nodeToRegister.guid().toMultiHash());
 
         try {
             localNodesDirectory.addNode(nodeToRegister);
@@ -92,7 +92,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         Node localNode = localNodesDirectory.getLocalNode();
-        if (localNode.getNodeGUID().equals(guid)) {
+        if (localNode.guid().equals(guid)) {
             return localNode;
         }
 
@@ -169,7 +169,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         if (nodesCollection.type() == NodesCollectionType.LOCAL) {
-            return new NodesCollectionImpl(localNodesDirectory.getLocalNode().getNodeGUID());
+            return new NodesCollectionImpl(localNodesDirectory.getLocalNode().guid());
         }
 
         Set<IGUID> nodesRefs = nodesCollection.nodesRefs();
@@ -285,13 +285,13 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
             for(Node node:getNodes()) {
 
-                if (!nodesStats.containsKey(node.getNodeGUID())) {
-                    nodesStats.put(node.getNodeGUID(), new NodeStats(node.getNodeGUID()));
+                if (!nodesStats.containsKey(node.guid())) {
+                    nodesStats.put(node.guid(), new NodeStats(node.guid()));
                 }
 
                 PingNode pingNode = new PingNode(node, UUID.randomUUID().toString());
                 TasksQueue.instance().performSyncTask(pingNode);
-                nodesStats.get(node.getNodeGUID()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
+                nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
             }
 
         }, 10, 10, TimeUnit.SECONDS);

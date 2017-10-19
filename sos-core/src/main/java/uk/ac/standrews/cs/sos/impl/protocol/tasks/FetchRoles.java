@@ -44,7 +44,7 @@ public class FetchRoles extends Task {
     @Override
     public void performAction() {
 
-        SOS_LOG.log(LEVEL.INFO, "Roles for user with GUID " + userid.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
+        SOS_LOG.log(LEVEL.INFO, "Roles for user with GUID " + userid.toMultiHash() + " will be fetched from node " + node.guid().toShortString());
 
         try {
             URL url = SOSURL.USRO_GET_ROLES(node, userid);
@@ -60,11 +60,11 @@ public class FetchRoles extends Task {
                     // TODO - array of roles...
                     // this.roles = JSONHelper.JsonObjMapper().readValue(responseBody, Role.class);
 
-                    SOS_LOG.log(LEVEL.INFO, "Roles for given user fetched successfully from node " + node.getNodeGUID());
+                    SOS_LOG.log(LEVEL.INFO, "Roles for given user fetched successfully from node " + node.guid());
                 }
 
             } else {
-                SOS_LOG.log(LEVEL.ERROR, "Roles for given user were not fetched successfully from node " + node.getNodeGUID().toShortString());
+                SOS_LOG.log(LEVEL.ERROR, "Roles for given user were not fetched successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {

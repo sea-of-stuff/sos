@@ -57,7 +57,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         }
 
         testNode = mock(SOSLocalNode.class);
-        when(testNode.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(testNode.guid()).thenReturn(GUIDFactory.generateRandomGUID());
         localNodesDirectory = new LocalNodesDirectory(testNode, nodesDatabase);
 
         try {

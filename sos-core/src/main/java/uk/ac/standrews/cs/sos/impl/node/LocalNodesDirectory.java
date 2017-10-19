@@ -59,7 +59,7 @@ public class LocalNodesDirectory {
      */
     public Node getNode(IGUID guid) {
         Optional<Node> node = knownNodes.stream()
-                .filter(n -> n.getNodeGUID().equals(guid))
+                .filter(n -> n.guid().equals(guid))
                 .findFirst();
 
         return node.orElse(null);
@@ -78,7 +78,7 @@ public class LocalNodesDirectory {
                 .filter(predicate);
 
         if (getLocalNode() != null) {
-            nodesStream = nodesStream.filter(n -> !n.getNodeGUID().equals(getLocalNode().getNodeGUID()));
+            nodesStream = nodesStream.filter(n -> !n.guid().equals(getLocalNode().guid()));
         }
 
         nodesStream = nodesStream.distinct();

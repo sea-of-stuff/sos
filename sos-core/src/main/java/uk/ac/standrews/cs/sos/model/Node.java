@@ -10,15 +10,17 @@ import java.security.PublicKey;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface Node {
+public interface Node extends Manifest {
 
     /**
-     * This is the unique GUID for this node.
-     * The GUID is generated using a pseudo-random hash function.
+     * This is the unique GUID for this node
      *
-     * @return
+     * hash(signature certificate)
+     *
+     * @return GUID of the context
      */
-    IGUID getNodeGUID();
+    IGUID guid();
+
 
     /**
      * This is the signature certificate the the node can expose to the rest of the SOS.

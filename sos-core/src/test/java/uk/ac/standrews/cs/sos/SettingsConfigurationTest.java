@@ -38,7 +38,7 @@ public class SettingsConfigurationTest {
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
         // NOTE: The node GUID is not set from the configuration file, but it is generated using the node certificate.
-        IGUID guid = settings.getSettingsObj().getNodeGUID();
+        IGUID guid = settings.getSettingsObj().guid();
         assertTrue(guid.isInvalid());
     }
 

@@ -126,7 +126,7 @@ public class LocationsIndexImpl implements LocationsIndex {
 
     private static boolean isLocalNode(IGUID nodeGUID) {
 
-        IGUID localNodeGUID = SOSLocalNode.settings.getNodeGUID();
+        IGUID localNodeGUID = SOSLocalNode.settings.guid();
         return localNodeGUID.equals(nodeGUID);
     }
 

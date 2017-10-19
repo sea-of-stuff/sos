@@ -10,13 +10,17 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
+import javax.ws.rs.NotSupportedException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.security.PublicKey;
 import java.util.List;
@@ -97,7 +101,7 @@ public class SettingsConfiguration {
         }
 
         @JsonIgnore
-        public IGUID getNodeGUID() {
+        public IGUID guid() {
 
             try {
                 return GUIDFactory.recreateGUID(getGuid());
@@ -178,12 +182,16 @@ public class SettingsConfiguration {
             this.bootstrapNodes = bootstrapNodes;
         }
 
-        public static class SimpleNode implements Node {
+        public static class SimpleNode extends BasicManifest implements Node {
 
             private String guid;
             private String hostname; // or ip
             private int port;
             private String signCert;
+
+            protected SimpleNode() {
+                super(ManifestType.NODE);
+            }
 
             public String getGuid() {
                 return guid;
@@ -195,7 +203,7 @@ public class SettingsConfiguration {
 
             @JsonIgnore
             @Override
-            public IGUID getNodeGUID() {
+            public IGUID guid() {
                 try {
                     return GUIDFactory.recreateGUID(getGuid());
                 } catch (GUIDGenerationException e) {
@@ -285,6 +293,11 @@ public class SettingsConfiguration {
             @Override
             public boolean isRMS() {
                 return false;
+            }
+
+            @Override
+            public InputStream contentToHash() throws IOException {
+                throw new NotSupportedException();
             }
         }
 

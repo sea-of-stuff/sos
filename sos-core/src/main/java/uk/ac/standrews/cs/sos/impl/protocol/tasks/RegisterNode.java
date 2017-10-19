@@ -28,7 +28,7 @@ public class RegisterNode extends Task {
 
     @Override
     public void performAction() {
-        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.getNodeGUID().toMultiHash() + " to NDS: " + ndsNode.getNodeGUID().toMultiHash());
+        SOS_LOG.log(LEVEL.INFO, "Registering node: " + node.guid().toMultiHash() + " to NDS: " + ndsNode.guid().toMultiHash());
 
         try {
             URL url = SOSURL.NDS_REGISTER_NODE(ndsNode);
@@ -37,15 +37,15 @@ public class RegisterNode extends Task {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
-                SOS_LOG.log(LEVEL.INFO, "Node " + node.getNodeGUID().toMultiHash() + " was successfully registered to NDS: " + ndsNode.getNodeGUID().toMultiHash());
+                SOS_LOG.log(LEVEL.INFO, "Node " + node.guid().toMultiHash() + " was successfully registered to NDS: " + ndsNode.guid().toMultiHash());
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Node " + node.getNodeGUID().toMultiHash() + " was NOT successfully registered to NDS: " + ndsNode.getNodeGUID().toMultiHash());
+                SOS_LOG.log(LEVEL.WARN, "Node " + node.guid().toMultiHash() + " was NOT successfully registered to NDS: " + ndsNode.guid().toMultiHash());
             }
 
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
 
         } catch (SOSURLException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to perform node registration to node " + ndsNode.getNodeGUID().toMultiHash() );
+            SOS_LOG.log(LEVEL.ERROR, "Unable to perform node registration to node " + ndsNode.guid().toMultiHash() );
         }
     }
 
@@ -61,6 +61,6 @@ public class RegisterNode extends Task {
 
     @Override
     public String toString() {
-        return "RegisterNode " + ndsNode.getNodeGUID().toMultiHash() + " to NDS node " + ndsNode.getNodeGUID().toMultiHash();
+        return "RegisterNode " + ndsNode.guid().toMultiHash() + " to NDS node " + ndsNode.guid().toMultiHash();
     }
 }

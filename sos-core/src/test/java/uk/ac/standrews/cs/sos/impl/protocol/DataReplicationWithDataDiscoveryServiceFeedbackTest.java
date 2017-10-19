@@ -133,7 +133,7 @@
 //                false, true, false, false, false, false, false);
 //
 //        Set<IGUID> nodes = new HashSet<>();
-//        nodes.add(node.getNodeGUID());
+//        nodes.add(node.guid());
 //
 //        Storage storage = localSOSNode.getStorage();
 //

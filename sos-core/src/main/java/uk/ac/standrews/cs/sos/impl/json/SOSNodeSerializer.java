@@ -21,7 +21,7 @@ public class SOSNodeSerializer extends JsonSerializer<SOSNode> {
         try {
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_NODE_GUID, node.getNodeGUID().toMultiHash());
+        jsonGenerator.writeStringField(JSONConstants.KEY_NODE_GUID, node.guid().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
         jsonGenerator.writeStringField(JSONConstants.KEY_NODE_HOSTNAME, node.getHostname());
         jsonGenerator.writeNumberField(JSONConstants.KEY_NODE_PORT, node.getHostAddress().getPort());

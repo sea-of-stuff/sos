@@ -34,7 +34,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         nds.registerNode(node, true);
 
         Set<IGUID> nodes = new HashSet<>();
-        nodes.add(node.getNodeGUID());
+        nodes.add(node.guid());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
@@ -73,7 +73,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         nds.registerNode(node, true);
 
         Set<IGUID> nodes = new HashSet<>();
-        nodes.add(node.getNodeGUID());
+        nodes.add(node.guid());
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);

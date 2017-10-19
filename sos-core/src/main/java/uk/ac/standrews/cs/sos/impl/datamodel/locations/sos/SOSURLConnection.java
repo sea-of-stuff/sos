@@ -88,7 +88,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private boolean isLocalNode(IGUID nodeGUID) {
-        IGUID localNodeGUID = nodeDiscoveryService.getThisNode().getNodeGUID();
+        IGUID localNodeGUID = nodeDiscoveryService.getThisNode().guid();
         return localNodeGUID.equals(nodeGUID);
     }
 

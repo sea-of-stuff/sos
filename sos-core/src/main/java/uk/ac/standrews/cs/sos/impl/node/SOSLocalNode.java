@@ -30,6 +30,7 @@ import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -103,7 +104,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         manageSignatureKeys();
         manageNodeGUID();
-        SOS_LOG = new SOS_LOG(getNodeGUID());
+        SOS_LOG = new SOS_LOG(guid());
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
         SOS_LOG.log(LEVEL.INFO,
@@ -119,7 +120,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         "   \\__\\/ /:/     \\  \\:\\/:/     \\__\\/ /:/  \n" +
                         "     /__/:/       \\  \\::/        /__/:/   \n" +
                         "     \\__\\/         \\__\\/         \\__\\/    \n" +
-                "\n\n" +
+                        "\n\n" +
                         " --------------------------------------------------------\n" +
                         "| Warning/Notes:                                         |\n" +
                         "|   This is a prototype version of the SOS.              |\n" +
@@ -127,8 +128,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         "|   There are still bugs and missing features.           |\n" +
                         "|   Visit https://github.com/stacs-srg/sos for more info |\n" +
                         " --------------------------------------------------------" +
-                "\n\n" +
-                "Starting up Node with GUID: " + this.getNodeGUID().toMultiHash() + "\n");
+                        "\n\n" +
+                        "Starting up Node with GUID: " + this.guid().toMultiHash() + "\n");
 
         initDB();
         initNDS();
@@ -243,12 +244,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void manageNodeGUID() throws SOSException {
 
-        try {
-            this.nodeGUID = GUIDFactory.generateGUID(signatureCertificate.getEncoded());
+        try (InputStream content = contentToHash()){
+
+            this.nodeGUID = GUIDFactory.generateGUID(content);
             this.DB_nodeid = nodeGUID.toMultiHash();
 
             settings.setGuid(nodeGUID.toMultiHash());
-        } catch (GUIDGenerationException e) {
+        } catch (GUIDGenerationException | IOException e) {
             throw new SOSException("Unable to generate GUID for SOSLocalNode");
         }
 
@@ -278,25 +280,25 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         for(Node node:settings.getBootstrapNodes()) {
 
             try {
-            String nodeInfo = "";
-            try {
-                // Get info by GUID
-                nodeInfo = nodeDiscoveryService.infoNode(node.getNodeGUID());
-            } catch (NodeNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with GUID: " + node.getNodeGUID().toMultiHash());
-
+                String nodeInfo = "";
                 try {
-                    nodeInfo = nodeDiscoveryService.infoNode(node);
-                } catch (NodeNotFoundException e1) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with address: " + node.getHostAddress().toString());
-                }
-            }
+                    // Get info by GUID
+                    nodeInfo = nodeDiscoveryService.infoNode(node.guid());
+                } catch (NodeNotFoundException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with GUID: " + node.guid().toMultiHash());
 
-            Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
-            nodeDiscoveryService.registerNode(retrievedNode, true);
+                    try {
+                        nodeInfo = nodeDiscoveryService.infoNode(node);
+                    } catch (NodeNotFoundException e1) {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with address: " + node.getHostAddress().toString());
+                    }
+                }
+
+                Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
+                nodeDiscoveryService.registerNode(retrievedNode, true);
 
             } catch (IOException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + node.getNodeGUID().toMultiHash() + " and address " + node.getHostAddress().toString());
+                SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + node.guid().toMultiHash() + " and address " + node.getHostAddress().toString());
             }
         }
     }
@@ -346,7 +348,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
         usersRolesService = new SOSUsersRolesService(localStorage, manifestsDataService);
 
-        storageService = new SOSStorageService(settings.getServices().getStorage(), getNodeGUID(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
+        storageService = new SOSStorageService(settings.getServices().getStorage(), guid(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), manifestsDataService);
         contextService = new SOSContextService(localStorage, manifestsDataService, nodeDiscoveryService, usersRolesService, storageService);
 

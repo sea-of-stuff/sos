@@ -69,7 +69,7 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
         try (Connection connection = getSQLiteConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_NODE)) {
 
-            preparedStatement.setString(1, node.getNodeGUID().toMultiHash());
+            preparedStatement.setString(1, node.guid().toMultiHash());
             preparedStatement.setString(2, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
             preparedStatement.setString(3, node.getHostname());
             preparedStatement.setInt(4, node.getHostAddress().getPort());

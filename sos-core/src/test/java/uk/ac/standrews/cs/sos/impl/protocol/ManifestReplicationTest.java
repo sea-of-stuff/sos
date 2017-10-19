@@ -113,7 +113,7 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
-        when(node.getNodeGUID()).thenReturn(nodeGUID);
+        when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostname()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
@@ -143,7 +143,7 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
-        when(node.getNodeGUID()).thenReturn(nodeGUID);
+        when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(false);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -171,7 +171,7 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
-        when(node.getNodeGUID()).thenReturn(nodeGUID);
+        when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostname()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
@@ -191,7 +191,7 @@ public class ManifestReplicationTest {
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
-        when(node.getNodeGUID()).thenReturn(nodeGUID);
+        when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
         when(node.getHostname()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));

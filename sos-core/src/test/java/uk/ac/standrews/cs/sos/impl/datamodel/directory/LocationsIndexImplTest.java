@@ -167,8 +167,8 @@ public class LocationsIndexImplTest {
                 new CacheLocationBundle(new URILocation("http://example.org/other"))), -1);
 
         assertEquals(comparator.compare(new CacheLocationBundle(new URILocation("http://example.org/other")),
-                new CacheLocationBundle(new SOSLocation(settings.getNodeGUID(), GUIDFactory.generateRandomGUID()))), 1);
-        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(settings.getNodeGUID(), GUIDFactory.generateRandomGUID())),
+                new CacheLocationBundle(new SOSLocation(settings.guid(), GUIDFactory.generateRandomGUID()))), 1);
+        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(settings.guid(), GUIDFactory.generateRandomGUID())),
                 new CacheLocationBundle(new URILocation("http://example.org/other"))), -1);
     }
 

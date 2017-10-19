@@ -11,11 +11,16 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.impl.json.SOSNodeDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.SOSNodeSerializer;
+import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.IP;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.PublicKey;
@@ -26,7 +31,7 @@ import java.util.Objects;
  */
 @JsonSerialize(using = SOSNodeSerializer.class)
 @JsonDeserialize(using = SOSNodeDeserializer.class)
-public class SOSNode implements Node { // TODO - implements Manifest
+public class SOSNode extends BasicManifest implements Node { // TODO - implements Manifest
 
     protected PublicKey signatureCertificate;
     protected IGUID nodeGUID;
@@ -46,10 +51,9 @@ public class SOSNode implements Node { // TODO - implements Manifest
     protected boolean DB_is_cms;
     protected boolean DB_is_rms;
 
-    private SOSNode() {}
-
     public SOSNode(IGUID guid, PublicKey signatureCertificate, String hostname, int port,
                    boolean isAgent, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS) {
+        super(ManifestType.NODE);
 
         this.nodeGUID = guid;
         this.signatureCertificate = signatureCertificate;
@@ -68,6 +72,7 @@ public class SOSNode implements Node { // TODO - implements Manifest
     }
 
     protected SOSNode(SettingsConfiguration.Settings settings) {
+        super(ManifestType.NODE);
 
         InetAddress address = IP.findLocalAddress();
         assert(address != null);
@@ -91,12 +96,12 @@ public class SOSNode implements Node { // TODO - implements Manifest
     // Cloning constructor
     public SOSNode(Node node) {
 
-        this(node.getNodeGUID(), node.getSignatureCertificate(), node.getHostname(), node.getHostAddress().getPort(),
+        this(node.guid(), node.getSignatureCertificate(), node.getHostname(), node.getHostAddress().getPort(),
                 node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
     }
 
     @Override
-    public IGUID getNodeGUID() {
+    public IGUID guid() {
 
         if (nodeGUID == null) {
             try {
@@ -165,12 +170,18 @@ public class SOSNode implements Node { // TODO - implements Manifest
     }
 
     @Override
+    public InputStream contentToHash() throws IOException {
+
+        return new ByteArrayInputStream(signatureCertificate.getEncoded());
+    }
+
+    @Override
     public String toString() {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for node" + this.getNodeGUID().toShortString());
+            SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for node" + this.guid().toShortString());
             return "";
         }
 
@@ -181,12 +192,12 @@ public class SOSNode implements Node { // TODO - implements Manifest
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SOSNode sosNode = (SOSNode) o;
-        return Objects.equals(getNodeGUID(), sosNode.getNodeGUID());
+        return Objects.equals(guid(), sosNode.guid());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNodeGUID());
+        return Objects.hash(guid());
     }
 
 }

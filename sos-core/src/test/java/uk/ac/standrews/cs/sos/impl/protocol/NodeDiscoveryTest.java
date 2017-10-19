@@ -73,7 +73,7 @@ public class NodeDiscoveryTest {
 
         localNode = mock(SOSLocalNode.class);
         SOSLocalNode.settings = settings;
-        when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
+        when(localNode.guid()).thenReturn(localNodeGUID);
         nds = new SOSNodeDiscoveryService(localNode, nodesDatabase);
 
         // MOCK SERVER SETUP
@@ -162,7 +162,7 @@ public class NodeDiscoveryTest {
     public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(nodeFound);
+        when(ndsMock.guid()).thenReturn(nodeFound);
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.getHostname()).thenReturn(NODE_HOSTNAME);
@@ -178,7 +178,7 @@ public class NodeDiscoveryTest {
     public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
-        when(ndsMock.getNodeGUID()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.guid()).thenReturn(GUIDFactory.generateRandomGUID());
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.getHostname()).thenReturn(NODE_HOSTNAME);

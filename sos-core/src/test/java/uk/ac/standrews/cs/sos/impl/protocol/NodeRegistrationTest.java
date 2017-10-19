@@ -120,7 +120,7 @@ public class NodeRegistrationTest extends ProtocolTest {
         }
 
         Node localNode = mock(SOSLocalNode.class);
-        when(localNode.getNodeGUID()).thenReturn(localNodeGUID);
+        when(localNode.guid()).thenReturn(localNodeGUID);
 
         nds = new SOSNodeDiscoveryService(localNode, nodesDatabase);
 

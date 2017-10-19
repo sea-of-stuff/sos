@@ -31,7 +31,7 @@ public class WWebDAV {
         try {
             String data = getTreeInJson(fileSystem);
 
-            model.put("node_id", sos.getNodeGUID().toMultiHash());
+            model.put("node_id", sos.guid().toMultiHash());
             model.put("tree", data);
         } catch (TIPNotFoundException | ManifestNotFoundException e) {
             e.printStackTrace();

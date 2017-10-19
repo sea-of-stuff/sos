@@ -46,7 +46,7 @@ public class FetchData extends Task {
     @Override
     public void performAction() {
 
-        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.getNodeGUID());
+        SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.guid());
 
         try {
             URL url = SOSURL.STORAGE_GET_DATA(node, entityId);
@@ -54,14 +54,14 @@ public class FetchData extends Task {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
-                SOS_LOG.log(LEVEL.INFO, "Data fetched successfully from node " + node.getNodeGUID());
+                SOS_LOG.log(LEVEL.INFO, "Data fetched successfully from node " + node.guid());
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.getNodeGUID());
+                SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.guid());
             }
 
             body = response.getBody();
         } catch(IOException | SOSURLException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Data not fetched successfully from node " + node.getNodeGUID() + " - Exception: " + e.getMessage());
+            SOS_LOG.log(LEVEL.ERROR, "Data not fetched successfully from node " + node.guid() + " - Exception: " + e.getMessage());
         }
     }
 
@@ -81,6 +81,6 @@ public class FetchData extends Task {
 
     @Override
     public String toString() {
-        return "FetchData for guid " + entityId + " from node " + node.getNodeGUID();
+        return "FetchData for guid " + entityId + " from node " + node.guid();
     }
 }

@@ -51,7 +51,7 @@ public class FetchVersions extends Task {
     @Override
     public void performAction() {
 
-        SOS_LOG.log(LEVEL.INFO, "Versions for invariant " + invariant.toMultiHash() + " will be fetched from node " + node.getNodeGUID().toShortString());
+        SOS_LOG.log(LEVEL.INFO, "Versions for invariant " + invariant.toMultiHash() + " will be fetched from node " + node.guid().toShortString());
 
         try {
             URL url = SOSURL.DDS_GET_VERSIONS(node, invariant);
@@ -64,12 +64,12 @@ public class FetchVersions extends Task {
 
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.versions = readJSONArrayOfGUIDs(responseBody);
-                    SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.getNodeGUID());
+                    SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.guid());
                 }
 
 
             } else {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to fetch versions for invariant " + invariant.toMultiHash() + " successfully from node " + node.getNodeGUID().toShortString());
+                SOS_LOG.log(LEVEL.ERROR, "Unable to fetch versions for invariant " + invariant.toMultiHash() + " successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
 
