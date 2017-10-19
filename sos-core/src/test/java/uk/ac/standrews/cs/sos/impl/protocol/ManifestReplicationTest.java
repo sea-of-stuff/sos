@@ -135,7 +135,7 @@ public class ManifestReplicationTest {
 
         verify(node, times(1)).getHostAddress();
 
-        verify(manifestsDataServiceMock, times(1)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ManifestReplicationTest {
 
         verify(node, times(0)).getHostAddress();
 
-        verify(manifestsDataServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(manifestsDataServiceMock, times(0)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
@@ -218,6 +218,6 @@ public class ManifestReplicationTest {
 
         verify(node, times(1)).getHostAddress();
 
-        verify(manifestsDataServiceMock, times(0)).addManifestDDSMapping(anyObject(), anyObject());
+        verify(manifestsDataServiceMock, times(0)).addManifestNodeMapping(anyObject(), anyObject());
     }
 }

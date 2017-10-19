@@ -71,7 +71,7 @@ public class ManifestReplication extends Task {
 
                 if (transferWasSuccessful) {
                     SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.guid().toMultiHash());
-                    manifestsDataService.addManifestDDSMapping(manifest.guid(), ref);
+                    manifestsDataService.addManifestNodeMapping(manifest.guid(), ref);
                     successfulReplicas++;
                 } else {
                     SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.guid().toMultiHash());
@@ -141,6 +141,8 @@ public class ManifestReplication extends Task {
         } else if (node.isMMS()) {
             return SOSURL.MMS_POST_MANIFEST(node);
 
+        } else if (node.isNDS()) {
+            return SOSURL.NDS_POST_MANIFEST(node);
         }
 
         throw new SOSURLException("Unable to return manifest URL for node " + node.toString());

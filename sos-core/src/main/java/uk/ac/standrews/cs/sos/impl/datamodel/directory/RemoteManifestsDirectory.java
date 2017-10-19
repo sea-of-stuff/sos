@@ -42,12 +42,12 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
      */
     private static int NUMBER_OF_REMOTE_TRIALS = 3;
 
-    private DDSIndex ddsIndex;
+    private ManifestsLocationsIndex manifestsLocationsIndex;
     private NodeDiscoveryService nodeDiscoveryService;
     private ManifestsDataService manifestsDataService;
 
-    public RemoteManifestsDirectory(DDSIndex ddsIndex, NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) {
-        this.ddsIndex = ddsIndex;
+    public RemoteManifestsDirectory(ManifestsLocationsIndex manifestsLocationsIndex, NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) {
+        this.manifestsLocationsIndex = manifestsLocationsIndex;
         this.nodeDiscoveryService = nodeDiscoveryService;
         this.manifestsDataService = manifestsDataService;
     }
@@ -141,7 +141,8 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
                     continue;
                 }
 
-                // TODO - update location-manifest info (ddsIndex)
+                // Update the manifest-node mapping
+                manifestsDataService.addManifestNodeMapping(manifest.guid(), nodeToCheck);
 
                 return manifest;
 
@@ -213,20 +214,20 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         } else {
 
-            // TODO - this is specific to DDS nodes
-            // Make this a generic index of guid --> node
-            nodesToCheck = ddsIndex.getDDSRefs(guid);
+            nodesToCheck = manifestsLocationsIndex.getNodeRefs(guid);
 
         }
 
-        if (nodesToCheck == null) {
-
-            // Simply get any node for the type specified
-            nodesToCheck = nodeDiscoveryService.getNodes(nodeType).stream()
-                    .map(Node::guid)
-                    .collect(Collectors.toSet());
-
-        }
+        // REMOVEME
+//
+//        if (nodesToCheck == null) {
+//
+//            // Simply get any node for the type specified
+//            nodesToCheck = nodeDiscoveryService.getNodes(nodeType).stream()
+//                    .map(Node::guid)
+//                    .collect(Collectors.toSet());
+//
+//        }
 
         if (nodesToCheck == null) {
             throw new NodeNotFoundException("Unable to find manifest because there are no known DDS nodes");

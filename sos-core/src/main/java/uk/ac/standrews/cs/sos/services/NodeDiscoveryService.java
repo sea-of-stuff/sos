@@ -60,9 +60,9 @@ public interface NodeDiscoveryService {
      * Get a set of nodes from a nodes collection.
      * The limit parameters will constrain the size of the set.
      *
-     * @param nodesCollection
-     * @param limit
-     * @return
+     * @param nodesCollection from which to find the nodes
+     * @param limit max number of returned nodes
+     * @return the set of nodes found
      */
     Set<Node> getNodes(NodesCollection nodesCollection, int limit);
 
@@ -70,9 +70,9 @@ public interface NodeDiscoveryService {
      * Returns a set of node refs matching the NodesCollection and NodeType constraints.
      * This method returns a maximum number of nodes as specified by the limit parameter.
      *
-     * @param nodesCollection
-     * @param type
-     * @param limit
+     * @param nodesCollection from which to find the nodes
+     * @param type of node to find
+     * @param limit max number of returned nodes
      * @return the filtered nodes collection
      */
     NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit);
@@ -88,8 +88,8 @@ public interface NodeDiscoveryService {
      * Returns a set of known nodes.
      * The limit constrains the maximum number of nodes returned.
      *
-     * @param limit
-     * @return
+     * @param limit max number of nodes to return
+     * @return the nodes found
      */
     Set<Node> getNodes(int limit);
 
@@ -109,6 +109,12 @@ public interface NodeDiscoveryService {
      */
     String infoNode(Node node) throws NodeNotFoundException;
 
+    /**
+     * Current stats about the node with the matching GUID
+     *
+     * @param guid of the node
+     * @return the stats object for the node
+     */
     NodeStats getNodeStats(IGUID guid);
 
 }

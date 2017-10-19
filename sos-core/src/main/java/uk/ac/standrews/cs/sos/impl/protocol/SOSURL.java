@@ -111,6 +111,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL NDS_POST_MANIFEST(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "nds/node";
+
+        return makeURL(url);
+    }
+
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash();
@@ -143,14 +150,6 @@ public class SOSURL {
     public static URL NDS_REGISTER_NODE(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "nds/register";
-
-        return makeURL(url);
-    }
-
-    // REMOVEME - need to have node as manifest
-    public static URL NDS_GET_NODE(Node node, IGUID guid) throws SOSURLException {
-        String url = buildURLBase(node) +
-                "nds/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }

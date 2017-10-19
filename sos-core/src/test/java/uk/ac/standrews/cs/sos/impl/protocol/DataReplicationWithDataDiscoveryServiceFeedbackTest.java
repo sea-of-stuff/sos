@@ -148,7 +148,7 @@
 //        assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID);
 //
 //        verify(mockNodeDiscoveryService, times(3)).registerNode(anyObject(), anyBoolean());
-//        verify(mockDataDiscoveryService, times(3)).addManifestDDSMapping(anyObject(), anyObject());
+//        verify(mockDataDiscoveryService, times(3)).addManifestNodeMapping(anyObject(), anyObject());
 //    }
 //
 //    @Test (expectedExceptions = SOSProtocolException.class)

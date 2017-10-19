@@ -32,11 +32,11 @@ import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 public class RESTNDS {
 
     @POST
-    @Path("/register")
+    @Path("/node")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response register(SOSNode node, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/nds/register");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/nds/node");
 
         NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
 

@@ -173,7 +173,7 @@ public class CommonUtilities {
                 counter++;
 
                 // Make sure that the manifestDataService has record of this information
-                manifestsDataService.addManifestDDSMapping(guid, nodeRef);
+                manifestsDataService.addManifestNodeMapping(guid, nodeRef);
             }
         }
 

@@ -17,11 +17,11 @@ import java.util.*;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DDSIndex implements Serializable {
+public class ManifestsLocationsIndex implements Serializable {
 
     private transient HashMap<IGUID, Set<IGUID>> index;
 
-    public DDSIndex() {
+    public ManifestsLocationsIndex() {
         index = new HashMap<>();
     }
 
@@ -41,7 +41,7 @@ public class DDSIndex implements Serializable {
         }
     }
 
-    public Set<IGUID> getDDSRefs(IGUID manifestGUID) {
+    public Set<IGUID> getNodeRefs(IGUID manifestGUID) {
 
         if (index.containsKey(manifestGUID)) {
             return index.get(manifestGUID);

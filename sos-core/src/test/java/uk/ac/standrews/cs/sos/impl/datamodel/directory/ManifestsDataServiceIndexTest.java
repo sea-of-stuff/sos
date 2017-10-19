@@ -29,9 +29,9 @@ public class ManifestsDataServiceIndexTest {
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
 
-        DDSIndex index = new DDSIndex();
+        ManifestsLocationsIndex index = new ManifestsLocationsIndex();
         index.addEntry(manifestGUID, nodeGUID);
-        Set<IGUID> nodesGUIDs = index.getDDSRefs(manifestGUID);
+        Set<IGUID> nodesGUIDs = index.getNodeRefs(manifestGUID);
         assertNotNull(nodesGUIDs);
         assertNotEquals(nodesGUIDs.size(), 0);
         assertEquals(nodesGUIDs.size(), 1);
@@ -42,8 +42,8 @@ public class ManifestsDataServiceIndexTest {
     public void nullTest() {
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
 
-        DDSIndex index = new DDSIndex();
-        Set<IGUID> nodesGUIDs = index.getDDSRefs(manifestGUID);
+        ManifestsLocationsIndex index = new ManifestsLocationsIndex();
+        Set<IGUID> nodesGUIDs = index.getNodeRefs(manifestGUID);
         assertEquals(nodesGUIDs.size(), 0);
     }
 
@@ -52,13 +52,13 @@ public class ManifestsDataServiceIndexTest {
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
 
-        DDSIndex index = new DDSIndex();
+        ManifestsLocationsIndex index = new ManifestsLocationsIndex();
         index.addEntry(manifestGUID, nodeGUID);
-        Set<IGUID> nodesGUIDs = index.getDDSRefs(manifestGUID);
+        Set<IGUID> nodesGUIDs = index.getNodeRefs(manifestGUID);
         assertEquals(nodesGUIDs.size(), 1);
 
         index.evictEntry(manifestGUID, nodeGUID);
-        Set<IGUID> nodesGUIDsSecondTime = index.getDDSRefs(manifestGUID);
+        Set<IGUID> nodesGUIDsSecondTime = index.getNodeRefs(manifestGUID);
         assertEquals(nodesGUIDsSecondTime.size(), 0);
     }
 
@@ -78,14 +78,14 @@ public class ManifestsDataServiceIndexTest {
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
 
-        DDSIndex ddsIndex = new DDSIndex();
-        ddsIndex.addEntry(manifestGUID, nodeGUID);
+        ManifestsLocationsIndex manifestsLocationsIndex = new ManifestsLocationsIndex();
+        manifestsLocationsIndex.addEntry(manifestGUID, nodeGUID);
 
         IFile file = localStorage.createFile(cachesDir, "dds.index");
-        Persistence.Persist(ddsIndex, file);
+        Persistence.Persist(manifestsLocationsIndex, file);
 
-        DDSIndex persistedIndex = (DDSIndex) Persistence.Load(file);
-        Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
+        ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.Load(file);
+        Set<IGUID> nodesGUIDs = persistedIndex.getNodeRefs(manifestGUID);
         assertNotNull(nodesGUIDs);
         assertNotEquals(nodesGUIDs.size(), 0);
         assertEquals(nodesGUIDs.size(), 1);
@@ -106,14 +106,14 @@ public class ManifestsDataServiceIndexTest {
         LocalStorage localStorage = new LocalStorage(stor);
         IDirectory cachesDir = localStorage.getNodeDirectory();
 
-        DDSIndex ddsIndex = new DDSIndex();
+        ManifestsLocationsIndex manifestsLocationsIndex = new ManifestsLocationsIndex();
 
         IFile file = localStorage.createFile(cachesDir, "dds.index");
-        Persistence.Persist(ddsIndex, file);
+        Persistence.Persist(manifestsLocationsIndex, file);
 
-        DDSIndex persistedIndex = (DDSIndex) Persistence.Load(file);
+        ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.Load(file);
         IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        Set<IGUID> nodesGUIDs = persistedIndex.getDDSRefs(manifestGUID);
+        Set<IGUID> nodesGUIDs = persistedIndex.getNodeRefs(manifestGUID);
         assertEquals(nodesGUIDs.size(), 0);
     }
 }

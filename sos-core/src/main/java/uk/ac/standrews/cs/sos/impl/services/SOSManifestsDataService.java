@@ -60,7 +60,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     private LocalStorage localStorage;
 
     // Maps ManifestGUID --> [ DDS Nodes that might have it ]
-    private DDSIndex ddsIndex;
+    private ManifestsLocationsIndex manifestsLocationsIndex;
 
     public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
 
@@ -73,7 +73,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         loadOrCreateIndex();
 
         local = new LocalManifestsDirectory(localStorage);
-        remote = new RemoteManifestsDirectory(ddsIndex, nodeDiscoveryService, this);
+        remote = new RemoteManifestsDirectory(manifestsLocationsIndex, nodeDiscoveryService, this);
     }
 
     @Override
@@ -124,8 +124,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void addManifestDDSMapping(IGUID manifest, IGUID ddsNode) {
-        ddsIndex.addEntry(manifest, ddsNode);
+    public void addManifestNodeMapping(IGUID manifest, IGUID node) {
+        manifestsLocationsIndex.addEntry(manifest, node);
     }
 
     // REMOVEME ????? in favour of method with params (guid, nodeTypeFilter)
@@ -286,7 +286,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             Persistence.Persist(inMemoryCache, cacheFile);
 
             IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
-            Persistence.Persist(ddsIndex, ddsIndexFile);
+            Persistence.Persist(manifestsLocationsIndex, ddsIndexFile);
 
             IFile indexFile = localStorage.createFile(cacheDir, MANIFESTS_INDEX_FILE);
             Persistence.Persist(index, indexFile);
@@ -317,14 +317,14 @@ public class SOSManifestsDataService implements ManifestsDataService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
             if (file.exists()) {
-                ddsIndex = (DDSIndex) Persistence.Load(file);
+                manifestsLocationsIndex = (ManifestsLocationsIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS index");
         }
 
-        if (ddsIndex == null) {
-            ddsIndex = new DDSIndex();
+        if (manifestsLocationsIndex == null) {
+            manifestsLocationsIndex = new ManifestsLocationsIndex();
         }
     }
 

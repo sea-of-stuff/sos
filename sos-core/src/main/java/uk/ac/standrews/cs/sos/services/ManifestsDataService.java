@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Data Discovery Service
+ * Manifest Data Service
  *
- * The DDS takes care of:
- * - managing the manifests in the SOS
+ * The MDS takes care of:
+ * - managing the first class entities of the SOS
  * - track where the data is and help nodes to find the data
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -83,7 +83,7 @@ public interface ManifestsDataService {
      * @param manifest for which to add a DDSnode ref
      * @param ddsNode the DDS node ref
      */
-    void addManifestDDSMapping(IGUID manifest, IGUID ddsNode);
+    void addManifestNodeMapping(IGUID manifest, IGUID ddsNode);
 
     /**
      * Get all the tips for the given invariant.

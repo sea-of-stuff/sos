@@ -6,8 +6,8 @@ package uk.ac.standrews.cs.sos.interfaces.node;
 public enum NodeType {
 
     AGENT("agent"),
-    CMS("cms"),
-    DDS("dds"),
+    CMS("cms"), // TODO - find another acronym
+    DDS("dds"), // TODO - DDS -> MDS
     MMS("mms"),
     NDS("nds"),
     RMS("rms"),
@@ -25,7 +25,7 @@ public enum NodeType {
 
     /**
      * Get the string representation of the enum NodeType
-     * @return
+     * @return string for the NodeType
      */
     @Override
     public String toString() {
@@ -34,8 +34,8 @@ public enum NodeType {
 
     /**
      * Parse a string to the corresponding NodeType enum
-     * @param value
-     * @return
+     * @param value string version of the enum
+     * @return the enum NodeType
      */
     public static NodeType get(String value) {
         for(NodeType v : values())
