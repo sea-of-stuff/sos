@@ -37,6 +37,7 @@ import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -225,7 +226,7 @@ public class SOSStorageService implements StorageService {
     public Data getAtomContent(NodesCollection nodesCollection, IGUID guid) throws AtomNotFoundException {
 
         try {
-            Manifest manifest = manifestsDataService.getManifest(nodesCollection, guid);
+            Manifest manifest = manifestsDataService.getManifest(nodesCollection, NodeType.DDS, guid);
 
             if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
                 Atom atom = (Atom) manifest;

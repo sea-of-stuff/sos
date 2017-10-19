@@ -280,7 +280,7 @@ public class CommonUtilities {
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
         NodesCollection domain = new NodesCollectionImpl(NodesCollectionType.LOCAL);
-        return manifestsDataService.getManifest(domain, guid);
+        return manifestsDataService.getManifest(domain, NodeType.DDS, guid);
     }
 
     /**
@@ -293,7 +293,7 @@ public class CommonUtilities {
     // Retrieve the manifest from local node
     public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
-        return manifestsDataService.getManifest(version.content());
+        return manifestsDataService.getManifest(version.content(), NodeType.DDS);
     }
 
     /**

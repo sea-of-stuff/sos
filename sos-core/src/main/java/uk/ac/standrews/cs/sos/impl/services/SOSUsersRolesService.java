@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UsersRolesIndex;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
@@ -69,7 +70,7 @@ public class SOSUsersRolesService implements UsersRolesService {
         for(IGUID ref:refs) {
 
             try {
-                User user = (User) manifestsDataService.getManifest(ref);
+                User user = (User) manifestsDataService.getManifest(ref, NodeType.RMS);
                 users.add(user);
 
             } catch (ManifestNotFoundException e) {
@@ -89,7 +90,7 @@ public class SOSUsersRolesService implements UsersRolesService {
         for(IGUID ref:refs) {
 
             try {
-                Role role = (Role) manifestsDataService.getManifest(ref);
+                Role role = (Role) manifestsDataService.getManifest(ref, NodeType.RMS);
                 roles.add(role);
 
             } catch (ManifestNotFoundException e) {
@@ -116,7 +117,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     public User getUser(IGUID userGUID) throws UserNotFoundException {
 
         try {
-            return (User) manifestsDataService.getManifest(userGUID);
+            return (User) manifestsDataService.getManifest(userGUID, NodeType.RMS);
 
         } catch (ManifestNotFoundException e) {
             throw new UserNotFoundException();
@@ -139,7 +140,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     public Role getRole(IGUID roleGUID) throws RoleNotFoundException {
 
         try {
-            return (Role) manifestsDataService.getManifest(roleGUID);
+            return (Role) manifestsDataService.getManifest(roleGUID, NodeType.RMS);
 
         } catch (ManifestNotFoundException e) {
             throw new RoleNotFoundException();
@@ -160,7 +161,7 @@ public class SOSUsersRolesService implements UsersRolesService {
         for(IGUID ref:roleRefs) {
 
             try {
-                Role role = (Role) manifestsDataService.getManifest(ref);
+                Role role = (Role) manifestsDataService.getManifest(ref, NodeType.RMS);
                 roles.add(role);
 
             } catch (ManifestNotFoundException e) {

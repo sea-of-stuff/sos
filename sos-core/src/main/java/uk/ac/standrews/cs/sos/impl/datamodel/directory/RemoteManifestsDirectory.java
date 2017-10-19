@@ -37,6 +37,11 @@ import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LI
  */
 public class RemoteManifestsDirectory extends AbstractManifestsDirectory implements ManifestsDirectory {
 
+    /**
+     * Max number of trials to external nodes before throwing a not found exception
+     */
+    private static int NUMBER_OF_REMOTE_TRIALS = 3;
+
     private DDSIndex ddsIndex;
     private NodeDiscoveryService nodeDiscoveryService;
     private ManifestsDataService manifestsDataService;
@@ -90,39 +95,58 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
         try {
-            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), guid);
+            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), NodeType.DDS, guid);
         } catch (NodesCollectionException e) {
-            return null;
+            throw new ManifestNotFoundException();
         }
 
     }
 
-    public Manifest findManifest(NodesCollection nodesCollection, IGUID guid) throws ManifestNotFoundException {
+    @Override
+    public Manifest findManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException {
 
-        Set<IGUID> ddsGUIDsToCheck;
         try {
-            ddsGUIDsToCheck = getDDSNodes(nodesCollection, guid);
+            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), nodeTypeFilter, guid);
+        } catch (NodesCollectionException e) {
+            throw new ManifestNotFoundException();
+        }
+
+    }
+
+    public Manifest findManifest(NodesCollection nodesCollection, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException {
+
+        Set<IGUID> nodesToCheck;
+        try {
+            nodesToCheck = getNodesToCheck(nodesCollection, nodeTypeFilter, guid);
         } catch (NodeNotFoundException e) {
             throw new ManifestNotFoundException("Unable to find manifest because there are no known DDS nodes");
         }
 
-        for(IGUID ddsGUID : ddsGUIDsToCheck) {
+        int trial = 0;
+        for(IGUID nodeToCheck : nodesToCheck) {
+
+            if (trial >= NUMBER_OF_REMOTE_TRIALS) {
+                break;
+            }
+            trial++;
 
             try {
-                Node node = nodeDiscoveryService.getNode(ddsGUID);
+                Node node = nodeDiscoveryService.getNode(nodeToCheck);
 
                 FetchManifest fetchManifest = new FetchManifest(node, guid);
                 TasksQueue.instance().performSyncTask(fetchManifest);
 
                 Manifest manifest = fetchManifest.getManifest();
                 if (manifest == null) {
-                    throw new ManifestNotFoundException("Unable to fetch manifest");
+                    continue;
                 }
+
+                // TODO - update location-manifest info (ddsIndex)
 
                 return manifest;
 
             } catch (NodeNotFoundException | IOException e) {
-                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid .toMultiHash()+ " from Node with GUID " + ddsGUID.toMultiHash());
+                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid .toMultiHash()+ " from Node with GUID " + nodeToCheck.toMultiHash());
             }
 
         }
@@ -142,18 +166,18 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant) {
 
 
-        Set<IGUID> ddsGUIDsToCheck;
+        Set<IGUID> nodesToCheck;
         try {
-            ddsGUIDsToCheck = getDDSNodes(nodesCollection, invariant);
+            nodesToCheck = getNodesToCheck(nodesCollection, NodeType.DDS, invariant);
         } catch (NodeNotFoundException e) {
             return new LinkedHashSet<>();
         }
 
         Set<IGUID> versionRefs = new LinkedHashSet<>();
-        for(IGUID ddsGUID : ddsGUIDsToCheck) {
+        for(IGUID nodeToCheck : nodesToCheck) {
 
             try {
-                Node node = nodeDiscoveryService.getNode(ddsGUID);
+                Node node = nodeDiscoveryService.getNode(nodeToCheck);
 
                 FetchVersions fetchVersions = new FetchVersions(node, invariant);
                 TasksQueue.instance().performSyncTask(fetchVersions);
@@ -161,7 +185,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
                 versionRefs.addAll(fetchVersions.getVersions());
 
             } catch (NodeNotFoundException | IOException e) {
-                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch versions for invariant " + invariant.toMultiHash()+ " from Node with GUID " + ddsGUID.toMultiHash());
+                SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch versions for invariant " + invariant.toMultiHash()+ " from Node with GUID " + nodeToCheck.toMultiHash());
             }
 
         }
@@ -172,34 +196,43 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     @Override
     public void flush() {}
 
-    private Set<IGUID> getDDSNodes(NodesCollection nodesCollection, IGUID guid) throws NodeNotFoundException {
+    private Set<IGUID> getNodesToCheck(NodesCollection nodesCollection, NodeType nodeType, IGUID guid) throws NodeNotFoundException {
 
-        Set<IGUID> ddsGUIDsToCheck;
+        Set<IGUID> nodesToCheck;
         if (nodesCollection.type().equals(NodesCollectionType.SPECIFIED)) {
-            NodesCollection ddsNodesOnly = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, NO_LIMIT);
-            ddsGUIDsToCheck = ddsNodesOnly.nodesRefs();
+
+            NodesCollection nodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, nodeType, NO_LIMIT);
+            nodesToCheck = nodes.nodesRefs();
+
         } else if (nodesCollection.type().equals(NodesCollectionType.ANY)){
-            // Get DDS nodes where we know the entity could be
-            ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
+
+            // Get nodes where we know the entity could be
+            nodesToCheck = nodeDiscoveryService.getNodes(nodeType).stream()
                     .map(Node::guid)
                     .collect(Collectors.toSet());
+
         } else {
-            ddsGUIDsToCheck = ddsIndex.getDDSRefs(guid);
+
+            // TODO - this is specific to DDS nodes
+            // Make this a generic index of guid --> node
+            nodesToCheck = ddsIndex.getDDSRefs(guid);
+
         }
 
-        if (ddsGUIDsToCheck == null) {
+        if (nodesToCheck == null) {
 
-            // Simply check any node
-            ddsGUIDsToCheck = nodeDiscoveryService.getNodes(NodeType.DDS).stream()
+            // Simply get any node for the type specified
+            nodesToCheck = nodeDiscoveryService.getNodes(nodeType).stream()
                     .map(Node::guid)
                     .collect(Collectors.toSet());
+
         }
 
-        if (ddsGUIDsToCheck == null) {
+        if (nodesToCheck == null) {
             throw new NodeNotFoundException("Unable to find manifest because there are no known DDS nodes");
         }
 
-        return ddsGUIDsToCheck;
+        return nodesToCheck;
 
     }
 

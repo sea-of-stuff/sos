@@ -104,6 +104,8 @@ public class FetchManifest extends Task {
         } else if (node.isMMS()) {
             return SOSURL.MMS_GET_MANIFEST(node, manifestId);
 
+        } else if (node.isNDS()) {
+            return SOSURL.NDS_GET_MANIFEST(node, manifestId);
         }
 
         throw new SOSURLException("Unable to return manifest URL for node " + node.toString());

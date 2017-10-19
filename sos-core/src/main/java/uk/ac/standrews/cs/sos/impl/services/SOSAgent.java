@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 
@@ -235,7 +236,7 @@ public class SOSAgent implements Agent {
     @Override
     public Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ServiceException {
         try {
-            return manifestsDataService.getManifest(nodesCollection, guid);
+            return manifestsDataService.getManifest(nodesCollection, NodeType.DDS, guid);
         } catch (ManifestNotFoundException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }

@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -52,6 +53,7 @@ public interface ManifestsDataService {
      *                              explorable Sea of Stuff.
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+    Manifest getManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException;
 
     /**
      * Challenge manifest matching the GUID with the given string challenge
@@ -66,11 +68,12 @@ public interface ManifestsDataService {
      * Get the manifest matching the given GUID from the nodes collection
      *
      * @param nodes
+     * @param nodeTypeFilter
      * @param guid
      * @return
      * @throws ManifestNotFoundException
      */
-    Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException;
+    Manifest getManifest(NodesCollection nodes, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException;
 
     /**
      * Map the GUID of a manifest with the GUID of a DDS node.

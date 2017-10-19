@@ -12,4 +12,8 @@ public class ManifestNotFoundException extends ManifestException {
     public ManifestNotFoundException(String message) {
         super("Exception: " + message);
     }
+
+    public ManifestNotFoundException() {
+        super();
+    }
 }

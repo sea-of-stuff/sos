@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsIndex;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -127,11 +128,22 @@ public class SOSManifestsDataService implements ManifestsDataService {
         ddsIndex.addEntry(manifest, ddsNode);
     }
 
+    // REMOVEME ????? in favour of method with params (guid, nodeTypeFilter)
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
         try {
-            return getManifest(new NodesCollectionImpl(ANY), guid);
+            return getManifest(new NodesCollectionImpl(ANY), NodeType.DDS, guid);
+        } catch (NodesCollectionException e) {
+            throw new ManifestNotFoundException("Manifest not found");
+        }
+    }
+
+    @Override
+    public Manifest getManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException {
+
+        try {
+            return getManifest(new NodesCollectionImpl(ANY), nodeTypeFilter, guid);
         } catch (NodesCollectionException e) {
             throw new ManifestNotFoundException("Manifest not found");
         }
@@ -156,7 +168,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public Manifest getManifest(NodesCollection nodes, IGUID guid) throws ManifestNotFoundException {
+    public Manifest getManifest(NodesCollection nodes, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException {
 
         if (guid == null || guid.isInvalid()) {
             throw new ManifestNotFoundException("GUID was invalid");
@@ -186,7 +198,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
             if (manifest == null && !nodes.type().equals(LOCAL)) {
 
-                manifest = remote.findManifest(nodes, guid);
+                manifest = remote.findManifest(nodes, nodeTypeFilter, guid);
                 if (manifest != null) {
                     inMemoryCache.addManifest(manifest);
                     local.addManifest(manifest);

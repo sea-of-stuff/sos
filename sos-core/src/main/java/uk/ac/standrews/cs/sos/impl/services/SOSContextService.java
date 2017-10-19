@@ -29,6 +29,7 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.context.ContextsContentsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
@@ -257,7 +258,7 @@ public class SOSContextService implements ContextService {
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
-            return (Context) manifestsDataService.getManifest(contextGUID);
+            return (Context) manifestsDataService.getManifest(contextGUID, NodeType.CMS);
         } catch (ManifestNotFoundException e) {
             throw new ContextNotFoundException(e);
         }
@@ -299,7 +300,7 @@ public class SOSContextService implements ContextService {
         try {
             Context context = getContext(contextGUID);
 
-            Compound compound = (Compound) manifestsDataService.getManifest(context.content());
+            Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
             return compound.getContents().stream()
                     .map(Content::getGUID)
                     .collect(Collectors.toSet());
@@ -443,7 +444,7 @@ public class SOSContextService implements ContextService {
 
         Set<Content> currentContents;
         try {
-            Compound compound = (Compound) manifestsDataService.getManifest(context.content());
+            Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
             currentContents = compound.getContents();
         } catch (ManifestNotFoundException e) {
             throw new ContextException("Unable to get the context's current contents");
@@ -728,7 +729,7 @@ public class SOSContextService implements ContextService {
             boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
-                Manifest manifest = manifestsDataService.getManifest(guid);
+                Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
                 policy.apply(context.codomain(), commonUtilities, manifest);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
             }
@@ -755,7 +756,7 @@ public class SOSContextService implements ContextService {
             boolean allPoliciesAreSatisfied = true;
             for (Policy policy:policies) {
 
-                Manifest manifest = manifestsDataService.getManifest(guid);
+                Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);;
             }
 
@@ -791,7 +792,7 @@ public class SOSContextService implements ContextService {
         IGUID predicateRef = context.predicate();
 
         try {
-            return (Predicate) manifestsDataService.getManifest(predicateRef);
+            return (Predicate) manifestsDataService.getManifest(predicateRef, NodeType.CMS);
 
         } catch (ManifestNotFoundException e) {
 
@@ -807,7 +808,7 @@ public class SOSContextService implements ContextService {
         for(IGUID policyRef:context.policies()) {
 
             try {
-                Policy policy = (Policy) manifestsDataService.getManifest(policyRef);
+                Policy policy = (Policy) manifestsDataService.getManifest(policyRef, NodeType.CMS);
                 retval.add(policy);
 
             } catch (ManifestNotFoundException e) {

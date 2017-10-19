@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
@@ -46,7 +47,7 @@ public class SOSMetadataService implements MetadataService {
     public Metadata getMetadata(IGUID guid) throws MetadataNotFoundException {
 
         try {
-            return (Metadata) manifestsDataService.getManifest(guid);
+            return (Metadata) manifestsDataService.getManifest(guid, NodeType.MMS);
         } catch (ManifestNotFoundException e) {
             throw new MetadataNotFoundException("Unable to find metadata");
         }
@@ -56,7 +57,7 @@ public class SOSMetadataService implements MetadataService {
     public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {
 
         try {
-            return (Metadata) manifestsDataService.getManifest(nodesCollection, guid);
+            return (Metadata) manifestsDataService.getManifest(nodesCollection, NodeType.MMS, guid);
         } catch (ManifestNotFoundException e) {
             throw new MetadataNotFoundException("Unable to find metadata");
         }

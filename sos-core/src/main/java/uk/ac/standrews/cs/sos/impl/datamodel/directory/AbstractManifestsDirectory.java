@@ -1,10 +1,12 @@
 package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
@@ -15,6 +17,11 @@ import java.util.*;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 abstract class AbstractManifestsDirectory implements ManifestsDirectory {
+
+    @Override
+    public Manifest findManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException {
+        return findManifest(guid);
+    }
 
     Manifest mergeManifests(IGUID guid, Atom first, Atom second) {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());

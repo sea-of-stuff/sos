@@ -62,6 +62,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL NDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "nds/guid/" + guid.toMultiHash();
+
+        return makeURL(url);
+    }
+
     public static URL DDS_GET_VERSIONS(Node node, IGUID invariant) throws SOSURLException {
         String url = buildURLBase(node) +
                 "dds/versions/invariant/" + invariant.toMultiHash();

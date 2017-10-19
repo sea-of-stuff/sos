@@ -2,18 +2,19 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.node.*;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.GetNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.InfoNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.PingNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
+import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
@@ -87,6 +88,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         // Register the node to other NDS nodes
+        // FIXME - do it through the MDS
         if (!localOnly) {
             Set<Node> ndsNodes = getNodes(NodeType.NDS);
             ndsNodes.forEach(n -> {
@@ -100,9 +102,6 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
     @Override
     public Node getNode(IGUID guid) throws NodeNotFoundException {
-
-        // manifestsDataService.getManifest(guid);
-
 
         if (guid == null || guid.isInvalid()) {
             throw new NodeNotFoundException("Cannot find node for invalid GUID");
@@ -282,20 +281,19 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
      */
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {
 
-        Set<Node> ndsNodes = getNodes(NodeType.NDS);
-        GetNode getNode = new GetNode(nodeGUID, ndsNodes.iterator());
-        TasksQueue.instance().performSyncTask(getNode);
 
-        Node retval = getNode.getFoundNode();
-        if (retval == null) {
+        // TODO - must be tested
+        try {
+            Manifest manifest = manifestsDataService.getManifest(nodeGUID, NodeType.NDS);
+
+            // TODO - register node
+
+            return (Node) manifest;
+
+        } catch (ManifestNotFoundException e) {
             throw new NodeNotFoundException("Unable to find node with GUID " + nodeGUID);
         }
 
-        try {
-            registerNode(retval, true);
-        } catch (NodeRegistrationException ignored) { }
-
-        return retval;
     }
 
     private void runCheckNodesPeriodic() {

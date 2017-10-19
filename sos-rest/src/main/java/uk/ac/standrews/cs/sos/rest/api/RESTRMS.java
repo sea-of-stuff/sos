@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -51,7 +52,7 @@ public class RESTRMS {
         }
 
         try {
-            Manifest manifest = RESTConfig.sos.getDDS().getManifest(userGUID);
+            Manifest manifest = RESTConfig.sos.getDDS().getManifest(userGUID, NodeType.RMS);
 
             if (manifest.getType() == ManifestType.USER ||
                     manifest.getType() == ManifestType.ROLE) {

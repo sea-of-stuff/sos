@@ -156,8 +156,8 @@ public class CommonPolicies {
             for(IGUID v:versions) {
 
                 try {
-                    Manifest m = commonUtilities.getManifest(v);
-                    replicateManifest(codomain, commonUtilities, m, factor);
+                    Manifest retrievedManifest = commonUtilities.getManifest(v);
+                    replicateManifest(codomain, commonUtilities, retrievedManifest, factor);
 
                 } catch (ManifestNotFoundException | NodesCollectionException e) {
                     e.printStackTrace();
@@ -178,8 +178,8 @@ public class CommonPolicies {
             for(IGUID v:versions) {
 
                 try {
-                    Manifest m = commonUtilities.getManifest(v);
-                    if (!manifestIsReplicated(codomain, commonUtilities, m, factor)) {
+                    Manifest retrievedManifest = commonUtilities.getManifest(v);
+                    if (!manifestIsReplicated(codomain, commonUtilities, retrievedManifest, factor)) {
                         return false;
                     }
 
