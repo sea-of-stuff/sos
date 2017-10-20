@@ -44,7 +44,7 @@ public class BasicInstrument implements Instrument {
             }
         }
 
-        System.out.println("Instrumentation output will be collected at the file: " + filename + " - The output will be of type: " + outputTYPE);
+        System.out.println("Instrumentation output will be collected at the file: " + filename + "." + outputTYPE + " - The output will be of type: " + outputTYPE);
     }
 
     @Override

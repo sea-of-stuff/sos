@@ -1,0 +1,20 @@
+{
+  "context": {
+    "name": "DATA_Search_word_the",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.SearchText(guid, \"white rabbit\");",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": []
+}

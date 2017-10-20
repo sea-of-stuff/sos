@@ -17,9 +17,14 @@ getwd()
 # pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_10_11T16_47_13_804Z.TSV", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_20T15_10_37_472Z.TSV", header=TRUE, sep="\t")
 d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
+
+# Remove data from d
+# use this line of code just to inspect the rest of the data
+# d<-d[!(d$ContextName=="DATA"),]
+
 
 aggr <- aggregate(d$Measures ~ d$ContextName,
                   FUN = function(x) c(mean = mean(x), sd = sd(x), n = length(x)))

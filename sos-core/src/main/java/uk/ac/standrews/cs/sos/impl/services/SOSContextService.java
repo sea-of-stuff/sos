@@ -490,7 +490,7 @@ public class SOSContextService implements ContextService {
         }
 
         long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration);
+        InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
         return counter;
     }
