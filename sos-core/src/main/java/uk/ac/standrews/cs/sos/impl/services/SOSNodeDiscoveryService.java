@@ -6,12 +6,12 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.node.*;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.InfoNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.PingNode;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.RegisterNode;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -76,25 +76,19 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         Node nodeToRegister = new SOSNode(node);
-        SOS_LOG.log(LEVEL.INFO, "DDS - Registering node with GUID: " + nodeToRegister.guid().toMultiHash());
+        SOS_LOG.log(LEVEL.INFO, "NDS - Registering node with GUID: " + nodeToRegister.guid().toMultiHash());
 
         try {
-            manifestsDataService.addManifest(node);
+            if (localOnly) {
+                manifestsDataService.addManifest(node);
+            } else {
+                manifestsDataService.addManifest(node, new NodesCollectionImpl(NodesCollectionType.ANY), 1);
+            }
 
             localNodesDirectory.addNode(nodeToRegister);
             localNodesDirectory.persistNodesTable();
-        } catch (ManifestPersistException | NodesDirectoryException e) {
+        } catch (ManifestPersistException | NodesDirectoryException | NodesCollectionException e) {
             throw new NodeRegistrationException("Unable to register node", e);
-        }
-
-        // Register the node to other NDS nodes
-        // FIXME - do it through the MDS
-        if (!localOnly) {
-            Set<Node> ndsNodes = getNodes(NodeType.NDS);
-            ndsNodes.forEach(n -> {
-                RegisterNode registerNode = new RegisterNode(node, n);
-                TasksQueue.instance().performAsyncTask(registerNode);
-            });
         }
 
         return nodeToRegister;
@@ -275,22 +269,20 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     /**
-     * TODO - use getManifest task via MDS
+     * TODO - must be tested
      *
      * Find a matching node for the given GUID through other known NDS nodes
      */
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {
 
-
-        // TODO - must be tested
         try {
             Manifest manifest = manifestsDataService.getManifest(nodeGUID, NodeType.NDS);
+            Node node = (Node) manifest;
+            registerNode(node, true);
 
-            // TODO - register node
+            return node;
 
-            return (Node) manifest;
-
-        } catch (ManifestNotFoundException e) {
+        } catch (ManifestNotFoundException | NodeRegistrationException e) {
             throw new NodeNotFoundException("Unable to find node with GUID " + nodeGUID);
         }
 

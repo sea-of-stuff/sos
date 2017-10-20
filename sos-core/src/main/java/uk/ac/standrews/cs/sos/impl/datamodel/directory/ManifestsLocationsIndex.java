@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * The DDSIndex maps the GUID for a manifest to a set of DDS GUIDs that may have it
  *
- * TODO - limit size?
+ * TODO - limit size, but should always have at least N entries of one kind (e.g. dds, nds, etc)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

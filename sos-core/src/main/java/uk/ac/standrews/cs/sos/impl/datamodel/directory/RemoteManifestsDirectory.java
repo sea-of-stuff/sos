@@ -62,7 +62,10 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public void addManifest(Manifest manifest) throws ManifestPersistException {
 
         try {
-            NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), NodeType.DDS, 1);
+            NodeType nodeType = getNodeType(manifest);
+            if (nodeType == null) throw new SOSProtocolException("Unable to tell what node type to talk to");
+
+            NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), nodeType, 1);
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException | NodesCollectionException e) {
@@ -81,13 +84,42 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
      */
     public void addManifest(Manifest manifest, NodesCollection nodesCollection, int replicationFactor) throws ManifestPersistException {
 
-        NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, NodeType.DDS, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
         try {
+            NodeType nodeType = getNodeType(manifest);
+            if (nodeType == null) throw new SOSProtocolException("Unable to tell what node type to talk to");
+
+            NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, nodeType, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
             // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
+        }
+    }
+
+    private NodeType getNodeType(Manifest manifest) {
+
+        switch(manifest.getType()) {
+
+            case ATOM: case ATOM_PROTECTED:
+            case COMPOUND: case COMPOUND_PROTECTED:
+            case VERSION:
+                return NodeType.DDS;
+
+            case ROLE: case USER:
+                return NodeType.RMS;
+
+            case METADATA: case METADATA_PROTECTED:
+                return NodeType.MMS;
+
+            case NODE:
+                return NodeType.NDS;
+
+            case CONTEXT: case POLICY: case PREDICATE:
+                return NodeType.CMS;
+
+            default:
+                return null;
         }
     }
 
