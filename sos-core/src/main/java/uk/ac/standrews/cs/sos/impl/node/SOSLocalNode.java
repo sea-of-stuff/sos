@@ -349,7 +349,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         usersRolesService = new SOSUsersRolesService(localStorage, manifestsDataService);
 
-        storageService = new SOSStorageService(settings.getServices().getStorage(), guid(), localStorage, manifestsDataService, usersRolesService, nodeDiscoveryService);
+        storageService = new SOSStorageService(settings.getServices().getStorage(), guid(), localStorage, manifestsDataService, nodeDiscoveryService);
         metadataService = new SOSMetadataService(new TikaMetadataEngine(), manifestsDataService);
 
         CommonUtilities commonUtilities = new CommonUtilities(nodeDiscoveryService, manifestsDataService, usersRolesService, storageService);

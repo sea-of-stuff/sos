@@ -79,14 +79,15 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         SOS_LOG.log(LEVEL.INFO, "NDS - Registering node with GUID: " + nodeToRegister.guid().toMultiHash());
 
         try {
+            localNodesDirectory.addNode(nodeToRegister);
+            localNodesDirectory.persistNodesTable();
+
             if (localOnly) {
                 manifestsDataService.addManifest(node);
             } else {
                 manifestsDataService.addManifest(node, new NodesCollectionImpl(NodesCollectionType.ANY), 1);
             }
 
-            localNodesDirectory.addNode(nodeToRegister);
-            localNodesDirectory.persistNodesTable();
         } catch (ManifestPersistException | NodesDirectoryException | NodesCollectionException e) {
             throw new NodeRegistrationException("Unable to register node", e);
         }
@@ -269,8 +270,6 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     /**
-     * TODO - must be tested
-     *
      * Find a matching node for the given GUID through other known NDS nodes
      */
     private Node findNodeViaNDS(IGUID nodeGUID) throws NodeNotFoundException {
@@ -305,7 +304,6 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                 nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
             }
 
-        }, 10, 10, TimeUnit.SECONDS);
-        // }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
+        }, 10, 10, TimeUnit.SECONDS); // TODO - use settings from node config
     }
 }

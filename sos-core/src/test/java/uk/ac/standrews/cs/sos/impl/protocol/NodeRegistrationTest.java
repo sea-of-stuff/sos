@@ -207,7 +207,7 @@ public class NodeRegistrationTest extends ProtocolTest {
 
     /**
      * The failure is logged, but nothing is returned to the user.
-     * @throws NodeRegistrationException
+     * @throws NodeRegistrationException if the node could not be registered. Test will fail
      */
     @Test
     public void registerToNDSFailsTest() throws NodeRegistrationException {

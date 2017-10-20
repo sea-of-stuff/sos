@@ -9,7 +9,7 @@ public class Internals {
 
     public static final String MANIFESTS_CACHE_FILE = "manifests.cache";
     public static final String MANIFESTS_INDEX_FILE = "manifests.index";
-    public static final String DDS_INDEX_FILE = "dds.index";
+    public static final String MDS_INDEX_FILE = "mds.index";
     public static final String CMS_INDEX_FILE = "cms.index";
     public static final String USRO_INDEX_FILE = "usro.index";
     public static final String LOCATIONS_INDEX_FILE = "locations.index";
@@ -18,8 +18,6 @@ public class Internals {
 
     public static final String DEFAULT_USER_NAME = "DEFAULT_USER";
     public static final String DEFAULT_ROLE_NAME = "DEFAULT_ROLE";
-    public static final String ACTIVE_USER = "ACTIVE_USER";
-    public static final String ACTIVE_ROLE = "ACTIVE_ROLE";
 
     /**
      * Use this multiplier to make sure that the NDS attempts to return about 3 times as many nodes as requested for a LIMITED nodes' request

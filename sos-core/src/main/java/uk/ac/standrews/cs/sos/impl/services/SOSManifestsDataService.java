@@ -59,7 +59,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     // Uses to store/get manifests into the local disk
     private LocalStorage localStorage;
 
-    // Maps ManifestGUID --> [ DDS Nodes that might have it ]
+    // Maps ManifestGUID --> [ Nodes that might have it ]
     private ManifestsLocationsIndex manifestsLocationsIndex;
 
     public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
@@ -69,7 +69,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         this.localStorage = localStorage;
 
         loadOrCreateCache();
-        loadOrCreateDDSIndex();
+        loadOrCreateManifestsLocationsIndex();
         loadOrCreateIndex();
 
         local = new LocalManifestsDirectory(localStorage);
@@ -211,7 +211,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
             return manifest;
         } catch (ManifestPersistException e) {
-            SOS_LOG.log(LEVEL.ERROR, "DDS - Unable to persist manifest to cache/local");
+            SOS_LOG.log(LEVEL.ERROR, "MDS - Unable to persist manifest to cache/local");
         }
 
         throw new ManifestNotFoundException("Manifest not found");
@@ -285,14 +285,14 @@ public class SOSManifestsDataService implements ManifestsDataService {
             IFile cacheFile = localStorage.createFile(cacheDir, MANIFESTS_CACHE_FILE);
             Persistence.Persist(inMemoryCache, cacheFile);
 
-            IFile ddsIndexFile = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
-            Persistence.Persist(manifestsLocationsIndex, ddsIndexFile);
+            IFile mdsIndexFile = localStorage.createFile(cacheDir, MDS_INDEX_FILE);
+            Persistence.Persist(manifestsLocationsIndex, mdsIndexFile);
 
             IFile indexFile = localStorage.createFile(cacheDir, MANIFESTS_INDEX_FILE);
             Persistence.Persist(index, indexFile);
 
         } catch (DataStorageException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the DDS inMemoryCache and/or index");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to persist the MDS inMemoryCache and/or index");
         }
     }
 
@@ -304,7 +304,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
                 inMemoryCache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS inMemoryCache");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS inMemoryCache");
         }
 
         if (inMemoryCache == null) {
@@ -312,15 +312,15 @@ public class SOSManifestsDataService implements ManifestsDataService {
         }
     }
 
-    private void loadOrCreateDDSIndex() {
+    private void loadOrCreateManifestsLocationsIndex() {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
-            IFile file = localStorage.createFile(cacheDir, DDS_INDEX_FILE);
+            IFile file = localStorage.createFile(cacheDir, MDS_INDEX_FILE);
             if (file.exists()) {
                 manifestsLocationsIndex = (ManifestsLocationsIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS index");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS index");
         }
 
         if (manifestsLocationsIndex == null) {
@@ -336,7 +336,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
                 index = (ManifestsIndex) Persistence.Load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to load the DDS inMemoryCache");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS inMemoryCache");
         }
 
         if (index == null) {

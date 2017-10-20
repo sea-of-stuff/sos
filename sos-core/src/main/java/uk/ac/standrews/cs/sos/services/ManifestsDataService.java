@@ -133,26 +133,26 @@ public interface ManifestsDataService {
     /**
      * Get all versions for the given invariant from the specified node collection
      *
-     * @param nodesCollection
-     * @param invariant
-     * @return
+     * @param nodesCollection where to get the versions from
+     * @param invariant of the asset
+     * @return set of refs to versions of the asset
      */
     Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
 
     /**
      * Get manifests of given type
      *
-     * @param type
-     * @return
+     * @param type of manifests to get
+     * @return set of refs to manifests
      */
     Set<IGUID> getManifests(ManifestType type);
 
     /**
      * Search manifests of given type for the given params
      *
-     * @param type
-     * @param params
-     * @return
+     * @param type of manifest to search
+     * @param params search parameters
+     * @return set of refs to manifest that match the search criteria
      */
     Set<IGUID> searchVersionableManifests(ManifestType type, List<ManifestParam> params);
 

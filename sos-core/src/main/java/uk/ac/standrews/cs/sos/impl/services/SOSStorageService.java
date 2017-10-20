@@ -42,7 +42,6 @@ import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.StorageService;
-import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -62,24 +61,25 @@ import static uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl
  */
 public class SOSStorageService implements StorageService {
 
+    // Settings for this service
     private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
 
+    // Other node services
     private ManifestsDataService manifestsDataService;
-    private UsersRolesService usersRolesService;
     private NodeDiscoveryService nodeDiscoveryService;
 
+    // Internal storage/cache/index/etc
     private LocalStorage storage;
     private AtomStorage atomStorage;
     private LocationsIndex locationIndex;
 
     public SOSStorageService(SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings, IGUID localNodeGUID, LocalStorage storage,
-                             ManifestsDataService manifestsDataService, UsersRolesService usersRolesService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
+                             ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
 
         this.storageSettings = storageSettings;
 
         this.storage = storage;
         this.manifestsDataService = manifestsDataService;
-        this.usersRolesService = usersRolesService;
         this.nodeDiscoveryService = nodeDiscoveryService;
 
         loadOrCreateLocationIndex();
@@ -126,7 +126,9 @@ public class SOSStorageService implements StorageService {
 
         // Make sure that a role is being used
         try {
-            Role role = usersRolesService.getRole(atomBuilder);
+            Role role = atomBuilder.getRole();
+            if (role == null) throw new RoleNotFoundException();
+
             atomBuilder.setRole(role);
         } catch (RoleNotFoundException e) {
             throw new ManifestNotMadeException("Unable to set Role when creating Secure Atom");
@@ -336,7 +338,9 @@ public class SOSStorageService implements StorageService {
 
                 } else if (nodesCollection.type() == NodesCollectionType.LOCAL) {
 
-                    if (!((SOSLocation) location).getMachineID().equals(nodeDiscoveryService.getThisNode().guid())) {
+                    IGUID locationMachineID = ((SOSLocation) location).getMachineID();
+                    Node localNode = nodeDiscoveryService.getThisNode();
+                    if (!locationMachineID.equals(localNode.guid())) {
                         continue;
                     }
 
@@ -363,10 +367,10 @@ public class SOSStorageService implements StorageService {
     /**
      * Adds the data part of the atom to the SOS
      *
-     * @param atomBuilder
-     * @param bundles
-     * @return
-     * @throws DataStorageException
+     * @param atomBuilder containing the information about the atom to be added
+     * @param bundles (OUT) containing the existing locations of the atom. This will be updated to contain the new locations.
+     * @return atom info
+     * @throws DataStorageException if the data could not be saved to disk
      */
     private StoredAtomInfo addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles) throws DataStorageException {
 
