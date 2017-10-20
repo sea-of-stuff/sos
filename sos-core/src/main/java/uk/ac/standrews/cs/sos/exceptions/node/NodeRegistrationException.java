@@ -7,10 +7,6 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
  */
 public class NodeRegistrationException extends SOSException {
 
-    public NodeRegistrationException(Throwable throwable) {
-        super(throwable);
-    }
-
     public NodeRegistrationException(String message, Throwable throwable) {
         super(message, throwable);
     }

@@ -128,7 +128,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         manifestsLocationsIndex.addEntry(manifest, node);
     }
 
-    // REMOVEME ????? in favour of method with params (guid, nodeTypeFilter)
+    // REMOVEME - in favour of method with params (guid, nodeTypeFilter)
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 

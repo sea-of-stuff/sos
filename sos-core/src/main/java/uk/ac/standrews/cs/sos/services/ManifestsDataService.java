@@ -53,6 +53,16 @@ public interface ManifestsDataService {
      *                              explorable Sea of Stuff.
      */
     Manifest getManifest(IGUID guid) throws ManifestNotFoundException;
+
+    /**
+     * Get the manifest that matches the given given GUID.
+     * This method contacts any node in the SOS.
+     *
+     * @param guid of the manifest
+     * @param nodeTypeFilter type of node to contact
+     * @return the manifest
+     * @throws ManifestNotFoundException if the manifest could not be found
+     */
     Manifest getManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException;
 
     /**
@@ -67,11 +77,11 @@ public interface ManifestsDataService {
     /**
      * Get the manifest matching the given GUID from the nodes collection
      *
-     * @param nodes
-     * @param nodeTypeFilter
-     * @param guid
-     * @return
-     * @throws ManifestNotFoundException
+     * @param nodes where to get the manifest from
+     * @param nodeTypeFilter type of node to contact
+     * @param guid of the manifest to get
+     * @return the manifest
+     * @throws ManifestNotFoundException if the manifest could not be found
      */
     Manifest getManifest(NodesCollection nodes, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException;
 

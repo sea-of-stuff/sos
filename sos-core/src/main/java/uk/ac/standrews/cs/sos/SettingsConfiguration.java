@@ -186,7 +186,7 @@ public class SettingsConfiguration {
 
             private String guid;
             private String hostname; // or ip
-            private int port;
+            private int port = 8080;
             private String signCert;
 
             protected SimpleNode() {
@@ -305,12 +305,12 @@ public class SettingsConfiguration {
         public static class AdvanceServicesSettings {
 
             private RoleSettings agent = new RoleSettings();
-            private StorageSettings storage;
-            private DDSSettings dds;
-            private NDSSettings nds;
-            private MMSSettings mms;
-            private CMSSettings cms;
-            private RMSSettings rms;
+            private StorageSettings storage = new StorageSettings(); // default
+            private DDSSettings dds = new DDSSettings(); // default
+            private NDSSettings nds = new NDSSettings(); // default
+            private MMSSettings mms = new MMSSettings();
+            private CMSSettings cms = new CMSSettings();
+            private RMSSettings rms = new RMSSettings();
 
             public AdvanceServicesSettings() {}
 
@@ -399,7 +399,7 @@ public class SettingsConfiguration {
 
             public static class NDSSettings extends RoleSettings {
 
-                private boolean startupRegistration;
+                private boolean startupRegistration = false;
                 private boolean bootstrap = true;
                 private boolean ping = false;
 
@@ -461,12 +461,12 @@ public class SettingsConfiguration {
                 private String loadedPath = "~/sos/java/contexts/"; // This is the default path
 
                 // If true, the CMS will run background processes to classify content and maintain the contexts
-                private boolean automatic;
-                private ThreadSettings predicateThread;
-                private ThreadSettings policiesThread;
-                private ThreadSettings checkPoliciesThread;
-                private ThreadSettings getdataThread;
-                private ThreadSettings spawnThread;
+                private boolean automatic = false;
+                private ThreadSettings predicateThread = new ThreadSettings();
+                private ThreadSettings policiesThread = new ThreadSettings();
+                private ThreadSettings checkPoliciesThread = new ThreadSettings();
+                private ThreadSettings getdataThread = new ThreadSettings();
+                private ThreadSettings spawnThread = new ThreadSettings();
                 private boolean predicateOnNewContext = true;
 
                 public CMSSettings() {}
@@ -742,9 +742,9 @@ public class SettingsConfiguration {
 
         public static class ThreadSettings {
 
-            private int ps; // Number of threads
-            private int initialDelay;
-            private int period;
+            private int ps = 1; // Number of threads
+            private int initialDelay = 60;
+            private int period = 60;
             // TODO - timeunit
 
             public ThreadSettings() {}

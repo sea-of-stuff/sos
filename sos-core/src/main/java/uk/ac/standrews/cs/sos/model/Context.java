@@ -23,6 +23,9 @@ import java.util.Set;
  * - content
  * - domain and codomain
  *
+ *
+ * GUID = hash(name + invariant + previous + content + domain + codomain)
+ *
  * NOTE 1: must have only one version
  * NOTE 2: invariant = hash(predicate + policies)
  *
@@ -31,15 +34,6 @@ import java.util.Set;
 @JsonSerialize(using = ContextSerializer.class)
 @JsonDeserialize(using = ContextDeserializer.class)
 public interface Context extends Versionable, SignedManifest {
-
-    /**
-     * This is the unique GUID for this context
-     *
-     * hash(name + invariant + previous + content + domain + codomain)
-     *
-     * @return GUID of the context
-     */
-    IGUID guid();
 
     /**
      * GUID of compound to contents

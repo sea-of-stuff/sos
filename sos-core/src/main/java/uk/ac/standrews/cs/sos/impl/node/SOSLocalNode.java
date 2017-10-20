@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
@@ -332,16 +331,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initBasicServices() throws SOSException {
 
         // Here we build a circular dependency between the NDS and the MDS, but it is necessary to handle nodes as first class entities
-        try {
-            Node localNode = new SOSNode(this);
-            nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, nodesDatabase);
-            manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
-            nodeDiscoveryService.setMDS(manifestsDataService);
+        Node localNode = new SOSNode(this);
+        nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, nodesDatabase);
+        manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
+        nodeDiscoveryService.setMDS(manifestsDataService);
 
-            SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
-        } catch (SOSProtocolException e) {
-            throw new SOSException(e);
-        }
+        SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
     }
 
     /**

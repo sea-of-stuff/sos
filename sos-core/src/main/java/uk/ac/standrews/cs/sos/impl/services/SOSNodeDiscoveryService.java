@@ -282,8 +282,10 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
             return node;
 
-        } catch (ManifestNotFoundException | NodeRegistrationException e) {
+        } catch (ManifestNotFoundException e) {
             throw new NodeNotFoundException("Unable to find node with GUID " + nodeGUID);
+        } catch (NodeRegistrationException e) {
+            throw new NodeNotFoundException("Unable to register node with GUID (but it was found)" + nodeGUID);
         }
 
     }

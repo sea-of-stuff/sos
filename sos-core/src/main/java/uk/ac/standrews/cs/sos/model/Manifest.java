@@ -22,6 +22,26 @@ import java.io.InputStream;
 public interface Manifest {
 
     /**
+     * GUID representing this manifest
+     *
+     * @return the guid for this manifest
+     */
+    IGUID guid();
+
+    /**
+     * Get the type of manifest as a string.
+     *
+     * @return type of manifest as a string.
+     */
+    ManifestType getType();
+
+    /**
+     *
+     * @return the content used to generate the GUID for this manifest
+     */
+    InputStream contentToHash() throws IOException;
+
+    /**
      * Verifies that the GUID of this manifest matches its contents
      *
      * This method is different for the Atom Manifest, where we need to get the content from all the available locations
@@ -50,25 +70,5 @@ public interface Manifest {
      * @return true if the manifest is valid.
      */
     boolean isValid();
-
-    /**
-     * Get the type of manifest as a string.
-     *
-     * @return type of manifest as a string.
-     */
-    ManifestType getType();
-
-    /**
-     * GUID representing this manifest
-     *
-     * @return the guid for this manifest
-     */
-    IGUID guid();
-
-    /**
-     *
-     * @return the content used to generate the GUID for this manifest
-     */
-    InputStream contentToHash() throws IOException;
 
 }

@@ -1,9 +1,11 @@
 package uk.ac.standrews.cs.sos.exceptions.protocol;
 
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSProtocolException extends Exception {
+public class SOSProtocolException extends SOSException {
 
     public SOSProtocolException(Error e) {
         super(e);
