@@ -46,6 +46,8 @@ public class SOSDistribution {
                 scp.sendDirectory(lDirectoryDataset, path + node.getDatasetPath());
             }
 
+            // TODO - transfer contexts
+
             scp.disconnect();
         }
 

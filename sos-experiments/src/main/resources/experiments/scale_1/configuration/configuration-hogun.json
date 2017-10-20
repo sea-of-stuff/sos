@@ -70,7 +70,7 @@
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "hogun_0.json",
+      "configurationfile" : "hogun_1.json",
       "behaviour": {
         "start": 0,
         "stop": -1,

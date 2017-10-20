@@ -1,0 +1,86 @@
+{
+  "settings": {
+    "services": {
+      "storage": {
+        "exposed": true
+      },
+      "cms": {
+        "exposed": false,
+        "loadedPath": "sos/java/contexts/",
+        "automatic": false,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "dds": {
+        "exposed": false
+      },
+      "rms": {
+        "exposed": false
+      },
+      "nds": {
+        "exposed": false,
+        "startupRegistration" : false,
+        "bootstrap": false
+      },
+      "mms": {
+        "exposed": false
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "/cs/scratch/sic2/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "/cs/scratch/sic2/sos/"
+    },
+    "global": {
+      "ssl_trust_store" : "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/security/cacerts",
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "nodeMaintainer": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": []
+  }
+}

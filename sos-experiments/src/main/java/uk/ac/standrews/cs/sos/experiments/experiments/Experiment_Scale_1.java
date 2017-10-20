@@ -150,8 +150,8 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_Scale_1 experiment_pr_1 = new Experiment_Scale_1(experimentConfiguration);
-        experiment_pr_1.process();
+        Experiment_Scale_1 experiment_scale_1 = new Experiment_Scale_1(experimentConfiguration);
+        experiment_scale_1.process();
     }
 
     private static void runHogun() throws ConfigurationException, ChicShockException, InterruptedException {
