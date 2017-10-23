@@ -29,6 +29,7 @@ This is a prototype of a distributed autonomic personal data storage system.
     |-- sos-web-archive     // Example of an application using the SOS
     |-- sos-experiments     // Code with configurations files for the experiments
     |-- experiments         // Scripts to analyse experiments results
+                            // + datasets and contexts used for the experiments
     |-- sos-instrument      // Instrumentation code. Useful to get results for the experiments.
     |-- scripts             // A bunch of useful scripts
     |-- README.md           // This README file
@@ -174,27 +175,26 @@ The configuration of a SOS node is specified using a simple JSON structure.
 ```json
 {
   "settings": {
-    "guid": "SHA256_16_9999a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00bb",
     "services": {
       "storage": {
-        "exposed": true
+        "exposed": true,
+        "canPersist": true,
+        "maxReplication": 3
       },
       "cms": {
         "exposed": false,
-        "indexFile": "cms.index",
-        "loadedPath": "sos/java/contexts/", // The default path is ~/sos/java/contexts/
         "automatic": true,
         "predicateThread": {
-          "initialDelay": 30,
-          "period": 60
+          "initialDelay": 10,
+          "period": 20
 
         },
         "policiesThread": {
-          "initialDelay": 45,
-          "period": 60
+          "initialDelay": 15,
+          "period": 20
         },
         "checkPoliciesThread": {
-          "initialDelay": 45,
+          "initialDelay": 100,
           "period": 60
         },
         "getdataThread": {
@@ -207,17 +207,17 @@ The configuration of a SOS node is specified using a simple JSON structure.
         }
       },
       "dds": {
-        "exposed": false,
-        "cacheFile": "manifests.cache",
-        "indexFile": "dds.index"
+        "exposed": true,
+        "maxReplication": 3
       },
       "rms": {
-        "exposed": false,
-        "cacheFile": "usro.cache"
+        "exposed": false
       },
       "nds": {
         "exposed": false,
-        "startupRegistration" : true
+        "startupRegistration": true,
+        "bootstrap" : true,
+        "ping": true
       },
       "mms": {
         "exposed": false
@@ -236,7 +236,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
       "port": 8082
     },
     "keys": {
-      "location": "~/sos/keys"
+      "location": "~/sos/keys/"
     },
     "store": {
       "type": "local",
@@ -250,16 +250,23 @@ The configuration of a SOS node is specified using a simple JSON structure.
         }
       },
       "nodeMaintainer": {
-        "enabled" : false,
+        "enabled": true,
         "maxSize": 1048576,
         "thread": {
           "ps": 1,
-          "initialDelay": 0,
-          "period": 600
+          "initialDelay": 60,
+          "period": 60
         }
       }
     },
-    "bootstrapNodes": []
+    "bootstrapNodes": [
+      {
+      "guid" : "SHA256_16_bb077f9420219e99bf776a7a116334405a81d2627bd4f87288259607f05d1615",
+      "hostname" : "138.251.207.87",
+      "port" : 8080,
+      "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKZOnoFAxsx4BiXBKzeJISOv5q5XTSpPZRCmYGg+59VctY1xeYS7NEkEmbk/Sa8y5chrZttN5CggdBJBIFGgMU0CAwEAAQ=="
+      }
+    ]
   }
 }
 ```
