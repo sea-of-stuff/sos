@@ -14,16 +14,16 @@ public interface NodesDatabase extends Database {
     /**
      * Add a given node to the database
      *
-     * @param node
-     * @throws DatabaseConnectionException
+     * @param node to be added
+     * @throws DatabaseConnectionException if the node could not be added
      */
     void addNode(Node node) throws DatabaseConnectionException;
 
     /**
      * Get all nodes from the database
      *
-     * @return
-     * @throws DatabaseConnectionException
+     * @return nodes to get
+     * @throws DatabaseConnectionException if the nodes could not be retrieved
      */
     Set<SOSNode> getNodes() throws DatabaseConnectionException;
 }

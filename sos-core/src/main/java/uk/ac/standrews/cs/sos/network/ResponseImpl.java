@@ -42,9 +42,13 @@ public class ResponseImpl implements Response {
     }
 
     @Override
-    public String getStringBody() throws IOException {
+    public String getStringBody() {
 
-        return IO.InputStreamToString(getBody());
+        try {
+            return IO.InputStreamToString(getBody());
+        } catch (IOException e) {
+            return "";
+        }
     }
 
     public int getContentLength() {
