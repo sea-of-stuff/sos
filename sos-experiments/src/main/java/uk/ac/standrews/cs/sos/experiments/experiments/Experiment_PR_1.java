@@ -31,7 +31,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
-        // Prepare the experiments to be run
+        // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for(int j = 0; j < PREDICATE_TYPE.values().length; j++) {
@@ -46,10 +46,10 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() {
-        super.finish();
+    public void finishIteration() {
+        super.finishIteration();
 
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR_1. # times a predicate was run: " + counter);
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR_1. # times a predicate was runIteration: " + counter);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             try {
                 counter = cms.runPredicates();
             } catch (ContextException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Experiment PR_1 - Unable to run predicates properly for predicate type " + predicate_type.name());
+                SOS_LOG.log(LEVEL.ERROR, "Experiment PR_1 - Unable to runIteration predicates properly for predicate type " + predicate_type.name());
             }
         }
 
@@ -161,7 +161,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
 
-        System.out.println("L/l for Local run and H/h for hogun cluster run");
+        System.out.println("L/l for Local runIteration and H/h for hogun cluster runIteration");
 
         Scanner in = new Scanner(System.in);
         String option = in.nextLine();

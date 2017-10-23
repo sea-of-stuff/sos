@@ -25,7 +25,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
     public Experiment_PO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
-        // Prepare the experiments to be run
+        // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for(int j = 0; j < POLICY_TYPE.values().length; j++) {
@@ -41,8 +41,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() {
-        super.finish();
+    public void finishIteration() {
+        super.finishIteration();
 
         InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PO_1.");
     }
@@ -134,7 +134,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
     }
 
-    // TODO - this experiment will require multiple nodes. It is pointless to have this experiment run locally only.
+    // TODO - this experiment will require multiple nodes. It is pointless to have this experiment runIteration locally only.
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_1") + "configuration.json");

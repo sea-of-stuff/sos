@@ -37,7 +37,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
     public Experiment_Scale_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
-        // Prepare the experiments to be run
+        // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             units.add(new Experiment_Scale_1.ExperimentUnit_Scale_1());
@@ -48,10 +48,10 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() {
-        super.finish();
+    public void finishIteration() {
+        super.finishIteration();
 
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT Scale_1. # times a predicate was run: " + counter);
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT Scale_1. # times a predicate was runIteration: " + counter);
     }
 
     @Override
@@ -123,14 +123,14 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
             try {
                 counter = cms.runPredicates();
             } catch (ContextException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Experiment Scale_1 - Unable to run predicates properly");
+                SOS_LOG.log(LEVEL.ERROR, "Experiment Scale_1 - Unable to runIteration predicates properly");
             }
         }
     }
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
 
-        System.out.println("L/l for Local run and H/h for hogun cluster run");
+        System.out.println("L/l for Local runIteration and H/h for hogun cluster runIteration");
 
         Scanner in = new Scanner(System.in);
         String option = in.nextLine();

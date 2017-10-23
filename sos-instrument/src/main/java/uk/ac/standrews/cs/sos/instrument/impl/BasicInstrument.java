@@ -24,11 +24,9 @@ public class BasicInstrument implements Instrument {
         this.outputTYPE = outputTYPE;
         this.filename = filename;
 
-        measureNodeInstance();
-
         boolean fileIsEmpty = fileIsEmpty(filename);
         if (fileIsEmpty) {
-            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name()), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name().toLowerCase()), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 switch (outputTYPE) {
@@ -39,23 +37,12 @@ public class BasicInstrument implements Instrument {
                         bufferedWriter.write("StatsTYPE" + TAB);
                 }
 
-                writeHeader(bufferedWriter, new AppMetrics(), false);
-                writeHeader(bufferedWriter, new OSMetrics(), true);
+                writeHeader(bufferedWriter, new AppMetrics(), true);
             }
         }
 
-        System.out.println("Instrumentation output will be collected at the file: " + filename + "." + outputTYPE + " - The output will be of type: " + outputTYPE);
-    }
-
-    @Override
-    public void measureNodeInstance() throws IOException {
-
-        try (FileWriter fileWriter = new FileWriter(new File(filename + "_node"), true);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-
-            ImmutableOSMeasures osMeasures = ImmutableOSMeasures.measure();
-            bufferedWriter.write(osMeasures.toString());
-        }
+        System.out.println("Instrumentation output will be collected at the file: " + filename + "." + outputTYPE.name().toLowerCase() +
+                " - The output will be of type: " + outputTYPE);
     }
 
     @Override
@@ -85,7 +72,7 @@ public class BasicInstrument implements Instrument {
 
         if (statistics.isEnabled(statsTYPE)) {
 
-            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name()), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name().toLowerCase()), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 switch (outputTYPE) {
@@ -98,10 +85,7 @@ public class BasicInstrument implements Instrument {
 
                 AppMetrics appMeasure = AppMetrics.measure(message);
                 appMeasure.setUserMeasure(measure);
-                write(bufferedWriter, appMeasure, false);
-
-                OSMetrics osMetrics = OSMetrics.measure();
-                write(bufferedWriter, osMetrics, true);
+                write(bufferedWriter, appMeasure, true);
 
                 // TODO - measure other things...network?
             } catch (IOException e) {
@@ -109,10 +93,6 @@ public class BasicInstrument implements Instrument {
             }
 
         }
-    }
-
-    public void measure(Metrics metrics) {
-
     }
 
     private void write(BufferedWriter bufferedWriter, Metrics metrics, boolean last) throws IOException {

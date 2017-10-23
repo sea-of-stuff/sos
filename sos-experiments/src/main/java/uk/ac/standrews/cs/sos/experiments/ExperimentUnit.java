@@ -34,7 +34,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 public interface ExperimentUnit {
 
     /**
-     * The setup for the experiment unit
+     * The setupIteration for the experiment unit
      *
      * @throws ExperimentException
      */

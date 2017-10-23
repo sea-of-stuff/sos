@@ -46,6 +46,7 @@ public abstract class BaseExperiment implements Experiment {
 
         try {
             InstrumentFactory.instance(experiment.getStats(), OutputTYPE.TSV, OUTPUT_FOLDER + getExperimentResultsFilename());
+            InstrumentFactory.start();
 
             if (experiment.getExperimentNode().hasDataset()) {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
@@ -56,11 +57,11 @@ public abstract class BaseExperiment implements Experiment {
             throw new ExperimentException("Problems while creating the base experiment", e);
         }
 
-        // WarmUp the JVM for the experiments to be run
+        // WarmUp the JVM for the experiments to be runIteration
         WarmUp.run();
     }
 
-    public void setup() throws ExperimentException {
+    public void setupIteration() throws ExperimentException {
 
         try {
             String configurationNodePath = experiment.getExperimentNode().getConfigurationFile(experiment.getName());
@@ -84,14 +85,14 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void run() throws ExperimentException {
+    public void runIteration() throws ExperimentException {
         start = System.nanoTime();
 
         currentExperimentUnit.run();
     }
 
     @Override
-    public void finish() {
+    public void finishIteration() {
         end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("Experiment iteration {" + iteration + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
@@ -110,17 +111,26 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
+    public void finish() throws ExperimentException {
+
+        InstrumentFactory.stop();
+    }
+
+    @Override
     public void process() throws ExperimentException {
 
         long start = System.nanoTime();
         for(iteration = 0; iteration < numberOfTotalIterations(); iteration++) {
 
-            setup();
-            run();
-            finish();
+            setupIteration();
+            runIteration();
+            finishIteration();
 
             cleanup();
         }
+
+        finish();
+
         long end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("All experiments finished in " + nanoToSeconds(timeToFinish) + " seconds");

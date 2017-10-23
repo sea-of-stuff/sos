@@ -12,9 +12,6 @@ import java.io.IOException;
 public class DummyInstrument implements Instrument {
 
     @Override
-    public void measureNodeInstance() throws IOException {}
-
-    @Override
     public void measureDataset(File directory) throws IOException {}
 
     @Override

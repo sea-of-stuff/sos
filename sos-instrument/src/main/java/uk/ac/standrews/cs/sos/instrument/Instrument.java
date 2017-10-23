@@ -8,8 +8,6 @@ import java.io.IOException;
  */
 public interface Instrument {
 
-    void measureNodeInstance() throws IOException;
-
     void measureDataset(File directory) throws IOException;
 
     void measure(String message);

@@ -22,7 +22,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
-        // Prepare the experiments to be run
+        // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
                 units.add(new ExperimentUnit_DO_1());
