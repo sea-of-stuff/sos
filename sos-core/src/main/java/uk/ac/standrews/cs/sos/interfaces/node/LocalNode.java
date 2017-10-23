@@ -11,51 +11,51 @@ public interface LocalNode extends Node {
     /**
      * Agent for this node
      *
-     * @return
+     * @return the agent of this node
      */
     Agent getAgent();
 
     /**
      * Storage actor for this node
      *
-     * @return
+     * @return storage service
      */
     StorageService getStorageService();
 
     /**
      * Data discovery service for this node
      *
-     * @return
+     * @return manifest-data service
      */
-    ManifestsDataService getDDS();
+    ManifestsDataService getMDS();
 
     /**
      * Node discovery service for this node
      *
-     * @return
+     * @return node discovery service
      */
     NodeDiscoveryService getNDS();
 
     /**
      * Metadata service for this node
      *
-     * @return
+     * @return metadata service
      */
     MetadataService getMMS();
 
     /**
      * Context service for this node
      *
-     * @return
+     * @return context servie
      */
     ContextService getCMS();
 
     /**
      * User and Role service for this node
      *
-     * @return
+     * @return user role service
      */
-    UsersRolesService getRMS();
+    UsersRolesService getUSRO();
 
     /**
      * Kill all the resources for this node

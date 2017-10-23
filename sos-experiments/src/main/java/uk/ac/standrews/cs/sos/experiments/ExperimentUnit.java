@@ -123,11 +123,11 @@ public interface ExperimentUnit {
 
                         case ROLE:
                             Role role = JSONHelper.JsonObjMapper().readValue(file, Role.class);
-                            node.getRMS().addRole(role);
+                            node.getUSRO().addRole(role);
                             break;
                         case USER:
                             User user = JSONHelper.JsonObjMapper().readValue(file, User.class);
-                            node.getRMS().addUser(user);
+                            node.getUSRO().addUser(user);
                             break;
                     }
 

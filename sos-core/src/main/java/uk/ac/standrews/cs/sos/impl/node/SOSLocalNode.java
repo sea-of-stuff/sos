@@ -151,7 +151,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public ManifestsDataService getDDS() {
+    public ManifestsDataService getMDS() {
         return manifestsDataService;
     }
 
@@ -171,7 +171,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public UsersRolesService getRMS() {
+    public UsersRolesService getUSRO() {
         return usersRolesService;
     }
 

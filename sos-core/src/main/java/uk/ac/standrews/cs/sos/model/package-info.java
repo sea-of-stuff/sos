@@ -8,7 +8,7 @@
  * The model consists of manifests, contexts, usro:
  *
  * Manifests:
- * - normal ones:
+ * - data ones:
  *  - Atom
  *  - Compound
  *  - Version
@@ -17,6 +17,7 @@
  * - protected ones:
  *  - SecureAtom
  *  - SecureCompound
+ *  - SecureMetadata
  *
  *
  * - Contexts
@@ -28,6 +29,7 @@
  * - USRO
  *  - User
  *  - Role
+ *
  *
  * - Node
  *

@@ -67,7 +67,7 @@ public class WGraph {
 
     private static void MakeVersionGraph(ObjectNode graph, SOSLocalNode sos, Manifest selectedManifest) {
 
-        ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), sos.getDDS(), selectedManifest);
+        ArrayNode nodes = ManifestNodeGraph(sos.getAgent(), sos.getMDS(), selectedManifest);
         ArrayNode edges = ManifestEdgesGraph(selectedManifest);
 
         graph.put("nodes", nodes);
@@ -76,8 +76,8 @@ public class WGraph {
 
     private static void MakeAssetGraph(ObjectNode graph, SOSLocalNode sos, IGUID invariant, boolean lookForContentEagerly) {
 
-        ArrayNode nodes = AllVersionsNodesGraph(sos.getDDS(), invariant, lookForContentEagerly);
-        ArrayNode edges = AllVersionsEdgesGraph(sos.getDDS(), invariant, lookForContentEagerly);
+        ArrayNode nodes = AllVersionsNodesGraph(sos.getMDS(), invariant, lookForContentEagerly);
+        ArrayNode edges = AllVersionsEdgesGraph(sos.getMDS(), invariant, lookForContentEagerly);
 
         graph.put("nodes", nodes);
         graph.put("edges", edges);

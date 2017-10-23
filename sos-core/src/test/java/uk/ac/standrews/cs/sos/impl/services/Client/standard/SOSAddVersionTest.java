@@ -110,7 +110,7 @@ public class SOSAddVersionTest extends AgentTest {
         Version manifest = agent.addVersion(builder);
         Manifest retrievedManifest = agent.getManifest(manifest.version());
 
-        assertFalse(agent.verifyManifestSignature(localSOSNode.getRMS().activeRole(), retrievedManifest));
+        assertFalse(agent.verifyManifestSignature(localSOSNode.getUSRO().activeRole(), retrievedManifest));
     }
 
     @Test

@@ -57,7 +57,7 @@ public class RESTDDS {
         }
 
         try {
-            ManifestsDataService manifestsDataService = RESTConfig.sos.getDDS();
+            ManifestsDataService manifestsDataService = RESTConfig.sos.getMDS();
             manifestsDataService.addManifest(manifest);
 
         } catch (ManifestPersistException e) {
@@ -85,7 +85,7 @@ public class RESTDDS {
         }
 
         try {
-            ManifestsDataService manifestsDataService = RESTConfig.sos.getDDS();
+            ManifestsDataService manifestsDataService = RESTConfig.sos.getMDS();
             Manifest manifest = manifestsDataService.getManifest(manifestGUID);
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, manifest.toString());
 
@@ -110,7 +110,7 @@ public class RESTDDS {
 
         if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
-        ManifestsDataService dds = RESTConfig.sos.getDDS();
+        ManifestsDataService dds = RESTConfig.sos.getMDS();
         IGUID challengeResult = dds.challenge(manifestGUID, challenge);
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
@@ -145,7 +145,7 @@ public class RESTDDS {
         }
 
 
-        ManifestsDataService manifestsDataService = RESTConfig.sos.getDDS();
+        ManifestsDataService manifestsDataService = RESTConfig.sos.getMDS();
         Set<IGUID> versions = manifestsDataService.getVersions(manifestGUID);
 
         ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();

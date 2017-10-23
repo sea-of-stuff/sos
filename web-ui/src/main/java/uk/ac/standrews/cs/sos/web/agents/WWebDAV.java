@@ -38,9 +38,9 @@ public class WWebDAV {
         }
 
         Set<Pair<User, Role>> usro = new LinkedHashSet<>();
-        for(Role role:sos.getRMS().getRoles()) {
+        for(Role role:sos.getUSRO().getRoles()) {
             try {
-                User user = sos.getRMS().getUser(role.getUser());
+                User user = sos.getUSRO().getUser(role.getUser());
                 usro.add(new Pair<>(user, role));
             } catch (UserNotFoundException e) { /* do nothing */ }
         }

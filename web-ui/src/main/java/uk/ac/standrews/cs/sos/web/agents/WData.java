@@ -68,20 +68,20 @@ public class WData {
 
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
-                Role roleToProtect = sos.getRMS().getRole(roleGUID);
+                Role roleToProtect = sos.getUSRO().getRole(roleGUID);
                 atomBuilder.setRole(roleToProtect);
             }
             VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
 
             if (sign) {
                 IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
-                Role roleToSign = sos.getRMS().getRole(signerGUID);
+                Role roleToSign = sos.getUSRO().getRole(signerGUID);
                 versionBuilder.setRole(roleToSign);
             }
 
             if (update) {
                 IGUID prevGUID = GUIDFactory.recreateGUID(prev);
-                Version version = (Version) sos.getDDS().getManifest(prevGUID);
+                Version version = (Version) sos.getMDS().getManifest(prevGUID);
 
                 Set<IGUID> prevs = new LinkedHashSet<>();
                 prevs.add(prevGUID);
@@ -118,20 +118,20 @@ public class WData {
 
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
-                Role roleToProtect = sos.getRMS().getRole(roleGUID);
+                Role roleToProtect = sos.getUSRO().getRole(roleGUID);
                 compoundBuilder.setRole(roleToProtect);
             }
             VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
 
             if (sign) {
                 IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
-                Role roleToSign = sos.getRMS().getRole(signerGUID);
+                Role roleToSign = sos.getUSRO().getRole(signerGUID);
                 versionBuilder.setRole(roleToSign);
             }
 
             if (update) {
                 IGUID prevGUID = GUIDFactory.recreateGUID(prev);
-                Version version = (Version) sos.getDDS().getManifest(prevGUID);
+                Version version = (Version) sos.getMDS().getManifest(prevGUID);
 
                 Set<IGUID> prevs = new LinkedHashSet<>();
                 prevs.add(prevGUID);
@@ -177,7 +177,7 @@ public class WData {
             Atom atom;
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
-                Role roleToProtect = sos.getRMS().getRole(roleGUID);
+                Role roleToProtect = sos.getUSRO().getRole(roleGUID);
                 atomBuilder.setRole(roleToProtect);
 
                 atom = sos.getAgent().addSecureAtom(atomBuilder);
@@ -206,7 +206,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.content());
+                Manifest contentManifest = sos.getMDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
                     return GetData(sos, version, LARGE_DATA_LIMIT, false);
@@ -256,7 +256,7 @@ public class WData {
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.content());
+                Manifest contentManifest = sos.getMDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
                     String extension = "";
@@ -293,11 +293,11 @@ public class WData {
             Manifest manifest = sos.getAgent().getManifest(guid);
 
             IGUID roleid = GUIDFactory.recreateGUID(req.params("roleid"));
-            Role role = sos.getRMS().getRole(roleid);
+            Role role = sos.getUSRO().getRole(roleid);
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.content());
+                Manifest contentManifest = sos.getMDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
 
                     try {
@@ -325,11 +325,11 @@ public class WData {
             Manifest manifest = sos.getAgent().getManifest(guid);
 
             IGUID roleid = GUIDFactory.recreateGUID(req.params("roleid"));
-            Role role = sos.getRMS().getRole(roleid);
+            Role role = sos.getUSRO().getRole(roleid);
 
             if (manifest.getType().equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
-                Manifest contentManifest = sos.getDDS().getManifest(version.content());
+                Manifest contentManifest = sos.getMDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM_PROTECTED)) {
 
                     String extension = "";
@@ -370,10 +370,10 @@ public class WData {
             Manifest manifest = sos.getAgent().getManifest(guid);
 
             IGUID roleid = GUIDFactory.recreateGUID(req.params("granter"));
-            Role granter = sos.getRMS().getRole(roleid);
+            Role granter = sos.getUSRO().getRole(roleid);
 
             roleid = GUIDFactory.recreateGUID(req.params("grantee"));
-            Role grantee = sos.getRMS().getRole(roleid);
+            Role grantee = sos.getUSRO().getRole(roleid);
 
             SecureAtom secureAtom;
             Manifest retrieved = manifest;
@@ -409,10 +409,10 @@ public class WData {
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         try {
-            Manifest manifest = sos.getDDS().getManifest(guid);
+            Manifest manifest = sos.getMDS().getManifest(guid);
             if (manifest.getType().equals(ManifestType.VERSION)) {
 
-                sos.getDDS().setHead((Version) manifest);
+                sos.getMDS().setHead((Version) manifest);
             }
 
             return "HEAD SET";

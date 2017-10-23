@@ -52,7 +52,7 @@ public class RESTRMS {
         }
 
         try {
-            Manifest manifest = RESTConfig.sos.getDDS().getManifest(userGUID, NodeType.RMS);
+            Manifest manifest = RESTConfig.sos.getMDS().getManifest(userGUID, NodeType.RMS);
 
             if (manifest.getType() == ManifestType.USER ||
                     manifest.getType() == ManifestType.ROLE) {
@@ -82,7 +82,7 @@ public class RESTRMS {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
-        UsersRolesService usro = RESTConfig.sos.getRMS();
+        UsersRolesService usro = RESTConfig.sos.getUSRO();
 
         try {
             Set<Role> roles = usro.getRoles(userGUID);
@@ -103,7 +103,7 @@ public class RESTRMS {
     public Response postUser(final User user, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/usro/user");
 
-        UsersRolesService usro = RESTConfig.sos.getRMS();
+        UsersRolesService usro = RESTConfig.sos.getUSRO();
 
         try {
             usro.addUser(user);
@@ -122,7 +122,7 @@ public class RESTRMS {
     public Response postRole(final Role role, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/usro/role");
 
-        UsersRolesService usro = RESTConfig.sos.getRMS();
+        UsersRolesService usro = RESTConfig.sos.getUSRO();
 
         try {
             usro.addRole(role);

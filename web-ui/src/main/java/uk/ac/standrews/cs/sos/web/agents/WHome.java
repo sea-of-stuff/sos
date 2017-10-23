@@ -30,14 +30,14 @@ public class WHome {
 
         Set<Map<String, Object> > assets = new LinkedHashSet<>();
 
-        Set<IGUID> assetInvariants = sos.getDDS().getManifests(ManifestType.VERSION);
+        Set<IGUID> assetInvariants = sos.getMDS().getManifests(ManifestType.VERSION);
         for(IGUID invariant : assetInvariants) {
 
             Map<String, Object> versionModel = new HashMap<>();
             try {
-                Version version = (Version) sos.getDDS().getManifest(sos.getDDS().getHead(invariant));
+                Version version = (Version) sos.getMDS().getManifest(sos.getMDS().getHead(invariant));
 
-                Manifest manifest = sos.getDDS().getManifest(version.content());
+                Manifest manifest = sos.getMDS().getManifest(version.content());
                 if (manifest.getType().equals(ManifestType.ATOM)) {
                     String outputData = GetData(sos, version, SHORT_DATA_LIMIT, true);
                     versionModel.put("data", outputData);
@@ -58,9 +58,9 @@ public class WHome {
         model.put("assets", assets);
 
         Set<Pair<User, Role>> usro = new LinkedHashSet<>();
-        for(Role role:sos.getRMS().getRoles()) {
+        for(Role role:sos.getUSRO().getRoles()) {
             try {
-                User user = sos.getRMS().getUser(role.getUser());
+                User user = sos.getUSRO().getUser(role.getUser());
                 usro.add(new Pair<>(user, role));
             } catch (UserNotFoundException e) { /* do nothing */ }
         }

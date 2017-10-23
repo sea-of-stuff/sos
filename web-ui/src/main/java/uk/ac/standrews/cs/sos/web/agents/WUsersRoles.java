@@ -26,8 +26,8 @@ public class WUsersRoles {
 
     public static String Render(SOSLocalNode sos){
         Map<String, Object> model = new HashMap<>();
-        model.put("users", sos.getRMS().getUsers());
-        model.put("roles", sos.getRMS().getRoles());
+        model.put("users", sos.getUSRO().getUsers());
+        model.put("roles", sos.getUSRO().getRoles());
 
         return VelocityUtils.RenderTemplate("velocity/usro.vm", model);
     }
@@ -38,7 +38,7 @@ public class WUsersRoles {
             String username = request.queryParams("username");
 
             User user = new UserImpl(username);
-            sos.getRMS().addUser(user);
+            sos.getUSRO().addUser(user);
 
             response.redirect("/usro");
             return "";
@@ -55,10 +55,10 @@ public class WUsersRoles {
             IGUID userGUID = GUIDFactory.recreateGUID(request.queryParams("userGUID"));
             String rolename = request.queryParams("rolename");
 
-            User user = sos.getRMS().getUser(userGUID);
+            User user = sos.getUSRO().getUser(userGUID);
 
             Role role = new RoleImpl(user, rolename);
-            sos.getRMS().addRole(role);
+            sos.getUSRO().addRole(role);
 
             response.redirect("/usro");
             return "";

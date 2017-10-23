@@ -24,7 +24,7 @@ public class WVerify {
         Manifest manifest = agent.getManifest(manifestId);
 
         IGUID roleid = GUIDFactory.recreateGUID(request.params("roleid"));
-        Role role = sos.getRMS().getRole(roleid);
+        Role role = sos.getUSRO().getRole(roleid);
 
         try {
             if (agent.verifyManifestSignature(role, manifest)) {
