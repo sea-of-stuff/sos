@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "META_IS_PNG",
+    "name": "DATA_Occurrence_word_bob",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/jpeg\"));",
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"bob\") > 100;",
     "dependencies": []
   },
   "max_age": 0,

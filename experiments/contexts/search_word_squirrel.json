@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DATA_Occurrence_word_alice",
+    "name": "DATA_Search_word_squirrel",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"bob\") > 100;",
+    "predicate": "CommonPredicates.SearchText(guid, \"squirrel\");",
     "dependencies": []
   },
   "max_age": 0,

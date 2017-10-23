@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "METAandDATA_Search_word_the_text_only",
+    "name": "DATA_Search_word_white_rabbit",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"white rabbit\");",
+    "predicate": "CommonPredicates.SearchText(guid, \"white rabbit\");",
     "dependencies": []
   },
   "max_age": 0,

@@ -152,7 +152,8 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         }
 
         private void addContext(String context_name) throws ContextException {
-            IGUID context = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + context_name + ".json"));
+            String contextPath = experiment.getExperimentNode().getContextsPath() + context_name + ".json";
+            IGUID context = cms.addContext(new File(contextPath));
             InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context " + context_name + " " + context.toShortString());
         }
 
@@ -191,7 +192,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.chicExperiment();
-
         chicShock.shockExperiment();
 
         Thread.sleep(60000);

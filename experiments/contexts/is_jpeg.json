@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DATA_Search_word_the",
+    "name": "META_IS_jpeg",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"white rabbit\");",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/jpeg\"));",
     "dependencies": []
   },
   "max_age": 0,

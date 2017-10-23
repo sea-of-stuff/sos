@@ -23,8 +23,10 @@ import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.USRO
  */
 public class ExperimentConfiguration {
 
-    public static final String REPO_DATASETS_PATH = "experiments/datasets/";
     public static final String REMOTE_DATASETS_PATH = "experiments/datasets/";
+    public static final String REPO_DATASETS_PATH = "experiments/datasets/";
+    public static final String REPO_CONTEXTS_PATH = "experiments/contexts/";
+    public static final String REMOTE_CONTEXTS_PATH = "experiments/contexts/";
 
     @JsonIgnore
     private JsonNode node;
@@ -278,6 +280,16 @@ public class ExperimentConfiguration {
 
             public String getUsro(String experimentName) {
                 return USRO_FOLDER.replace("{experiment}", experimentName);
+            }
+
+
+            public String getContextsPath() {
+
+                if (isRemote()) {
+                    return REMOTE_CONTEXTS_PATH;
+                } else {
+                    return REPO_CONTEXTS_PATH;
+                }
             }
 
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)

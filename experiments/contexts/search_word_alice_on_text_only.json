@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DATA_Search_word_the",
+    "name": "METAandDATA_Search_word_alice_text_only",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"squirrel\");",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"alice\");",
     "dependencies": []
   },
   "max_age": 0,
