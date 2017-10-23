@@ -1,5 +1,4 @@
 # sos-experiment
-
 This module contains the code to run the experiment on the SOS.
 
 ## Experiments
@@ -13,18 +12,36 @@ Running different types of predicates (data, metadata, none, data and metadata, 
 
 ### PO_1
 
+The experiment PO 1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc.
+
+
+### DO_1
+
+Investigate the context performance as the cardinality of its domain changes
+
+### CO_3
+
+Change in dimension of the codomain.
 
 
 ### Scale_1
+
+This is an experiment where multiple nodes interact with each other in order to achieve an equilibrium state.
+
+
+
+
+
+
 
 ## Experiment Setup
 
 An experiment is defined by a Java class and by a bunch of experiment configuration files.
 The experiment class must implement that Experiment interface, which consists of five main methods.
 
-- setup
-- run
-- finish
+- setupIteration
+- runIteration
+- finishIteration
 - cleanup
 
 Each method defines a particular phase of the experiment.
@@ -177,7 +194,8 @@ It is possible to control what to instrument via the experiment configuration fi
 "stats": {
   "experiment": true,
   "predicate": true,
-  "policies": false
+  "policies": false,
+  "checkPolicies": false
 }
 ```
 
@@ -186,7 +204,9 @@ It is possible to control what to instrument via the experiment configuration fi
 - experiment: to enable instrument calls inside sos-instrument
 - predicate
 - policies
+- checkPolicies
 
 
 **Killing all sos jar applications**
+
 `for pid in $(ps -ef | grep "sos.jar" | awk '{print $2}'); do kill -9 $pid; done`
