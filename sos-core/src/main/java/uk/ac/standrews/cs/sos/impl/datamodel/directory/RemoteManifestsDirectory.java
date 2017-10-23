@@ -134,17 +134,6 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
     }
 
-    @Override
-    public Manifest findManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException {
-
-        try {
-            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), nodeTypeFilter, guid);
-        } catch (NodesCollectionException e) {
-            throw new ManifestNotFoundException();
-        }
-
-    }
-
     public Manifest findManifest(NodesCollection nodesCollection, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException {
 
         Set<IGUID> nodesToCheck;

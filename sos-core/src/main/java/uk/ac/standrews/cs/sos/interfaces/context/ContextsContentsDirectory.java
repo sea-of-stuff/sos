@@ -19,6 +19,7 @@ public interface ContextsContentsDirectory {
 
     boolean entryExists(IGUID context, IGUID version);
 
+    // REMOVEME
     Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context, boolean includeEvicted);
 
     Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context, boolean includeEvicted);

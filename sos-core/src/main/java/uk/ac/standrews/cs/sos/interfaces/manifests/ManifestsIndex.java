@@ -74,6 +74,7 @@ public interface ManifestsIndex {
     void flush();
 
     /**
+     * TODO - this method should be implemented. Such methods should be elsewhere too!!!!
      * Rebuild index from disk
      */
     void rebuild();
