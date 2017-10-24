@@ -2,8 +2,10 @@ package uk.ac.standrews.cs.sos.experiments;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
@@ -17,6 +19,7 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.model.Version;
+import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.File;
@@ -138,6 +141,12 @@ public interface ExperimentUnit {
             }
         }
 
+    }
+
+    default void addContext(ContextService cms, ExperimentConfiguration.Experiment experiment, String context_name) throws ContextException {
+        String contextPath = experiment.getExperimentNode().getContextsPath() + context_name + ".json";
+        IGUID context = cms.addContext(new File(contextPath));
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context " + context_name + " " + context.toShortString());
     }
 
 }

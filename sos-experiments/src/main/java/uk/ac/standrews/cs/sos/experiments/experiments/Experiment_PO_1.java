@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -74,6 +73,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with policy type " + policy_type.name());
 
             try {
+                // FIXME - use common usro folder
                 String usroPath = experiment.getExperimentNode().getUsro(experiment.getName());
                 addFolderUSROToNode(node, new File(usroPath));
 
@@ -100,32 +100,24 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
             switch (policy_type) {
                 case NONE: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "No_Policies.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context No_Policies " + c_1.toShortString());
+                    addContext(cms, experiment, "No_Policies");
                     break;
                 }
                 case NOTHING: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Do_Nothing_Policy.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Do_Nothing_Policy " + c_1.toShortString());
+                    addContext(cms, experiment, "Do_Nothing_Policy");
                     break;
                 }
                 case DATA_PROTECTION: {
                     // Roles loaded from experiment resources
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Access_Grant.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Access_Grant " + c_1.toShortString());
-
+                    addContext(cms, experiment, "Access_Grant");
                     break;
                 }
                 case DATA_REPLICATION: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Data_Replication_1.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Data_Replication_1 " + c_1.toShortString());
-
+                    addContext(cms, experiment, "Data_Replication_1");
                     break;
                 }
                 case MANIFEST_REPLICATION: {
-                    IGUID c_1 = cms.addContext(new File(CONTEXTS_FOLDER.replace("{experiment}", experiment.getName()) + "Manifest_Replication_1.json"));
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context Manifest_Replication_1 " + c_1.toShortString());
-
+                    addContext(cms, experiment, "Manifest_Replication_1");
                     break;
                 }
 

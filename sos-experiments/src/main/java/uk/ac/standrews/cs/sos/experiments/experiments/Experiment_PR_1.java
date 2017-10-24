@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
@@ -100,47 +99,47 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
             switch(predicate_type) {
                 case ALL: {
-                    addContext("all");
-                    addContext("reject_all");
+                    addContext(cms, experiment, "all");
+                    addContext(cms, experiment, "reject_all");
 
                     break;
                 }
 
                 case DATA: {
-                    addContext("search_word_the");
-                    addContext("search_word_squirrel");
-                    addContext("search_word_white_rabbit");
-                    addContext("occurrence_word_the");
-                    addContext("occurrence_word_alice");
-                    addContext("occurrence_word_bob");
-                    addContext("search_sentence_online_marketing");
+                    addContext(cms, experiment, "search_word_the");
+                    addContext(cms, experiment, "search_word_squirrel");
+                    addContext(cms, experiment, "search_word_white_rabbit");
+                    addContext(cms, experiment, "occurrence_word_the");
+                    addContext(cms, experiment, "occurrence_word_alice");
+                    addContext(cms, experiment, "occurrence_word_bob");
+                    addContext(cms, experiment, "search_sentence_online_marketing");
 
                     break;
                 }
 
                 case DATA_AND_METADATA: {
-                    addContext("search_word_the_on_text_only");
-                    addContext("search_word_alice_on_text_only");
-                    addContext("search_word_white_rabbit_on_text_only");
+                    addContext(cms, experiment, "search_word_the_on_text_only");
+                    addContext(cms, experiment, "search_word_alice_on_text_only");
+                    addContext(cms, experiment, "search_word_white_rabbit_on_text_only");
 
                     break;
                 }
 
                 case METADATA: {
-                    addContext("is_img");
-                    addContext("is_mp3");
-                    addContext("is_text");
-                    addContext("is_pdf");
-                    addContext("is_png");
-                    addContext("is_jpeg");
-                    addContext("greater_than_100_kb");
+                    addContext(cms, experiment, "is_img");
+                    addContext(cms, experiment, "is_mp3");
+                    addContext(cms, experiment, "is_text");
+                    addContext(cms, experiment, "is_pdf");
+                    addContext(cms, experiment, "is_png");
+                    addContext(cms, experiment, "is_jpeg");
+                    addContext(cms, experiment, "greater_than_100_kb");
 
                     break;
                 }
 
                 case MANIFEST: {
-                    addContext("content_protected");
-                    addContext("content_not_protected");
+                    addContext(cms, experiment, "content_protected");
+                    addContext(cms, experiment, "content_not_protected");
 
                     // TODO - type, label name
 
@@ -149,12 +148,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
             }
 
-        }
-
-        private void addContext(String context_name) throws ContextException {
-            String contextPath = experiment.getExperimentNode().getContextsPath() + context_name + ".json";
-            IGUID context = cms.addContext(new File(contextPath));
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, "Added context " + context_name + " " + context.toShortString());
         }
 
     }

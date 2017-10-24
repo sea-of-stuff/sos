@@ -153,4 +153,8 @@ public abstract class BaseExperiment implements Experiment {
 
         return name + "__" + now;
     }
+
+    public ExperimentConfiguration.Experiment getExperiment() {
+        return experiment;
+    }
 }

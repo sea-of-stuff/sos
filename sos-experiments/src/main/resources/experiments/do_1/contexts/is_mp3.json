@@ -1,4 +1,0 @@
-{
-  "name": "IS_mp3",
-  "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"audio/mpeg\")) && CommonPredicates.MetadataPropertyPredicate(guid, \"xmpDM:audioCompressor\", Collections.singletonList(\"MP3\"));"
-}
