@@ -27,7 +27,7 @@ public interface Agent {
      *
      * @param atomBuilder for this atom
      * @return the added atom
-     * @throws ServiceException
+     * @throws ServiceException if the atom could not be added
      *
      * @apiNote the data will not processed through contexts. Contexts operate over assets.
      */

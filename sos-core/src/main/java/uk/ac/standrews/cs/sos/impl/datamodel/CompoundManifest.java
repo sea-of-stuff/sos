@@ -91,11 +91,6 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
         this.signature = signature;
     }
 
-    /**
-     * Gets all the contents of this compound.
-     *
-     * @return the contents of this compound.
-     */
     @Override
     public Set<Content> getContents() {
         return contents;
