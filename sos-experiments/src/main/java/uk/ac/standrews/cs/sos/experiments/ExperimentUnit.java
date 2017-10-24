@@ -93,10 +93,12 @@ public interface ExperimentUnit {
     /**
      * Add the users/roles for this experiment to the node
      *
-     * @param node
-     * @param folder
+     * @param node where to add the users and roles
+     * @param experiment settings
      */
-    default void addFolderUSROToNode(SOSLocalNode node, File folder) {
+    default void addFolderUSROToNode(SOSLocalNode node, ExperimentConfiguration.Experiment experiment) {
+
+        File folder = new File(experiment.getExperimentNode().getUsroPath());
 
         File keysToBeAdded = new File(folder, "keys");
         File keysFolder = new File(SOSLocalNode.settings.getKeys().getLocation());

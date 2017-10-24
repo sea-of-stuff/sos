@@ -73,9 +73,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with policy type " + policy_type.name());
 
             try {
-                // FIXME - use common usro folder
-                String usroPath = experiment.getExperimentNode().getUsro(experiment.getName());
-                addFolderUSROToNode(node, new File(usroPath));
+                addFolderUSROToNode(node, experiment);
 
                 cms = node.getCMS();
 

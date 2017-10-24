@@ -50,6 +50,10 @@ public class SOSDistribution {
             scp.makePath(path + REMOTE_CONTEXTS_PATH);
             scp.sendDirectory(REPO_CONTEXTS_PATH, path + node.getContextsPath());
 
+            // Copy users/roles over
+            scp.makePath(path + REMOTE_USRO_PATH);
+            scp.sendDirectory(REPO_USRO_PATH, path + node.getContextsPath());
+
             scp.disconnect();
         }
 
@@ -145,6 +149,9 @@ public class SOSDistribution {
         // Copy contexts over
         scp.makePath(path + REMOTE_CONTEXTS_PATH);
         scp.sendDirectory(REPO_CONTEXTS_PATH, path + experimentNode.getContextsPath());
+
+        scp.makePath(path + REMOTE_USRO_PATH);
+        scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getContextsPath());
 
         scp.disconnect();
     }

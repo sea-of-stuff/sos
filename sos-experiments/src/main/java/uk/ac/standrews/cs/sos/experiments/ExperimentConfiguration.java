@@ -23,10 +23,12 @@ import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.USRO
  */
 public class ExperimentConfiguration {
 
-    public static final String REMOTE_DATASETS_PATH = "experiments/datasets/";
     public static final String REPO_DATASETS_PATH = "experiments/datasets/";
+    public static final String REMOTE_DATASETS_PATH = "experiments/datasets/";
     public static final String REPO_CONTEXTS_PATH = "experiments/contexts/";
     public static final String REMOTE_CONTEXTS_PATH = "experiments/contexts/";
+    public static final String REPO_USRO_PATH = "experiments/usro/";
+    public static final String REMOTE_USRO_PATH = "experiments/usro/";
 
     @JsonIgnore
     private JsonNode node;
@@ -289,6 +291,15 @@ public class ExperimentConfiguration {
                     return REMOTE_CONTEXTS_PATH;
                 } else {
                     return REPO_CONTEXTS_PATH;
+                }
+            }
+
+            public String getUsroPath() {
+
+                if (isRemote()) {
+                    return REMOTE_USRO_PATH;
+                } else {
+                    return REPO_USRO_PATH;
                 }
             }
 

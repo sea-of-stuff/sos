@@ -250,3 +250,22 @@ It is possible to control what to instrument via the experiment configuration fi
 **Killing all sos jar applications**
 
 `for pid in $(ps -ef | grep "sos.jar" | awk '{print $2}'); do kill -9 $pid; done`
+
+
+
+## JVM Monitoring notes
+
+
+* -Dcom.sun.management.jmxremote option (on jar executable) + jconsole run aside
+* JMXTRANS (+ Graphite to visualize data)
+* Ganglia - https://github.com/ganglia
+* jvm-mon - https://github.com/ajermakovics/jvm-mon
+* jmxterm - http://wiki.cyclopsgroup.org/jmxterm/
+
+
+// https://stackoverflow.com/a/1195461/2467938
+You can write a program to connect to your VM using the Attach API which would then query the MBeans.
+
+Or you can expose the platform MBeanServer over RMI and query the MBeans that way.
+
+See the java.lang.management package for more info
