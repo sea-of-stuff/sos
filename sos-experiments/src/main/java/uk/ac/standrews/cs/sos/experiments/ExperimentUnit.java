@@ -39,17 +39,16 @@ public interface ExperimentUnit {
     /**
      * The setupIteration for the experiment unit
      *
-     * @throws ExperimentException
+     * @throws ExperimentException if the experiment unit could not be setup
      */
     void setup() throws ExperimentException;
 
     /**
      * The code that runs the actual experiment for this unit
      *
-     * @throws ExperimentException
+     * @throws ExperimentException if the experiment unit could not be run
      */
     void run() throws ExperimentException;
-
 
     /**
      * Add the data inside the folder to the local node

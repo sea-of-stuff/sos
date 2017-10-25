@@ -18,7 +18,7 @@ getwd()
 
 # Read the CVS file
 d <- read.csv("output/pr_1__2017_10_20T15_10_37_472Z.TSV", header=TRUE, sep="\t")
-d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
+d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
 # Remove data from d
@@ -38,6 +38,10 @@ d_processed$se <- d_processed[,3] / sqrt(d_processed[,4])
 colnames(d_processed) <- c("Configuration", "mean", "sd", "n", "se")
 d_processed$names <- d_processed$Config
 
+# http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+# https://stackoverflow.com/questions/15212884/colouring-different-group-data-in-boxplot-using-r
+colors = c(rep("red",2),rep("deepskyblue",4),rep("green",1), rep("tomato", 6), rep("gray0", 1))
+
 # Estimate top limit on the y-axis
 plotTop <- max(d_processed$mean) + max(d_processed$se) +
   d_processed[d_processed$mean == max(d_processed$mean), 5] * 4
@@ -50,11 +54,18 @@ barCenters <- barplot(height = d_processed$mean,
                       names.arg = d_processed$names,
                       beside = true, las =2,
                       ylim = c(0, plotTop),
-                      main = "Predicate performance against different settings.",
-                      sub = "This diagram shows the average time to run a predicate of some given type against the entire dataset",
+                      main = "TODO (this is the time for all assets!) \nDataset: Random. 39 files.",
                       ylab = "Time (s)",
+                      xaxt="n",
                       border = "black",
-                      axes = T)
+                      axes = T,
+                      col=colors)
+
+legend("topright", legend=c("ALL", "Data", "Manifest", "Meta", "Meta and Data"),
+       fill=c("red", "deepskyblue", "green", "tomato", "gray0"), cex=0.8, inset=.05)
+
+labs <- paste(names(table(d$ContextName)))
+text(barCenters, par("usr")[3], labels = labs, srt = 30, adj = c(1.1,1.1), xpd = TRUE, cex=.9)
 
 # Add error bars
 segments(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
@@ -65,22 +76,18 @@ arrows(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
        code = 3, length = 0.05)
 
 
-# BOPLOT
-par(mar=c(12,4,4,2)+3) # Add space to show all labels
-x <- boxplot(d$User.Measure~d$ContextName, data=d,
+##################
+# BOXPLOT
+par(mar=c(15,4,4,2)+3) # Add space to show all labels
+x <- boxplot(d$Measures~d$ContextName, data=d,
              las=2, # Draw x labels vertically
              main="Predicate performance against different settings",
-             ylab="Time (s)")
+             ylab="Time (s) - log scale", 
+             log = "y",
+             col=colors)
 
-
-
-# CHECKING DISTRIBUTION OF DATA
-x = subset(d, ContextName=="META")
-descdist(x$Measures, discrete = FALSE)
-fit.norm <- fitdist(x$Measures, "beta", start=NULL) # other distributions: norm, etc...
-plot(fit.norm)
-fit.weibull <- fitdist(x$Measures, "weibull")
-plot(fit.weibull)
+legend("topright", legend=c("ALL", "Data", "Manifest", "Meta", "Meta and Data"),
+       fill=c("red", "deepskyblue", "green", "tomato", "gray0"), cex=0.8, inset=.05)
 
 
 # Kruskal-Wallis Test
