@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "METAandDATA_Search_word_alice_text_only",
+    "name": "Search_word_alice_text_only",
     "domain": {
       "type": "LOCAL",
       "nodes": []

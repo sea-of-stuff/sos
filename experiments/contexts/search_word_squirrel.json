@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DATA_Search_word_squirrel",
+    "name": "Search_word_squirrel",
     "domain": {
       "type": "LOCAL",
       "nodes": []

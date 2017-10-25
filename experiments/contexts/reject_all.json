@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "ALL_Reject_All",
+    "name": "Reject_All",
     "domain": {
       "type": "LOCAL",
       "nodes": []

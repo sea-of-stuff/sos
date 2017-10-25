@@ -440,7 +440,6 @@ public class SOSContextService implements ContextService {
     private int runPredicate(Context context) throws ContextException {
 
         int counter = 0;
-        long start = System.nanoTime();
 
         Set<Content> currentContents;
         try {
@@ -454,6 +453,8 @@ public class SOSContextService implements ContextService {
         Set<Pair<IGUID, ContextVersionInfo>> cacheResults = new LinkedHashSet<>();
         Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
         for (IGUID assetInvariant:assetInvariants) {
+
+            long start = System.nanoTime();
 
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
@@ -473,6 +474,9 @@ public class SOSContextService implements ContextService {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant: " + assetInvariant.toMultiHash());
             }
 
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
+
         }
 
         try {
@@ -488,9 +492,6 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.ERROR, "Unable to update context version properly");
             throw new ContextException("Unable to update context version properly");
         }
-
-        long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
         return counter;
     }

@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "META_IS_IMG",
+    "name": "IS_IMG",
     "domain": {
       "type": "LOCAL",
       "nodes": []

@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "META_IS_TEXT",
+    "name": "IS_TEXT",
     "domain": {
       "type": "LOCAL",
       "nodes": []

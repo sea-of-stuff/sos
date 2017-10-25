@@ -33,11 +33,11 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            for(int j = 0; j < PREDICATE_TYPE.values().length; j++) {
-
-                PREDICATE_TYPE predicate_type = PREDICATE_TYPE.values()[j];
-                units.add(new ExperimentUnit_PR_1(predicate_type));
-            }
+//            for(int j = 0; j < PREDICATE_TYPE.values().length; j++) {
+//
+//                PREDICATE_TYPE predicate_type = PREDICATE_TYPE.values()[j];
+            units.add(new ExperimentUnit_PR_1());
+//            }
         }
         Collections.shuffle(units);
 
@@ -53,7 +53,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     @Override
     public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations() * PREDICATE_TYPE.values().length;
+        return experiment.getSetup().getIterations(); //  * PREDICATE_TYPE.values().length;
     }
 
     public enum PREDICATE_TYPE {
@@ -63,15 +63,12 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
 
         private ContextService cms;
-        private PREDICATE_TYPE predicate_type;
 
-        ExperimentUnit_PR_1(PREDICATE_TYPE predicate_type) {
-            this.predicate_type = predicate_type;
-        }
+        ExperimentUnit_PR_1() { }
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with predicate type " + predicate_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with predicate");
 
             try {
                 cms = node.getCMS();
@@ -86,67 +83,47 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with predicate type " + predicate_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with predicate");
 
             try {
                 counter = cms.runPredicates();
             } catch (ContextException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Experiment PR_1 - Unable to runIteration predicates properly for predicate type " + predicate_type.name());
+                SOS_LOG.log(LEVEL.ERROR, "Experiment PR_1 - Unable to runIteration predicates properly");
             }
         }
 
         private void addContexts() throws Exception {
 
-            switch(predicate_type) {
-                case ALL: {
-                    addContext(cms, experiment, "all");
-                    addContext(cms, experiment, "reject_all");
 
-                    break;
-                }
+            addContext(cms, experiment, "all");
+//            addContext(cms, experiment, "reject_all");
 
-                case DATA: {
-                    addContext(cms, experiment, "search_word_the");
-                    addContext(cms, experiment, "search_word_squirrel");
-                    addContext(cms, experiment, "search_word_white_rabbit");
-                    addContext(cms, experiment, "occurrence_word_the");
-                    addContext(cms, experiment, "occurrence_word_alice");
-                    addContext(cms, experiment, "occurrence_word_bob");
-                    addContext(cms, experiment, "search_sentence_online_marketing");
 
-                    break;
-                }
+            addContext(cms, experiment, "search_word_the");
+//            addContext(cms, experiment, "search_word_squirrel");
+//            addContext(cms, experiment, "search_word_white_rabbit");
+            addContext(cms, experiment, "occurrence_word_the");
+//            addContext(cms, experiment, "occurrence_word_alice");
+//            addContext(cms, experiment, "occurrence_word_bob");
+//            addContext(cms, experiment, "search_sentence_online_marketing");
 
-                case DATA_AND_METADATA: {
-                    addContext(cms, experiment, "search_word_the_on_text_only");
-                    addContext(cms, experiment, "search_word_alice_on_text_only");
-                    addContext(cms, experiment, "search_word_white_rabbit_on_text_only");
 
-                    break;
-                }
+            addContext(cms, experiment, "search_word_the_on_text_only");
+//            addContext(cms, experiment, "search_word_alice_on_text_only");
+//            addContext(cms, experiment, "search_word_white_rabbit_on_text_only");
 
-                case METADATA: {
-                    addContext(cms, experiment, "is_img");
-                    addContext(cms, experiment, "is_mp3");
-                    addContext(cms, experiment, "is_text");
-                    addContext(cms, experiment, "is_pdf");
-                    addContext(cms, experiment, "is_png");
-                    addContext(cms, experiment, "is_jpeg");
-                    addContext(cms, experiment, "greater_than_100_kb");
 
-                    break;
-                }
+            addContext(cms, experiment, "is_img");
+//            addContext(cms, experiment, "is_mp3");
+//            addContext(cms, experiment, "is_text");
+//            addContext(cms, experiment, "is_pdf");
+//            addContext(cms, experiment, "is_png");
+//            addContext(cms, experiment, "is_jpeg");
+//            addContext(cms, experiment, "greater_than_100_kb");
 
-                case MANIFEST: {
-                    addContext(cms, experiment, "content_protected");
-                    addContext(cms, experiment, "content_not_protected");
 
-                    // TODO - type, label name
-
-                    break;
-                }
-
-            }
+            addContext(cms, experiment, "content_protected");
+//            addContext(cms, experiment, "content_not_protected");
 
         }
 

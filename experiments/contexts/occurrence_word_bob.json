@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DATA_Occurrence_word_bob",
+    "name": "Occurrence_word_bob",
     "domain": {
       "type": "LOCAL",
       "nodes": []

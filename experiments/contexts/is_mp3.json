@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "META_IS_mp3",
+    "name": "IS_mp3",
     "domain": {
       "type": "LOCAL",
       "nodes": []

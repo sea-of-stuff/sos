@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "META_IS_PDF",
+    "name": "IS_PDF",
     "domain": {
       "type": "LOCAL",
       "nodes": []

@@ -17,10 +17,14 @@ getwd()
 # pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_10_20T15_10_37_472Z.TSV", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_25T17_08_57_485Z.tsv", header=TRUE, sep="\t")
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
-d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
+# https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
+d$ContextName<-factor(d$ContextName, levels=c("All", "IS_IMG", "Occurrence_word_the", "Search_word_the", "Protected", "Search_word_the_text_only"))
+
+
+d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 # Remove data from d
 # use this line of code just to inspect the rest of the data
 # d<-d[!(d$ContextName=="DATA"),]
@@ -40,7 +44,7 @@ d_processed$names <- d_processed$Config
 
 # http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 # https://stackoverflow.com/questions/15212884/colouring-different-group-data-in-boxplot-using-r
-colors = c(rep("red",2),rep("deepskyblue",4),rep("green",1), rep("tomato", 6), rep("gray0", 1))
+colors = c(rep("red",1),rep("deepskyblue",1),rep("green",2), rep("tomato", 1), rep("gray90", 1))
 
 # Estimate top limit on the y-axis
 plotTop <- max(d_processed$mean) + max(d_processed$se) +
@@ -56,16 +60,15 @@ barCenters <- barplot(height = d_processed$mean,
                       ylim = c(0, plotTop),
                       main = "TODO (this is the time for all assets!) \nDataset: Random. 39 files.",
                       ylab = "Time (s)",
-                      xaxt="n",
                       border = "black",
                       axes = T,
                       col=colors)
 
-legend("topright", legend=c("ALL", "Data", "Manifest", "Meta", "Meta and Data"),
-       fill=c("red", "deepskyblue", "green", "tomato", "gray0"), cex=0.8, inset=.05)
+legend("topright", legend=c("ALL", "Meta", "Data", "Manifest", "Meta and Data"),
+       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
 
-labs <- paste(names(table(d$ContextName)))
-text(barCenters, par("usr")[3], labels = labs, srt = 30, adj = c(1.1,1.1), xpd = TRUE, cex=.9)
+#labs <- paste(names(table(d$ContextName)))
+#text(barCenters, par("usr")[3], labels = labs, srt = 30, adj = c(1.1,1.1), xpd = TRUE, cex=.9)
 
 # Add error bars
 segments(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
@@ -86,8 +89,8 @@ x <- boxplot(d$Measures~d$ContextName, data=d,
              log = "y",
              col=colors)
 
-legend("topright", legend=c("ALL", "Data", "Manifest", "Meta", "Meta and Data"),
-       fill=c("red", "deepskyblue", "green", "tomato", "gray0"), cex=0.8, inset=.05)
+legend("topright", legend=c("ALL", "Meta", "Data", "Manifest", "Meta and Data"),
+       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
 
 
 # Kruskal-Wallis Test

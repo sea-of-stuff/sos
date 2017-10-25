@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "META_Greater_than_100_kb",
+    "name": "Greater_than_100_kb",
     "domain": {
       "type": "LOCAL",
       "nodes": []

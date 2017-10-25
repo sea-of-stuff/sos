@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DATA_Search_word_white_rabbit",
+    "name": "Search_word_white_rabbit",
     "domain": {
       "type": "LOCAL",
       "nodes": []
