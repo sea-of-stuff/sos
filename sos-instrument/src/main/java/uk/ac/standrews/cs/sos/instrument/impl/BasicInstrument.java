@@ -54,6 +54,15 @@ public class BasicInstrument implements Instrument {
             DatasetMetrics datasetMetrics = DatasetMetrics.measure(directory);
             bufferedWriter.write(datasetMetrics.toString());
         }
+
+        try (FileWriter fileWriter = new FileWriter(new File(filename + "_dataset.tsv"), true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+
+            DatasetMetrics datasetMetrics = DatasetMetrics.measure(directory);
+            bufferedWriter.write(datasetMetrics.tsvHeader());
+            bufferedWriter.newLine();
+            bufferedWriter.write(datasetMetrics.tsv());
+        }
     }
 
     @Override

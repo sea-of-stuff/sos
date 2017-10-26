@@ -26,6 +26,12 @@ public class DatasetMetrics implements Metrics {
     private long totalSize;
     private Set<String> fileExtensions;
 
+    private static ArrayList<FSEntry> entries;
+
+    private DatasetMetrics() {
+        entries = new ArrayList<>();
+    }
+
     public static DatasetMetrics measure(File directory) throws IOException {
 
         DatasetMetrics metrics = new DatasetMetrics();
@@ -81,14 +87,22 @@ public class DatasetMetrics implements Metrics {
         return null;
     }
 
+    // FIXME - not considering folders?
     @Override
     public String tsvHeader() {
-        return null;
+        return "Type" + TAB + "Name" + TAB + "Size" + TAB + "Filetype";
     }
 
     @Override
     public String tsv() {
-        return null;
+
+        String retval = "";
+        for(FSEntry entry:entries) {
+            retval += entry.type + TAB + entry.name + TAB + entry.size + TAB + entry.filetype;
+            retval += "\n";
+        }
+
+        return retval;
     }
 
     public double getMean() {
@@ -263,7 +277,24 @@ public class DatasetMetrics implements Metrics {
             String extension = FilenameUtils.getExtension(file.getFileName().toString());
             fileExtensions.add(extension);
 
+            entries.add(new FSEntry("file", file.getFileName().toString(), file.toFile().length(), extension));
+
             return FileVisitResult.CONTINUE;
+        }
+    }
+
+    private static class FSEntry {
+
+        public String type;
+        public String name;
+        public long size;
+        public String filetype;
+
+        public FSEntry(String type, String name, long size, String filetype) {
+            this.type = type;
+            this.name = name;
+            this.size = size;
+            this.filetype = filetype;
         }
     }
 }
