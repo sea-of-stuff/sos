@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "Occurrence_word_the",
+    "name": "common_word_occurs_at_least_10_times",
     "domain": {
       "type": "LOCAL",
       "nodes": []

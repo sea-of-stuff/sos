@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "All",
+    "name": "manifest",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.AcceptAll();",
+    "predicate": "CommonPredicates.ContentIsProtected(guid);",
     "dependencies": []
   },
   "max_age": 0,

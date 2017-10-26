@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "IS_mp3",
+    "name": "meta_and_search_uncommon_word",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"audio/mpeg\")) && CommonPredicates.MetadataPropertyPredicate(guid, \"xmpDM:audioCompressor\", Collections.singletonList(\"MP3\"));",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"poison\");",
     "dependencies": []
   },
   "max_age": 0,

@@ -454,11 +454,10 @@ public class SOSContextService implements ContextService {
         Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
         for (IGUID assetInvariant:assetInvariants) {
 
-            long start = System.nanoTime();
-
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
                 boolean predicateResult = runPredicate(context, currentContents, head);
+
                 if (predicateResult) {
                     Content content = new ContentImpl(head);
                     contents.add(content);
@@ -473,9 +472,6 @@ public class SOSContextService implements ContextService {
             } catch (HEADNotFoundException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to find head for invariant: " + assetInvariant.toMultiHash());
             }
-
-            long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
         }
 
@@ -690,7 +686,11 @@ public class SOSContextService implements ContextService {
         if (!alreadyRun || maxAgeExpired) {
 
             Predicate predicate = getPredicate(context);
+
+            long start = System.nanoTime();
             predicateResult = predicate.test(versionGUID);
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
             // FIXME - adapt eviction model to new model
 //            ContextVersionInfo content = new ContextVersionInfo();

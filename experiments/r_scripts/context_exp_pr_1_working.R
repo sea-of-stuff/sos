@@ -17,11 +17,16 @@ getwd()
 # pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_10_25T17_08_57_485Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_26T15_45_06_944Z.tsv", header=TRUE, sep="\t")
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 
 # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
-d$ContextName<-factor(d$ContextName, levels=c("All", "IS_IMG", "Occurrence_word_the", "Search_word_the", "Protected", "Search_word_the_text_only"))
+d$ContextName<-factor(d$ContextName, levels=c("base", 
+                                              "search_common_word", "search_uncommon_word", "common_word_occurs_at_least_10_times",
+                                              "meta_and_search_common_word", "meta_and_search_uncommon_word", "meta_and_common_word_occurs_at_least_10_times",
+                                              "metadata", "multi_metadata",
+                                              "manifest"
+                                              ))
 
 
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
@@ -44,7 +49,7 @@ d_processed$names <- d_processed$Config
 
 # http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 # https://stackoverflow.com/questions/15212884/colouring-different-group-data-in-boxplot-using-r
-colors = c(rep("red",1),rep("deepskyblue",1),rep("green",2), rep("tomato", 1), rep("gray90", 1))
+colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), rep("gray90", 1))
 
 # Estimate top limit on the y-axis
 plotTop <- max(d_processed$mean) + max(d_processed$se) +
@@ -61,8 +66,8 @@ barCenters <- barplot(height = d_processed$mean,
                       main = "TODO (this is the time for all assets!) \nDataset: Random. 39 files.",
                       ylab = "Time (s)",
                       border = "black",
-                      axes = T,
-                      col=colors)
+                      col=colors,
+                      axes = T)
 
 legend("topright", legend=c("ALL", "Meta", "Data", "Manifest", "Meta and Data"),
        fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
@@ -89,7 +94,7 @@ x <- boxplot(d$Measures~d$ContextName, data=d,
              log = "y",
              col=colors)
 
-legend("topright", legend=c("ALL", "Meta", "Data", "Manifest", "Meta and Data"),
+legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),
        fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
 
 

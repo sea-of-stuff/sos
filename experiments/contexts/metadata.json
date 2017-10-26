@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "Search_word_the",
+    "name": "metadata",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"the\");",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/jpeg\", \"image/png\"));",
     "dependencies": []
   },
   "max_age": 0,

@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "Search_word_squirrel",
+    "name": "multi_metadata",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"squirrel\");",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"audio/mpeg\")) && CommonPredicates.MetadataPropertyPredicate(guid, \"xmpDM:audioCompressor\", Collections.singletonList(\"MP3\"));",
     "dependencies": []
   },
   "max_age": 0,

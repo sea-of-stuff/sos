@@ -94,36 +94,27 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws Exception {
 
+            addContext(cms, experiment, "base");
 
-            addContext(cms, experiment, "all");
-//            addContext(cms, experiment, "reject_all");
+            // Data only
+            // Source: http://norvig.com/ngrams/count_1w.txt
+            addContext(cms, experiment, "search_common_word"); // the
+            addContext(cms, experiment, "search_uncommon_word"); // poison (10,000th)
+            addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
 
+            // Metadata and Data
+            addContext(cms, experiment, "meta_and_search_common_word"); // the
+            addContext(cms, experiment, "meta_and_search_uncommon_word"); // poison (10,000th)
+            addContext(cms, experiment, "meta_and_common_word_occurs_at_least_10_times"); // the
 
-            addContext(cms, experiment, "search_word_the");
-//            addContext(cms, experiment, "search_word_squirrel");
-//            addContext(cms, experiment, "search_word_white_rabbit");
-            addContext(cms, experiment, "occurrence_word_the");
-//            addContext(cms, experiment, "occurrence_word_alice");
-//            addContext(cms, experiment, "occurrence_word_bob");
-//            addContext(cms, experiment, "search_sentence_online_marketing");
+            // Check one metadata property
+            addContext(cms, experiment, "metadata");
 
+            // Check two metadata features
+            addContext(cms, experiment, "multi_metadata");
 
-            addContext(cms, experiment, "search_word_the_on_text_only");
-//            addContext(cms, experiment, "search_word_alice_on_text_only");
-//            addContext(cms, experiment, "search_word_white_rabbit_on_text_only");
-
-
-            addContext(cms, experiment, "is_img");
-//            addContext(cms, experiment, "is_mp3");
-//            addContext(cms, experiment, "is_text");
-//            addContext(cms, experiment, "is_pdf");
-//            addContext(cms, experiment, "is_png");
-//            addContext(cms, experiment, "is_jpeg");
-//            addContext(cms, experiment, "greater_than_100_kb");
-
-
-            addContext(cms, experiment, "content_protected");
-//            addContext(cms, experiment, "content_not_protected");
+            // Manifest
+            addContext(cms, experiment, "manifest");
 
         }
 

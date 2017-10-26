@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "Protected",
+    "name": "search_uncommon_word",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentIsProtected(guid);",
+    "predicate": "CommonPredicates.SearchText(guid, \"poison\");",
     "dependencies": []
   },
   "max_age": 0,
