@@ -4,12 +4,14 @@ import com.jezhumble.javasysmon.JavaSysMon;
 import com.jezhumble.javasysmon.MemoryStats;
 import com.jezhumble.javasysmon.OsProcess;
 import com.jezhumble.javasysmon.ProcessInfo;
+import com.sun.management.OperatingSystemMXBean;
 import uk.ac.standrews.cs.sos.instrument.Metrics;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,6 +42,8 @@ public class BackgroundInstrument implements Metrics {
 
     private int processPID;
     private String processName;
+
+    private double processLoad;
 
     public BackgroundInstrument(String filename) {
         this.filename = filename;
@@ -135,6 +139,14 @@ public class BackgroundInstrument implements Metrics {
         this.processName = processName;
     }
 
+    public double getProcessLoad() {
+        return processLoad;
+    }
+
+    public void setProcessLoad(double processLoad) {
+        this.processLoad = processLoad;
+    }
+
     public static BackgroundInstrument measure() {
         JavaSysMon monitor = new JavaSysMon();
 
@@ -157,6 +169,19 @@ public class BackgroundInstrument implements Metrics {
 
         osMetrics.setProcessPID(monitor.currentPid());
         osMetrics.setProcessName(processInfo.getName());
+
+
+        // TODO - use this rather than library above?
+        OperatingSystemMXBean osBean = ManagementFactory
+                .getPlatformMXBean(com.sun.management.OperatingSystemMXBean.class);
+
+        // What % CPU load this current JVM is taking, from 0.0-1.0
+        osMetrics.setProcessLoad(osBean.getProcessCpuLoad());
+        // System.out.println(osBean.getProcessCpuLoad());
+
+        // What % load the overall system is at, from 0.0-1.0
+        // System.out.println(osBean.getSystemLoadAverage());
+
 
         return osMetrics;
     }
@@ -230,13 +255,14 @@ public class BackgroundInstrument implements Metrics {
 
     @Override
     public String tsvHeader() {
-        return "OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Free Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+"Resident Bytes"+TAB+"Total Bytes"+TAB+"User Uptime"+TAB+"System Uptime";
+        return "OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Free Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+"Resident Bytes"+TAB+"Total Bytes"+TAB+"User Uptime"+TAB+"System Uptime"+TAB+"CPU Process Load";
     }
 
     @Override
     public String tsv() {
         return getOsName() + TAB + getNoCPUs() + TAB + getCpuHZ() + TAB + getMemFreeBytes() + TAB + getMemTotalBytes() + TAB +
                 getProcessPID() + TAB + getProcessName() + TAB + getResidentBytes() + TAB + getTotalBytes() + TAB +
-                getUserUptime() + TAB + getSysUptime();
+                getUserUptime() + TAB + getSysUptime() + TAB + getProcessLoad();
     }
+
 }
