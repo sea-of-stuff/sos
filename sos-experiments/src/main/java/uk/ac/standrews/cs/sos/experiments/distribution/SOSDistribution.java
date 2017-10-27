@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import static uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration.*;
 
@@ -27,7 +28,7 @@ public class SOSDistribution {
         String appPath = configuration.getExperimentObj().getSetup().getApp();
         System.out.println("Distributing the app at the following path: " + appPath);
 
-        for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+        for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             System.out.println("Sending files for node " + node.getName());
             String path = node.getPath() + node.getSsh().getUser() + "/";
@@ -63,7 +64,7 @@ public class SOSDistribution {
     public static void undoDistribution(ExperimentConfiguration configuration) throws NetworkException {
         System.out.println("UndoDistribution of the app at the remote nodes");
 
-        for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+        for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             System.out.println("Deleting files for node " + node.getName());
             String path = node.getPath() + node.getSsh().getUser() + "/";
@@ -84,7 +85,7 @@ public class SOSDistribution {
 
     public static void startAllApplications(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
-        for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+        for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             String path = node.getPath() + node.getSsh().getUser() + "/";
 
@@ -102,7 +103,7 @@ public class SOSDistribution {
 
     public static void stopAllApplications(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
-        for(ExperimentConfiguration.Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+        for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
             String path = node.getPath() + node.getSsh().getUser() + "/";
 
@@ -116,11 +117,34 @@ public class SOSDistribution {
 
     }
 
+    public static void stopNode(ExperimentConfiguration configuration, String nodeName) throws NetworkException, InterruptedException {
+
+        List<Experiment.Node> nodes = configuration.getExperimentObj().getNodes();
+        for(Experiment.Node node:nodes) {
+
+            if (node.getName().equals(nodeName)) {
+
+                String path = node.getPath() + node.getSsh().getUser() + "/";
+
+                NetworkOperations scp = new NetworkOperations();
+                scp.setSsh(node.getSsh());
+                scp.connect();
+
+                scp.killProcess(path + REMOTE_SOS_PID_FILE);
+                scp.disconnect();
+
+                break;
+            }
+        }
+    }
+
+
+
     public static void distributeToExperimentNode(ExperimentConfiguration configuration) throws NetworkException, IOException {
         System.out.println("Distributing the SOS-Experiment to a remote node");
 
         String experimentName = configuration.getExperimentObj().getName();
-        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+        Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
         String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
 
@@ -159,7 +183,7 @@ public class SOSDistribution {
     public static void runExperiment(ExperimentConfiguration configuration) throws NetworkException {
         System.out.println("Running the SOS-Experiment from a remote node");
 
-        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+        Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
         String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
 
@@ -174,7 +198,7 @@ public class SOSDistribution {
 
     public static void stopExperiment(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
-        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+        Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
         String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
 
@@ -189,7 +213,7 @@ public class SOSDistribution {
     public static void undoDistributionToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
         System.out.println("Distributing the SOS-Experiment to a remote node");
 
-        ExperimentConfiguration.Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+        Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
         String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
 

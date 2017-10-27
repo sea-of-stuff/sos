@@ -112,6 +112,16 @@ public class ChicShock {
         }
     }
 
+    public void unShock(String nodeName) throws ChicShockException {
+        System.out.println("Stopping the remote SOS Nodes");
+
+        try {
+            SOSDistribution.stopNode(experimentConfiguration, nodeName);
+        } catch (InterruptedException | NetworkException e) {
+            throw new ChicShockException();
+        }
+    }
+
     public void unShockExperiment() throws ChicShockException {
         System.out.println("Stopping the remote SOS Nodes");
 

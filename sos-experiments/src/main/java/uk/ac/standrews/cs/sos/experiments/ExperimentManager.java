@@ -31,7 +31,6 @@ public class ExperimentManager {
 
     public static void main(String[] args) throws Exception {
 
-        // File experimentConfigurationFile = new File("sos-experiments/src/main/resources/experiments/scale_1/configuration/configuration.json");
         File experimentConfigurationFile = new File("experiment.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 

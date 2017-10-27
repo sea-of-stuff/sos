@@ -123,6 +123,7 @@
     <orderEntry type="module" module-name="instrument" />
     <orderEntry type="library" name="Maven: com.outr.javasysmon:javasysmon_2.10:0.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.3" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.20.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.skyscreamer:jsonassert:1.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mock-server:mockserver-netty:3.10.4" level="project" />

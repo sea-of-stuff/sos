@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -122,19 +121,25 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
 
-        System.out.println("L/l for Local runIteration and H/h for hogun cluster runIteration");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Scanner in = new Scanner(System.in);
-        String option = in.nextLine();
-        switch(option) {
-            case "l": case "L":
-                runLocal();
-                break;
-
-            case "h": case "H":
-                runHogun();
-                break;
-        }
+        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
+        experiment_pr_1.process();
+//
+//        System.out.println("L/l for Local runIteration and H/h for hogun cluster runIteration");
+//
+//        Scanner in = new Scanner(System.in);
+//        String option = in.nextLine();
+//        switch(option) {
+//            case "l": case "L":
+//                runLocal();
+//                break;
+//
+//            case "h": case "H":
+//                runHogun();
+//                break;
+//        }
     }
 
     private static void runLocal() throws ConfigurationException, ExperimentException {
