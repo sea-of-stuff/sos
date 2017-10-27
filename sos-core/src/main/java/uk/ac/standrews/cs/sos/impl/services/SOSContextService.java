@@ -427,6 +427,7 @@ public class SOSContextService implements ContextService {
         int counter = 0;
 
         for (Context context : getContexts()) {
+            SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getUniqueName());
             try {
                 counter += runPredicate(context);
             } catch (ContextException e) {

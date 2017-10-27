@@ -134,6 +134,13 @@ public abstract class BaseExperiment implements Experiment {
         long end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("All experiments finished in " + nanoToSeconds(timeToFinish) + " seconds");
+
+        try {
+            System.out.println("Going to sleep for 5 seconds");
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new ExperimentException();
+        }
     }
 
     public abstract int numberOfTotalIterations();

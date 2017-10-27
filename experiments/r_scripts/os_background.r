@@ -1,7 +1,7 @@
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-d <- read.csv("output/pr_1__2017_10_27T08_36_08_026Z_os.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_27T13_03_39_007Z_os.tsv", header=TRUE, sep="\t")
 
 # Convert to MB
 d$Mem.Used.Bytes <- d$Mem.Used.Bytes / 1000000
@@ -11,6 +11,7 @@ d$Total.Bytes <- d$Total.Bytes / 1000000
 d$Physical.Mem.Total.Bytes <- d$Physical.Mem.Total.Bytes / 1000000
 d$Physical.Mem.Used.Bytes <- d$Physical.Mem.Used.Bytes / 1000000
 
+d$User.Uptime <- d$User.Uptime / 1000
 
 plot(d$User.Uptime, d$Mem.Total.Bytes, 
      col="blue",
@@ -18,7 +19,7 @@ plot(d$User.Uptime, d$Mem.Total.Bytes,
      ylim=c(min(d$Mem.Used.Bytes, d$Mem.Total.Bytes, d$Resident.Bytes, d$Total.Bytes, d$Physical.Mem.Total.Bytes, d$Physical.Mem.Used.Bytes), 
             max(d$Mem.Used.Bytes, d$Mem.Total.Bytes, d$Resident.Bytes, d$Total.Bytes, d$Physical.Mem.Total.Bytes, d$Physical.Mem.Used.Bytes)),
      xlim=c(min(d$User.Uptime), max(d$User.Uptime)),
-     xlab="ms",
+     xlab="Time (s)",
      ylab="MB")
 lines(d$User.Uptime, d$Mem.Used.Bytes, col="red", type="b", pch=20)
 lines(d$User.Uptime, d$Resident.Bytes, col="black", type="b", pch=20)
@@ -42,5 +43,5 @@ plot(d$User.Uptime, d$CPU.Process.Load,
      type="b", pch=20,
      ylim=c(0, 100),
      ylab="CPU (%)",
-     xlab="ms")
+     xlab="Time (s)")
 

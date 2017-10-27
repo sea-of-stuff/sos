@@ -32,11 +32,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-//            for(int j = 0; j < PREDICATE_TYPE.values().length; j++) {
-//
-//                PREDICATE_TYPE predicate_type = PREDICATE_TYPE.values()[j];
             units.add(new ExperimentUnit_PR_1());
-//            }
         }
         Collections.shuffle(units);
 
@@ -52,11 +48,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     @Override
     public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations(); //  * PREDICATE_TYPE.values().length;
-    }
-
-    public enum PREDICATE_TYPE {
-        ALL, DATA, METADATA, DATA_AND_METADATA, MANIFEST
+        return experiment.getSetup().getIterations();
     }
 
     private class ExperimentUnit_PR_1 implements ExperimentUnit {

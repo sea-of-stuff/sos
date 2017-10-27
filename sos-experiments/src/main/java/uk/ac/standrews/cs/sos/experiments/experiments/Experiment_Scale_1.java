@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
-import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -23,7 +22,6 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  *
@@ -130,23 +128,6 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
 
-        System.out.println("L/l for Local runIteration and H/h for hogun cluster runIteration");
-
-        Scanner in = new Scanner(System.in);
-        String option = in.nextLine();
-        switch(option) {
-            case "l": case "L":
-                runLocal();
-                break;
-
-            case "h": case "H":
-                runHogun();
-                break;
-        }
-    }
-
-    private static void runLocal() throws ConfigurationException, ExperimentException {
-
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
@@ -154,24 +135,4 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         experiment_scale_1.process();
     }
 
-    private static void runHogun() throws ConfigurationException, ChicShockException, InterruptedException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "scale_1") + "configuration-hogun.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        ChicShock chicShock = new ChicShock(experimentConfiguration);
-        chicShock.chic();
-        chicShock.chicExperiment();
-
-        chicShock.shock();
-        chicShock.shockExperiment();
-
-        Thread.sleep(60000);
-
-        chicShock.unShockExperiment();
-        chicShock.unChicExperiment();
-
-        chicShock.unShock();
-        chicShock.unChic();
-    }
 }

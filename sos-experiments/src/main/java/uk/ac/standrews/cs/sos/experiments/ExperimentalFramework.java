@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.sos.experiments;
 
-import org.apache.commons.cli.*;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 
 import java.io.File;
+import java.util.Scanner;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -12,44 +12,62 @@ import java.io.File;
 public class ExperimentalFramework {
 
     private static final String RUN_EXPERIMENT = "run";
+    private static final String CRON_EXPERIMENT = "cron";
     private static final String CHECK_NODE = "check";
     private static final String STOP_NODE = "stop";
     private static final String STOP_ALL_NODES = "stop_all";
     private static final String STATS_NODE = "stats";
     private static final String CLEAN_NODE = "clean"; // TODO - remove files from remote node
 
-    public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/";
+    private static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/";
 
+    private static Scanner in;
     /*
 
        Options:
        - run configuration_path (e.g. run pr_1/configuration-hogun.json)
-           - cronjob
+       - cron configuration_path cronfile
 
        - check node_config (e.g. check pr_1/hogun_1.json) - prints a short summary of this node, such as IT IS RUNNING, IT CRASHED, etc
        - stop configuration_path node_name (e.g. stop pr_1/hogun_1.json)
        - stats node_config dest_path (e.g. stats pr_1/hogun_1.json experiments/output) - downloads all stats from the node
 
         */
-    public static void main(String[] args) throws ParseException, InterruptedException, ConfigurationException, ChicShockException {
-        CommandLine cli = InitCLI(args);
+    public static void main(String[] args) throws InterruptedException, ConfigurationException, ChicShockException {
 
-        if (cli.hasOption(RUN_EXPERIMENT)) {
-            runExperiment(cli);
-        } else if (cli.hasOption(CHECK_NODE)) {
-            // TODO
-        } else if (cli.hasOption(STOP_NODE)) {
-            stopNode(cli);
-        } else if (cli.hasOption(STOP_ALL_NODES)) {
-            stopAllNodes(cli);
-        } else if (cli.hasOption(STATS_NODE)) {
-            // TODO
+
+        System.out.println("Options: run, cron, stop, stopall, check, stats, clean");
+        in = new Scanner(System.in);
+        String option = in.nextLine();
+
+        System.out.println("Enter experiment configuration path relative to " + CONFIGURATION_FOLDER);
+        System.out.println("Example: pr_1/configuration/configuration.json");
+        switch(option) {
+
+            case RUN_EXPERIMENT:
+                runExperiment();
+                break;
+
+            case STOP_NODE:
+                stopNode();
+                break;
+
+            case STOP_ALL_NODES:
+                stopAllNodes();
+                break;
+
+            case CHECK_NODE:
+            case STATS_NODE:
+            case CRON_EXPERIMENT:
+            case CLEAN_NODE:
+                break;
         }
+
     }
 
-    private static void runExperiment(CommandLine cli) throws ConfigurationException, ChicShockException, InterruptedException {
+    private static void runExperiment() throws ConfigurationException, ChicShockException, InterruptedException {
 
-        String configurationPath = cli.getOptionValue(RUN_EXPERIMENT);
+        String configurationPath = in.nextLine();
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
@@ -64,23 +82,28 @@ public class ExperimentalFramework {
         chicShock.shockExperiment();
     }
 
-    private static void stopNode(CommandLine cli) throws ConfigurationException, ChicShockException {
+    private static void stopNode() throws ConfigurationException, ChicShockException {
 
-        String[] options = cli.getOptionValues(STOP_NODE);
-
-        String configurationPath = options[0];
+        String configurationPath = in.nextLine();
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        String nodeName = options[1];
+        System.out.println("Enter name of node to stop. Options:");
+        for(ExperimentConfiguration.Experiment.Node node:experimentConfiguration.getExperimentObj().getNodes()) {
+            System.out.println("\t\t" + node.getName());
+        }
+        ExperimentConfiguration.Experiment.Node node = experimentConfiguration.getExperimentObj().getExperimentNode();
+        System.out.println("\t\t" + node.getName());
+
+        String nodeName = in.nextLine();
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.unShock(nodeName);
     }
 
-    private static void stopAllNodes(CommandLine cli) throws ConfigurationException, ChicShockException, InterruptedException {
+    private static void stopAllNodes() throws ConfigurationException, ChicShockException, InterruptedException {
 
-        String configurationPath = cli.getOptionValue(RUN_EXPERIMENT);
+        String configurationPath = in.nextLine();
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
@@ -88,61 +111,6 @@ public class ExperimentalFramework {
         chicShock.unShock();
         Thread.sleep(2000); // Wait a bit before stopping the experiment node
         chicShock.unShockExperiment();
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // CLI SETTINGS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static CommandLine InitCLI(String[] args) throws ParseException {
-        CommandLineParser parser = new DefaultParser();
-        Options options = CreateOptions();
-
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("posix", options);
-        System.out.println("\n===================================================\n\n");
-
-        return parser.parse(options, args);
-    }
-
-    private static Options CreateOptions() {
-        Options options = new Options();
-
-        options.addOption(Option.builder(RUN_EXPERIMENT)
-                .required(false)
-                .hasArg()
-                .desc("Run experiment")
-                .build());
-
-        options.addOption(Option.builder(CHECK_NODE)
-                .required(false)
-                .hasArgs()
-                .desc("Check node")
-                .build());
-
-        options.addOption(Option.builder(STOP_NODE)
-                .required(false)
-                .hasArgs()
-                .desc("Stop node")
-                .build());
-
-        options.addOption(Option.builder(STOP_ALL_NODES)
-                .required(false)
-                .desc("Stop all nodes")
-                .build());
-
-        options.addOption(Option.builder(STATS_NODE)
-                .required(false)
-                .hasArgs()
-                .desc("Get node stats")
-                .build());
-
-        return options;
     }
 
 }
