@@ -12,7 +12,7 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_10_26T15_45_06_944Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_27T08_36_08_026Z.tsv", header=TRUE, sep="\t")
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 
 # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
@@ -40,6 +40,24 @@ d_processed$names <- d_processed$Config
 # http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 # https://stackoverflow.com/questions/15212884/colouring-different-group-data-in-boxplot-using-r
 colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), rep("gray90", 1))
+
+##################
+# BOXPLOT
+par(mar=c(20,4,4,2)+3) # Add space to show all labels
+x <- boxplot(d$Measures~d$ContextName, data=d,
+             outline=FALSE,
+             las=2, # Draw x labels vertically
+             main="Predicate performance against different settings",
+             ylab="Time (s) - log scale", 
+             log = "y",
+             col=colors)
+
+legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),
+       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
+
+
+##################
+# BARPLOT
 
 # Estimate top limit on the y-axis
 plotTop <- max(d_processed$mean) + max(d_processed$se) +
@@ -71,20 +89,9 @@ arrows(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
        code = 3, length = 0.05)
 
 
-##################
-# BOXPLOT
-par(mar=c(15,4,4,2)+3) # Add space to show all labels
-x <- boxplot(d$Measures~d$ContextName, data=d,
-             las=2, # Draw x labels vertically
-             main="Predicate performance against different settings",
-             ylab="Time (s) - log scale", 
-             log = "y",
-             col=colors)
-
-legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),
-       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
 
 
+## STAT ANALYSIS
 # Kruskal-Wallis Test
 # http://www.r-tutor.com/elementary-statistics/non-parametric-methods/kruskal-wallis-test
 d$Kruskal <- as.factor(d$ContextName)
