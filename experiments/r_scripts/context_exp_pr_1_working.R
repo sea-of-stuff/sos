@@ -11,11 +11,6 @@ library(stargazer)
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-# pr_1__2017_08_21T15_35_33_894Z.TSV (on macs_500k) NOT VALID, MUST BE RE-RUN
-# pr_1__2017_08_23T11_50_08_412Z.TSV (on text dataset) (40 iterations x configuration type)
-# pr_1__2017_08_23T11_50_08_412Z_cleaned.TSV
-# pr_1__2017_08_23T12_03_11_247Z.TSV (on random_1)
-
 # Read the CVS file
 d <- read.csv("output/pr_1__2017_10_26T15_45_06_944Z.tsv", header=TRUE, sep="\t")
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
@@ -28,12 +23,7 @@ d$ContextName<-factor(d$ContextName, levels=c("base",
                                               "manifest"
                                               ))
 
-
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
-# Remove data from d
-# use this line of code just to inspect the rest of the data
-# d<-d[!(d$ContextName=="DATA"),]
-
 
 aggr <- aggregate(d$Measures ~ d$ContextName,
                   FUN = function(x) c(mean = mean(x), sd = sd(x), n = length(x)))
@@ -63,7 +53,7 @@ barCenters <- barplot(height = d_processed$mean,
                       names.arg = d_processed$names,
                       beside = true, las =2,
                       ylim = c(0, plotTop),
-                      main = "TODO (this is the time for all assets!) \nDataset: Random. 39 files.",
+                      main = "TODO (this is the time for all assets!)",
                       ylab = "Time (s)",
                       border = "black",
                       col=colors,
@@ -71,9 +61,6 @@ barCenters <- barplot(height = d_processed$mean,
 
 legend("topright", legend=c("ALL", "Meta", "Data", "Manifest", "Meta and Data"),
        fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
-
-#labs <- paste(names(table(d$ContextName)))
-#text(barCenters, par("usr")[3], labels = labs, srt = 30, adj = c(1.1,1.1), xpd = TRUE, cex=.9)
 
 # Add error bars
 segments(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
@@ -121,7 +108,6 @@ posthoc.kruskal.nemenyi.test(d$User.Measure ~ d$Kruskal, data=d)
 # Resources:
 # https://rcompanion.org/rcompanion/d_06.html
 
-
 # WRONG 
 # Testing pairs of sets using the t-test will lead to the Type1 error. 
 # Instead we need to do:
@@ -130,15 +116,9 @@ posthoc.kruskal.nemenyi.test(d$User.Measure ~ d$Kruskal, data=d)
 # 
 # I am keeping the code below just to remember myself that this type of stats is wrong
 # P-test for two sets
-x = subset(d, ContextName=="ALL")
-y = subset(d, ContextName=="META")
-t.test(x$Measures, y$Measures)
-
-# linear model test
-# https://www.r-bloggers.com/one-way-analysis-of-variance-anova/
-model <- lm(formula = Measures ~ ContextName, data = d)
-summary(model)
-anova(model)
+# x = subset(d, ContextName=="ALL")
+# y = subset(d, ContextName=="META")
+# t.test(x$Measures, y$Measures)
 
 # Power test
 # https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html

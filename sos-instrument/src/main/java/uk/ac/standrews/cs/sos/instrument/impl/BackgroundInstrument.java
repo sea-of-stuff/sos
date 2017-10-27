@@ -38,14 +38,16 @@ public class BackgroundInstrument implements Metrics {
     private long cpuHZ;
 
     private long memTotalBytes;
-    private long memFreeBytes;
+    private long memUsedBytes;
+
+    private long phyMemTotalBytes;
+    private long phyMemUsedBytes;
 
     private int processPID;
     private String processName;
 
     private double processLoad;
     private double systemLoadAverage;
-    private long usedMemory;
 
     public BackgroundInstrument(String filename) {
         this.filename = filename;
@@ -117,12 +119,12 @@ public class BackgroundInstrument implements Metrics {
         this.memTotalBytes = memTotalBytes;
     }
 
-    public long getMemFreeBytes() {
-        return memFreeBytes;
+    public long getMemUsedBytes() {
+        return memUsedBytes;
     }
 
-    public void setMemFreeBytes(long memFreeBytes) {
-        this.memFreeBytes = memFreeBytes;
+    public void setMemUsedBytes(long memUsedBytes) {
+        this.memUsedBytes = memUsedBytes;
     }
 
     public int getProcessPID() {
@@ -165,25 +167,25 @@ public class BackgroundInstrument implements Metrics {
         osMetrics.setNoCPUs(monitor.numCpus());
         osMetrics.setCpuHZ(monitor.cpuFrequencyInHz());
 
-        MemoryStats memoryStats = monitor.swap(); // TODO - monitor.phyisical memory
+        MemoryStats memoryStats = monitor.swap();
         osMetrics.setMemTotalBytes(memoryStats.getTotalBytes());
-        osMetrics.setMemFreeBytes(memoryStats.getFreeBytes());
+        osMetrics.setMemUsedBytes(memoryStats.getTotalBytes() - memoryStats.getFreeBytes());
+
+        MemoryStats phyMemoryStats = monitor.physical();
+        osMetrics.setPhyMemTotalBytes(phyMemoryStats.getTotalBytes());
+        osMetrics.setPhyMemUsedBytes(phyMemoryStats.getTotalBytes() - phyMemoryStats.getFreeBytes());
 
         osMetrics.setProcessPID(monitor.currentPid());
         osMetrics.setProcessName(processInfo.getName());
 
 
-        // TODO - use this rather than library above?
-        OperatingSystemMXBean osBean = ManagementFactory
-                .getPlatformMXBean(com.sun.management.OperatingSystemMXBean.class);
+        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(com.sun.management.OperatingSystemMXBean.class);
 
         // What % CPU load this current JVM is taking, from 0.0-1.0
         osMetrics.setProcessLoad(osBean.getProcessCpuLoad());
 
         // What % load the overall system is at, from 0.0-1.0
         osMetrics.setSystemLoadAverage(osBean.getSystemLoadAverage());
-
-        osMetrics.setUsedMemory(osBean.getTotalPhysicalMemorySize() - osBean.getFreePhysicalMemorySize());
 
         return osMetrics;
     }
@@ -236,7 +238,7 @@ public class BackgroundInstrument implements Metrics {
         return "OSName: " + getOsName() + "\n" +
                 "NoCPUs: " + getNoCPUs() + "\n" +
                 "CPU Hz: " + getCpuHZ() + "\n" +
-                "Free OS Memory: " + getMemFreeBytes() + "/" + getMemTotalBytes() + "\n" +
+                "Free OS Memory: " + getMemUsedBytes() + "/" + getMemTotalBytes() + "\n" +
                 "Process ID/Name: " + getProcessPID() + "/" + getProcessName() + "\n" +
                 "Resident/Total Bytes: " + getResidentBytes() + "/" + getTotalBytes() + "\n" +
                 "User/Sys Uptime Milliseconds: " + getUserUptime() + "/" + getSysUptime() + "\n\n";
@@ -250,23 +252,24 @@ public class BackgroundInstrument implements Metrics {
     @Override
     public String csv() {
 
-        return getOsName() + COMMA + getNoCPUs() + COMMA + getCpuHZ() + COMMA + getMemFreeBytes() + COMMA + getMemTotalBytes() + COMMA +
+        return getOsName() + COMMA + getNoCPUs() + COMMA + getCpuHZ() + COMMA + getMemUsedBytes() + COMMA + getMemTotalBytes() + COMMA +
                 getProcessPID() + COMMA + getProcessName() + COMMA + getResidentBytes() + COMMA + getTotalBytes() + COMMA +
                 getUserUptime() + COMMA + getSysUptime();
     }
 
     @Override
     public String tsvHeader() {
-        return "OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Free Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+
+        return "OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Used Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+
                 "Resident Bytes"+TAB+"Total Bytes"+TAB+"User Uptime"+TAB+"System Uptime"+TAB+"CPU Process Load"+TAB+
-                "System Load Average"+TAB+"Used Memory";
+                "System Load Average"+TAB+"Physical Mem Total Bytes"+TAB+"Physical Mem Used Bytes";
     }
 
     @Override
     public String tsv() {
-        return getOsName() + TAB + getNoCPUs() + TAB + getCpuHZ() + TAB + getMemFreeBytes() + TAB + getMemTotalBytes() + TAB +
+        return getOsName() + TAB + getNoCPUs() + TAB + getCpuHZ() + TAB + getMemUsedBytes() + TAB + getMemTotalBytes() + TAB +
                 getProcessPID() + TAB + getProcessName() + TAB + getResidentBytes() + TAB + getTotalBytes() + TAB +
-                getUserUptime() + TAB + getSysUptime() + TAB + getProcessLoad() + TAB + getSystemLoadAverage() + TAB + getUsedMemory();
+                getUserUptime() + TAB + getSysUptime() + TAB + getProcessLoad() + TAB + getSystemLoadAverage() + TAB +
+                getPhyMemTotalBytes() + TAB + getPhyMemUsedBytes();
     }
 
     public double getSystemLoadAverage() {
@@ -277,11 +280,19 @@ public class BackgroundInstrument implements Metrics {
         this.systemLoadAverage = systemLoadAverage;
     }
 
-    public long getUsedMemory() {
-        return usedMemory;
+    public long getPhyMemTotalBytes() {
+        return phyMemTotalBytes;
     }
 
-    public void setUsedMemory(long usedMemory) {
-        this.usedMemory = usedMemory;
+    public void setPhyMemTotalBytes(long phyMemTotalBytes) {
+        this.phyMemTotalBytes = phyMemTotalBytes;
+    }
+
+    public long getPhyMemUsedBytes() {
+        return phyMemUsedBytes;
+    }
+
+    public void setPhyMemUsedBytes(long phyMemUsedBytes) {
+        this.phyMemUsedBytes = phyMemUsedBytes;
     }
 }
