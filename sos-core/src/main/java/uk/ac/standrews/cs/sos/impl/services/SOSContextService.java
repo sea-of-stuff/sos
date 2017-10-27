@@ -542,8 +542,6 @@ public class SOSContextService implements ContextService {
 
     private void runPolicies(Context context) {
 
-        long start = System.nanoTime();
-
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
 
@@ -552,9 +550,6 @@ public class SOSContextService implements ContextService {
             }
 
         });
-
-        long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.policies, context.getName(), duration);
     }
 
     private void runContextPoliciesCheckNow(Context context) {
@@ -720,6 +715,8 @@ public class SOSContextService implements ContextService {
     private void runPolicies(Context context, IGUID guid) {
 
         try {
+            Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
+
             ContextVersionInfo content = new ContextVersionInfo();
             ContextVersionInfo prev = contextsContentsDirectory.getEntry(context.guid(), guid);
 
@@ -729,12 +726,14 @@ public class SOSContextService implements ContextService {
 
             Set<Policy> policies = getPolicies(context);
             boolean allPoliciesAreSatisfied = true;
-            for (Policy policy:policies) {
 
-                Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
+            long start = System.nanoTime();
+            for (Policy policy:policies) {
                 policy.apply(context.codomain(), commonUtilities, manifest);
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
             }
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.policies, context.getName(), duration);
 
             content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);

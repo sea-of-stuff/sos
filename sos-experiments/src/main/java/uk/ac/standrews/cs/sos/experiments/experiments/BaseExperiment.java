@@ -95,7 +95,7 @@ public abstract class BaseExperiment implements Experiment {
     public void finishIteration() {
         end = System.nanoTime();
         long timeToFinish = end - start;
-        System.out.println("Experiment iteration {" + iteration + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
+        System.out.println("Experiment iteration {" + (iteration + 1) + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
 
         ServerState.kill();
     }
@@ -143,7 +143,9 @@ public abstract class BaseExperiment implements Experiment {
         }
     }
 
-    public abstract int numberOfTotalIterations();
+    public int numberOfTotalIterations() {
+        return experiment.getSetup().getIterations();
+    }
 
     private double nanoToSeconds(long nano) {
         return nano/1000000000.0;

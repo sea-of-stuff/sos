@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "AccessGrant",
+    "name": "grant_access",
     "domain": {
       "type": "LOCAL",
       "nodes": []

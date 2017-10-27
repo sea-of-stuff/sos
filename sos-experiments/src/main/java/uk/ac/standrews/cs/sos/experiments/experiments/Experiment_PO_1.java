@@ -27,13 +27,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            for(int j = 0; j < POLICY_TYPE.values().length; j++) {
-
-                POLICY_TYPE predicate_type = POLICY_TYPE.values()[j];
-                units.add(new ExperimentUnit_PO_1(predicate_type));
-            }
+            units.add(new ExperimentUnit_PO_1());
         }
-
         Collections.shuffle(units);
 
         experimentUnitIterator = units.iterator();
@@ -46,31 +41,13 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PO_1.");
     }
 
-    @Override
-    public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations() * POLICY_TYPE.values().length;
-    }
-
-    public enum POLICY_TYPE {
-        NONE, NOTHING,
-        DATA_REPLICATION, MANIFEST_REPLICATION, METADATA_REPLICATION, // <-- each of these can have different settings (e.g. based on where node are, their availability, etc)
-        DATA_PROTECTION, MANIFEST_PROTECTION, METADATA_PROTECTION, // <-- protection granting. Data is not protected by the policies
-        NOTIFICATION // Nodes? are notified about the new data in the context
-    }
-
-
     private class ExperimentUnit_PO_1 implements ExperimentUnit {
 
         private ContextService cms;
-        private POLICY_TYPE policy_type;
-
-        ExperimentUnit_PO_1(POLICY_TYPE policy_type) {
-            this.policy_type = policy_type;
-        }
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with policy type " + policy_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT");
 
             try {
                 addFolderUSROToNode(node, experiment);
@@ -89,42 +66,27 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT policy type " + policy_type.name());
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT");
 
             cms.runPolicies();
         }
 
         private void addContexts() throws Exception {
 
-            switch (policy_type) {
-                case NONE: {
-                    addContext(cms, experiment, "No_Policies");
-                    break;
-                }
-                case NOTHING: {
-                    addContext(cms, experiment, "Do_Nothing_Policy");
-                    break;
-                }
-                case DATA_PROTECTION: {
-                    // Roles loaded from experiment resources
-                    addContext(cms, experiment, "Access_Grant");
-                    break;
-                }
-                case DATA_REPLICATION: {
-                    addContext(cms, experiment, "Data_Replication_1");
-                    break;
-                }
-                case MANIFEST_REPLICATION: {
-                    addContext(cms, experiment, "Manifest_Replication_1");
-                    break;
-                }
+            addContext(cms, experiment, "no_policies");
+            addContext(cms, experiment, "do_nothing_policy");
 
-            }
+            // Roles loaded from experiment resources
+            addContext(cms, experiment, "grant_access");
+
+
+//            addContext(cms, experiment, "Data_Replication_1");
+//            addContext(cms, experiment, "Manifest_Replication_1");
         }
 
     }
 
-    // TODO - this experiment will require multiple nodes. It is pointless to have this experiment runIteration locally only.
+    // REMOVEME
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_1") + "configuration.json");

@@ -12,7 +12,7 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_10_27T08_36_08_026Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_27T13_03_39_007Z.tsv", header=TRUE, sep="\t")
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 
 # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/

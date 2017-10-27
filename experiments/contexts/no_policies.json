@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "DoNothing",
+    "name": "no_policies",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -16,13 +16,5 @@
     "dependencies": []
   },
   "max_age": 0,
-  "policies": [
-    {
-      "type" : "Policy",
-      "apply" : "CommonPolicies.apply_DoNothing();",
-      "satisfied" : "return CommonPolicies.satisfied_DoNothing();",
-      "dependencies" : [],
-      "fields" : []
-    }
-  ]
+  "policies": []
 }

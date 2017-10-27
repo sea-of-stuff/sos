@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
-import uk.ac.standrews.cs.sos.experiments.ChicShock;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -46,20 +45,13 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR_1. # times a predicate was runIteration: " + counter);
     }
 
-    @Override
-    public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations();
-    }
-
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
 
         private ContextService cms;
 
-        ExperimentUnit_PR_1() { }
-
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT with predicate");
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT");
 
             try {
                 cms = node.getCMS();
@@ -74,7 +66,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT with predicate");
+            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT");
 
             try {
                 counter = cms.runPredicates();
@@ -111,6 +103,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     }
 
+    // REMOVEME
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
@@ -118,45 +111,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
         experiment_pr_1.process();
-//
-//        System.out.println("L/l for Local runIteration and H/h for hogun cluster runIteration");
-//
-//        Scanner in = new Scanner(System.in);
-//        String option = in.nextLine();
-//        switch(option) {
-//            case "l": case "L":
-//                runLocal();
-//                break;
-//
-//            case "h": case "H":
-//                runHogun();
-//                break;
-//        }
     }
 
-    private static void runLocal() throws ConfigurationException, ExperimentException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration);
-        experiment_pr_1.process();
-    }
-
-    private static void runHogun() throws ConfigurationException, ChicShockException, InterruptedException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration-hogun.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        ChicShock chicShock = new ChicShock(experimentConfiguration);
-        chicShock.chicExperiment();
-        chicShock.shockExperiment();
-
-        Thread.sleep(60000);
-
-        chicShock.unShockExperiment();
-        chicShock.unChicExperiment();
-
-    }
 
 }
