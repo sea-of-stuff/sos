@@ -190,6 +190,14 @@ public class NetworkOperations {
         }
     }
 
+    public void scheduleJar() {
+        // TODO - crontab cronfile
+    }
+
+    public void unscheduleJar() {
+        // TODO - crontab -r
+    }
+
     public void killProcess(String pidFile) throws NetworkException {
         System.out.println("NETWORK - Killing process with pidfile " + pidFile);
 

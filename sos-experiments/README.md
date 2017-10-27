@@ -269,3 +269,8 @@ You can write a program to connect to your VM using the Attach API which would t
 Or you can expose the platform MBeanServer over RMI and query the MBeans that way.
 
 See the java.lang.management package for more info
+
+
+## cronjobs
+
+https://crontab.guru/
