@@ -261,7 +261,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
     },
     "bootstrapNodes": [
       {
-      "guid" : "SHA256_16_bb077f9420219e99bf776a7a116334405a81d2627bd4f87288259607f05d1615",
+      "GUID" : "SHA256_16_bb077f9420219e99bf776a7a116334405a81d2627bd4f87288259607f05d1615",
       "hostname" : "138.251.207.87",
       "port" : 8080,
       "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKZOnoFAxsx4BiXBKzeJISOv5q5XTSpPZRCmYGg+59VctY1xeYS7NEkEmbk/Sa8y5chrZttN5CggdBJBIFGgMU0CAwEAAQ=="

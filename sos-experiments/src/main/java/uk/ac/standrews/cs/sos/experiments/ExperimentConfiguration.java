@@ -185,6 +185,8 @@ public class ExperimentConfiguration {
             private boolean remote;
             private String java = "java";
             private String configurationFile;
+            private String certificateFile;
+            private String keyFile;
             private SSH ssh;
             private Behaviour behaviour;
             private String dataset;
@@ -217,6 +219,30 @@ public class ExperimentConfiguration {
 
             public void setConfigurationFile(String configurationFile) {
                 this.configurationFile = configurationFile;
+            }
+
+            public String getCertificateFile() {
+                return certificateFile;
+            }
+
+            public String getCertificateFile(String experimentName) {
+                return CONFIGURATION_FOLDER.replace("{experiment}", experimentName) + certificateFile;
+            }
+
+            public void setCertificateFile(String certificateFile) {
+                this.certificateFile = certificateFile;
+            }
+
+            public String getKeyFile() {
+                return keyFile;
+            }
+
+            public String getKeyFile(String experimentName) {
+                return CONFIGURATION_FOLDER.replace("{experiment}", experimentName) + keyFile;
+            }
+
+            public void setKeyFile(String keyFile) {
+                this.keyFile = keyFile;
             }
 
             public SSH getSsh() {

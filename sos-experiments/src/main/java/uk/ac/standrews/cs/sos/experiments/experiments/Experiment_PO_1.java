@@ -48,16 +48,23 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
         @Override
         public void setup() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT");
+            System.out.println("node id is " + node.guid().toMultiHash());
 
             try {
+                System.out.println("adding users/roles to node");
                 addFolderUSROToNode(node, experiment);
 
                 cms = node.getCMS();
 
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
+
+                System.out.println("adding content to node");
                 addFolderContentToNode(node, new File(datasetPath));
+
+                System.out.println("adding contexts to node");
                 addContexts();
 
+                System.out.println("running predicates");
                 cms.runPredicates();
             } catch (Exception e) {
                 throw new ExperimentException();
@@ -79,8 +86,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
             // Roles loaded from experiment resources
             addContext(cms, experiment, "grant_access");
 
-
-//            addContext(cms, experiment, "Data_Replication_1");
+            // Must have multiple nodes up and running
+            addContext(cms, experiment, "data_replication_1");
 //            addContext(cms, experiment, "Manifest_Replication_1");
         }
 

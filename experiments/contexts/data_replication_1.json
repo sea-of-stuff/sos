@@ -1,13 +1,13 @@
 {
   "context": {
-    "name": "DataReplication",
+    "name": "data_replication_1",
     "domain": {
       "type": "LOCAL",
       "nodes": []
     },
     "codomain": {
-      "type": "LOCAL",
-      "nodes": []
+      "type": "SPECIFIED",
+      "nodes": ["SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2"]
     }
   },
   "predicate": {
@@ -26,7 +26,7 @@
         {
           "type" : "int",
           "name" : "factor",
-          "value" : "1"
+          "value" : "2"
         }
       ]
     }

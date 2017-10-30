@@ -17,6 +17,8 @@ public class SOSDistribution {
     private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/experiments-1.0-SNAPSHOT-jar-with-dependencies.jar";
     private static final String REMOTE_SOS_JAR_PATH =  "sos.jar";
     private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.json";
+    private static final String REMOTE_SOS_CERTIFICATE_PATH = "sos/node/id_rsa.crt";
+    private static final String REMOTE_SOS_KEY_PATH = "sos/node/id_rsa.key";
     private static final String REMOTE_SOS_PID_FILE =  "sos.pid";
     private static final String REMOTE_SOS_OUT_FILE = "out";
     private static final String REMOTE_SOS_EXPERIMENTS_JAR_PATH =  "sos-experiments.jar";
@@ -40,9 +42,13 @@ public class SOSDistribution {
             scp.makePath(path);
             scp.sendFile(appPath, path + REMOTE_SOS_JAR_PATH);
             scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
+            if (node.getCertificateFile() != null && node.getKeyFile() != null) {
+                scp.makePath(path + "sos/node/");
+                scp.sendFile(node.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH); // TODO - remote path
+                scp.sendFile(node.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH); // TODO - remote path
+            }
 
             if (node.hasDataset()) {
-                scp.makePath(path + REMOTE_DATASETS_PATH);
                 String lDirectoryDataset = REPO_DATASETS_PATH + node.getDataset();
                 scp.sendDirectory(lDirectoryDataset, path + node.getDatasetPath());
             }
@@ -53,7 +59,7 @@ public class SOSDistribution {
 
             // Copy users/roles over
             scp.makePath(path + REMOTE_USRO_PATH);
-            scp.sendDirectory(REPO_USRO_PATH, path + node.getContextsPath());
+            scp.sendDirectory(REPO_USRO_PATH, path + node.getUsroPath());
 
             scp.disconnect();
         }
@@ -164,6 +170,12 @@ public class SOSDistribution {
         scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
         scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile());
 
+        if (experimentNode.getCertificateFile() != null && experimentNode.getKeyFile() != null) {
+            scp.makePath(path + "sos/node/");
+            scp.sendFile(experimentNode.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH); // TODO - remote path
+            scp.sendFile(experimentNode.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH); // TODO - remote path
+        }
+
         if (experimentNode.hasDataset()) {
             scp.makePath(path + REMOTE_DATASETS_PATH);
             String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
@@ -175,7 +187,7 @@ public class SOSDistribution {
         scp.sendDirectory(REPO_CONTEXTS_PATH, path + experimentNode.getContextsPath());
 
         scp.makePath(path + REMOTE_USRO_PATH);
-        scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getContextsPath());
+        scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getUsroPath());
 
         scp.disconnect();
     }

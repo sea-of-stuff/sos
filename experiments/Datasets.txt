@@ -1,0 +1,22 @@
+Datasets
+
+- Blog corpus
+    - ~900MB
+	- http://u.cs.biu.ac.il/~koppel/BlogCorpus.htm
+
+
+- Reuters corpus
+	- Requires request auth
+
+- YFCC100M
+	- 14GB ?
+	- Requires request auth
+
+
+- AWS Datasets
+    + Can be very very large
+
+
+- Use github repos?
+
+- 
