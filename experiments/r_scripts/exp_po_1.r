@@ -51,3 +51,18 @@ legend("topright", legend=c("Remote", "Local", "Base"),
        fill=c("red", "deepskyblue", "green"), cex=0.8, inset=.05)
 
 
+################
+# Playing with ggplot
+
+ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
+  geom_boxplot(outlier.alpha = 0.1) +
+  geom_point(color="tomato", position="jitter", alpha=.05) +
+  geom_rug(side="1") +
+  labs(title="Policies per asset....", x="Policy", y="Time (s)")
+
+
+ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
+  geom_bar(position=position_dodge(), stat="identity", width=.5) +
+  geom_point(color="tomato", position="jitter", alpha=.05) +
+  geom_rug(side="1") +
+  labs(title="Policies per asset....", x="Policy", y="Time (s)")

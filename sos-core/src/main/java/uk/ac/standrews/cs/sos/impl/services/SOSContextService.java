@@ -74,7 +74,10 @@ public class SOSContextService implements ContextService {
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
     private Queue<Pair<Long, Long>> checkPolicyThreadSessionStatistics;
 
-    private long time_to_run_predicate_on_current_dataset;
+    private long pred_time_prep;
+    private long pred_time_to_check_if_predicate_has_to_be_run;
+    private long pred_time_to_run_predicate_on_current_dataset;
+    private long pred_time_to_update_context;
 
     /**
      * Build a CMS instance.
@@ -432,9 +435,14 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getUniqueName());
             try {
 
-                time_to_run_predicate_on_current_dataset = 0;
+                pred_time_prep = 0;
+                pred_time_to_check_if_predicate_has_to_be_run = 0; // TODO
+                pred_time_to_run_predicate_on_current_dataset = 0;
+                pred_time_to_update_context = 0;
+
                 counter += runPredicate(context);
-                InstrumentFactory.instance().measure(StatsTYPE.predicate_dataset, context.getName(), time_to_run_predicate_on_current_dataset);
+
+                InstrumentFactory.instance().measure(StatsTYPE.predicate_dataset, context.getName(), pred_time_to_run_predicate_on_current_dataset);
 
             } catch (ContextException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
@@ -446,6 +454,7 @@ public class SOSContextService implements ContextService {
 
     private int runPredicate(Context context) throws ContextException {
 
+        long start = System.nanoTime();
         int counter = 0;
 
         Set<Content> currentContents;
@@ -459,6 +468,9 @@ public class SOSContextService implements ContextService {
         Set<Content> contents = new LinkedHashSet<>();
         Set<Pair<IGUID, ContextVersionInfo>> cacheResults = new LinkedHashSet<>();
         Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
+
+        pred_time_prep = System.nanoTime() - start; // Time before running the context on each asset
+
         for (IGUID assetInvariant:assetInvariants) {
 
             try {
@@ -482,6 +494,9 @@ public class SOSContextService implements ContextService {
 
         }
 
+        // Updating context with new contents
+        start = System.nanoTime();
+
         try {
             Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
             ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
@@ -495,6 +510,8 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.ERROR, "Unable to update context version properly");
             throw new ContextException("Unable to update context version properly");
         }
+
+        pred_time_to_update_context = System.nanoTime() - start; // Time after predicate is run and used to process the results
 
         return counter;
     }
@@ -672,6 +689,7 @@ public class SOSContextService implements ContextService {
      */
     private boolean runPredicate(Context context, Set<Content> currentContents, IGUID versionGUID) {
 
+        long start = System.nanoTime();
         boolean predicateResult = false;
 
         IGUID contextGUID = context.guid();
@@ -685,14 +703,17 @@ public class SOSContextService implements ContextService {
             maxAgeExpired = predicateHasExpired(context, versionGUID);
         }
 
+        long duration = System.nanoTime() - start;
+        pred_time_to_check_if_predicate_has_to_be_run += duration;
+
         if (!alreadyRun || maxAgeExpired) {
 
             Predicate predicate = getPredicate(context);
 
-            long start = System.nanoTime();
+            start = System.nanoTime();
             predicateResult = predicate.test(versionGUID); // TODO - measure mb of data processed?
-            long duration = System.nanoTime() - start;
-            time_to_run_predicate_on_current_dataset += duration;
+            duration = System.nanoTime() - start;
+            pred_time_to_run_predicate_on_current_dataset += duration;
             InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
             // FIXME - adapt eviction model to new model

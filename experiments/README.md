@@ -43,3 +43,9 @@ Filtering data by label: `subdataset = subset(dataset, ContextName=="DATA")`
 
 https://stats.stackexchange.com/questions/132652/how-to-determine-which-distribution-fits-my-data-best
 
+
+
+
+### About boxplots in R
+
+https://flowingdata.com/2008/02/15/how-to-read-and-use-a-box-and-whisker-plot/
