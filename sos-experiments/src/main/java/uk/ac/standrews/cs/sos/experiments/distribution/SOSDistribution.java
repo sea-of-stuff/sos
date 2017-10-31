@@ -17,8 +17,8 @@ public class SOSDistribution {
     private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/experiments-1.0-SNAPSHOT-jar-with-dependencies.jar";
     private static final String REMOTE_SOS_JAR_PATH =  "sos.jar";
     private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.json";
-    private static final String REMOTE_SOS_CERTIFICATE_PATH = "sos/node/id_rsa.crt";
-    private static final String REMOTE_SOS_KEY_PATH = "sos/node/id_rsa.key";
+    private static final String REMOTE_SOS_CERTIFICATE_PATH = "id_rsa.crt";
+    private static final String REMOTE_SOS_KEY_PATH = "id_rsa.key";
     private static final String REMOTE_SOS_PID_FILE =  "sos.pid";
     private static final String REMOTE_SOS_OUT_FILE = "out";
     private static final String REMOTE_SOS_EXPERIMENTS_JAR_PATH =  "sos-experiments.jar";
@@ -42,10 +42,10 @@ public class SOSDistribution {
             scp.makePath(path);
             scp.sendFile(appPath, path + REMOTE_SOS_JAR_PATH);
             scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
+
             if (node.getCertificateFile() != null && node.getKeyFile() != null) {
-                scp.makePath(path + "sos/node/");
-                scp.sendFile(node.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH); // TODO - remote path
-                scp.sendFile(node.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH); // TODO - remote path
+                scp.sendFile(node.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH);
+                scp.sendFile(node.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH);
             }
 
             if (node.hasDataset()) {
@@ -144,8 +144,6 @@ public class SOSDistribution {
         }
     }
 
-
-
     public static void distributeToExperimentNode(ExperimentConfiguration configuration) throws NetworkException, IOException {
         System.out.println("Distributing the SOS-Experiment to a remote node");
 
@@ -171,9 +169,8 @@ public class SOSDistribution {
         scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile());
 
         if (experimentNode.getCertificateFile() != null && experimentNode.getKeyFile() != null) {
-            scp.makePath(path + "sos/node/");
-            scp.sendFile(experimentNode.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH); // TODO - remote path
-            scp.sendFile(experimentNode.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH); // TODO - remote path
+            scp.sendFile(experimentNode.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH);
+            scp.sendFile(experimentNode.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH);
         }
 
         if (experimentNode.hasDataset()) {

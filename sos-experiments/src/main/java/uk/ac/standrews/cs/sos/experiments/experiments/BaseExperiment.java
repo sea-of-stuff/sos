@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import org.apache.commons.io.FileUtils;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -70,12 +71,20 @@ public abstract class BaseExperiment implements Experiment {
                 configFile = new File(experiment.getExperimentNode().getConfigurationFile());
             }
 
+            // Copy node certificate and keys
+            makepath("sos/node/");
+            FileUtils.copyFile(new File("id_rsa.crt"), new File("sos/node/id_rsa.crt"));
+            FileUtils.copyFile(new File("id_rsa.key"), new File("sos/node/id_rsa.key"));
+
+
             System.out.println("CONFIG FILE " + configFile.getAbsolutePath());
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
             node = ServerState.init(configuration.getSettingsObj());
         } catch (ConfigurationException e) {
             throw new ExperimentException("Unable to process configuration properly", e);
+        } catch (IOException e) {
+            throw new ExperimentException("Unable to copy configuration files", e);
         }
 
         if (!experimentUnitIterator.hasNext()) throw new ExperimentException();
@@ -165,5 +174,16 @@ public abstract class BaseExperiment implements Experiment {
 
     public ExperimentConfiguration.Experiment getExperiment() {
         return experiment;
+    }
+
+    private static void makepath(String path) {
+        java.io.File file = new java.io.File(path);
+        java.io.File parent = file.getParentFile();
+        if (parent != null)
+            parent.mkdirs();
+
+        if (path.endsWith("/")) {
+            file.mkdir();
+        }
     }
 }
