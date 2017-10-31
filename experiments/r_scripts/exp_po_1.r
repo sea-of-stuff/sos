@@ -8,6 +8,8 @@ library("fitdistrplus", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Re
 install.packages("stargazer")
 library(stargazer)
 
+library(ggplot2)
+
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
@@ -40,9 +42,12 @@ x <- boxplot(d$Measures~d$ContextName, data=d,
              outline=FALSE,
              las=2, # Draw x labels vertically
              ylab="Time (s) - log scale", 
+             xlab="Policies",
              log = "y",
              col=colors)
 
 
 legend("topright", legend=c("Remote", "Local", "Base"),
        fill=c("red", "deepskyblue", "green"), cex=0.8, inset=.05)
+
+

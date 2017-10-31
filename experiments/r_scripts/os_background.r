@@ -1,7 +1,7 @@
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-d <- read.csv("output/pr_1__2017_10_27T13_03_39_007Z_os.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_26T14_53_38_374Z_os.tsv", header=TRUE, sep="\t")
 
 # Convert to MB
 d$Mem.Used.Bytes <- d$Mem.Used.Bytes / 1000000

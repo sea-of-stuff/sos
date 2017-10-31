@@ -74,6 +74,8 @@ public class SOSContextService implements ContextService {
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
     private Queue<Pair<Long, Long>> checkPolicyThreadSessionStatistics;
 
+    private long time_to_run_predicate_on_current_dataset;
+
     /**
      * Build a CMS instance.
      * The DDS is passed as parameter and it is needed to access the manifests to be processed.
@@ -429,7 +431,11 @@ public class SOSContextService implements ContextService {
         for (Context context : getContexts()) {
             SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getUniqueName());
             try {
+
+                time_to_run_predicate_on_current_dataset = 0;
                 counter += runPredicate(context);
+                InstrumentFactory.instance().measure(StatsTYPE.predicate_dataset, context.getName(), time_to_run_predicate_on_current_dataset);
+
             } catch (ContextException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
             }
@@ -684,8 +690,9 @@ public class SOSContextService implements ContextService {
             Predicate predicate = getPredicate(context);
 
             long start = System.nanoTime();
-            predicateResult = predicate.test(versionGUID);
+            predicateResult = predicate.test(versionGUID); // TODO - measure mb of data processed?
             long duration = System.nanoTime() - start;
+            time_to_run_predicate_on_current_dataset += duration;
             InstrumentFactory.instance().measure(StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
             // FIXME - adapt eviction model to new model

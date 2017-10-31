@@ -50,8 +50,7 @@ x <- boxplot(d$Measures~d$ContextName, data=d,
              outline=FALSE,
              las=2, # Draw x labels vertically
              main="Predicate performance against different settings",
-             ylab="Time (s) - log scale", 
-             log = "y",
+             ylab="Time (s) - log scale",
              col=colors)
 
 legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),

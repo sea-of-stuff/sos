@@ -18,6 +18,7 @@
     "stats": {
       "experiment": false,
       "predicate": true,
+      "predicate_dataset": true,
       "policies": false,
       "checkPolicies": false
     }
