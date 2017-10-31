@@ -703,6 +703,7 @@ public class SettingsConfiguration {
             public static class TasksSettings {
 
                 private ThreadSettings thread;
+                private boolean fallbackToSyncTasks = false;
 
                 public TasksSettings() {}
 
@@ -712,6 +713,14 @@ public class SettingsConfiguration {
 
                 public void setThread(ThreadSettings thread) {
                     this.thread = thread;
+                }
+
+                public boolean isFallbackToSyncTasks() {
+                    return fallbackToSyncTasks;
+                }
+
+                public void setFallbackToSyncTasks(boolean fallbackToSyncTasks) {
+                    this.fallbackToSyncTasks = fallbackToSyncTasks;
                 }
             }
 

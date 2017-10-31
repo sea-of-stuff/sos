@@ -725,17 +725,14 @@ public class SOSContextService implements ContextService {
             content.timestamp = prev.timestamp;
 
             Set<Policy> policies = getPolicies(context);
-            boolean allPoliciesAreSatisfied = true;
 
             long start = System.nanoTime();
             for (Policy policy:policies) {
                 policy.apply(context.codomain(), commonUtilities, manifest);
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
             InstrumentFactory.instance().measure(StatsTYPE.policies, context.getName(), duration);
 
-            content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {

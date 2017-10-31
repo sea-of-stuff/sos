@@ -43,7 +43,7 @@ public class TasksQueue {
 
         try {
             synchronized (task) {
-                performAsyncTask(task);
+                performAsyncTask(task, false);
 
                 task.wait();
                 SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task);
@@ -56,18 +56,28 @@ public class TasksQueue {
 
     public void performAsyncTask(Task task) {
 
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
-        persist(task);
+        performAsyncTask(task, true);
+    }
 
-        final Future handler = executorService.submit(task);
-        executorService.schedule(() -> {
-            handler.cancel(true);
-            SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
+    private void performAsyncTask(Task task, boolean checkSettings) {
 
-            task.notify();
-        }, TIMEOUT_LIMIT_S, TimeUnit.SECONDS);
+        if (checkSettings && SOSLocalNode.settings.getGlobal().getTasks().isFallbackToSyncTasks()) {
+            performSyncTask(task);
+        } else {
 
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
+            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
+            persist(task);
+
+            final Future handler = executorService.submit(task);
+            executorService.schedule(() -> {
+                handler.cancel(true);
+                SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
+
+                task.notify();
+            }, TIMEOUT_LIMIT_S, TimeUnit.SECONDS);
+
+            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
+        }
     }
 
     private void persist(Task task) {

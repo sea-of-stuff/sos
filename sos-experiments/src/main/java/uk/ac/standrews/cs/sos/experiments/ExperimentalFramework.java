@@ -15,7 +15,7 @@ public class ExperimentalFramework {
     private static final String CRON_EXPERIMENT = "cron";
     private static final String CHECK_NODE = "check";
     private static final String STOP_NODE = "stop";
-    private static final String STOP_ALL_NODES = "stop_all";
+    private static final String STOP_ALL_NODES = "stopall";
     private static final String STATS_NODE = "stats";
     private static final String CLEAN_NODE = "clean"; // TODO - remove files from remote node
 
